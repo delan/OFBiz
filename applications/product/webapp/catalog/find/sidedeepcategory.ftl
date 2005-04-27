@@ -29,7 +29,7 @@
 <#-- looping macro -->
 <#macro categoryList parentCategory category>
   <#if parentCategory.productCategoryId != category.productCategoryId>
-    <#local pStr = "&pcategory=" + parentCategory.productCategoryId>  
+    <#local pStr = "&amp;pcategory=" + parentCategory.productCategoryId>  
   </#if>
   <#if curCategoryId?exists && curCategoryId == category.productCategoryId>
     <div class="browsecategorytext">

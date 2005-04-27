@@ -32,8 +32,8 @@
 <#-- Main Heading -->
 <#include "ProfileTabBar.ftl"/>
 
-<br>
-<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<br/>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">

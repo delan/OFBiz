@@ -57,8 +57,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </#list>
     </table>
     
-    <br>
-    <form method="POST" action="<@ofbizUrl>/addPartyToFacility</@ofbizUrl>" style="margin: 0;">
+    <br/>
+    <form method="post" action="<@ofbizUrl>/addPartyToFacility</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="facilityId" value="${facilityId}">  
     <div class="head2">${uiLabelMap.ProductAddFacilityPartyRole}:</div>
     <div class="tabletext">

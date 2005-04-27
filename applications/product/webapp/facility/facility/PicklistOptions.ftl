@@ -55,7 +55,7 @@
                     <td>
                         <div class="tabletext">
                             <#if orderReadyToPickInfoList?has_content>
-                                <form method="POST" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
                                     <input type="hidden" name="facilityId" value="${facilityId}"/>
                                     <input type="hidden" name="isRushOrder" value="Y"/>
                                     ${uiLabelMap.ProductPickFirst}:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
@@ -86,7 +86,7 @@
                         <td>
                             <div class="tabletext">
                                 <#if orderReadyToPickInfoList?has_content>
-                                    <form method="POST" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+                                    <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
                                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                                         <input type="hidden" name="shipmentMethodTypeId" value="${shipmentMethodType.shipmentMethodTypeId}"/>
                                         ${uiLabelMap.ProductPickFirst}:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
@@ -106,7 +106,7 @@
                     <td>
                         <div class="tabletext">
                           <#if (orderReadyToPickInfoListSizeTotal > 0)>
-                            <form method="POST" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+                            <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
                                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                                 ${uiLabelMap.ProductPickFirst}:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
                                 <input type="submit" value="${uiLabelMap.ProductCreatePicklist}" class="smallSubmit"/>

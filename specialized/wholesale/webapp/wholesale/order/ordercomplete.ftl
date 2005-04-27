@@ -29,7 +29,7 @@
 
 <#if orderHeader?has_content>
   <#include "orderheader.ftl">
-  <br>
+  <br/>
   <#include "orderitems.ftl">
   <table border="0" cellpadding="1" width="100%">
    <tr>

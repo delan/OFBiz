@@ -29,7 +29,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <#if shipment?exists>
     <div class="head1">Shipment Plan</div>
     ${findOrderItemsForm.renderFormString()}
-    <br>
+    <br/>
     <#if addToShipmentPlanRows?has_content>
         ${addToShipmentPlanForm.renderFormString()}
 
@@ -49,10 +49,10 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
         document.forms.addToShipmentPlan.submit();
     }
-</SCRIPT>
+</script>
 <form><input type="submit" class="smallSubmit" onClick="submitRows('${rowCount?if_exists}');return false;" name="submitButton" value="${uiLabelMap.CommonAdd}"/></form>
     <hr class="sepbar">
-	<br>
+	<br/>
     </#if>
     ${listShipmentPlanForm.renderFormString()}
     <div class="head2">Total weight: ${totWeight}</div>

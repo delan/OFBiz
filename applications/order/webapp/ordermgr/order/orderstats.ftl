@@ -26,12 +26,12 @@
 
 <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='70%' >
+          <TD align="left" width='70%' >
             <div class='boxhead'>&nbsp;Order Statistics Page</div>
           </TD>          
         </tr>
@@ -203,7 +203,7 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 <#else>
   <h3>You do not have permission to view this page.</h3>
 </#if>

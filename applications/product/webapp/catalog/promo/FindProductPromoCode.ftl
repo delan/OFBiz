@@ -59,7 +59,7 @@
     <br/>
     <div class="head3">Add Set of Promotion Codes:</div>
     <div class="tabletext">
-        <form method="POST" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="userEntered" value="N"/>
             <input type="hidden" name="requireEmailOrParty" value="N"/>
             <input type="hidden" name="productPromoId" value="${productPromoId}"/>

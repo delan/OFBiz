@@ -44,7 +44,7 @@
 <input type="hidden" name="surveyId" value="${survey.surveyId}">
 
 <div class="head1">${survey.description?if_exists}</div>
-<br>
+<br/>
 
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <#list surveyQuestions as question>

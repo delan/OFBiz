@@ -26,7 +26,7 @@
  *@since      2.2
 -->
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupBom() {
     document.searchbom.productId.value=document.editProductAssocForm.productId.value;
@@ -42,18 +42,18 @@ function lookupBom() {
         <!--<a href="<@ofbizUrl>/EditRoutingProductLink?byProduct=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductRoutings}]</a></span>-->
     </#if>
 
-    <br>
-    <br>
+    <br/>
+    <br/>
 
     <form name="searchform" action="<@ofbizUrl>/UpdateProductBom</@ofbizUrl>#topform" method=PUT >
-    <input type=hidden name="UPDATE_MODE" value="">
+    <input type="hidden" name="UPDATE_MODE" value="">
     <a name="topform"/>
     <table border="0" cellpadding="2" cellspacing="0">
         <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
             <td>&nbsp;</td>
             <td>
-            <select class="selectBox" name="productAssocTypeId" size=1>
+            <select class="selectBox" name="productAssocTypeId" size="1">
             <#if productAssocTypeId?has_content>
                 <#assign curAssocType = delegator.findByPrimaryKey("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId))>
                 <#if curAssocType?exists>
@@ -66,7 +66,7 @@ function lookupBom() {
             </#list>
             </select>
             </td>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ProductProductId}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ProductProductId}:</div></td>
             <td>&nbsp;</td>
             <td>
             <input type="text" class="inputBox" name="productId" size="20" maxlength="40" value="${productId?if_exists}">
@@ -75,10 +75,10 @@ function lookupBom() {
             </td>
         </tr>
         <tr>
-            <td colspan='3' align=left>
+            <td colspan='3' align="left">
                 &nbsp;
             </td>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingCopyToProductId}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingCopyToProductId}:</div></td>
             <td>&nbsp;</td>
             <td>
             <input type="text" class="inputBox" name="copyToProductId" size="20" maxlength="40" value="">
@@ -92,16 +92,16 @@ function lookupBom() {
     <hr class="sepbar">
 
     
-    <form action="<@ofbizUrl>/UpdateProductBom</@ofbizUrl>" method=POST style="margin: 0;" name="editProductAssocForm">
+    <form action="<@ofbizUrl>/UpdateProductBom</@ofbizUrl>" method="post" style="margin: 0;" name="editProductAssocForm">
     <table border="0" cellpadding="2" cellspacing="0">
     
     <#if !(productAssoc?exists)>
-            <input type=hidden name="UPDATE_MODE" value="CREATE">
+            <input type="hidden" name="UPDATE_MODE" value="CREATE">
             <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
             <td>&nbsp;</td>
             <td>
-                <select class="selectBox" name="productAssocTypeId" size=1>
+                <select class="selectBox" name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findByPrimaryKey("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId))>
                     <#if curAssocType?exists>
@@ -116,7 +116,7 @@ function lookupBom() {
             </td>
             </tr>
             <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ProductProductId}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ProductProductId}:</div></td>
             <td>&nbsp;</td>
             <td>
                 <input type="text" class="inputBox" name="productId" size="20" maxlength="40" value="${productId?if_exists}">
@@ -124,7 +124,7 @@ function lookupBom() {
             </td>
             </tr>
             <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingProductIdTo}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingProductIdTo}:</div></td>
             <td>&nbsp;</td>
             <td>
                 <input type="text" class="inputBox" name="productIdTo" size="20" maxlength="40" value="${productIdTo?if_exists}">
@@ -132,7 +132,7 @@ function lookupBom() {
             </td>
             </tr>
             <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.CommonFromDate}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.CommonFromDate}:</div></td>
             <td>&nbsp;</td>
             <td>
                 <div class="tabletext">
@@ -144,34 +144,34 @@ function lookupBom() {
             </tr>
     <#else>
         <#assign curProductAssocType = productAssoc.getRelatedOneCache("ProductAssocType")>
-        <input type=hidden name="UPDATE_MODE" value="UPDATE">
-        <input type=hidden name="productId" value="${productId?if_exists}">
-        <input type=hidden name="productIdTo" value="${productIdTo?if_exists}">
-        <input type=hidden name="productAssocTypeId" value="${productAssocTypeId?if_exists}">
-        <input type=hidden name="fromDate" value="${fromDate?if_exists}">
+        <input type="hidden" name="UPDATE_MODE" value="UPDATE">
+        <input type="hidden" name="productId" value="${productId?if_exists}">
+        <input type="hidden" name="productIdTo" value="${productIdTo?if_exists}">
+        <input type="hidden" name="productAssocTypeId" value="${productAssocTypeId?if_exists}">
+        <input type="hidden" name="fromDate" value="${fromDate?if_exists}">
         <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ProductProductId}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ProductProductId}:</div></td>
             <td>&nbsp;</td>
             <td><b>${productId?if_exists}</b></td>
         </tr>
         <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingProductIdTo}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingProductIdTo}:</div></td>
             <td>&nbsp;</td>
             <td><b>${productIdTo?if_exists}</b></td>
         </tr>
         <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
             <td>&nbsp;</td>
             <td><b><#if curProductAssocType?exists>${(curProductAssocType.description)?if_exists}<#else> ${productAssocTypeId?if_exists}</#if></b></td>
         </tr>
         <tr>
-            <td align=right><div class='tableheadtext'>${uiLabelMap.CommonFromDate}:</div></td>
+            <td align="right"><div class='tableheadtext'>${uiLabelMap.CommonFromDate}:</div></td>
             <td>&nbsp;</td>
             <td><b>${fromDate?if_exists}</b></td>
         </tr>
     </#if>
     <tr>
-        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.CommonThruDate}:</div></td>
+        <td width="26%" align="right"><div class='tableheadtext'>${uiLabelMap.CommonThruDate}:</div></td>
         <td>&nbsp;</td>
         <td width="74%">
         <div class="tabletext">
@@ -181,35 +181,35 @@ function lookupBom() {
         </td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.CommonSequenceNum}:</div></td>
+        <td width="26%" align="right"><div class='tableheadtext'>${uiLabelMap.CommonSequenceNum}:</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="sequenceNum" <#if useValues>value="${(productAssoc.sequenceNum)?if_exists}"<#else>value="${(request.getParameter("sequenceNum"))?if_exists}"</#if> size="5" maxlength="10"></td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class="tabletext"><div class='tableheadtext'>${uiLabelMap.ManufacturingReason}:</div></div></td>
+        <td width="26%" align="right"><div class="tabletext"><div class='tableheadtext'>${uiLabelMap.ManufacturingReason}:</div></div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="reason" <#if useValues>value="${(productAssoc.reason)?if_exists}"<#else>value="${(request.getParameter("reason"))?if_exists}"</#if> size="60" maxlength="255"></td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingInstruction}:</div></td>
+        <td width="26%" align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingInstruction}:</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="instruction" <#if useValues>value="${(productAssoc.instruction)?if_exists}"<#else>value="${(request.getParameter("instruction"))?if_exists}"</#if> size="60" maxlength="255"></td>
     </tr>
     
     <tr>
-        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingQuantity}:</div></td>
+        <td width="26%" align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingQuantity}:</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="quantity" <#if useValues>value="${(productAssoc.quantity)?if_exists}"<#else>value="${(request.getParameter("quantity"))?if_exists}"</#if> size="10" maxlength="15"></td>
     </tr>
 
     <tr>
-        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingScrapFactor}:</div></td>
+        <td width="26%" align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingScrapFactor}:</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="scrapFactor" <#if useValues>value="${(productAssoc.scrapFactor)?if_exists}"<#else>value="${(request.getParameter("scrapFactor"))?if_exists}"</#if> size="10" maxlength="15"></td>
     </tr>
 
     <tr>
-        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingFormula}:</div></td>
+        <td width="26%" align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingFormula}:</div></td>
         <td>&nbsp;</td>
         <td width="74%">
             <select name="formula">
@@ -226,7 +226,7 @@ function lookupBom() {
     </tr>
 
     <tr>
-        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingRoutingTask}:</div></td>
+        <td width="26%" align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingRoutingTask}:</div></td>
         <td>&nbsp;</td>
         <td width="74%">
             <input type="text" class="inputBox" name="routingWorkEffortId" <#if useValues>value="${(productAssoc.routingWorkEffortId)?if_exists}"<#else>value="${(request.getParameter("routingWorkEffortId"))?if_exists}"</#if> size="10" maxlength="15">
@@ -236,11 +236,11 @@ function lookupBom() {
     
     <tr>
         <td colspan="2">&nbsp;</td>
-        <td align=left><input type="submit" class="SmallSubmit" <#if !(productAssoc?exists)>value="${uiLabelMap.CommonAdd}"<#else>value="${uiLabelMap.CommonEdit}"</#if>></td>
+        <td align="left"><input type="submit" class="SmallSubmit" <#if !(productAssoc?exists)>value="${uiLabelMap.CommonAdd}"<#else>value="${uiLabelMap.CommonEdit}"</#if>></td>
     </tr>
     </table>
     </form>
-    <br>
+    <br/>
     <#if productId?exists && product?exists>
         <hr class="sepbar">
         <a name="components"></a>
@@ -316,6 +316,6 @@ function lookupBom() {
             </#list>
         </table>
 
-        <br>
+        <br/>
         <div class="tabletext">NOTE: <b style="color: red;">Red</b> date/time entries denote that the current time is before the From Date or after the Thru Date. If the From Date is <b style="color: red;">red</b>, association has not started yet; if Thru Date is <b style="color: red;">red</b>, association has expired (<u>and should probably be deleted</u>).</div>
     </#if>

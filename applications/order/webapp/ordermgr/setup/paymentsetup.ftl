@@ -31,7 +31,7 @@
 </div>
 
 <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
-<table border=0 width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
+<table border="0" width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxtop'>
@@ -100,13 +100,13 @@
 </table> 
 
 <#if security.hasEntityPermission("PAYPROC", "_CREATE", session)>
-<br>
-<table border=0 width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
+<br/>
+<table border="0" width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxtop'>
         <tr>
-          <td align=left width='90%'>
+          <td align="left" width='90%'>
             <#if webSitePayment?has_content>
               <div class='boxhead'>&nbsp;Update&nbsp;Setting</div>
             <#else>
@@ -128,13 +128,13 @@
         <tr>
           <td>  
             <#if webSitePayment?has_content>       
-              <form method="POST" action="<@ofbizUrl>/updateWebSitePaymentSetting</@ofbizUrl>">
+              <form method="post" action="<@ofbizUrl>/updateWebSitePaymentSetting</@ofbizUrl>">
             <#else>
-              <form method="POST" action="<@ofbizUrl>/createWebSitePaymentSetting</@ofbizUrl>">
+              <form method="post" action="<@ofbizUrl>/createWebSitePaymentSetting</@ofbizUrl>">
             </#if>
             <table border='0' cellpadding='2' cellspacing='0'>
               <tr>
-                <td width="26%" align=right><div class="tabletext">WebSite</div></td>
+                <td width="26%" align="right"><div class="tabletext">WebSite</div></td>
                 <td>&nbsp;</td>
                 <td width="74%">
                   <#if webSitePayment?has_content>
@@ -152,7 +152,7 @@
                 </td>
               </tr>
               <tr>
-                <td width="26%" align=right><div class="tabletext">Payment Method Type</div></td>
+                <td width="26%" align="right"><div class="tabletext">Payment Method Type</div></td>
                 <td>&nbsp;</td>
                 <td width="74%">
                   <#if webSitePayment?has_content>
@@ -171,33 +171,33 @@
               </tr>
               
               <tr>
-                <td width="26%" align=right><div class="tabletext">Processor Auth Service</div></td>
+                <td width="26%" align="right"><div class="tabletext">Processor Auth Service</div></td>
                 <td>&nbsp;</td>
                 <td width="74%"><input type="text" class="inputBox" name="paymentAuthService" value="${payInfo.paymentAuthService?if_exists}" size="30" maxlength="60"></td>
               </tr>  
               <tr>
-                <td width="26%" align=right><div class="tabletext">Processor Re-Auth Service</div></td>
+                <td width="26%" align="right"><div class="tabletext">Processor Re-Auth Service</div></td>
                 <td>&nbsp;</td>
                 <td width="74%"><input type="text" class="inputBox" name="paymentReAuthService" value="${payInfo.paymentReAuthService?if_exists}" size="30" maxlength="60"></td>
               </tr>                      
               <tr>
-                <td width="26%" align=right><div class="tabletext">Processor Capture Service</div></td>
+                <td width="26%" align="right"><div class="tabletext">Processor Capture Service</div></td>
                 <td>&nbsp;</td>
                 <td width="74%"><input type="text" class="inputBox" name="paymentCaptureService" value="${payInfo.paymentCaptureService?if_exists}" size="30" maxlength="60"></td>
               </tr> 
               <tr>
-                <td width="26%" align=right><div class="tabletext">Processor Refund Service</div></td>
+                <td width="26%" align="right"><div class="tabletext">Processor Refund Service</div></td>
                 <td>&nbsp;</td>
                 <td width="74%"><input type="text" class="inputBox" name="paymentRefundService" value="${payInfo.paymentRefundService?if_exists}" size="30" maxlength="60"></td>
               </tr>                                            
               <tr>
-                <td width="26%" align=right><div class="tabletext">Processor Properties URL</div></td>
+                <td width="26%" align="right"><div class="tabletext">Processor Properties URL</div></td>
                 <td>&nbsp;</td>
                 <td width="74%"><input type="text" class="inputBox" name="paymentConfiguration" value="${payInfo.paymentConfiguration?if_exists}" size="30" maxlength="60"></td>
               </tr>  
               <tr>
                 <td colspan='2'>&nbsp;</td>
-                <td colspan='1' align=left><input type="submit" value="Update"></td>
+                <td colspan='1' align="left"><input type="submit" value="Update"></td>
               </tr>            
             </table>               
             </form>		  
@@ -210,6 +210,6 @@
 </#if>
          
 <#else>
-  <br>
+  <br/>
   <h3>You do not have permission to view this page. ("PAYSETUP_VIEW" or "PAYSETUP_ADMIN" needed)</h3>
 </#if>

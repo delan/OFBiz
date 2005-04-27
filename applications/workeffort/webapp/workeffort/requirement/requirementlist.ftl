@@ -27,15 +27,15 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
+          <TD align="left" width='40%' >
             <div class='boxhead'>${uiLabelMap.WorkEffortRequirementList}</div>
           </TD>
-          <TD align=right width='60%'>
+          <TD align="right" width='60%'>
             <A href='<@ofbizUrl>/requirementlist</@ofbizUrl>' class='lightbuttontextdisabled'>[${uiLabelMap.WorkEffortRequirementList}]</A>
             <A href='<@ofbizUrl>/requirement</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortNewRequirement}]</A>
           </TD>
@@ -54,7 +54,7 @@
                   <TD><DIV class='tabletext'><b>${uiLabelMap.CommonDescription}</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortRequiredBy}</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortEstmatedBudget}</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>${uiLabelMap.WorkEffortViewTasksEdit}</b></DIV></TD>
+                  <TD align="right"><DIV class='tabletext'><b>${uiLabelMap.WorkEffortViewTasksEdit}</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='5'><HR class='sepbar'></TD></TR>                
                 <#if requirements?has_content>
@@ -65,7 +65,7 @@
                     <TD><DIV class='tabletext'>${requirement.description?if_exists}</DIV></TD>
                     <TD><DIV class='tabletext'>${requirement.requiredByDate?if_exists}</DIV></TD>
                     <TD><DIV class='tabletext'>${requirement.estimatedBudget?default(0)}</DIV></TD>
-                    <TD align=right NOWRAP><A class="buttontext" href="<@ofbizUrl>/workefforts?requirementId=${requirement.requirementId}</@ofbizUrl>">${uiLabelMap.WorkEffortTasks}</a>&nbsp;/&nbsp;<A class='buttontext' href='<@ofbizUrl>/requirement?requirementId=${requirement.requirementId}</@ofbizUrl>'>
+                    <TD align="right" NOWRAP><A class="buttontext" href="<@ofbizUrl>/workefforts?requirementId=${requirement.requirementId}</@ofbizUrl>">${uiLabelMap.WorkEffortTasks}</a>&nbsp;/&nbsp;<A class='buttontext' href='<@ofbizUrl>/requirement?requirementId=${requirement.requirementId}</@ofbizUrl>'>
                         ${uiLabelMap.CommonEdit}[${requirement.requirementId?if_exists}]</a></DIV></TD>
                   </TR>
                 </#list>

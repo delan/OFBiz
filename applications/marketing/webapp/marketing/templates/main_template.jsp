@@ -12,15 +12,15 @@
     <link rel='stylesheet' href='<ofbiz:contenturl>/images/tabstyles.css</ofbiz:contenturl>' type='text/css'>    
 </head>
 <body>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
           <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerImageUrl"))) {%>
-            <TD align=left width='1%'><IMG alt="<%EntityField.run("layoutSettings", "companyName", pageContext);%>" src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
+            <TD align="left" width='1%'><IMG alt="<%EntityField.run("layoutSettings", "companyName", pageContext);%>" src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
           <%}%>         
-          <TD align=right width='1%' nowrap <%EntityField.run("layoutSettings", "headerRightBackgroundUrl", "background='", "'", pageContext);%>>
+          <TD align="right" width='1%' nowrap <%EntityField.run("layoutSettings", "headerRightBackgroundUrl", "background='", "'", pageContext);%>>
               <ofbiz:if name="person">
                 <div class="insideHeaderText">Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</div>
               </ofbiz:if>

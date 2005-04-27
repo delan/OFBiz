@@ -25,7 +25,7 @@
 -->
 
 <div class="tabletext"><b>Create Virtual Product</b></div>
-<form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="POST" style="margin: 0;" name="quickCreateVirtualWithVariants">
+<form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" style="margin: 0;" name="quickCreateVirtualWithVariants">
     <div>
         <span class="tabletext">Variant Product IDs:</span>
         <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>

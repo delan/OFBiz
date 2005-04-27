@@ -26,15 +26,15 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left>
+          <TD align="left">
             <div class='boxhead'>${uiLabelMap.WorkEffortProjects}</div>
           </TD>
-          <TD align=right>            
+          <TD align="right">            
             <#if showAllProjects = "true"><A href='<@ofbizUrl>/projectlist</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortShowActive}</A><#else><A href='<@ofbizUrl>/projectlist?ShowAllProjects=true</@ofbizUrl>' class='submenutext'>${uiLabelMap.CommonShowAll}</A></#if><A href='<@ofbizUrl>/editproject</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewProject}</A>
           </TD>
         </tr>
@@ -53,7 +53,7 @@
                   <TD><DIV class='tabletext'><b>${uiLabelMap.CommonDescription}</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.CommonStartDate}</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortStatus}</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
+                  <TD align="right"><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
                 <#list projects as workEffort>
@@ -65,7 +65,7 @@
                     <TD><DIV class='tabletext'>${(workEffort.estimatedStartDate?datetime?string)?if_exists}</DIV></TD>
                     <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.currentStatusId))>                    
                     <TD><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
-                    <TD align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editproject?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
+                    <TD align="right" width='1%'><A class='buttontext' href='<@ofbizUrl>/editproject?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                         [${uiLabelMap.CommonEdit}]</a></DIV></TD>
                   </TR>
                 </#list>

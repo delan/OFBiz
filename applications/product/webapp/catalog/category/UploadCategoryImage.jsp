@@ -135,11 +135,11 @@
   <%}%>
     <form method="POST" enctype="multipart/form-data" action="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%>&upload_file_type=<%=fileType%></ofbiz:url>">
     Upload an image for the category with the ID: "<b><%=productCategoryId%></b>" and Description "<b><%=productCategory.getString("description")%></b>".
-    <br>
+    <br/>
     Enter local file name to upload:
-    <br>
+    <br/>
     <input type="file" size="80" name="fname">
-    <br>
+    <br/>
     <input type="submit" value="Upload Now">
     </form>
   <%}else{%>

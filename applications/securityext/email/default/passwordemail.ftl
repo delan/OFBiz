@@ -29,7 +29,7 @@
 </head>
 <body>
   <div>This email is in response to your request to have <#if useEncryption>a new<#else>your</#if> password sent to you.</div>
-  <br>
+  <br/>
   <div>Your <#if useEncryption>new</#if> password is "${password}"</div>
 </body>
 </html>

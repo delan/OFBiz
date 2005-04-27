@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 
-<script language="javascript">
+<script language="JavaScript" type="text/javascript">
 function shipBillAddr() {
     <#if requestParameters.singleUsePayment?default("N") == "Y">
       <#assign singleUse = "&singleUsePayment=Y">
@@ -122,7 +122,7 @@ function shipBillAddr() {
 
                 <#if (paymentMethodType == "CC" || paymentMethodType == "EFT")>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tableheadtext">Billing Address</div></td>
+                    <td width="26%" align="right" valign="top"><div class="tableheadtext">Billing Address</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">&nbsp;</td>
                   </tr>
@@ -138,20 +138,20 @@ function shipBillAddr() {
                     <td colspan="3"><hr class="sepbar"/></td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tableheadtext">Credit Card Information</div></td>
+                    <td width="26%" align="right" valign="top"><div class="tableheadtext">Credit Card Information</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">&nbsp;</td>
                   </tr>
 
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Company Name on Card</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Company Name on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard?if_exists}">
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Prefix on Card</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Prefix on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="titleOnCard" class="selectBox">
@@ -164,28 +164,28 @@ function shipBillAddr() {
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">First Name on Card</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">First Name on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Middle Name on Card</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Middle Name on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)?if_exists}">
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Last Name on Card</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Last Name on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Suffix on Card</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Suffix on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="suffixOnCard" class="selectBox">
@@ -202,7 +202,7 @@ function shipBillAddr() {
                   </tr>
 
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Card Type</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Card Type</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="cardType" class="selectBox">
@@ -215,21 +215,21 @@ function shipBillAddr() {
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Card Number</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Card Number</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber?if_exists}">
                     *</td>
                   </tr>
                   <#--<tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Card Security Code</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Card Security Code</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" size="5" maxlength="10" name="cardSecurityCode" value="">
                     </td>
                   </tr>-->
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Expiration Date</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Expiration Date</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <#assign expMonth = "">
@@ -276,40 +276,40 @@ function shipBillAddr() {
                     <td colspan="3"><hr class="sepbar"/></td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tableheadtext">EFT Account Information</div></td>
+                    <td width="26%" align="right" valign="top"><div class="tableheadtext">EFT Account Information</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">&nbsp;</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Name on Account</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Name on Account</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Company Name on Account</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Company Name on Account</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount?if_exists}">
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Bank Name</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Bank Name</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="bankName" value="${eftAccount.bankName?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Routing Number</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Routing Number</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Account Type</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Account Type</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="accountType" class='selectBox'>
@@ -321,7 +321,7 @@ function shipBillAddr() {
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Account Number</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Account Number</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber?if_exists}">
@@ -339,19 +339,19 @@ function shipBillAddr() {
                     </tr>
                   </#if>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tableheadtext">Gift Card Information</div></td>
+                    <td width="26%" align="right" valign="top"><div class="tableheadtext">Gift Card Information</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">&nbsp;</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">Gift Card Number</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">Gift Card Number</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="20" maxlength="60" name="giftCardNumber" value="${giftCard.cardNumber?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=middle><div class="tabletext">PIN Number</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">PIN Number</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="10" maxlength="60" name="giftCardPin" value="${giftCard.pinNumber?if_exists}">
@@ -359,7 +359,7 @@ function shipBillAddr() {
                   </tr>
                   <#if paymentMethodType != "GC">
                     <tr>
-                      <td width="26%" align=right valign=middle><div class="tabletext">Amount To Use</div></td>
+                      <td width="26%" align="right" valign=middle><div class="tabletext">Amount To Use</div></td>
                       <td width="5">&nbsp;</td>
                       <td width="74%">
                         <input type="text" class="inputBox" size="5" maxlength="10" name="giftCardAmount" value="${giftCard.pinNumber?if_exists}">

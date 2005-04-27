@@ -35,11 +35,11 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 </#if>
 
 <#if inventoryItem?exists>
-  <form action="<@ofbizUrl>/UpdateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;" name="inventoryItemForm">
+  <form action="<@ofbizUrl>/UpdateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
   <table border="0" cellpadding="2" cellspacing="0">
-  <input type=hidden name="inventoryItemId" value="${inventoryItemId}">
+  <input type="hidden" name="inventoryItemId" value="${inventoryItemId}">
   <tr>
-    <td align=right><div class="tabletext">${uiLabelMap.ProductInventoryItemId}</div></td>
+    <td align="right"><div class="tabletext">${uiLabelMap.ProductInventoryItemId}</div></td>
     <td>&nbsp;</td>
     <td>
       <b>${inventoryItemId}</b> ${uiLabelMap.ProductNotModificationRecrationInventoryItem}
@@ -47,19 +47,19 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
   </tr>
 <#else>
   <#if inventoryItemId?exists>
-    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;" name="inventoryItemForm">
+    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
     <table border="0" cellpadding="2" cellspacing="0">
     <h3>${uiLabelMap.ProductNotFindInventoryItemWithId} "${inventoryItemId}".</h3>
   <#else>
-    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;" name="inventoryItemForm">
+    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
     <table border="0" cellpadding="2" cellspacing="0">
   </#if>
 </#if>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductInventoryItemTypeId}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductInventoryItemTypeId}</div></td>
         <td>&nbsp;</td>
         <td>
-          <select name="inventoryItemTypeId" size=1 class="selectBox">
+          <select name="inventoryItemTypeId" size="1" class="selectBox">
             <#if inventoryItemType?exists>
                 <option selected value="${inventoryItemType.inventoryItemTypeId}">${inventoryItemType.description}</option>
                 <option value="${inventoryItemType.inventoryItemTypeId}">----</option>
@@ -71,7 +71,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
         <td>&nbsp;</td>
         <td>
             <input type="text" name="productId" value="${inventoryItemData.productId?if_exists}" size="20" maxlength="20" class="inputBox">
@@ -81,13 +81,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.PartyPartyId}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.PartyPartyId}</div></td>
         <td>&nbsp;</td>
         <td><input type="text" name="partyId" value="${inventoryItemData.partyId?if_exists}" size="20" maxlength="20" class="inputBox"></td>
       </tr>
       <#if "SERIALIZED_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
 	      <tr>
-	        <td align=right><div class="tabletext">${uiLabelMap.ProductStatus}</div></td>
+	        <td align="right"><div class="tabletext">${uiLabelMap.ProductStatus}</div></td>
 	        <td>&nbsp;</td>
 	        <td>
 	          <select name="statusId" class="selectBox">
@@ -106,7 +106,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 	      </tr>
       </#if>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductDateReceived}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductDateReceived}</div></td>
         <td>&nbsp;</td>
         <td>
         	<input type="text" size="25" name="datetimeReceived" value="${(inventoryItemData.datetimeReceived.toString())?if_exists}" class="inputBox">
@@ -114,7 +114,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductExpireDate}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductExpireDate}</div></td>
         <td>&nbsp;</td>
         <td>
         	<input type="text" size="25" name="expireDate" value="${(inventoryItemData.expireDate.toString())?if_exists}" class="inputBox">
@@ -122,7 +122,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductFacilityContainer}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductFacilityContainer}</div></td>
         <td>&nbsp;</td>
         <td>
             <span class="tabletext">${uiLabelMap.ProductSelectFacility} : </span>
@@ -141,7 +141,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <#if (inventoryItem.facilityId)?has_content>
                 <a href="<@ofbizUrl>/EditFacility?facilityId=${inventoryItem.facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductEditFacility} ${inventoryItem.facilityId}]</a>
             </#if>
-            <br>
+            <br/>
             <span class="tabletext">${uiLabelMap.ProductOrEnterContainerId} :</span>
             <input type="text" name="containerId" value="${inventoryItemData.containerId?if_exists}" size="20" maxlength="20" class="inputBox"/>
          </td>
@@ -168,28 +168,28 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductLotId}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductLotId}</div></td>
         <td>&nbsp;</td>
         <td><input type="text" name="lotId" value="${inventoryItemData.lotId?if_exists}" size="20" maxlength="20" class="inputBox"></td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductUomId}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductUomId}</div></td>
         <td>&nbsp;</td>
         <td><input type="text" name="uomId" value="${inventoryItemData.uomId?if_exists}" size="20" maxlength="20" class="inputBox"></td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductBinNumber}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductBinNumber}</div></td>
         <td>&nbsp;</td>
         <td><input type="text" name="binNumber" value="${inventoryItemData.binNumber?if_exists}" size="20" maxlength="20" class="inputBox"></td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductComments}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductComments}</div></td>
         <td>&nbsp;</td>
         <td><input type="text" name="comments" value="${inventoryItemData.comments?if_exists}" size="60" maxlength="250" class="inputBox"></td>
       </tr>
     <#if "NON_SERIAL_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductAvailablePromiseQuantityHand}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductAvailablePromiseQuantityHand}</div></td>
         <td>&nbsp;</td>
         <td>
         	<div class="tabletext">${inventoryItemData.availableToPromiseTotal?if_exists} / ${inventoryItemData.quantityOnHandTotal?if_exists}</div>
@@ -198,13 +198,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>
     <#elseif "SERIALIZED_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductSerialNumber}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductSerialNumber}</div></td>
         <td>&nbsp;</td>
         <td><input type="text" name="serialNumber" value="${inventoryItemData.serialNumber?if_exists}" size="30" maxlength="60" class="inputBox"></td>
       </tr>
     <#elseif inventoryItem?exists>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductSerialAtpQoh}</div></td>
+        <td align="right"><div class="tabletext">${uiLabelMap.ProductSerialAtpQoh}</div></td>
         <td>&nbsp;</td>
         <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorType} [${inventoryItem.inventoryItemTypeId?if_exists}] ${uiLabelMap.ProductUnknownSpecifyType} .</div></td>
       </tr>
@@ -221,7 +221,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 	<div class="head2">${uiLabelMap.ProductPhysicalInventoryVariances}</div>
 	
 	${createPhysicalInventoryAndVarianceWrapper.renderFormString()}
-	<br>
+	<br/>
 	${viewPhysicalInventoryAndVarianceWrapper.renderFormString()}
 </#if>
 

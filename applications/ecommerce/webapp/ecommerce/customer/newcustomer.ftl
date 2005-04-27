@@ -24,7 +24,7 @@
 -->
 
 <#if getUsername>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
      lastFocusedName = null;
      function setLastFocused(formElement) {
          lastFocusedName = formElement.name;
@@ -295,7 +295,7 @@
                 <div class="form-label"><span class="tabletext">${uiLabelMap.CommonUsername}</span></div>
                 <div class="form-field">
                     <@fieldErrors fieldName="USERNAME"/>
-                    <div>Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);"/></div>
+                    <div>Use Email Address: <input type="checkbox" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);"/></div>
                     <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50" onFocus="clickUsername();" onchange="changeEmail();"/> *</div>
                 </div>
             </div>

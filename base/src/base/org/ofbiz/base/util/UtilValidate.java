@@ -36,33 +36,33 @@ import java.util.Collection;
  * @since      1.0
  *
  *
- * <br> SUMMARY
- * <br>
- * <br> This is a set of meethods for validating input. Functions are provided to validate:
- * <br>    - U.S. and international phone/fax numbers
- * <br>    - U.S. ZIP codes(5 or 9 digit postal codes)
- * <br>    - U.S. Postal Codes(2 letter abbreviations for names of states)
- * <br>    - U.S. Social Security Numbers(abbreviated as SSNs)
- * <br>    - email addresses
- * <br>	   - dates(entry of year, month, and day and validity of combined date)
- * <br>	   - credit card numbers
- * <br>
- * <br> Supporting utility functions validate that:
- * <br>    - characters are Letter, Digit, or LetterOrDigit
- * <br>    - strings are a Signed, Positive, Negative, Nonpositive, or Nonnegative integer
- * <br>    - strings are a Float or a SignedFloat
- * <br>    - strings are Alphabetic, Alphanumeric, or Whitespace
- * <br>    - strings contain an integer within a specified range
- * <br>
- * <br> Other utility functions are provided to:
- * <br>    - remove from a string characters which are/are not in a "bag" of selected characters
- * <br>	   - strip whitespace/leading whitespace from a string
- * <br>
- * <br> ==============================================================================
- * <br> NOTE: This code was adapted from the Netscape JavaScript form validation code, 
- * <br> usually found in "FormChek.js". Credit card verification functions Originally 
+ * <br/> SUMMARY
+ * <br/>
+ * <br/> This is a set of meethods for validating input. Functions are provided to validate:
+ * <br/>    - U.S. and international phone/fax numbers
+ * <br/>    - U.S. ZIP codes(5 or 9 digit postal codes)
+ * <br/>    - U.S. Postal Codes(2 letter abbreviations for names of states)
+ * <br/>    - U.S. Social Security Numbers(abbreviated as SSNs)
+ * <br/>    - email addresses
+ * <br/>	   - dates(entry of year, month, and day and validity of combined date)
+ * <br/>	   - credit card numbers
+ * <br/>
+ * <br/> Supporting utility functions validate that:
+ * <br/>    - characters are Letter, Digit, or LetterOrDigit
+ * <br/>    - strings are a Signed, Positive, Negative, Nonpositive, or Nonnegative integer
+ * <br/>    - strings are a Float or a SignedFloat
+ * <br/>    - strings are Alphabetic, Alphanumeric, or Whitespace
+ * <br/>    - strings contain an integer within a specified range
+ * <br/>
+ * <br/> Other utility functions are provided to:
+ * <br/>    - remove from a string characters which are/are not in a "bag" of selected characters
+ * <br/>	   - strip whitespace/leading whitespace from a string
+ * <br/>
+ * <br/> ==============================================================================
+ * <br/> NOTE: This code was adapted from the Netscape JavaScript form validation code, 
+ * <br/> usually found in "FormChek.js". Credit card verification functions Originally 
  * <br< included as Starter Application 1.0.0 in LivePayment.
- * <br> ==============================================================================
+ * <br/> ==============================================================================
  */
 public class UtilValidate {
     

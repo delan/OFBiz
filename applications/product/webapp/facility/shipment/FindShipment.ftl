@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,7 +26,7 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupShipments() {
     shipmentIdValue = document.lookupShipmentForm.shipmentId.value;
@@ -42,7 +42,7 @@ function lookupShipments() {
 
 <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>/FindShipment</@ofbizUrl>">
 <input type="hidden" name="lookupFlag" value="Y">
-<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -166,15 +166,15 @@ function lookupShipments() {
 
 
 <#if shipmentList?exists>
-<br>
-<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<br/>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td width="50%"><div class="boxhead">${uiLabelMap.ProductShipmentsFound}</div></td>
           <td width="50%">
-            <div class="boxhead" align=right>
+            <div class="boxhead" align="right">
               <#if 0 < shipmentList?size>             
                 <#if 0 < viewIndex>
                   <a href="<@ofbizUrl>/FindShipment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>

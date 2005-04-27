@@ -52,7 +52,7 @@
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
-              <tr align=left valign=bottom>
+              <tr align="left" valign=bottom>
                 <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
                 <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
                 <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>

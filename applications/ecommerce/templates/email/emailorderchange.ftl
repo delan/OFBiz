@@ -131,7 +131,7 @@
       <br/>
 
       <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->
         <tr>
           <td width='100%'>
@@ -327,7 +327,7 @@
     <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
     <#-- right side -->
     <td width='50%' valign='top' align='left'>
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
+      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
         <tr>
           <td width='100%'>
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -460,7 +460,7 @@
 <br/>
 
 <#-- order items -->
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>

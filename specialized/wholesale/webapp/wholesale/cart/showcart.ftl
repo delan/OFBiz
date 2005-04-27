@@ -25,7 +25,7 @@
  *@since      2.1
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
 function toggle(e) {
     e.checked = !e.checked;
@@ -88,7 +88,7 @@ function addToList() {
         <tr>
           <td>
   <#if (shoppingCartSize > 0)>
-    <form method="POST" action="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
       <input type="hidden" name="removeSelected" value="false">
       <input type="hidden" name="alwaysShowcart" value="checked">
       <input type="hidden" name="selectedItem" value="">
@@ -153,7 +153,7 @@ function addToList() {
                         <td valign=middle width="35%"><a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
                           <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${cartLine.getProduct().smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>" valign="bottom" height="50" class="imageborder" border="0"></a>
                         </td>
-                        <td valign=middle align=left>
+                        <td valign=middle align="left">
                           	<a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
                       			${cartLine.getName()?if_exists} <#--<#if cartLine.getProductFeatures()?has_content> - ${cartLine.getProductFeatures()} </#if>  --></a>
                    		</td>
@@ -269,7 +269,7 @@ function addToList() {
             <div class="tabletext"><b>${uiLabelMap.EcommerceCartTotal}:</b></div>
           </td>
           <td align="right" valign=bottom>
-            <hr size=1 class="sepbar">
+            <hr size="1" class="sepbar">
             <div class="tabletext"><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b></div>
           </td>
         </tr>
@@ -346,7 +346,7 @@ function addToList() {
         </tr>
       </table>
   <#else>
-    <div class="tabletext">${uiLabelMap.EcommerceYourShoppingCartEmpty}.</div><br>
+    <div class="tabletext">${uiLabelMap.EcommerceYourShoppingCartEmpty}.</div><br/>
     <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontext">[continue browsing]</a>
   </#if>
           </td>
@@ -379,7 +379,7 @@ function addToList() {
    <tr><td colspan="3"><hr class="sepbar"></td></tr>
 
    <tr>
-     <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">         
+     <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">         
           <td width="50%">
               <div class="tableheadtext">
                 <input type="text" class="inputBox" size="15" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
@@ -415,7 +415,7 @@ function addToList() {
           <tr>
             <td>
               <div class="tabletext">
-	            <form method="POST" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
+	            <form method="post" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
 	              <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
 	              <input type="submit" class="smallSubmit" value="Add Code">
 	              <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>

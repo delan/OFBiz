@@ -32,15 +32,15 @@
 <%@ page import="org.ofbiz.security.*" %>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='90%' >
+          <TD align="left" width='90%' >
             <div class='boxhead'>&nbsp;Party Manager Main Page</div>
           </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <TD align="right" width='10%'>&nbsp;</TD>
         </tr>
       </table>
     </TD>

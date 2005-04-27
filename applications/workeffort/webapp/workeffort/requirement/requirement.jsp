@@ -60,15 +60,15 @@
     if (requirementTypes != null && requirementTypes.size() > 0) pageContext.setAttribute("requirementTypes", requirementTypes);
 %>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
+          <TD align="left" width='40%' >
             <div class='boxhead'>&nbsp;Requirement Detail</div>
           </TD>
-          <TD align=right width='60%'>
+          <TD align="right" width='60%'>
             <A href='<ofbiz:url>/requirementlist</ofbiz:url>' class='lightbuttontext'>[Requirement&nbsp;List]</A>
             <ofbiz:if name="requirement">
               <A href='<ofbiz:url>/workefforts?requirementId=<%=requirementId%></ofbiz:url>' class='lightbuttontext'>[Requirement&nbsp;Tasks]</A>
@@ -89,12 +89,12 @@
         <tr>
           <td>
               <ofbiz:if name="requirement">
-                <form name="requirementForm" action="<ofbiz:url>/updaterequirement/<%=donePage%></ofbiz:url>" method=POST style='margin: 0;'>
+                <form name="requirementForm" action="<ofbiz:url>/updaterequirement/<%=donePage%></ofbiz:url>" method="post" style='margin: 0;'>
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='requirementId' value='<ofbiz:print attribute="requirementId"/>'>
               </ofbiz:if>
               <ofbiz:unless name="requirement">
-              <form name="requirementForm" action="<ofbiz:url>/createrequirement/<%=donePage%></ofbiz:url>" method=POST style='margin: 0;'>
+              <form name="requirementForm" action="<ofbiz:url>/createrequirement/<%=donePage%></ofbiz:url>" method="post" style='margin: 0;'>
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <ofbiz:if name="requirementId">
                     <DIV class='tabletext'>ERROR: Could not find Requirement with ID "<ofbiz:print attribute="requirementId"/>"</DIV>
@@ -108,14 +108,14 @@
 
               <ofbiz:if name="requirement">
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Requirement ID</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Requirement ID</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><span class="tabletext"><b><ofbiz:print attribute="requirementId"/></b></span></td>
                 </tr>
               </ofbiz:if>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Type</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Type</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <select name="requirementTypeId" class="selectBox">
@@ -127,37 +127,37 @@
                 </tr>
                                   
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Description</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='40' maxlength='255' name='description' value='<ofbiz:inputvalue field="description" entityAttr="requirement"/>'></td>
                 </tr>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Facility ID</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Facility ID</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='20' maxlength='20' name='facilityId' value='<ofbiz:inputvalue field="facilityId" entityAttr="requirement"/>'></td>
                 </tr>
                 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Product ID</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Product ID</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='20' maxlength='20' name='productId' value='<ofbiz:inputvalue field="productId" entityAttr="requirement" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
                 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Use Case</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Use Case</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><textarea name='story' class='textAreaBox' cols='50' rows='10'><ofbiz:inputvalue field="useCase" entityAttr="requirement"/></TEXTAREA>
                 </tr>
 
                  <tr>
-                  <td width='26%' align=right><div class='tabletext'>Reason</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Reason</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='50' maxlength='255' name='reason' value='<ofbiz:inputvalue field="reason" entityAttr="requirement"/>'></td>
                 </tr>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Required By Date/Time</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Required By Date/Time</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <input type='text' class='inputBox' size='30' maxlength='30' name='requiredByDate' value='<ofbiz:inputvalue field="requiredByDate" entityAttr="requirement"/>'>
@@ -167,26 +167,26 @@
 
                 <ofbiz:if name="requirement">
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Created Date/Time</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Created Date/Time</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><span class="tabletext"><ofbiz:inputvalue field="createdDate" entityAttr="requirement"/></span></td>
                 </tr>
                 </ofbiz:if>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Estimated Budget</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Estimated Budget</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='10' maxlength='30' name='estimatedBudget' value='<ofbiz:inputvalue field="estimatedBudget" entityAttr="requirement"/>'></td>
                 </tr>
 
                <tr>
-                  <td width='26%' align=right><div class='tabletext'>Quantity</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Quantity</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='5' maxlength='30' name='quantity' value='<ofbiz:inputvalue field="quantity" entityAttr="requirement" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
 
                 <tr>
-                  <td width='26%' align=right>
+                  <td width='26%' align="right">
                     <ofbiz:if name="requirement"><input type="submit" name="Update" value="Update"></ofbiz:if>
                     <ofbiz:unless name="requirement"><input type="submit" name="Create" value="Create"></ofbiz:unless>
                   </td>
@@ -204,13 +204,13 @@
 </TABLE>
 
 <ofbiz:if name="requirementRequests">
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
+          <TD align="left" width='40%' >
             <div class='boxhead'>&nbsp;Requirement Requests</div>
           </TD>        
         </tr>

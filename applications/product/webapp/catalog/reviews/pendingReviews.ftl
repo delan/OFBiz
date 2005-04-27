@@ -25,7 +25,7 @@
 -->
 
 <div class="head1">Pending Product Reviews</div>
-<br>
+<br/>
 
 <#if !pendingReviews?has_content>
   <div class="head3">No Reviews Pending Approval</div>

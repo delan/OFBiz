@@ -33,8 +33,8 @@
 <#else>
     <a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
 </#if>
-<br>
-<br>
+<br/>
+<br/>
 <#if productPriceRules?has_content>
   <table border="1" cellpadding="2" cellspacing="0">
     <tr>
@@ -73,9 +73,9 @@
 </#if>
 
 <br/>
-<form method="POST" action="<@ofbizUrl>/createProductPriceRule</@ofbizUrl>" style="margin: 0;">
+<form method="post" action="<@ofbizUrl>/createProductPriceRule</@ofbizUrl>" style="margin: 0;">
   <div class="head2">${uiLabelMap.ProductAddPriceRule}:</div>
-  <br>
-  ${uiLabelMap.ProductName}: <input type=text size="30" class="inputBox" name="ruleName">
-  <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
+  <br/>
+  ${uiLabelMap.ProductName}: <input type="text" size="30" class="inputBox" name="ruleName"/>
+  <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"/>
 </form>

@@ -25,7 +25,7 @@
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -61,7 +61,7 @@
 
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
-                <td width="26%" align=right valign=top><div class="tableheadtext">${uiLabelMap.OrderShippingAddress}</div></td>
+                <td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderShippingAddress}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">&nbsp;</td>
               </tr>

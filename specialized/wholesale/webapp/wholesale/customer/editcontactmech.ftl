@@ -72,7 +72,7 @@
       &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
-          <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyContactPurposes}</div></td>
+          <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyContactPurposes}</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
             <table border='0' cellspacing='1' bgcolor='black'>
@@ -94,7 +94,7 @@
               </#list>
               <#if purposeTypes?has_content>
               <tr>
-                <form method=POST action='<@ofbizUrl>/createPartyContactMechPurpose?contactMechId=${contactMechId}&DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' name='newpurposeform'>
+                <form method="post" action='<@ofbizUrl>/createPartyContactMechPurpose?contactMechId=${contactMechId}&DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' name='newpurposeform'>
                   <td bgcolor='white'>
                     <select name='contactMechPurposeTypeId' class='selectBox'>
                       <option></option>
@@ -111,48 +111,48 @@
           </td>
         </tr>
         <form method="post" action='<@ofbizUrl>/${requestName}</@ofbizUrl>' name="editcontactmechform">
-        <input type=hidden name="DONE_PAGE" value='${donePage}'>
-        <input type=hidden name="contactMechId" value='${contactMechId}'>
+        <input type="hidden" name="DONE_PAGE" value='${donePage}'>
+        <input type="hidden" name="contactMechId" value='${contactMechId}'>
     </#if>
 
   <#if contactMechTypeId = "POSTAL_ADDRESS">
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyToName}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyToName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="toName" value="${postalAddressData.toName?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyAttentionName}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyAttentionName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="attnName" value="${postalAddressData.attnName?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyAddressLine1}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyAddressLine1}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="30" name="address1" value="${postalAddressData.address1?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyAddressLine2}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyAddressLine2}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class='inputBox' size="30" maxlength="30" name="address2" value="${postalAddressData.address2?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyCity}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyCity}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class='inputBox' size="30" maxlength="30" name="city" value="${postalAddressData.city?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyState}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyState}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="stateProvinceGeoId" class='selectBox'>
@@ -163,14 +163,14 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyZipCode}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyZipCode}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="12" maxlength="10" name="postalCode" value="${postalAddressData.postalCode?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyCountry}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyCountry}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="countryGeoId" class='selectBox'>
@@ -181,7 +181,7 @@
     </tr>
   <#elseif contactMechTypeId = "TELECOM_NUMBER">
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyPhoneNumber}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyPhoneNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <div class="tabletext">
@@ -193,13 +193,13 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext"></div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext"></div></td>
       <td width="5">&nbsp;</td>
       <td><div class="tabletext">[${uiLabelMap.PartyCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]</div></td>
     </tr>
   <#elseif contactMechTypeId = "EMAIL_ADDRESS">
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyEmailAddress}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyEmailAddress}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class='inputBox' size="60" maxlength="255" name="emailAddress" value="<#if tryEntity>${contactMech.infoString?if_exists}<#else>${requestParameters.emailAddress?if_exists}</#if>">
@@ -207,7 +207,7 @@
     </tr>
   <#else>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${contactMechType.description?if_exists}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${contactMechType.description?if_exists}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class='inputBox' size="60" maxlength="255" name="infoString" value="${contactMechData.infoString?if_exists}">
@@ -215,7 +215,7 @@
     </tr>
   </#if>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyAllowSolicitation}?</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyAllowSolicitation}?</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="allowSolicitation" class='selectBox'>

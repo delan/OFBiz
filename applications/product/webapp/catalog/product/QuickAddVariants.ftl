@@ -62,7 +62,7 @@ function clickAll(e) {
     <br/>
     <div style="float: right;">
         <div class="tabletext"><b>Add Variant Products:</b></div>
-        <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="POST" style="margin: 0;" name="addVariantsToVirtual">
+        <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="post" style="margin: 0;" name="addVariantsToVirtual">
             <input type="hidden" name="productId" value="${productId}"/>
             <div><span class="tabletext">Variant Product IDs:</span></div>
             <div><textarea name="variantProductIdsBag" rows="6" cols="20"></textarea></div>
@@ -73,8 +73,8 @@ function clickAll(e) {
     <#if (featureTypes.size() > 0)>
         <table border="1" cellpadding="2" cellspacing="0">
                 <#assign rowCount = 0>
-                <FORM method=POST action="<@ofbizUrl>/QuickAddChosenVariants</@ofbizUrl>" name="selectAllForm">
-                <input type=hidden name="productId" value="${productId}">
+                <FORM method="post" action="<@ofbizUrl>/QuickAddChosenVariants</@ofbizUrl>" name="selectAllForm">
+                <input type="hidden" name="productId" value="${productId}">
                 <input type="hidden" name="_useRowSubmit" value="Y">
                 <input type="hidden" name="_checkGlobalScope" value="Y">
 
@@ -100,9 +100,9 @@ function clickAll(e) {
                                             <#assign productFeatureIds = productFeatureIds + "|" + productFeatureAndAppl.productFeatureId>
 			                </td>
 			            </#list>
-                                    <input type=hidden name="productFeatureIds_o_${rowCount}" value="${productFeatureIds}">
+                                    <input type="hidden" name="productFeatureIds_o_${rowCount}" value="${productFeatureIds}">
 			            <td>
-			                <input type=text size="20" maxlength="20" name="productVariantId_o_${rowCount}" value="">
+			                <input type="text" size="20" maxlength="20" name="productVariantId_o_${rowCount}" value="">
 			            </td>
 			            <td>
 			                <div class="tabletext">&nbsp;

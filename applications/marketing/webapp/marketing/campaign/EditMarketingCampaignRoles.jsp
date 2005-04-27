@@ -83,7 +83,7 @@
 <ofbiz:if name="marketingCampaignRoles" size="0">
   <table border="0" width="100%" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <%if (viewIndex > 0) {%>
           <a href="<ofbiz:url><%="/EditMarketingCampaignRoles?marketingCampaignId=" + marketingCampaignId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
@@ -121,7 +121,7 @@
 <ofbiz:if name="marketingCampaignRoles" size="0">
   <table border="0" width="100%" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <%if (viewIndex > 0) {%>
           <a href="<ofbiz:url><%="/EditMarketingCampaignRoles?marketingCampaignId=" + marketingCampaignId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
@@ -148,12 +148,12 @@
                 <option value='<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>'><ofbiz:entityfield attribute="roleType" field="description"/><%--[<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>]--%></option>
             </ofbiz:iterator>
         </select>
-        Party&nbsp;ID:&nbsp;<input type=text size='20' name='partyId' class='inputBox'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
+        Party&nbsp;ID:&nbsp;<input type="text" size='20' name='partyId' class='inputBox'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 
 </form>
 <%}%>
-<br>
+<br/>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("MARKETING_VIEW" or "MARKETING_ADMIN" needed)</h3>

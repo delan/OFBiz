@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -405,7 +405,7 @@ public class UtilHttp {
                     }
 
                     if (valueStr != null && valueStr.length() > 0) {
-                        if (buf.length() > 0) buf.append('&');
+                        if (buf.length() > 0) buf.append("&amp;");
                         try {
                             buf.append(URLEncoder.encode(name, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
@@ -422,6 +422,29 @@ public class UtilHttp {
             }
         }
         return buf.toString();
+    }
+    
+    public static String encodeAmpersands(String htmlString) {
+        StringBuffer htmlBuffer = new StringBuffer(htmlString);
+        int ampLoc = -1;
+        while ((ampLoc = htmlBuffer.indexOf("&", ampLoc + 1)) != -1) {
+            //NOTE: this should work fine, but if it doesn't could try making sure all characters between & and ; are letters, that would qualify as an entity
+            
+            // found ampersand, is it already and entity? if not change it to &amp;
+            int semiLoc = htmlBuffer.indexOf(";", ampLoc);
+            if (semiLoc != -1) {
+                // found a semi colon, if it has another & or an = before it, don't count it as an entity, otherwise it may be an entity, so skip it
+                int eqLoc = htmlBuffer.indexOf("=", ampLoc);
+                int amp2Loc = htmlBuffer.indexOf("&", ampLoc + 1);
+                if ((eqLoc == -1 || eqLoc > semiLoc) && (amp2Loc == -1 || amp2Loc > semiLoc)) {
+                    continue;
+                }
+            }
+            
+            // at this point not an entity, no substitute with a &amp;
+            htmlBuffer.insert(ampLoc + 1, "amp;");
+        }
+        return htmlBuffer.toString();
     }
 
     public static String setResponseBrowserProxyNoCache(HttpServletRequest request, HttpServletResponse response) {

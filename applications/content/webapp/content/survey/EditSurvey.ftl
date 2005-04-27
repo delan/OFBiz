@@ -28,7 +28,7 @@
 <#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
   ${pages.get("/survey/SurveyTabBar.ftl")}
   <div class="head1">Edit Survey - <span class="head2">ID: ${requestParameters.surveyId?if_exists}</span></div>
-  <br>
+  <br/>
 
   ${editSurveyWrapper.renderFormString()}
 <#else>

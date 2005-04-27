@@ -63,11 +63,11 @@
 </#if>
 
 
-<table border=0 width="100%" cellspacing="0" cellpadding="0">
-    <tr valign=top>
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+    <tr valign="top">
         <td>
             <#-- ProductionRun Update sub-screen -->
-            <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+            <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
                 <tr>
                     <td>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -114,7 +114,7 @@
         <#if routingTaskId?has_content || actionForm=="AddRoutingTask">
 			<td> &nbsp; </td>
 			<td>
-				<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+				<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
 				  <tr><td>	
 					<table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
 						<tr>
@@ -135,7 +135,7 @@
 
 			<td> &nbsp; </td>
 			<td>
-				<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+				<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
 				  <tr><td>	
 					<table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
 						<tr>
@@ -153,10 +153,10 @@
 		</#if>	
 		</tr>		   		
 	</table>   		
-	<br>
+	<br/>
 	
 			  <#-- List Of ProductionRun RoutingTasks  sub-screen -->
-	<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+	<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
 	  <tr><td>	
 		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
 			<tr>
@@ -172,7 +172,7 @@
 	</table>   		
 
 			  <#-- List Of ProductionRun Components  sub-screen -->
-	<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+	<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
 	  <tr><td>	
 		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
 			<tr>

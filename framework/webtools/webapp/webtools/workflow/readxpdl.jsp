@@ -65,9 +65,9 @@
 <div>This page is used to read and import XPDL files into the workflow process repository.</div>
 
 <%if(security.hasPermission("WORKFLOW_MAINT", session)) {%>
-  <FORM method=POST action='<ofbiz:url>/readxpdl</ofbiz:url>'>
-    XPDL Filename or URL: <INPUT name='XPDL_LOCATION' class='inputBox' type=text size='60' value='<%=UtilFormatOut.checkNull(xpdlLoc)%>'> Is URL?:<INPUT type=checkbox name='XPDL_IS_URL' <%=xpdlIsUrl?"checked":""%>><BR>
-    Import/Update to DB?:<INPUT type=checkbox name='XPDL_IMPORT'> <INPUT type=submit class=smallSubmit value='View'>
+  <FORM method="post" action='<ofbiz:url>/readxpdl</ofbiz:url>'>
+    XPDL Filename or URL: <INPUT name='XPDL_LOCATION' class='inputBox' type="text" size='60' value='<%=UtilFormatOut.checkNull(xpdlLoc)%>'> Is URL?:<INPUT type="checkbox" name='XPDL_IS_URL' <%=xpdlIsUrl?"checked":""%>><BR>
+    Import/Update to DB?:<INPUT type="checkbox" name='XPDL_IMPORT'> <INPUT type="submit" class=smallSubmit value='View'>
   </FORM>
 
   <hr>

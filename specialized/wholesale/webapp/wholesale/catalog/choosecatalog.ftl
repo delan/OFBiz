@@ -34,7 +34,7 @@
       <TD width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
-            <td valign=middle align=center>
+            <td valign=middle align="center">
               <div class="boxhead">${uiLabelMap.ProductCatalogLabel}</div>
             </td>
           </tr>
@@ -45,8 +45,8 @@
       <TD width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
-            <td align=center>
-              <form name="choosecatalogform" method="POST" action="<@ofbizUrl>/category</@ofbizUrl>" style='margin: 0;'>
+            <td align="center">
+              <form name="choosecatalogform" method="post" action="<@ofbizUrl>/category</@ofbizUrl>" style='margin: 0;'>
                 <SELECT name='CURRENT_CATALOG_ID' class='selectBox'>
                   <OPTION value='${currentCatalogId}'>${currentCatalogName}</OPTION>
                   <OPTION value='${currentCatalogId}'></OPTION>
@@ -63,6 +63,6 @@
       </TD>
     </TR>
   </TABLE>
-  <br>
+  <br/>
 </#if>
 

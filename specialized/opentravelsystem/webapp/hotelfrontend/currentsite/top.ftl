@@ -31,7 +31,7 @@
                 (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>/autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
               </td></tr>
           <#else>
-              <tr><td width="90%" align=center class="link">${uiLabelMap.CommonWelcome}!</TD></tr>
+              <tr><td width="90%" align="center" class="link">${uiLabelMap.CommonWelcome}!</TD></tr>
           </#if>
 						
 							<tr>

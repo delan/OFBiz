@@ -18,7 +18,7 @@ private String makeTable(Map map){
        while (it.hasNext()){
             String key = (String)it.next();
             String value = map.get(key).toString(); 
-            result.append("<TR><TD width='26%' align=right><div class='tabletext'>")
+            result.append("<TR><TD width='26%' align="right"><div class='tabletext'>")
                     .append(key)
                     .append("</div></TD><TD  width='74%'>")
                     .append(value)
@@ -54,11 +54,11 @@ private String makeTable(Map map){
         <TD>
         <table border=1><tr><td><%=makeTable((Map)pageContext.getAttribute("applicationContext"))%></td></tr></table>
     </TD></TR> 
-<br><br>
+<br/><br/>
     ApplicationID: ----- <%=applicationId%>
-    <br><br>
+    <br/><br/>
     workEffortId ID: ----- <%=workEffortId%>
-    <br><br>
+    <br/><br/>
     <table>
     <form name='complete' action='complete_application' method='get'>
         <% for ( Iterator it = ((Map)pageContext.getAttribute("applicationResultSignature")).keySet().iterator(); it.hasNext();){
@@ -74,5 +74,5 @@ private String makeTable(Map map){
         <tr><td colspan=2><INPUT type='submit' name='complete' value='complete'></td></tr>
    </form></table>
 
-    <br>
-<br><br>
+    <br/>
+<br/><br/>

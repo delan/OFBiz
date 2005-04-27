@@ -1,7 +1,7 @@
 /*
  * $Id$
  * 
- * Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -77,7 +77,7 @@ public class PromoServices {
                 return ServiceUtil.returnError("Could not create a bank of promo codes", null, null, createProductPromoCodeMap);
             }
             bankOfNumbers.append((String) createProductPromoCodeMap.get("productPromoCodeId"));
-            bankOfNumbers.append("<br>");
+            bankOfNumbers.append("<br/>");
         }
 
         return ServiceUtil.returnSuccess(bankOfNumbers.toString());

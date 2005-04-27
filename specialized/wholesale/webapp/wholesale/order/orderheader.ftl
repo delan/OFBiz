@@ -115,10 +115,10 @@
           </td>
         </tr>
       </table>
-      <br>
+      <br/>
       
       <#if !orderHeader?has_content || orderPaymentPreferences?has_content || billingAccount?has_content>
-      <table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->
         <tr>
           <td width='100%'>
@@ -175,8 +175,8 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              ${creditCard.nameOnCard}<br>
-                              <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br></#if>
+                              ${creditCard.nameOnCard}<br/>
+                              <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br/></#if>
                               ${formattedCardNumber}
                             </div>
                           </td>
@@ -190,9 +190,9 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              ${eftAccount.nameOnAccount?if_exists}<br>
-                              <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
-                              ${requestAttributes.uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                              ${eftAccount.nameOnAccount?if_exists}<br/>
+                              <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br/></#if>
+                              ${requestAttributes.uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
                               ${requestAttributes.uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
                             </div>
                           </td>
@@ -239,7 +239,7 @@
     <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
     <#-- right side -->
     <td width='50%' valign='top' align='left'>
-      <table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>        
+      <table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>        
         <tr>
           <td width='100%'>
             <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -271,12 +271,12 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if shippingAddress.toName?has_content><b>${requestAttributes.uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br></#if>
-                            <#if shippingAddress.attnName?has_content><b>${requestAttributes.uiLabelMap.PartyAddrAttnName}:</b> ${shippingAddress.attnName}<br></#if>
-                            ${shippingAddress.address1}<br>
-                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>                            
+                            <#if shippingAddress.toName?has_content><b>${requestAttributes.uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br/></#if>
+                            <#if shippingAddress.attnName?has_content><b>${requestAttributes.uiLabelMap.PartyAddrAttnName}:</b> ${shippingAddress.attnName}<br/></#if>
+                            ${shippingAddress.address1}<br/>
+                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>                            
                             ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
-                            ${shippingAddress.postalCode?if_exists}<br>
+                            ${shippingAddress.postalCode?if_exists}<br/>
                             ${shippingAddress.countryGeoId?if_exists}
                           </div>
                         </td>
@@ -292,7 +292,7 @@
                         <div class="tabletext">
                           <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
                           ${shipMethDescription?if_exists}
-                          <#if shippingAccount?exists><br>${requestAttributes.uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
+                          <#if shippingAccount?exists><br/>${requestAttributes.uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
                         </div>
                       </td>
                     </tr>

@@ -26,12 +26,12 @@
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td valign=middle align=center>
+          <td valign=middle align="center">
             <div class="boxhead">${uiLabelMap.ProductSearchCatalog}</div>
           </td>
         </tr>
@@ -42,8 +42,8 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-          <td align=center>
-            <form name="keywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
+          <td align="center">
+            <form name="keywordsearchform" method="post" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
               <input type='hidden' name="VIEW_SIZE" value="10">
               <div class='tabletext'>
                 <input type='text' class='inputBox' name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}">
@@ -64,8 +64,8 @@
                 <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
               </#if>
               <div class='tabletext'>
-              	    ${uiLabelMap.CommonAny}<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
-              	    ${uiLabelMap.CommonAll}<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>
+              	    ${uiLabelMap.CommonAny}<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked="checked"</#if>>
+              	    ${uiLabelMap.CommonAll}<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked="checked"</#if>>
               	    &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
               	</div>
             </form>
@@ -78,8 +78,8 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-          <td align=center>
-            <form name="advancedsearchform" method="POST" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style='margin: 0;'>
+          <td align="center">
+            <form name="advancedsearchform" method="post" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style='margin: 0;'>
               <#if 0 < otherSearchProdCatalogCategories?size>
                 <div class='tabletext'>${uiLabelMap.ProductAdvancedSearchIn}: </div>
                 <div class='tabletext'>

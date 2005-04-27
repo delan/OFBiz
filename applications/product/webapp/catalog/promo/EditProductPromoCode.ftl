@@ -36,7 +36,7 @@
         <div class="tabletext"><a href="<@ofbizUrl>/deleteProductPromoCodeEmail?productPromoCodeId=${productPromoCodeEmail.productPromoCodeId}&emailAddress=${productPromoCodeEmail.emailAddress}</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${productPromoCodeEmail.emailAddress}</div>
     </#list>
     <div class="tabletext">
-        <form method="POST" action="<@ofbizUrl>/createProductPromoCodeEmail</@ofbizUrl>" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>/createProductPromoCodeEmail</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId?if_exists}"/>
             ${uiLabelMap.ProductAddEmail} : <input type="text" size="40" name="emailAddress" class="inputBox">
             <input type="submit" value="${uiLabelMap.CommonAdd}">
@@ -48,7 +48,7 @@
         <div class="tabletext"><a href="<@ofbizUrl>/deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&partyId=${productPromoCodeParty.partyId}</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${productPromoCodeParty.partyId}</div>
     </#list>
     <div class="tabletext">
-        <form method="POST" action="<@ofbizUrl>/createProductPromoCodeParty</@ofbizUrl>" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>/createProductPromoCodeParty</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId?if_exists}"/>
             ${uiLabelMap.ProductAddPartyId} : <input type="text" size="10" name="partyId" class="inputBox">
             <input type="submit" value="${uiLabelMap.CommonAdd}">

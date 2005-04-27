@@ -31,7 +31,7 @@
         <div class="boxhead">${uiLabelMap.ProductChooseCatalog}</div>
     </div>
     <div class="screenlet-body" style="text-align: center;">
-        <form name="choosecatalogform" method="POST" action="<@ofbizUrl>choosecatalog</@ofbizUrl>" style='margin: 0;'>
+        <form name="choosecatalogform" method="post" action="<@ofbizUrl>choosecatalog</@ofbizUrl>" style='margin: 0;'>
           <select name='CURRENT_CATALOG_ID' class='selectBox'>
             <option value='${currentCatalogId}'>${currentCatalogName}</OPTION>
             <option value='${currentCatalogId}'></OPTION>

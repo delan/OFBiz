@@ -30,7 +30,7 @@
 
 <#-- virtual product javascript -->
 ${virtualJavaScript?if_exists}
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
     var detailImageUrl = null;
      function setAddProductId(name) {
@@ -408,7 +408,7 @@ ${virtualJavaScript?if_exists}
       </div>
       <#-- Prefill first select box (virtual products only) -->
       <#if variantTree?exists && 0 < variantTree.size()>
-        <script language="JavaScript">eval("list" + "${featureOrderFirst}" + "()");</script>
+        <script language="JavaScript" type="text/javascript">eval("list" + "${featureOrderFirst}" + "()");</script>
       </#if>
 
       <#-- Swatches (virtual products only) -->

@@ -38,8 +38,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <#else>
         <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
     </#if>
-    <br>
-    <br>
+    <br/>
+    <br/>
     
     <#if facilityId?exists && facility?exists>
         <p class="head2">${uiLabelMap.ProductGroupMemberMaintenance}</p>
@@ -47,7 +47,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <#if (facilityGroupMembers.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
             <tr>
-            <td align=right>
+            <td align="right">
                 <b>
                 <#if (viewIndex > 0)>
                 <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -88,15 +88,15 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <td align="center">
                     <#assign hasExpired = false>
                     <#if (facilityGroupMember.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupMember.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                    <FORM method=POST action="<@ofbizUrl>/updateGroupToFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
-                        <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
-                        <input type=hidden name="facilityId" value="${(facilityGroupMember.facilityId)?if_exists}">
-                        <input type=hidden name="facilityGroupId" value="${(facilityGroupMember.facilityGroupId)?if_exists}">
-                        <input type=hidden name="fromDate" value="${(facilityGroupMember.fromDate)?if_exists}">
-                        <input type=text size="25" name="thruDate" value="${(facilityGroupMember.thruDate)?if_exists}" class="inputBox" <#if hasExpired>style="color: red;</#if>">
+                    <FORM method="post" action="<@ofbizUrl>/updateGroupToFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
+                        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
+                        <input type="hidden" name="facilityId" value="${(facilityGroupMember.facilityId)?if_exists}">
+                        <input type="hidden" name="facilityGroupId" value="${(facilityGroupMember.facilityGroupId)?if_exists}">
+                        <input type="hidden" name="fromDate" value="${(facilityGroupMember.fromDate)?if_exists}">
+                        <input type="text" size="25" name="thruDate" value="${(facilityGroupMember.thruDate)?if_exists}" class="inputBox" <#if hasExpired>style="color: red;</#if>">
                         <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(facilityGroupMember.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-                        <input type=text size="5" name="sequenceNum" value="${(facilityGroupMember.sequenceNum)?if_exists}" class="inputBox">           
-                        <INPUT type=submit value="Update" style="font-size: x-small;">
+                        <input type="text" size="5" name="sequenceNum" value="${(facilityGroupMember.sequenceNum)?if_exists}" class="inputBox">           
+                        <INPUT type="submit" value="Update" style="font-size: x-small;">
                     </FORM>
                 </td>
                 <td align="center">
@@ -111,7 +111,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <#if (facilityGroupMembers.size() > 0)>
             <table border="0" width="100%" cellpadding="2">
                 <tr>
-                <td align=right>
+                <td align="right">
                     <b>
                     <#if (viewIndex > 0)>
                     <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -128,48 +128,48 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             </table>
         </#if>
         
-        <br>
-        <form method="POST" action="<@ofbizUrl>/addGroupToFacility</@ofbizUrl>" style="margin: 0;" name="addFacilityGroupMemberForm">
+        <br/>
+        <form method="post" action="<@ofbizUrl>/addGroupToFacility</@ofbizUrl>" style="margin: 0;" name="addFacilityGroupMemberForm">
         <input type="hidden" name="facilityId" value="${facilityId}">
         <input type="hidden" name="useValues" value="true">
-        <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">${uiLabelMap.ProductAddFacilityGroupMember}:</div>
         <div class="tabletext">
             Facility Group ID: 
-            <select name="facilityGroupId" size=1 class="selectBox">
+            <select name="facilityGroupId" size="1" class="selectBox">
                 <#list facilityGroups as facilityGroup>
                     <option value="${(facilityGroup.facilityGroupId)?if_exists}">${(facilityGroup.facilityGroupName)?if_exists}</option>
                 </#list>
             </select>
-            From Date: <input type=text size="25" class="inputBox" name="fromDate">
+            From Date: <input type="text" size="25" class="inputBox" name="fromDate">
             <a href="javascript:call_cal(document.addFacilityGroupMemberForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type="submit" value="Add">
         </div>
         </form>
         
         <!-- TO DO IMPLEMENT THIS
-        <br>
-        <form method="POST" action="<@ofbizUrl>/expireAllFacilityGroupMembers</@ofbizUrl>" style="margin: 0;">
+        <br/>
+        <form method="post" action="<@ofbizUrl>/expireAllFacilityGroupMembers</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="facilityGroupId" value="${facilityGroupId?if_exists}">
         <input type="hidden" name="useValues" value="true">
-        <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">Expire All Facility Members:</div>
         <div class="tabletext">
-            Optional Expiration Date: <input type=text size="20" name="thruDate">
+            Optional Expiration Date: <input type="text" size="20" name="thruDate">
             <input type="submit" value="Expire All">
         </div>
         </form>
-        <br>
-        <form method="POST" action="<@ofbizUrl>/removeExpiredFacilityGroupMembers</@ofbizUrl>" style="margin: 0;">
+        <br/>
+        <form method="post" action="<@ofbizUrl>/removeExpiredFacilityGroupMembers</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="facilityGroupId" value="${facilityGroupId?if_exists}">
         <input type="hidden" name="useValues" value="true">
-        <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">Remove Expired Facility Members:</div>
         <div class="tabletext">
-            Optional Expired Before Date: <input type=text size="20" name="validDate">
+            Optional Expired Before Date: <input type="text" size="20" name="validDate">
             <input type="submit" value="Remove Expired">
         </div>
         </form>

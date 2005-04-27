@@ -36,15 +36,15 @@
 <%String workEffortId = request.getParameter("workEffortId");%>
 <%GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");%>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
+          <TD align="left" width='40%' >
             <div class='boxhead'>&nbsp;Task Note</div>
           </TD>
-          <TD align=right width='60%'>
+          <TD align="right" width='60%'>
 <%--            <A href='<ofbiz:url>/mytasks</ofbiz:url>' class='lightbuttontext'>[Task&nbsp;List]</A>
             <A href='<ofbiz:url>/task</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Task]</A>--%>
           </TD>
@@ -57,20 +57,20 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <form name='noteForm' action="<ofbiz:url>/savetasknote</ofbiz:url>" method=POST style='margin: 0;'>
+              <form name='noteForm' action="<ofbiz:url>/savetasknote</ofbiz:url>" method="post" style='margin: 0;'>
               <table border='0' cellpadding='2' cellspacing='0'>
                 <input type='hidden' name='workEffortId' value='<%=workEffortId%>'>
                 <input type='hidden' name='noteParty' value='<%=userLogin.getString("partyId")%>'>
 
                 <tr>
-                  <td width='26%' align=right valign=top><div class='tabletext'>Note</div></td>
+                  <td width='26%' align="right" valign="top"><div class='tabletext'>Note</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><TEXTAREA name='noteInfo' cols='50' rows='10'></TEXTAREA>
                 </tr>
 
 
                 <tr>
-                  <td width='26%' align=right>
+                  <td width='26%' align="right">
                     <input type="submit" name="Save" value="Save">
                   </td>
                   <td>&nbsp;</td>
@@ -84,7 +84,7 @@
     </TD>
   </TR>
 </TABLE>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
   document.noteForm.noteInfo.focus();
 //-->

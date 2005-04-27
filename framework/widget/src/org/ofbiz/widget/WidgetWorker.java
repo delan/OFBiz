@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,6 +28,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
@@ -39,28 +40,29 @@ public class WidgetWorker {
     public WidgetWorker () {}
 
     public static void buildHyperlinkUrl(StringBuffer buffer, String requestName, String targetType, HttpServletRequest request, HttpServletResponse response, Map context) {
-
+        String localRequestName = UtilHttp.encodeAmpersands(requestName);
+        
         if ("intra-app".equals(targetType)) {
-            appendOfbizUrl(buffer, "/" + requestName, request, response);
+            appendOfbizUrl(buffer, "/" + localRequestName, request, response);
         } else if ("inter-app".equals(targetType)) {
-            String fullTarget = requestName;
+            String fullTarget = localRequestName;
             buffer.append(fullTarget);
             String externalLoginKey = (String) request.getAttribute("externalLoginKey");
             if (UtilValidate.isNotEmpty(externalLoginKey)) {
                 if (fullTarget.indexOf('?') == -1) {
                     buffer.append('?');
                 } else {
-                    buffer.append('&');
+                    buffer.append("&amp;");
                 }
                 buffer.append("externalLoginKey=");
                 buffer.append(externalLoginKey);
             }
         } else if ("content".equals(targetType)) {
-            appendContentUrl(buffer, requestName, request);
+            appendContentUrl(buffer, localRequestName, request);
         } else if ("plain".equals(targetType)) {
-            buffer.append(requestName);
+            buffer.append(localRequestName);
         } else {
-            buffer.append(requestName);
+            buffer.append(localRequestName);
         }
 
     

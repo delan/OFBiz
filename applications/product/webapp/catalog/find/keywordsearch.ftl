@@ -33,13 +33,13 @@
 <div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[Refine Search]</a></div>
 
 <#if !productIds?has_content>
-  <br><div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
+  <br/><div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
 </#if>
 
 <#if productIds?has_content>
 <table border="0" width="100%" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -57,7 +57,7 @@
 </#if>
 
 <#if productIds?has_content>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
     function checkProductToBagTextArea(field, idValue) {
         fullValue = idValue + "\n";
         tempStr = document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value;
@@ -83,7 +83,7 @@
       <#assign product = delegator.findByPrimaryKey("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", productId))>
       <tr>
         <td>
-          <input type="checkbox" name="selectResult${productId_index}" onChange="checkProductToBagTextArea(this, '${productId}');"/>
+          <input type="checkbox" name="selectResult${productId_index}" onchange="checkProductToBagTextArea(this, '${productId}');"/>
           <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${productId}] ${(product.internalName)?if_exists}</a>
         </td>
       </tr>
@@ -95,7 +95,7 @@
 <#if productIds?has_content>
 <table border="0" width="100%" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -120,7 +120,7 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="POST" action="<@ofbizUrl>/searchRemoveFromCategory</@ofbizUrl>"
+<form method="post" action="<@ofbizUrl>/searchRemoveFromCategory</@ofbizUrl>"
   <b>Remove Results From </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <option value="">- Any Category -</option>
@@ -133,14 +133,14 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
        </#list>
     </select>
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Remove" class="smallSubmit"><br>
+  <input type="submit" value="Remove" class="smallSubmit"><br/>
 </form>
 </div>
 
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="POST" action="<@ofbizUrl>/searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
+<form method="post" action="<@ofbizUrl>/searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
   <b>Expire Results From </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <option value="">- Any Category -</option>
@@ -154,14 +154,14 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
     </select>
   Thru<input type="text" size="25" name="thruDate" class="inputBox"><a href="javascript:call_cal(document.searchExpireFromCategory.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Expire" class="smallSubmit"><br>
+  <input type="submit" value="Expire" class="smallSubmit"><br/>
 </form>
 </div>
 
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="POST" action="<@ofbizUrl>/searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
+<form method="post" action="<@ofbizUrl>/searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
   <b>Add Results to </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <#list productCategories as productCategory>
@@ -174,19 +174,19 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
     </select>
   From<input type="text" size="25" name="fromDate" class="inputBox"><a href="javascript:call_cal(document.searchAddToCategory.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Add to Category" class="smallSubmit"><br>
+  <input type="submit" value="Add to Category" class="smallSubmit"><br/>
 </form>
 </div>
 
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="POST" action="<@ofbizUrl>/searchAddFeature</@ofbizUrl>" name="searchAddFeature">
-  <b>Add Feature to Results:</b><br>
+<form method="post" action="<@ofbizUrl>/searchAddFeature</@ofbizUrl>" name="searchAddFeature">
+  <b>Add Feature to Results:</b><br/>
   Feature ID<input type="text" size="10" name="productFeatureId" value="" class="inputBox">
   From<input type="tex"t size="25" name="fromDate" class="inputBox"><a href="javascript:call_cal(document.searchAddFeature.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a> 
   Thru<input type="text" size="25" name="thruDate" class="inputBox"><a href="javascript:call_cal(document.searchAddFeature.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-  <br>
+  <br/>
   Amount<input type="text" size="5" name="amount" value="" class="inputBox">
   Sequence<input type="text" size="5" name="sequenceNum" value="" class="inputBox">
   Application Type
@@ -201,18 +201,18 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
        </#list>
   </select>
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Add Feature" class="smallSubmit"><br>
+  <input type="submit" value="Add Feature" class="smallSubmit"><br/>
 </form>
 </div>
 
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="POST" action="<@ofbizUrl>/searchRemoveFeature</@ofbizUrl>" name="searchRemoveFeature">
-  <b>Remove Feature from Results:</b><br>
+<form method="post" action="<@ofbizUrl>/searchRemoveFeature</@ofbizUrl>" name="searchRemoveFeature">
+  <b>Remove Feature from Results:</b><br/>
   Feature ID<input type="text" size="10" name="productFeatureId" value="" class="inputBox">
   <input type="hidden" name="clearSearch" value="N">
-  <input type="submit" value="Remove Feature" class="smallSubmit"><br>
+  <input type="submit" value="Remove Feature" class="smallSubmit"><br/>
 </form>
 </div>
 </#if>

@@ -68,7 +68,7 @@ function doPublish() {
 </script>
 
     <!--              Name update section -->
-    <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="POST" style="margin: 0;" name="editProduct">
+    <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" style="margin: 0;" name="editProduct">
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <tr>
                 <input type="hidden" name="productId" value="${productId?if_exists}">
@@ -89,7 +89,7 @@ function doPublish() {
             <tr>
                 <td colspan="2"><span class="head2">${uiLabelMap.SelectableFeatures}</span></td>
                 <td colspan="2">Type
-                  <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="POST" style="margin: 0;" name="selectableFeatureTypeSelector">
+                  <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeatureTypeSelector">
                     <input type="hidden" name="productId" value="${product.productId?if_exists}">
                     <select name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
                         <option value="~~any~~">${uiLabelMap.AnyFeatureType}
@@ -114,7 +114,7 @@ function doPublish() {
                 <td>DL</td>
             </tr>
 
-            <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="POST" style="margin: 0;" name="selectableFeature">
+            <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeature">
             <input type="hidden" name="productId" value="${product.productId?if_exists}">
             <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)?if_exists}">
 
@@ -160,7 +160,7 @@ function doPublish() {
         <hr>
     </#if>
     <#if (product.isVariant)?if_exists == "Y">
-        <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method=POST style="margin: 0;" name="distFeature">
+        <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" style="margin: 0;" name="distFeature">
             <input type="hidden" name="productId" value="${product.productId?if_exists}">
             <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <tr>
@@ -188,7 +188,7 @@ function doPublish() {
 
     <!-- ***************************************************** Shipping dimensions section -->
     <hr>
-    <form action="<@ofbizUrl>updateProductQuickAdminShipping</@ofbizUrl>" method="POST" style="margin: 0;" name="updateShipping">
+    <form action="<@ofbizUrl>updateProductQuickAdminShipping</@ofbizUrl>" method="post" style="margin: 0;" name="updateShipping">
         <input type="hidden" name="productId" value="${product.productId?if_exists}">
         <input type="hidden" name="heightUomId" value="LEN_in">
         <input type="hidden" name="widthUomId" value="LEN_in">
@@ -232,7 +232,7 @@ function doPublish() {
             <#assign idx = idx + 1/>
         </#list>
             <tr>
-                <td colspan=10 align=right><input name="applyToAll" type="submit" value="${uiLabelMap.ApplyToAll}">
+                <td colspan=10 align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ApplyToAll}">
                 &nbsp;&nbsp;<input name="updateShipping" type="submit" value="${uiLabelMap.UpdateShipping}"></td>
             </tr>
     <#else>
@@ -252,7 +252,7 @@ function doPublish() {
                 <td><a class="buttontext" href="<@ofbizUrl>/EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${thrudate?if_exists}</a></td>
             </tr>
             <tr>
-                <td colspan=10 align=right><input type="submit" value="${uiLabelMap.UpdateShipping}"></td>
+                <td colspan=10 align="right"><input type="submit" value="${uiLabelMap.UpdateShipping}"></td>
             </tr>
     </#if>
 
@@ -265,7 +265,7 @@ function doPublish() {
     <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
     <tr>
     <td>
-        <form method="POST" action="<@ofbizUrl>/quickAdminApplyFeatureToProduct</@ofbizUrl>" style="margin: 0;" name="addFeatureById">
+        <form method="post" action="<@ofbizUrl>/quickAdminApplyFeatureToProduct</@ofbizUrl>" style="margin: 0;" name="addFeatureById">
         <input type="hidden" name="productId" value="${product.productId?if_exists}">
         <input type="hidden" name="productFeatureApplTypeId" value="STANDARD_FEATURE">
         <input type="hidden" name="fromDate" value="${nowTimestampString}">
@@ -286,7 +286,7 @@ function doPublish() {
                     </td>
                 </tr>
             </#list>
-                <tr><td colspan=2 align=right><input type=submit value="${uiLabelMap.AddFeatures}"></td></tr>
+                <tr><td colspan=2 align="right"><input type="submit" value="${uiLabelMap.AddFeatures}"></td></tr>
 
         </table>
         </form>
@@ -310,9 +310,9 @@ function doPublish() {
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <tr>
                 <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">
-                <input type=hidden name="productFeatureTypeId" value="${(productFeatureTypeId)?if_exists}">
-                <input type=hidden name="productId" value="${product.productId?if_exists}">
-                <td align=right>${uiLabelMap.FeatureTypes}</td>
+                <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)?if_exists}">
+                <input type="hidden" name="productId" value="${product.productId?if_exists}">
+                <td align="right">${uiLabelMap.FeatureTypes}</td>
                 <td>
                     <select multiple name=addFeatureTypeId>
                         <#list featureTypes as featureType>
@@ -320,7 +320,7 @@ function doPublish() {
                         </#list>
                     </select>&nbsp;
                 </td>
-                <td><input type=submit value="${uiLabelMap.AddFeatureType}"></td>
+                <td><input type="submit" value="${uiLabelMap.AddFeatureType}"></td>
                 </form>
             </tr>
         </table>
@@ -346,7 +346,7 @@ function doPublish() {
                 </td>
             </tr>
         </table>
-    <td valign=top>
+    <td valign="top">
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <#list productCategoryMembers as prodCatMemb>
                 <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory")/>
@@ -359,7 +359,7 @@ function doPublish() {
     </td>
     </tr>
     <tr>
-        <td colspan=2 align=right><input type=submit value="${uiLabelMap.UpdateCategories}"></td>
+        <td colspan=2 align="right"><input type="submit" value="${uiLabelMap.UpdateCategories}"></td>
     </tr>
     </table>
     </form>
@@ -372,10 +372,10 @@ function doPublish() {
     <#if (showPublish == "true")>
         <tr>
             <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
-            <input type=hidden name="productId" value="${product.productId?if_exists}">
-            <input type=hidden name="categoryId" value="${allCategoryId?if_exists}">
+            <input type="hidden" name="productId" value="${product.productId?if_exists}">
+            <input type="hidden" name="categoryId" value="${allCategoryId?if_exists}">
             <td>
-                <input type=text size="25" name="fromDate" class="inputBox">
+                <input type="text" size="25" name="fromDate" class="inputBox">
                 <a href="javascript:call_cal(document.publish.fromDate, '${nowTimestampString}');">
                     <img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar">
                 </a>
@@ -386,15 +386,15 @@ function doPublish() {
     <#else>
         <tr>
             <form action="<@ofbizUrl>quickAdminUnPublish</@ofbizUrl>" name="unpublish">
-                <input type=hidden name="productId" value="${product.productId?if_exists}">
-                <input type=hidden name="productCategoryId" value="${allCategoryId?if_exists}">
+                <input type="hidden" name="productId" value="${product.productId?if_exists}">
+                <input type="hidden" name="productCategoryId" value="${allCategoryId?if_exists}">
             <td>
-                <input type=text size="25" name="thruDate" class="inputBox">
+                <input type="text" size="25" name="thruDate" class="inputBox">
                 <a href="javascript:call_cal(document.unpublish.thruDate, '${nowTimestampString}');">
                     <img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar">
                 </a>
             </td>
-            <td><input type=submit value="${uiLabelMap.RemoveFromSite}"></td>
+            <td><input type="submit" value="${uiLabelMap.RemoveFromSite}"></td>
             </form>
         </tr>
     </#if>

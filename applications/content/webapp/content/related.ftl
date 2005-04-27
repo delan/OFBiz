@@ -28,21 +28,21 @@
 ${pages.get(page.getProperty("subMenu"))}
 
 <div class="head1">${page.getProperty("entityName")}</div>
-<br>
+<br/>
 <#if addWrapper?exists >
-<br>
+<br/>
 <div class="head1">${singleTitle?default("Create New")}</div>
 ${addWrapper.renderFormString()}
 </#if>
 <#if listWrapper?exists >
-<br>
+<br/>
 ${listWrapper.renderFormString()}
 </#if>
 <#if editWrapper?exists >
-<br>
+<br/>
 <div class="head1">Edit</div>
 ${editWrapper.renderFormString()}
-<br>
+<br/>
 </#if>
 
 <#--

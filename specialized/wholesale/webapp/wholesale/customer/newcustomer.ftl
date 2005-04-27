@@ -24,12 +24,12 @@
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <p class="head1">${uiLabelMap.PartyRequestNewAccount}</p>
-<br>
+<br/>
 <p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
 
 <form method="post" action="<@ofbizUrl>/createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style='margin:0;'>
 <input type="hidden" name="productStoreId" value="${productStoreId}">
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -137,9 +137,9 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -223,9 +223,9 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -272,9 +272,9 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -343,9 +343,9 @@
 <input type="image" src="/images/spacer.gif" onClick="javascript:document.newuserform.submit();">
 </form>
 
-<br><div class="commentary">Fields marked with (*) are required.</div>
+<br/><div class="commentary">Fields marked with (*) are required.</div>
 
 &nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
 &nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-<br>
-<br>
+<br/>
+<br/>

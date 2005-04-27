@@ -341,7 +341,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
 
         writer.write("<table border=\"0\" width=\"100%\" cellpadding=\"2\">\n");
         writer.write("  <tr>\n");
-        writer.write("    <td align=right>\n");
+        writer.write("    <td align=\"right\">\n");
         writer.write("      <b>\n");
         if (viewIndex > 0) {
             writer.write(" <a href=\"");

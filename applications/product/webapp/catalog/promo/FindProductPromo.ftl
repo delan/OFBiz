@@ -35,12 +35,12 @@
     </#if>
 </div>
 <div class="tabletext">
-    <form method="POST" action="<@ofbizUrl>/EditProductPromoCode</@ofbizUrl>" style="margin: 0;">
-        Promotion Code: <input type=text size="10" name="productPromoCodeId" class="inputBox">
+    <form method="post" action="<@ofbizUrl>/EditProductPromoCode</@ofbizUrl>" style="margin: 0;">
+        Promotion Code: <input type="text" size="10" name="productPromoCodeId" class="inputBox">
         <input type="submit" value="${uiLabelMap.CommonEdit}">
     </form>
 </div>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
     <tr>
         <td><div class="tabletext"><b>${uiLabelMap.ProductPromoNameId}</b></div></td>

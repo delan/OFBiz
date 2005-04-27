@@ -65,7 +65,7 @@
 
 <ofbiz:unless name="lookupGroup">
   <p class="head1">Add New Group Information</p>
-    <FORM method=POST action='<ofbiz:url>/createPartyGroup/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editgroupform">
+    <FORM method="post" action='<ofbiz:url>/createPartyGroup/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editgroupform">
     <%
         // remove session attribute "partyId" in case PartyGroup can not be created und returns to same page with "partyId" set
         request.getSession().removeAttribute("partyId");
@@ -73,7 +73,7 @@
 </ofbiz:unless>
 <ofbiz:if name="lookupGroup">
   <p class="head1">Edit Group Information</p>
-    <FORM method=POST action='<ofbiz:url>/updatePartyGroup/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editgroupform">
+    <FORM method="post" action='<ofbiz:url>/updatePartyGroup/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editgroupform">
 </ofbiz:if>
 
 <% if (partyId != null) { %>
@@ -85,14 +85,14 @@
 
 <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">Group name</div></td>
-      <td width="74%" align=left>
+      <td width="26%" align="right"><div class="tabletext">Group name</div></td>
+      <td width="74%" align="left">
         <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="groupName" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Party Group (Sub-) Type</div></td>
-      <td width="74%" align=left>
+      <td width="26%" align="right"><div class="tabletext">Party Group (Sub-) Type</div></td>
+      <td width="74%" align="left">
         <select name="partyTypeId" class="selectBox">
           <ofbiz:if name="lookupGroup">
               <option value='<ofbiz:entityfield attribute="lookupPartyType" field="partyTypeId"/>' selected><ofbiz:entityfield attribute="lookupPartyType" field="description"/></option>
@@ -112,14 +112,14 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Federal Tax Number</div></td>
-      <td width="74%" align=left>
+      <td width="26%" align="right"><div class="tabletext">Federal Tax Number</div></td>
+      <td width="74%" align="left">
         <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="federalTaxId" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Comment</div></td>
-      <td width="74%" align=left>
+      <td width="26%" align="right"><div class="tabletext">Comment</div></td>
+      <td width="74%" align="left">
         <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="comments" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>

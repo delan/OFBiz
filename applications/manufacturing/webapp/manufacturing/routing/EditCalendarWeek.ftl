@@ -31,7 +31,7 @@
 
 		<#if calendarWeek?has_content>
   			<div class="head1">${uiLabelMap.ManufacturingUpdateCalendarWeek} </div>
-			<br>
+			<br/>
   			<form name="calendarWeekform" method="post" action="<@ofbizUrl>/UpdateCalendarWeek</@ofbizUrl>">
 			<table width="90%" border="0" cellpadding="2" cellspacing="0">
 			  <tr>
@@ -41,7 +41,7 @@
       			<td width="74%" valign="top" colspan="5"><div class="tabletext"><b>${calendarWeek.calendarWeekId?if_exists}</b> (${uiLabelMap.CommonNotModifRecreat})</td>
 		<#else>
   			<div class="head1">${uiLabelMap.ManufacturingCreateCalendarWeek} </div>
-			<br>
+			<br/>
   			<form name="calendarWeekform" method="post" action="<@ofbizUrl>/CreateCalendarWeek</@ofbizUrl>">
 			<table width="90%" border="0" cellpadding="2" cellspacing="0">
 			  <tr>
@@ -125,7 +125,7 @@
     </tr>
 			
 		</table>
-	<br>
+	<br/>
 
 
 	

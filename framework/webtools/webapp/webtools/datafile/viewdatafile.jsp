@@ -68,11 +68,11 @@
 <div>This page is used to view data from data files parsed by the configurable data file parser.</div>
 
 <%if(security.hasPermission("DATAFILE_MAINT", session)) {%>
-  <FORM method=POST action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
-    Data Filename or URL: <INPUT name='DATAFILE_LOCATION' type=text class='inputBox' size='60' value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'> Is URL?:<INPUT type=checkbox name='DATAFILE_IS_URL' <%=dataFileIsUrl?"checked":""%>><BR>
-    Definition Filename or URL: <INPUT name='DEFINITION_LOCATION' class='inputBox' type=text size='60' value='<%=UtilFormatOut.checkNull(definitionLoc)%>'> Is URL?:<INPUT type=checkbox name='DEFINITION_IS_URL' <%=definitionIsUrl?"checked":""%>><BR>
-    Data File Definition Name: <INPUT name='DEFINITION_NAME' type=text class='inputBox' size='30' value='<%=UtilFormatOut.checkNull(definitionName)%>'><BR>
-    <INPUT type=submit value='View'>
+  <FORM method="post" action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
+    Data Filename or URL: <INPUT name='DATAFILE_LOCATION' type="text" class='inputBox' size='60' value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'> Is URL?:<INPUT type="checkbox" name='DATAFILE_IS_URL' <%=dataFileIsUrl?"checked":""%>><BR>
+    Definition Filename or URL: <INPUT name='DEFINITION_LOCATION' class='inputBox' type="text" size='60' value='<%=UtilFormatOut.checkNull(definitionLoc)%>'> Is URL?:<INPUT type="checkbox" name='DEFINITION_IS_URL' <%=definitionIsUrl?"checked":""%>><BR>
+    Data File Definition Name: <INPUT name='DEFINITION_NAME' type="text" class='inputBox' size='30' value='<%=UtilFormatOut.checkNull(definitionName)%>'><BR>
+    <INPUT type="submit" value='View'>
   </FORM>
 
   <hr>
@@ -88,14 +88,14 @@
   <%}%>
 
   <%if(dataFile != null && modelDataFile != null) {%>
-    <FORM method=POST action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
-      <INPUT name='DATAFILE_LOCATION' type=hidden value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'>
-      <%=dataFileIsUrl?"<INPUT type=hidden name='DATAFILE_IS_URL' value='true'>":""%>
-      <INPUT name='DEFINITION_LOCATION' type=hidden value='<%=UtilFormatOut.checkNull(definitionLoc)%>'>
-      <%=definitionIsUrl?"<INPUT type=hidden name='DEFINITION_IS_URL' value='true'>":""%>
-      <INPUT name='DEFINITION_NAME' type=hidden value='<%=UtilFormatOut.checkNull(definitionName)%>'>
-      Save to file: <INPUT name='DATAFILE_SAVE' type=text size='60' value='<%=UtilFormatOut.checkNull(dataFileSave)%>'>
-      <INPUT type=submit value='Save'>
+    <FORM method="post" action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
+      <INPUT name='DATAFILE_LOCATION' type="hidden" value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'>
+      <%=dataFileIsUrl?"<INPUT type="hidden" name='DATAFILE_IS_URL' value='true'>":""%>
+      <INPUT name='DEFINITION_LOCATION' type="hidden" value='<%=UtilFormatOut.checkNull(definitionLoc)%>'>
+      <%=definitionIsUrl?"<INPUT type="hidden" name='DEFINITION_IS_URL' value='true'>":""%>
+      <INPUT name='DEFINITION_NAME' type="hidden" value='<%=UtilFormatOut.checkNull(definitionName)%>'>
+      Save to file: <INPUT name='DATAFILE_SAVE' type="text" size='60' value='<%=UtilFormatOut.checkNull(dataFileSave)%>'>
+      <INPUT type="submit" value='Save'>
     </FORM>
     <BR>
 

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -44,7 +44,7 @@
     </#if>
 
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
+      <td width="26%" align="right" valign='top'><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
@@ -66,14 +66,14 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingPINNumber}</div></td>
+      <td width="26%" align="right" valign='top'><div class="tabletext">${uiLabelMap.AccountingPINNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="password" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingExpirationDate}</div></td>
+      <td width="26%" align="right" valign='top'><div class="tabletext">${uiLabelMap.AccountingExpirationDate}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#assign expMonth = "">

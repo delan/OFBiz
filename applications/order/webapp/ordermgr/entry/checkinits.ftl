@@ -33,7 +33,7 @@
 
 <!-- Sales Order Entry -->
 <#if !(updateParty?exists) | shoppingCart.getOrderType() = "SALES_ORDER">
-<table border=0 align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td>
       <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -130,7 +130,7 @@
 
 <!-- Purchase Order Entry -->
 <#if !(updateParty?exists) | shoppingCart.getOrderType() = "PURCHASE_ORDER">
-<table border=0 align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td>
       <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>

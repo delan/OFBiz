@@ -26,7 +26,7 @@
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -76,7 +76,7 @@
 <#if shoppingList?has_content>
     <#if canView>
 
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -167,7 +167,7 @@
 
 <#if childShoppingListDatas?has_content>
 <br/>
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -229,7 +229,7 @@
 </#if>
 
 <br/>
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -276,7 +276,7 @@
                           </div>
                         </td>
                         <td nowrap align="center">
-						  <form method="POST" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+						  <form method="post" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
 						    <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
 						    <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
                             <div class='tabletext'>
@@ -302,7 +302,7 @@
                             <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_?if_exists>
                             <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_?if_exists>
                             <br/>
-                            <form method="POST" action="<@ofbizUrl>${addToCartAction}</@ofbizUrl>" name='listreplform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+                            <form method="post" action="<@ofbizUrl>${addToCartAction}</@ofbizUrl>" name='listreplform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
                               <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
                               <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
                               <input type="hidden" name="quantity" value="${shoppingListItem.quantity}">
@@ -348,7 +348,7 @@
 </TABLE>
 
 <br/>
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>

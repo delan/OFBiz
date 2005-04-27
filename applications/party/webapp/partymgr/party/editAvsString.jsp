@@ -34,7 +34,7 @@
   <input type="hidden" name="partyId" value="<%=partyId%>">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">AVS String</div></td>
+      <td width="26%" align="right"><div class="tabletext">AVS String</div></td>
       <td width="74%">
         <ofbiz:if name="avsOverride">
           <input type="text" class="inputBox" name="avsDeclineString" size="40" value="<%=avsOverride.getString("avsDeclineString")%>">*

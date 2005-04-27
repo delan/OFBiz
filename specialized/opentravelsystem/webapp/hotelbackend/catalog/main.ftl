@@ -24,12 +24,12 @@
  *@since      2.1
 -->
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='90%' >
+          <TD align="left" width='90%' >
             <div class='boxhead'>&nbsp;Catalog maintenance.</div>
           </TD>        
         </tr>
@@ -42,7 +42,7 @@
         <tr>
           <td>
             <DIV class='tabletext'><br/><br/><br/><br/><br/><br/><br/><br/>
-            <center><h2> ${prodCatalogId?if_exists} Catalog Section</h2><br><br>Here you can maintain your categories, products and fixed assets</center></DIV>  
+            <center><h2> ${prodCatalogId?if_exists} Catalog Section</h2><br/><br/>Here you can maintain your categories, products and fixed assets</center></DIV>  
             <br/><br/><br/><br/><br/><br/><br/><br/>
           </td>
         </tr>

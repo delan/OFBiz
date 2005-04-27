@@ -36,10 +36,10 @@
 <%String fontColor = "Black";%>
 
 <p class="head1">Create New Customer</p>
-<br>
+<br/>
 <form method="post" action="<ofbiz:url>/createcustomer<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="newuserform" style='margin:0;'>
 	
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -146,9 +146,9 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -232,9 +232,9 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -281,9 +281,9 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -357,9 +357,9 @@
 
 </form>
 
-<br><div class="commentary">Fields marked with (*) are required.</div>
+<br/><div class="commentary">Fields marked with (*) are required.</div>
 
 &nbsp;&nbsp;<a href="<ofbiz:url>/checkLogin/main</ofbiz:url>" class="buttontext">[Back]</a>
 &nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[Save]</a>
-<br>
-<br>
+<br/>
+<br/>

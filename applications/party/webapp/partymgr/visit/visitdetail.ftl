@@ -28,7 +28,7 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
   <div class='head1'>${uiLabelMap.PartyVisitDetail}</div>
-  <br>
+  <br/>
 
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
@@ -139,9 +139,9 @@
     </tr>
   </table>
 
-  <br>
+  <br/>
   <div class="head1">${uiLabelMap.PartyHitTracker}</div>
-  <br>
+  <br/>
 
   <#if serverHits?has_content>
     <table border="0" width="100%" cellpadding="2">
@@ -225,9 +225,9 @@
   </#if>
 
   <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
-    <br>
+    <br/>
     <div class="head1">${uiLabelMap.PartyPagePushFollowing}</div>
-    <br>
+    <br/>
 
     <table border="0" cellpadding="5" cellspacing="5">
       <form name="pushPage" method="get" action="<@ofbizUrl>/pushPage</@ofbizUrl>">

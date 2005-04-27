@@ -40,18 +40,18 @@
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name='paymentMethodId' value='${paymentMethodId}'>
+        <input type="hidden" name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCompanyNameOnCard}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingCompanyNameOnCard}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${creditCardData.companyNameOnCard?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Prefix on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Prefix on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="titleOnCard" class="selectBox">
@@ -64,28 +64,28 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">First Name on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">First Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCardData.firstNameOnCard)?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Middle Name on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Middle Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCardData.middleNameOnCard)?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Last Name on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Last Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCardData.lastNameOnCard)?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Suffix on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Suffix on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="suffixOnCard" class="selectBox">
@@ -102,7 +102,7 @@
     </tr>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCardType}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingCardType}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="cardType" class='selectBox'>
@@ -113,7 +113,7 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#if creditCardData?has_content>
@@ -131,14 +131,14 @@
       *</td>
     </tr>
     <#--<tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCardSecurityCode}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingCardSecurityCode}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="5" maxlength="10" name="cardSecurityCode" value="${creditCardData.cardSecurityCode?if_exists}">
       </td>
     </tr>-->
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingExpirationDate}</div></td>        
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingExpirationDate}</div></td>        
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#assign expMonth = "">
@@ -161,7 +161,7 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyBillingAddress}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyBillingAddress}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
@@ -220,7 +220,7 @@
             <#assign partyContactMech = postalAddressInfo.partyContactMech>
             <tr>
               <td align="right" valign="top" width="1%">
-                <input type=radio name='contactMechId' value='${contactMech.contactMechId}'>
+                <input type="radio" name='contactMechId' value='${contactMech.contactMechId}'>
               </td>
               <td align="left" valign="middle" width="80%">
                 <#list partyContactMechPurposes as partyContactMechPurpose>

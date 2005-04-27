@@ -40,16 +40,16 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </#if>
     
     <#if facilityId?exists && !(facilityLocation?exists)> 
-        <form action="<@ofbizUrl>/CreateFacilityLocation</@ofbizUrl>" method="POST" style="margin: 0;">
+        <form action="<@ofbizUrl>/CreateFacilityLocation</@ofbizUrl>" method="post" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="facilityId" value="${facilityId}">  
     <#elseif facilityLocation?exists>
-        <form action="<@ofbizUrl>/UpdateFacilityLocation</@ofbizUrl>" method="POST" style="margin: 0;">
+        <form action="<@ofbizUrl>/UpdateFacilityLocation</@ofbizUrl>" method="post" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
         <input type="hidden" name="locationSeqId" value="${locationSeqId}">
         <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductFacilityId}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductFacilityId}</div></td>
             <td>&nbsp;</td>
             <td>
             <b>${facilityId?if_exists}</b>
@@ -68,7 +68,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     
     <#if facilityId?exists>      
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductType}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductType}</div></td>
             <td>&nbsp;</td>
             <td width="74%">
                 <select name="locationTypeEnumId">
@@ -84,33 +84,33 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             </td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonArea}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.CommonArea}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="areaId" value="${(facilityLocation.areaId)?if_exists}" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductAisle}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductAisle}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="aisleId" value="${(facilityLocation.aisleId)?if_exists}" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductSection}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductSection}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="sectionId" value="${(facilityLocation.sectionId)?if_exists}" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductLevel}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductLevel}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="levelId" value="${(facilityLocation.levelId)?if_exists}" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductPosition}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductPosition}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="positionId" value="${(facilityLocation.positionId)?if_exists}" size="19" maxlength="20"></td>
         </tr>    
         <tr>
             <td colspan="2">&nbsp;</td>
-            <td colspan="1" align=left><input type="submit" value="Update"></td>
+            <td colspan="1" align="left"><input type="submit" value="Update"></td>
         </tr>
     </table>
     </form>
@@ -130,7 +130,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 	        <tr valign="middle">
 	            <td><div class="tabletext"><#if product?exists>${product.internalName}</#if>[${productFacilityLocation.productId}]</div></td>
 	            <td align="center">
-	                <FORM method=POST action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
+	                <FORM method="post" action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
 	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
 	                    <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
 	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.facilityId)?if_exists}">
@@ -146,16 +146,16 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 	        </tr>
         </#list>
         </table>
-        <br>
-        <form method="POST" action="<@ofbizUrl>/createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
+        <br/>
+        <form method="post" action="<@ofbizUrl>/createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
             <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
             <input type="hidden" name="locationSeqId" value="${locationSeqId?if_exists}">
             <input type="hidden" name="useValues" value="true">
             <div class="head2">${uiLabelMap.ProductAddProduct}:</div>
             <div class="tabletext">
-                ${uiLabelMap.ProductProductId}:&nbsp;<input type=text size="10" name="productId" class="inputBox">
-                ${uiLabelMap.ProductMinimumStock}:&nbsp;<input type=text size="10" name="minimumStock" class="inputBox">
-                ${uiLabelMap.ProductMoveQuantity}:&nbsp;<input type=text size="10" name="moveQuantity" class="inputBox">
+                ${uiLabelMap.ProductProductId}:&nbsp;<input type="text" size="10" name="productId" class="inputBox">
+                ${uiLabelMap.ProductMinimumStock}:&nbsp;<input type="text" size="10" name="minimumStock" class="inputBox">
+                ${uiLabelMap.ProductMoveQuantity}:&nbsp;<input type="text" size="10" name="moveQuantity" class="inputBox">
                 <input type="submit" value="Add" style="font-size: x-small;">
             </div>
         </form>

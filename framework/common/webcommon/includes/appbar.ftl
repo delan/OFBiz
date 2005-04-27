@@ -55,13 +55,13 @@
               <td height="15" class="${class.col}">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td class="${class.left}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
+                    <td class="${class.left}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"/></a></td>
                     <td nowrap="nowrap" class="${class.center}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}">${display.title}</a></td>
-                    <td class="${class.right}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
+                    <td class="${class.right}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"/></a></td>
                   </tr>
                   <#if thisApp != contextPath>
-                    <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
-                    <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
+                    <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"/></td></tr>
+                    <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"/></td></tr>
                   </#if>
                 </table>
               </td>
@@ -71,7 +71,7 @@
           <td width="100%" class="appbarresize">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td>               
+                <td class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"/></td>
               </tr>               
             </table>
           </td>           

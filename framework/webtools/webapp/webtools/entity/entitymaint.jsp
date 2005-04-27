@@ -54,7 +54,7 @@
 %>
 <TABLE cellpadding='1' cellspacing='1' border='0'>
   <TR>
-    <TD valign=top>
+    <TD valign="top">
         <TABLE cellpadding='1' cellspacing='1' border='0'>
           <TR class='viewOneTR1'>
             <TD>Entity&nbsp;Name</TD>
@@ -69,7 +69,7 @@
             <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
               <TD><div class='tabletext' style='FONT-SIZE: xx-small;'><%=entity.getEntityName()%></div></TD>
               <%if (entity instanceof ModelViewEntity) {%>
-                    <TD colspan='3' align=center><div class='tabletext' style='FONT-SIZE: xx-small;'>View Entity</div></TD>
+                    <TD colspan='3' align="center"><div class='tabletext' style='FONT-SIZE: xx-small;'>View Entity</div></TD>
               <%} else {%>
                   <%if (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(entity.getPlainTableName(), "_CREATE", session)) {%>
                     <TD><a href='<ofbiz:url>/ViewGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Crt</a></TD>
@@ -91,7 +91,7 @@
               <%colSize += colSize;%>
               </TABLE>
             </TD>
-            <TD valign=top>
+            <TD valign="top">
               <TABLE cellpadding='1' cellspacing='1' border='0'>
               <%rowColor = "";%>
               <TR class='viewOneTR1'>

@@ -22,7 +22,7 @@
  *@author     Si Chen (sichen@sinfoniasolutions.com)
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>

@@ -84,12 +84,12 @@ function toggleBillingAccount(box) {
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
-        <table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+        <table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
           <tr>
             <td width='100%'>
               <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left>
+                  <td valign=middle align="left">
                     <div class="boxhead">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
                   </td>
                 </tr>
@@ -97,7 +97,7 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <tr style='height: 100%;'>
-            <td valign=top height='100%'>
+            <td valign="top" height='100%'>
               <table border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
                   <td>
@@ -214,7 +214,7 @@ function toggleBillingAccount(box) {
                             </b>
                           </div>
                           <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
-                          <br>
+                          <br/>
                           <div class="tabletext">${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                           <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getOrderAdditionalEmails()?if_exists}'>
                         </td>

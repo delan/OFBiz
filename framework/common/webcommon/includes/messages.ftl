@@ -66,20 +66,20 @@
 
 <#-- display the error messages -->
 <#if errorMessageList?has_content>
-<div class="errorMessage">${uiLabelMap.CommonFollowingErrorsOccurred}:</div><br>
+<div class="errorMessage">${uiLabelMap.CommonFollowingErrorsOccurred}:</div><br/>
 <ul>
   <#list errorMessageList as errorMsg>
     <li class="errorMessage">${errorMsg}</li>
   </#list>
 </ul>
-<br>
+<br/>
 </#if>
 <#if eventMessageList?has_content>
-<div class="eventMessage">${uiLabelMap.CommonFollowingOccurred}:</div><br>
+<div class="eventMessage">${uiLabelMap.CommonFollowingOccurred}:</div><br/>
 <ul>
   <#list eventMessageList as eventMsg>
     <li class="eventMessage">${eventMsg}</li>
   </#list>
 </ul>
-<br>
+<br/>
 </#if>

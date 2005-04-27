@@ -25,5 +25,5 @@
 -->
 
 ${pages.get("/entry/order/orderheader.ftl")}
-<br>
+<br/>
 ${pages.get("/entry/order/orderitems.ftl")}

@@ -26,7 +26,7 @@
   <div class="head1">${uiLabelMap.ManufacturingCreateProductionRun}</div>
   <form name="productionRunform" method="post" action="<@ofbizUrl>/CreateProductionRunGo</@ofbizUrl>">
 
-  <br>
+  <br/>
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td width='26%' align='right' valign='top'>

@@ -46,7 +46,7 @@
 <% if (serviceName == null) { %>
   <div class="head2">Schedule A Job</div>
   <div class="tabletext">Step 1: Service & Recurrence Information</div>
-  <br>
+  <br/>
 
   <FORM name="scheduleForm" method='POST' action='<ofbiz:url>/scheduleJob</ofbiz:url>'>
     <table border='0'>
@@ -111,7 +111,7 @@
 <%} else {%>
   <div class="head2">Schedule A Job</div>
   <div class="tabletext">Step 2: Service Parameters</div>
-  <br>
+  <br/>
 
   <FORM name="scheduleForm" method='POST' action='<ofbiz:url>/scheduleService</ofbiz:url>'>
     <% 

@@ -30,24 +30,24 @@
   <input type="hidden" name="partyId" value="<%=partyId%>">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">UserLogin ID</div></td>
+      <td width="26%" align="right"><div class="tabletext">UserLogin ID</div></td>
       <td width="74%">
         <input type="text" name="userLoginId" class="inputBox" size="20">
       *</td>
     <tr>
-      <td width="26%" align=right><div class="tabletext">New Password</div></td>
+      <td width="26%" align="right"><div class="tabletext">New Password</div></td>
       <td width="74%">
         <input type="password" name="currentPassword" class="inputBox" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">New Password Verify</div></td>
+      <td width="26%" align="right"><div class="tabletext">New Password Verify</div></td>
       <td width="74%">
         <input type="password" name="currentPasswordVerify" class="inputBox" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
+      <td width="26%" align="right"><div class="tabletext">Password Hint</div></td>
       <td width="74%">
         <input type="text" size="40" maxlength="100" class="inputBox" <ofbiz:inputvalue field="passwordHint" entityAttr="userLogin" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>

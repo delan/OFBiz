@@ -1,7 +1,7 @@
 <!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org -->
+<!-- Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org -->
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -89,7 +89,7 @@
     </script>
 </#if>
 
-    <script language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
         // This code inserts the value lookedup by a popup window back into the associated form element
         var re_id = new RegExp('id=(\\d+)');
         var num_id = (re_id.exec(String(window.location))
@@ -125,7 +125,7 @@
         }
     </script>
 
-    <script language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
         function lookupSubContent (viewName, contentId, mapKey, subDataResourceTypeId, subMimeTypeId) {
 	    var viewStr = viewName;
             var my=20;
@@ -157,13 +157,13 @@
 </head>
 
 <body <#if primaryHTMLField?exists && (primaryHTMLField?length >0)>onLoad="initEditor()"</#if> >
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
           <#if layoutSettings.headerImageUrl?exists>
-          <td align=left width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
+          <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
           </#if>  
             <#if userLogin?has_content && productStoreId?exists>
 				<td class="head2"><center><u>Store Name: ${productStoreId}</u></center></td/>
@@ -178,7 +178,7 @@
             </#if>
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
-                <form method="POST" action="/backend/control/setSessionLocale" style="margin: 0;">
+                <form method="post" action="/backend/control/setSessionLocale" style="margin: 0;">
                 <select name="locale" class="selectBox">
                     <option value="en_US">English (United States)</option>
                     <option value="en">----</option>

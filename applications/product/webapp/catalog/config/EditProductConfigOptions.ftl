@@ -49,7 +49,7 @@
       </form>
     </#list>
   </table>
-  <br>
+  <br/>
 
   <hr class="sepbar">
   <a name="edit"/>
@@ -64,7 +64,7 @@
     ${sections.render("CreateConfigOptionForm")}
 
   <#if (configOption?has_content)>
-    <br>
+    <br/>
     <hr class="sepbar">
     <div class="head1">Components - <span class="head2">ID: ${configOption.configOptionId?if_exists} - ${configOption.description?if_exists}</div>
     <table border="1" cellpadding='2' cellspacing='0'>

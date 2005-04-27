@@ -43,13 +43,13 @@
 </head>
 
 <body>
-<table border=0 width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxtop">
         <tr>
           <#if layoutSettings.headerImageUrl?exists>
-          <td align=left width="1%"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"></td>
+          <td align="left" width="1%"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"></td>
           </#if>       
           <td align="right" width="1%" nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background="${layoutSettings.headerRightBackgroundUrl}"</#if>>
             <#if requestAttributes.person?has_content>
@@ -61,7 +61,7 @@
             </#if>
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
-                <form method="POST" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>" style="margin: 0;">
                 <select name="locale" class="selectBox">
                     <option value="${requestAttributes.locale.toString()}">${locale.getDisplayName(locale)}</option>
                     <option value="${requestAttributes.locale.toString()}">----</option>

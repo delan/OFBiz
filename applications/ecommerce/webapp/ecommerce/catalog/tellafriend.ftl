@@ -63,7 +63,7 @@
           </tr>
         </table>
       <#else>
-        <script language="javascript">
+        <script language="JavaScript" type="text/javascript">
         <!-- //
         window.close();
         // -->

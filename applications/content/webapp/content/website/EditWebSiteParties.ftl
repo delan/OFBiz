@@ -36,14 +36,14 @@
 <div class="head1">Parties <span class='head2'>for <#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [ID:${webSiteId?if_exists}]</span></div>
 
 <a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[New WebSite]</a>
-<br>
-<br>
+<br/>
+<br/>
 <#if webSiteId?has_content>
 ${updateWebSiteRoleWrapper.renderFormString()}
-<br>
+<br/>
 ${addWebSiteRoleWrapper.renderFormString()}
 </#if>
-<br>
+<br/>
 
 <#else>
  <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>

@@ -31,8 +31,8 @@
     <td width='100%'> 
 	  <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
       	<tr> 
-          <td align=left width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarMonthView}</td>
-          <td align=right width='60%'>		  
+          <td align="left" width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarMonthView}</td>
+          <td align="right" width='60%'>		  
             <a href='<@ofbizUrl>/day?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortDayView}</a><a href='<@ofbizUrl>/week?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortWeekView}</a><a href='<@ofbizUrl>/month?start=${start.time?string("#")}</@ofbizUrl>' class='submenutextdisabled'>${uiLabelMap.WorkEffortMonthView}</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortUpcomingEvents}</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewEvent}</a>
           </td>				
 		</tr>
@@ -49,10 +49,10 @@
 <#if periods?has_content> 
 <table width="100%" cellspacing="1" border="0" cellpadding="1" class="calendar">
   <tr class="bg">
-    <td width="1%" class="monthdayheader">&nbsp;<br>
+    <td width="1%" class="monthdayheader">&nbsp;<br/>
       <img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1" width="88"></td>
     <#list periods as day>
-    <td width="14%" class="monthdayheader">${day.start?date?string("EEEE")?cap_first}<br>
+    <td width="14%" class="monthdayheader">${day.start?date?string("EEEE")?cap_first}<br/>
       <img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1" width="1"></td>
     <#if (day_index > 5)><#break></#if>
   	</#list>
@@ -83,7 +83,7 @@
 		    <#else>
 		    ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
 		    </#if>
-		    <br>
+		    <br/>
 		    <a href="<@ofbizUrl>/event?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;
           </td>
         </tr>			
@@ -103,7 +103,7 @@
 	<tr>
 		<td width="50%" align="center">
 			<div class="tabletext">
-				<form action="<@ofbizUrl>/month</@ofbizUrl>" name="partyform" method="POST">
+				<form action="<@ofbizUrl>/month</@ofbizUrl>" name="partyform" method="post">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
 					 ${uiLabelMap.WorkEffortByPartyId}: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputbox"/>
                                          <a href="javascript:call_fieldlookup2(document.partyform.partyId,'<@ofbizUrl>/LookupPartyName</@ofbizUrl>');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
@@ -113,7 +113,7 @@
 		</td>
 		<td width="50%" align="center">
 			<div class="tabletext">
-				<form action="<@ofbizUrl>/month</@ofbizUrl>" method="POST">
+				<form action="<@ofbizUrl>/month</@ofbizUrl>" method="post">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
 					${uiLabelMap.WorkEffortByFacility}: 
 						<select name="facilityId" class="selectbox">

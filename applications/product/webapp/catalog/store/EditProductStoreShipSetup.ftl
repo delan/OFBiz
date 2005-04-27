@@ -24,7 +24,7 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
 function setAssocFields(select) {
     var index = select.selectedIndex;
@@ -71,8 +71,8 @@ function setAssocFields(select) {
   <#if requestParameters.newShipMethod?default("N") == "Y" || requestParameters.createNew?default("N") == "Y">
     <a href="<@ofbizUrl>EditProductStoreShipSetup?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewEstimates}]</a>
   </#if>
-  <br>
-  <br>
+  <br/>
+  <br/>
 <#-- Shipping Setup From Catalog->Store->Shipping-->
   <#if !requestParameters.createNew?exists && !requestParameters.newShipMethod?exists>
     <table border="1" cellpadding="2" cellspacing="0">
@@ -113,7 +113,7 @@ function setAssocFields(select) {
     <#assign weightValue = estimate.getRelatedOne("WeightQuantityBreak")?if_exists>
     <#assign quantityValue = estimate.getRelatedOne("QuantityQuantityBreak")?if_exists>
     <#assign priceValue = estimate.getRelatedOne("PriceQuantityBreak")?if_exists>
-    <br>
+    <br/>
       <table cellspacing="2" cellpadding="2">
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductShipmentMethod}</span></td>
@@ -545,7 +545,7 @@ function setAssocFields(select) {
         </#list>
       </#if>
     </table>
-    <br>
+    <br/>
     <table cellspacing="2" cellpadding="2">
       <form name="addscarr" method="post" action="<@ofbizUrl>storeCreateShipMeth</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
@@ -557,7 +557,7 @@ function setAssocFields(select) {
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductCarrierShipmentMethod}</span></td>
           <td>
-            <select class="selectBox" name="carrierShipmentString" onChange="javascript:setAssocFields(this);">
+            <select class="selectBox" name="carrierShipmentString" onchange="javascript:setAssocFields(this);">
               <option>${uiLabelMap.ProductSelectOne}</option>
               <#list shipmentMethods as shipmentMethod>
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.roleTypeId}|${shipmentMethod.shipmentMethodTypeId}|${shipmentMethod.sequenceNumber?default(1)}">${shipmentMethod.description} (${shipmentMethod.partyId}/${shipmentMethod.roleTypeId})</option>
@@ -728,7 +728,7 @@ function setAssocFields(select) {
         </tr>
       </form>
     </table>
-    <br>
+    <br/>
 
     <div class="head2">${uiLabelMap.ProductShipmentMethodType} :</div>
     <table cellspacing="2" cellpadding="2">
@@ -780,7 +780,7 @@ function setAssocFields(select) {
       </form>
     </table>
 
-    <br>
+    <br/>
 
     <div class="head2">${uiLabelMap.ProductCarrierShipmentMethod} :</div>
     <table cellspacing="2" cellpadding="2">

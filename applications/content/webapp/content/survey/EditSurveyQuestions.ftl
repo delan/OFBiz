@@ -29,7 +29,7 @@
 
   ${pages.get("/survey/SurveyTabBar.ftl")}
   <div class="head1">Survey Questions - <span class="head2">ID: ${requestParameters.surveyId?if_exists}</div>
-  <br><br>
+  <br/><br/>
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
       <td><div class="tableheadtext">ID</div></td>
@@ -77,13 +77,13 @@
       </form>
     </#list>
   </table>
-  <br>
+  <br/>
   <#-- apply question from category -->
   <#if surveyQuestionCategory?has_content>
     <hr class="sepbar">
     <a name="appl">
     <div class="head1">Apply Question From Category - <span class="head2">${surveyQuestionCategory.description?if_exists} [${surveyQuestionCategory.surveyQuestionCategoryId}]</div>
-    <br><br>
+    <br/><br/>
     <table border="1" cellpadding='2' cellspacing='0'>
       <tr>
         <td><div class="tableheadtext">ID</div></td>
@@ -122,12 +122,12 @@
         </form>
       </#list>
     </table>
-    <br>
+    <br/>
   </#if>
 
   <hr class="sepbar">
   <div class="head2">Apply Question(s) From Category</div>
-  <br>
+  <br/>
   <form method="post" action="<@ofbizUrl>/EditSurveyQuestions#apply</@ofbizUrl>">
     <input type="hidden" name="surveyId" value="${requestParameters.surveyId}">
     <select name="surveyQuestionCategoryId" class="selectBox">
@@ -138,7 +138,7 @@
     &nbsp;
     <input type="submit" value="Apply">
   </form>
-  <br>
+  <br/>
 
   <hr class="sepbar">
   <a name="edit">
@@ -146,7 +146,7 @@
   <#if requestParameters.newCategory?default("N") == "Y">
     <div class="head2">Create Question Category</div>
     <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
-    <br><br>
+    <br/><br/>
     ${createSurveyQuestionCategoryWrapper.renderFormString()}
   <#else>
     <#if surveyQuestionId?has_content>
@@ -156,16 +156,16 @@
       <div class="head2">Create New Question</div>
     </#if>
     <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">[New Question Category]</a>
-    <br><br>
+    <br/><br/>
     ${createSurveyQuestionWrapper.renderFormString()}
   </#if>
 
   <#if (surveyQuestion?has_content && surveyQuestion.surveyQuestionTypeId?default("") == "OPTION")>
-    <br>
+    <br/>
     <hr class="sepbar">
-    <br>
+    <br/>
     <div class="head1">Survey Options - <span class="head2">ID: ${surveyQuestion.surveyQuestionId?if_exists}</div>
-    <br><br>
+    <br/><br/>
     <table border="1" cellpadding='2' cellspacing='0'>
       <tr>
         <td><div class="tableheadtext">Description</div></td>
@@ -183,7 +183,7 @@
         </tr>
       </#list>
     </table>
-    <br>
+    <br/>
     <#if !surveyQuestionOption?has_content>
       <div class="head2">Create Question Option:</div>
     <#else>

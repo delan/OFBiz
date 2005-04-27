@@ -30,7 +30,7 @@
     <input type="hidden" name="add_all" value="false">
     <input type="hidden" name="order_id" value="${orderHeader.orderId}">    
     <#include "orderheader.ftl">
-    <br>
+    <br/>
     <#include "orderitems.ftl">
   </form>
 

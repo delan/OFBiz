@@ -21,7 +21,7 @@
  *
  *@author     Si Chen (sichen@sinfoniasolutions.com)
 -->
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -35,7 +35,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <form method="POST" action="<@ofbizUrl>/setcustselect/${donePage}</@ofbizUrl>" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>/setcustselect/${donePage}</@ofbizUrl>" style="margin: 0;">
         <select name="party_id" class="selectBox">
           <#if parties?has_content>
             <option value="">Select Customer</option>

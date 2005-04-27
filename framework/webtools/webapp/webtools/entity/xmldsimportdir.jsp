@@ -64,17 +64,17 @@
 <%if(security.hasPermission("ENTITY_MAINT", session)){%>
   <h3>Import:</h3>
 
-  <FORM method=POST action='<ofbiz:url>/xmldsimportdir</ofbiz:url>'>
+  <FORM method="post" action='<ofbiz:url>/xmldsimportdir</ofbiz:url>'>
     <div>Absolute directory path:</div>
     <div>
-    <INPUT type=text class='inputBox' size='60' name='path' value="<%=UtilFormatOut.checkNull(path)%>">
-    Mostly Inserts?:<INPUT type=checkbox name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
-    Maintain Timestamps?:<INPUT type=checkbox name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
-    Create "Dummy" FKs?:<INPUT type=checkbox name='createDummyFks' <%=createDummyFks?"checked":""%>>
+    <INPUT type="text" class='inputBox' size='60' name='path' value="<%=UtilFormatOut.checkNull(path)%>">
+    Mostly Inserts?:<INPUT type="checkbox" name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
+    Maintain Timestamps?:<INPUT type="checkbox" name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
+    Create "Dummy" FKs?:<INPUT type="checkbox" name='createDummyFks' <%=createDummyFks?"checked":""%>>
     </div>
     <div>TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
     Pause (secs) between files:<INPUT type="text" size="6" value="<%=filePauseStr%>" name="filePause"></div>
-    <INPUT type=submit value='Import Files'>
+    <INPUT type="submit" value='Import Files'>
   </FORM>
   <hr>
     <h3>Results:</h3>

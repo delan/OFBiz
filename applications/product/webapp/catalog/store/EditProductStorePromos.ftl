@@ -35,7 +35,7 @@
   <#else>
     <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}</@ofbizUrl>" class="buttontext">[User Entered Only]</a>
   </#if>
-  <br>
+  <br/>
   <div class="head3">Showing 
     <#if activeOnly>Active Only<#else>Active/Inactive</#if>
     and
@@ -46,7 +46,7 @@
         <#if (listSize > 0)>
             <table border="0" cellpadding="2">
                 <tr>
-                <td align=right>
+                <td align="right">
                     <b>
                     <#if (viewIndex > 0)>
                     <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -82,14 +82,14 @@
 	            <td align="center">
 	                <#assign hasExpired = false>
 	                <#if productStorePromoAndAppl.getTimestamp("thruDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productStorePromoAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-	                <FORM method=POST action="<@ofbizUrl>updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
-	                    <input type=hidden name="productStoreId" value="${(productStorePromoAndAppl.productStoreId)?if_exists}">
-	                    <input type=hidden name="productPromoId" value="${(productStorePromoAndAppl.productPromoId)?if_exists}">
-	                    <input type=hidden name="fromDate" value="${(productStorePromoAndAppl.fromDate)?if_exists}">
-	                    <input type=text size="25" name="thruDate" value="${(productStorePromoAndAppl.thruDate)?if_exists}" class="inputBox" style="<#if (hasExpired) >color: red;</#if>">
+	                <FORM method="post" action="<@ofbizUrl>updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
+	                    <input type="hidden" name="productStoreId" value="${(productStorePromoAndAppl.productStoreId)?if_exists}">
+	                    <input type="hidden" name="productPromoId" value="${(productStorePromoAndAppl.productPromoId)?if_exists}">
+	                    <input type="hidden" name="fromDate" value="${(productStorePromoAndAppl.fromDate)?if_exists}">
+	                    <input type="text" size="25" name="thruDate" value="${(productStorePromoAndAppl.thruDate)?if_exists}" class="inputBox" style="<#if (hasExpired) >color: red;</#if>">
 	                    <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productStorePromoAndAppl.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-	                    <input type=text size="5" name="sequenceNum" value="${(productStorePromoAndAppl.sequenceNum)?if_exists}" class="inputBox">
-	                    <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+	                    <input type="text" size="5" name="sequenceNum" value="${(productStorePromoAndAppl.sequenceNum)?if_exists}" class="inputBox">
+	                    <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
 	                </FORM>
 	            </td>
 	            <td align="center">
@@ -121,7 +121,7 @@
         </#if>
         
         <br/>
-        <form method="POST" action="<@ofbizUrl>createProductStorePromoAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
+        <form method="post" action="<@ofbizUrl>createProductStorePromoAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="productStoreId" value="${productStoreId?if_exists}"/>
         <input type="hidden" name="tryEntity" value="true"/>
         
@@ -132,8 +132,8 @@
             <option value="${productPromo.productPromoId?if_exists}">${productPromo.promoName?if_exists} [${productPromo.productPromoId?if_exists}]</option>
         </#list>
         </select> <span class="tabletext">NOTE: Only user entered promos included in drop-down</span> 
-        <br>
-        <input type=text size="25" name="fromDate" class="inputBox"/>
+        <br/>
+        <input type="text" size="25" name="fromDate" class="inputBox"/>
         <a href="javascript:call_cal(document.addNewForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
         <input type="submit" value="${uiLabelMap.CommonAdd}"/>
         </form>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -59,7 +59,7 @@
 
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
-                <td width="26%" align=right valign=top><div class="tableheadtext">${uiLabelMap.OrderShippingAddress}</div></td>
+                <td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderShippingAddress}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">&nbsp;</td>
               </tr>

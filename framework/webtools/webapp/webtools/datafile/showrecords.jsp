@@ -57,7 +57,7 @@
           <%ModelField modelField = (ModelField)modelRecord.fields.get(f);%>
           <%Object value = record.get(modelField.name);%>
           <%if(value instanceof Double) {%>
-            <TD align=right><%=UtilFormatOut.formatPrice((Double)value)%></TD>
+            <TD align="right"><%=UtilFormatOut.formatPrice((Double)value)%></TD>
           <%}else{%>
             <TD><%=UtilFormatOut.makeString(value)%></TD>
           <%}%>

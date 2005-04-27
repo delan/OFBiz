@@ -78,21 +78,21 @@
 
 <%if (trackingCode == null) {%>
   <%if (trackingCodeId != null) {%>
-    <form action="<ofbiz:url>/createTrackingCode</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createTrackingCode</ofbiz:url>" method="post" style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <h3>Could not find trackingCode with ID "<%=trackingCodeId%>".</h3>
       <tr>
-        <td align=right><div class="tabletext">TrackingCode ID</div></td>
+        <td align="right"><div class="tabletext">TrackingCode ID</div></td>
         <td>&nbsp;</td>
         <td>
             <input type="text" class="inputBox" name="trackingCodeId" value="<%=trackingCodeId%>" size="20" maxlength="20">
         </td>
       </tr>
   <%} else {%>
-    <form action="<ofbiz:url>/createTrackingCode</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createTrackingCode</ofbiz:url>" method="post" style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
       <tr>
-        <td align=right><div class="tabletext">TrackingCode ID</div></td>
+        <td align="right"><div class="tabletext">TrackingCode ID</div></td>
         <td>&nbsp;</td>
         <td>
             <input type="text" class="inputBox" name="trackingCodeId" size="20" maxlength="20">
@@ -101,10 +101,10 @@
   <%}%>
 <%} else {%>
   <form action="<ofbiz:url>/updateTrackingCode</ofbiz:url>" method="GET" style='margin: 0;'>
-      <input type=hidden name="trackingCodeId" value="<%=trackingCodeId%>">
+      <input type="hidden" name="trackingCodeId" value="<%=trackingCodeId%>">
   <table border='0' cellpadding='2' cellspacing='0'>
   <tr>
-    <td align=right><div class="tabletext">TrackingCode ID</div></td>
+    <td align="right"><div class="tabletext">TrackingCode ID</div></td>
     <td>&nbsp;</td>
     <td>
       <b><%=trackingCodeId%></b> (This cannot be changed without re-creating the trackingCode.)
@@ -112,11 +112,11 @@
   </tr>
 <%}%>
       <tr>
-        <td width="26%" align=right><div class="tabletext">TrackingCode Type</div></td>
+        <td width="26%" align="right"><div class="tabletext">TrackingCode Type</div></td>
         <td>&nbsp;</td>
         <td width="74%">
           <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(tryEntity?trackingCode.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
-          <select name="trackingCodeTypeId" size=1 class='selectBox'>
+          <select name="trackingCodeTypeId" size="1" class='selectBox'>
             <ofbiz:if name="trackingCodeType">
               <option selected value='<ofbiz:inputvalue entityAttr="trackingCodeType" field="trackingCodeTypeId"/>'><ofbiz:inputvalue entityAttr="trackingCodeType" field="description"/> <%--<ofbiz:entityfield attribute="trackingCodeType" field="trackingCodeTypeId" prefix="[" suffix="]"/>--%></option>
               <option value='<ofbiz:inputvalue entityAttr="trackingCodeType" field="trackingCodeTypeId"/>'>----</option>
@@ -128,10 +128,10 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Marketing Campaign</div></td>
+        <td width="26%" align="right"><div class="tabletext">Marketing Campaign</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <select name="marketingCampaignId" size=1 class='selectBox'>
+          <select name="marketingCampaignId" size="1" class='selectBox'>
             <ofbiz:if name="marketingCampaign">
               <option selected value='<ofbiz:inputvalue entityAttr="marketingCampaign" field="marketingCampaignId"/>'><ofbiz:inputvalue entityAttr="marketingCampaign" field="campaignName"/> <%--<ofbiz:entityfield attribute="marketingCampaign" field="marketingCampaignId" prefix="[" suffix="]"/>--%></option>
             </ofbiz:if>
@@ -144,69 +144,69 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Description</div></td>
+        <td width="26%" align="right"><div class="tabletext">Description</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="description" fullattrs="true"/> size="60" maxlength="250"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Comments</div></td>
+        <td width="26%" align="right"><div class="tabletext">Comments</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="comments" fullattrs="true"/> size="60" maxlength="250"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Redirect URL</div></td>
+        <td width="26%" align="right"><div class="tabletext">Redirect URL</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="redirectUrl" fullattrs="true"/> size="60" maxlength="250"> (No redirect if empty)</td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Override Logo URL</div></td>
+        <td width="26%" align="right"><div class="tabletext">Override Logo URL</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="overrideLogo" fullattrs="true"/> size="60" maxlength="250"> (No override (co-brand) if empty)</td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Override CSS URL</div></td>
+        <td width="26%" align="right"><div class="tabletext">Override CSS URL</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="overrideCss" fullattrs="true"/> size="60" maxlength="250"> (No override (co-brand) if empty)</td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Default Product Catalog ID</div></td>
+        <td width="26%" align="right"><div class="tabletext">Default Product Catalog ID</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="prodCatalogId" fullattrs="true"/> size="20" maxlength="20"> (No override (co-brand) if empty)</td>
       </tr>      
       <tr>
-        <td width="26%" align=right><div class="tabletext">Trackable Lifetime</div></td>
+        <td width="26%" align="right"><div class="tabletext">Trackable Lifetime</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="trackableLifetime" fullattrs="true"/> size="8" maxlength="18"> (seconds)</td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Billable Lifetime</div></td>
+        <td width="26%" align="right"><div class="tabletext">Billable Lifetime</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="billableLifetime" fullattrs="true"/> size="8" maxlength="18"> (seconds)</td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">From Date/Time</div></td>
+        <td width="26%" align="right"><div class="tabletext">From Date/Time</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="fromDate" fullattrs="true"/> size="20"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Thru Date/Time</div></td>
+        <td width="26%" align="right"><div class="tabletext">Thru Date/Time</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="thruDate" fullattrs="true"/> size="20"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Group ID</div></td>
+        <td width="26%" align="right"><div class="tabletext">Group ID</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="groupId" fullattrs="true"/> size="20" maxlength="20"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Sub-Group ID</div></td>
+        <td width="26%" align="right"><div class="tabletext">Sub-Group ID</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="trackingCode" field="subgroupId" fullattrs="true"/> size="20" maxlength="20"></td>
       </tr>
 
   <tr>
     <td colspan='2'>&nbsp;</td>
-    <td colspan='1' align=left><input type="submit" name="Update" value="Update"></td>
+    <td colspan='1' align="left"><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>

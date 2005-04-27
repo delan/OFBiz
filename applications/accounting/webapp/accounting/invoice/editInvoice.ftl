@@ -137,12 +137,12 @@
           </td>
         </tr>
       </table>
-      <#-- add <br> and continue for more -->
+      <#-- add <br/> and continue for more -->
     </td>
     <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
     <#-- right side -->
     <td width='50%' valign='top' align='left'>
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
+      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
         <tr>
           <td width='100%'>
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -169,12 +169,12 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if billingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${billingAddress.toName}<br></#if>
-                            <#if billingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${billingAddress.attnName}<br></#if>
-                            ${billingAddress.address1}<br>
-                            <#if billingAddress.address2?has_content>${billingAddress.address2}<br></#if>                            
+                            <#if billingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${billingAddress.toName}<br/></#if>
+                            <#if billingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${billingAddress.attnName}<br/></#if>
+                            ${billingAddress.address1}<br/>
+                            <#if billingAddress.address2?has_content>${billingAddress.address2}<br/></#if>                            
                             ${billingAddress.city}<#if billingAddress.stateProvinceGeoId?has_content>, ${billingAddress.stateProvinceGeoId} </#if>
-                            ${billingAddress.postalCode}<br>
+                            ${billingAddress.postalCode}<br/>
                             ${billingAddress.countryGeoId}
                           </div>
                         </td>
@@ -236,9 +236,9 @@
   </tr>
 </table>
 
-<br>
+<br/>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>

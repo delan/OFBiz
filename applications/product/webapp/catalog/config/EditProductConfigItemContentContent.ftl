@@ -26,7 +26,7 @@
     <#if contentId?has_content>
         <a href="/content/control/gotoContent?contentId=${contentId}" class='buttontext' target='_blank'>[Content Page]</a>
     </#if>
-    <br>
+    <br/>
 
     <#if configItemId?has_content && productContent?has_content>
         ${updateProductContentWrapper.renderFormString()}

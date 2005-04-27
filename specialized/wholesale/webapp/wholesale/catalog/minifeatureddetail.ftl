@@ -32,7 +32,7 @@
     <TD width='100%'>
       <table width='100%'border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td valign=middle align=center>
+          <td valign=middle align="center">
             <div class="boxhead">${productCategory.description?if_exists}</div>
           </td>
         </tr>

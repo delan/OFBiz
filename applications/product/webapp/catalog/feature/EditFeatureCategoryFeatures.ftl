@@ -28,7 +28,7 @@
 <div class="head1">${uiLabelMap.ProductEditFeaturesForFeatureCategory} "${(curProductFeatureCategory.description)?if_exists}"</div>
 <a href="<@ofbizUrl>/EditFeature?productFeatureCategoryId=${productFeatureCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewFeature}]</a>
 
-<br>
+<br/>
 <p class="head2">${uiLabelMap.ProductProductFeatureMaintenance}</p>
 <#if (listSize > 0)>
     <#if productId?has_content>
@@ -36,7 +36,7 @@
     </#if>
     <table border="0" width="100%" cellpadding="2">
         <tr>
-        <td align=right>
+        <td align="right">
             <span class="tabletext">
             <b>
             <#if (viewIndex > 0)>
@@ -78,7 +78,7 @@
       <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}">
       <td><a href="<@ofbizUrl>/EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
       <td><input type="text" class='inputBox' size='15' name="description_o_${rowCount}" value="${productFeature.description}"></td>
-      <td><select name='productFeatureTypeId_o_${rowCount}' size=1 class='selectBox'>
+      <td><select name='productFeatureTypeId_o_${rowCount}' size="1" class='selectBox'>
         <#if productFeature.productFeatureTypeId?has_content>
           <option value='${productFeature.productFeatureTypeId}'><#if curProductFeatureType?exists>${curProductFeatureType.description}<#else> [${productFeature.productFeatureTypeId}]</#if></option>
           <option value='${productFeature.productFeatureTypeId}'>---</option>
@@ -87,7 +87,7 @@
           <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.description}</option>
         </#list>
       </select></td>
-      <td><select name='productFeatureCategoryId_o_${rowCount}' size=1 class='selectBox'>
+      <td><select name='productFeatureCategoryId_o_${rowCount}' size="1" class='selectBox'>
         <#if productFeature.productFeatureCategoryId?has_content>
           <#assign curProdFeatCat = productFeature.getRelatedOne("ProductFeatureCategory")>
           <option value='${productFeature.productFeatureCategoryId}'>${(curProdFeatCat.description)?if_exists} [${productFeature.productFeatureCategoryId}]</option>
@@ -97,12 +97,12 @@
           <option value='${productFeatureCategory.productFeatureCategoryId}'>${productFeatureCategory.description} [${productFeatureCategory.productFeatureCategoryId}]</option>
         </#list>
       </select></td>
-      <td><input type=text class='inputBox' size='10' name="uomId_o_${rowCount}" value="${productFeature.uomId?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="numberSpecified_o_${rowCount}" value="${productFeature.numberSpecified?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="defaultAmount_o_${rowCount}" value="${productFeature.defaultAmount?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="defaultSequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="idCode_o_${rowCount}" value="${productFeature.idCode?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="abbrev_o_${rowCount}" value="${productFeature.abbrev?if_exists}"></td>
+      <td><input type="text" class='inputBox' size='10' name="uomId_o_${rowCount}" value="${productFeature.uomId?if_exists}"></td>
+      <td><input type="text" class='inputBox' size='5' name="numberSpecified_o_${rowCount}" value="${productFeature.numberSpecified?if_exists}"></td>
+      <td><input type="text" class='inputBox' size='5' name="defaultAmount_o_${rowCount}" value="${productFeature.defaultAmount?if_exists}"></td>
+      <td><input type="text" class='inputBox' size='5' name="defaultSequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum?if_exists}"></td>
+      <td><input type="text" class='inputBox' size='5' name="idCode_o_${rowCount}" value="${productFeature.idCode?if_exists}"></td>
+      <td><input type="text" class='inputBox' size='5' name="abbrev_o_${rowCount}" value="${productFeature.abbrev?if_exists}"></td>
       <td align="right"><input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);"></td>
   </tr>
 <#assign rowCount = rowCount + 1>
@@ -112,4 +112,4 @@
 </form>
 </#if>
 </table>
-<br>
+<br/>

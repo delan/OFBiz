@@ -29,7 +29,7 @@
 
 <div class="head1">Find Global GL Account</div>
 <div><a href="<@ofbizUrl>/EditGlobalGlAccount</@ofbizUrl>" class="buttontext">[Create New Global GL Account]</a></div>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class="tabletext"><b>ID</b></div></td>    
@@ -60,7 +60,7 @@
   </tr>
 </#list>
 </table>
-<br>
+<br/>
 
 <#else>
   <h3>${uiLabelMap.AccountingViewPermissionError}</h3>

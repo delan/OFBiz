@@ -26,7 +26,7 @@
 
 <div class="head1">Product Feature Group Applications</div>
 
-<br>
+<br/>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tableheadtext">ID</div></td>
@@ -50,15 +50,15 @@
   </#list>
 </table>
 
-<br>
-<form method="POST" action="<@ofbizUrl>/CreateProductFeatureGroupAppl</@ofbizUrl>" style='margin: 0;'>
+<br/>
+<form method="post" action="<@ofbizUrl>/CreateProductFeatureGroupAppl</@ofbizUrl>" style='margin: 0;'>
   <input type="hidden" name="productFeatureGroupId" value="${requestParameters.productFeatureGroupId}">
   <div class='head2'>Quick Apply Product Feature:</div>
-  <br>
+  <br/>
   <table>
     <tr>
       <td><div class='tabletext'>Product Feature ID:</div></td>
-      <td><input type=text class='inputBox' size='30' name='productFeatureId' value=''></td>
+      <td><input type="text" class='inputBox' size='30' name='productFeatureId' value=''></td>
     </tr>
     <tr>
       <td colspan='2'><input type="submit" value="${uiLabelMap.CommonCreate}"></td>
@@ -66,12 +66,12 @@
   </table>
 </form>
 
-<br>
+<br/>
 <#if !productFeatures?has_content>
-  <form method="POST" action="<@ofbizUrl>/EditFeatureGroupAppls</@ofbizUrl>" style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>/EditFeatureGroupAppls</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="productFeatureGroupId" value="${requestParameters.productFeatureGroupId}">
     <div class='head2'>Apply Product Feature(s) From Category:</div>
-    <br>
+    <br/>
     <table>
       <tr>
         <td><div class='tabletext'>Product Feature Category:</div></td>
@@ -92,7 +92,7 @@
 
 
   <div class='head2'>Apply Product Feature(s) From Category:</div>
-  <br>
+  <br/>
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
       <td><div class='tableheadtext'>ID</div></td>
@@ -105,7 +105,7 @@
 
     <#list productFeatures as feature>
       <#assign type = feature.getRelatedOne("ProductFeatureType")>
-      <form method="POST" action="<@ofbizUrl>/CreateProductFeatureGroupAppl</@ofbizUrl>" style='margin: 0;'>
+      <form method="post" action="<@ofbizUrl>/CreateProductFeatureGroupAppl</@ofbizUrl>" style='margin: 0;'>
         <input type="hidden" name="productFeatureGroupId" value="${requestParameters.productFeatureGroupId}">
         <input type="hidden" name="productFeatureCategoryId" value="${requestParameters.productFeatureCategoryId}">
         <input type="hidden" name="productFeatureId" value="${feature.productFeatureId}">

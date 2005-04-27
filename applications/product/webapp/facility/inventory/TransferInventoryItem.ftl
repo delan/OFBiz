@@ -62,7 +62,7 @@
             <input type="hidden" name="inventoryTransferId" value="${inventoryTransferId?if_exists}">
         </#if>
 
-        <script language="JavaScript">
+        <script language="JavaScript" type="text/javascript">
             function setNow(field) { eval('document.transferform.' + field + '.value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}"'); }
         </script>
 
@@ -181,7 +181,7 @@
                 <option value="${(nextFacility.facilityId)?if_exists}">${(nextFacility.facilityName)?if_exists} [${(nextFacility.facilityId)?if_exists}]</option>
                 </#list>
             </select>
-            <br>
+            <br/>
             <span class="tabletext">${uiLabelMap.ProductOrEnterContainerId}:</span>
             <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)?if_exists}" size="20" maxlength="20" class="inputBox">
             </td>
@@ -208,7 +208,7 @@
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <#if inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
-                <input type=text size="5" name="xferQty" value="${(inventoryItem.availableToPromise)?if_exists}" class="inputBox">
+                <input type="text" size="5" name="xferQty" value="${(inventoryItem.availableToPromise)?if_exists}" class="inputBox">
             <#elseif inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
                 <input type="hidden" name="xferQty" value="1">
                 <div class="tabletext">1</div>
@@ -254,9 +254,9 @@
     <tr>
         <td colspan="2">&nbsp;</td>
         <#if !(inventoryTransfer?exists)>
-            <td colspan="1" align=left><input type="submit" value="${uiLabelMap.ProductTransfer}"></td>
+            <td colspan="1" align="left"><input type="submit" value="${uiLabelMap.ProductTransfer}"></td>
         <#else>
-            <td colspan="1" align=left><input type="submit" value="${uiLabelMap.CommonUpdate}"></td>
+            <td colspan="1" align="left"><input type="submit" value="${uiLabelMap.CommonUpdate}"></td>
         </#if>
     </tr>
     </table>

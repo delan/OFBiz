@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,7 +26,7 @@
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
  <!--
      function changeCategory() {
          document.forms["keywordsearchform"].elements["SEARCH_CATEGORY_ID"].value=document.forms["advancedsearchform"].elements["DUMMYCAT"].value;
@@ -53,28 +53,28 @@
 <#if isOpen>
     <div class="screenlet-body">
         <div>
-            <form name="keywordsearchform" method="POST" action="<@ofbizUrl>keywordsearch?VIEW_SIZE=25</@ofbizUrl>" style="margin: 0;">
-              <div class="tabletext">${uiLabelMap.ProductKeywords}: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}"></div>
+            <form name="keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch?VIEW_SIZE=25</@ofbizUrl>" style="margin: 0;">
+              <div class="tabletext">${uiLabelMap.ProductKeywords}: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}"/></div>
               <div class="tabletext">
-                ${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20" value="${requestParameters.SEARCH_CATEGORY_ID?if_exists}">
+                ${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20" value="${requestParameters.SEARCH_CATEGORY_ID?if_exists}"/>
               </div>
               <div class="tabletext">
-                No Contains<input type="CHECKBOX" name="SEARCH_CONTAINS" value="N" <#if requestParameters.SEARCH_CONTAINS?if_exists == "N">checked="true"</#if>/>
-                ${uiLabelMap.CommonAny}<input type="RADIO" name="SEARCH_OPERATOR" value="OR" <#if requestParameters.SEARCH_OPERATOR?if_exists != "AND">checked="true"</#if>/>
-                ${uiLabelMap.CommonAll}<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if requestParameters.SEARCH_OPERATOR?if_exists == "AND">checked="true"</#if>/>
+                No Contains<input type="checkbox" name="SEARCH_CONTAINS" value="N" <#if requestParameters.SEARCH_CONTAINS?if_exists == "N">checked="checked"</#if>/>
+                ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if requestParameters.SEARCH_OPERATOR?if_exists != "AND">checked="checked"</#if>/>
+                ${uiLabelMap.CommonAll}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if requestParameters.SEARCH_OPERATOR?if_exists == "AND">checked="checked"</#if>/>
                 &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
               </div>
             </form>
         </div>
         <div>
-            <form name="advancedsearchform" method="POST" action="<@ofbizUrl>advancedsearch</@ofbizUrl>" style="margin: 0;">
+            <form name="advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>" style="margin: 0;">
               <div class="tabletext">
-                ${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20" value="${requestParameters.SEARCH_CATEGORY_ID?if_exists}">
+                ${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20" value="${requestParameters.SEARCH_CATEGORY_ID?if_exists}"/>
               </div>
               <div class="tabletext">
                 <a href="javascript:document.advancedsearchform.submit()" class="buttontext">${uiLabelMap.ProductAdvancedSearch}</a>
               </div>
-                <select class="selectBox" name="DUMMYCAT" onChange="changeCategory()" style="width: 200px;">
+                <select class="selectBox" name="DUMMYCAT" onchange="changeCategory()" style="width: 200px;">
                     <option value="">-Select a Category-</option>
                     <#list productCategories as productCategory>
                         <#assign displayDesc = productCategory.description?default("No Description")>
@@ -87,10 +87,10 @@
             </form>
         </div>
         <div>
-            <form name="productjumpform" method="POST" action="<@ofbizUrl>EditProduct</@ofbizUrl>" style="margin: 0;">
-                <input type="text" class="inputBox" name="productId" size="10" maxlength="20" value="${requestParameters.productId?if_exists}">
-                <a href="javascript:call_fieldlookup2(document.productjumpform.productId,'LookupProduct');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
-                <select class="selectBox" name="DUMMYPAGE" onChange="submitProductJump()" style="width: 110px;">
+            <form name="productjumpform" method="post" action="<@ofbizUrl>EditProduct</@ofbizUrl>" style="margin: 0;">
+                <input type="text" class="inputBox" name="productId" size="10" maxlength="20" value="${requestParameters.productId?if_exists}"/>
+                <a href="javascript:call_fieldlookup2(document.productjumpform.productId,'LookupProduct');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a>
+                <select class="selectBox" name="DUMMYPAGE" onchange="submitProductJump()" style="width: 110px;">
                     <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">-Product Jump-</option>
                     <option value="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">${uiLabelMap.ProductQuickAdmin}</option>
                     <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">${uiLabelMap.ProductProduct}</option>
@@ -116,4 +116,3 @@
     </div>
 </#if>
 </div>
-

@@ -29,15 +29,15 @@
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 
-<TABLE border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
     <TD width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <TD align=left width="90%" >
+          <TD align="left" width="90%" >
             <div class="boxhead">&nbsp;Web Tools Main Page</div>
           </TD>
-          <TD align=right width="10%"><div class="lightbuttontextdisabled"><%=delegator.getDelegatorName()%></div></TD>
+          <TD align="right" width="10%"><div class="lightbuttontextdisabled"><%=delegator.getDelegatorName()%></div></TD>
         </tr>
       </table>
     </TD>

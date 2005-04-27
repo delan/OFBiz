@@ -41,39 +41,39 @@
       &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name='paymentMethodId' value='${paymentMethodId}'>
+        <input type="hidden" name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingNameOnAccount}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingNameOnAccount}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCompanyNameOnAccount}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingCompanyNameOnAccount}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingBankName}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingBankName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingRoutingNumber}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingRoutingNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingAccountType}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingAccountType}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="accountType" class='selectBox'>
@@ -85,7 +85,7 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingAccountNumber}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingAccountNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber?if_exists}">
@@ -93,7 +93,7 @@
     </tr>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyBillingAddress}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyBillingAddress}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
@@ -118,12 +118,12 @@
                 </div>
               </#list>
               <div class="tabletext">
-                <#if curPostalAddress.toName?exists><b>${uiLabelMap.CommonTo}:</b> ${curPostalAddress.toName}<br></#if>
-                <#if curPostalAddress.attnName?exists><b>${uiLabelMap.PartyAddrAttnName}:</b> ${curPostalAddress.attnName}<br></#if>
-                ${curPostalAddress.address1?if_exists}<br>
-                <#if curPostalAddress.address2?exists>${curPostalAddress.address2}<br></#if>
+                <#if curPostalAddress.toName?exists><b>${uiLabelMap.CommonTo}:</b> ${curPostalAddress.toName}<br/></#if>
+                <#if curPostalAddress.attnName?exists><b>${uiLabelMap.PartyAddrAttnName}:</b> ${curPostalAddress.attnName}<br/></#if>
+                ${curPostalAddress.address1?if_exists}<br/>
+                <#if curPostalAddress.address2?exists>${curPostalAddress.address2}<br/></#if>
                 ${curPostalAddress.city}<#if curPostalAddress.stateProvinceGeoId?has_content>,&nbsp;${curPostalAddress.stateProvinceGeoId}</#if>&nbsp;${curPostalAddress.postalCode} 
-                <#if curPostalAddress.countryGeoId?exists><br>${curPostalAddress.countryGeoId}</#if>
+                <#if curPostalAddress.countryGeoId?exists><br/>${curPostalAddress.countryGeoId}</#if>
               </div>
               <div class="tabletext">(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())?if_exists})</div>
               <#if curPartyContactMech.thruDate?exists><div class='tabletext'><b>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</b></div></#if>
@@ -161,12 +161,12 @@
                     </div>
                 </#list>
                 <div class="tabletext">
-                  <#if postalAddress.toName?exists><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
-                  <#if postalAddress.attnName?exists><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br></#if>
-                  ${postalAddress.address1?if_exists}<br>
-                  <#if postalAddress.address2?exists>${postalAddress.address2}<br></#if>
+                  <#if postalAddress.toName?exists><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br/></#if>
+                  <#if postalAddress.attnName?exists><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br/></#if>
+                  ${postalAddress.address1?if_exists}<br/>
+                  <#if postalAddress.address2?exists>${postalAddress.address2}<br/></#if>
                   ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode} 
-                  <#if postalAddress.countryGeoId?exists><br>${postalAddress.countryGeoId}</#if>
+                  <#if postalAddress.countryGeoId?exists><br/>${postalAddress.countryGeoId}</#if>
                 </div>
                 <div class="tabletext">(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())?if_exists})</div>
                 <#if partyContactMech.thruDate?exists><div class='tabletext'><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>

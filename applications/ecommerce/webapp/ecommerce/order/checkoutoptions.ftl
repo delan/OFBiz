@@ -99,12 +99,12 @@ function toggleBillingAccount(box) {
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr valign="top" align="left">
       <td height="100%">
-        <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside" style="height: 100%;">
+        <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside" style="height: 100%;">
           <tr>
             <td width='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left nowrap>
+                  <td valign=middle align="left" nowrap>
                     <#if shipping == true>
                         <div class="boxhead">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
                     <#else>
@@ -116,7 +116,7 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <tr style='height: 100%;'>
-            <td width='100%' valign=top height='100%'>
+            <td width='100%' valign="top" height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
                   <td valign='top'>
@@ -175,12 +175,12 @@ function toggleBillingAccount(box) {
       </td>
       <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
       <td height='100%'>
-        <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+        <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
           <tr>
             <td width='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left nowrap>
+                  <td valign=middle align="left" nowrap>
                     <#if shipping == true>
                         <div class="boxhead">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
                     <#else>
@@ -192,7 +192,7 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <tr style='height: 100%;'>
-            <td width='100%' valign=top height='100%'>
+            <td width='100%' valign="top" height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
                   <td>
@@ -328,12 +328,12 @@ function toggleBillingAccount(box) {
       </td>
       <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
       <td height='100%'>
-        <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
+        <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
           <tr>
             <td width='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left nowrap>
+                  <td valign=middle align="left" nowrap>
                     <div class="boxhead">3)&nbsp;${uiLabelMap.OrderHowShallYouPay}?</div>
                   </td>
                 </tr>
@@ -343,10 +343,10 @@ function toggleBillingAccount(box) {
 
           <#-- Payment Method Selection -->
           <tr style='height: 100%;'>
-            <td width='100%' valign=top height='100%'>
+            <td width='100%' valign="top" height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
-                  <td valign=top>
+                  <td valign="top">
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
                       <tr>
                         <td colspan="2">

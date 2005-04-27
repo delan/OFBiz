@@ -35,15 +35,15 @@
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "taskStatusItems", "WORKFLOW_STATUS");%>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
+          <TD align="left" width='40%' >
             <div class='boxhead'>&nbsp;Phase Detail</div>
           </TD>
-          <TD align=right width='60%'>
+          <TD align="right" width='60%'>
 <%--            <A href='<ofbiz:url>/mytasks</ofbiz:url>' class='lightbuttontext'>[Task&nbsp;List]</A>
             <A href='<ofbiz:url>/task</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Task]</A>--%>
           </TD>
@@ -58,12 +58,12 @@
           <td>
             <ofbiz:if name="canView" type="Boolean">
               <ofbiz:if name="workEffort">
-                <form name='projectForm' action="<ofbiz:url>/updatephase</ofbiz:url>" method=POST style='margin: 0;'>
+                <form name='projectForm' action="<ofbiz:url>/updatephase</ofbiz:url>" method="post" style='margin: 0;'>
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortId' value='<ofbiz:print attribute="workEffortId"/>'>
               </ofbiz:if>
               <ofbiz:unless name="workEffort">
-                <form name='projectForm' action="<ofbiz:url>/createphase</ofbiz:url>" method=POST style='margin: 0;'>
+                <form name='projectForm' action="<ofbiz:url>/createphase</ofbiz:url>" method="post" style='margin: 0;'>
                 <input type='hidden' name='quickAssignPartyId' value='<ofbiz:entityfield field="partyId" attribute="userLogin"/>'>
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='TASK'>
@@ -76,12 +76,12 @@
                 <input type='hidden' name='projectWorkEffortId' value='<%=request.getParameter("projectWorkEffortId")%>'>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Phase Name</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Phase Name</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' size='30' maxlength='30' name='workEffortName' value='<ofbiz:inputvalue field="workEffortName" param="workEffortName" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
 <%--                <tr>
-                  <td width='26%' align=right><div class='tabletext'>Priority</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Priority</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <SELECT name='priority'>
@@ -94,7 +94,7 @@
                   </td>
                 </tr>--%>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Phase Status</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Phase Status</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <SELECT name='currentStatusId'>
@@ -111,24 +111,24 @@
                 </tr>
 
 <%--                <tr>
-                  <td width='26%' align=right><div class='tabletext'>Location</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Location</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' size='60' maxlength='255' name='locationDesc' value='<ofbiz:inputvalue field="locationDesc" param="locationDesc" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr> --%>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Description</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><TEXTAREA name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" param="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
                 </tr>
 
-<SCRIPT language='JavaScript'>
+<script language="JavaScript" type="text/javascript">
 function insertNowTimestampStart() {
   eval('document.projectForm.estimatedStartDate.value="<%=UtilDateTime.nowTimestamp().toString()%>";');
 };
-</SCRIPT>
+</script>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>Start Date/Time</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedStartDate' value='<ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'>
                     <span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span>
@@ -136,19 +136,19 @@ function insertNowTimestampStart() {
                   </td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>End Date/Time</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedCompletionDate' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
 
                 <ofbiz:if name="workEffort">
 <%--                  <tr>
-                    <td width='26%' align=right><div class='tabletext'>Revision #</div></td>
+                    <td width='26%' align="right"><div class='tabletext'>Revision #</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'><ofbiz:entityfield field="revisionNumber" attribute="workEffort"/></div></td>
                   </tr>--%>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>Created</div></td>
+                    <td width='26%' align="right"><div class='tabletext'>Created</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       <ofbiz:entityfield field="createdDate" attribute="workEffort"/>
@@ -156,7 +156,7 @@ function insertNowTimestampStart() {
                     </div></td>
                   </tr>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>Last Modified</div></td>
+                    <td width='26%' align="right"><div class='tabletext'>Last Modified</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       <ofbiz:entityfield field="lastModifiedDate" attribute="workEffort"/>
@@ -166,7 +166,7 @@ function insertNowTimestampStart() {
                 </ofbiz:if>
 
                 <tr>
-                  <td width='26%' align=right>
+                  <td width='26%' align="right">
 <%--                    <input type="submit" name="Save" value="Save">--%>
                     <ofbiz:if name="workEffort"><input type="submit" name="Update" value="Update"></ofbiz:if>
                     <ofbiz:unless name="workEffort"><input type="submit" name="Create" value="Create"></ofbiz:unless>
@@ -186,7 +186,7 @@ function insertNowTimestampStart() {
     </TD>
   </TR>
 </TABLE>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
   document.projectForm.workEffortName.focus();
 //-->

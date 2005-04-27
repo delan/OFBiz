@@ -28,7 +28,7 @@
 
 <div class="head1">${uiLabelMap.AccountingEditPayment}</div>
 <a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingCreatePayment}]</a>
-<br>
+<br/>
 
 <#if payment?has_content>
   <form name="editpayment" method="post" action="<@ofbizUrl>/updatePayment</@ofbizUrl>">

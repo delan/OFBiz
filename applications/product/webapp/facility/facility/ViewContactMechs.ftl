@@ -39,13 +39,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 	<a href="<@ofbizUrl>/EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewContactMech}]</a>
 </#if>
 
-<br><br>
+<br/><br/>
 <table width='100%' border='0' cellspacing='0' cellpadding='0'>
   <tr>
     <td>
   <#if contactMeches?has_content>
     <table width="100%" border="0" cellpadding="0">
-      <tr align=left valign='bottom'>
+      <tr align="left" valign='bottom'>
         <td colspan="7">
           <span class="head2">${uiLabelMap.ProductContactTypeInformation}</span>
         </td>
@@ -76,14 +76,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
               <#if "POSTAL_ADDRESS" = contactMech.contactMechTypeId>
                   <#assign postalAddress = contactMechMap.postalAddress>
                   <div class="tabletext">                    
-                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br></#if>
-                    ${postalAddress.address1?if_exists}<br>
-                    <#if postalAddress.address2?has_content>${postalAddress.address2?if_exists}<br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br/></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br/></#if>
+                    ${postalAddress.address1?if_exists}<br/>
+                    <#if postalAddress.address2?has_content>${postalAddress.address2?if_exists}<br/></#if>
                     ${postalAddress.city?if_exists},
                     ${postalAddress.stateProvinceGeoId?if_exists}
                     ${postalAddress.postalCode?if_exists}
-                    <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
+                    <#if postalAddress.countryGeoId?has_content><br/>${postalAddress.countryGeoId}</#if>
                   </div>
                   <#if (postalAddress?has_content && !postalAddress.countryGeoId?has_content) || postalAddress.countryGeoId = "USA">
                       <#assign addr1 = postalAddress.address1?if_exists>

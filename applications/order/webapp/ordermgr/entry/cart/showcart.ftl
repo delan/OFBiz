@@ -26,7 +26,7 @@
  *@since      2.2
 -->
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
 function toggle(e) {
     e.checked = !e.checked;    
@@ -108,7 +108,7 @@ function gwAll(e) {
       <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>           
-            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
               <table border="0">
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :<div></td>
@@ -157,7 +157,7 @@ function gwAll(e) {
         <tr><td><hr class="sepbar"></td></tr>
         <tr>
           <td>
-            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
                 <div class="tableheadtext">
                     ${uiLabelMap.ProductItem}:&nbsp;${uiLabelMap.ProductType}:&nbsp;<select name="add_item_type" class="selectBox"><option value="BULK_ORDER_ITEM">Bulk Item</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option></select>
                     Category:&nbsp;<select name="add_category_id" class="selectBox">
@@ -182,7 +182,7 @@ function gwAll(e) {
   </TR>
 </TABLE>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
   document.quickaddform.add_product_id.focus();
 //-->
@@ -223,7 +223,7 @@ function gwAll(e) {
           <TD NOWRAP><div class="tabletext"><b>${uiLabelMap.ProductProduct}</b></div></TD>
           <#if showOrderGiftWrap?default("true") == "true">
             <td NOWRAP align="right">
-              <select class="selectBox" name="GWALL" onChange="javascript:gwAll(this);">
+              <select class="selectBox" name="GWALL" onchange="javascript:gwAll(this);">
                 <option value="">${uiLabelMap.OrderGiftWrapAllItems}</option>
                 <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
                 <#if allgiftWraps?has_content>
@@ -327,14 +327,14 @@ function gwAll(e) {
               <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP?if_exists>
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")?if_exists>
               <#if giftWrapOption?has_content>
-                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onChange="javascript:document.cartform.submit()">
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
                   <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
                   <#list giftWrapOption as option>
                     <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?exists && selectedOption.productFeatureId == option.productFeatureId)>SELECTED</#if>>${option.description} : <@ofbizCurrency amount=option.amount?default(0) isoCode=currencyUomId/></option>
                   </#list>
                 </select>
               <#elseif showNoGiftWrapOptions>
-                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onChange="javascript:document.cartform.submit()">
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
                   <option value="">${uiLabelMap.OrderNoGiftWrap}</option>
                 </select>
               <#else>
@@ -392,7 +392,7 @@ function gwAll(e) {
             <div class="tabletext"><b>${uiLabelMap.OrderCartTotal}:</b></div>
           </td>
           <td align="right" valign=bottom>
-            <hr size=1 class="sepbar">
+            <hr size="1" class="sepbar">
             <div class="tabletext"><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></b></div>
           </td>
         </tr>       

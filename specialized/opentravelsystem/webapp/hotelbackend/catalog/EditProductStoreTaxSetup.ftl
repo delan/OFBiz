@@ -57,7 +57,7 @@
     </#list>
   </table>
   
-  <br>
+  <br/>
   <table>
     <#if security.hasEntityPermission("TAXRATE", "_CREATE", session)>
       <form name="addrate" action="<@ofbizUrl>/storeCreateTaxRate</@ofbizUrl>">

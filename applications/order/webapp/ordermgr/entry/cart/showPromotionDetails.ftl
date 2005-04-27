@@ -129,7 +129,7 @@
         <#if (listSize > 0)>
             <table border="0" width="100%" cellpadding="2">
                 <tr>
-                <td align=right>
+                <td align="right">
                     <span class="tabletext">
                     <b>
                     <#if (viewIndex > 0)>

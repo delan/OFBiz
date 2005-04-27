@@ -28,14 +28,14 @@
 <#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
 
 <#if surveyList?exists>
-<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td width="50%"><div class="boxhead">Surveys Found</div></td>
           <td width="50%">
-            <div class="boxhead" align=right>
+            <div class="boxhead" align="right">
               <#if 0 < surveyList?size>
                 <#if 0 < viewIndex>
                   <a href="<@ofbizUrl>/FindSurvey?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
@@ -57,7 +57,7 @@
         </tr>
       </table>
       <div class="tabletext"><a href="<@ofbizUrl>/EditSurvey</@ofbizUrl>" class="buttontext">[Create New Survey]</a></div>
-      <br>
+      <br/>
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
           <td align="left"><div class="tableheadtext">Survey ID</div></td>

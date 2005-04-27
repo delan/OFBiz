@@ -28,7 +28,7 @@
 
 <#include "ProfileTabBar.ftl"/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -75,7 +75,7 @@
 <br/>
 
 <#if shoppingList?has_content>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -168,7 +168,7 @@
 
 <#if childShoppingListDatas?has_content>
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' <#--class='boxoutside'-->>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' <#--class='boxoutside'-->>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -216,7 +216,7 @@
 </#if>
 
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -267,7 +267,7 @@
                           </div>
                         </td>
                         <td nowrap align="center">
-						  <form method="POST" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+						  <form method="post" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
 						    <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
 						    <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
                             <div class='tabletext'>
@@ -306,7 +306,7 @@
   </TR>
 </TABLE>
 
-<br>
+<br/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">

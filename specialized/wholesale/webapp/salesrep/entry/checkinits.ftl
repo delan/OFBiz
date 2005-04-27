@@ -24,7 +24,7 @@
  *@since      2.2
 -->
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
 var defaultText = "!";
 var defaultValue = "!";
@@ -52,7 +52,7 @@ function setStore(disable) {
 //-->
 </script>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -78,7 +78,7 @@ function setStore(disable) {
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <input type='radio' name='orderMode' onChange="javascript:setStore(false)" value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' onChange="javascript:setStore(true)" value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
+              <input type='radio' name='orderMode' onchange="javascript:setStore(false)" value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' onchange="javascript:setStore(true)" value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
               <#if !sessionAttributes.orderMode?exists>*<font color='red'>required</font><#else>(cannot be changed without clearing order.)</#if>
             </div>
           </td>

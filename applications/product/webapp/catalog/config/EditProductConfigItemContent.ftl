@@ -22,14 +22,14 @@
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     David E. Jones (jonesde@ofbiz.org)
 -->
-<SCRIPT language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 function insertNowTimestamp(field) {
   eval('document.productForm.' + field + '.value="${nowTimestamp?string}";');
 }
 function insertImageName(size,nameValue) {
   eval('document.productForm.' + size + 'ImageUrl.value=nameValue;');
 }
-</SCRIPT>
+</script>
 
 <#if fileType?has_content>
     <div class='head3'>${uiLabelMap.ProductResultOfImageUpload}</div>
@@ -41,7 +41,7 @@ function insertImageName(size,nameValue) {
         <div class='tabletext'>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath?if_exists}</b></div>
         <div class='tabletext'>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl?if_exists}</@ofbizContentUrl>">${imageUrl?if_exists}</a></b></div>
     </#if>
-<br>
+<br/>
 </#if>    
 
 <#if !(configItem?exists)>
@@ -80,7 +80,7 @@ function insertImageName(size,nameValue) {
     <hr class="sepbar"/>
     
     <div class="head2">${uiLabelMap.ProductOverrideSimpleFields}</div>
-    <form action="<@ofbizUrl>/updateProductConfigItemContent</@ofbizUrl>" method=POST style="margin: 0;" name="productForm">
+    <form action="<@ofbizUrl>/updateProductConfigItemContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
     <table border="0" cellpadding="2" cellspacing="0">
     <input type="hidden" name="configItemId" value="${configItemId?if_exists}">
     <tr>
@@ -128,7 +128,7 @@ function insertImageName(size,nameValue) {
     <hr class="sepbar"/>
 
     <div class="head3">${uiLabelMap.ProductUploadImage}</div>
-    <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductConfigItemImage?configItemId=${configItemId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
+    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductConfigItemImage?configItemId=${configItemId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
         <input type="file" class="inputBox" size="50" name="fname">
         <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
     </form>

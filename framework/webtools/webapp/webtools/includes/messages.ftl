@@ -41,20 +41,20 @@
 
 <#-- display the error messages -->
 <#if errorMessageList?has_content>
-<div class="errorMessage">The following errors occurred:</div><br>
+<div class="errorMessage">The following errors occurred:</div><br/>
 <ul>
   <#list errorMessageList as errorMsg>
     <li class="errorMessage">${errorMsg}</li>
   </#list>
 </ul>
-<br>
+<br/>
 </#if>
 <#if eventMessageList?has_content>
-<div class="eventMessage">The following occurred:</div><br>
+<div class="eventMessage">The following occurred:</div><br/>
 <ul>
   <#list eventMessageList as eventMsg>
     <li class="eventMessage">${eventMsg}</li>
   </#list>
 </ul>
-<br>
+<br/>
 </#if>

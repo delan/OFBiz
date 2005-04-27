@@ -28,7 +28,7 @@
 
 <div class="head1">${uiLabelMap.AccountingInvoicePayments} - <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoiceId}</@ofbizUrl>" class="buttontext">#${invoiceId}</div>
 
-<br>
+<br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td><div class="tableheadtext">${uiLabelMap.AccountingPayment} #</div></td>

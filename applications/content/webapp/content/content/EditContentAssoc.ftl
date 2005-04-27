@@ -24,19 +24,19 @@
  *@since      2.2
 -->
 
-<br>
-<br>
+<br/>
+<br/>
 <#if contentAssocValue?exists>
 <div class="head1">Edit</div>
 ${editWrapper.renderFormString()}
-<br>
+<br/>
 </#if>
 <div class="head1">From this content to ...</div>
 ${listToWrapper.renderFormString()}
-<br>
+<br/>
 <div class="head1">To this content from ...</div>
 ${listFromWrapper.renderFormString()}
-<br>
+<br/>
 <div class="head1">Create New</div>
 ${addWrapper.renderFormString()}
 

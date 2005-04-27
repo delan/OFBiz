@@ -369,7 +369,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("');\">");
             buffer.append("<img src=\"");
             this.appendContentUrl(buffer, "/content/images/cal.gif");
-            buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
+            buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"/></a>");
         }
 
         this.appendTooltip(buffer, context, modelFormField);
@@ -427,7 +427,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         // if the current value should go first, stick it in
         if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
             buffer.append("<option");
-            buffer.append(" selected");
+            buffer.append(" selected=\"selected\"");
             buffer.append(" value=\"");
             buffer.append(currentValue);
             buffer.append("\">");
@@ -458,9 +458,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("<option");
             // if current value should be selected in the list, select it
             if (UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey()) && "selected".equals(dropDownField.getCurrent())) {
-                buffer.append(" selected");
+                buffer.append(" selected=\"selected\"");
             } else if (UtilValidate.isEmpty(currentValue) && noCurrentSelectedKey != null && noCurrentSelectedKey.equals(optionValue.getKey())) {
-                buffer.append(" selected");
+                buffer.append(" selected=\"selected\"");
             }
             buffer.append(" value=\"");
             buffer.append(optionValue.getKey());
@@ -549,7 +549,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         // if current value should be selected in the list, select it
         if ("Y".equals(currentValue) || "T".equals(currentValue)) {
-            buffer.append(" checked");
+            buffer.append(" checked=\"checked\"");
         }
         buffer.append(" name=\"");
         buffer.append(modelFormField.getParameterName(context));
@@ -593,9 +593,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
             // if current value should be selected in the list, select it
             String noCurrentSelectedKey = radioField.getNoCurrentSelectedKey(context);
             if (UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey())) {
-                buffer.append(" checked");
+                buffer.append(" checked=\"checked\"");
             } else if (UtilValidate.isEmpty(currentValue) && noCurrentSelectedKey != null && noCurrentSelectedKey.equals(optionValue.getKey())) {
-                buffer.append(" checked");
+                buffer.append(" checked=\"checked\"");
             }
             buffer.append(" name=\"");
             buffer.append(modelFormField.getParameterName(context));
@@ -765,6 +765,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.widget.form.ModelFormField)
      */
     public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField) {
+        String tempTitleText = modelFormField.getTitle(context);
+        String titleText = UtilHttp.encodeAmpersands(tempTitleText);
+        
         buffer.append("<span");
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
             buffer.append(" class=\"");
@@ -772,7 +775,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("\"");
         }
         buffer.append(">");
-        buffer.append(modelFormField.getTitle(context));
+        buffer.append(titleText);
         buffer.append("</span>");
 
         this.appendWhitespace(buffer);
@@ -810,7 +813,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.widget.form.FormStringRenderer#renderFormOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.widget.form.ModelForm)
      */
     public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<form method=\"POST\" ");
+        buffer.append("<form method=\"post\" ");
         String targ = modelForm.getTarget(context);
         String targetType = modelForm.getTargetType();
         if (targ != null && targ.length() > 0) {
@@ -1211,7 +1214,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append('>');
         buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_op\" value=\"equals\" checked/>");
+        buffer.append("_op\" value=\"equals\" checked=\"checked\"/>");
 
         buffer.append(" " + opBeginsWith + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
@@ -1293,7 +1296,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_fld0_op\" value=\"equals\" checked/>");
+        buffer.append("_fld0_op\" value=\"equals\" checked=\"checked\"/>");
 
         buffer.append(" " + opGreaterThan + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
@@ -1439,7 +1442,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("');\">");
         buffer.append("<img src=\"");
         this.appendContentUrl(buffer, "/content/images/cal.gif");
-        buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
+        buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"/></a>");
 
         buffer.append(" <span");
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
@@ -1451,11 +1454,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_fld0_op\" value=\"equals\" checked/>");
+        buffer.append("_fld0_op\" value=\"equals\" checked=\"checked\"/>");
 
         buffer.append(" " + opSameDay +  " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_fld0_op\" value=\"sameDay\" checked/>");
+        buffer.append("_fld0_op\" value=\"sameDay\" checked=\"checked\"/>");
 
         buffer.append(" " + opGreaterThanFromDayStart + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
@@ -1513,7 +1516,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("');\">");
         buffer.append("<img src=\"");
         this.appendContentUrl(buffer, "/content/images/cal.gif");
-        buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
+        buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"/></a>");
 
         buffer.append(" <span");
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
@@ -1611,7 +1614,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("');\">");
         buffer.append("<img src=\"");
         this.appendContentUrl(buffer, "/content/images/fieldlookup.gif");
-        buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Lookup\"></a>");
+        buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Lookup\"/></a>");
 
         this.makeHyperlinkString(buffer, lookupField.getSubHyperlink(), context);
         this.appendTooltip(buffer, context, modelFormField);
@@ -1682,7 +1685,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append("<table border=\"0\" cellpadding=\"2\">\n");
         buffer.append("  <tr>\n");
-        buffer.append("    <td align=right>\n");
+        buffer.append("    <td align=\"right\">\n");
         buffer.append("      <b>\n");
         if (viewIndex > 0) {
             buffer.append(" <a href=\"");

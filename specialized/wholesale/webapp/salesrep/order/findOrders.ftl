@@ -24,7 +24,7 @@
  *@since      2.2
 -->
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupOrders() {
     orderIdValue = document.lookuporder.order_id.value;
@@ -42,7 +42,7 @@ function lookupOrders() {
 <form method='post' name="lookuporder" action="<@ofbizUrl>/findorders</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -215,7 +215,7 @@ function lookupOrders() {
 </table>
 <input type="image" src="/images/spacer.gif" onClick="javascript:lookupOrders();">
 </form>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--//
 document.lookuporder.order_id.focus();
 //-->
@@ -223,15 +223,15 @@ document.lookuporder.order_id.focus();
 
 
 <#if orderHeaderList?exists>
-<br>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td width="50%"><div class="boxhead">Orders Found</div></td>
           <td width="50%">
-            <div class="boxhead" align=right>
+            <div class="boxhead" align="right">
               <#if 0 < orderHeaderList?size>
                 <#if 0 < viewIndex>
                   <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>

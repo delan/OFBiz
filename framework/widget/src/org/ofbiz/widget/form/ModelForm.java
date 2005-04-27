@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -636,6 +636,7 @@ public class ModelForm {
         
             
         boolean isFirstPass = true;
+        boolean haveRenderedOpenFieldRow = false;
         while (currentFormField != null) {
             // do the check/get next stuff at the beginning so we can still use the continue stuff easily
             // don't do it on the first pass though...
@@ -755,13 +756,15 @@ public class ModelForm {
                 // no spacer cell, might add later though...
                 //formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, currentFormField);
             } else {
-                if (lastFormField != null) {
+                if (haveRenderedOpenFieldRow) {
                     // render row formatting close
                     formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
+                    haveRenderedOpenFieldRow = false;
                 }
 
                 // render row formatting open
                 formStringRenderer.renderFormatFieldRowOpen(buffer, context, this);
+                haveRenderedOpenFieldRow = true;
             }
 
             // render title formatting open

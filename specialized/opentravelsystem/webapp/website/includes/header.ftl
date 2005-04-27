@@ -1,7 +1,7 @@
 <!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org -->
+<!-- Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org -->
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -46,13 +46,13 @@
 	${layoutSettings.extraHead?if_exists}
 </head>
 <body>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
           <#if layoutSettings.headerImageUrl?exists>
-          <td align=left width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
+          <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
           </#if>  
             <#if userLogin?has_content && productStoreId?exists>
 				<td class="head2"><center><u>Store Name: ${productStoreId}</u></center></td/>
@@ -67,7 +67,7 @@
             </#if>
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
-                <form method="POST" action="/backend/control/setSessionLocale" style="margin: 0;">
+                <form method="post" action="/backend/control/setSessionLocale" style="margin: 0;">
                 <select name="locale" class="selectBox">
                     <option value="en_US">English (United States)</option>
                     <option value="en">----</option>

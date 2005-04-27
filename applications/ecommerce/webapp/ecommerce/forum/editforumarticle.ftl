@@ -29,18 +29,18 @@
 <#--
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
-    <td align=left>
+    <td align="left">
       <div class="head1">${contentIdTo?if_exists}
       </div>
     </td>
-    <td align=right>
+    <td align="right">
     </td>
   </tr>
 </table>
 <br/>
 -->
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -61,9 +61,9 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Content ID</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${contentId?if_exists}</div></td></tr>
-    <tr><td align=right nowrap><div class='tabletext'><b>Content Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${contentName?if_exists}</div></td></tr>
-    <tr><td align=right nowrap><div class='tabletext'><b>Description</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${description?if_exists}<div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Content ID</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${contentId?if_exists}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Content Name</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${contentName?if_exists}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Description</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${description?if_exists}<div></td></tr>
   </table>
           </td>
         </tr>
@@ -72,7 +72,7 @@
   </TR>
 </TABLE>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -93,7 +93,7 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Image</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Image</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
         <img src="<@ofbizUrl>/img?imgId=${imgDataResourceId?if_exists}</@ofbizUrl>" />
 <div></td></tr>
   </table>
@@ -104,7 +104,7 @@
   </TR>
 </TABLE>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -125,7 +125,7 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Summary</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Summary</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
 ${summaryData?if_exists}
 <div></td></tr>
   </table>
@@ -136,7 +136,7 @@ ${summaryData?if_exists}
   </TR>
 </TABLE>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -157,7 +157,7 @@ ${summaryData?if_exists}
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Article</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Article</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
 ${textData?if_exists}
 <div></td></tr>
   </table>

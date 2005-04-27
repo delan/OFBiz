@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -91,12 +91,12 @@ function toggleBillingAccount(box) {
 
       <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
       <td height='100%'>
-        <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
+        <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
           <tr>
             <td width='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left>
+                  <td valign=middle align="left">
                     <div class="boxhead">3)&nbsp;${uiLabelMap.OrderHowShallYouPay}?</div>
                   </td>
                 </tr>
@@ -106,10 +106,10 @@ function toggleBillingAccount(box) {
 
           <#-- Payment Method Selection -->
           <tr style='height: 100%;'>
-            <td width='100%' valign=top height='100%'>
+            <td width='100%' valign="top" height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
-                  <td valign=top>
+                  <td valign="top">
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
                       <tr><td colspan="2">
                         <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>

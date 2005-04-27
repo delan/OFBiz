@@ -28,19 +28,19 @@
 			<span class='head2'> <#if (techDataCalendar.description)?has_content>"${(techDataCalendar.get("description", locale))}"</#if> 
 						[${uiLabelMap.CommonId}:${techDataCalendar.calendarId?if_exists}]</span>
 	</div>
-	<br>
+	<br/>
 	<#if techDataCalendar?has_content>
 		${listCalendarExceptionWeekWrapper.renderFormString(context)}
-		<br>
+		<br/>
 		<hr class="sepbar">
 		<#if calendarExceptionWeek?has_content>
 				${updateCalendarExceptionWeekWrapper.renderFormString(context)}
-				<br>
+				<br/>
 				<hr class="sepbar">
 		</#if>
 		${addCalendarExceptionWeekWrapper.renderFormString(context)}
 	</#if>
-	<br>
+	<br/>
 
 
 	

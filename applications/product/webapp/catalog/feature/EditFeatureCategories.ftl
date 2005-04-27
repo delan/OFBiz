@@ -27,15 +27,15 @@
 
 <div class="head1">${uiLabelMap.ProductProductFeatureCategories}</div>
 
-<br>
+<br/>
 
-<form method="POST" action="<@ofbizUrl>/EditFeature</@ofbizUrl>" style="margin: 0;">
+<form method="post" action="<@ofbizUrl>/EditFeature</@ofbizUrl>" style="margin: 0;">
   <div class="head2">${uiLabelMap.ProductEditFeatureId} :</div>
   <input type="text" class="inputBox" size="12" name="productFeatureId" value=""/>
   <input type="submit" value="${uiLabelMap.CommonEdit}"/>
 </form>
 
-<br>
+<br/>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -49,12 +49,12 @@
 
 <#list productFeatureCategories as productFeatureCategory>
   <tr valign="middle">
-    <FORM method=POST action="<@ofbizUrl>/UpdateFeatureCategory</@ofbizUrl>">
-    <input type=hidden name="productFeatureCategoryId" value="${productFeatureCategory.productFeatureCategoryId}">
+    <FORM method="post" action="<@ofbizUrl>/UpdateFeatureCategory</@ofbizUrl>">
+    <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategory.productFeatureCategoryId}">
     <td><a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategory.productFeatureCategoryId}</@ofbizUrl>" class="buttontext">${productFeatureCategory.productFeatureCategoryId}</a></td>
-    <td><input type=text class="inputBox" size="30" name="description" value="${productFeatureCategory.description?if_exists}"></td>
+    <td><input type="text" class="inputBox" size="30" name="description" value="${productFeatureCategory.description?if_exists}"></td>
     <td>
-      <select name="parentCategoryId" size=1 class="selectBox">
+      <select name="parentCategoryId" size="1" class="selectBox">
         ${productFeatureCategory}
         <#assign curProdFeatCat = productFeatureCategory.getRelatedOne("ParentProductFeatureCategory")?if_exists>
         <#if curProdFeatCat?has_content>
@@ -72,19 +72,19 @@
   </tr>
 </#list>
 </table>
-<br>
+<br/>
 
-<form method="POST" action="<@ofbizUrl>/CreateFeatureCategory</@ofbizUrl>" style="margin: 0;">
+<form method="post" action="<@ofbizUrl>/CreateFeatureCategory</@ofbizUrl>" style="margin: 0;">
   <div class="head2">${uiLabelMap.ProductCreateAProductFeatureCategory}:</div>
-  <br>
+  <br/>
   <table>
     <tr>
       <td><div class="tabletext">${uiLabelMap.CommonDescription}:</div></td>
-      <td><input type=text class="inputBox" size="30" name="description" value=""></td>
+      <td><input type="text" class="inputBox" size="30" name="description" value=""></td>
     </tr>
     <tr>
       <td><div class="tabletext">${uiLabelMap.ProductParentCategory}:</div></td>
-      <td><select name="parentCategoryId" size=1 class="selectbox">
+      <td><select name="parentCategoryId" size="1" class="selectbox">
         <option value="">&nbsp;</option>
         <#list productFeatureCategories as productFeatureCategory>
           <option value="${productFeatureCategory.productFeatureCategoryId}">${productFeatureCategory.description?if_exists} [${productFeatureCategory.productFeatureCategoryId}]</option>
@@ -96,4 +96,4 @@
     </tr>
   </table>
 </form>
-<br>
+<br/>

@@ -26,7 +26,7 @@
 <#-- Render the reorder page -->
   <#if pages?exists>${pages.get("/catalog/reorderprods.ftl")}</#if>
   <#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#reorderprods")}</#if>
-<br>
+<br/>
 <#-- Render the order history page -->
   <#if pages?exists>${pages.get("/order/orderhistory.ftl")}</#if>
   <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderhistory")}</#if>

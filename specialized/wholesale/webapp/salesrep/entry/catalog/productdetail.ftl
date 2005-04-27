@@ -32,7 +32,7 @@
 
 <#-- virtual product javascript -->
 ${requestAttributes.virtualJavaScript?if_exists}
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
  <!--
      function addItem() {
          if (document.addform.add_product_id.value == 'NULL') {
@@ -113,7 +113,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </div>
       </#if>
 
-      <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
+      <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
@@ -121,7 +121,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
-                <select name="${currentType}" class="selectBox" onChange="getList(this.name, this.options[this.selectedIndex].value)">
+                <select name="${currentType}" class="selectBox" onchange="getList(this.name, this.options[this.selectedIndex].value)">
                   <option>${requestAttributes.featureTypes.get(currentType)}</option>
                 </select>
               </div>
@@ -188,7 +188,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 
       <#-- Prefill first select box (virtual products only) -->
       <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
-        <script language="JavaScript">eval("list" + "${requestAttributes.featureOrderFirst}" + "()");</script>
+        <script language="JavaScript" type="text/javascript">eval("list" + "${requestAttributes.featureOrderFirst}" + "()");</script>
       </#if>
 
       <#-- Swatches (virtual products only) -->
@@ -205,7 +205,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
               <#if swatchProduct?exists && swatchProduct.smallImageUrl?exists>
                 <td align="center" valign="bottom">
                   <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${swatchProduct.smallImageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
-                  <br>
+                  <br/>
                   <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
                 </td>
                 <#assign indexer = indexer + 1>

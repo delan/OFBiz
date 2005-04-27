@@ -71,19 +71,19 @@
 
 <%if (marketingCampaign == null) {%>
   <%if (marketingCampaignId != null) {%>
-    <form action="<ofbiz:url>/createMarketingCampaign</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createMarketingCampaign</ofbiz:url>" method="post" style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <h3>Could not find marketingCampaign with ID "<%=marketingCampaignId%>".</h3>
   <%} else {%>
-    <form action="<ofbiz:url>/createMarketingCampaign</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createMarketingCampaign</ofbiz:url>" method="post" style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
   <%}%>
 <%} else {%>
-  <form action="<ofbiz:url>/updateMarketingCampaign</ofbiz:url>" method=POST style='margin: 0;'>
-      <input type=hidden name="marketingCampaignId" value="<%=marketingCampaignId%>">
+  <form action="<ofbiz:url>/updateMarketingCampaign</ofbiz:url>" method="post" style='margin: 0;'>
+      <input type="hidden" name="marketingCampaignId" value="<%=marketingCampaignId%>">
   <table border='0' cellpadding='2' cellspacing='0'>
   <tr>
-    <td align=right><div class="tabletext">MarketingCampaign ID</div></td>
+    <td align="right"><div class="tabletext">MarketingCampaign ID</div></td>
     <td>&nbsp;</td>
     <td>
       <b><%=marketingCampaignId%></b> (This is automatically generated.)
@@ -91,15 +91,15 @@
   </tr>
 <%}%>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Campaign Name</div></td>
+        <td width="26%" align="right"><div class="tabletext">Campaign Name</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="marketingCampaign" field="campaignName" fullattrs="true" tryEntityAttr="tryEntity"/> size="30" maxlength="250"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Parent Marketing Campaign</div></td>
+        <td width="26%" align="right"><div class="tabletext">Parent Marketing Campaign</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <select name="parentCampaignId" size=1 class='selectBox'>
+          <select name="parentCampaignId" size="1" class='selectBox'>
             <ofbiz:if name="parentCampaign">
               <option selected value='<ofbiz:inputvalue entityAttr="marketingCampaign" field="parentCampaignId"/>'><ofbiz:inputvalue entityAttr="parentCampaign" field="campaignName"/><%--<ofbiz:entityfield attribute="parentCampaign" field="marketingCampaignId" prefix="[" suffix="]"/>--%></option>
             </ofbiz:if>
@@ -112,14 +112,14 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Campaign Summary</div></td>
+        <td width="26%" align="right"><div class="tabletext">Campaign Summary</div></td>
         <td>&nbsp;</td>
         <td width="74%"><textarea class='textAreaBox' cols="60" rows="7" name="campaignSummary" maxlength="2000"><ofbiz:inputvalue entityAttr='marketingCampaign' field='campaignSummary' tryEntityAttr="tryEntity"/></textarea></td>
       </tr>
 
   <tr>
     <td colspan='2'>&nbsp;</td>
-    <td colspan='1' align=left><input type="submit" name="Update" value="Update"></td>
+    <td colspan='1' align="left"><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>

@@ -38,7 +38,7 @@
   <#if requestParameters.returnId?has_content>
     <div class="head2">${uiLabelMap.OrderNoReturnFoundWithId} : ${requestParameters.returnId}</div>
   </#if>
-  <br>
+  <br/>
 </#if>
 
 <#if returnHeader?exists>
@@ -151,15 +151,15 @@
           <#list postalAddresses as postalAddressInfo>
             <#assign postalAddress = postalAddressInfo.postalAddress>           
             <div class="tabletext">
-              <input type='radio' name="originContactMechId" value="${postalAddress.contactMechId}" <#if returnHeader.originContactMechId?default("") == postalAddress.contactMechId>checked</#if>>
-              <#if postalAddress.toName?has_content><b>To:</b>&nbsp;${postalAddress.toName}<br></#if>
-              <#if postalAddress.attnName?has_content>&nbsp;&nbsp;&nbsp;&nbsp;<b>Attn:</b>&nbsp;${postalAddress.attnName}<br></#if>
-              <#if postalAddress.address1?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address1}<br></#if>
-              <#if postalAddress.address2?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address2}<br></#if>
+              <input type='radio' name="originContactMechId" value="${postalAddress.contactMechId}" <#if returnHeader.originContactMechId?default("") == postalAddress.contactMechId>checked="checked"</#if>>
+              <#if postalAddress.toName?has_content><b>To:</b>&nbsp;${postalAddress.toName}<br/></#if>
+              <#if postalAddress.attnName?has_content>&nbsp;&nbsp;&nbsp;&nbsp;<b>Attn:</b>&nbsp;${postalAddress.attnName}<br/></#if>
+              <#if postalAddress.address1?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address1}<br/></#if>
+              <#if postalAddress.address2?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address2}<br/></#if>
               <#if postalAddress.city?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.city}</#if>
-              <#if postalAddress.stateProvinceGeoId?has_content><br>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.stateProvinceGeoId}</#if>
-              <#if postalAddress.postalCode?has_content><br>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.postalCode}</#if>
-              <#if postalAddress.countryGeoId?has_content><br>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.countryGeoId}</#if>                                                                                     
+              <#if postalAddress.stateProvinceGeoId?has_content><br/>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.stateProvinceGeoId}</#if>
+              <#if postalAddress.postalCode?has_content><br/>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.postalCode}</#if>
+              <#if postalAddress.countryGeoId?has_content><br/>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.countryGeoId}</#if>                                                                                     
             </div>
           </#list>
         </#if>          

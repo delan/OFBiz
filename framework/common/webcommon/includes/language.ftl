@@ -26,7 +26,7 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign locale = Static["org.ofbiz.base.util.UtilHttp"].getLocale(session)>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -43,7 +43,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td align='center'>
-            <form method="POST" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
+            <form method="post" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
               <select name="locale" class="selectBox">
                 <#assign initialDisplayName = locale.getDisplayName(locale)>
                 <#if 18 < initialDisplayName?length>
@@ -67,4 +67,4 @@
     </td>
   </tr>
 </table>
-<br>
+<br/>

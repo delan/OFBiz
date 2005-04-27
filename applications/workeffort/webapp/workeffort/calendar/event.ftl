@@ -31,13 +31,13 @@
 <#else>null</#if>
 </#macro>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarEventDetails}</td>
-          <td align=right width='60%'>		  
+          <td align="left" width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarEventDetails}</td>
+          <td align="right" width='60%'>		  
             <a href='<@ofbizUrl>/day</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortDayView}</a><a href='<@ofbizUrl>/week</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortWeekView}</a><a href='<@ofbizUrl>/month</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortMonthView}</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortUpcomingEvents}</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextrightdisabled'>${uiLabelMap.WorkEffortNewEvent}</a>
 		  </td>
         </tr>
@@ -58,11 +58,11 @@
             </#if>
             <#if canView = true>
               <#if workEffort?has_content>
-                <form action="<@ofbizUrl>/updateevent</@ofbizUrl>" name="eventform" method=POST style='margin: 0;'>
+                <form action="<@ofbizUrl>/updateevent</@ofbizUrl>" name="eventform" method="post" style='margin: 0;'>
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortId' value='${workEffortId}'>              
               <#else>
-                <form action="<@ofbizUrl>/createevent</@ofbizUrl>" name="eventform" method=POST style='margin: 0;'>
+                <form action="<@ofbizUrl>/createevent</@ofbizUrl>" name="eventform" method="post" style='margin: 0;'>
                 <input type='hidden' name='quickAssignPartyId' value='${userLogin.partyId}'>
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='EVENT'>
@@ -74,12 +74,12 @@
                 <input type="hidden" name="communicationEventId" value="${requestParameters.communicationEventId}">
               </#if> 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortEventName}</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortEventName}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="workEffortName" value='${(workEffort.workEffortName)?if_exists}'></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortPriority}</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortPriority}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <select name='priority' class='selectBox'>
@@ -92,7 +92,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortEventStatus}</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortEventStatus}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <select name='currentStatusId' class='selectBox'>
@@ -109,23 +109,23 @@
                 </tr>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortLocation}</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortLocation}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='60' maxlength='255' name="locationDesc" value='${(workEffort.locationDesc)?if_exists}'></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonDescription}</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.CommonDescription}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><textarea class='textAreaBox' name='description' cols='50' rows='4'>${(workEffort.description)?if_exists}</textarea>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonStartDateTime}</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.CommonStartDateTime}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="estimatedStartDate" value='${(estimatedStartDate)?if_exists}'>
                   <a href="javascript:call_cal(document.eventform.estimatedStartDate, <@quoteIfExists str=(estimatedStartDate)?if_exists/>);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonEndDateTime}</div></td>
+                  <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.CommonEndDateTime}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="estimatedCompletionDate" value='${(estimatedCompletionDate)?if_exists}'>
                   <a href="javascript:call_cal(document.eventform.estimatedCompletionDate, <@quoteIfExists str=(estimatedCompletionDate)?if_exists/>);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a></td>
@@ -133,12 +133,12 @@
 
                 <#if workEffort?has_content>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortRevision} #</div></td>
+                    <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortRevision} #</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>${workEffort.revisionNumber}</div></td>
                   </tr>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortCreated}</div></td>
+                    <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortCreated}</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       ${workEffort.createdDate.toString()}
@@ -146,7 +146,7 @@
                     </div></td>
                   </tr>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortLastModified}</div></td>
+                    <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortLastModified}</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       ${workEffort.lastModifiedDate.toString()}
@@ -156,7 +156,7 @@
                 </#if>
 
                 <tr>
-                  <td width='26%' align=right>
+                  <td width='26%' align="right">
                     <#if workEffort?has_content><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}">
                     <#else><input type="submit" name="Create" value="Create"></#if>
                   </td>

@@ -25,7 +25,7 @@
 -->
 
 <#if hasPermission>
-<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -56,7 +56,7 @@
     </td>
   </tr>
 </table>
-<br>
+<br/>
 
 <#else>
  <h3>You do not have permission to view this page. ("ORDERMGR_VIEW", "ORDERMGR_ADMIN" or associated in the "Supplier Agent" role needed)</h3>

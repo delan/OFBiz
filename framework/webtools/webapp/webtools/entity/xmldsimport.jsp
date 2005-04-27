@@ -60,22 +60,22 @@
 <%if(security.hasPermission("ENTITY_MAINT", session)){%>
   <h3>Import:</h3>
 
-  <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
+  <FORM method="post" action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
     <div>Absolute Filename of FreeMarker template file to filter data by (optional):</div>
-    <INPUT type=text class='inputBox' size='60' name='fmfilename' value='<%=UtilFormatOut.checkNull(fmfilename)%>'> 
+    <INPUT type="text" class='inputBox' size='60' name='fmfilename' value='<%=UtilFormatOut.checkNull(fmfilename)%>'> 
     <div>Absolute Filename or URL:</div>
-    <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> 
-    Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>> 
-    Mostly Inserts?:<INPUT type=checkbox name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
-    Maintain Timestamps?:<INPUT type=checkbox name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
-    Create "Dummy" FKs?:<INPUT type=checkbox name='createDummyFks' <%=createDummyFks?"checked":""%>>
+    <INPUT type="text" class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> 
+    Is URL?:<INPUT type="checkbox" name='IS_URL' <%=isUrl?"checked":""%>> 
+    Mostly Inserts?:<INPUT type="checkbox" name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
+    Maintain Timestamps?:<INPUT type="checkbox" name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
+    Create "Dummy" FKs?:<INPUT type="checkbox" name='createDummyFks' <%=createDummyFks?"checked":""%>>
     TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
-    <INPUT type=submit value='Import File'>
+    <INPUT type="submit" value='Import File'>
   </FORM>
-  <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
+  <FORM method="post" action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
     <div>Complete XML document (root tag: entity-engine-xml):</div>
     <TEXTAREA class='textAreaBox' rows="8" cols="85" name='fulltext'><%=UtilFormatOut.checkNull(fulltext)%></TEXTAREA>
-    <BR><INPUT type=submit value='Import Text'>
+    <BR><INPUT type="submit" value='Import Text'>
   </FORM>
   <hr>
     <h3>Results:</h3>

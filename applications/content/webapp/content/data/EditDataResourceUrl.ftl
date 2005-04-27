@@ -1,5 +1,5 @@
 <div class="head1">Add Url DataResource</div>
 
-<br>
+<br/>
 ${editWrapper.renderFormString()}
-<br>
+<br/>
