@@ -48,6 +48,7 @@
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <lookup target-form-name="LookupProduct"/>
         </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><date-find type="date"/></field>
         <field name="requirementByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><date-find type="date"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">

@@ -1402,7 +1402,16 @@ public class ProductionRunServices {
         serviceContext.put("pRQuantity", quantity);
         serviceContext.put("startDate", requirement.getTimestamp("requirementStartDate"));
         serviceContext.put("facilityId", requirement.getString("facilityId"));
-        serviceContext.put("workEffortName", "Created from requirement");
+        String workEffortName = null;
+        if (requirement.getString("description") != null) {
+            workEffortName = requirement.getString("description");
+            if (workEffortName.length() > 50) {
+                workEffortName = workEffortName.substring(0, 50);
+            }
+        } else {
+            workEffortName = "Created from requirement " + requirement.getString("requirementId");
+        }
+        serviceContext.put("workEffortName", workEffortName);
         serviceContext.put("userLogin", userLogin);
         Map resultService = null;
         try {

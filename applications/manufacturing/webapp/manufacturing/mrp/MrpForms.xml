@@ -29,6 +29,7 @@
     <form name="RunMrp" type="single" 
             target="runMrpGo" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="mrpName"  title="${uiLabelMap.ManufacturingMrpName}"><text size="20"/></field>
         <field name="facilityId" title="${uiLabelMap.ProductFacility}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Facility" description="${facilityName} [${facilityId}]"/>

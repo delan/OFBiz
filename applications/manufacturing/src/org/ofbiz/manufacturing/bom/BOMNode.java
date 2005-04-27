@@ -491,6 +491,9 @@ public class BOMNode {
             if (facilityId != null) {
                 serviceContext.put("facilityId", facilityId);
             }
+            if (shipmentId != null) {
+                serviceContext.put("workEffortName", "SP_" + shipmentId);
+            }
             serviceContext.put("pRQuantity", new Double(getQuantity()));
             serviceContext.put("startDate", startDate);
             serviceContext.put("userLogin", userLogin);
