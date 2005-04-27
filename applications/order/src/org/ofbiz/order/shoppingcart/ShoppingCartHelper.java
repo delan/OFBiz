@@ -497,13 +497,23 @@ public class ShoppingCartHelper {
                     }
 
                     try {
-                        int index = this.cart.addOrIncreaseItem(quoteItem.getString("productId"),
-                                        quoteItem.getDouble("quantity").doubleValue(),
-                                        null, null, catalogId, dispatcher);
-                        noItems = false;
-                        ShoppingCartItem sci = (ShoppingCartItem)this.cart.items().get(index);
+                        // TODO: it would be better to implement a new ShoppingCartItem.makeItem(...) method
+                        //       that takes as input the quoteItem generic value
+                        ShoppingCartItem sci = ShoppingCartItem.makeItem(new Integer(0), quoteItem.getString("productId"),
+                                                                         0, quoteItem.getDouble("quantity").doubleValue(), 
+                                                                         null, null, catalogId, null, 
+                                                                         dispatcher, this.cart);
                         sci.setQuoteId(quoteId);
                         sci.setQuoteItemSeqId(quoteItem.getString("quoteItemSeqId"));
+                        double quoteUnitPrice = 0.0;
+                        if (quoteItem.get("quoteUnitPrice") != null) {
+                            quoteUnitPrice = quoteItem.getDouble("quoteUnitPrice").doubleValue();
+                        }
+                        // FIXME: in this way the promotions created in the setQuantity method (called inside the makeItem method)
+                        //        are not cleaned up.
+                        sci.setBasePrice(quoteUnitPrice);
+                        this.cart.addItem(0, sci);
+                        noItems = false;
                     } catch (CartItemModifyException e) {
                         errorMsgs.add(e.getMessage());
                     } catch (ItemNotFoundException e) {

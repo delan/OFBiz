@@ -1248,6 +1248,7 @@
       <field name="partyId" type="id"></field>
       <field name="issueDate" type="date-time"></field>
       <field name="statusId" type="id"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="validFromDate" type="date-time"></field>
       <field name="validThruDate" type="date-time"></field>
       <field name="description" type="description"></field>
@@ -1263,6 +1264,9 @@
       </relation>
       <relation type="one" fk-name="QUOTE_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_CUOM" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="QuoteAttribute"
