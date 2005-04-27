@@ -25,15 +25,15 @@
 -->
 
     <div class="head1">${uiLabelMap.ManufacturingLLCInit}</div>
-    <br>
+    <br/>
     <#if products?has_content>
         <#list products as oneProduct>
-            ${oneProduct}<br>
+            ${oneProduct}<br/>
         </#list>
     </#if>
-    <br>
+    <br/>
     <form name="searchbom" action="<@ofbizUrl>/InitLowLevelCode</@ofbizUrl>" method=PUT >
-        <input type=hidden name="ACTION" value="INIT">
-        <input type=submit value="${uiLabelMap.CommonRun}">
+        <input type="hidden" name="ACTION" value="INIT">
+        <input type="submit" value="${uiLabelMap.CommonRun}">
     </form>
     

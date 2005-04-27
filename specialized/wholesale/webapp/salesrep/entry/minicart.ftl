@@ -32,12 +32,12 @@
     <#assign shoppingCartSize = 0>
 </#if>
     
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td valign=middle align=center>
+          <td valign=middle align="center">
       <div class='boxhead'><b>Order&nbsp;Summary</b></div>
           </td>
         </tr>

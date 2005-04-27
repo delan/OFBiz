@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -49,7 +49,7 @@
               <div style='margin-left: 10px;'>
               	<#list prodCatalogCategories as prodCatalogCategory>
                   <#assign productCategory = prodCatalogCategory.getRelatedOneCache("ProductCategory")>
-                  <div class='browsecategorytext'>-&nbsp;<a href='<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>' class="browsecategorybutton">${(productCategory.description)?if_exists}</a></div>
+                  <div class='browsecategorytext'>-&nbsp;<a href='<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&amp;productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>' class="browsecategorybutton">${(productCategory.description)?if_exists}</a></div>
                 </#list>
               </div>
           <#else>

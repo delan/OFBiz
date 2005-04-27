@@ -215,7 +215,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
     </form>
-    <script language="JavaScript">selectAll();</script>
+    <script language="JavaScript" type="text/javascript">selectAll();</script>
 </#if>
 
 <#else>

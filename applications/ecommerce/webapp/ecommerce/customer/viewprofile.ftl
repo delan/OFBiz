@@ -27,7 +27,7 @@
 <#-- Main Heading -->
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
-    <td align=left>
+    <td align="left">
       <div class="head1">${uiLabelMap.PartyTheProfileOf}
         <#if person?exists>
           ${person.personalTitle?if_exists}
@@ -40,7 +40,7 @@
         </#if>
       </div>
     </td>
-    <td align=right>
+    <td align="right">
       <#if showOld>
         <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyHideOld}]</a>&nbsp;&nbsp;
       <#else>
@@ -51,7 +51,7 @@
 </table>
 <br/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -88,18 +88,18 @@
         </div>
       </td>
     </tr>
-    <#if person.nickname?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyNickName}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.nickname}</div></td></tr></#if>
-    <#if person.gender?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyGender}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.gender}</div></td></tr></#if>
-    <#if person.birthDate?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyBirthDate}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.birthDate.toString()}</div></td></tr></#if>
-    <#if person.height?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyHeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.height}</div></td></tr></#if>
-    <#if person.weight?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyWeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.weight}</div></td></tr></#if>
-    <#if person.mothersMaidenName?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaidenName}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.mothersMaidenName}</div></td></tr></#if>
-    <#if person.maritalStatus?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaritalStatus}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.maritalStatus}</div></td></tr></#if>
-    <#if person.socialSecurityNumber?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartySocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.socialSecurityNumber}</div></td></tr></#if>
-    <#if person.passportNumber?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportNumber}</div></td></tr></#if>
-    <#if person.passportExpireDate?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportExpireDate}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportExpireDate.toString()}</div></td></tr></#if>
-    <#if person.totalYearsWorkExperience?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.totalYearsWorkExperience}</div></td></tr></#if>
-    <#if person.comments?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CommonComments}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.comments}</div></td></tr></#if>
+    <#if person.nickname?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyNickName}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.nickname}</div></td></tr></#if>
+    <#if person.gender?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyGender}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.gender}</div></td></tr></#if>
+    <#if person.birthDate?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyBirthDate}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.birthDate.toString()}</div></td></tr></#if>
+    <#if person.height?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyHeight}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.height}</div></td></tr></#if>
+    <#if person.weight?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyWeight}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.weight}</div></td></tr></#if>
+    <#if person.mothersMaidenName?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaidenName}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.mothersMaidenName}</div></td></tr></#if>
+    <#if person.maritalStatus?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaritalStatus}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.maritalStatus}</div></td></tr></#if>
+    <#if person.socialSecurityNumber?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartySocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.socialSecurityNumber}</div></td></tr></#if>
+    <#if person.passportNumber?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportNumber}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.passportNumber}</div></td></tr></#if>
+    <#if person.passportExpireDate?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportExpireDate}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.passportExpireDate.toString()}</div></td></tr></#if>
+    <#if person.totalYearsWorkExperience?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.totalYearsWorkExperience}</div></td></tr></#if>
+    <#if person.comments?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.CommonComments}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.comments}</div></td></tr></#if>
   </table>
 </div>
 <#else>
@@ -115,7 +115,7 @@
 <#-- ============================================================= -->
 <#if monthsToInclude?exists && totalSubRemainingAmount?exists && totalOrders?exists>
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -143,7 +143,7 @@
 
 <#-- ============================================================= -->
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -165,7 +165,7 @@
           <td>
   <#if partyContactMechValueMaps?has_content>
     <table width="100%" border="0" cellpadding="0">
-      <tr align=left valign=bottom>
+      <tr align="left" valign=bottom>
         <th>${uiLabelMap.PartyContactType}</th>
         <th width="5">&nbsp;</th>
         <th>${uiLabelMap.CommonInformation}</th>
@@ -280,7 +280,7 @@
 </TABLE>
 <#-- ============================================================= -->
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -405,7 +405,7 @@
 </TABLE>
 
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -444,7 +444,7 @@
 ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-include")}
 
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <form name="setdefaultshipmeth" action="<@ofbizUrl>/setprofiledefault/viewprofile</@ofbizUrl>" method="post">
   <input type="hidden" name="productStoreId" value="${productStoreId}">
   <TR>
@@ -491,7 +491,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
 </TABLE>
 
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -554,7 +554,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
 
 <#if surveys?has_content>
   <br/>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>

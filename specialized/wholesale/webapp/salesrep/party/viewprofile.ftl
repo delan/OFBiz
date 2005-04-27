@@ -58,9 +58,9 @@ ${pages.get("/party/viewcustomers.ftl")}
     </td>
   </tr>
 </table>
-<br>
+<br/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -113,40 +113,40 @@ ${pages.get("/party/viewcustomers.ftl")}
       </td>
     </tr>
     <#if lookupPerson.nickname?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyNickname}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.nickname}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyNickname}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.nickname}</div></td></tr>
     </#if>
     <#if lookupPerson.gender?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyGender}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.gender}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyGender}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.gender}</div></td></tr>
     </#if>
     <#if lookupPerson.birthDate?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyBirthDate}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.birthDate.toString()}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyBirthDate}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.birthDate.toString()}</div></td></tr>
     </#if>
     <#if lookupPerson.height?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyHeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.height}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyHeight}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.height}</div></td></tr>
     </#if>
     <#if lookupPerson.weight?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyWeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.weight}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyWeight}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.weight}</div></td></tr>
     </#if>
     <#if lookupPerson.mothersMaidenName?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyMothersMaidenName}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.mothersMaidenName}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyMothersMaidenName}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.mothersMaidenName}</div></td></tr>
     </#if>
     <#if lookupPerson.maritalStatus?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaritalStatus}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.maritalStatus}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaritalStatus}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.maritalStatus}</div></td></tr>
     </#if>
     <#if lookupPerson.socialSecurityNumber?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartySocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.socialSecurityNumber}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartySocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.socialSecurityNumber}</div></td></tr>
     </#if>
     <#if lookupPerson.passportNumber?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.passportNumber}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportNumber}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.passportNumber}</div></td></tr>
     </#if>
     <#if lookupPerson.passportExpireDate?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportExpire}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.passportExpireDate.toString()}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportExpire}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.passportExpireDate.toString()}</div></td></tr>
     </#if>
     <#if lookupPerson.totalYearsWorkExperience?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.totalYearsWorkExperience}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.totalYearsWorkExperience}</div></td></tr>
     </#if>
     <#if lookupPerson.comments?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyComments}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.comments}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyComments}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${lookupPerson.comments}</div></td></tr>
     </#if>
   </table>
 <#elseif lookupGroup?has_content>
@@ -161,8 +161,8 @@ ${pages.get("/party/viewcustomers.ftl")}
   </TR>
 </TABLE>
 <#-- ============================================================= -->
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -186,7 +186,7 @@ ${pages.get("/party/viewcustomers.ftl")}
           <td>
   <#if contactMeches?has_content>
     <table width="100%" border="0" cellpadding="0">
-      <tr align=left valign=bottom>
+      <tr align="left" valign=bottom>
         <th><div class="tableheadtext">${uiLabelMap.PartyContactType}</th>
         <th width="5">&nbsp;</th>
         <th><div class="tableheadtext">${uiLabelMap.PartyContactInformation}</th>
@@ -219,14 +219,14 @@ ${pages.get("/party/viewcustomers.ftl")}
               <#if "POSTAL_ADDRESS" = contactMech.contactMechTypeId>
                   <#assign postalAddress = contactMechMap.postalAddress>
                   <div class="tabletext">
-                    <#if postalAddress.toName?has_content><b>${uiLabelMap.PartyAddrToName}:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br></#if>
-                    ${postalAddress.address1?if_exists}<br>
-                    <#if postalAddress.address2?has_content><br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.PartyAddrToName}:</b> ${postalAddress.toName}<br/></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br/></#if>
+                    ${postalAddress.address1?if_exists}<br/>
+                    <#if postalAddress.address2?has_content><br/></#if>
                     ${postalAddress.city?if_exists},
                     ${postalAddress.stateProvinceGeoId?if_exists}
                     ${postalAddress.postalCode?if_exists}
-                    <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
+                    <#if postalAddress.countryGeoId?has_content><br/>${postalAddress.countryGeoId}</#if>
                   </div>
                   <#if (postalAddress?has_content && !postalAddress.countryGeoId?has_content) || postalAddress.countryGeoId = "USA">
                       <#assign addr1 = postalAddress.address1?if_exists>
@@ -296,8 +296,8 @@ ${pages.get("/party/viewcustomers.ftl")}
 <#-- =====================Pay Method Information======================================== -->
 
 <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>

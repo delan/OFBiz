@@ -26,12 +26,12 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='40%' >
+          <td align="left" width='40%' >
             <div class='boxhead'>${uiLabelMap.WorkEffortActivityDetail}</div>
           </td>
           <td align='right' width='60%'>
@@ -158,13 +158,13 @@
 </table>
 
 <#if partyAssigns?has_content>
-  <br>
-  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <br/>
+  <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
       <td width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
-            <td align=left width='40%' >
+            <td align="left" width='40%' >
               <div class='boxhead'>${uiLabelMap.PartyPartyAssignmentsDetail}</div>
             </td>             
           </tr>
@@ -204,22 +204,22 @@
                     <input type='hidden' name="fromDate" value="${workEffortPartyAssignment.fromDate}">
     
                     <tr>
-                      <td width='26%' align=right><div class='tabletext'>${uiLabelMap.PartyPartyId}</div></td>
+                      <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.PartyPartyId}</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'><span class='tabletext'>${assignedName?default(workEffortPartyAssignment.partyId)} [${workEffortPartyAssignment.partyId?if_exists}]</span></td>
                     </tr>
                     <tr>
-                      <td width='26%' align=right><div class='tabletext'>${uiLabelMap.PartyRoleTypeId}</div></td>
+                      <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.PartyRoleTypeId}</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'><span class='tabletext'>${roleType.description} [${workEffortPartyAssignment.roleTypeId?if_exists}]</span></td>
                     </tr>
                     <tr>
-                      <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonFromDate}</div></td>
+                      <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.CommonFromDate}</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'><span class='tabletext'>${workEffortPartyAssignment.fromDate?if_exists?string}</span></td>
                     </tr>
                     <tr>
-                      <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonThruDate}</div></td>
+                      <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.CommonThruDate}</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'>
                         <input type='text' class='inputBox' size='30' maxlength='30' name="thruDate" value="${workEffortPartyAssignment.thruDate?if_exists?string}">
@@ -228,7 +228,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td width='26%' align=right><div class='tabletext'>${uiLabelMap.PartyPartyAssignmentStatus}</div></td>
+                      <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.PartyPartyAssignmentStatus}</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'>                                                
                         <select name='statusId' class='selectBox'>                                                   
@@ -245,12 +245,12 @@
                       </td>
                     </tr>
                     <tr>
-                      <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortComments}</div></td>
+                      <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortComments}</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'><input type='text' class="inputBox" size='60' maxlength='255' name="comments" value="${workEffortPartyAssignment.comments?if_exists}"></td>
                     </tr>
                     <tr>
-                      <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortMustRsvp}?</div></td>
+                      <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortMustRsvp}?</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'>
                         <select name='mustRsvp' class='selectBox'>
@@ -263,13 +263,13 @@
                       </td>
                     </tr>
                     <tr>
-                      <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortExpectation}</div></td>
+                      <td width='26%' align="right"><div class='tabletext'>${uiLabelMap.WorkEffortExpectation}</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'><span class='tabletext'>${workEffortPartyAssignment.expectationEnumId?default("N/A")}</span></td>
                     </tr>
                     
                     <tr>
-                      <td width='26%' align=right>
+                      <td width='26%' align="right">
                         <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}">
                         <#if isApplication?default(false)>
                         &nbsp;

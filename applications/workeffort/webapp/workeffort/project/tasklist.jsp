@@ -62,14 +62,14 @@
 
 %>
 
-<table border=0 cellspacing='0' cellpadding='0'><tr>
-  <td width='45%' valign=top>
-    <TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside' width='100%'>
+<table border="0" cellspacing='0' cellpadding='0'><tr>
+  <td width='45%' valign="top">
+    <TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside' width='100%'>
       <TR>
         <TD width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
-              <TD align=left width=>
+              <TD align="left" width=>
                 <div class='boxhead'>&nbsp;<b>Project:</b>&nbsp;<A class='boxhead' href='<ofbiz:url>/phaselist?projectWorkEffortId=<%=projectWorkEffortId%></ofbiz:url>'><ofbiz:entityfield attribute="projectWorkEffort" field="workEffortName"/></a></div>
               </TD>
             </tr>
@@ -80,25 +80,25 @@
         <TD width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>Project Status:</nobr></div></td>
+                      <td align="right" valign="top"><div class='tabletext'><nobr>Project Status:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top><ofbiz:entityfield field="description" attribute="projectWorkEffortStatus"/></td>
+                      <td valign="top"><ofbiz:entityfield field="description" attribute="projectWorkEffortStatus"/></td>
                     </tr>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
+                      <td align="right" valign="top"><div class='tabletext'><nobr>Description:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top><ofbiz:inputvalue field="description" param="description" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
+                      <td valign="top"><ofbiz:inputvalue field="description" param="description" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
                     </tr>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
+                      <td align="right" valign="top"><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top><ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
+                      <td valign="top"><ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
                       </td>
                     </tr>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
+                      <td align="right" valign="top"><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top><ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
+                      <td valign="top"><ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
                       </td>
                     </tr>
           </table>
@@ -106,14 +106,14 @@
       </TR>
     </TABLE>
   </td>
-  <td width='10%' valign=top>&nbsp;</td>
-  <td width='45%' valign=top>
-    <TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside' width='100%'>
+  <td width='10%' valign="top">&nbsp;</td>
+  <td width='45%' valign="top">
+    <TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside' width='100%'>
       <TR>
         <TD width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
-              <TD align=left>
+              <TD align="left">
                 <div class='boxhead'>&nbsp;<b>Phase:</b>&nbsp;<ofbiz:entityfield attribute="phaseWorkEffort" field="workEffortName"/></div>
               </TD>
             </tr>
@@ -124,25 +124,25 @@
         <TD width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>Phase Status:</nobr></div></td>
+                      <td align="right" valign="top"><div class='tabletext'><nobr>Phase Status:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top><ofbiz:entityfield field="description" attribute="phaseWorkEffortStatus"/></td>
+                      <td valign="top"><ofbiz:entityfield field="description" attribute="phaseWorkEffortStatus"/></td>
                     </tr>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
+                      <td align="right" valign="top"><div class='tabletext'><nobr>Description:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top><ofbiz:inputvalue field="description" param="description" entityAttr="phaseWorkEffort" tryEntityAttr="tryEntity"/>
+                      <td valign="top"><ofbiz:inputvalue field="description" param="description" entityAttr="phaseWorkEffort" tryEntityAttr="tryEntity"/>
                     </tr>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
+                      <td align="right" valign="top"><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top><ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="phaseWorkEffort" tryEntityAttr="tryEntity"/>
+                      <td valign="top"><ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="phaseWorkEffort" tryEntityAttr="tryEntity"/>
                       </td>
                     </tr>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
+                      <td align="right" valign="top"><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
                       <td>&nbsp;</td>
-                      <td valign=top><ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="phaseWorkEffort" tryEntityAttr="tryEntity"/>
+                      <td valign="top"><ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="phaseWorkEffort" tryEntityAttr="tryEntity"/>
                       </td>
                     </tr>
           </table>
@@ -151,16 +151,16 @@
     </TABLE>
   </td>
 </tr></table>
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
+          <TD align="left" width='40%' >
             <div class='boxhead'>&nbsp;Phase Tasks</div>
           </TD>
-          <TD align=right width='60%'>
+          <TD align="right" width='60%'>
             <A href='<ofbiz:url>/editphasetask?phaseWorkEffortId=<%=phaseWorkEffortId%></ofbiz:url>' class='lightbuttontext'>[New&nbsp;Task]</A>
           </TD>
         </tr>
@@ -180,7 +180,7 @@
                   <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                  <TD align="right"><DIV class='tabletext'><b>Edit</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='6'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="tasks">
@@ -192,7 +192,7 @@
                     <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
                     <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
-                    <TD align=right width='1%'><A class='buttontext' href='<ofbiz:url>/editphasetask?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>&phaseWorkEffortId=<%=phaseWorkEffortId%></ofbiz:url>'>
+                    <TD align="right" width='1%'><A class='buttontext' href='<ofbiz:url>/editphasetask?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>&phaseWorkEffortId=<%=phaseWorkEffortId%></ofbiz:url>'>
                         [Edit]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>

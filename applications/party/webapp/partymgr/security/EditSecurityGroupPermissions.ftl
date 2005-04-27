@@ -30,7 +30,7 @@
   ${pages.get("/security/SecurityGroupTabBar.ftl")}
   <div class="head1">${uiLabelMap.PartyPermissionSecurityGroupWithId}&nbsp;"${groupId}"</div>
   <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewSecurityGroup}]</a>
-  <br>
+  <br/>
   <#if securityGroupPermissions?has_content>
     <table border="0" width="100%" cellpadding="2">
       <tr>
@@ -50,7 +50,7 @@
       </tr>
     </table>
   <#else>
-    <br>
+    <br/>
   </#if>
   <table border="1" cellpadding='2' cellspacing='0' width='100%'>
     <tr>
@@ -91,8 +91,8 @@
       </tr>
     </table>
   </#if> 
-  <br>
-  <form method="POST" action="<@ofbizUrl>/addSecurityPermissionToSecurityGroup</@ofbizUrl>" style='margin: 0;'>
+  <br/>
+  <form method="post" action="<@ofbizUrl>/addSecurityPermissionToSecurityGroup</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="groupId" value="${groupId}">
     <input type="hidden" name="useValues" value="true">
 
@@ -107,8 +107,8 @@
       <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
     </div>
   </form>
-  <br>
-  <form method="POST" action="<@ofbizUrl>/addSecurityPermissionToSecurityGroup</@ofbizUrl>" style='margin: 0;'>
+  <br/>
+  <form method="post" action="<@ofbizUrl>/addSecurityPermissionToSecurityGroup</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="groupId" value="${groupId}">
     <input type="hidden" name="useValues" value="true">
 

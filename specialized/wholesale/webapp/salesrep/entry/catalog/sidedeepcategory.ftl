@@ -55,12 +55,12 @@
   </#if>
 </#macro>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td valign=middle align=center>
+          <td valign=middle align="center">
             <div class="boxhead">${uiLabelMap.ProductBrowseCategories}</div>
           </td>
         </tr>
@@ -83,4 +83,4 @@
     </TD>
   </TR>
 </TABLE>
-<br>
+<br/>

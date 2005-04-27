@@ -25,7 +25,7 @@
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 // function called from ShipmentScaleApplet when a weight is read
 function setWeight(weight) {
@@ -40,7 +40,7 @@ function setWeight(weight) {
   <#if shipment?has_content>
     <a href="<@ofbizUrl>/EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductEditShipment}]</a>
   </#if>
-  <br><br>
+  <br/><br/>
   
   <#if shipment?exists>   
     <#if 1 < shipmentPackages.size()>
@@ -120,7 +120,7 @@ function setWeight(weight) {
                 </tr>                
               </table>              
             </form>
-            <script language="javascript">
+            <script language="JavaScript" type="text/javascript">
             <!-- //
               document.routeForm.carrierPartyId.focus();
             // -->
@@ -129,7 +129,7 @@ function setWeight(weight) {
             <#-- display the links for label/packing slip -->
             <#assign allDone = "yes">
             <center>
-              <a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductShippingLabel}</a><br>
+              <a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductShippingLabel}</a><br/>
               <a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductPackingSlip}</a>
             </center>                
           </#if>
@@ -165,7 +165,7 @@ function setWeight(weight) {
               </tr>
             </table>
           </form>
-          <script language="javascript">
+          <script language="JavaScript" type="text/javascript">
           <!-- // 
             document.weightForm.weight.focus();
           // -->
@@ -182,10 +182,10 @@ function setWeight(weight) {
       </#if>      
       <hr class="sepbar">
       ${pages.get("/shipment/ViewShipmentInfo.ftl")}         
-      <br>${pages.get("/shipment/ViewShipmentItemInfo.ftl")}
-      <br>${pages.get("/shipment/ViewShipmentPackageInfo.ftl")}
+      <br/>${pages.get("/shipment/ViewShipmentItemInfo.ftl")}
+      <br/>${pages.get("/shipment/ViewShipmentPackageInfo.ftl")}
       <#if allDone?default("no") == "yes">
-        <br>${pages.get("/shipment/ViewShipmentRouteInfo.ftl")}
+        <br/>${pages.get("/shipment/ViewShipmentRouteInfo.ftl")}
       </#if>
     </#if>
   <#else>
@@ -211,7 +211,7 @@ function setWeight(weight) {
         </tr>        
       </table>
     </form>
-    <script language="javascript">
+    <script language="JavaScript" type="text/javascript">
     <!-- //
         document.selectOrderForm.orderId.focus();
     // -->

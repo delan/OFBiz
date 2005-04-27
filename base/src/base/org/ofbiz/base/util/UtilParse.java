@@ -28,8 +28,8 @@ package org.ofbiz.base.util;
  * <p>
  * Parses input to strip ignorable characters, deal with nulls, etc.
  * </p>
- * <br>
- * <br>
+ * <br/>
+ * <br/>
  * Created on Oct 2, 2004 by dustin
  */
 public class UtilParse {

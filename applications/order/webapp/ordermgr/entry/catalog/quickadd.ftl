@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -28,10 +28,10 @@
 <#if productCategory?has_content>
   <table border='0'  cellpadding='3' cellspacing='0'>
     <tr>
-      <td align=left>
+      <td align="left">
         <div class="head2">${productCategory.description?if_exists}</div>
       </td>
-      <td align=right>
+      <td align="right">
         <form name="choosequickaddform" method="post" action="<@ofbizUrl>/quickadd</@ofbizUrl>" style='margin: 0;'>
           <select name='category_id' class='selectBox'>
             <option value='${productCategory.productCategoryId}'>${productCategory.description?if_exists}</option>
@@ -53,7 +53,7 @@
         <td align="left" valign="top" width="0" colspan='2'>
           <div class="tabletext">
             <#if productCategory.categoryImageUrl?exists>
-              <img src="${productCategory.categoryImageUrl}" vspace="5" hspace="5" border="1" height='100' align=left>
+              <img src="${productCategory.categoryImageUrl}" vspace="5" hspace="5" border="1" height='100' align="left">
             </#if>
             ${productCategory.longDescription?if_exists}
           </div>

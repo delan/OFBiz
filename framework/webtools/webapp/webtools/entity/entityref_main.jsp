@@ -1,5 +1,5 @@
 <!--
- *  Copyright (c) 2001-2004 The Open For Business Project and respected authors.
+ *  Copyright (c) 2001-2005 The Open For Business Project and respected authors.
  
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -85,7 +85,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <body bgcolor="#FFFFFF">
 <div align="center">
 
-  <DIV class='toptext'>Entity Reference Chart<br>
+  <DIV class='toptext'>Entity Reference Chart<br/>
     <%=numberOfEntities%> Total Entities
     </DIV>
 <%
@@ -115,11 +115,11 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       </td>
     </tr>
     <tr class='headertext'>
-      <td width="30%" align=center>Java Name</td>
-      <td width="30%" align=center>DB Name</td>
-      <td width="10%" align=center>Field-Type</td>
-      <td width="15%" align=center>Java-Type</td>
-      <td width="15%" align=center nowrap>SQL-Type</td>
+      <td width="30%" align="center">Java Name</td>
+      <td width="30%" align="center">DB Name</td>
+      <td width="10%" align="center">Field-Type</td>
+      <td width="15%" align="center">Java-Type</td>
+      <td width="15%" align="center" nowrap>SQL-Type</td>
     </tr>
 	
 <%
@@ -169,7 +169,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       <td width="60%" colspan='4'><div align="left" class='relationtext'>
         <%=relation.getType()%>:<%if(relation.getType().length()==3){%>&nbsp;<%}%>
         <%for (int km = 0; km < relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = relation.getKeyMap(km);%>
-          <br>&nbsp;&nbsp;<%=km+1%>)&nbsp;
+          <br/>&nbsp;&nbsp;<%=km+1%>)&nbsp;
           <%if(keyMap.getFieldName().equals(keyMap.getRelFieldName())){%><%=keyMap.getFieldName()%>
           <%}else{%><%=keyMap.getFieldName()%> : <%=keyMap.getRelFieldName()%><%}%>
         <%}%>
@@ -183,14 +183,14 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 	  <td colspan="5">&nbsp;</td>
 	</tr>
   </table>
-  <br>
+  <br/>
 <%
       numberShowed++;
       }
     }
   }
 %>  
-  <br><br>
+  <br/><br/>
   <p align="center">Displayed: <%= numberShowed %></p>
 </div>
 

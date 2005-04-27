@@ -150,10 +150,10 @@
       <hr>
     
       <h3>Export:</h3>
-      <FORM method=POST action='<ofbiz:url>/xmldsdumpall</ofbiz:url>'>
-        <div>Output Directory: <INPUT type=text class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'></div>
-        <br>
-        <INPUT type=submit value='Export'>
+      <FORM method="post" action='<ofbiz:url>/xmldsdumpall</ofbiz:url>'>
+        <div>Output Directory: <INPUT type="text" class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'></div>
+        <br/>
+        <INPUT type="submit" value='Export'>
       </FORM>
     <%} else {%>
       <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>

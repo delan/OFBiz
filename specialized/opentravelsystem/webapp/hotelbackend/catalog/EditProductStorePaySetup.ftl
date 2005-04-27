@@ -52,7 +52,7 @@
     </#list>
   </table>
   
-  <br>
+  <br/>
   <table>
     <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
       <#if editSetting?has_content>

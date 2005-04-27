@@ -29,11 +29,11 @@
 <#if productCategory?has_content>
   <table border='0' width="100%" cellpadding='3' cellspacing='0'>
     <tr>
-      <td align=left>
+      <td align="left">
         <div class="head2">${productCategory.description?if_exists}</div>
       </td>
-      <td align=right>
-        <form name="choosequickaddform" method="POST" action="<@ofbizUrl>/quickadd</@ofbizUrl>" style='margin: 0;'>
+      <td align="right">
+        <form name="choosequickaddform" method="post" action="<@ofbizUrl>/quickadd</@ofbizUrl>" style='margin: 0;'>
           <select name='category_id' class='selectBox'>
             <option value='${productCategory.productCategoryId}'>${productCategory.description?if_exists}</option>
             <option value='${productCategory.productCategoryId}'>--</option>
@@ -54,7 +54,7 @@
         <td align="left" valign="top" width="0" colspan='2'>
           <div class="tabletext">
             <#if productCategory.categoryImageUrl?exists>
-              <img src="${productCategory.categoryImageUrl}" vspace="5" hspace="5" border="1" height='100' align=left>
+              <img src="${productCategory.categoryImageUrl}" vspace="5" hspace="5" border="1" height='100' align="left">
             </#if>
             ${productCategory.longDescription?if_exists}
           </div>
@@ -65,7 +65,7 @@
 </#if>
 
 <#if productCategoryMembers?exists && 0 < productCategoryMembers?size>
-  <br>
+  <br/>
   <center>
   <form method="post" action="<@ofbizUrl>/addtocartbulk</@ofbizUrl>" name="bulkaddform" style='margin: 0;'>
     <input type='hidden' name='category_id' value='${categoryId}'>

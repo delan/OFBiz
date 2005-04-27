@@ -35,7 +35,7 @@
         <tr valign="middle">
             <td><div class="tabletext">${(productAttribute.attrName)?if_exists}</div></td>
             <td>
-                <form method="POST" action="<@ofbizUrl>UpdateProductAttribute?UPDATE_MODE=UPDATE</@ofbizUrl>">
+                <form method="post" action="<@ofbizUrl>UpdateProductAttribute?UPDATE_MODE=UPDATE</@ofbizUrl>">
                     <input type="hidden" name="productId" value="${productAttribute.productId}"/>
                     <input type="hidden" name="PRODUCT_ID" value="${productAttribute.productId}"/>
                     <input type="hidden" name="ATTRIBUTE_NAME" value="${productAttribute.attrName}"/>
@@ -52,7 +52,7 @@
         </#list>
     </table>
     <br/>
-    <form method="POST" action="<@ofbizUrl>/UpdateProductAttribute</@ofbizUrl>" style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>/UpdateProductAttribute</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="productId" value="${productId}"/>
         <input type="hidden" name="PRODUCT_ID" value="${productId}"/>
         <input type="hidden" name="UPDATE_MODE" value="CREATE"/>

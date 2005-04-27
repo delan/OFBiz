@@ -47,7 +47,7 @@
 </div>
 <div class="tabletext"><u><b>Memory:</b></u> [<b>TOTAL:</b> <%=rt.totalMemory()%>] [<b>FREE:</b> <%=rt.freeMemory()%>] [<b>USED:</b> <%=(rt.totalMemory() - rt.freeMemory())%>] [<b>MAX:</b> <%=rt.maxMemory()%>]</span></div>
 
-<br>
+<br/>
 <table border='0' cellpadding='2' cellspacing='2'>
 <%
   String rowColor1 = "viewManyTR2";
@@ -85,15 +85,15 @@
         <td><%=(new Boolean(utilCache.getUseSoftReference())).toString()%></td>
         <td><%=(new Boolean(utilCache.getUseFileSystemStore())).toString()%></td>
         
-        <td align=center valign=middle>
+        <td align="center" valign=middle>
           <a href='<ofbiz:url>/FindUtilCacheElements?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Elements</a>
         </td>
-        <td align=center valign=middle>
+        <td align="center" valign=middle>
           <%if(hasUtilCacheEdit){%>
             <a href='<ofbiz:url>/EditUtilCache?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Edit</a>
           <%}%>
         </td>
-        <td align=center valign=middle>
+        <td align="center" valign=middle>
           <%if(hasUtilCacheEdit){%>
             <a href='<ofbiz:url>/FindUtilCacheClear?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Clear</a>
           <%}%>

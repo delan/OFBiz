@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2001-2005 The Open For Business Project (www.ofbiz.org)
  * 
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -114,7 +114,7 @@ public class ProductEvents {
             errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.keyword_missing", UtilHttp.getLocale(request)));
         if (errMsg.length() > 0) {
             errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
-            errMsg += ("</b><br><ul>" + errMsg + "</ul>");
+            errMsg += ("</b><br/><ul>" + errMsg + "</ul>");
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -434,7 +434,7 @@ public class ProductEvents {
             errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.from_date_missing", UtilHttp.getLocale(request)));
         if (errMsg.length() > 0) {
             errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
-            errMsg += ("</b><br><ul>" + errMsg + "</ul>");
+            errMsg += ("</b><br/><ul>" + errMsg + "</ul>");
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -508,7 +508,7 @@ public class ProductEvents {
         }
         if (errMsg.length() > 0) {
             errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
-            errMsg += ("</b><br><ul>" + errMsg + "</ul>");
+            errMsg += ("</b><br/><ul>" + errMsg + "</ul>");
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -600,7 +600,7 @@ public class ProductEvents {
             errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.attribute_name_missing", UtilHttp.getLocale(request)));
         if (errMsg.length() > 0) {
             errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
-            errMsg += ("</b><br><ul>" + errMsg + "</ul>");
+            errMsg += ("</b><br/><ul>" + errMsg + "</ul>");
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }

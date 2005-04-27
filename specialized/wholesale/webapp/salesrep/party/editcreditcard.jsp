@@ -77,27 +77,27 @@
       <%}%>
       <form method="post" action='<ofbiz:url>/updateCreditCard/<%=donePage%></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name='paymentMethodId' value='<ofbiz:print attribute="paymentMethodId"/>'>
+        <input type="hidden" name='paymentMethodId' value='<ofbiz:print attribute="paymentMethodId"/>'>
     </ofbiz:if>
 
     <input type="hidden" name="partyId" value="<%=partyId%>">
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Company Name on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Company Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Type</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Card Type</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="cardType" class="selectBox">
@@ -114,7 +114,7 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Card Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
@@ -122,7 +122,7 @@
     </tr>
     <%-- Should not be storing this
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Card Security Code</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" size="5" maxlength="10" <ofbiz:inputvalue field="cardSecurityCode" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
@@ -130,7 +130,7 @@
     </tr>
     --%>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Expiration Date</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <%String expMonth = "";%>
@@ -171,7 +171,7 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Billing Address</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Billing Address</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <%-- Removed because is confusing, can add but would have to come back here with all data populated as before...
@@ -182,7 +182,7 @@
         <ofbiz:if name="curPostalAddress">
           <tr>
             <td align="right" valign="top" width="1%">
-              <INPUT type=radio name='contactMechId' value='<ofbiz:print attribute="curContactMechId"/>' checked>
+              <INPUT type="radio" name='contactMechId' value='<ofbiz:print attribute="curContactMechId"/>' checked>
             </td>
             <td align="left" valign="top" width="80%">
               <div class="tabletext"><b>Use Current Address:</b></div>
@@ -196,14 +196,14 @@
                 </div>
               </ofbiz:iterator>
               <div class="tabletext">
-                <ofbiz:entityfield attribute="curPostalAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
-                <ofbiz:entityfield attribute="curPostalAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
-                <ofbiz:entityfield attribute="curPostalAddress" field="address1"/><br>
-                <ofbiz:entityfield attribute="curPostalAddress" field="address2" prefix="" suffix="<br>"/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="toName" prefix="<b>To:</b> " suffix="<br/>"/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br/>"/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="address1"/><br/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="address2" prefix="" suffix="<br/>"/>
                 <ofbiz:entityfield attribute="curPostalAddress" field="city"/>,
                 <ofbiz:entityfield attribute="curPostalAddress" field="stateProvinceGeoId"/>
                 <ofbiz:entityfield attribute="curPostalAddress" field="postalCode"/>
-                <ofbiz:entityfield attribute="curPostalAddress" field="countryGeoId" prefix="<br>" suffix=""/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="countryGeoId" prefix="<br/>" suffix=""/>
               </div>
               <div class="tabletext">(Updated:&nbsp;<ofbiz:entityfield attribute="curPartyContactMech" field="fromDate"/>)</div>
               <ofbiz:entityfield attribute="curPartyContactMech" field="thruDate" prefix="<div class='tabletext'><b>Delete:&nbsp;" suffix="</b></div>"/>
@@ -227,7 +227,7 @@
           <ofbiz:iterator name="postalAddressInfo" property="postalAddressInfos" type="java.util.Map" expandMap="true">
             <tr>
               <td align="right" valign="top" width="1%">
-                <INPUT type=radio name='contactMechId' value='<ofbiz:entityfield attribute="contactMech" field="contactMechId"/>'>
+                <INPUT type="radio" name='contactMechId' value='<ofbiz:entityfield attribute="contactMech" field="contactMechId"/>'>
               </td>
               <td align="left" valign="top" width="80%">
                 <ofbiz:iterator name="partyContactMechPurpose" property="partyContactMechPurposes">
@@ -238,14 +238,14 @@
                     </div>
                 </ofbiz:iterator>
                 <div class="tabletext">
-                  <ofbiz:entityfield attribute="postalAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
-                  <ofbiz:entityfield attribute="postalAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
-                  <ofbiz:entityfield attribute="postalAddress" field="address1"/><br>
-                  <ofbiz:entityfield attribute="postalAddress" field="address2" prefix="" suffix="<br>"/>
+                  <ofbiz:entityfield attribute="postalAddress" field="toName" prefix="<b>To:</b> " suffix="<br/>"/>
+                  <ofbiz:entityfield attribute="postalAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br/>"/>
+                  <ofbiz:entityfield attribute="postalAddress" field="address1"/><br/>
+                  <ofbiz:entityfield attribute="postalAddress" field="address2" prefix="" suffix="<br/>"/>
                   <ofbiz:entityfield attribute="postalAddress" field="city"/>,
                   <ofbiz:entityfield attribute="postalAddress" field="stateProvinceGeoId"/>
                   <ofbiz:entityfield attribute="postalAddress" field="postalCode"/>
-                  <ofbiz:entityfield attribute="postalAddress" field="countryGeoId" prefix="<br>" suffix=""/>
+                  <ofbiz:entityfield attribute="postalAddress" field="countryGeoId" prefix="<br/>" suffix=""/>
                 </div>
                 <div class="tabletext">(Updated:&nbsp;<ofbiz:entityfield attribute="partyContactMech" field="fromDate"/>)</div>
                 <ofbiz:entityfield attribute="partyContactMech" field="thruDate" prefix="<div class='tabletext'><b>Delete:&nbsp;" suffix="</b></div>"/>

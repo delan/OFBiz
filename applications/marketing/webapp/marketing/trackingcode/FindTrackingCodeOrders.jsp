@@ -80,7 +80,7 @@
 <ofbiz:if name="trackingCodeOrders" size="0">
   <table border="0" width="100%" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <%if (viewIndex > 0) {%>
           <a href="<ofbiz:url><%="/FindTrackingCodeOrders?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
@@ -120,7 +120,7 @@
 <ofbiz:if name="trackingCodeOrders" size="0">
   <table border="0" width="100%" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <%if (viewIndex > 0) {%>
           <a href="<ofbiz:url><%="/FindTrackingCodeOrders?trackingCodeId=" + trackingCodeId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
@@ -136,9 +136,9 @@
     </tr>
   </table>
 </ofbiz:if>
-<br>
+<br/>
 <%}%>
-<br>
+<br/>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("MARKETING_VIEW" or "MARKETING_ADMIN" needed)</h3>

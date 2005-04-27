@@ -26,7 +26,7 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupPayment() {
     paymentIdValue = document.lookuppayment.paymentId.value;
@@ -44,7 +44,7 @@ function lookupPayment() {
 <form method='post' name="lookuppayment" action="<@ofbizUrl>/findPayment</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -149,7 +149,7 @@ function lookupPayment() {
 </table>
 <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:lookupPayment();">
 </form> 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--//
     if (document.lookuppayment.paymentId != null) {
         document.lookuppayment.paymentId.focus();
@@ -158,15 +158,15 @@ function lookupPayment() {
 </script>
 
 <#if paymentList?exists>
-<br>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td width="50%"><div class="boxhead">${uiLabelMap.AccountingPaymentsFound}</div></td>
           <td width="50%">
-            <div class="boxhead" align=right>
+            <div class="boxhead" align="right">
               <#if 0 < paymentList?size>             
                 <#if 0 < viewIndex>
                   <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>

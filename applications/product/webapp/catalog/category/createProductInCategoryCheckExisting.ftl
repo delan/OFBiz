@@ -64,7 +64,7 @@
 
 <br/>
 
-<form name="createProductInCategoryForm" method="POST" action="<@ofbizUrl>/createProductInCategory</@ofbizUrl>" style="margin: 0;">
+<form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>/createProductInCategory</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
     <table cellpadding="1" cellspacing="0" border="1">
         <#list productFeatureAndTypeDatas?if_exists as productFeatureAndTypeData>

@@ -135,14 +135,14 @@
                             </td>
                             <td align="left" width="99%" valign="top" nowrap>
                               <div class="tabletext">
-                                <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                                <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
-                                <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
-                                <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
+                                <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br/></#if>
+                                <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br/></#if>
+                                <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br/></#if>
+                                <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>
                                 <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
-                                <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
-                                <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
-                                <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>
+                                <#if shippingAddress.stateProvinceGeoId?has_content><br/>${shippingAddress.stateProvinceGeoId}</#if>
+                                <#if shippingAddress.postalCode?has_content><br/>${shippingAddress.postalCode}</#if>
+                                <#if shippingAddress.countryGeoId?has_content><br/>${shippingAddress.countryGeoId}</#if>
                                 <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                               </div>
                             </td>

@@ -7,12 +7,12 @@ function submitBrowse(id) {
 </script>
 <div class="apptitle">&nbsp;DataCategories&nbsp;</div>
         <@showResponseTree masterNode=masterNode depth=0 />
-<br>
+<br/>
 <div class="inputBox">
 <a href="<@ofbizUrl>/EditDataCategory</@ofbizUrl>">New DataCategory</a>
 </div>
 
-<form name="brws" method="POST" action="<@ofbizUrl>/BrowseDataResource</@ofbizUrl>">
+<form name="brws" method="post" action="<@ofbizUrl>/BrowseDataResource</@ofbizUrl>">
 <input type="hidden" name="viewSize" value="10" />
 <input type="hidden" name="viewIndex" value="0" />
 <input type="hidden" name="dataCategoryId" value="" />

@@ -82,7 +82,7 @@
     </tr>
   </table>  
 </#if>
-<br>
+<br/>
 <#if wfTransitions?exists && wfTransitions?has_content>
   <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>

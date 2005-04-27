@@ -41,7 +41,7 @@
         <tr valign="middle">
             <td><div class="tabletext"><b>${(productPromoRule.productPromoRuleId)?if_exists}</b></div></td>
             <td align="left">
-                <form method="POST" action="<@ofbizUrl>/updateProductPromoRule</@ofbizUrl>">
+                <form method="post" action="<@ofbizUrl>/updateProductPromoRule</@ofbizUrl>">
                     <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                     <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                     <input type="text" size="30" name="ruleName" value="${(productPromoRule.ruleName)?if_exists}" class="inputBox">
@@ -71,11 +71,11 @@
                         </#if>
                         <td><div class="tabletext"><b>${(productPromoCond.productPromoCondSeqId)?if_exists}</b></div></td>
                         <td align="left">
-                            <form method=POST action="<@ofbizUrl>/updateProductPromoCond</@ofbizUrl>">
-                                <input type=hidden name="productPromoId" value="${(productPromoCond.productPromoId)?if_exists}"/>
-                                <input type=hidden name="productPromoRuleId" value="${(productPromoCond.productPromoRuleId)?if_exists}"/>
-                                <input type=hidden name="productPromoCondSeqId" value="${(productPromoCond.productPromoCondSeqId)?if_exists}"/>
-                                <select name="inputParamEnumId" size=1 class="selectBox">
+                            <form method="post" action="<@ofbizUrl>/updateProductPromoCond</@ofbizUrl>">
+                                <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)?if_exists}"/>
+                                <input type="hidden" name="productPromoRuleId" value="${(productPromoCond.productPromoRuleId)?if_exists}"/>
+                                <input type="hidden" name="productPromoCondSeqId" value="${(productPromoCond.productPromoCondSeqId)?if_exists}"/>
+                                <select name="inputParamEnumId" size="1" class="selectBox">
                                     <#if (productPromoCond.inputParamEnumId)?exists>
                                         <#assign inputParamEnum = productPromoCond.getRelatedOneCache("InputParamEnumeration")>
                                         <option value="${productPromoCond.inputParamEnumId}"><#if inputParamEnum?exists>${(inputParamEnum.description)?if_exists}<#else>[${(productPromoCond.inputParamEnumId)?if_exists}]</#if></option>
@@ -87,7 +87,7 @@
                                         <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
                                     </#list>
                                 </select>
-                                <select name="operatorEnumId" size=1 class="selectBox">
+                                <select name="operatorEnumId" size="1" class="selectBox">
                                     <#if (productPromoCond.operatorEnumId)?exists>
                                         <#assign operatorEnum = productPromoCond.getRelatedOneCache("OperatorEnumeration")>
                                         <option value="${(productPromoCond.operatorEnumId)?if_exists}"><#if operatorEnum?exists>${(operatorEnum.description)?if_exists}<#else>[${(productPromoCond.operatorEnumId)?if_exists}]</#if></option>
@@ -99,9 +99,9 @@
                                     <option value="${(condOperEnum.enumId)?if_exists}">${(condOperEnum.description)?if_exists}</option>
                                     </#list>
                                 </select>
-                                <input type=text size="25" name="condValue" value="${(productPromoCond.condValue)?if_exists}" class="inputBox">
-                                Other:<input type=text size="10" name="otherValue" value="${(productPromoCond.otherValue)?if_exists}" class="inputBox">
-                                <input type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+                                <input type="text" size="25" name="condValue" value="${(productPromoCond.condValue)?if_exists}" class="inputBox">
+                                Other:<input type="text" size="10" name="otherValue" value="${(productPromoCond.otherValue)?if_exists}" class="inputBox">
+                                <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </form>
                             <#-- ======================= Categories ======================== -->
                             <div class="tableheadtext">Condition Categories:</div>
@@ -119,7 +119,7 @@
                                 </div>
                             </#list>
                             <div class="tabletext">
-                                <form method="POST" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${productPromoId}">
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="_NA_">
@@ -156,7 +156,7 @@
                                 </div>
                             </#list>
                             <div class="tabletext">
-                                <form method="POST" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${productPromoId}">
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="_NA_">
@@ -179,24 +179,24 @@
                 </#list>
                 <tr>
                     <td align="left" colspan="3">
-                        <form method=POST action="<@ofbizUrl>/createProductPromoCond</@ofbizUrl>">
-                            <input type=hidden name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
-                            <input type=hidden name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
+                        <form method="post" action="<@ofbizUrl>/createProductPromoCond</@ofbizUrl>">
+                            <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
+                            <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                             <span class="tabletext"><b>${uiLabelMap.CommonNew} :</b>&nbsp;</span>
-                            <#-- <input type=text size="5" name="productPromoCondSeqId" value="${maxCondSeqId?if_exists}" class="inputBox"> -->
-                            <select name="inputParamEnumId" size=1 class="selectBox">
+                            <#-- <input type="text" size="5" name="productPromoCondSeqId" value="${maxCondSeqId?if_exists}" class="inputBox"> -->
+                            <select name="inputParamEnumId" size="1" class="selectBox">
                                 <#list inputParamEnums as inputParamEnum>
                                     <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
                                 </#list>
                             </select>
-                            <select name="operatorEnumId" size=1 class="selectBox">
+                            <select name="operatorEnumId" size="1" class="selectBox">
                                 <#list condOperEnums as condOperEnum>
                                 <option value="${(condOperEnum.enumId)?if_exists}">${(condOperEnum.description)?if_exists}</option>
                                 </#list>
                             </select>
                             <input type="text" size="25" name="condValue" class="inputBox">
-                            Other:<input type=text size="10" name="otherValue" class="inputBox">
-                            <input type=submit value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
+                            Other:<input type="text" size="10" name="otherValue" class="inputBox">
+                            <input type="submit" value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </form>
                     </td>
                 </tr>
@@ -220,11 +220,11 @@
                         <td><div class="tabletext"><b>${(productPromoAction.productPromoActionSeqId)?if_exists}</b></div></td>
                         <td align="left">
                             <div class="tabletext">
-                            <form method=POST action="<@ofbizUrl>/updateProductPromoAction</@ofbizUrl>">
-                                <input type=hidden name="productPromoId" value="${(productPromoAction.productPromoId)?if_exists}">
-                                <input type=hidden name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)?if_exists}">
-                                <input type=hidden name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)?if_exists}">
-                                <select name="productPromoActionEnumId" size=1 class="selectBox">
+                            <form method="post" action="<@ofbizUrl>/updateProductPromoAction</@ofbizUrl>">
+                                <input type="hidden" name="productPromoId" value="${(productPromoAction.productPromoId)?if_exists}">
+                                <input type="hidden" name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)?if_exists}">
+                                <input type="hidden" name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)?if_exists}">
+                                <select name="productPromoActionEnumId" size="1" class="selectBox">
                                     <#if (productPromoAction.productPromoActionEnumId)?exists>
                                         <#assign productPromoActionCurEnum = productPromoAction.getRelatedOneCache("ActionEnumeration")>
                                         <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}"><#if productPromoActionCurEnum?exists>${(productPromoActionCurEnum.description)?if_exists}<#else>[${(productPromoAction.productPromoActionEnumId)?if_exists}]</#if></option>
@@ -237,7 +237,7 @@
                                     </#list>
                                 </select>
                                 <input type="hidden" name="orderAdjustmentTypeId" value="${(productPromoAction.orderAdjustmentTypeId)?if_exists}">
-                                <#-- <select name="orderAdjustmentTypeId" size=1 class="selectBox">
+                                <#-- <select name="orderAdjustmentTypeId" size="1" class="selectBox">
                                     <#if (productPromoAction.orderAdjustmentTypeId)?exists>
                                         <#assign orderAdjustmentType = productPromoAction.getRelatedOneCache("OrderAdjustmentType")>
                                         <option value="${(productPromoAction.orderAdjustmentTypeId)?if_exists}"><#if orderAdjustmentType?exists>${(orderAdjustmentType.description)?if_exists}<#else>[${(productPromoAction.orderAdjustmentTypeId)?if_exists}]</#if></option>
@@ -249,11 +249,11 @@
                                     <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.description)?if_exists}</option>
                                     </#list>
                                 </select> -->
-                                Quantity:&nbsp;<input type=text size="5" name="quantity" value="${(productPromoAction.quantity)?if_exists}" class="inputBox">
-                                Amount:&nbsp;<input type=text size="5" name="amount" value="${(productPromoAction.amount)?if_exists}" class="inputBox">
-                                Item:&nbsp;<input type=text size="15" name="productId" value="${(productPromoAction.productId)?if_exists}" class="inputBox">
-                                Party:&nbsp;<input type=text size="10" name="partyId" value="${(productPromoAction.partyId)?if_exists}" class="inputBox">
-                                <input type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+                                Quantity:&nbsp;<input type="text" size="5" name="quantity" value="${(productPromoAction.quantity)?if_exists}" class="inputBox">
+                                Amount:&nbsp;<input type="text" size="5" name="amount" value="${(productPromoAction.amount)?if_exists}" class="inputBox">
+                                Item:&nbsp;<input type="text" size="15" name="productId" value="${(productPromoAction.productId)?if_exists}" class="inputBox">
+                                Party:&nbsp;<input type="text" size="10" name="partyId" value="${(productPromoAction.partyId)?if_exists}" class="inputBox">
+                                <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </form>
                             </div>
                             <#-- ======================= Categories ======================== -->
@@ -272,7 +272,7 @@
                                 </div>
                             </#list>
                             <div class="tabletext">
-                                <form method="POST" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${productPromoId}">
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}">
@@ -309,7 +309,7 @@
                                 </div>
                             </#list>
                             <div class="tabletext">
-                                <form method="POST" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${productPromoId}">
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}">
@@ -333,27 +333,27 @@
                 <tr>
                     <td align="left" colspan="3">
                         <div class="tabletext">
-                        <form method="POST" action="<@ofbizUrl>/createProductPromoAction</@ofbizUrl>">
+                        <form method="post" action="<@ofbizUrl>/createProductPromoAction</@ofbizUrl>">
                             <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                             <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                             <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
-                            <#-- <input type=text size="5" name="productPromoActionSeqId" value="${maxActionSeqId?if_exists}" class="inputBox"> -->
-                            <select name="productPromoActionEnumId" size=1 class="selectBox">
+                            <#-- <input type="text" size="5" name="productPromoActionSeqId" value="${maxActionSeqId?if_exists}" class="inputBox"> -->
+                            <select name="productPromoActionEnumId" size="1" class="selectBox">
                                 <#list productPromoActionEnums as productPromoActionEnum>
                                 <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.description)?if_exists}</option>
                                 </#list>
                             </select>
                             <input type="hidden" name="orderAdjustmentTypeId" value="PROMOTION_ADJUSTMENT">
-                            <#-- <select name="orderAdjustmentTypeId" size=1 class="selectBox">
+                            <#-- <select name="orderAdjustmentTypeId" size="1" class="selectBox">
                                 <#list orderAdjustmentTypes as orderAdjustmentType>
                                 <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.description)?if_exists}</option>
                                 </#list>
                             </select> -->
-                            Quantity:&nbsp;<input type=text size="5" name="quantity" class="inputBox">
-                            Amount:&nbsp;<input type=text size="5" name="amount" class="inputBox">
-                            Item:&nbsp;<input type=text size="15" name="productId" class="inputBox">
-                            Party:&nbsp;<input type=text size="10" name="partyId" class="inputBox">
-                            <input type=submit value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
+                            Quantity:&nbsp;<input type="text" size="5" name="quantity" class="inputBox">
+                            Amount:&nbsp;<input type="text" size="5" name="amount" class="inputBox">
+                            Item:&nbsp;<input type="text" size="15" name="productId" class="inputBox">
+                            Party:&nbsp;<input type="text" size="10" name="partyId" class="inputBox">
+                            <input type="submit" value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </form>
                         </div>
                     </td>
@@ -366,13 +366,13 @@
         <div class="tabletext"><b>${uiLabelMap.ProductNoteOnItemId} :</b> ${uiLabelMap.ProductItemIdGiftPurchaseFreeShipping}</div>
         <div class="tabletext"><b>${uiLabelMap.ProductNoteOnPartyId} :</b> ${uiLabelMap.ProductPartyFreeShipping}</div>
 
-        <br>
+        <br/>
 
         <div class="head3">${uiLabelMap.ProductAddPromoRule}:</div>
         <div class="tabletext">
-            <form method="POST" action="<@ofbizUrl>/createProductPromoRule</@ofbizUrl>" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>/createProductPromoRule</@ofbizUrl>" style="margin: 0;">
                 <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}">
-                ${uiLabelMap.ProductName} : <input type=text size="30" name="ruleName" class="inputBox">
+                ${uiLabelMap.ProductName} : <input type="text" size="30" name="ruleName" class="inputBox">
                 <input type="submit" value="${uiLabelMap.CommonAdd}">
             </form>
         </div>
@@ -394,7 +394,7 @@
             </div>
         </#list>
         <div class="tabletext">
-            <form method="POST" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
+            <form method="post" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
                 <input type="hidden" name="productPromoId" value="${productPromoId}">
                 <input type="hidden" name="productPromoRuleId" value="_NA_">
                 <input type="hidden" name="productPromoActionSeqId" value="_NA_">
@@ -431,7 +431,7 @@
             </div>
         </#list>
         <div class="tabletext">
-            <form method="POST" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
+            <form method="post" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
                 <input type="hidden" name="productPromoId" value="${productPromoId}">
                 <input type="hidden" name="productPromoRuleId" value="_NA_">
                 <input type="hidden" name="productPromoActionSeqId" value="_NA_">

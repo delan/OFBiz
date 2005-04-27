@@ -97,12 +97,12 @@ function toggleBillingAccount(box) {
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
-        <table border=0 cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
+        <table border="0" cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
           <tr>
             <td width='100%'>
               <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left nowrap>
+                  <td valign=middle align="left" nowrap>
                     <div class="boxhead">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
                   </td>
                 </tr>
@@ -110,7 +110,7 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <tr style='height: 100%;'>
-            <td valign=top height='100%'>
+            <td valign="top" height='100%'>
               <table border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
                   <td valign='top'>
@@ -130,14 +130,14 @@ function toggleBillingAccount(box) {
                              </td>
                              <td align="left" valign="top" width="99%" nowrap>
                                <div class="tabletext">
-                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
-                                 <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
-                                 <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
+                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br/></#if>
+                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br/></#if>
+                                 <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br/></#if>
+                                 <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>
                                  <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
-                                 <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
-                                 <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
-                                 <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>
+                                 <#if shippingAddress.stateProvinceGeoId?has_content><br/>${shippingAddress.stateProvinceGeoId}</#if>
+                                 <#if shippingAddress.postalCode?has_content><br/>${shippingAddress.postalCode}</#if>
+                                 <#if shippingAddress.countryGeoId?has_content><br/>${shippingAddress.countryGeoId}</#if>
                                  <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                                </div>
                              </td>
@@ -157,12 +157,12 @@ function toggleBillingAccount(box) {
       </td>
       <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
       <td height='100%'>
-        <table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+        <table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
           <tr>
             <td width='100%'>
               <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left nowrap>
+                  <td valign=middle align="left" nowrap>
                     <div class="boxhead">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
                   </td>
                 </tr>
@@ -170,7 +170,7 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <tr style='height: 100%;'>
-            <td valign=top height='100%'>
+            <td valign="top" height='100%'>
               <table border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
                   <td>
@@ -284,7 +284,7 @@ function toggleBillingAccount(box) {
                             </b>
                           </div>
                           <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
-                          <br>
+                          <br/>
                           <div class="tabletext">${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                           <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getOrderAdditionalEmails()?if_exists}'>
                         </td>
@@ -299,12 +299,12 @@ function toggleBillingAccount(box) {
       </td>
       <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
       <td height='100%'>
-        <table border=0 cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
+        <table border="0" cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
           <tr>
             <td width='100%'>
               <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left nowrap>
+                  <td valign=middle align="left" nowrap>
                     <div class="boxhead">3)&nbsp;${uiLabelMap.OrderHowShallYouPay}?</div>
                   </td>
                 </tr>
@@ -314,10 +314,10 @@ function toggleBillingAccount(box) {
 
           <#-- Payment Method Selection -->
           <tr style='height: 100%;'>
-            <td valign=top height='100%'>
+            <td valign="top" height='100%'>
               <table border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
-                  <td valign=top>
+                  <td valign="top">
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
                       <tr><td colspan="2">
                         <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
@@ -435,7 +435,7 @@ function toggleBillingAccount(box) {
                             </td>
                             <td align="left" valign="top" width="99%" nowrap>
                               <div class="tabletext">
-                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${availableAmount})<br>
+                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${availableAmount})<br/>
                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>

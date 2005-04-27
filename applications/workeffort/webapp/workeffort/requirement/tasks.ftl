@@ -26,15 +26,15 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
+          <TD align="left" width='40%' >
             <div class='boxhead'>${uiLabelMap.WorkEffortTaskList} <span class="tabletext">${uiLabelMap.WorkEffortForRequirement}: <a href="<@ofbizUrl>/requirement?requirementId=${requirementId}</@ofbizUrl>" class="lightbuttontext">[${requirementId}]</a></span></div>
           </TD>
-          <TD align=right width='60%'>
+          <TD align="right" width='60%'>
             <A href='<@ofbizUrl>/requirementlist</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortRequirementList}]</A>
             <A href='<@ofbizUrl>/requirement</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortNewRequirement}]</A>
             <A href='<@ofbizUrl>/task?requirementId=${requirementId}</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortAddTask}]</A>
@@ -54,7 +54,7 @@
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortStatus}</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortTaskName}</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
+                  <TD align="right"><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
                 <#if tasks?has_content>
@@ -66,7 +66,7 @@
                     <TD><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
                     <TD><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                         ${workEffort.workEffortName}</a></DIV></TD>
-                    <TD align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
+                    <TD align="right" width='1%'><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                        ${uiLabelMap.CommonEdit}&nbsp;[${workEffort.workEffortId}]</a></DIV></TD>
                   </TR>
                 </#list>

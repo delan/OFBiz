@@ -91,13 +91,13 @@
         <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}&showEmpty=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowEmptyItems}]</a>
     </#if>
 </#if>
-<br>
+<br/>
 
 <#if (product.isVirtual)?if_exists == "Y">
     <div class="head3">${uiLabelMap.ProductWarningVirtualProduct}.</div>
 </#if>
 
-<br>
+<br/>
 <#if productId?exists>
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>

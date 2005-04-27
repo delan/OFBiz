@@ -80,7 +80,7 @@
 <ofbiz:if name="userLoginSecurityGroups" size="0">
   <table border="0" width="100%" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <%if (viewIndex > 0) {%>
           <a href="<ofbiz:url><%="/EditUserLoginSecurityGroups?userLoginId=" + userLoginId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
@@ -111,12 +111,12 @@
     </td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/></div></td>
     <td>
-        <form action='<ofbiz:url>/userLogin_updateUserLoginToSecurityGroup</ofbiz:url>' method=POST style='margin: 0;'>
-            <input type=hidden name='userLoginId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>'>
-            <input type=hidden name='groupId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>'>
-            <input type=hidden name='fromDate' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/>'>
-            <input type=text class="inputBox" size='22' <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
-            <input type=submit value='Update'>
+        <form action='<ofbiz:url>/userLogin_updateUserLoginToSecurityGroup</ofbiz:url>' method="post" style='margin: 0;'>
+            <input type="hidden" name='userLoginId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>'>
+            <input type="hidden" name='groupId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>'>
+            <input type="hidden" name='fromDate' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/>'>
+            <input type="text" class="inputBox" size='22' <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
+            <input type="submit" value='Update'>
         </form>
     </td>
     </td>
@@ -130,7 +130,7 @@
 <ofbiz:if name="userLoginSecurityGroups" size="0">
   <table border="0" width="100%" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <%if (viewIndex > 0) {%>
           <a href="<ofbiz:url><%="/EditUserLoginSecurityGroups?userLoginId=" + userLoginId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
@@ -146,30 +146,30 @@
     </tr>
   </table>
 </ofbiz:if>
-<br>
+<br/>
 <form method="POST" action="<ofbiz:url>/userLogin_addUserLoginToSecurityGroup</ofbiz:url>" style='margin: 0;' name='addUserLoginToSecurityGroupForm'>
   <input type="hidden" name="userLoginId" value="<%=userLoginId%>">
   <input type="hidden" name="useValues" value="true">
-  <%-- <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'> --%>
+  <%-- <input type="hidden" name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'> --%>
 
   <script language='JavaScript'>
       function setUltsgFromDate() { document.addUserLoginToSecurityGroupForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
   </script>
   <div class='head2'>Add Security Group to this UserLogin:</div>
   <div class='tabletext'>
-    Security Group ID: <%-- <input type=text size='60' name='groupId'> --%>
+    Security Group ID: <%-- <input type="text" size='60' name='groupId'> --%>
       <select name="groupId" class="selectBox">
       <ofbiz:iterator name="securityGroup" property="securityGroups">
         <option value='<ofbiz:entityfield attribute="securityGroup" field="groupId"/>'><ofbiz:entityfield attribute="securityGroup" field="description"/> [<ofbiz:entityfield attribute="securityGroup" field="groupId"/>]</option>
       </ofbiz:iterator>
       </select>
-    <br>
-    From Date: <a href='#' onclick='setUltsgFromDate()' class='buttontext'>[Now]</a> <input type=text class="inputBox" size='22' name='fromDate'>
+    <br/>
+    From Date: <a href='#' onclick='setUltsgFromDate()' class='buttontext'>[Now]</a> <input type="text" class="inputBox" size='22' name='fromDate'>
     <input type="submit" value="Add">
   </div>
 </form>
 <%}%>
-<br>
+<br/>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("SECURITY_VIEW" or "SECURITY_ADMIN" needed)</h3>

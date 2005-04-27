@@ -38,7 +38,7 @@
   <#elseif !partyId?exists>
     <a href="<@ofbizUrl>/showvisits?showAll=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowAll}]</a>
   </#if>
-  <br>
+  <br/>
   <#if visitList?has_content>
     <table border="0" width="100%" cellpadding="2">
       <tr>
@@ -58,7 +58,7 @@
       </tr>
     </table>
   <#else>
-    <br>
+    <br/>
   </#if>
   
   <table width="100%" border="0" cellpadding="2" cellspacing="0">

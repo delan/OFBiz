@@ -32,8 +32,8 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
 
 <div class="head1">${uiLabelMap.PartyRoles} <span class="head2">${uiLabelMap.CommonFor} "${(facilityGroup.facilityGroupName)?if_exists}" [${uiLabelMap.CommonId} :${facilityGroupId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
-<br>
-<br>
+<br/>
+<br/>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -55,8 +55,8 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
 </#list>
 </table>
 
-<br>
-<form method="POST" action="<@ofbizUrl>/addPartyToFacilityGroup</@ofbizUrl>" style="margin: 0;">
+<br/>
+<form method="post" action="<@ofbizUrl>/addPartyToFacilityGroup</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="facilityGroupId" value="${facilityGroupId}">  
   <div class="head2">${uiLabelMap.ProductAddFacilityGroupPartyRole} :</div>
   <div class="tabletext">
@@ -71,7 +71,7 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
   </div>
 </form>
 
-<br>
+<br/>
 <#else>
   <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

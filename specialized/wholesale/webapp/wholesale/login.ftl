@@ -33,7 +33,7 @@
 </#if>
 
 <div class="head1">${uiLabelMap.CommonLogin}</div>
-<br>
+<br/>
 
 <table border='0' cellpadding='0' cellspacing='0'>
   <tr>
@@ -55,7 +55,7 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
-                  <form method="POST" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style='margin: 0;'>
+                  <form method="post" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style='margin: 0;'>
                     <table border='0' cellpadding='0' cellspacing='2'>
                       <tr align="center">
                         <td align='right'><span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span></td>
@@ -71,14 +71,14 @@
                           </td>
                         </#if>
                         -->
-                        <td align=left>
+                        <td align="left">
                           <input type="text" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>' size="20">
                         </td>
                       </tr>
                       <#if autoUserLogin?has_content>
                         <tr align="center">
-                          <td align=right>&nbsp;</td>
-                          <td align=left>
+                          <td align="right">&nbsp;</td>
+                          <td align="left">
                             <span class="tabletext">
                               (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
                             </span>
@@ -100,7 +100,7 @@
           </td>
         </tr>
       </table>
-      <br>
+      <br/>
       <table border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
           <td width='100%'>
@@ -118,7 +118,7 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td valign='middle' align='center'>
-                  <form method="POST" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style='margin: 0;'>
+                  <form method="post" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style='margin: 0;'>
                     <span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span><input type="text" size="20" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>'>
                     <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}" name="EMAIL_PASSWORD"></div>
                   </form>
@@ -130,7 +130,7 @@
       </table>
     </td>
     <td>&nbsp;&nbsp;&nbsp;</td>
-    <td width='50%' valign=top>
+    <td width='50%' valign="top">
       <table border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
           <td width='100%'>
@@ -148,8 +148,8 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
-                  <form method="POST" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style='margin: 0;'>
-                    <div class="tabletext" align=center>${uiLabelMap.CommonMayCreateNewAccountHere}:</div>
+                  <form method="post" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style='margin: 0;'>
+                    <div class="tabletext" align="center">${uiLabelMap.CommonMayCreateNewAccountHere}:</div>
                     <div align='center'><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonMayCreate}"></div>
                   </form>
                 </td>
@@ -159,7 +159,7 @@
         </tr>
       </table>
       <#if (shoppingCartSize > 0)>
-      <br>
+      <br/>
       <table border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
           <td width='100%'>
@@ -177,8 +177,8 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
-                  <form method="POST" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" style='margin: 0;'>
-                    <div class="tabletext" align=center>${uiLabelMap.CommonCheckoutAnonymousMsg}:</div>
+                  <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" style='margin: 0;'>
+                    <div class="tabletext" align="center">${uiLabelMap.CommonCheckoutAnonymousMsg}:</div>
                     <div align='center'><input type="submit" class="smallSubmit" value="Checkout"></div>
                   </form>
                 </td>
@@ -192,7 +192,7 @@
   </tr>
 </table>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
   <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>
   <#if !autoUserLogin?has_content>document.loginform.USERNAME.focus();</#if>
 </script>

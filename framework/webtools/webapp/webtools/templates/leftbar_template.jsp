@@ -1,6 +1,6 @@
 <%@ taglib uri='regions' prefix='region' %>
 
-  <td width='150' valign=top align=left>
+  <td width='150' valign="top" align="left">
     <region:render section='first'/>
 
     <region:render section='second'/>

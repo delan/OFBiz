@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
     var clicked = 0;
     function processOrder() {
@@ -46,7 +46,7 @@
 <#if cart?exists && 0 < cart.size()>
   <#if pages?exists>${pages.get("/order/orderheader.ftl")}</#if>
   <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderheader")}</#if>
-  <br>
+  <br/>
  <#if pages?exists>${pages.get("/order/orderitems.ftl")}</#if>
  <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderitems")}</#if>
   <table border="0" cellpadding="1" width="100%">

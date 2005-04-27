@@ -25,14 +25,14 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<SCRIPT language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 function insertNowTimestamp(field) {
   eval('document.productForm.' + field + '.value="${nowTimestampString}";');
 };
 function insertImageName(type,nameValue) {
   eval('document.productForm.' + type + 'ImageUrl.value=nameValue;');
 };
-</SCRIPT>
+</script>
 
 <#if fileType?has_content>
     <div class='head3'>${uiLabelMap.ProductResultOfImageUpload}</div>
@@ -44,7 +44,7 @@ function insertImageName(type,nameValue) {
         <div class='tabletext'>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath?if_exists}</b></div>
         <div class='tabletext'>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl?if_exists}</@ofbizContentUrl>">${imageUrl?if_exists}</a></b></div>
     </#if>
-<br>
+<br/>
 </#if>    
 
 <#if !(product?exists)>
@@ -95,47 +95,47 @@ function insertImageName(type,nameValue) {
     <hr class="sepbar"/>
     
     <div class="head2">${uiLabelMap.ProductOverrideSimpleFields}</div>
-    <form action="<@ofbizUrl>/updateProductContent</@ofbizUrl>" method=POST style="margin: 0;" name="productForm">
+    <form action="<@ofbizUrl>/updateProductContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
     <table border="0" cellpadding="2" cellspacing="0">
-    <input type=hidden name="productId" value="${productId?if_exists}">
+    <input type="hidden" name="productId" value="${productId?if_exists}">
     <tr>
-        <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductProductName}</b></div></td>
+        <td width="20%" align="right" valign="top"><div class="tabletext"><b>${uiLabelMap.ProductProductName}</b></div></td>
         <td>&nbsp;</td>
-        <td width="80%" colspan="4" valign=top>
+        <td width="80%" colspan="4" valign="top">
             <input type="text" class="inputBox" name="productName" value="${(product.productName)?if_exists}" size="30" maxlength="60">
         </td>
     </tr>        
     <tr>
-        <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductProductDescription}</b></div></td>
+        <td width="20%" align="right" valign="top"><div class="tabletext"><b>${uiLabelMap.ProductProductDescription}</b></div></td>
         <td>&nbsp;</td>
-        <td width="80%" colspan="4" valign=top>
+        <td width="80%" colspan="4" valign="top">
             <textarea class="textAreaBox" name="description" cols="60" rows="2">${(product.description)?if_exists}</textarea>
         </td>
     </tr>        
     <tr>
-        <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductLongDescription}</b></div></td>
+        <td width="20%" align="right" valign="top"><div class="tabletext"><b>${uiLabelMap.ProductLongDescription}</b></div></td>
         <td>&nbsp;</td>
-        <td width="80%" colspan="4" valign=top>
+        <td width="80%" colspan="4" valign="top">
             <textarea class="textAreaBox" name="longDescription" cols="60" rows="7">${(product.longDescription)?if_exists}</textarea>
         </td>
     </tr>        
     <tr>
-        <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductDetailScreen}</b></div></td>
+        <td width="20%" align="right" valign="top"><div class="tabletext"><b>${uiLabelMap.ProductDetailScreen}</b></div></td>
         <td>&nbsp;</td>
-        <td width="80%" colspan="4" valign=top>
+        <td width="80%" colspan="4" valign="top">
             <input type="text" class="inputBox" name="detailScreen" value="${(product.detailScreen)?if_exists}" size="60" maxlength="250">
-            <br><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, for screens in other files use something like: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</span>
+            <br/><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, for screens in other files use something like: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</span>
         </td>
     </tr>        
     <tr>
-        <td width="20%" align=right valign=top>
+        <td width="20%" align="right" valign="top">
             <div class="tabletext"><b>${uiLabelMap.ProductSmallImage}</b></div>
             <#if (product.smallImageUrl)?exists>
                 <a href="<@ofbizContentUrl>${(product.smallImageUrl)?if_exists}</@ofbizContentUrl>" target="_blank"><img alt="Small Image" src="<@ofbizContentUrl>${(product.smallImageUrl)?if_exists}</@ofbizContentUrl>" height="40" width="40"></a>
             </#if>
         </td>
         <td>&nbsp;</td>
-        <td width="80%" colspan="4" valign=top>
+        <td width="80%" colspan="4" valign="top">
         <input type="text" class="inputBox" name="smallImageUrl" value="${(product.smallImageUrl)?default('')}" size="60" maxlength="255">
         <#if productId?has_content>
             <div>
@@ -148,14 +148,14 @@ function insertImageName(type,nameValue) {
         </td>
     </tr>
     <tr>
-        <td width="20%" align=right valign=top>
+        <td width="20%" align="right" valign="top">
             <div class="tabletext"><b>${uiLabelMap.ProductMediumImage}</b></div>
             <#if (product.mediumImageUrl)?exists>
                 <a href="<@ofbizContentUrl>${product.mediumImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Medium Image" src="<@ofbizContentUrl>${product.mediumImageUrl}</@ofbizContentUrl>" height="40" width="40"></a>
             </#if>
         </td>
         <td>&nbsp;</td>
-        <td width="80%" colspan="4" valign=top>
+        <td width="80%" colspan="4" valign="top">
         <input type="text" class="inputBox" name="mediumImageUrl" value="${(product.mediumImageUrl)?default('')}" size="60" maxlength="255">
         <#if productId?has_content>
             <div>
@@ -168,14 +168,14 @@ function insertImageName(type,nameValue) {
         </td>
     </tr>
     <tr>
-        <td width="20%" align=right valign=top>
+        <td width="20%" align="right" valign="top">
             <div class="tabletext"><b>${uiLabelMap.ProductLargeImage}</b></div>
             <#if (product.largeImageUrl)?exists>
                 <a href="<@ofbizContentUrl>${product.largeImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Large Image" src="<@ofbizContentUrl>${product.largeImageUrl}</@ofbizContentUrl>" height="40" width="40"></a>
             </#if>
         </td>
         <td>&nbsp;</td>
-        <td width="80%" colspan="4" valign=top>
+        <td width="80%" colspan="4" valign="top">
         <input type="text" class="inputBox" name="largeImageUrl" value="${(product.largeImageUrl)?default('')}" size="60" maxlength="255">
         <#if productId?has_content>
             <div>
@@ -188,14 +188,14 @@ function insertImageName(type,nameValue) {
         </td>
     </tr>
     <tr>
-        <td width="20%" align=right valign=top>
+        <td width="20%" align="right" valign="top">
             <div class="tabletext"><b>${uiLabelMap.ProductDetailImage}</b></div>
             <#if (product.detailImageUrl)?exists>
                 <a href="<@ofbizContentUrl>${product.detailImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Detail Image" src="<@ofbizContentUrl>${product.detailImageUrl}</@ofbizContentUrl>" height="40" width="40"></a>
             </#if>
         </td>
         <td>&nbsp;</td>
-        <td width="80%" colspan="4" valign=top>
+        <td width="80%" colspan="4" valign="top">
         <input type="text" class="inputBox" name="detailImageUrl" value="${(product.detailImageUrl)?default('')}" size="60" maxlength="255">
         <#if productId?has_content>
             <div>
@@ -217,21 +217,21 @@ function insertImageName(type,nameValue) {
 
     <hr class="sepbar"/>
 
-    <SCRIPT language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
         function setUploadUrl(newUrl) {
         var toExec = 'document.imageUploadForm.action="' + newUrl + '";';
         eval(toExec);
         };
-    </SCRIPT>
+    </script>
     <div class="head3">${uiLabelMap.ProductUploadImage}</div>
-    <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
+    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
         <input type="file" class="inputBox" size="50" name="fname">
-        <br>
+        <br/>
         <span class="tabletext">
-            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="small" checked onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>");'>${uiLabelMap.CommonSmall}
-            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="medium" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=medium</@ofbizUrl>");'>${uiLabelMap.CommonMedium}
-            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=large</@ofbizUrl>");'>${uiLabelMap.CommonLarge}
-            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=detail</@ofbizUrl>");'>${uiLabelMap.CommonDetail}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="small" checked onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>");'>${uiLabelMap.CommonSmall}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="medium" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=medium</@ofbizUrl>");'>${uiLabelMap.CommonMedium}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=large</@ofbizUrl>");'>${uiLabelMap.CommonLarge}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=detail</@ofbizUrl>");'>${uiLabelMap.CommonDetail}
         </span>
         <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
     </form>

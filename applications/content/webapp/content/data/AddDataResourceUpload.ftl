@@ -1,8 +1,8 @@
 <div class="head1">Add Image Upload DataResource</div>
 
-<br>
+<br/>
 ${editWrapper.renderFormString()}
-<br>
+<br/>
 <div class="inputBox">
 <a href="<@ofbizUrl>/AddDataResourceText</@ofbizUrl>">New Text DataResource</a>
 <a href="<@ofbizUrl>/AddDataResourceUrl</@ofbizUrl>">New Url DataResource</a>

@@ -33,10 +33,10 @@
         <TD width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
             <tr>
-            <TD align=left>
+            <TD align="left">
                 <DIV class="boxhead">${uiLabelMap.ProductAddProductKeyword}:</DIV>
             </TD>
-            <TD align=right>
+            <TD align="right">
                 <a href="<@ofbizUrl>/EditProduct?productId=${productId?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductEditProduct}</a>
             </td>
             </tr>
@@ -48,7 +48,7 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
             <tr>
             <td>
-                <form method="POST" action="<@ofbizUrl>/UpdateProductKeyword</@ofbizUrl>" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>/UpdateProductKeyword</@ofbizUrl>" style="margin: 0;">
                     <input type="hidden" name="UPDATE_MODE" value="CREATE">
                     <input type="hidden" name="PRODUCT_ID" value="${productId?if_exists}">
                     <span class="tabletext">${uiLabelMap.ProductKeyword}: </span><input type="text" size="20" name="KEYWORD" value="" class="inputBox">
@@ -68,10 +68,10 @@
         <TD width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-            <TD align=left>
+            <TD align="left">
                 <DIV class="boxhead">${uiLabelMap.ProductKeywords}</DIV>
             </TD>
-            <TD align=right>
+            <TD align="right">
                 <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductReInduceKeywords}</a><a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductDeleteAllKeywords}</a>
             </td>
         </tr>
@@ -82,7 +82,7 @@
         <TD width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
-            <td valign=top>
+            <td valign="top">
             <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
             <#assign productKeywords = product.getRelated("ProductKeyword")>
             <#if (productKeywords.size() > 0)>
@@ -90,10 +90,10 @@
                 <#assign colSize = productKeywords.size()/3 + 1>
                 <#assign kIdx = 0>
                 <tr>                        
-                    <td align=right>${(productKeyword.relevancyWeight)?if_exists}&nbsp;</td>
-                    <td align=left>&nbsp;${(productKeyword.keyword)?if_exists}</td>
+                    <td align="right">${(productKeyword.relevancyWeight)?if_exists}&nbsp;</td>
+                    <td align="left">&nbsp;${(productKeyword.keyword)?if_exists}</td>
                     <td>&nbsp;&nbsp;</td>
-                    <td align=left>
+                    <td align="left">
                         <a href="<@ofbizUrl>/UpdateProductKeyword?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&KEYWORD=${(productKeyword.keyword)?if_exists}</@ofbizUrl>" class="buttontext">
                         [${uiLabelMap.CommonDelete}]</a>
                     </td>
@@ -103,7 +103,7 @@
                     <#assign colSize = colSize + colSize>
                     </TABLE>
                     </TD>
-                    <TD bgcolor="#FFFFFF" valign=top style="border-left: solid #CCCCCC 1px;">
+                    <TD bgcolor="#FFFFFF" valign="top" style="border-left: solid #CCCCCC 1px;">
                     <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">      
                 </#if>
                 </#list>

@@ -5,7 +5,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }
-</SCRIPT>
+</script>
 
 
 <#--
@@ -18,8 +18,8 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
     <#assign rootForumId=defaultSiteId?if_exists/>
 </#if>
 <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_ADMIN" >
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <form name="userform" mode="POST" action="<@ofbizUrl>/CMSSites</@ofbizUrl>" >
@@ -66,7 +66,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <#if requestParameters.moderatedSiteId?has_content>
   <TR>
     <TD width='100%'>
-      <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
          <tr><td><hr/></td></tr>
          <tr><td align="center"><div class="head1">Unapproved entries for forum Id:${requestParameters.moderatedSiteId}</div></td></tr>
          <tr><td><hr/></td></tr>
@@ -78,7 +78,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <#if requestParameters.permRoleSiteId?has_content>
   <TR>
     <TD width='100%'>
-      <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
          <tr><td><hr/></td></tr>
          <tr><td align="center"><div class="head1">Associated roles for forum Id:${requestParameters.permRoleSiteId}</div></td></tr>
          <tr><td><hr/></td></tr>
@@ -257,7 +257,7 @@ function call_fieldlookup3(view_name) {
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }
-</SCRIPT>
+</script>
 
 </#macro>
 

@@ -27,11 +27,11 @@
 <#if orderHeader?exists>
     <#if hasPermission>
         ${pages.get("/order/orderheader.ftl")}
-        <br>
+        <br/>
         ${pages.get("/order/orderitems.ftl")}
-        <br>
+        <br/>
         ${pages.get("/order/ordernotes.ftl")}
-        <br>
+        <br/>
         ${pages.get("/order/transitions.ftl")}
     <#else>
         <div class="head3">ERROR: You do not have permission to view the Order with ID [${orderId?if_exists}]</div>

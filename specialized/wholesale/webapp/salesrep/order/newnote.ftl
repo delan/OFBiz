@@ -34,7 +34,7 @@
     <input type="hidden" name="orderId" value="${orderId?if_exists}">
     <table width="90%" border="0" cellpadding="2" cellspacing="0">
       <tr>
-        <td width="26%" align=right><div class="tabletext">Note</div></td>
+        <td width="26%" align="right"><div class="tabletext">Note</div></td>
         <td width="54%">
           <textarea name="note" class="textAreaBox" rows="5" cols="70"></textarea>
         </td>

@@ -28,7 +28,7 @@
 
 <div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccountId}: ${billingAccount.billingAccountId}</div>
 
-<br>
+<br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td><div class="tableheadtext">${uiLabelMap.PartyTerm}</div></td>
@@ -60,15 +60,15 @@
   </#if>
 </table>
 
-<br>
+<br/>
 <#if billingAccountTerm?has_content>
     <div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms}</div>
-    <br>
+    <br/>
     <form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccountTerm</@ofbizUrl>">
       <input type="hidden" name="billingAccountTermId" value="${billingAccountTerm.billingAccountTermId}">
 <#else>
     <div class="head1">${uiLabelMap.AccountingCreateBillingAccountTerm}</div>
-    <br>
+    <br/>
     <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccountTerm</@ofbizUrl>">
 </#if>
   <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">

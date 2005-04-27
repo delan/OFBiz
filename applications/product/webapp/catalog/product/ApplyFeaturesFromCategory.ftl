@@ -43,7 +43,7 @@
     </#if>
     <table border="0" cellpadding="2">
         <tr>
-        <td align=right>
+        <td align="right">
             <span class="tabletext">
             <b>
             <#if (viewIndex > 0)>
@@ -60,10 +60,10 @@
     </table>
 </#if>
 <table border="1" cellpadding="2" cellspacing="0">
-<form method="POST" action="<@ofbizUrl>/ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
+<form method="post" action="<@ofbizUrl>/ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
   <input type="hidden" name="_useRowSubmit" value="Y">
   <input type="hidden" name="_checkGlobalScope" value="Y">
-  <input type=hidden name="productId" value="${productId}">
+  <input type="hidden" name="productId" value="${productId}">
 
   <tr class="viewOneTR1">
     <td><div class="tabletext"><b>${uiLabelMap.CommonId}</b></div></td>
@@ -81,7 +81,7 @@
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType")>
     <tr valign="middle" class="viewOneTR1">
-        <input type=hidden name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}">
+        <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}">
         <td><a href="<@ofbizUrl>/EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
         <td>${productFeature.description}</td>
         <td><#if curProductFeatureType?exists>${curProductFeatureType.description}<#else> [${productFeature.productFeatureTypeId}]</#if></td>
@@ -92,10 +92,10 @@
             </#list>
           </select>
         </td>
-        <td><input type=text size="25" name="fromDate_o_${rowCount}" class="inputBox"><a href="javascript:call_cal(document.selectAllForm.fromDate_o_${rowCount}, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a></td>
-        <td><input type=text size="25" name="thruDate_o_${rowCount}" class="inputBox"><a href="javascript:call_cal(document.selectAllForm.thruDate_o_${rowCount}, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a></td>
-        <td><input type=text size="6" name="amount_o_${rowCount}" class="inputBox" value="${productFeature.defaultAmount?if_exists}"></td>
-        <td><input type=text size="5" name="sequenceNum_o_${rowCount}" class="inputBox" value="${productFeature.defaultSequenceNum?if_exists}"></td>
+        <td><input type="text" size="25" name="fromDate_o_${rowCount}" class="inputBox"><a href="javascript:call_cal(document.selectAllForm.fromDate_o_${rowCount}, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a></td>
+        <td><input type="text" size="25" name="thruDate_o_${rowCount}" class="inputBox"><a href="javascript:call_cal(document.selectAllForm.thruDate_o_${rowCount}, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a></td>
+        <td><input type="text" size="6" name="amount_o_${rowCount}" class="inputBox" value="${productFeature.defaultAmount?if_exists}"></td>
+        <td><input type="text" size="5" name="sequenceNum_o_${rowCount}" class="inputBox" value="${productFeature.defaultSequenceNum?if_exists}"></td>
         <td align="right">              
             <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
         </td>

@@ -38,15 +38,15 @@ ${menuWrapper.renderMenuString()}
 <#-- Main Heading -->
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
-    <td align=left>
+    <td align="left">
       <div class="head1">${contentId?if_exists}
       </div>
     </td>
-    <td align=right>
+    <td align="right">
     </td>
   </tr>
 </table>
-<br>
+<br/>
 
 
 <#if currentValue?has_content>
@@ -61,8 +61,8 @@ ${menuWrapper.renderMenuString()}
 -->
 <#-- ============================================================= -->
 
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -103,8 +103,8 @@ ${menuWrapper.renderMenuString()}
   </TR>
 </TABLE>
 
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -178,7 +178,7 @@ ${menuWrapper.renderMenuString()}
 </TABLE>
 
 <#--
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -199,7 +199,7 @@ ${menuWrapper.renderMenuString()}
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Image</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Image</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
         <img src="<@ofbizUrl>/img?imgId=${imgDataResourceId?if_exists}</@ofbizUrl>" />
 <div></td></tr>
   </table>
@@ -239,7 +239,7 @@ ${menuWrapper.renderMenuString()}
 
 <#macro renderTextData content textData >
     <#assign contentId=content.contentId?if_exists/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -260,8 +260,8 @@ ${menuWrapper.renderMenuString()}
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Content Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${content.contentName?if_exists}</div></td></tr>
-    <tr><td align=right nowrap><div class='tabletext'><b>Description</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${content.description?if_exists}<div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Content Name</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${content.contentName?if_exists}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>Description</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${content.description?if_exists}<div></td></tr>
   </table>
           </td>
         </tr>
@@ -274,7 +274,7 @@ ${menuWrapper.renderMenuString()}
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b></b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
+    <tr><td align="right" nowrap><div class='tabletext'><b></b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
 <#-- ${textData?if_exists} -->
 <@renderContentAsText subContentId=content.contentId  editRequestName="/EditAddContent"/>
 <div></td></tr>

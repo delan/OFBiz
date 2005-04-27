@@ -25,7 +25,7 @@
 -->
 <#if pages?exists>${pages.get("/order/orderheader.ftl")}</#if>
 <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderheader")}</#if>
-<br>
+<br/>
 <#if pages?exists>${pages.get("/order/orderitems.ftl")}</#if>
 <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderitems")}</#if>
 

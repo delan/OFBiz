@@ -89,9 +89,9 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   while(piter.hasNext()) {
     String pName = (String)piter.next();
     if (forstatic) {%>
-	    <a href="entityref_main.html#<%=pName%>" target="entityFrame" class='listtext'><%=pName%></a><br>
+	    <a href="entityref_main.html#<%=pName%>" target="entityFrame" class='listtext'><%=pName%></a><br/>
     <%} else {%>
-	    <a href="<%=response.encodeURL(controlPath + "/view/entityref_main#" + pName)%>" target="entityFrame" class='listtext'><%=pName%></a><br>
+	    <a href="<%=response.encodeURL(controlPath + "/view/entityref_main#" + pName)%>" target="entityFrame" class='listtext'><%=pName%></a><br/>
     <%}%>
 <%}%>
 
@@ -113,7 +113,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 	-->
 	<a href="<%=response.encodeURL(controlPath + "/view/" + url)%>" target="entityFrame" class='listtext'><%= entityName %></a>
   <%}%>
-<br>
+<br/>
 <%
 		}	
 	}

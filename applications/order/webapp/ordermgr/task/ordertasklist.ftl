@@ -25,7 +25,7 @@
  *@since      2.2
 -->
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
     function viewOrder(form) {
         if (form.taskStatus.value == "WF_NOT_STARTED") {
@@ -48,12 +48,12 @@
 
 <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session) || security.hasRolePermission("ORDERMGR_ROLE", "_VIEW", "", "", session)>
 <#assign tasksFound = false>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='70%' >
+          <td align="left" width='70%' >
             <div class='boxhead'>${uiLabelMap.OrderOrderNeedingAttention}</div>
           </td>             
         </tr>

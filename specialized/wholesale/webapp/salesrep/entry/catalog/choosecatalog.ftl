@@ -26,12 +26,12 @@
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if 0 < catalogCol?size>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
-            <td valign=middle align=center>
+            <td valign=middle align="center">
               <div class="boxhead">${uiLabelMap.ProductCatalogLabel}</div>
             </td>
           </tr>
@@ -42,8 +42,8 @@
       <TD width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
-            <td align=center>
-              <form name="choosecatalogform" method="POST" action="<@ofbizUrl>/orderentry</@ofbizUrl>" style='margin: 0;'>
+            <td align="center">
+              <form name="choosecatalogform" method="post" action="<@ofbizUrl>/orderentry</@ofbizUrl>" style='margin: 0;'>
                 <SELECT name='CURRENT_CATALOG_ID' class='selectBox'>
                   <OPTION value='${currentCatalogId}'>${currentCatalogName}</OPTION>
                   <OPTION value='${currentCatalogId}'></OPTION>

@@ -27,7 +27,7 @@
   <div class="tabletext">Repository is empty.</div>
 </#if>
 
-<br>
+<br/>
 <div class="head2">Upload XPDL</div>
 <div>&nbsp;</div>
 <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/repository?upload=xpdl</@ofbizUrl>" name="xpdlUploadForm">

@@ -7,7 +7,7 @@
         document.forms.mostrecent.appendChild(rowCountElement);
         document.forms.mostrecent.submit();
     }
-</SCRIPT>
+</script>
 
 <table width="100%" border="0" >
 

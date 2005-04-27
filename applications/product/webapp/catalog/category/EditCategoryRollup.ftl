@@ -48,14 +48,14 @@
       <td><#if curCategory?has_content><a href="<@ofbizUrl>/EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if></td>
       <td><div class="tabletext" <#if hasntStarted>style="color: red;"</#if>>${productCategoryRollup.fromDate}</div></td>
       <td align="center">
-        <form method=POST action="<@ofbizUrl>/updateProductCategoryToCategory</@ofbizUrl>" name="lineParentForm${lineParent}">
-            <input type=hidden name="showProductCategoryId" value="${productCategoryRollup.productCategoryId}">
-            <input type=hidden name="productCategoryId" value="${productCategoryRollup.productCategoryId}">
-            <input type=hidden name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}">
-            <input type=hidden name="fromDate" value="${productCategoryRollup.fromDate}">
-            <input type=text size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" <#if hasExpired>style="color: red"</#if>>
+        <form method="post" action="<@ofbizUrl>/updateProductCategoryToCategory</@ofbizUrl>" name="lineParentForm${lineParent}">
+            <input type="hidden" name="showProductCategoryId" value="${productCategoryRollup.productCategoryId}">
+            <input type="hidden" name="productCategoryId" value="${productCategoryRollup.productCategoryId}">
+            <input type="hidden" name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}">
+            <input type="hidden" name="fromDate" value="${productCategoryRollup.fromDate}">
+            <input type="text" size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" <#if hasExpired>style="color: red"</#if>>
             <a href="javascript:call_cal(document.lineParentForm${lineParent}.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-            <input type=text size="5" name="sequenceNum" value="${productCategoryRollup.sequenceNum?if_exists}" class="inputBox">
+            <input type="text" size="5" name="sequenceNum" value="${productCategoryRollup.sequenceNum?if_exists}" class="inputBox">
             <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </form>
       </td>
@@ -72,8 +72,8 @@
   </tr>
 </#if>
 </table>
-<br>
-<form method="POST" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
+<br/>
+<form method="post" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
   <input type="hidden" name="productCategoryId" value="${productCategoryId}">
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
   <div class="tabletext">${uiLabelMap.CommonAddA} <b>${uiLabelMap.ProductParent}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
@@ -84,13 +84,13 @@
         </#if>
     </#list>
     </select>
-  <input type=text size="25" name="fromDate" class="inputBox">
+  <input type="text" size="25" name="fromDate" class="inputBox">
   <a href="javascript:call_cal(document.addParentForm.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>
-<br>
+<br/>
 <hr>
-<br>
+<br/>
 
 <p class="head2">${uiLabelMap.ProductCategoryRollupChildCategories}</p>
 
@@ -114,14 +114,14 @@
       <td><#if curCategory?has_content><a href="<@ofbizUrl>/EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if>
       <td><div class="tabletext" <#if hasntStarted>style="color: red"</#if>>${productCategoryRollup.fromDate}</div></td>
       <td align="center">
-        <form method=POST action="<@ofbizUrl>/updateProductCategoryToCategory</@ofbizUrl>" name="lineChildForm${lineChild}">
-            <input type=hidden name="showProductCategoryId" value="${productCategoryId}">
-            <input type=hidden name="productCategoryId" value="${productCategoryRollup.productCategoryId}">
-            <input type=hidden name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}">
-            <input type=hidden name="fromDate" value="${productCategoryRollup.fromDate}">
-            <input type=text size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"</#if>>
+        <form method="post" action="<@ofbizUrl>/updateProductCategoryToCategory</@ofbizUrl>" name="lineChildForm${lineChild}">
+            <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
+            <input type="hidden" name="productCategoryId" value="${productCategoryRollup.productCategoryId}">
+            <input type="hidden" name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}">
+            <input type="hidden" name="fromDate" value="${productCategoryRollup.fromDate}">
+            <input type="text" size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineChildForm${lineChild}.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-            <input type=text size="5" name="sequenceNum" value="${productCategoryRollup.sequenceNum?if_exists}" class="inputBox">
+            <input type="text" size="5" name="sequenceNum" value="${productCategoryRollup.sequenceNum?if_exists}" class="inputBox">
             <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </form>
       </td>
@@ -138,9 +138,9 @@
   </tr>
 </#if>
 </table>
-<br>
+<br/>
 
-<form method="POST" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
+<form method="post" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
   <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}">
   <div class="tabletext">${uiLabelMap.CommonAddA} <b>${uiLabelMap.ProductChild}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
@@ -151,7 +151,7 @@
         </#if>
     </#list>
     </select>
-  <input type=text size="25" name="fromDate" class="inputBox">
+  <input type="text" size="25" name="fromDate" class="inputBox">
   <a href="javascript:call_cal(document.addChildForm.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>

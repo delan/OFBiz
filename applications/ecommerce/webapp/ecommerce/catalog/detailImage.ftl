@@ -30,7 +30,7 @@
         <#assign detailImage = Static["org.ofbiz.base.util.Base64"].base64Decode(requestParameters.detail)>
         <img src="${detailImage}" border="0" width='500'>
       <#else>
-        <script language="javascript">
+        <script language="JavaScript" type="text/javascript">
         <!-- //
             window.close();
         // -->

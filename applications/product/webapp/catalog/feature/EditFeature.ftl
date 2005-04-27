@@ -30,7 +30,7 @@
 <#if editSupplierFeaturesForm?has_content>
 ${editSupplierFeaturesForm.renderFormString()}
 </#if>
-<br>
+<br/>
 <div class="head2">Create information for new supplier</div>
 <#if createSupplierFeatureForm?has_content>
 ${createSupplierFeatureForm.renderFormString()}

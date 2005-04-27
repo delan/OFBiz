@@ -29,10 +29,10 @@
 ${pages.get(page.getProperty("subMenu"))}
 
 <div class="head1">${page.getProperty("entityName")}</div>
-<br>
-<br>
+<br/>
+<br/>
 ${editWrapper.renderFormString()}
-<br>
+<br/>
 
 <#else>
  <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>

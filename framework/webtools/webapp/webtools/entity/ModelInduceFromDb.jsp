@@ -7,7 +7,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 %>
 
 <div class='head3'><b>Please specify the helperName to induce from:</b></div>
-<form action='' method=POST>
+<form action='' method="post">
     <input type='TEXT' class='inputBox' size='40' name='helperName'>
     <input type=SUBMIT value='Induce!'>
 </form>

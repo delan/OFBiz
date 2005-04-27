@@ -43,8 +43,8 @@ ${menuWrapper.renderMenuString()}
 </#if>
 <#assign partyUserLoginId=""/>
 <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_ADMIN" subContentId=partyUserLoginId>
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <form name="userform" mode="POST" action="<@ofbizUrl>/UserPermissions</@ofbizUrl>" >

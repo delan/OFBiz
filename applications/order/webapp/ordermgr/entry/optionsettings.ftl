@@ -26,7 +26,7 @@
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
 <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
@@ -149,7 +149,7 @@
                       <td nowrap colspan="2">
                          <table>
                             <tr>
-                              <td width="26%" align=right valign=top>
+                              <td width="26%" align="right" valign="top">
                                 <div class="head2"><b>${uiLabelMap.OrderShipBeforeDate} :</b></div>
                               </td>
                               <td width="5">&nbsp;</td>
@@ -165,7 +165,7 @@
                       <td nowrap colspan="2">
                          <table>
                             <tr>
-                              <td width="26%" align=right valign=top>
+                              <td width="26%" align="right" valign="top">
                                 <div class="head2"><b>${uiLabelMap.OrderShipAfterDate} :</b></div>
                               </td>
                               <td width="5">&nbsp;</td>
@@ -189,7 +189,7 @@
   </tr>
 </table>
 
-<br>
+<br/>
 <#else>
   <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

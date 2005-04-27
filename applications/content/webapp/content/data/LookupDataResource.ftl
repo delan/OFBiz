@@ -25,11 +25,11 @@
 -->
 
 <div class="head1">Find ${page.getProperty("entityName")}</div>
-<br>
+<br/>
 ${mruWrapper.renderFormString()}
-<br>
+<br/>
 ${queryWrapper.renderFormString()}
-<br>
+<br/>
 ${listWrapper.renderFormString()}
-<br>
+<br/>
 

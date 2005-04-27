@@ -220,7 +220,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         if (errorMessageList == null) errorMessageList = new LinkedList();
 
         if (request.getAttribute("_EVENT_MESSAGE_") != null) {
-            eventMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_EVENT_MESSAGE_"), "\n", "<br>"));
+            eventMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_EVENT_MESSAGE_"), "\n", "<br/>"));
             request.removeAttribute("_EVENT_MESSAGE_");
         }
         if (request.getAttribute("_EVENT_MESSAGE_LIST_") != null) {
@@ -228,11 +228,11 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             request.removeAttribute("_EVENT_MESSAGE_LIST_");
         }
         if (request.getAttribute("_ERROR_MESSAGE_") != null) {
-            errorMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_ERROR_MESSAGE_"), "\n", "<br>"));
+            errorMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
             request.removeAttribute("_ERROR_MESSAGE_");
         }
         if (session.getAttribute("_ERROR_MESSAGE_") != null) {
-            errorMessageList.add(UtilFormatOut.replaceString((String) session.getAttribute("_ERROR_MESSAGE_"), "\n", "<br>"));
+            errorMessageList.add(UtilFormatOut.replaceString((String) session.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
             session.removeAttribute("_ERROR_MESSAGE_");
         }
         if (request.getAttribute("_ERROR_MESSAGE_LIST_") != null) {

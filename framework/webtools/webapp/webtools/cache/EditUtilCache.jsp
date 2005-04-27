@@ -42,7 +42,7 @@
    <%if(utilCache!=null){%>
     <div class="tabletext"><b>Cache Name:</b>&nbsp;<%=cacheName%></div>
     <a href='<ofbiz:url>/EditUtilCacheClear?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>' class="buttontext">Clear this Cache</a>
-    <br><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
+    <br/><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
     <form method="POST" action='<ofbiz:url>/EditUtilCacheUpdate?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>'>
     <table border="0" cellpadding="2" cellspacing="2">
     <%
@@ -132,7 +132,7 @@
   <%}else{%>
     <H3>&nbsp;No Cache Name Specified</H3>
   <%}%>
-  <br><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
+  <br/><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
 
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_EDIT needed).</h3>

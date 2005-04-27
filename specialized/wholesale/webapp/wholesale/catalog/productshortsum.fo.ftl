@@ -44,5 +44,5 @@
 <fo:inline white-space-collapse="false">
 </fo:inline>
 <#else>
-&nbsp;${uiLabelMap.ProductErrorProductNotFound}.<br>
+&nbsp;${uiLabelMap.ProductErrorProductNotFound}.<br/>
 </#if>

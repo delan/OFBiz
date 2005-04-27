@@ -25,29 +25,29 @@
  *@version    $Rev$
  *@since      2.2
 -->
-    <form action="<@ofbizUrl>UpdateProductAssoc</@ofbizUrl>" method=POST style="margin: 0;" name="editProductAssocForm">
+    <form action="<@ofbizUrl>UpdateProductAssoc</@ofbizUrl>" method="post" style="margin: 0;" name="editProductAssocForm">
     <table border="0" cellpadding="2" cellspacing="0">
     
     <#if !(productAssoc?exists)>
         <#if productId?exists && productIdTo?exists && productAssocTypeId?exists && fromDate?exists>
 <#--            <div class="tabletext"><b>Association not found: Product Id=${productId?if_exists}, Product Id To=${productIdTo?if_exists}, Association Type Id=${productAssocTypeId?if_exists}, From Date=${fromDate?if_exists}.</b></div> -->
             <div class="tabletext"><b><#assign uiLabelWithVar=uiLabelMap.ProductAssociationNotFound?interpret><@uiLabelWithVar/></b></div>
-            <input type=hidden name="UPDATE_MODE" value="CREATE">
+            <input type="hidden" name="UPDATE_MODE" value="CREATE">
             <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
             <td>&nbsp;</td>
             <td><input type="text" class="inputBox" name="PRODUCT_ID" size="20" maxlength="40" value="${productId?if_exists}"></td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
             <td>&nbsp;</td>
             <td><input type="text" class="inputBox" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo?if_exists}"></td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductAssociationTypeId}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductAssociationTypeId}</div></td>
             <td>&nbsp;</td>
             <td>
-                <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size=1>
+                <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size="1">
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findByPrimaryKey("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId))>
                     <#if curAssocType?exists>
@@ -62,7 +62,7 @@
             </td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
             <td>&nbsp;</td>
             <td>
                 <div class="tabletext">
@@ -73,22 +73,22 @@
             </td>
             </tr>
         <#else>
-            <input type=hidden name="UPDATE_MODE" value="CREATE">
+            <input type="hidden" name="UPDATE_MODE" value="CREATE">
             <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
             <td>&nbsp;</td>
             <td><input type="text" class="inputBox" name="PRODUCT_ID" size="20" maxlength="40" value="${productId?if_exists}"></td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
             <td>&nbsp;</td>
             <td><input type="text" class="inputBox" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo?if_exists}"></td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductAssociationTypeId}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductAssociationTypeId}</div></td>
             <td>&nbsp;</td>
             <td>
-                <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size=1>
+                <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size="1">
                 <-- <option value="">&nbsp;</option> -->
                 <#list assocTypes as assocType>
                     <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.description)?if_exists}</option>
@@ -97,7 +97,7 @@
             </td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
             <td>&nbsp;</td>
             <td>
                 <div class="tabletext">
@@ -111,34 +111,34 @@
     <#else>
         <#assign isCreate = false>
         <#assign curProductAssocType = productAssoc.getRelatedOneCache("ProductAssocType")>
-        <input type=hidden name="UPDATE_MODE" value="UPDATE">
-        <input type=hidden name="PRODUCT_ID" value="${productId?if_exists}">
-        <input type=hidden name="PRODUCT_ID_TO" value="${productIdTo?if_exists}">
-        <input type=hidden name="PRODUCT_ASSOC_TYPE_ID" value="${productAssocTypeId?if_exists}">
-        <input type=hidden name="FROM_DATE" value="${fromDate?if_exists}">
+        <input type="hidden" name="UPDATE_MODE" value="UPDATE">
+        <input type="hidden" name="PRODUCT_ID" value="${productId?if_exists}">
+        <input type="hidden" name="PRODUCT_ID_TO" value="${productIdTo?if_exists}">
+        <input type="hidden" name="PRODUCT_ASSOC_TYPE_ID" value="${productAssocTypeId?if_exists}">
+        <input type="hidden" name="FROM_DATE" value="${fromDate?if_exists}">
         <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
             <td>&nbsp;</td>
             <td><b>${productId?if_exists}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
         </tr>
         <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
             <td>&nbsp;</td>
             <td><b>${productIdTo?if_exists}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
         </tr>
         <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.ProductAssociationType}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductAssociationType}</div></td>
             <td>&nbsp;</td>
             <td><b><#if curProductAssocType?exists>${(curProductAssocType.description)?if_exists}<#else> ${productAssocTypeId?if_exists}</#if></b> (You must re-create the association to change this.)</td>
         </tr>
         <tr>
-            <td align=right><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
             <td>&nbsp;</td>
             <td><b>${fromDate?if_exists}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
         </tr>
     </#if>
     <tr>
-        <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonThruDate}</div></td>
+        <td width="26%" align="right"><div class="tabletext">${uiLabelMap.CommonThruDate}</div></td>
         <td>&nbsp;</td>
         <td width="74%">
         <div class="tabletext">
@@ -148,34 +148,34 @@
         </td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductSequenceNum}</div></td>
+        <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductSequenceNum}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="SEQUENCE_NUM" <#if useValues>value="${(productAssoc.sequenceNum)?if_exists}"<#else>value="${(request.getParameter("SEQUENCE_NUM"))?if_exists}"</#if> size="5" maxlength="10"></td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductReason}</div></td>
+        <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductReason}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="REASON" <#if useValues>value="${(productAssoc.reason)?if_exists}"<#else>value="${(request.getParameter("REASON"))?if_exists}"</#if> size="60" maxlength="255"></td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductInstruction}</div></td>
+        <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductInstruction}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="INSTRUCTION" <#if useValues>value="${(productAssoc.instruction)?if_exists}"<#else>value="${(request.getParameter("INSTRUCTION"))?if_exists}"</#if> size="60" maxlength="255"></td>
     </tr>
     
     <tr>
-        <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductQuantity}</div></td>
+        <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductQuantity}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="QUANTITY" <#if useValues>value="${(productAssoc.quantity)?if_exists}"<#else>value="${(request.getParameter("QUANTITY"))?if_exists}"</#if> size="10" maxlength="15"></td>
     </tr>
     
     <tr>
         <td colspan="2">&nbsp;</td>
-        <td align=left><input type="submit" <#if isCreate>value="${uiLabelMap.CommonCreate}"<#else>value="${uiLabelMap.CommonUpdate}"</#if>></td>
+        <td align="left"><input type="submit" <#if isCreate>value="${uiLabelMap.CommonCreate}"<#else>value="${uiLabelMap.CommonUpdate}"</#if>></td>
     </tr>
     </table>
     </form>
-    <br>
+    <br/>
     <#if productId?exists && product?exists>
         <hr class="sepbar">
         <div class="head2">${uiLabelMap.ProductAssociationsFromProduct}...</div>
@@ -243,6 +243,6 @@
             </#list>
         </table>
 
-        <br>
+        <br/>
         <div class="tabletext">${uiLabelMap.CommonNote} : ${uiLabelMap.ProductRedExplanation}</div>
     </#if>

@@ -126,9 +126,9 @@
 %>
 <h3 style='margin:0;'>Find <%=modelEntity.getEntityName()%>s</h3>
 <%-- Note: you may use the '%' character as a wildcard for String fields. --%>
-<br>To find ALL <%=modelEntity.getEntityName()%>s, leave all entries blank.
+<br/>To find ALL <%=modelEntity.getEntityName()%>s, leave all entries blank.
 <form method="post" action='<ofbiz:url>/FindGeneric?entityName=<%=entityName%></ofbiz:url>' style='margin:0;'>
-<INPUT type=hidden name='find' value='true'>
+<INPUT type="hidden" name='find' value='true'>
 <table cellpadding="2" cellspacing="2" border="0">
   <%for (int fnum=0; fnum<modelEntity.getFieldsSize(); fnum++) {%>
     <%ModelField field = modelEntity.getField(fnum);%>
@@ -145,8 +145,8 @@
   </tr>
 </table>
 </form>
-<b><%=modelEntity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br>
-<b><%=modelEntity.getEntityName()%>s curFindString: <%=curFindString%></b><br>
+<b><%=modelEntity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br/>
+<b><%=modelEntity.getEntityName()%>s curFindString: <%=curFindString%></b><br/>
 <%if (hasCreatePermission) {%>
   <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=modelEntity.getEntityName()%>]</a>
 <%}%>

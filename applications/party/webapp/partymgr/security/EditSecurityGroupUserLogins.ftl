@@ -30,7 +30,7 @@
   ${pages.get("/security/SecurityGroupTabBar.ftl")}
   <div class="head1">${uiLabelMap.PartyUserLoginsForSecurityGroup} "${groupId}"</div>
   <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewSecurityGroup}]</a>
-  <br>
+  <br/>
   <#if userLoginSecurityGroups?has_content>
     <table border="0" width="100%" cellpadding="2">
       <tr>
@@ -50,7 +50,7 @@
       </tr>
     </table>
   <#else>
-    <br>  
+    <br/>  
   </#if>  
   <table border="1" cellpadding='2' cellspacing='0' width='100%'>
     <tr>
@@ -109,8 +109,8 @@
     </table>
   </#if>  
     
-  <br>
-  <form method="POST" action="<@ofbizUrl>/addUserLoginToSecurityGroup</@ofbizUrl>" style='margin: 0;' name='addUserLoginToSecurityGroupForm'>
+  <br/>
+  <form method="post" action="<@ofbizUrl>/addUserLoginToSecurityGroup</@ofbizUrl>" style='margin: 0;' name='addUserLoginToSecurityGroupForm'>
     <input type="hidden" name="groupId" value="${groupId}">
     <input type="hidden" name="useValues" value="true">
   

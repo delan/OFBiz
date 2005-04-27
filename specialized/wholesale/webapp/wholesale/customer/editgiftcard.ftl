@@ -45,7 +45,7 @@
     </#if>
 
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
+      <td width="26%" align="right" valign='top'><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
@@ -67,14 +67,14 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingPINNumber}</div></td>
+      <td width="26%" align="right" valign='top'><div class="tabletext">${uiLabelMap.AccountingPINNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="password" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingExpirationDate}</div></td>
+      <td width="26%" align="right" valign='top'><div class="tabletext">${uiLabelMap.AccountingExpirationDate}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#assign expMonth = "">
@@ -86,7 +86,7 @@
             <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
           </#if>
         </#if>
-        <select name="expMonth" class='selectBox' onChange="javascript:makeExpDate();">
+        <select name="expMonth" class='selectBox' onchange="javascript:makeExpDate();">
           <#if giftCardData?has_content && expMonth?has_content>
             <#assign ccExprMonth = expMonth>
           <#else>
@@ -98,7 +98,7 @@
           <#if pages?exists>${pages.get("/includes/ccmonths.ftl")}</#if>
 			<#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#ccmonths")}</#if>
         </select>
-        <select name="expYear" class='selectBox' onChange="javascript:makeExpDate();">
+        <select name="expYear" class='selectBox' onchange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
             <#assign ccExprYear = expYear>
           <#else>

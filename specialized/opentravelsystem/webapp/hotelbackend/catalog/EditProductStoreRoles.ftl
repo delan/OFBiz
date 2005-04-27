@@ -37,8 +37,8 @@
   <#else>
     <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowActive}]</a>
   </#if>
-  <br>
-  <br> 
+  <br/>
+  <br/> 
   -->
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
@@ -68,7 +68,7 @@
     </#if>
   </table>
   
-  <br>
+  <br/>
   <div class="head2">${uiLabelMap.ProductCreateProductStoreRole}:</div>
   <form name="addRole" action="<@ofbizUrl>/storeCreateRole</@ofbizUrl>" method="post">
     <input type="hidden" name="productStoreId" value="${productStoreId}">

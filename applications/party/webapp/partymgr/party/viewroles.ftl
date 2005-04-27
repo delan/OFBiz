@@ -32,8 +32,8 @@
 <#include "ProfileTabBar.ftl"/>
 
 <#-- Party Roles -->
-<br>
-<TABLE border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<br/>
+<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
     <TD width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -105,8 +105,8 @@
 
 <#-- Add role type -->
 <#if hasCreatePermission>
-<br>
-<TABLE border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<br/>
+<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
     <TD width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">

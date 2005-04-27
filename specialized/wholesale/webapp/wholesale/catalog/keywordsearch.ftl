@@ -33,13 +33,13 @@
 <div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductRefineSearch}]</a></div>
 
 <#if !productIds?has_content>
-  <br><div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
+  <br/><div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
 </#if>
 
 <#if productIds?has_content>
 <table border="0" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -79,7 +79,7 @@
 <#if productIds?has_content>
 <table border="0" cellpadding="2">
     <tr>
-      <td align=right>
+      <td align="right">
         <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |

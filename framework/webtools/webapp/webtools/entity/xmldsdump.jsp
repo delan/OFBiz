@@ -338,13 +338,13 @@
       <hr>
     
       <h3>Export:</h3>
-      <FORM method=POST action='<ofbiz:url>/xmldsdump</ofbiz:url>'>
-        <div>Output Directory&nbsp;: <INPUT type=text class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'>&nbsp;&nbsp;Max Records Per File&nbsp;: <INPUT type=text class='inputBox' size='10' name='maxrecords'></div>
-        <div>Single Filename&nbsp;&nbsp;: <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
-        <div>OR Out to Browser: <INPUT type=checkbox name='tobrowser' <%=tobrowser?"checked":""%>></div>
-        <br>
+      <FORM method="post" action='<ofbiz:url>/xmldsdump</ofbiz:url>'>
+        <div>Output Directory&nbsp;: <INPUT type="text" class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'>&nbsp;&nbsp;Max Records Per File&nbsp;: <INPUT type="text" class='inputBox' size='10' name='maxrecords'></div>
+        <div>Single Filename&nbsp;&nbsp;: <INPUT type="text" class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
+        <div>OR Out to Browser: <INPUT type="checkbox" name='tobrowser' <%=tobrowser?"checked":""%>></div>
+        <br/>
         <div>Entity Names:</div>
-        <INPUT type=submit value='Export'>
+        <INPUT type="submit" value='Export'>
         <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
         <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
         <br/>
@@ -376,12 +376,12 @@
                 <%ModelEntity curModelEntity = delegator.getModelEntity(curEntityName);%>
                 <%if (curModelEntity instanceof ModelViewEntity) check = false;%>
               <%}%>
-              <TD><INPUT type=checkbox name='entityName' value='<%=curEntityName%>' <%=check?"checked":""%>><%=curEntityName%></TD>
+              <TD><INPUT type="checkbox" name='entityName' value='<%=curEntityName%>' <%=check?"checked":""%>><%=curEntityName%></TD>
             <%}%>
           </TR>
         </TABLE>
     
-        <INPUT type=submit value='Export'>
+        <INPUT type="submit" value='Export'>
         <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
         <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
       </FORM>

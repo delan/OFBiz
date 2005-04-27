@@ -39,11 +39,11 @@
     <tr valign="middle">
         <td><div class="tabletext"><#if goodIdentificationType?exists>${(goodIdentificationType.description)?if_exists}<#else>[${(goodIdentification.goodIdentificationTypeId)?if_exists}]</#if></div></td>
         <td align="center">
-            <form method="POST" action="<@ofbizUrl>updateGoodIdentification</@ofbizUrl>" name="lineForm${line}"/>
-                <input type=hidden name="productId" value="${(goodIdentification.productId)?if_exists}"/>
-                <input type=hidden name="goodIdentificationTypeId" value="${(goodIdentification.goodIdentificationTypeId)?if_exists}"/>
-                <input type=text size="20" name="idValue" value="${(goodIdentification.idValue)?if_exists}" class="inputBox"/>
-                <input type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;"/>
+            <form method="post" action="<@ofbizUrl>updateGoodIdentification</@ofbizUrl>" name="lineForm${line}"/>
+                <input type="hidden" name="productId" value="${(goodIdentification.productId)?if_exists}"/>
+                <input type="hidden" name="goodIdentificationTypeId" value="${(goodIdentification.goodIdentificationTypeId)?if_exists}"/>
+                <input type="text" size="20" name="idValue" value="${(goodIdentification.idValue)?if_exists}" class="inputBox"/>
+                <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;"/>
             </form>
         </td>
         <td align="center">
@@ -53,8 +53,8 @@
     </tr>
     </#list>
     </table>
-    <br>
-    <form method="POST" action="<@ofbizUrl>/createGoodIdentification</@ofbizUrl>" style="margin: 0;" name="createGoodIdentificationForm">
+    <br/>
+    <form method="post" action="<@ofbizUrl>/createGoodIdentification</@ofbizUrl>" style="margin: 0;" name="createGoodIdentificationForm">
         <input type="hidden" name="productId" value="${productId}"/>
         <input type="hidden" name="useValues" value="true"/>
     
@@ -66,7 +66,7 @@
                     <option value="${(goodIdentificationType.goodIdentificationTypeId)?if_exists}">${(goodIdentificationType.description)?if_exists}</option>
                 </#list>
             </select>
-            ${uiLabelMap.ProductIdValue} : <input type=text size="20" name="idValue" class="inputBox"/>&nbsp;<input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;"/>
+            ${uiLabelMap.ProductIdValue} : <input type="text" size="20" name="idValue" class="inputBox"/>&nbsp;<input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;"/>
         </div>        
     </form>
 </#if>    

@@ -1,7 +1,7 @@
 /*
  * $Id: EntitySyncServices.java 3376 2004-09-14 08:32:01Z jonesde $
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

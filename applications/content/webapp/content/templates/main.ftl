@@ -82,7 +82,7 @@
     </script>
 </#if>
 
-    <script language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
         // This code inserts the value lookedup by a popup window back into the associated form element
         var re_id = new RegExp('id=(\\d+)');
         var num_id = (re_id.exec(String(window.location))
@@ -118,7 +118,7 @@
         }
     </script>
 
-    <script language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
         function lookupSubContent (viewName, contentId, mapKey, subDataResourceTypeId, subMimeTypeId) {
 	    var viewStr = viewName;
             var my=20;
@@ -150,13 +150,13 @@
 </head>
 
 <body <#if primaryHTMLField?exists && (primaryHTMLField?length >0)>onLoad="initEditor()"</#if> >
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
           <#if layoutSettings.headerImageUrl?exists>
-          <td align=left width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
+          <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
           </#if>       
           <td align='right' width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='${layoutSettings.headerRightBackgroundUrl}'</#if>>
             <#if requestAttributes.person?has_content>

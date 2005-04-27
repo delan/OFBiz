@@ -119,26 +119,26 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 
 <H3>Check/Update Database</H3>
 
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="checkupdatetables"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   &nbsp;(fks)&nbsp;<input type="checkbox" name="checkFks" value="true"/>
   &nbsp;(fk-idx)&nbsp;<input type="checkbox" name="checkFkIdx" value="true"/>
   <input type="submit" value="Check Only"/>
 </form>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="checkupdatetables"/>
   <input type="hidden" name="addMissing" value="true"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   &nbsp;(fks)&nbsp;<input type="checkbox" name="checkFks" value="true"/>
   &nbsp;(fk-idx)&nbsp;<input type="checkbox" name="checkFkIdx" value="true"/>
   <input type="submit" value="Check and Add Missing"/>
 </form>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="checkupdatetables"/>
   <input type="hidden" name="repair" value="true"/>
   <input type="hidden" name="addMissing" value="true"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   &nbsp;(fks)&nbsp;<input type="checkbox" name="checkFks" value="true"/>
   &nbsp;(fk-idx)&nbsp;<input type="checkbox" name="checkFkIdx" value="true"/>
   <input type="submit" value="Check, Add Missing and Repair Column Sizes"/>
@@ -147,7 +147,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <p>NOTE: Use the following at your own risk; make sure you know what you are doing before running these...</p>
 
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
  <!--
      function enableTablesRemove() {
          document.forms["TablesRemoveForm"].elements["TablesRemoveButton"].disabled=false;
@@ -156,47 +156,47 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 </script>
 
 <H3>Remove All Tables</H3>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>" name="TablesRemoveForm">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>" name="TablesRemoveForm">
   <input type="hidden" name="option" value="removetables"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Remove" name="TablesRemoveButton" disabled/>
   <input type="button" value="Enable" onClick="enableTablesRemove();"/>
 </form>
 
 <H3>Create/Remove All Primary Keys</H3>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="createpks"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Create"/>
 </form>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="removepks"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Remove"/>
 </form>
 
 <H3>Create/Remove All Declared Indices</H3>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="createidx"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Create"/>
 </form>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="removeidx"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Remove"/>
 </form>
 
 <H3>Create/Remove All Foreign Keys</H3>
 <p>NOTE: Foreign keys may also be created in the Check/Update database operation if the check-fks-on-start and other options on the datasource element are setup to do so.</p>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="createfks"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Create"/>
 </form>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="removefks"/>
-  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Remove"/>
 </form>
 

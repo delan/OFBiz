@@ -73,13 +73,13 @@
   if(findByPK.isPrimaryKey()) value = delegator.findByPrimaryKey(findByPK);
   if(value == null) useValue = false;
 %>
-<br>
+<br/>
 <STYLE>
   .topouter { overflow: visible; border-style: none; }
   .topcontainer { POSITION: absolute; VISIBILITY: visible; width: 90%; border-style: none; }
   .topcontainerhidden { POSITION: absolute; VISIBILITY: hidden; }
 </STYLE>
-<SCRIPT language='JavaScript'>  
+<script language="JavaScript" type="text/javascript">  
 var numTabs=<%=entity.getRelationsSize()+2%>;
 function ShowTab(lname) {
   for(inc=1; inc <= numTabs; inc++) {
@@ -88,7 +88,7 @@ function ShowTab(lname) {
     document.getElementById('area' + inc).className = (lname == 'tab' + inc) ? 'topcontainer' : 'topcontainerhidden';
   }
 }
-</SCRIPT>
+</script>
 <div style='color: white; background-color: black; padding:3;'>
   <b>View Entity: <%=entityName%> with PK: <%=findByPK.toString()%></b>
 </div>
@@ -102,8 +102,8 @@ function ShowTab(lname) {
     <a href='<ofbiz:url>/UpdateGeneric?UPDATE_MODE=DELETE&<%=curFindString%></ofbiz:url>' class="buttontext">[Delete this <%=entityName%>]</a>
   <%}%>
 <%}%>
-<br>
-<br>
+<br/>
+<br/>
 <table cellpadding='0' cellspacing='0'><tr>  
   <td id='tab1' class='ontab'>
     <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk>View <%=entityName%></a>
@@ -177,7 +177,7 @@ function ShowTab(lname) {
   <DIV id='area2' class='topcontainerhidden' width="1%">
 <%boolean showFields = true;%>
 <%if(value == null && (findByPK.getAllFields().size() > 0)){%>
-    <%=entity.getEntityName()%> with primary key <%=findByPK.toString()%> not found.<br>
+    <%=entity.getEntityName()%> with primary key <%=findByPK.toString()%> not found.<br/>
 <%}%>
 <%
   String lastUpdateMode = request.getParameter("UPDATE_MODE");
@@ -584,11 +584,11 @@ Displaying <%=relatedLoopCount%> entities.
 <%}%>
 </div>
 <%if ((hasUpdatePermission || hasCreatePermission) && !useValue) {%>
-  <SCRIPT language='JavaScript'>  
+  <script language="JavaScript" type="text/javascript">  
     ShowViewTab("edit");
-  </SCRIPT>
+  </script>
 <%}%>
-<br>
+<br/>
 <%} else {%>
   <h3>You do not have permission to view this page (<%=entity.getPlainTableName()%>_ADMIN, or <%=entity.getPlainTableName()%>_VIEW needed).</h3>
 <%}%>

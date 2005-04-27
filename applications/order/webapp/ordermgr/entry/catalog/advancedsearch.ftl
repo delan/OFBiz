@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -27,8 +27,8 @@
 <#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)>
 
 <div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
-<br>
-<form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
+<br/>
+<form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="VIEW_SIZE" value="10">
   <table border="0" wdith="100%">
     <#if searchCategory?has_content>
@@ -40,8 +40,8 @@
           <td valign="middle">
             <div class="tabletext">
               <b>"${(searchCategory.description)?if_exists}"</b> Include sub-categories?
-              Yes<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="Y" checked>
-              No<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="N">
+              Yes<input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked>
+              No<input type="radio" name="SEARCH_SUB_CATEGORIES" value="N">
             </div>
           </td>
         </tr>
@@ -53,8 +53,8 @@
       <td valign="middle">
         <div class="tabletext">
           <input type="text" class="inputBox" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">&nbsp;
-          ${uiLabelMap.CommonAny}<input type="RADIO" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked</#if>>
-          ${uiLabelMap.CommonAll}<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked</#if>>
+          ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked</#if>>
+          ${uiLabelMap.CommonAll}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked</#if>>
         </div>
       </td>
     </tr>
@@ -110,8 +110,8 @@
             <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
             <option value="SortProductPrice:AVERAGE_COST">Average Cost</option>
           </select>
-          Low to High<input type="RADIO" name="sortAscending" value="Y" checked>
-          High to Low<input type="RADIO" name="sortAscending" value="N">
+          Low to High<input type="radio" name="sortAscending" value="Y" checked>
+          High to Low<input type="radio" name="sortAscending" value="N">
         </div>
       </td>
     </tr>
@@ -126,8 +126,8 @@
             </#list>
             <div class="tabletext">${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
             <div class="tabletext">
-              ${uiLabelMap.ProductNewSearch}<input type="RADIO" name="clearSearch" value="Y" checked>
-              ${uiLabelMap.ProductRefineSearch}<input type="RADIO" name="clearSearch" value="N">
+              ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked>
+              ${uiLabelMap.ProductRefineSearch}<input type="radio" name="clearSearch" value="N">
             </div>
         </td>
       </tr>

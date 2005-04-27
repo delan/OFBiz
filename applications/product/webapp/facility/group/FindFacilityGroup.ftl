@@ -30,7 +30,7 @@
 <div class="head1">${uiLabelMap.ProductFacilityGroupList}</div>
 
 <div><a href='<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>' class="buttontext">[${uiLabelMap.ProductNewGroup}]</a></div>
-<br>
+<br/>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityGroupNameId}</b></div></td>
@@ -53,7 +53,7 @@
   </#if>
 </#list>
 </table>
-<br>
+<br/>
 
 <#else>
   <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>

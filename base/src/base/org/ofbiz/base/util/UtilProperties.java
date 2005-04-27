@@ -343,8 +343,8 @@ public class UtilProperties implements java.io.Serializable {
     // ========= Locale & Resource Based Methods ==========
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding to the given locale.
-     *  <br>
-     *  <br> Two reasons why we do not use the FlexibleProperties class for this:
+     *  <br/>
+     *  <br/> Two reasons why we do not use the FlexibleProperties class for this:
      *  <ul>
      *    <li>Doesn't support flexible locale based naming: try fname_locale (5 letter), then fname_locale (2 letter lang only), then fname</li>
      *    <li>Does not support parent properties/bundles so that if the fname_locale5 file doesn't have it then fname_locale2 is tried, then the fname bundle</li>

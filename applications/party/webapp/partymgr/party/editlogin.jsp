@@ -60,19 +60,19 @@
   <input type="hidden" name="userLoginId" value="<%=userLoginId%>">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">New Password</div></td>
+      <td width="26%" align="right"><div class="tabletext">New Password</div></td>
       <td width="74%">
         <input type="password" class="inputBox" name="newPassword" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">New Password Verify</div></td>
+      <td width="26%" align="right"><div class="tabletext">New Password Verify</div></td>
       <td width="74%">
         <input type="password" class="inputBox" name="newPasswordVerify" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
+      <td width="26%" align="right"><div class="tabletext">Password Hint</div></td>
       <td width="74%"><input type="text" class="inputBox" size="40" maxlength="100" name="passwordHint" value='<ofbiz:entityfield attribute="userUserLogin" field="passwordHint"/>'></td>
     </tr>
   </table>
@@ -81,14 +81,14 @@
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Change&nbsp;Password]</a>
   </div>
-<br>
+<br/>
   <p class="head1">Update UserLogin Security Settings</p>
   <form method="post" action="<ofbiz:url>/updateUserLoginSecurity</ofbiz:url>" name="updatesecurityform">
   <input type="hidden" name="partyId" value="<%=partyId%>">
   <input type="hidden" name="userLoginId" value="<%=userLoginId%>">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">Account Enabled?</div></td>
+      <td width="26%" align="right"><div class="tabletext">Account Enabled?</div></td>
       <td width="74%">
         <select name="enabled" class="selectBox">
           <option><ofbiz:inputvalue field="enabled" entityAttr="userUserLogin"/></option>
@@ -99,11 +99,11 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Disabled Date</div></td>
+      <td width="26%" align="right"><div class="tabletext">Disabled Date</div></td>
       <td width="74%"><input type="text" class="inputBox" size="20" name="disabledDateTime" value='<ofbiz:inputvalue entityAttr="userUserLogin" field="disabledDateTime"/>'></td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Successive Failed Logins</div></td>
+      <td width="26%" align="right"><div class="tabletext">Successive Failed Logins</div></td>
       <td width="74%"><input type="text" class="inputBox" size="5" name="successiveFailedLogins" value='<ofbiz:inputvalue entityAttr="userUserLogin" field="successiveFailedLogins"/>'></td>
     </tr>
   </table>

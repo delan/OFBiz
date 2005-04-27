@@ -25,7 +25,7 @@
  *@since       2.2
 -->
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupReturn(click) {
     returnIdValue = document.lookupreturn.returnId.value;
@@ -151,22 +151,22 @@ function lookupReturn(click) {
     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.lookupreturn.submit();">
   </form>
 <#if requestParameters.hideFields?default("N") != "Y">
-  <script language="JavaScript">
+  <script language="JavaScript" type="text/javascript">
     <!--//
       document.lookupreturn.returnId.focus();
     //-->
   </script>
 </#if>
   <#if returnHeaderList?exists>
-    <br>
-    <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <br/>
+    <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
       <tr>
         <td width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
               <td width="50%"><div class="boxhead">${uiLabelMap.OrderReturnFound}</div></td>
               <td width="50%">
-                 <div class="boxhead" align=right>
+                 <div class="boxhead" align="right">
                   <#if (returnHeaderListSize > 0)>
                     <#if (viewIndex > 1)>
                       <a href="<@ofbizUrl>/findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>

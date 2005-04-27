@@ -40,7 +40,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
 
 /**
  * A region is content that contains a set of sections that can render in a PageContext
- * <br>Implements abstract render(PageContext) from Content
+ * <br/>Implements abstract render(PageContext) from Content
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>

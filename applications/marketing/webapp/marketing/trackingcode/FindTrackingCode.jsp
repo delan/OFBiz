@@ -40,7 +40,7 @@
 <div class="head1">TrackingCodes List</div>
 
 <div><a href='<ofbiz:url>/EditTrackingCode</ofbiz:url>' class="buttontext">[Create New TrackingCode]</a></div>
-<br>
+<br/>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>ID</b></div></td>
@@ -66,7 +66,7 @@
   </tr>
 </ofbiz:iterator>
 </table>
-<br>
+<br/>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("MARKETING_VIEW" or "MARKETING_ADMIN" needed)</h3>

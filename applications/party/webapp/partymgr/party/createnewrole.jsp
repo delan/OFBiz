@@ -29,12 +29,12 @@
   <form method="post" action="<ofbiz:url>/createroletype/<%=donePage%></ofbiz:url>" name="createroleform">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">Role Type ID</div></td>
+      <td width="26%" align="right"><div class="tabletext">Role Type ID</div></td>
       <td width="74%">
         <input type="text" class="inputBox" name="roleTypeId" size="20">
       *</td>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Description</div></td>
+      <td width="26%" align="right"><div class="tabletext">Description</div></td>
       <td width="74%">
         <input type="text" class="inputBox" name="description" size="30">
       </td>

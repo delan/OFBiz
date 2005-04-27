@@ -28,7 +28,7 @@
 
 <div class="head1">${uiLabelMap.AccountingBillingAccountPayments}</div>
 
-<br>
+<br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
     <tr>
         <td><div class="tableheadtext">${uiLabelMap.AccountingPayment} #</div></td>

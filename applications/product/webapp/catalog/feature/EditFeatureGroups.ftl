@@ -26,7 +26,7 @@
 
 <div class="head1">Product Feature Groups</div>
 
-<br>
+<br/>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>${uiLabelMap.CommonId}</b></div></td>
@@ -47,19 +47,19 @@
     </tr>
   </#list>
 </table>
-<br>
+<br/>
 
-<form method="POST" action="<@ofbizUrl>/CreateProductFeatureGroup</@ofbizUrl>" style='margin: 0;'>
+<form method="post" action="<@ofbizUrl>/CreateProductFeatureGroup</@ofbizUrl>" style='margin: 0;'>
   <div class='head2'>Create a Product Feature Group:</div>
-  <br>
+  <br/>
   <table>
     <tr>
       <td><div class='tabletext'>${uiLabelMap.CommonDescription}:</div></td>
-      <td><input type=text class='inputBox' size='30' name='description' value=''></td>
+      <td><input type="text" class='inputBox' size='30' name='description' value=''></td>
     </tr>
     <tr>
       <td colspan='2'><input type="submit" value="${uiLabelMap.CommonCreate}"></td>
     </tr>
   </table>
 </form>
-<br>
+<br/>

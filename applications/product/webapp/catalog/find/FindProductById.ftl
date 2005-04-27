@@ -29,7 +29,7 @@
         <div class="boxhead">Find Products by ID Value</div>
     </div>
     <div class="screenlet-body">
-        <form name="idsearchform" method="POST" action="<@ofbizUrl>FindProductById</@ofbizUrl>" style="margin: 0;">
+        <form name="idsearchform" method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>" style="margin: 0;">
           <div class="tabletext">ID Value: <input type="text" name="idValue" size="20" maxlength="50" value="${idValue?if_exists}">&nbsp;<a href="javascript:document.idsearchform.submit()" class="buttontext">Find</a></div>
         </form>
     </div>

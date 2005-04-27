@@ -26,7 +26,7 @@
  *@since      3.0
 -->
 <div class="head1">${uiLabelMap.ProductAlternateKeyWordThesaurus}</div>
-<form method="POST" action="<@ofbizUrl>/createKeywordThesaurus</@ofbizUrl>">
+<form method="post" action="<@ofbizUrl>/createKeywordThesaurus</@ofbizUrl>">
         <div class="tabletext">
         ${uiLabelMap.ProductKeyword} :<input type="text" name="enteredKeyword" size="10" class="inputBox"/>
         ${uiLabelMap.ProductAlternate} :<input type="text" name="alternateKeyword" size="10" class="inputBox"/>
@@ -55,7 +55,7 @@
         </#if>
         <tr>
           <td>
-            <form method="POST" action="<@ofbizUrl>/createKeywordThesaurus</@ofbizUrl>">
+            <form method="post" action="<@ofbizUrl>/createKeywordThesaurus</@ofbizUrl>">
               <div class="tabletext">
                 <b>${keyword.enteredKeyword}</b>
                 <a href="<@ofbizUrl>/deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDeleteAll}]</a>

@@ -27,8 +27,8 @@
 
 
 <div class="head1">Most Recently Used ${page.getProperty("entityName")}</div>
-<br>
-<br>
+<br/>
+<br/>
 ${mruWrapper.renderFormString()}
-<br>
+<br/>
 

@@ -47,7 +47,7 @@
             <td align="center">
                 <#assign hasExpired = false>
                 <#if (productStorePromoAppl.getTimestamp("thruDate"))?exists && nowTimestamp.after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                <form method="POST" action="<@ofbizUrl>/promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
+                <form method="post" action="<@ofbizUrl>/promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
                     <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}">
                     <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}">
                     <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}">
@@ -64,19 +64,19 @@
         </tr>
         </#list>
         </table>
-        <br>
-        <form method="POST" action="<@ofbizUrl>/promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog" style="margin: 0;">
+        <br/>
+        <form method="post" action="<@ofbizUrl>/promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog" style="margin: 0;">
         <input type="hidden" name="productPromoId" value="${productPromoId}"/>
         <input type="hidden" name="tryEntity" value="true"/>
         
         <div class="head2">${uiLabelMap.ProductAddStorePromo} :</div>
-        <br>
+        <br/>
         <select name="productStoreId" class="selectBox">
         <#list productStores as productStore>
             <option value="${(productStore.productStoreId)?if_exists}">${(productStore.storeName)?if_exists} [${(productStore.productStoreId)?if_exists}]</option>
         </#list>
         </select>
-        <input type=text size="20" name="fromDate" class="inputBox"/>
+        <input type="text" size="20" name="fromDate" class="inputBox"/>
         <a href="javascript:call_cal(document.addProductPromoToCatalog.fromDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
         <input type="submit" value="${uiLabelMap.CommonAdd}"/>
         </form>

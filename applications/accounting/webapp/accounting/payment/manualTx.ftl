@@ -25,7 +25,7 @@
 -->
 
 <div class="head1">Manual Electronic Transaction</div>
-<br>
+<br/>
 
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
   ${setRequestAttribute("validTx", "false")}
@@ -36,7 +36,7 @@
 
     <table border='0' cellpadding='2' cellspacing='0'>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Payment Method Type</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Payment Method Type</div></td>
         <td width="5">&nbsp;</td>
         <td width='74%'>
           <#if paymentMethodType?has_content>
@@ -50,7 +50,7 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Product Store</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Product Store</div></td>
         <td width="5">&nbsp;</td>
         <td width='74%'>
           <#if currentStore?has_content>
@@ -66,7 +66,7 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Transaction Type</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Transaction Type</div></td>
         <td width="5">&nbsp;</td>
         <td width='74%'>
           <#if currentTx?has_content>
@@ -95,7 +95,7 @@
         <#-- amount field -->
         <#if txType != "PRDS_PAY_RELEASE">
           <tr>
-            <td width="26%" align=right valign=middle><div class="tableheadtext">Amount</div></td>
+            <td width="26%" align="right" valign=middle><div class="tableheadtext">Amount</div></td>
             <td width="5">&nbsp;</td>
             <td width="74%">
               <input type="text" class="inputBox" size="20" maxlength="30" name="amount">
@@ -105,7 +105,7 @@
 
         <#-- submit button -->
         <tr>
-          <td width="26%" align=right valign=middle>&nbsp;</td>
+          <td width="26%" align="right" valign=middle>&nbsp;</td>
           <td width="5">&nbsp;</td>
           <td width="74%">
             <input type="submit" value="Submit">
@@ -114,9 +114,9 @@
       <#elseif txType?has_content>
         <tr>
           <td colspan="3" align="center">
-            <br>
+            <br/>
             <div class="head2">This transaction type is not yet supported</div>
-            <br>
+            <br/>
           </td>
         </tr>
       </#if>

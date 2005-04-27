@@ -41,7 +41,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <#if facilityInventoryItems?exists && (facilityInventoryItems.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
             <tr>
-            <td align=right>
+            <td align="right">
                 <b>
                 <#if (viewIndex > 0)>
                 <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -121,7 +121,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <#if (facilityInventoryItems.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
             <tr>
-            <td align=right>
+            <td align="right">
                 <b>
                 <#if (viewIndex > 0)>
                 <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
@@ -137,7 +137,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             </tr>
         </table>
         </#if>
-        <br>
+        <br/>
     </#if>
 <#else>
   <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>

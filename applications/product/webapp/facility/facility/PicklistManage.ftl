@@ -42,7 +42,7 @@
                 <div class="tabletext">
                     <b>Picklist</b> <span class="head2">${picklist.picklistId}</span>
                     <b>date</b> ${picklist.picklistDate}
-                    <form method="POST" action="<@ofbizUrl>updatePicklist</@ofbizUrl>" style="display: inline;">
+                    <form method="post" action="<@ofbizUrl>updatePicklist</@ofbizUrl>" style="display: inline;">
                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                         <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
                         <select name="statusId" class="smallSelect">
@@ -74,7 +74,7 @@
                 </#list>
                 <div class="tabletext" style="margin-left: 15px;">
                     <b>Assign Picker:</b>
-                    <form method="POST" action="<@ofbizUrl>createPicklistRole</@ofbizUrl>" style="display: inline;">
+                    <form method="post" action="<@ofbizUrl>createPicklistRole</@ofbizUrl>" style="display: inline;">
                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                         <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
                         <input type="hidden" name="roleTypeId" value="PICKER"/>
@@ -106,7 +106,7 @@
                     </div>
                     <div class="tabletext" style="margin-left: 30px;">
                         <b>Update Bin:</b>
-	                    <form method="POST" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
+	                    <form method="post" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
 	                        <input type="hidden" name="facilityId" value="${facilityId}"/>
 	                        <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
 	                        Location#:

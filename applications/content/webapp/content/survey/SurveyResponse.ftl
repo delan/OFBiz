@@ -27,7 +27,7 @@
 <#if hasPermission>
   ${pages.get("/survey/SurveyTabBar.ftl")}
   <div class="head1">Survey Responses - <span class="head2">ID: ${requestParameters.surveyId?if_exists} (${surveyWrapper.getNumberResponses()} Responses)</span></div>
-  <br>
+  <br/>
 
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <#assign questions = surveyWrapper.getSurveyQuestions()>

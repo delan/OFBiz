@@ -30,7 +30,7 @@
     <td width="50%" valign="top" align="left">
 
       <#-- header box -->
-      <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <tr>
           <td width="100%">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -57,7 +57,7 @@
         </tr>
       </table>
       <#-- end of header box -->
-      <br>
+      <br/>
 
       <#-- payment box -->
       <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -125,7 +125,7 @@
           </td>
         </tr>
       </table>
-      <br>
+      <br/>
       <#-- end of contact box -->
 
       <#-- shipping info box -->

@@ -1,7 +1,7 @@
 <div class="head1">Add Image Upload DataResource</div>
 
-<br>
+<br/>
 ${editWrapper.renderFormString()}
-<br>
+<br/>
 ${uploadWrapper.renderFormString()}
-<br>
+<br/>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -82,7 +82,7 @@
                     <div class="tabletext">${status.description}</div>
                   </td>
                   <td width="10">&nbsp;</td>
-                  <td align=right>
+                  <td align="right">
                     <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${uiLabelMap.CommonView}]</a>
                   </td>
                 </tr>

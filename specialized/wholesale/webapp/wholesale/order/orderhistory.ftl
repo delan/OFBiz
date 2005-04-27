@@ -25,15 +25,15 @@
 -->
 
 <#if page.title == "Order History">
-<table border=0 cellspacing='0' cellpadding='0'>
+<table border="0" cellspacing='0' cellpadding='0'>
   <tr>
     <td align="right">
-      <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${requestAttributes.uiLabelMap.CommonProfile}]</a><br>&nbsp;&nbsp;
+      <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${requestAttributes.uiLabelMap.CommonProfile}]</a><br/>&nbsp;&nbsp;
     </td>
   </tr>
 </table>
 </#if>
-<table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -89,7 +89,7 @@
                   <td>
                     <div class="tabletext">${status.description}</div>
                   </td>
-                  <td align=right>
+                  <td align="right">
                     <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
                   </td>
                 </tr>

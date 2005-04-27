@@ -58,7 +58,7 @@
   &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
   &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[Save]</a>
    
-<br>
+<br/>
 <#else>
   <h3>You do not have permission to view this page. ("ORDERMGR_UPDATE" or "ORDERMGR_ADMIN" needed)</h3>
 </#if>

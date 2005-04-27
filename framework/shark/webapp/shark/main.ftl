@@ -29,7 +29,7 @@
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <td align=left width="90%" >
+          <td align="left" width="90%" >
             <div class="boxhead">&nbsp;Shark Workflow Manager Main Page</div>
           </td>        
         </tr>

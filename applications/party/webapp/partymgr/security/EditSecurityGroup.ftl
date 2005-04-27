@@ -30,11 +30,11 @@
   ${pages.get("/security/SecurityGroupTabBar.ftl")}
   <div class="head1">${uiLabelMap.PartyEditSecurityGroupWithId}&nbsp;"${groupId?if_exists}"</div>
   <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewSecurityGroup}]</a>
-  <br>
-  <br>
+  <br/>
+  <br/>
   
   <#if securityGroup?has_content>
-    <form action="<@ofbizUrl>/updateSecurityGroup</@ofbizUrl>" method=POST style='margin: 0;'>
+    <form action="<@ofbizUrl>/updateSecurityGroup</@ofbizUrl>" method="post" style='margin: 0;'>
       <input type="hidden" name="groupId" value="${groupId}">
       <table border='0' cellpadding='2' cellspacing='0'>    
         <tr>
@@ -45,7 +45,7 @@
           </td>
         </tr>
   <#else>  
-    <form action="<@ofbizUrl>/createSecurityGroup</@ofbizUrl>" method=POST style='margin: 0;'>
+    <form action="<@ofbizUrl>/createSecurityGroup</@ofbizUrl>" method="post" style='margin: 0;'>
       <table border='0' cellpadding='2' cellspacing='0'>
         <tr>
           <td align='right'><div class="tabletext">${uiLabelMap.PartySecurityGroupId}</div></td>
@@ -56,13 +56,13 @@
         </tr>
   </#if>
       <tr>
-        <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonDescription}</div></td>
+        <td width="26%" align="right"><div class="tabletext">${uiLabelMap.CommonDescription}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="description" value="${(securityGroup.description)?if_exists}" size="60" maxlength="250"></td>
       </tr>
 
       <tr>
-        <td colspan='1' align=right><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}"></td>
+        <td colspan='1' align="right"><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}"></td>
         <td colspan='2'>&nbsp;</td>
       </tr>
     </table>

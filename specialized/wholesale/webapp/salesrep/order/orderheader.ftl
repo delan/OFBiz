@@ -28,7 +28,7 @@
   <tr>
     <td width="50%" valign="top" align="left">
       <#-- header box -->
-      <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <tr>
           <td width="100%">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -112,7 +112,7 @@
         </tr>
       </table>
       <#-- end of header box -->
-      <br>
+      <br/>
       <#-- payment box -->
       <#if orderPaymentPreferences?has_content || billingAccount?has_content>
         <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -179,8 +179,8 @@
                             <td align="left" valign="top" width="80%">
                               <#assign oppStatusItem = orderPaymentPreference.getRelatedOne("StatusItem")>
                               <div class="tabletext">
-                                ${creditCard.nameOnCard?if_exists}<br>
-                                <#if creditCard.companyNameOnCard?exists>${creditCard.companyNameOnCard}<br></#if>
+                                ${creditCard.nameOnCard?if_exists}<br/>
+                                <#if creditCard.companyNameOnCard?exists>${creditCard.companyNameOnCard}<br/></#if>
                                 <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                   ${creditCard.cardType}
                                   ${creditCard.cardNumber}
@@ -219,9 +219,9 @@
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
-                                ${eftAccount.nameOnAccount?if_exists}<br>
-                                <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br></#if>
-                                Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                                ${eftAccount.nameOnAccount?if_exists}<br/>
+                                <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br/></#if>
+                                Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
                                 Account#: ${eftAccount.accountNumber}
                               </div>
                             </td>
@@ -275,12 +275,12 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              <#if pmBillingAddress.toName?has_content><b>To:</b> ${pmBillingAddress.toName}<br></#if>
-                              <#if pmBillingAddress.attnName?has_content><b>Attn:</b> ${pmBillingAddress.attnName}<br></#if>
-                              ${pmBillingAddress.address1}<br>
-                              <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br></#if>
+                              <#if pmBillingAddress.toName?has_content><b>To:</b> ${pmBillingAddress.toName}<br/></#if>
+                              <#if pmBillingAddress.attnName?has_content><b>Attn:</b> ${pmBillingAddress.attnName}<br/></#if>
+                              ${pmBillingAddress.address1}<br/>
+                              <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br/></#if>
                               ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
-                              ${pmBillingAddress.postalCode?if_exists}<br>
+                              ${pmBillingAddress.postalCode?if_exists}<br/>
                               ${pmBillingAddress.countryGeoId?if_exists}
                             </div>
                           </td>
@@ -394,13 +394,13 @@
                             <#assign postalAddress = orderContactMechValueMap.postalAddress>
                             <#if postalAddress?has_content>
                               <div class="tabletext">
-                                <#if postalAddress.toName?has_content><b>To:</b> ${postalAddress.toName}<br></#if>
-                                <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br></#if>
-                                ${postalAddress.address1}<br>
-                                <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>
+                                <#if postalAddress.toName?has_content><b>To:</b> ${postalAddress.toName}<br/></#if>
+                                <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br/></#if>
+                                ${postalAddress.address1}<br/>
+                                <#if postalAddress.address2?has_content>${postalAddress.address2}<br/></#if>
                                 ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if>
-                                ${postalAddress.postalCode?if_exists}<br>
-                                ${postalAddress.countryGeoId?if_exists}<br>
+                                ${postalAddress.postalCode?if_exists}<br/>
+                                ${postalAddress.countryGeoId?if_exists}<br/>
                                 <#if !postalAddress.countryGeoId?exists || postalAddress.countryGeoId == "USA">
                                   <#assign addr1 = postalAddress.address1?if_exists>
                                   <#if (addr1.indexOf(" ") > 0)>
@@ -451,7 +451,7 @@
           </td>
         </tr>
       </table>
-      <br>
+      <br/>
       </#if>
       <#-- end of contact box -->
 

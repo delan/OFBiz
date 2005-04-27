@@ -69,7 +69,7 @@
   </tr>
 </table>
 
-<br>
+<br/>
 <#if communicationEvent?has_content>
   <#assign formAction = "/updateCommunicationEvent">
   <#assign buttonText = uiLabelMap.CommonUpdate>

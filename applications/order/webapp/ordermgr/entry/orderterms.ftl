@@ -25,7 +25,7 @@
  *@since      2.2
 -->
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
@@ -80,7 +80,7 @@
                 <input type="hidden" name="termIndex" value="${termIndex?default(-1)}">
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
                   <tr>
-                    <td width="26%" align=right valign=top>
+                    <td width="26%" align="right" valign="top">
                        <div class="tabletext">${uiLabelMap.OrderOrderTermType}</div>
                     </td>
                     <td width="5">&nbsp;</td>
@@ -96,7 +96,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top>
+                    <td width="26%" align="right" valign="top">
                        <div class="tabletext">${uiLabelMap.OrderOrderTermValue}</div>
                     </td>
                     <td width="5">&nbsp;</td>
@@ -105,7 +105,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top>
+                    <td width="26%" align="right" valign="top">
                        <div class="tabletext">${uiLabelMap.OrderOrderTermDays}</div>
                     </td>
                     <td width="5">&nbsp;</td>
@@ -124,5 +124,5 @@
     </td>
   </tr>
 </table>
-<br>
+<br/>
 

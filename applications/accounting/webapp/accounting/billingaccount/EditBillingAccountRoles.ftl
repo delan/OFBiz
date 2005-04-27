@@ -27,7 +27,7 @@
 -->
 <div class="head1">${uiLabelMap.PageTitleEditBillingAccountRoles} - ${uiLabelMap.AccountingAccountId}: ${billingAccount.billingAccountId}</div>
 
-<br>
+<br/>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
@@ -60,9 +60,9 @@
   </#if>
 </table>
 
-<br>
+<br/>
 <div class="head1">${uiLabelMap.AccountingCreateBillingAccountRole}</div>
-<br>
+<br/>
 <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccountRole</@ofbizUrl>">
   <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">
   <table width="90%" border="0" cellpadding="2" cellspacing="0"> 

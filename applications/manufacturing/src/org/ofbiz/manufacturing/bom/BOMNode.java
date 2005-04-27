@@ -376,7 +376,7 @@ public class BOMNode {
                 bomQuantity = 1;
             }
             oneChildNode = (BOMNode)childrenNodes.get(i);
-            sb.append("<br>");
+            sb.append("<br/>");
             if (oneChildNode != null) {
                 oneChildNode.print(sb, (quantity * bomQuantity), depth);
             }

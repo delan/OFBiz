@@ -114,7 +114,7 @@ import org.xml.sax.SAXException;
  *
  * <p>
  * There is also support to write information from the cookie, incoming
- * header, the Session or something else in the ServletRequest.<br>
+ * header, the Session or something else in the ServletRequest.<br/>
  * It is modeled after the apache syntax:
  * <ul>
  * <li><code>%{xxx}i</code> for incoming headers

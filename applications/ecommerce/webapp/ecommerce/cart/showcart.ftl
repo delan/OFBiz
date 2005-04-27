@@ -24,7 +24,7 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 function toggle(e) {
     e.checked = !e.checked;
 }
@@ -98,7 +98,7 @@ function gwAll(e) {
 }
 </script>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 function setAlternateGwp(field) {
   window.location=field.value;
 };
@@ -139,7 +139,7 @@ function setAlternateGwp(field) {
     </div>
 </div>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
   document.quickaddform.add_product_id.focus();
 </script>
 
@@ -359,7 +359,7 @@ function setAlternateGwp(field) {
             <div class="tabletext"><b>${uiLabelMap.EcommerceCartTotal}:</b></div>
           </td>
           <td colspan="2" align="right" valign=bottom>
-            <hr size=1 class="sepbar">
+            <hr size="1" class="sepbar">
             <div class="tabletext"><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b></div>
           </td>
         </tr>

@@ -41,7 +41,7 @@
 
 <div class="head1">Data Sources</div>
 
-<br>
+<br/>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>ID</b></div></td>
@@ -52,8 +52,8 @@
   </tr>
 <ofbiz:iterator name="dataSource" property="dataSources">
   <tr valign="middle">
-    <FORM method=POST action='<ofbiz:url>/updateDataSource</ofbiz:url>'>
-        <input type=hidden <ofbiz:inputvalue entityAttr="dataSource" field="dataSourceId" fullattrs="true"/>>
+    <FORM method="post" action='<ofbiz:url>/updateDataSource</ofbiz:url>'>
+        <input type="hidden" <ofbiz:inputvalue entityAttr="dataSource" field="dataSourceId" fullattrs="true"/>>
     <td><div class='tabletext'><ofbiz:entityfield attribute="dataSource" field="dataSourceId"/></div></td>
     <td>
       <select name='dataSourceTypeId' size='1' class='selectBox'>
@@ -69,22 +69,22 @@
         </ofbiz:iterator>
       </select>
     </td>
-    <td><input type=text size='60' class='inputBox' <ofbiz:inputvalue entityAttr="dataSource" field="description" fullattrs="true"/>></td>
-    <td><INPUT type=submit value='Update' style='size: x-small;'></td>
+    <td><input type="text" size='60' class='inputBox' <ofbiz:inputvalue entityAttr="dataSource" field="description" fullattrs="true"/>></td>
+    <td><INPUT type="submit" value='Update' style='size: x-small;'></td>
     <td><a href='<ofbiz:url>/deleteDataSource?dataSourceId=<ofbiz:entityfield attribute="dataSource" field="dataSourceId"/></ofbiz:url>' class='buttontext'>Delete</a></td>
     </FORM>
   </tr>
 </ofbiz:iterator>
 </table>
-<br>
+<br/>
 
 <form method="POST" action="<ofbiz:url>/createDataSource</ofbiz:url>" style='margin: 0;'>
   <div class='head2'>Create a Data Source:</div>
-  <br>
+  <br/>
   <table>
     <tr>
       <td><div class='tabletext'>ID:</div></td>
-      <td><input type=text size='20' name='dataSourceId' value='' class='inputBox'></td>
+      <td><input type="text" size='20' name='dataSourceId' value='' class='inputBox'></td>
     </tr>
     <tr>
       <td><div class='tabletext'>Type:</div></td>
@@ -98,14 +98,14 @@
     </tr>
     <tr>
       <td><div class='tabletext'>Description:</div></td>
-      <td><input type=text size='60' name='description' value='' class='inputBox'></td>
+      <td><input type="text" size='60' name='description' value='' class='inputBox'></td>
     </tr>
     <tr>
       <td colspan='2'><input type="submit" value="Create"></td>
     </tr>
   </table>
 </form>
-<br>
+<br/>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("MARKETING_VIEW" or "MARKETING_ADMIN" needed)</h3>

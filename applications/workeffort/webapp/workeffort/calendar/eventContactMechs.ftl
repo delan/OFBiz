@@ -28,12 +28,12 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='40%' >
+          <td align="left" width='40%' >
             <div class='boxhead'>${uiLabelMap.WorkEffortCalendarEventContacts} : ${workEffort.workEffortName?if_exists}</div>
           </td>
         </tr>
@@ -56,12 +56,12 @@
                       </div>
                     </#if>
 <#-- ============================================================= -->
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxinside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxinside'>
         <tr>
           <td>
   <#if contactMeches?has_content>
     <table width="100%" border="0" cellpadding="0">
-      <tr align=left valign=bottom>
+      <tr align="left" valign=bottom>
         <th>${uiLabelMap.WorkEffortContactType}</th>
         <th width="5">&nbsp;</th>
         <th>${uiLabelMap.WorkEffortInformation}</th>
@@ -80,14 +80,14 @@
               <#if contactMechMap.postalAddress?exists>
                   <#assign postalAddress = contactMechMap.postalAddress>
                   <div class="tabletext">                    
-                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br></#if>
-                    ${postalAddress.address1?if_exists}<br>
-                    <#if postalAddress.address2?has_content><br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br/></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br/></#if>
+                    ${postalAddress.address1?if_exists}<br/>
+                    <#if postalAddress.address2?has_content><br/></#if>
                     ${postalAddress.city?if_exists},
                     ${postalAddress.stateProvinceGeoId?if_exists}
                     ${postalAddress.postalCode?if_exists}
-                    <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
+                    <#if postalAddress.countryGeoId?has_content><br/>${postalAddress.countryGeoId}</#if>
                   </div>
                   <#if (postalAddress?has_content && !postalAddress.countryGeoId?has_content) || postalAddress.countryGeoId = "USA">
                     <#assign addr1 = postalAddress.address1?default("")>                 

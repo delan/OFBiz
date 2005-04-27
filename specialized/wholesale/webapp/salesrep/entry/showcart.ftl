@@ -28,7 +28,7 @@
 <#assign security = requestAttributes.security>
 <#assign externalKeyParam = requestAttributes.externalKeyParam>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
 function toggle(e) {
     e.checked = !e.checked;    
@@ -74,7 +74,7 @@ function addToList() {
   
           ${pages.get("/party/viewcustomers.ftl")} <BR>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
   document.quickaddform.add_product_id.focus();
 //-->
@@ -217,7 +217,7 @@ function addToList() {
             <div class="tabletext"><b>Cart&nbsp;Total:</b></div>
           </td>
           <td align="right" valign=bottom>
-            <hr size=1 class="sepbar">
+            <hr size="1" class="sepbar">
             <div class="tabletext"><b>${shoppingCart.getGrandTotal()}</b></div>
           </td>
         </tr> 
@@ -265,7 +265,7 @@ function addToList() {
    <tr><td colspan="3"><hr class="sepbar"></td></tr>
 
    <tr>
-     <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">         
+     <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">         
           <td width="50%">
               <div class="tableheadtext">
                 <input type="text" class="inputBox" size="15" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">

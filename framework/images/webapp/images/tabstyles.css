@@ -113,7 +113,7 @@ DIV.col-fill {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px; font-weight: bold; text-decoration: none;
 background-color: #B4B0AA; color: #000099;
-margin: 0; padding: 0; border: none; float: center; width: 0;
+margin: 0; padding: 0; border: none; text-align: center; width: 0;
 }
 
 DIV.col-right {

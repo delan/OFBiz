@@ -41,9 +41,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </#if>
     <a href="<@ofbizUrl>/TransferInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductInventoryTransfer}]</a>
     
-    <br>
+    <br/>
     <#if (toTransfers.size() > 0)>
-        <br>
+        <br/>
         <div class="head1">${uiLabelMap.CommonTo}:<span class="head2">&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
             <tr>
@@ -75,7 +75,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </#if>
     
     <#if (fromTransfers.size() > 0)>
-        <br>
+        <br/>
         <div class="head1">${uiLabelMap.CommonFrom}:<span class="head2">&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
             <tr>

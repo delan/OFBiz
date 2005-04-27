@@ -37,13 +37,13 @@
         <tr valign="middle">
             <td><div class="tabletext"><#if facility?exists>${facility.facilityName}<#else>[${productFacility.facilityId}]</#if></div></td>
             <td align="center">
-                <form method="POST" action="<@ofbizUrl>/updateProductFacility</@ofbizUrl>" name="lineForm${productFacility_index}">
-                    <input type=hidden name="productId" value="${(productFacility.productId)?if_exists}"/>
-                    <input type=hidden name="facilityId" value="${(productFacility.facilityId)?if_exists}"/>
-                    <input type=text size="10" name="minimumStock" value="${(productFacility.minimumStock)?if_exists}" class="inputBox"/>
-                    <input type=text size="10" name="reorderQuantity" value="${(productFacility.reorderQuantity)?if_exists}" class="inputBox"/>
-                    <input type=text size="10" name="daysToShip" value="${(productFacility.daysToShip)?if_exists}" class="inputBox"/>
-                    <input type=submit value="Update" style="font-size: x-small;"/>
+                <form method="post" action="<@ofbizUrl>/updateProductFacility</@ofbizUrl>" name="lineForm${productFacility_index}">
+                    <input type="hidden" name="productId" value="${(productFacility.productId)?if_exists}"/>
+                    <input type="hidden" name="facilityId" value="${(productFacility.facilityId)?if_exists}"/>
+                    <input type="text" size="10" name="minimumStock" value="${(productFacility.minimumStock)?if_exists}" class="inputBox"/>
+                    <input type="text" size="10" name="reorderQuantity" value="${(productFacility.reorderQuantity)?if_exists}" class="inputBox"/>
+                    <input type="text" size="10" name="daysToShip" value="${(productFacility.daysToShip)?if_exists}" class="inputBox"/>
+                    <input type="submit" value="Update" style="font-size: x-small;"/>
                 </form>
             </td>
             <td align="center">
@@ -53,8 +53,8 @@
         </tr>
     </#list>
     </table>
-    <br>
-    <form method="POST" action="<@ofbizUrl>/createProductFacility</@ofbizUrl>" style="margin: 0;" name="createProductFacilityForm">
+    <br/>
+    <form method="post" action="<@ofbizUrl>/createProductFacility</@ofbizUrl>" style="margin: 0;" name="createProductFacilityForm">
         <input type="hidden" name="productId" value="${productId?if_exists}"/>
         <input type="hidden" name="useValues" value="true"/>
     
@@ -66,9 +66,9 @@
                     <option value="${(facility.facilityId)?if_exists}">${(facility.facilityName)?if_exists}</option>
                 </#list>
             </select>
-            ${uiLabelMap.ProductMinimumStock}:&nbsp;<input type=text size="10" name="minimumStock" class="inputBox"/>
-            ${uiLabelMap.ProductReorderQuantity}:&nbsp;<input type=text size="10" name="reorderQuantity" class="inputBox"/>
-            ${uiLabelMap.ProductDaysToShip}:&nbsp;<input type=text size="10" name="daysToShip" class="inputBox"/>
+            ${uiLabelMap.ProductMinimumStock}:&nbsp;<input type="text" size="10" name="minimumStock" class="inputBox"/>
+            ${uiLabelMap.ProductReorderQuantity}:&nbsp;<input type="text" size="10" name="reorderQuantity" class="inputBox"/>
+            ${uiLabelMap.ProductDaysToShip}:&nbsp;<input type="text" size="10" name="daysToShip" class="inputBox"/>
             <input type="submit" value="Add" style="font-size: x-small;"/>
         </div>
     </form>

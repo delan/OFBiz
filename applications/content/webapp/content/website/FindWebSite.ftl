@@ -28,7 +28,7 @@
 
 <div class="head1">WebSite List</div>
 <div><a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[Create New WebSite]</a></div>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class="tabletext"><b>Site&nbsp;Name&nbsp;[ID]</b></div></td>
@@ -44,7 +44,7 @@
   </tr>
 </#list>
 </table>
-<br>
+<br/>
 
 <#else>
   <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>

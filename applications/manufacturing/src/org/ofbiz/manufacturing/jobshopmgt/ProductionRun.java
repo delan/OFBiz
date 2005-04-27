@@ -245,8 +245,8 @@ public class ProductionRun {
     /**
      * recalculated  the estimatedCompletionDate property.
      *     Use the quantity and the estimatedStartDate properties as entries parameters.
-     *     <br>read the listRoutingTask and for each recalculated and update the estimatedStart and endDate in the object.
-     *     <br> no store in the database is done.
+     *     <br/>read the listRoutingTask and for each recalculated and update the estimatedStart and endDate in the object.
+     *     <br/> no store in the database is done.
      * @param priority give the routingTask start point to recalculated
      * @return the estimatedCompletionDate calculated
      **/

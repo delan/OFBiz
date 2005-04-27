@@ -35,8 +35,8 @@ function call_fieldlookup3(view_name) {
 </script>
 
 <#-- ============================================================= -->
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <form name="userform" mode="POST" action="<@ofbizUrl>/UserPermissions</@ofbizUrl>" >

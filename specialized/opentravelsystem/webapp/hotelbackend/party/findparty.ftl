@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 -->
 
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupParty(click) {
     partyIdValue = document.lookupparty.partyId.value;
@@ -213,22 +213,22 @@ function refreshInfo() {
     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.lookupparty.submit();">
   </form>
 <#if requestParameters.hideFields?default("N") != "Y">
-  <script language="JavaScript">
+  <script language="JavaScript" type="text/javascript">
     <!--//
       document.lookupparty.partyId.focus();
     //-->
   </script>
 </#if>
   <#if partyList?exists>
-    <br>
-    <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <br/>
+    <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
       <tr>
         <td width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
               <td width="50%"><div class="boxhead">Party(s) Found</div></td>
               <td width="50%">
-                 <div class="boxhead" align=right>
+                 <div class="boxhead" align="right">
                   <#if (partyListSize > 0)>
                     <#if (viewIndex > 1)>
                       <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>

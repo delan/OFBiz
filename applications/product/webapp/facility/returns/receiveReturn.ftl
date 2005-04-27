@@ -60,7 +60,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </#list>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
   </table>
-  <br>
+  <br/>
 </#if>
 
 <#-- Multi-Item Return Receiving -->
@@ -224,7 +224,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
   </form>
-  <script language="JavaScript">selectAll();</script>
+  <script language="JavaScript" type="text/javascript">selectAll();</script>
   
   <#-- Initial Screen -->
 <#else>
@@ -251,7 +251,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
   </form>
 </#if>
 
-<br>
+<br/>
 <#else>
   <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -33,7 +33,7 @@
   </div>
 </#if>
 
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- shipping address -->
         <tr>
           <td width='100%'>
@@ -67,12 +67,12 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br></#if>
-                            <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${shippingAddress.attnName}<br></#if>
-                            ${shippingAddress.address1}<br>
-                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>                            
+                            <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br/></#if>
+                            <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${shippingAddress.attnName}<br/></#if>
+                            ${shippingAddress.address1}<br/>
+                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>                            
                             ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
-                            ${shippingAddress.postalCode}<br>
+                            ${shippingAddress.postalCode}<br/>
                             ${shippingAddress.countryGeoId}
                           </div>
                         </td>
@@ -120,7 +120,7 @@
                         <div class="tabletext">
                           <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
                           ${shipMethDescription?if_exists}
-                          <#if shippingAccount?exists><br>${uiLabelMap.OrderUseAccount}: ${shippingAccount}</#if>
+                          <#if shippingAccount?exists><br/>${uiLabelMap.OrderUseAccount}: ${shippingAccount}</#if>
                         </div>
                       </td>
                     </tr>
@@ -227,8 +227,8 @@
       </table>
    
       <#if paymentMethod?has_content || paymentMethodType?has_content || billingAccount?has_content>
-      <br>      
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <br/>      
+      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->
         <tr>
           <td width='100%'>
@@ -285,13 +285,13 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br></#if>
+                              <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br/></#if>
                               <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp</#if>
                               ${creditCard.firstNameOnCard}&nbsp;
                               <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp</#if>
                               ${creditCard.lastNameOnCard}
                               <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
-                              <br>
+                              <br/>
                               ${formattedCardNumber}
                             </div>
                           </td>
@@ -305,9 +305,9 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              ${eftAccount.nameOnAccount}<br>
-                              <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
-                              Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                              ${eftAccount.nameOnAccount}<br/>
+                              <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br/></#if>
+                              Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
                               Account #: ${eftAccount.accountNumber}
                             </div>
                           </td>

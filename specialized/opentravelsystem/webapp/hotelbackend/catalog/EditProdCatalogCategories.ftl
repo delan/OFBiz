@@ -72,7 +72,7 @@
                 <#if prodCatalogCategory.getTimestamp("thruDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(prodCatalogCategory.getTimestamp("thruDate"))>
                     <#assign hasExpired = true>
                 </#if>
-                <FORM method=POST action="<@ofbizUrl>/updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
+                <FORM method="post" action="<@ofbizUrl>/updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
                     <input type="hidden" name="prodCatalogId" value="${prodCatalogCategory.prodCatalogId}">
                     <input type="hidden" name="productCategoryId" value="${prodCatalogCategory.productCategoryId}">
                     <input type="hidden" name="prodCatalogCategoryTypeId" value="${prodCatalogCategory.prodCatalogCategoryTypeId}">
@@ -98,7 +98,7 @@
                         <option value="${prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")}">${prodCatalogCategoryType.getString("description")}</option>
                         </list>
                     </select> -->
-                    <INPUT type=submit value="${uiLabelMap.CommonUpdate}">
+                    <INPUT type="submit" value="${uiLabelMap.CommonUpdate}">
                     <td align="center">
                         <a href="<@ofbizUrl>/removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogCategory.prodCatalogId}&productCategoryId=${prodCatalogCategory.productCategoryId}&fromDate=${prodCatalogCategory.fromDate}&prodCatalogCategoryTypeId=${prodCatalogCategory.prodCatalogCategoryTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
                     </td>
@@ -111,18 +111,18 @@
         <#assign line = line + 1>
         </#list>
         </table>
-        <br>
-        <form method="POST" action="<@ofbizUrl>/addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
+        <br/>
+        <form method="post" action="<@ofbizUrl>/addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="prodCatalogId" value="${prodCatalogId}">
         <input type="hidden" name="tryEntity" value="true">
         <div class="head2">Activate Category (select Category and Type, then enter optional From Date):</div>
-        <br>
+        <br/>
         <select class="selectBox" name="productCategoryId">
         <#list productCategories as productCategory>
             <option value="${productCategory.productCategoryId}"> ${productCategory.description?if_exists}&nbsp;[${productCategory.productCategoryId}]</option>
         </#list>
         </select>
-            <select class="selectBox" name="prodCatalogCategoryTypeId" size=1>
+            <select class="selectBox" name="prodCatalogCategoryTypeId" size="1">
                 <!-- <option value="">&nbsp;</option> -->
                 <#list prodCatalogCategoryTypes as prodCatalogCategoryType>
                 <option value="${prodCatalogCategoryType.prodCatalogCategoryTypeId}">${prodCatalogCategoryType.description?if_exists}</option>

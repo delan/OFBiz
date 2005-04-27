@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 function copyAndAddRoutingTask() {
     document.addtaskassocform.copyTask.value = "Y";
@@ -89,6 +89,6 @@ function addRoutingTask() {
          </tr>
     </table>
 </form>
-<br>
+<br/>
 </#if>
 	

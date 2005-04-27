@@ -34,7 +34,7 @@
 
 <h3>Update Debug Levels</h3>
 <div>This page is used to set and update the debugging levels.</div>
-<br>
+<br/>
 
 <%if(security.hasPermission("UTIL_DEBUG_EDIT", session)) {%>
   <FORM method='POST' action='<ofbiz:url>/updateDebugLevel</ofbiz:url>'>

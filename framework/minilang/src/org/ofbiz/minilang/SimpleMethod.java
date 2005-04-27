@@ -558,7 +558,7 @@ public class SimpleMethod {
             String errMsg = UtilProperties.getMessage(SimpleMethod.err_resource, "simpleMethod.error_running", locale) + ": " + t.getMessage();                                
             Debug.logError(errMsg, module);
             finished = false;
-            errorMsg += errMsg + "<br>";
+            errorMsg += errMsg + "<br/>";
         }
         
         String returnValue = null;
@@ -665,7 +665,7 @@ public class SimpleMethod {
                 String errMsg = "Error trying to commit transaction, could not process method: " + e.getMessage();
                 Debug.logWarning(errMsg, module);
                 Debug.logWarning(e, module);
-                errorMsg += errMsg + "<br>";
+                errorMsg += errMsg + "<br/>";
             }
         } else {
             // rollback here passing beganTransaction to either rollback, or set rollback only
@@ -675,7 +675,7 @@ public class SimpleMethod {
                 String errMsg = "Error trying to rollback transaction, could not process method: " + e.getMessage();
                 Debug.logWarning(errMsg, module);
                 Debug.logWarning(e, module);
-                errorMsg += errMsg + "<br>";
+                errorMsg += errMsg + "<br/>";
             }
         }
         

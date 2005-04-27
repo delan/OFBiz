@@ -1,9 +1,9 @@
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='90%' >
+          <TD align="left" width='90%' >
             <div class='boxhead'> Hotel Demo Store, Backend system entry page.</div>
           </TD>        
         </tr>
@@ -21,7 +21,7 @@
             </h2></center></DIV>  
            <center><table width='60%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'><tr><td>
             The purpose of this system is to provide Hotels with the possbility to maintain the offerings (products), reservations, customer 
-            management and access and settings.<br>
+            management and access and settings.<br/>
             This is the first version of this Hotel version of an open source product which is often used on the internet. The name is OFbiz 
             and it is documented at the <a href="http://ofbiz.org" target=new>OFBiz website</a>
             </td></tr></table>

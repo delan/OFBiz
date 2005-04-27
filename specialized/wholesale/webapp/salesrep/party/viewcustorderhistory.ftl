@@ -22,7 +22,7 @@
  *@author     Si Chen (sichen@sinfoniasolutions.com)
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -107,7 +107,7 @@
                   <td>
                     <div class="tabletext">${orderHeader.noteInfo?if_exists}</div>
                   </td>
-                  <td align=right>
+                  <td align="right">
                     <a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
                   </td>
                 </tr>

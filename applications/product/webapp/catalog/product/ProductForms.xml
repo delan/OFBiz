@@ -202,8 +202,8 @@
     <form name="AddProductPrice" type="single"
             target="createProductPrice" title="" 
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <auto-fields-service service-name="createProductPrice" map-name=""/>
-        <field name="productId"><hidden value="${productId}"/></field>
+        <auto-fields-service service-name="createProductPrice"/>
+        <field name="productId"><hidden/></field>
         <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}" widget-style="smallSelect">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductPriceType" description="${description}">

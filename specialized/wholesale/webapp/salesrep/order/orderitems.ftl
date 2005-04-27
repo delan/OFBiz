@@ -47,7 +47,7 @@
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
-              <tr align=left valign=bottom>
+              <tr align="left" valign=bottom>
                 <td width="30%" align="left"><div class="tableheadtext">Product</div></td>
                 <td width="30%" align="left"><div class="tableheadtext">Status</div></td>
                 <td width="5%" align="right"><div class="tableheadtext">Quantity</div></td>

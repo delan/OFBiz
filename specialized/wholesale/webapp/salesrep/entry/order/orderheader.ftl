@@ -25,7 +25,7 @@
 -->
 
 
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
+      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
         <tr>
           <td width='100%'>
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -59,12 +59,12 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if shippingAddress.toName?has_content><b>To:</b> ${shippingAddress.toName}<br></#if>
-                            <#if shippingAddress.attnName?has_content><b>Attn:</b> ${shippingAddress.attnName}<br></#if>
-                            ${shippingAddress.address1}<br>
-                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>                            
+                            <#if shippingAddress.toName?has_content><b>To:</b> ${shippingAddress.toName}<br/></#if>
+                            <#if shippingAddress.attnName?has_content><b>Attn:</b> ${shippingAddress.attnName}<br/></#if>
+                            ${shippingAddress.address1}<br/>
+                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>                            
                             ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
-                            ${shippingAddress.postalCode}<br>
+                            ${shippingAddress.postalCode}<br/>
                             ${shippingAddress.countryGeoId}
                           </div>
                         </td>
@@ -80,7 +80,7 @@
                         <div class="tabletext">
                           <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
                           ${shipMethDescription?if_exists}
-                          <#if shippingAccount?exists><br>Use Account: ${shippingAccount}</#if>
+                          <#if shippingAccount?exists><br/>Use Account: ${shippingAccount}</#if>
                         </div>
                       </td>
                     </tr>
@@ -160,8 +160,8 @@
       </table>
    
       <#if paymentMethod?has_content || paymentMethodType?has_content || billingAccount?has_content>
-      <br>      
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <br/>      
+      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->
         <tr>
           <td width='100%'>
@@ -218,8 +218,8 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              ${creditCard.nameOnCard}<br>
-                              <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br></#if>
+                              ${creditCard.nameOnCard}<br/>
+                              <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br/></#if>
                               ${formattedCardNumber}
                             </div>
                           </td>
@@ -233,9 +233,9 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              ${eftAccount.nameOnAccount}<br>
-                              <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
-                              Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                              ${eftAccount.nameOnAccount}<br/>
+                              <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br/></#if>
+                              Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
                               Account #: ${eftAccount.accountNumber}
                             </div>
                           </td>

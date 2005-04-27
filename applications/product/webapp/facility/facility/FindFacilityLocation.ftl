@@ -40,7 +40,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <table border="0" cellpadding="2" cellspacing="0">
         <#if !(facilityId?exists)>
             <tr>
-                <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductFacility}</div></td>
+                <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductFacility}</div></td>
                 <td>&nbsp;</td>
                 <td width="74%"><input type="text" class="inputBox" value="" size="19" maxlength="20"></td>
             </tr>
@@ -48,45 +48,45 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <input type="hidden" name="facilityId" value="${facilityId}">
         </#if>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductLocationSeqId}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductLocationSeqId}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="locationSeqId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonArea}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.CommonArea}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="areaId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductAisle}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductAisle}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="aisleId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductSection}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductSection}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="sectionId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductLevel}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductLevel}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="levelId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductPosition}</div></td>
+            <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductPosition}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="positionId" value="" size="19" maxlength="20"></td>
         </tr>             
         <tr>
             <td colspan="2">&nbsp;</td>
-            <td colspan="1" align=left><input type="submit" name="look_up" value="${uiLabelMap.CommonFind}"></td>
+            <td colspan="1" align="left"><input type="submit" name="look_up" value="${uiLabelMap.CommonFind}"></td>
         </tr>
         </table>
     </form>
     
     <#if foundLocations?exists>
-        <br>
+        <br/>
         <span class="head1">${uiLabelMap.CommonFound}:&nbsp;</span><span class="head2"><b>${foundLocations.size()}</b>&nbsp;${uiLabelMap.ProductLocationsFor}&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span>
         <table border="1" cellpadding="2" cellspacing="0">
         <tr>

@@ -26,7 +26,7 @@
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupOrders(click) {
     orderIdValue = document.lookuporder.order_id.value;
@@ -47,7 +47,7 @@ function lookupOrders(click) {
 <form method='post' name="lookuporder" action="<@ofbizUrl>/findorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -232,7 +232,7 @@ function lookupOrders(click) {
 <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:lookupOrders(true);">
 </form>
 <#if requestParameters.hideFields?default("N") != "Y">
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--//
 document.lookuporder.order_id.focus();
 //-->
@@ -240,15 +240,15 @@ document.lookuporder.order_id.focus();
 </#if>
 
 <#if orderHeaderList?exists>
-<br>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<br/>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td width="50%"><div class="boxhead">${uiLabelMap.OrderOrderFound}</div></td>
           <td width="50%">
-            <div class="boxhead" align=right>
+            <div class="boxhead" align="right">
               <#if 0 < orderHeaderList?size>
                 <#if (viewIndex > 1)>
                   <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>

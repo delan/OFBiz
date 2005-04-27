@@ -43,16 +43,16 @@
   <tr valign="middle">
     <td><div class="tabletext"><b>${productPriceRule.productPriceRuleId}</b></div></td>
     <td align="left">
-        <FORM method=POST action="<@ofbizUrl>/updateProductPriceRule</@ofbizUrl>">
-            <input type=hidden name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
-            <input type=text size="15" name="ruleName" value="${productPriceRule.ruleName}" class="inputBox">
-            <input type=text size="22" name="fromDate" value="${productPriceRule.fromDate?if_exists}" class="inputBox">
-            <input type=text size="22" name="thruDate" value="${productPriceRule.thruDate?if_exists}" class="inputBox">
+        <FORM method="post" action="<@ofbizUrl>/updateProductPriceRule</@ofbizUrl>">
+            <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
+            <input type="text" size="15" name="ruleName" value="${productPriceRule.ruleName}" class="inputBox">
+            <input type="text" size="22" name="fromDate" value="${productPriceRule.fromDate?if_exists}" class="inputBox">
+            <input type="text" size="22" name="thruDate" value="${productPriceRule.thruDate?if_exists}" class="inputBox">
             &nbsp;&nbsp;
             <#assign saleRule = productPriceRule.isSale?exists && productPriceRule.isSale == "Y">
             <span class="tabletext"><b>${uiLabelMap.ProductNotifySale}:</b>&nbsp;
-            <input type=RADIO class="radioButton" name="isSale" value="Y" <#if saleRule>CHECKED</#if>>${uiLabelMap.CommonYes}&nbsp;
-            <input type=RADIO name="isSale" value="N" <#if !saleRule>CHECKED</#if>>${uiLabelMap.CommonNo}</span>
+            <input type="radio" class="radioButton" name="isSale" value="Y" <#if saleRule>CHECKED</#if>>${uiLabelMap.CommonYes}&nbsp;
+            <input type="radio" name="isSale" value="N" <#if !saleRule>CHECKED</#if>>${uiLabelMap.CommonNo}</span>
             &nbsp;&nbsp;
             <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </FORM>
@@ -81,9 +81,9 @@
                 <#if (curCondSeqId >= maxCondSeqId)><#assign maxCondSeqId = curCondSeqId + 1></#if>
                 <td><div class="tabletext"><b>${productPriceCond.productPriceCondSeqId}</b></div></td>
                 <td align="left">
-                    <FORM method=POST action="<@ofbizUrl>/updateProductPriceCond</@ofbizUrl>">
-                        <input type=hidden name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}"/>
-                        <input type=hidden name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}"/>
+                    <FORM method="post" action="<@ofbizUrl>/updateProductPriceCond</@ofbizUrl>">
+                        <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}"/>
+                        <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}"/>
                         <select name="inputParamEnumId" size="1" class="selectBox">
                             <#if productPriceCond.inputParamEnumId?has_content>
                               <#assign inputParamEnum = productPriceCond.getRelatedOneCache("InputParamEnumeration")?if_exists>
@@ -108,7 +108,7 @@
                               <option value="${condOperEnum.enumId}">${condOperEnum.description}<#--[${condOperEnum.enumId}]--></option>
                             </#list>
                         </select>
-                        <input type=text size="20" name="condValue" value="${productPriceCond.condValue?if_exists}" class="inputBox">
+                        <input type="text" size="20" name="condValue" value="${productPriceCond.condValue?if_exists}" class="inputBox">
                         <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                     </FORM>
                 </td>
@@ -120,8 +120,8 @@
           </#list>
           <tr>
             <td align="left" colspan="3">
-                <FORM method=POST action="<@ofbizUrl>/createProductPriceCond</@ofbizUrl>">
-                    <input type=hidden name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
+                <FORM method="post" action="<@ofbizUrl>/createProductPriceCond</@ofbizUrl>">
+                    <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
                     <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="inputParamEnumId" size="1" class="selectBox">
                     	<#list inputParamEnums as inputParamEnum>
@@ -133,7 +133,7 @@
                           <option value="${condOperEnum.enumId}">${condOperEnum.description}<#--[${condOperEnum.enumId}]--></option>
                         </#list>
                     </select>
-                    <input type=text size="20" name="condValue" class="inputBox">
+                    <input type="text" size="20" name="condValue" class="inputBox">
                     <INPUT type="submit" value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                 </FORM>
             </td>
@@ -158,9 +158,9 @@
                 <#if (curActionSeqId >= maxActionSeqId)><#assign maxActionSeqId = curActionSeqId + 1></#if>
                 <td><div class="tabletext"><b>${productPriceAction.productPriceActionSeqId}</b></div></td>
                 <td align="left">
-                    <FORM method=POST action="<@ofbizUrl>/updateProductPriceAction</@ofbizUrl>">
-                        <input type=hidden name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}">
-                        <input type=hidden name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}">
+                    <FORM method="post" action="<@ofbizUrl>/updateProductPriceAction</@ofbizUrl>">
+                        <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}">
+                        <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}">
                         <select name="productPriceActionTypeId" size="1" class="selectBox">
                             <#if productPriceAction.productPriceActionTypeId?has_content>
                               <#assign productPriceActionType = productPriceAction.getRelatedOneCache("ProductPriceActionType")>
@@ -173,7 +173,7 @@
                               <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.description}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                             </#list>
                         </select>
-                        <input type=text size="8" name="amount" value="${productPriceAction.amount?if_exists}" class="inputBox">
+                        <input type="text" size="8" name="amount" value="${productPriceAction.amount?if_exists}" class="inputBox">
                         <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                     </FORM>
                 </td>
@@ -185,15 +185,15 @@
           </#list>
           <tr>
             <td align="left" colspan="3">
-                <FORM method=POST action="<@ofbizUrl>/createProductPriceAction</@ofbizUrl>">
-                    <input type=hidden name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
+                <FORM method="post" action="<@ofbizUrl>/createProductPriceAction</@ofbizUrl>">
+                    <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
                     <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="productPriceActionTypeId" size="1" class="selectBox">
                     	<#list productPriceActionTypes as productPriceActionType>
                           <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.description}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                         </#list>
                     </select>
-                    <input type=text size="8" name="amount" class="inputBox">
+                    <input type="text" size="8" name="amount" class="inputBox">
                     <INPUT type="submit" value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                 </FORM>
             </td>

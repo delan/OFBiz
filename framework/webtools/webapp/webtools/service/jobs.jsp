@@ -45,9 +45,9 @@
 <a href="<ofbiz:url>/threadList</ofbiz:url>" class="buttontext">[Thread List]</a>
 <a href="<ofbiz:url>/serviceList</ofbiz:url>" class="buttontext">[Service Log]</a>&nbsp;
 <a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">[Schedule Job]</a>
-<br>
+<br/>
 
-<br>
+<br/>
 <table cellpadding="2" cellspacing="0" border="1" width="100%">
   <tr>
     <td><div class="tableheadtext">Job</div></td>

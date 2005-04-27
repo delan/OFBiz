@@ -230,14 +230,14 @@ A.listtext:hover {color:red;}
 <span style='color: red;'>The following errors occurred:
 <ul><%=errorMsg%></ul>
 </span>
-<br>
+<br/>
 <%}%>
 
-<FORM method=POST action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
+<FORM method="post" action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
   <INPUT type=TEXT class='inputBox' size='30' name='entityName'>
   <INPUT type=SUBMIT value='Edit Specified Entity'>
 </FORM>
-<FORM method=POST action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
+<FORM method="post" action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
   <SELECT name='entityName' class='selectBox'>
     <OPTION selected>&nbsp;</OPTION>
     <%Iterator entIter1 = entSet.iterator();%>
@@ -248,8 +248,8 @@ A.listtext:hover {color:red;}
   <INPUT type=SUBMIT value='Edit Specified Entity'>
 </FORM>
 <hr>
-<FORM method=POST action='<ofbiz:url>/view/EditEntity?event=addEntity</ofbiz:url>' style='margin: 0;'>
-  Entity Name (Java style): <INPUT type=TEXT class='inputBox' size='60' name='entityName'><br>
+<FORM method="post" action='<ofbiz:url>/view/EditEntity?event=addEntity</ofbiz:url>' style='margin: 0;'>
+  Entity Name (Java style): <INPUT type=TEXT class='inputBox' size='60' name='entityName'><br/>
   Entity Group: <INPUT type=TEXT size='60' class='inputBox' name='entityGroup' value='org.ofbiz'>
   <INPUT type=SUBMIT value='Create Entity'>
 </FORM>
@@ -262,7 +262,7 @@ A.listtext:hover {color:red;}
 <A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%></ofbiz:url>'>Reload Current Entity: <%=entityName%></A><BR>
 <BR>
 
-<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateEntity</ofbiz:url>' style='margin: 0;'>
+<FORM method="post" action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateEntity</ofbiz:url>' style='margin: 0;'>
   <TABLE>
   <TR>
     <TD>Entity Name</TD>
@@ -275,12 +275,12 @@ A.listtext:hover {color:red;}
   <%if (modelViewEntity == null) {%>
     <TR>
       <TD>Table Name</TD>
-      <TD><INPUT type=text class='inputBox' size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getPlainTableName())%>'></TD>
+      <TD><INPUT type="text" class='inputBox' size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getPlainTableName())%>'></TD>
     </TR>
   <%}%>
   <TR>
     <TD>Package Name</TD>
-    <TD><INPUT type=text class='inputBox' size='60' name='packageName' value='<%=entity.getPackageName()%>'></TD>
+    <TD><INPUT type="text" class='inputBox' size='60' name='packageName' value='<%=entity.getPackageName()%>'></TD>
   </TR>
   <TR>
     <TD>Dependent On Entity</TD>
@@ -297,7 +297,7 @@ A.listtext:hover {color:red;}
   </TR>
   <TR>
     <TD>Title</TD>
-    <TD><INPUT type=text class='inputBox' size='60' name='title' value='<%=entity.getTitle()%>'></TD>
+    <TD><INPUT type="text" class='inputBox' size='60' name='title' value='<%=entity.getTitle()%>'></TD>
   </TR>
   <TR>
     <TD>Description</TD>
@@ -305,34 +305,34 @@ A.listtext:hover {color:red;}
   </TR>
   <TR>
     <TD>Copyright</TD>
-    <TD><INPUT type=text class='inputBox' size='60' name='copyright' value='<%=entity.getCopyright()%>'></TD>
+    <TD><INPUT type="text" class='inputBox' size='60' name='copyright' value='<%=entity.getCopyright()%>'></TD>
   </TR>
   <TR>
     <TD>Author</TD>
-    <TD><INPUT type=text class='inputBox' size='60' name='author' value='<%=entity.getAuthor()%>'></TD>
+    <TD><INPUT type="text" class='inputBox' size='60' name='author' value='<%=entity.getAuthor()%>'></TD>
   </TR>
   <TR>
     <TD>Version</TD>
-    <TD><INPUT type=text class='inputBox' size='60' name='version' value='<%=entity.getVersion()%>'></TD>
+    <TD><INPUT type="text" class='inputBox' size='60' name='version' value='<%=entity.getVersion()%>'></TD>
   </TR>
   <TR>
     <TD>Group</TD>
     <TD>
-      <INPUT type=text class='inputBox' size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'>
+      <INPUT type="text" class='inputBox' size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'>
       <BR>(This group is for the "<%=delegator.getDelegatorName()%>" delegator)
     </TD>
   </TR>
   <%boolean isFile = entityResourceHandler == null ? true : entityResourceHandler.isFileResource();%>
   <TR>
     <TD>Resource Loader</TD>
-    <TD><INPUT type=text class='inputBox' size='20' name='loaderName' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLoaderName())%>'<%if(!isFile){%> disabled<%}%>></TD>
+    <TD><INPUT type="text" class='inputBox' size='20' name='loaderName' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLoaderName())%>'<%if(!isFile){%> disabled<%}%>></TD>
   </TR>
   <TR>
     <TD>Location</TD>
-    <TD><INPUT type=text class='inputBox' size='60' name='location' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLocation())%>'<%if(!isFile){%> disabled<%}%>></TD>
+    <TD><INPUT type="text" class='inputBox' size='60' name='location' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLocation())%>'<%if(!isFile){%> disabled<%}%>></TD>
   </TR>
   </TABLE>
-  <INPUT type=submit value='Update Entity'>
+  <INPUT type="submit" value='Update Entity'>
 </FORM>
 
 <HR>
@@ -347,8 +347,8 @@ A.listtext:hover {color:red;}
         <TD><%=field.getColName()%> (<%=field.getColName().length()%>)</TD>
         <TD><%=field.getType()%></TD>
         <TD>
-          <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&fieldName=<%=field.getName()%>&event=updateField</ofbiz:url>' style='margin: 0;'>
-            <INPUT type=CHECKBOX name='primaryKey'<%=field.getIsPk()?" checked":""%>>
+          <FORM method="post" action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&fieldName=<%=field.getName()%>&event=updateField</ofbiz:url>' style='margin: 0;'>
+            <INPUT type="checkbox" name='primaryKey'<%=field.getIsPk()?" checked":""%>>
             <SELECT name='fieldType' class='selectBox'>
               <OPTION selected><%=field.getType()%></OPTION>
               <%Iterator iter = UtilMisc.toIterator(types);%>
@@ -356,7 +356,7 @@ A.listtext:hover {color:red;}
                 <OPTION><%=typeName%></OPTION>
               <%}%>
             </SELECT>
-            <INPUT type=submit value='Set'>
+            <INPUT type="submit" value='Set'>
           </FORM>
         </TD>
         <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&fieldName=<%=field.getName()%>&event=removeField</ofbiz:url>'>Remove</A></TD>
@@ -364,16 +364,16 @@ A.listtext:hover {color:red;}
     <%}%>
   </TABLE>
 
-<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addField</ofbiz:url>'>
+<FORM method="post" action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addField</ofbiz:url>'>
   Add new field with <u>Field Name (Java style)</u> and field type.<BR>
-  <INPUT type=text class='inputBox' size='40' maxlength='30' name='name'>
+  <INPUT type="text" class='inputBox' size='40' maxlength='30' name='name'>
   <SELECT name='fieldType' class='selectBox'>
     <%Iterator iter = UtilMisc.toIterator(types);%>
     <%while (iter != null && iter.hasNext()){ String typeName = (String)iter.next();%>
       <OPTION><%=typeName%></OPTION>
     <%}%>
   </SELECT>
-  <INPUT type=submit value='Create'>
+  <INPUT type="submit" value="Create">
 </FORM>
 <%} else {%>
 
@@ -392,9 +392,9 @@ A.listtext:hover {color:red;}
     <%}%>
   </TABLE>
 
-<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addMemberEntity</ofbiz:url>'>
+<FORM method="post" action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addMemberEntity</ofbiz:url>'>
   Add new member entity with <u>Entity Alias*</u> and <u>Entity Name*</u>.<BR>
-  <INPUT type=text class='inputBox' size='10' name='alias'>
+  <INPUT type="text" class='inputBox' size='10' name='alias'>
   <SELECT name='aliasedEntityName' class='selectBox'>
     <OPTION selected>&nbsp;</OPTION>
     <%Iterator entIter = entSet.iterator();%>
@@ -402,7 +402,7 @@ A.listtext:hover {color:red;}
       <OPTION><%=(String)entIter.next()%></OPTION>
     <%}%>
   </SELECT>
-  <INPUT type=submit value='Add'>
+  <INPUT type="submit" value='Add'>
 </FORM>
 
 <HR>
@@ -441,7 +441,7 @@ A.listtext:hover {color:red;}
     <%ModelRelation relation = entity.getRelation(r);%>
     <%ModelEntity relEntity = reader.getModelEntity(relation.getRelEntityName());%>
     <tr bgcolor='#CCCCFF'>
-      <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateRelation&relNum=<%=r%></ofbiz:url>'>
+      <FORM method="post" action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateRelation&relNum=<%=r%></ofbiz:url>'>
         <td align="left"><%=relation.getTitle()%><A class='listtext' href='<ofbiz:url>/view/EditEntity?entityName=<%=relation.getRelEntityName()%></ofbiz:url>'><%=relation.getRelEntityName()%></A></td>
         <td>
           <INPUT type=TEXT class='inputBox' name='title' value='<%=relation.getTitle()%>'>
@@ -464,7 +464,7 @@ A.listtext:hover {color:red;}
     </tr>
     <%for (int km=0; km<relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.getKeyMap(km);%>
       <tr>
-        <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateKeyMap&relNum=<%=r%>&kmNum=<%=km%></ofbiz:url>'>
+        <FORM method="post" action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateKeyMap&relNum=<%=r%>&kmNum=<%=km%></ofbiz:url>'>
           <td></td>
           <td colspan='2'>
             Main:
@@ -494,11 +494,11 @@ A.listtext:hover {color:red;}
   <%}%>
   </TABLE>
 
-<FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addRelation</ofbiz:url>'>
+<FORM method="post" action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addRelation</ofbiz:url>'>
   Add new relation with <u>Title</u>, <u>FK Name</u>, <u>Related Entity Name*</u> and <u>Relation Type*</u>.<BR>
-  <INPUT type=text class='inputBox' size='30' maxlength='30' name='title'>
-  <INPUT type=text class='inputBox' size='20' maxlength='18' name='fkName'>
-  <%-- <INPUT type=text size='40' maxlength='30' name='relEntityName'> --%>
+  <INPUT type="text" class='inputBox' size='30' maxlength='30' name='title'>
+  <INPUT type="text" class='inputBox' size='20' maxlength='18' name='fkName'>
+  <%-- <INPUT type="text" size='40' maxlength='30' name='relEntityName'> --%>
   <SELECT name='relEntityName' class='selectBox'>
     <OPTION selected>&nbsp;</OPTION>
     <%Iterator entIter = entSet.iterator();%>
@@ -511,7 +511,7 @@ A.listtext:hover {color:red;}
     <OPTION>one-nofk</OPTION>
     <OPTION>many</OPTION>
   </SELECT>
-  <INPUT type=submit value='Create'>
+  <INPUT type="submit" value='Create'>
 </FORM>
 
 <%}%>

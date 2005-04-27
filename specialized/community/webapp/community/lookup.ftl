@@ -1,5 +1,5 @@
 
-    <script language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
         
         // function passing selected value to calling window
         function set_value(value) {

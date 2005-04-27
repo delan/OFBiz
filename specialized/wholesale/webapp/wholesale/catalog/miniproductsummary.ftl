@@ -47,7 +47,7 @@
         <a href="<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseAmount}...]</nobr></a>
     
     <#elseif security.hasEntityPermission("WHOLESALE_ORDER", "_CREATE", session)>
-        <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
             <input type="hidden" name="add_product_id" value="${miniProduct.productId}">
             <input type="hidden" name="quantity" value="${miniProdQuantity?default("1")}">
             <#if requestParameters.order_id?has_content><input type="hidden" name="order_id" value="${requestParameters.order_id}"></#if>

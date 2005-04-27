@@ -83,12 +83,12 @@ function toggleBillingAccount(box) {
   <table border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
-        <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+        <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
           <tr>
             <td width='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left>
+                  <td valign=middle align="left">
                     <div class="boxhead">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
                   </td>
                 </tr>
@@ -96,7 +96,7 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <tr style='height: 100%;'>
-            <td width='100%' valign=top height='100%'>
+            <td width='100%' valign="top" height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
                   <td>

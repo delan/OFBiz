@@ -62,5 +62,5 @@ function call_fieldlookup3(view_name) {
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }
-</SCRIPT>
+</script>
 

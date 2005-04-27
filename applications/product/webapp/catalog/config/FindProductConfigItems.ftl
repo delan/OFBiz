@@ -33,7 +33,7 @@
         <tr>
           <td width="50%"><div class="boxhead">Config Items Found</div></td>
           <td width="50%">
-            <div class="boxhead" align=right>
+            <div class="boxhead" align="right">
               <#if 0 < itemsList?size>
                 <#if 0 < viewIndex>
                   <a href="<@ofbizUrl>/FindProductConfigItems?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
@@ -55,7 +55,7 @@
         </tr>
       </table>
       <div class="tabletext"><a href="<@ofbizUrl>/EditProductConfigItem</@ofbizUrl>" class="buttontext">[Create New Config Item]</a></div>
-      <br>
+      <br/>
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
           <td align="left"><div class="tableheadtext">Config Item</div></td>

@@ -33,7 +33,7 @@
   <form name="calendarform" method="post" action="<@ofbizUrl>/CreateCalendar</@ofbizUrl>">
 </#if>
 
-  <br>
+  <br/>
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#if techDataCalendar?has_content>
     <tr>

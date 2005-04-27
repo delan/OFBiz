@@ -40,7 +40,7 @@ databases, JDBC drivers, JTA implementations (transaction managers), connection 
 local vs. remote deployment configurations, and hardware (app server hardware, database 
 server hardware, network connections).</div>
 
-<br>
+<br/>
 <%if(security.hasPermission("ENTITY_MAINT", session)) {%>
 
 <%double startTime, totalTime, callsPerSecond;%>

@@ -32,8 +32,8 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
 
 <div class="head1">${uiLabelMap.ProductRollups} <span class="head2">${uiLabelMap.CommonFor}"${(facilityGroup.facilityGroupName)?if_exists}" [${uiLabelMap.CommonId}:${facilityGroupId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
-<br>
-<br>
+<br/>
+<br/>
 
 <#if facilityGroup?exists>
 <p class="head2">${uiLabelMap.ProductFacilityGroupRollupParentGroups}</p>
@@ -52,15 +52,15 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
       <td><a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${(curGroup.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext">${(curGroup.facilityGroupName)?if_exists}</a></td>
       <td><div class="tabletext" <#if facilityGroupRollup.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupRollup.fromDate)>style="color: red;"</#if>>${facilityGroupRollup.fromDate}</div></td>
       <td align="center">
-        <FORM method=POST action="<@ofbizUrl>/updateFacilityGroupToGroup</@ofbizUrl>" name="lineParentForm${facilityGroupRollup_index}">
-            <input type=hidden name="showFacilityGroupId" value="${facilityGroupId}">
-            <input type=hidden name="facilityGroupId" value="${facilityGroupRollup.facilityGroupId}">
-            <input type=hidden name="parentFacilityGroupId" value="${facilityGroupRollup.parentFacilityGroupId}">
-            <input type=hidden name="fromDate" value="${facilityGroupRollup.fromDate.toString()}">
-            <input type=text size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
+        <FORM method="post" action="<@ofbizUrl>/updateFacilityGroupToGroup</@ofbizUrl>" name="lineParentForm${facilityGroupRollup_index}">
+            <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
+            <input type="hidden" name="facilityGroupId" value="${facilityGroupRollup.facilityGroupId}">
+            <input type="hidden" name="parentFacilityGroupId" value="${facilityGroupRollup.parentFacilityGroupId}">
+            <input type="hidden" name="fromDate" value="${facilityGroupRollup.fromDate.toString()}">
+            <input type="text" size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineParentForm${facilityGroupRollup_index}.thruDate, '${(facilityGroupRollup.thruDate.toString())?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-            <input type=text size="5" name="sequenceNum" value="${facilityGroupRollup.sequenceNum?if_exists}" class="inputBox">
-            <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+            <input type="text" size="5" name="sequenceNum" value="${facilityGroupRollup.sequenceNum?if_exists}" class="inputBox">
+            <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </FORM>
       </td>
       <td>
@@ -75,8 +75,8 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
   </tr>
 </#if>
 </table>
-<br>
-<form method="POST" action="<@ofbizUrl>/addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addParentForm">
+<br/>
+<form method="post" action="<@ofbizUrl>/addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addParentForm">
   <input type="hidden" name="facilityGroupId" value="${facilityGroupId}">
   <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
   <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductParent}</b> ${uiLabelMap.ProductGroupSelectCategoryFromDate}:</div>
@@ -87,13 +87,13 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
       </#if>
     </#list>
     </select>
-  <input type=text class="inputBox" size="25" name="fromDate">
+  <input type="text" class="inputBox" size="25" name="fromDate">
   <a href="javascript:call_cal(document.addParentForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>
-<br>
+<br/>
 <hr>
-<br>
+<br/>
 <p class="head2">${uiLabelMap.ProductGroupRollupChildGroups}</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -110,15 +110,15 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
       <td><a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${(curGroup.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext">${(curGroup.facilityGroupName)?if_exists}</a></td>
       <td><div class="tabletext" <#if facilityGroupRollup.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupRollup.fromDate)>style="color: red;"</#if>>${facilityGroupRollup.fromDate}</div></td>
       <td align="center">
-        <FORM method=POST action="<@ofbizUrl>/updateFacilityGroupToGroup</@ofbizUrl>" name="lineChildForm${facilityGroupRollup_index}">
-            <input type=hidden name="showFacilityGroupId" value="${facilityGroupId}">
-            <input type=hidden name="facilityGroupId" value="${facilityGroupRollup.facilityGroupId}">
-            <input type=hidden name="parentFacilityGroupId" value="${facilityGroupRollup.parentFacilityGroupId}">
-            <input type=hidden name="fromDate" value="${facilityGroupRollup.fromDate.toString()}">
-            <input type=text size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
+        <FORM method="post" action="<@ofbizUrl>/updateFacilityGroupToGroup</@ofbizUrl>" name="lineChildForm${facilityGroupRollup_index}">
+            <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
+            <input type="hidden" name="facilityGroupId" value="${facilityGroupRollup.facilityGroupId}">
+            <input type="hidden" name="parentFacilityGroupId" value="${facilityGroupRollup.parentFacilityGroupId}">
+            <input type="hidden" name="fromDate" value="${facilityGroupRollup.fromDate.toString()}">
+            <input type="text" size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineChildForm${facilityGroupRollup_index}.thruDate, '${(facilityGroupRollup.thruDate.toString())?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-            <input type=text size="5" name="sequenceNum" value="${facilityGroupRollup.sequenceNum?if_exists}" class="inputBox">
-            <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+            <input type="text" size="5" name="sequenceNum" value="${facilityGroupRollup.sequenceNum?if_exists}" class="inputBox">
+            <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </FORM>
       </td>
       <td>
@@ -133,8 +133,8 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
   </tr>
 </#if>
 </table>
-<br>
-<form method="POST" action="<@ofbizUrl>/addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addChildForm">
+<br/>
+<form method="post" action="<@ofbizUrl>/addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addChildForm">
   <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
   <input type="hidden" name="parentFacilityGroupId" value="${facilityGroupId}">
   <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductChild}</b> ${uiLabelMap.ProductGroupSelectGroupFromDate} :</div>
@@ -145,7 +145,7 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
       </#if>
     </#list>
     </select>
-  <input type=text class="inputBox" size="25" name="fromDate">
+  <input type="text" class="inputBox" size="25" name="fromDate">
   <a href="javascript:call_cal(document.addChildForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>

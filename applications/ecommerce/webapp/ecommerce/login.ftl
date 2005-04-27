@@ -97,7 +97,7 @@
         </div>
         <div class="screenlet-body">
           <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" style="margin: 0;">
-            <div class="tabletext" align=center>${uiLabelMap.CommonCheckoutAnonymousMsg}:</div>
+            <div class="tabletext" align="center">${uiLabelMap.CommonCheckoutAnonymousMsg}:</div>
             <div align="center"><input type="submit" class="smallSubmit" value="Checkout"></div>
           </form>
         </div>
@@ -107,7 +107,7 @@
   <div class="endcolumns">&nbsp;</div>
 <div>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
   <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>
   <#if !autoUserLogin?has_content>document.loginform.USERNAME.focus();</#if>
 </script>

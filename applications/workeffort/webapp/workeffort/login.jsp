@@ -33,19 +33,19 @@
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 <%String previousParams=(String)session.getAttribute("_PREVIOUS_PARAMS_");%>
 
-<br>
+<br/>
 <div class="head1">Log&nbsp;In</div>
-<br>
+<br/>
 <table width='100%' border='0' cellpadding='0' cellspacing='0'>
   <tr>
-    <%-- <td width='50%' valign=top> --%>
-    <td width='300' valign=top>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <%-- <td width='50%' valign="top"> --%>
+    <td width='300' valign="top">
+<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td valign=middle align=center>
+          <td valign=middle align="center">
             <div class="boxhead">Registered&nbsp;User</div>
           </td>
         </tr>
@@ -91,7 +91,7 @@
 </TABLE>
     </td>
     <td>&nbsp;&nbsp;&nbsp;</td>
-    <td width='10%' valign=top>
+    <td width='10%' valign="top">
         &nbsp;
     </td>
   </tr>

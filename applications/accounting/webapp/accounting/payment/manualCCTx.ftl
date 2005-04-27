@@ -30,7 +30,7 @@
       <#assign validTx = true>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Reference Number</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Reference Number</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="60" name="referenceNum">
@@ -41,28 +41,28 @@
     <#-- manual credit card information -->
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">
       ${setRequestAttribute("validTx", "true")}
-      <script language="javascript">
+      <script language="JavaScript" type="text/javascript">
       <!-- //
         document.manualTxForm.action = "<@ofbizUrl>/processManualCcTx</@ofbizUrl>";
       // -->
       </script>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">First Name</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">First Name</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="60" name="firstName" value="${(person.firstName)?if_exists}">
         *</td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Last Name</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Last Name</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="60" name="lastName" value="${(person.lastName)?if_exists}">
         *</td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Email Address</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Email Address</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="60" name="infoString" value="">
@@ -71,14 +71,14 @@
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tableheadtext">Company Name On Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tableheadtext">Company Name On Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${(creditCard.companyNameOnCard)?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tableheadtext">Prefix On Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tableheadtext">Prefix On Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="titleOnCard" class="selectBox">
@@ -91,28 +91,28 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tableheadtext">First Name On Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tableheadtext">First Name On Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tableheadtext">Middle Name On Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tableheadtext">Middle Name On Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tableheadtext">Last Name On Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tableheadtext">Last Name On Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tableheadtext">Suffix On Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tableheadtext">Suffix On Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="suffixOnCard" class="selectBox">
@@ -129,7 +129,7 @@
     </tr>
 
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Card Type</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Card Type</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <select name="cardType" class="selectBox">
@@ -142,21 +142,21 @@
         *</td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Card Number</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Card Number</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="20" maxlength="30" name="cardNumber" value="${(creditCard.cardNumber)?if_exists}">
         *</td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Card Security Code</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Card Security Code</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" size="5" maxlength="10" name="cardSecurityCode" value="">
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Expiration Date</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Expiration Date</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <#assign expMonth = "">
@@ -196,14 +196,14 @@
 
       <#-- first / last name -->
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">First Name</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">First Name</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="30" name="firstName" value="${(person.firstName)?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
         *</td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Last Name</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Last Name</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="30" name="lastName" value="${(person.lastName)?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
@@ -212,28 +212,28 @@
 
       <#-- credit card address -->
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Bill-To Address1</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Bill-To Address1</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="30" name="address1" value="${(postalFields.address1)?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
         *</td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Bill-To Address2</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Bill-To Address2</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="30" name="address2" value="${(postalFields.address2)?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">City</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">City</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="30" name="city" value="${(postalFields.city)?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
         *</td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">State/Province</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">State/Province</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <select name="stateProvinceGeoId" class="selectBox" <#if requestParameters.useShipAddr?exists>disabled</#if>>
@@ -248,14 +248,14 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Postal Code</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Postal Code</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="12" maxlength="10" name="postalCode" value="${(postalFields.postalCode)?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
         *</td>
       </tr>
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Country</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">Country</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <select name="countryGeoId" class="selectBox" <#if requestParameters.useShipAddr?exists>disabled</#if>>

@@ -26,7 +26,7 @@
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if reorderProducts?has_content>
-  <table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+  <table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
       <td width='100%'>
         <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -65,6 +65,6 @@
       </td>
     </tr>
   </table>
-  <br>
+  <br/>
 </#if>
 

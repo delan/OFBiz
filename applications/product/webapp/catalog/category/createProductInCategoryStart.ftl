@@ -31,7 +31,7 @@
     <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductBackToEditCategory}]</a>
 </#if>
 
-<form name="createProductInCategoryCheckExistingForm" method="POST" action="<@ofbizUrl>createProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">
+<form name="createProductInCategoryCheckExistingForm" method="post" action="<@ofbizUrl>createProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
     <table cellpadding="1" cellspacing="0" border="1">
         <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>

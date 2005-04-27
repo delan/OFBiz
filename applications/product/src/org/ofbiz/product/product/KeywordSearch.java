@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2001-2005 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
 
 /**
  *  Does a product search by keyword using the PRODUCT_KEYWORD table.
- *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
+ *  <br/>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Rev$

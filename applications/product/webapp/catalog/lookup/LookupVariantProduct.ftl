@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,13 +24,13 @@
 
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
     
-<br>
+<br/>
 <div class="tabletext">[${product.productId}] ${product.internalName}</div>
-<br>
+<br/>
 <#if searchFeatures?has_content>
     <table border="1" cellpadding="2" cellspacing="0">
-        <form method=POST action="<@ofbizUrl>/LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
-        <input type=hidden name="productId" value="${product.productId}">
+        <form method="post" action="<@ofbizUrl>/LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
+        <input type="hidden" name="productId" value="${product.productId}">
         <#list searchFeatures as searchFeature>
             <tr>
                 <td><div class="tabletext"><b>${searchFeature.featureType}</b></div></td>
@@ -54,7 +54,7 @@
         </form>
     </table>
 </#if>
-<br>
+<br/>
 <#if variants?exists>
     <table border="1" cellpadding="2" cellspacing="0">
         <#list variants as variant>
@@ -66,10 +66,10 @@
 </#if>
 <#if productFeatureIds?exists>
     <table border="1" cellpadding="2" cellspacing="0">
-        <form method=POST action="<@ofbizUrl>/LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
-        <input type=hidden name="productId" value="${product.productId}">
-        <input type=hidden name="productFeatureIds" value="${productFeatureIds}">
-        <input type=text name="productVariantId" value="${productVariantId}" class="inputBox">
+        <form method="post" action="<@ofbizUrl>/LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
+        <input type="hidden" name="productId" value="${product.productId}">
+        <input type="hidden" name="productFeatureIds" value="${productFeatureIds}">
+        <input type="text" name="productVariantId" value="${productVariantId}" class="inputBox">
         <input type="submit" value="Quick Add Variant" class="smallSubmit">
         </form>
     </table>

@@ -59,7 +59,7 @@
     </#if>
   </table>
   
-  <br>
+  <br/>
   <div class="head2">${uiLabelMap.ProductCreateProductStoreRole}:</div>
   <form name="addRole" action="<@ofbizUrl>/storeCreateRole</@ofbizUrl>" method="post">
     <input type="hidden" name="productStoreId" value="${productStoreId}">

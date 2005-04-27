@@ -72,7 +72,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </#list>
     <tr><td colspan="8"><hr class="sepbar"></td></tr>
   </table>
-  <br>
+  <br/>
 </#if>
 
 <#-- Single Product Receiving -->
@@ -137,7 +137,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>	
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductInventoryItem} <br>(${uiLabelMap.ProductOptionalCreateNew})</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductInventoryItem} <br/>(${uiLabelMap.ProductOptionalCreateNew})</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <input type='text' name='inventoryItemId_o_0' size='20' maxlength='20' class="inputBox">
@@ -148,7 +148,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductInventoryItemType} </div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <select name="inventoryItemTypeId_o_0" size=1 class="selectBox">  
+          <select name="inventoryItemTypeId_o_0" size="1" class="selectBox">  
             <#list inventoryItemTypes as nextInventoryItemType>                      
               <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
             </#list>
@@ -446,7 +446,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
   </form>
-  <script language="JavaScript">selectAll();</script>
+  <script language="JavaScript" type="text/javascript">selectAll();</script>
   
 <#-- Initial Screen -->
 <#else>
@@ -481,7 +481,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
   </form>
 </#if>
 
-<br>
+<br/>
 <#else>
   <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

@@ -45,14 +45,14 @@
     <#if (productCategoryRole.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productCategoryRole.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
     <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productCategoryRole.fromDate)?if_exists}</div></td>
     <td align="center">
-        <FORM method=POST action="<@ofbizUrl>/updatePartyToCategory</@ofbizUrl>" name="lineForm${line}">
+        <FORM method="post" action="<@ofbizUrl>/updatePartyToCategory</@ofbizUrl>" name="lineForm${line}">
             <#assign hasExpired = false>
             <#if (productCategoryRole.getTimestamp("thruDate"))?exists && (Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productCategoryRole.getTimestamp("thruDate")))> <#assign hasExpired = true></#if>
-            <input type=hidden name="productCategoryId" value="${(productCategoryRole.productCategoryId)?if_exists}">
-            <input type=hidden name="partyId" value="${(productCategoryRole.partyId)?if_exists}">
-            <input type=hidden name="roleTypeId" value="${(productCategoryRole.roleTypeId)?if_exists}">
-            <input type=hidden name="fromDate" value="${(productCategoryRole.getTimestamp("fromDate"))?if_exists}">
-            <input type=text size="25" name="thruDate" value="${(productCategoryRole. getTimestamp("thruDate"))?if_exists}" class="inputBox" <#if hasExpired> style="color: red;"</#if>>
+            <input type="hidden" name="productCategoryId" value="${(productCategoryRole.productCategoryId)?if_exists}">
+            <input type="hidden" name="partyId" value="${(productCategoryRole.partyId)?if_exists}">
+            <input type="hidden" name="roleTypeId" value="${(productCategoryRole.roleTypeId)?if_exists}">
+            <input type="hidden" name="fromDate" value="${(productCategoryRole.getTimestamp("fromDate"))?if_exists}">
+            <input type="text" size="25" name="thruDate" value="${(productCategoryRole. getTimestamp("thruDate"))?if_exists}" class="inputBox" <#if hasExpired> style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productCategoryRole.getTimestamp("thruDate"))?default(nowTimestamp?string)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </FORM>
@@ -64,14 +64,14 @@
     </tr>
     </#list>
     </table>
-    <br>
-    <form method="POST" action="<@ofbizUrl>/addPartyToCategory</@ofbizUrl>" style="margin: 0;" name="addNewForm">
+    <br/>
+    <form method="post" action="<@ofbizUrl>/addPartyToCategory</@ofbizUrl>" style="margin: 0;" name="addNewForm">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
     
     <div class="head2">${uiLabelMap.ProductAssociatePartyToCategory}:</div>
-    <br>
+    <br/>
     <input type="text" class="inputBox" size="20" maxlength="20" name="partyId" value="">
-    <select name="roleTypeId" size=1 class="selectBox">
+    <select name="roleTypeId" size="1" class="selectBox">
     <#list roleTypes as roleType>
         <option value="${(roleType.roleTypeId)?if_exists}" <#if roleType.roleTypeId.equals("_NA_")> ${uiLabelMap.ProductSelected}</#if>>${(roleType.description)?if_exists}</option>
     </#list>

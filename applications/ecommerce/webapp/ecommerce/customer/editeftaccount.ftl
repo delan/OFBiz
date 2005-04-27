@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -40,39 +40,39 @@
       &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name='paymentMethodId' value='${paymentMethodId}'>
+        <input type="hidden" name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingNameOnAccount}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingNameOnAccount}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCompanyNameOnAccount}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingCompanyNameOnAccount}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingBankName}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingBankName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingRoutingNumber}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingRoutingNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingAccountType}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingAccountType}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="accountType" class='selectBox'>
@@ -84,7 +84,7 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingAccountNumber}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingAccountNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber?if_exists}">
@@ -92,7 +92,7 @@
     </tr>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyBillingAddress}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyBillingAddress}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...

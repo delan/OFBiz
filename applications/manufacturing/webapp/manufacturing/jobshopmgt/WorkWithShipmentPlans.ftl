@@ -27,12 +27,12 @@
   <div class="head1">Shipment Plan: ${shipment.shipmentId}</div>
   ${listShipmentPlanForm.renderFormString(context)}
   <#if workInProgress>
-    <br>
+    <br/>
     <div><a href="<@ofbizUrl>/ShipmentWorkEffortTasks.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingTasksReport}]</a></div>
     <div><a href="<@ofbizUrl>/CuttingListReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_report" class="buttontext">[${uiLabelMap.ManufacturingCuttingListReport}]</a></div>
   <#else>
     <div><a href="<@ofbizUrl>createProductionRunsForOrder?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CreateProductionRuns}]</a></div>
-    <br>
+    <br/>
     <div><a href="<@ofbizUrl>/ShipmentPlanStockReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_report" class="buttontext">[${uiLabelMap.ManufacturingShipmentPlanStockReport}]</a></div>
   </#if>
   <div><a href="<@ofbizUrl>/ShipmentLabel.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPackageLabelsReport}]</a></div>

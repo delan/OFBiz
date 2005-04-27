@@ -33,7 +33,7 @@ import javax.servlet.jsp.PageContext;
 
 /**
  * Abstract base class for Section and Region
- * <br>Subclasses of Content must implement render(PageContext)
+ * <br/>Subclasses of Content must implement render(PageContext)
  *
  *@author     David M. Geary in the book "Advanced Java Server Pages"
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
@@ -44,11 +44,11 @@ public abstract class Content implements java.io.Serializable {
     protected final String content;
 
     /** type can be:
-     * <br>- direct (for direct inline content)
-     * <br>- region (for a nested region)
-     * <br>- default (for region if matches region name OR JSP/Servlet resource otherwise)
-     * <br>- resource (for JSP/Servlet resource)
-     * <br>- or any ViewHandler defined in the corresponding controller.xml file 
+     * <br/>- direct (for direct inline content)
+     * <br/>- region (for a nested region)
+     * <br/>- default (for region if matches region name OR JSP/Servlet resource otherwise)
+     * <br/>- resource (for JSP/Servlet resource)
+     * <br/>- or any ViewHandler defined in the corresponding controller.xml file 
      */
     protected final String type;
 

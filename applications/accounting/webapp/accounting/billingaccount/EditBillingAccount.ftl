@@ -39,7 +39,7 @@
     </#if>
 </#if>
 
-  <br>
+  <br/>
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#if billingAccount?has_content>
     <tr>

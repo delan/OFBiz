@@ -93,7 +93,7 @@
     </tr>
   </#if>
 </table>
-<br>
+<br/>
 <#if returnHeader.statusId == "RETURN_REQUESTED">
 <form name="returnItems" method="post" action="<@ofbizUrl>/returnItems</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${returnId}">

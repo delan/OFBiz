@@ -9,7 +9,7 @@
 
 <body bgcolor="#FFFFFF">
 <div align="center">
-  <br>
+  <br/>
   <table width="100%" border="1" height="200">
     <tr>
       <td>
@@ -21,7 +21,7 @@
           </tr>
           <tr> 
             <td>
-              <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%=UtilFormatOut.replaceString(errorMsg, "\n", "<br>")%></font></div>
+              <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%=UtilFormatOut.replaceString(errorMsg, "\n", "<br/>")%></font></div>
             </td>
           </tr>
         </table>

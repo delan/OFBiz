@@ -31,12 +31,12 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='40%' >
+          <td align="left" width='40%' >
             <div class='boxhead'>&nbsp;${uiLabelMap.WorkEffortCalendarEvent}: ${workEffort.workEffortName?if_exists}</div>
           </td>
         </tr>
@@ -83,14 +83,14 @@
               <#if contactMechMap.postalAddress?exists>
                   <#assign postalAddress = contactMechMap.postalAddress>
                   <div class="tabletext">                    
-                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br></#if>
-                    ${postalAddress.address1?if_exists}<br>
-                    <#if postalAddress.address2?has_content><br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br/></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br/></#if>
+                    ${postalAddress.address1?if_exists}<br/>
+                    <#if postalAddress.address2?has_content><br/></#if>
                     ${postalAddress.city?if_exists},
                     ${postalAddress.stateProvinceGeoId?if_exists}
                     ${postalAddress.postalCode?if_exists}
-                    <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
+                    <#if postalAddress.countryGeoId?has_content><br/>${postalAddress.countryGeoId}</#if>
                   </div>
                   <#if (postalAddress?has_content && !postalAddress.countryGeoId?has_content) || postalAddress.countryGeoId = "USA">
                     <#assign addr1 = postalAddress.address1?default("")>                 
@@ -143,13 +143,13 @@
 				 <tr><td colspan="5"><input type="submit" value="${uiLabelMap.CommonAdd}"></td></tr>
 				</form>     
       </table>
-          <br>
+          <br/>
       <p class="head1">${uiLabelMap.PartyCreateAdditionalContactInformation}</p>
       <#else>
       <#if partyId?has_content>
-<#--		No contact information was found for the party with id ${partyId}<br> -->
-         <#assign uiLabelWithVar=uiLabelMap.PartyNoContactInformationParty?interpret><@uiLabelWithVar/><br>
-		<br>
+<#--		No contact information was found for the party with id ${partyId}<br/> -->
+         <#assign uiLabelWithVar=uiLabelMap.PartyNoContactInformationParty?interpret><@uiLabelWithVar/><br/>
+		<br/>
 	  </#if>
       <p class="head1">${uiLabelMap.PartyCreateNewContact}</p>
       </#if>
@@ -159,9 +159,9 @@
       </#if>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <form method="post" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
-        <input type=hidden name='DONE_PAGE' value='${donePage}'>
-        <input type=hidden name='contactMechTypeId' value='${mechMap.contactMechTypeId}'>
-        <input type=hidden name='partyId' value='${partyId}'>
+        <input type="hidden" name='DONE_PAGE' value='${donePage}'>
+        <input type="hidden" name='contactMechTypeId' value='${mechMap.contactMechTypeId}'>
+        <input type="hidden" name='partyId' value='${partyId}'>
         <input type="hidden" name="workEffortId" value="${workEffortId}">        
         <#if preContactMechTypeId?exists><input type='hidden' name='preContactMechTypeId' value='${preContactMechTypeId}'></#if>
         <#if contactMechPurposeTypeId?exists><input type='hidden' name='contactMechPurposeTypeId' value='${contactMechPurposeTypeId?if_exists}'></#if>
@@ -174,7 +174,7 @@
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
       
         <tr>
-          <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyContactPurposes}</div></td>
+          <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyContactPurposes}</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
             <table border='0' cellspacing='1' bgcolor='black'>  
@@ -198,9 +198,9 @@
 				</#if>              
               <#if mechMap.purposeTypes?has_content>
               <tr>
-                <form method=POST action='<@ofbizUrl>/createPartyContactMechPurpose?DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' name='newpurposeform'>
-                <input type=hidden name='partyId' value='${partyId?if_exists}'>
-                <input type=hidden name='contactMechId' value='${contactMechId?if_exists}'>
+                <form method="post" action='<@ofbizUrl>/createPartyContactMechPurpose?DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' name='newpurposeform'>
+                <input type="hidden" name='partyId' value='${partyId?if_exists}'>
+                <input type="hidden" name='contactMechId' value='${contactMechId?if_exists}'>
                   <td bgcolor='white'>
                     <select name='contactMechPurposeTypeId' class="selectBox">
                       <option></option>
@@ -217,50 +217,50 @@
           </td>
         </tr>
         <form method="post" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
-        <input type=hidden name="DONE_PAGE" value='${donePage}'>
-        <input type=hidden name="contactMechId" value='${contactMechId}'>
-        <input type=hidden name="contactMechTypeId" value='${mechMap.contactMechTypeId}'>
+        <input type="hidden" name="DONE_PAGE" value='${donePage}'>
+        <input type="hidden" name="contactMechId" value='${contactMechId}'>
+        <input type="hidden" name="contactMechTypeId" value='${mechMap.contactMechTypeId}'>
         <input type="hidden" name="workEffortId" value="${workEffortId}">
     </#if>
   
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId?if_exists>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyToName}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyToName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" name="toName" value="${(mechMap.postalAddress.toName)?default(request.getParameter('toName')?if_exists)}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyAttentionName}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyAttentionName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" name="attnName" value="${(mechMap.postalAddress.attnName)?default(request.getParameter('attnName')?if_exists)}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyAddressLine1}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyAddressLine1}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="30" name="address1" value="${(mechMap.postalAddress.address1)?default(request.getParameter('address1')?if_exists)}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyAddressLine2}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyAddressLine2}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="30" name="address2" value="${(mechMap.postalAddress.address2)?default(request.getParameter('address2')?if_exists)}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyCity}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyCity}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="30" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')?if_exists)}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyStateProvince}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyStateProvince}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="stateProvinceGeoId" class="selectBox">
@@ -271,14 +271,14 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyZipPostalCode}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyZipPostalCode}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="12" maxlength="10" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')?if_exists)}">
       *</td> 
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyCountry}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyCountry}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="countryGeoId" class="selectBox">
@@ -290,7 +290,7 @@
     </tr>
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId?if_exists>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyPhoneNumber}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyPhoneNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="4" maxlength="10" name="countryCode" value="${(mechMap.telecomNumber.countryCode)?default(request.getParameter('countryCode')?if_exists)}">
@@ -300,13 +300,13 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext"></div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext"></div></td>
       <td width="5">&nbsp;</td>
       <td><div class="tabletext">[${uiLabelMap.PartyCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyContactExt}]</div></td>
     </tr>
   <#elseif "EMAIL_ADDRESS" = mechMap.contactMechTypeId?if_exists>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyEmailAddress}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyEmailAddress}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class="inputBox" size="60" maxlength="255" name="emailAddress" value="${(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')?if_exists)}">
@@ -314,7 +314,7 @@
     </tr>
   <#else>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${mechMap.contactMechType.description}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${mechMap.contactMechType.description}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class="inputBox" size="60" maxlength="255" name="infoString" value="${(mechMap.contactMech.infoString)?if_exists}">
@@ -323,7 +323,7 @@
   </#if>
   <#if partyId?has_content && security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyAddContactInformationParty}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyAddContactInformationParty}</div></td>
       <td width="5">&nbsp;</td>
                   <td width="74%">
           

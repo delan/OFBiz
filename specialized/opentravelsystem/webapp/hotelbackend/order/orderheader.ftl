@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -34,7 +34,7 @@
   <tr>
     <td width="50%" valign="top" align="left">
       <#-- header box -->
-      <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <tr>
           <td width="100%">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -200,7 +200,7 @@
         </tr>
       </table>
       <#-- end of header box -->
-      <br>
+      <br/>
       <#-- payment box -->
       <#if orderPaymentPreferences?has_content || billingAccount?has_content>
         <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -271,13 +271,13 @@
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
                                 <#if creditCard?has_content>
-                                  <#if creditCard.companyNameOnCard?exists>${creditCard.companyNameOnCard}<br></#if>
+                                  <#if creditCard.companyNameOnCard?exists>${creditCard.companyNameOnCard}<br/></#if>
                                   <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp</#if>
                                   ${creditCard.firstNameOnCard}&nbsp;
                                   <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp</#if>
                                   ${creditCard.lastNameOnCard}
                                   <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
-                                  <br>                                  
+                                  <br/>                                  
 
                                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                     ${creditCard.cardType}
@@ -322,9 +322,9 @@
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
                                 <#if eftAccount?has_content>
-                                  ${eftAccount.nameOnAccount?if_exists}<br>
-                                  <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br></#if>
-                                  Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                                  ${eftAccount.nameOnAccount?if_exists}<br/>
+                                  <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br/></#if>
+                                  Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
                                   Account#: ${eftAccount.accountNumber}
                                 <#else>
                                   ${uiLabelMap.CoomonInformationNotAvailable}
@@ -384,12 +384,12 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              <#if pmBillingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${pmBillingAddress.toName}<br></#if>
-                              <#if pmBillingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${pmBillingAddress.attnName}<br></#if>
-                              ${pmBillingAddress.address1}<br>
-                              <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br></#if>
+                              <#if pmBillingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${pmBillingAddress.toName}<br/></#if>
+                              <#if pmBillingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${pmBillingAddress.attnName}<br/></#if>
+                              ${pmBillingAddress.address1}<br/>
+                              <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br/></#if>
                               ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
-                              ${pmBillingAddress.postalCode?if_exists}<br>
+                              ${pmBillingAddress.postalCode?if_exists}<br/>
                               ${pmBillingAddress.countryGeoId?if_exists}
                             </div>
                           </td>
@@ -503,13 +503,13 @@
                             <#assign postalAddress = orderContactMechValueMap.postalAddress>
                             <#if postalAddress?has_content>
                               <div class="tabletext">
-                                <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
-                                <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br></#if>
-                                ${postalAddress.address1}<br>
-                                <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>
+                                <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br/></#if>
+                                <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br/></#if>
+                                ${postalAddress.address1}<br/>
+                                <#if postalAddress.address2?has_content>${postalAddress.address2}<br/></#if>
                                 ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if>
-                                ${postalAddress.postalCode?if_exists}<br>
-                                ${postalAddress.countryGeoId?if_exists}<br>
+                                ${postalAddress.postalCode?if_exists}<br/>
+                                ${postalAddress.countryGeoId?if_exists}<br/>
                                 <#if !postalAddress.countryGeoId?exists || postalAddress.countryGeoId == "USA">
                                   <#assign addr1 = postalAddress.address1?if_exists>
                                   <#if (addr1.indexOf(" ") > 0)>
@@ -566,7 +566,7 @@
       <#-- shipping info box -->
       <#if shipGroups?has_content>
         <#list shipGroups as shipGroup>
-          <br>
+          <br/>
           <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType")?if_exists>
           <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress")?if_exists>
           <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">

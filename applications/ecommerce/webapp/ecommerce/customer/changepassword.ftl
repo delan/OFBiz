@@ -31,25 +31,25 @@
   <form method="post" action="<@ofbizUrl>/updatePassword/${donePage}</@ofbizUrl>" name="changepasswordform">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyOldPassword}</div></td>
+      <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyOldPassword}</div></td>
       <td width="74%">
         <input type="password" class='inputBox' name="currentPassword" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyNewPassword}</div></td>
+      <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyNewPassword}</div></td>
       <td width="74%">
         <input type="password" class='inputBox' name="newPassword" size="20" maxlength="20"/>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyNewPasswordVerify}</div></td>
+      <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyNewPasswordVerify}</div></td>
       <td width="74%">
         <input type="password" class='inputBox' name="newPasswordVerify" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyPasswordHint}</div></td>
+      <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyPasswordHint}</div></td>
       <td width="74%">
         <input type="text" class='inputBox' size="40" maxlength="100" name="passwordHint" value="${userLoginData.passwordHint?if_exists}"/>
       </td>

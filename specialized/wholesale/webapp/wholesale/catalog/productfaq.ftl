@@ -22,7 +22,7 @@
  *@author     Si Chen
  *@version    $Revision$
 -->
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
