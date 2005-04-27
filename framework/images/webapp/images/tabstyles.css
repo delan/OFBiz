@@ -165,7 +165,7 @@ padding: 4px;
 position: relative;
 background-color: #FFFFFF;
 margin: auto;
-width: auto;
+width: 100%;
 }
 
 #column-container .left {
