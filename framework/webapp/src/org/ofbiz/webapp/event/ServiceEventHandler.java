@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -75,7 +76,7 @@ public class ServiceEventHandler implements EventHandler {
      */
     public void init(ServletContext context) throws EventHandlerException {
     }
-    
+
     /**
      * @see org.ofbiz.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
@@ -144,7 +145,7 @@ public class ServiceEventHandler implements EventHandler {
         if (isMultiPart) {
             DiskFileUpload upload = new DiskFileUpload();
             upload.setSizeMax(maxUploadSize);
-            
+
             List uploadedItems = null;
             try {
                 uploadedItems = upload.parseRequest(request);
@@ -175,7 +176,7 @@ public class ServiceEventHandler implements EventHandler {
                         multiPartMap.put(fieldName, new ByteWrapper(item.get()));
                         multiPartMap.put("_" + fieldName + "_size", new Long(item.getSize()));
                         multiPartMap.put("_" + fieldName + "_fileName", fileName);
-                        multiPartMap.put("_" + fieldName + "_contentType", item.getContentType());                        
+                        multiPartMap.put("_" + fieldName + "_contentType", item.getContentType());
                     }
                 }
             }
@@ -210,10 +211,14 @@ public class ServiceEventHandler implements EventHandler {
 
                 // check the request parameters
                 if (UtilValidate.isEmpty(value)) {
-                    Object tempVal = request.getParameter(name);
-                    if (tempVal != null) {
-                        value = tempVal;
-                    }
+                    String[] paramArr = request.getParameterValues(name);
+                    if (paramArr != null) {
+                        if (paramArr.length > 1) {
+                            value = Arrays.asList(paramArr);
+                        } else {
+                            value = paramArr[0];
+                        }
+                    }                    
                 }
 
                 // next check attributes
@@ -282,7 +287,7 @@ public class ServiceEventHandler implements EventHandler {
         } catch (ServiceValidationException e) {
             // not logging since the service engine already did
             request.setAttribute("serviceValidationException", e);
-            if (e.getMessageList() != null) {                
+            if (e.getMessageList() != null) {
                 request.setAttribute("_ERROR_MESSAGE_LIST_", e.getMessageList());
             } else {
                 request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
