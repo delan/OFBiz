@@ -52,21 +52,27 @@ public class UspsMockApiServlet extends HttpServlet {
 
         // we're only testing the Rate API right now
         if (!"Rate".equals(request.getParameter("API"))) {
-            Debug.log("Unsupported API [" + request.getParameter("API") + "]", module);
+            Debug.logError("Unsupported API [" + request.getParameter("API") + "]", module);
             return;
         }
 
+        String xmlValue = request.getParameter("XML");
         Document requestDocument = null;
         try {
-            requestDocument = UtilXml.readXmlDocument(request.getParameter("XML"), false);
+            requestDocument = UtilXml.readXmlDocument(xmlValue, false);
         } catch (SAXException se) {
-            Debug.log(se, module);
+            Debug.logError(se, module);
             return;
         } catch (ParserConfigurationException pce) {
-            Debug.log(pce, module);
+            Debug.logError(pce, module);
             return;
         } catch (IOException xmlReadException) {
-            Debug.log(xmlReadException, module);
+            Debug.logError(xmlReadException, module);
+            return;
+        }
+        
+        if (requestDocument == null) {
+            Debug.logError("In UspsMockApiSerlvet No XML document found in request, quiting now; XML parameter is: " + xmlValue, module);
             return;
         }
 
