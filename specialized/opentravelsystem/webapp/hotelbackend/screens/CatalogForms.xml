@@ -37,7 +37,7 @@
     
     <!-- edit the list of products selected by the primary category being the product STore Id. -->
     <form name="EditProducts" type="list" list-name="products" 
-             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
         </actions>
@@ -235,7 +235,7 @@
 
     <form name="ListProductCategoryMembers" type="list"
             target="updateProductToCategory" title="" list-name="productCategoryMembers"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="browsecategorytext">
 
         <auto-fields-service service-name="updateProductToCategory" map-name="productCategoryMember"/>
         <field name="productId"><hidden/></field>

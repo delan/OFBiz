@@ -38,7 +38,7 @@
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">List Reservations</a></div>  
   <div class="col"><a href="<@ofbizUrl>downloadorder</@ofbizUrl>" class="${selectedLeftClassMap.downloadorder?default(unselectedLeftClassName)}">Download Reservations</a></div>  
-  <div class="col"><a href="<@ofbizUrl>statistics</@ofbizUrl>" class="${selectedLeftClassMap.statistics?default(unselectedLeftClassName)}">Statistics</a></div>  
+  <!--div class="col"><a href="<@ofbizUrl>statistics</@ofbizUrl>" class="${selectedLeftClassMap.statistics?default(unselectedLeftClassName)}">Statistics</a></div-->  
   <div class="col"><a href="<@ofbizUrl>reports</@ofbizUrl>" class="${selectedLeftClassMap.reports?default(unselectedLeftClassName)}">Reports</a></div>  
 
   <#if userLogin?has_content>

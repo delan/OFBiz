@@ -140,7 +140,6 @@
             <actions>
                 <set field="page.appTabButtonItem" value="Reservations"/>
                 <set field="page.headerItem" value="statistics"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/orderstats.bsh"/>
             </actions>
             <widgets>
@@ -159,10 +158,11 @@
         <screen name="reports">
         <section>
             <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Reservations"/>
                 <set field="page.headerItem" value="reports"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="Order Purchase Report Options"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <!-- <set field="titleProperty" value=""/> -->
             </actions>
             <widgets>
@@ -188,6 +188,7 @@
     <screen name="OrderPurchaseReportPayment">
         <section>
             <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="Order Purchase Report Payment"/>
                 <entity-condition entity-name="OrderPurchasePaymentSummary" list-name="orderPurchasePaymentSummaryList">
                     <condition-list combine="and">
@@ -222,6 +223,7 @@
     <screen name="OrderPurchaseReportProduct">
         <section>
             <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="Order Purchase Report Product"/>
                 <entity-condition entity-name="OrderPurchaseProductSummary" list-name="orderPurchaseProductSummaryList">
                     <condition-list combine="and">

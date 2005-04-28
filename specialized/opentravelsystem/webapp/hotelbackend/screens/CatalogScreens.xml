@@ -25,12 +25,6 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
    <screen name="CommonCatalogDecorator">
         <section>
-            <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-            </actions>
             <widgets>
                 <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
@@ -132,9 +126,6 @@
     </screen>
     <screen name="EditCategory">
         <section>
-            <condition>
-                <if-has-permission permission="CATALOG" action="_VIEW"/>
-            </condition>
             <actions>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
@@ -662,7 +653,7 @@
                            <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
                        </platform-specific>
                             <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
-                             </container>
+                        </container>
                         <include-form name="ListFixedAssetProducts" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
@@ -678,8 +669,6 @@
     <screen name="ListFixedAssetCalendar">
         <section>
             <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="layoutSettings.extraHead" value="&lt;link rel='stylesheet' href='/images/calendarTable.css' type='text/css'&gt;"/>
                 <set field="title" value="Edit Fixed Asset Calendar"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
                 <set field="page.appTabButtonItem" value="Product"/>
@@ -690,10 +679,35 @@
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
                 <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
+                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.opentravelsystemCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.opentravelsystemCompanySubtitle" global="true"/>
+                <set field="layoutSettings.headerImageUrl" value="/images/opentravelsystem_logo.jpg" global="true"/>
+                <!--set field="layoutSettings.extraHead" value=" "/-->
+                <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
+                <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+                <set field="activeApp" value="hotelbackend" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
-                    <decorator-section name="body">
+                <!-- render header -->
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/header1.ftl"/></html></platform-specific>
+                <!-- render appbar -->
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
+                <container style="centerarea">
+                        <container style="column-main">
+                                <platform-specific>
+                                    <html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderCatalog.ftl"/></html>
+                                </platform-specific>
+                                <container style="contentarea">
+                                 <platform-specific>
+                                    <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
+                                </platform-specific>
                                 <container>
                                  <platform-specific>
                                     <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
@@ -709,16 +723,19 @@
                                     <include-form name="listFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                     <label style="tabletext" text="*) empty, but maximum from fixed Asset capacity shown"></label>
                                 </container>
-<!--                                 <container>
+<!--                          <container>
                                     <label style="tabletext" text="&amp;nbsp;"></label>
                                 </container>
                                 <container>
                                    <label style="head1">${uiLabelMap.AccountingUpdateAvailability}</label>
                                    <include-form name="updateFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                 </container>
- -->                    </decorator-section>
-                </decorator-screen>
-            </widgets>
+ -->                  </container> 
+                     </container>
+                 </container>
+                 <!-- render footer -->
+                <platform-specific><html><html-template location="component://opentravelsystem/includes/footer.ftl"/></html></platform-specific>
+             </widgets>
         </section>
     </screen>
 </screens>

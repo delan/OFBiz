@@ -58,7 +58,7 @@
             <actions>
                 <set field="page.appTabButtonItem" value="Customers"/>
                 <set field="page.headerItem" value="main"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="CustomerSummary" list-name="customers">
                         <condition-expr field-name="productStoreId" operator="equals"  env-name="productStoreId"/>
@@ -79,7 +79,7 @@
             <actions>
                 <set field="page.appTabButtonItem" value="Customers"/>
                 <set field="page.headerItem" value="main"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>
             </actions>
@@ -103,7 +103,7 @@
             <actions>
                 <set field="page.appTabButtonItem" value="Customers"/>
                 <set field="page.headerItem" value="main"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/visitdetail.bsh"/>
             </actions>
@@ -129,7 +129,7 @@
                 <set field="page.appTabButtonItem" value="Customers"/>
                 <set field="page.headerItem" value="main"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="productStoreId" to-scope="user" value="${productStoreId}"/>
                 <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/findOrders.bsh"/>
             </actions>
