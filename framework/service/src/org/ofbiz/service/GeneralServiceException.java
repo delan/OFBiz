@@ -38,10 +38,11 @@ import org.ofbiz.base.util.Debug;
  * @since      3.2
  */
 public class GeneralServiceException extends org.ofbiz.base.util.GeneralException {
+
     protected List errorMsgList = null;
     protected Map errorMsgMap = null;
     protected Map nestedServiceResult = null;
-    
+
     public GeneralServiceException() {
         super();
     }
@@ -64,7 +65,7 @@ public class GeneralServiceException extends org.ofbiz.base.util.GeneralExceptio
         this.errorMsgMap = errorMsgMap;
         this.nestedServiceResult = nestedServiceResult;
     }
-    
+
     public Map returnError(String module) {
         String errMsg = this.getMessage() == null ? "Error in Service" : this.getMessage();
         if (this.getNested() != null) {
@@ -72,7 +73,7 @@ public class GeneralServiceException extends org.ofbiz.base.util.GeneralExceptio
         }
         return ServiceUtil.returnError(errMsg, this.errorMsgList, this.errorMsgMap, this.nestedServiceResult);
     }
-    
+
     public void addErrorMessages(List errMsgs) {
         if (this.errorMsgList == null) {
             this.errorMsgList = new LinkedList();

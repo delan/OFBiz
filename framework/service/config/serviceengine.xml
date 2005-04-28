@@ -54,7 +54,7 @@
     <engine name="rmi" class="org.ofbiz.service.rmi.RmiServiceEngine"/>
     <engine name="simple" class="org.ofbiz.minilang.SimpleServiceEngine"/>
     <engine name="soap" class="org.ofbiz.service.engine.SOAPClientEngine"/>
-    <engine name="workflow" class="org.ofbiz.workflow.WorkflowEngine"/>
+    <engine name="workflow" class="org.ofbiz.shark.service.SharkServiceEngine"/>
 
     <service-location name="main-rmi" location="rmi://localhost:1099/RMIDispatcher"/>
     <service-location name="main-http" location="http://localhost:8080/webtools/control/httpService"/>
