@@ -24,14 +24,17 @@
  */
 package org.ofbiz.service.rmi;
 
-import org.ofbiz.service.*;
-import org.ofbiz.base.util.Debug;
-
-import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
+
+import org.ofbiz.service.GenericRequester;
+import org.ofbiz.service.GenericResultWaiter;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 
 /**
  * Generic Services Remote Dispatcher Implementation
@@ -47,9 +50,9 @@ public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteD
 
     protected LocalDispatcher dispatcher = null;
 
-    RemoteDispatcherImpl(LocalDispatcher dispatcher, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
+    public RemoteDispatcherImpl(LocalDispatcher dispatcher, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
         super(0, csf, ssf);
-        this.dispatcher = dispatcher;        
+        this.dispatcher = dispatcher;
     }
 
     // RemoteDispatcher methods
@@ -136,7 +139,8 @@ public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteD
     protected void checkExportFlag(String serviceName) throws GenericServiceException {
         ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
         if (!model.export && !exportAll) {
-            Debug.logWarning("Attempt to invoke a non-exported service: " + serviceName, module);
+            // TODO: make this log on the server rather than the client
+            //Debug.logWarning("Attempt to invoke a non-exported service: " + serviceName, module);
             throw new GenericServiceException("Cannot find requested service");
         }
     }
