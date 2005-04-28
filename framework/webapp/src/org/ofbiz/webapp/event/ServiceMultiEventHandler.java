@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -59,9 +60,9 @@ import org.ofbiz.service.ServiceValidationException;
  * @since      2.2
  */
 public class ServiceMultiEventHandler implements EventHandler {
-    
+
     public static final String module = ServiceMultiEventHandler.class.getName();
-    
+
     public static final String DELIMITER = "_o_";
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
@@ -71,7 +72,7 @@ public class ServiceMultiEventHandler implements EventHandler {
      */
     public void init(ServletContext context) throws EventHandlerException {
     }
-    
+
     /**
      * @see org.ofbiz.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
@@ -84,8 +85,8 @@ public class ServiceMultiEventHandler implements EventHandler {
         DispatchContext dctx = dispatcher.getDispatchContext();
         if (dctx == null) {
             throw new EventHandlerException("Dispatch context cannot be found");
-        }        
-        
+        }
+
         // get the details for the service(s) to call
         String mode = SYNC;
         String serviceName = null;
@@ -95,24 +96,24 @@ public class ServiceMultiEventHandler implements EventHandler {
         } else {
             mode = eventPath;
         }
-        
+
         // we only support SYNC mode in this handler
         if (mode != SYNC) {
             throw new EventHandlerException("Async mode is not supported");
         }
-        
+
         // nake sure we have a defined service to call
-        serviceName = eventMethod;                       
+        serviceName = eventMethod;
         if (serviceName == null) {
             throw new EventHandlerException("Service name (eventMethod) cannot be null");
         }
         if (Debug.verboseOn()) Debug.logVerbose("[Set mode/service]: " + mode + "/" + serviceName, module);
-                
+
         // some needed info for when running the service
         Locale locale = UtilHttp.getLocale(request);
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        
+
         // get the service model to generate context(s)
         ModelService model = null;
 
@@ -128,59 +129,59 @@ public class ServiceMultiEventHandler implements EventHandler {
 
         if (Debug.verboseOn()) Debug.logVerbose("[Processing]: SERVICE Event", module);
         if (Debug.verboseOn()) Debug.logVerbose("[Using delegator]: " + dispatcher.getDelegator().getDelegatorName(), module);
-        
+
         // check if we are using per row submit
-        boolean useRowSubmit = request.getParameter("_useRowSubmit") == null ? false : 
+        boolean useRowSubmit = request.getParameter("_useRowSubmit") == null ? false :
                 "Y".equalsIgnoreCase(request.getParameter("_useRowSubmit"));
-        
-        // check if we are to also look in a global scope (no delimiter)        
+
+        // check if we are to also look in a global scope (no delimiter)
         boolean checkGlobalScope = request.getParameter("_checkGlobalScope") == null ? false :
                 "Y".equalsIgnoreCase(request.getParameter("_checkGlobalScope"));
-        
+
         // get the number of rows
         String rowCountField = request.getParameter("_rowCount");
         if (rowCountField == null) {
             throw new EventHandlerException("Required field _rowCount is missing");
         }
-        
+
         int rowCount = 0; // parsed int value
         try {
-            rowCount = Integer.parseInt(rowCountField);    
+            rowCount = Integer.parseInt(rowCountField);
         } catch (NumberFormatException e) {
             throw new EventHandlerException("Invalid value for _rowCount");
         }
         if (rowCount < 1) {
             throw new EventHandlerException("No rows to process");
         }
-        
-        // some default message settings        
+
+        // some default message settings
         String errorPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.error.prefix", locale);
         String errorSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.error.suffix", locale);
         String messagePrefixStr = UtilProperties.getMessage("DefaultMessages", "service.message.prefix", locale);
-        String messageSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.message.suffix", locale);        
-                
+        String messageSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.message.suffix", locale);
+
         // prepare the error message list
         List errorMessages = new ArrayList();
-        
+
         // start the transaction
         boolean beganTrans = false;
         try {
             beganTrans = TransactionUtil.begin();
         } catch (GenericTransactionException e) {
-            throw new EventHandlerException("Problem starting transaction", e);            
+            throw new EventHandlerException("Problem starting transaction", e);
         }
-        
+
         // now loop throw the rows and prepare/invoke the service for each
         for (int i = 0; i < rowCount; i++) {
             String thisSuffix = DELIMITER + i;
             boolean rowSelected = request.getParameter("_rowSubmit" + thisSuffix) == null ? false :
                     "Y".equalsIgnoreCase(request.getParameter("_rowSubmit" + thisSuffix));
-            
+
             // make sure we are to process this row
-            if (useRowSubmit && !rowSelected) {            
+            if (useRowSubmit && !rowSelected) {
                 continue;
             }
-            
+
             // build the context
             Map serviceContext = new HashMap();
             Iterator modelParmInIter = model.getInModelParamList().iterator();
@@ -201,34 +202,49 @@ public class ServiceMultiEventHandler implements EventHandler {
                     List paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
                     value = paramList;
                 } else {
-                    value = request.getParameter(name + thisSuffix);
-    
+                    // first check for request parameters
+                    String[] paramArr = request.getParameterValues(name + thisSuffix);
+                    if (paramArr != null) {
+                        if (paramArr.length > 1) {
+                            value = Arrays.asList(paramArr);
+                        } else {
+                            value = paramArr[0];
+                        }
+                    }
+
                     // if the parameter wasn't passed and no other value found, don't pass on the null
                     if (value == null) {
                         value = request.getAttribute(name + thisSuffix);
-                    } 
+                    }
                     if (value == null) {
                         value = request.getSession().getAttribute(name + thisSuffix);
                     }
-                    
+
                     // now check global scope
                     if (value == null) {
                         if (checkGlobalScope) {
-                            value = request.getParameter(name);
+                            String[] gParamArr = request.getParameterValues(name);
+                            if (gParamArr != null) {
+                                if (gParamArr.length > 1) {
+                                    value = Arrays.asList(gParamArr);
+                                } else {
+                                    value = gParamArr[0];
+                                }
+                            }                            
                             if (value == null) {
-                                value = request.getAttribute(name);                                
+                                value = request.getAttribute(name);
                             }
                             if (value == null) {
                                 value = request.getSession().getAttribute(name);
                             }
                         }
                     }
-                    
+
                     if (value == null) {
                         // still null, give up for this one
                         continue;
                     }
-                
+
                     if (value instanceof String && ((String) value).length() == 0) {
                         // interpreting empty fields as null values for each in back end handling...
                         value = null;
@@ -236,24 +252,24 @@ public class ServiceMultiEventHandler implements EventHandler {
                 }
                 // set even if null so that values will get nulled in the db later on
                 serviceContext.put(name, value);
-            }  
-            
+            }
+
             // get only the parameters for this service - converted to proper type
-            serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, null, locale);  
+            serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, null, locale);
 
             // include the UserLogin value object
-            if (userLogin != null) {             
+            if (userLogin != null) {
                 serviceContext.put("userLogin", userLogin);
-            }        
-        
+            }
+
             // include the Locale object
-            if (locale != null) {            
+            if (locale != null) {
                 serviceContext.put("locale", locale);
             }
-            
+
             // invoke the service
             Map result = null;
-            try {                
+            try {
                 result = dispatcher.runSync(serviceName, serviceContext);
             } catch (ServiceAuthException e) {
                 // not logging since the service engine already did
@@ -272,23 +288,23 @@ public class ServiceMultiEventHandler implements EventHandler {
                 }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Service invocation error", module);
-                errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNested() + messageSuffixStr);                             
-            } 
-            
+                errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNested() + messageSuffixStr);
+            }
+
             // check for an error message
             String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, "", "");
             if (UtilValidate.isNotEmpty(errorMessage)) {
-                errorMessages.add(errorMessage);           
-            }       
+                errorMessages.add(errorMessage);
+            }
         }
-             
+
         if (errorMessages.size() > 0) {
             // rollback the transaction
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException e) {
                 Debug.logError(e, "Could not rollback transaction", module);
-            }            
+            }
             errorMessages.add(0, errorPrefixStr);
             errorMessages.add(errorSuffixStr);
             StringBuffer errorBuf = new StringBuffer();
@@ -297,17 +313,17 @@ public class ServiceMultiEventHandler implements EventHandler {
                 String em = (String) ei.next();
                 errorBuf.append(em + "\n");
             }
-            request.setAttribute("_ERROR_MESSAGE_", errorBuf.toString());            
-            return "error";            
-        } else {  
+            request.setAttribute("_ERROR_MESSAGE_", errorBuf.toString());
+            return "error";
+        } else {
             // commit the transaction
             try {
                 TransactionUtil.commit(beganTrans);
             } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not commit transaction", module);      
-                throw new EventHandlerException("Commit transaction failed");                              
-            }                                                                 
+                Debug.logError(e, "Could not commit transaction", module);
+                throw new EventHandlerException("Commit transaction failed");
+            }
             return "success";
         }
-    }        
+    }
 }
