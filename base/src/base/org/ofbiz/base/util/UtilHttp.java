@@ -33,15 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -91,7 +83,16 @@ public class UtilHttp {
         java.util.Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
-            paramMap.put(name, request.getParameter(name));
+            Object value = null;
+            String[] paramArr = request.getParameterValues(name);
+            if (paramArr != null) {
+                if (paramArr.length > 1) {
+                    value = Arrays.asList(paramArr);
+                } else {
+                    value = paramArr[0];
+                }
+            }
+            paramMap.put(name, value);
         }
 
         if (paramMap.size() == 0) {
@@ -280,7 +281,7 @@ public class UtilHttp {
         if (userLogin == null) {
             userLogin = (Map) session.getAttribute("autoUserLogin");
         }
-        
+
         Object localeObject = null;
 
         // check userLogin first
@@ -369,7 +370,7 @@ public class UtilHttp {
             Currency cur = Currency.getInstance(getLocale(session));
             iso = cur.getCurrencyCode();
         }
-        
+
         return iso;
     }
 
@@ -423,13 +424,13 @@ public class UtilHttp {
         }
         return buf.toString();
     }
-    
+
     public static String encodeAmpersands(String htmlString) {
         StringBuffer htmlBuffer = new StringBuffer(htmlString);
         int ampLoc = -1;
         while ((ampLoc = htmlBuffer.indexOf("&", ampLoc + 1)) != -1) {
             //NOTE: this should work fine, but if it doesn't could try making sure all characters between & and ; are letters, that would qualify as an entity
-            
+
             // found ampersand, is it already and entity? if not change it to &amp;
             int semiLoc = htmlBuffer.indexOf(";", ampLoc);
             if (semiLoc != -1) {
@@ -440,7 +441,7 @@ public class UtilHttp {
                     continue;
                 }
             }
-            
+
             // at this point not an entity, no substitute with a &amp;
             htmlBuffer.insert(ampLoc + 1, "amp;");
         }
