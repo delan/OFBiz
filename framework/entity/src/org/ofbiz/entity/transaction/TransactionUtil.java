@@ -84,7 +84,10 @@ public class TransactionUtil implements Status {
                         Debug.logWarning("[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun", module);
                     }
 
-                    throw new GenericTransactionException("The current transaction is marked for rollback, not beginning a new transaction and aborting current operation.");
+                    //Throwing this exception is just too much of a pain and hides the real problem, so not doing this for now and we'll see how it goes... DEJ20050427
+                    //throw new GenericTransactionException("The current transaction is marked for rollback, not beginning a new transaction and aborting current operation.");
+                    
+                    return false;
                 }
 
                 // set the timeout for THIS transaction
