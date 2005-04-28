@@ -249,10 +249,10 @@ public class OrderChangeHelper {
         }
         if (orderHeader != null) {
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
-            GenericValue btp = orh.getBillToPerson();
+            GenericValue btparty = orh.getBillToParty();
             String partyId = "_NA_";
-            if (btp != null) {
-                partyId = btp.getString("partyId");
+            if (btparty != null) {
+                partyId = btparty.getString("partyId");
             }
 
             List opps = orh.getPaymentPreferences();

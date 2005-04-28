@@ -599,7 +599,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -639,7 +639,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -732,7 +732,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -786,7 +786,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -846,7 +846,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -893,7 +893,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1017,7 +1017,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1143,7 +1143,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1207,7 +1207,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1261,7 +1261,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1350,7 +1350,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1408,10 +1408,11 @@ public class GenericDelegator implements DelegatorInterface {
             this.decryptFields(results);
             return results;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findAllByPrimaryKeys operation, rolling back transaction";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1484,10 +1485,11 @@ public class GenericDelegator implements DelegatorInterface {
             this.decryptFields(results);
             return results;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            String errMsg = "Failure in findAllByPrimaryKeysCache operation, rolling back transaction";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1607,7 +1609,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1657,7 +1659,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1771,7 +1773,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1811,7 +1813,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -1969,7 +1971,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -2016,7 +2018,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -2534,10 +2536,11 @@ public class GenericDelegator implements DelegatorInterface {
                 return nextSeqLong.toString();
             }
         } catch (Exception e) {
-            Debug.logError(e, "Failure in getNextSeqId operation for seqName [" + seqName + "]: " + e.toString() + ". Rolling back transaction", module);
+            String errMsg = "Failure in getNextSeqId operation for seqName [" + seqName + "]: " + e.toString() + ". Rolling back transaction";
+            Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -2596,7 +2599,7 @@ public class GenericDelegator implements DelegatorInterface {
             Debug.logError(e, errMsg, module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -2670,7 +2673,7 @@ public class GenericDelegator implements DelegatorInterface {
                 Debug.logError(e, errMsg, module);
                 try {
                     // only rollback the transaction if we started one...
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, errMsg, e);
                 } catch (GenericEntityException e2) {
                     Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
                 }

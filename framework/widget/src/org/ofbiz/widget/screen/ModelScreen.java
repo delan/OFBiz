@@ -105,7 +105,7 @@ public class ModelScreen {
             Debug.logError(errMsg + ". Rolling back transaction.", module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
@@ -116,7 +116,7 @@ public class ModelScreen {
             Debug.logError(errMsg + ". Rolling back transaction.", module);
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }

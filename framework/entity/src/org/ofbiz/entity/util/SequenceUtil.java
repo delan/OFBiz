@@ -277,9 +277,10 @@ public class SequenceUtil {
                         }
                     }
                 } catch (Exception e) {
-                    Debug.logError(e, "General error in getting a sequenced ID", module);
+                    String errMsg = "General error in getting a sequenced ID";
+                    Debug.logError(e, errMsg, module);
                     try {
-                        TransactionUtil.rollback(beganTransaction);
+                        TransactionUtil.rollback(beganTransaction, errMsg, e);
                     } catch (GenericTransactionException gte2) {
                         Debug.logError(gte2, "Unable to rollback transaction", module);
                     }

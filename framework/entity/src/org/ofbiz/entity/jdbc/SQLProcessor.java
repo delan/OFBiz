@@ -178,7 +178,7 @@ public class SQLProcessor {
                 if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
             } else {
                 try {
-                    TransactionUtil.setRollbackOnly();
+                    TransactionUtil.setRollbackOnly("rollback called in Entity Engine SQLProcessor", new Exception("Current Location Stack"));
                     if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, "Error setting rollback only", module);

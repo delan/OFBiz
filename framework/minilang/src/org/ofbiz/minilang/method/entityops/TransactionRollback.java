@@ -59,7 +59,7 @@ public class TransactionRollback extends MethodOperation {
         }
         
         try {
-            TransactionUtil.rollback(beganTransaction);
+            TransactionUtil.rollback(beganTransaction, "Explicit rollback in simple-method [" + this.simpleMethod.getShortDescription() + "]", null);
         } catch (GenericTransactionException e) {
             Debug.logError(e, "Could not rollback transaction in simple-method, returning error.", module);
             

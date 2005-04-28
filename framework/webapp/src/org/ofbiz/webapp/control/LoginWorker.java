@@ -148,9 +148,10 @@ public class LoginWorker {
                 beganTransaction = TransactionUtil.begin();
                 userLogin.store();
             } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Unable to set logged out flag on UserLogin", module);
+                String errMsg = "Unable to set logged out flag on UserLogin";
+                Debug.logError(e, errMsg, module);
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, errMsg, e);
                 } catch (GenericTransactionException e2) {
                     Debug.logError(e2, "Could not rollback nested transaction: " + e.getMessage(), module);
                 }

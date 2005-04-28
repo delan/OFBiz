@@ -222,10 +222,11 @@ public class ByConditionFinder {
                     EntityListIterator eli = delegator.findListIteratorByCondition(entityName, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderByFields, options);
                     this.outputHandler.handleOutput(eli, context, listAcsr);
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, "Failure in operation, rolling back transaction", module);
+                    String errMsg = "Failure in by condition find operation, rolling back transaction";
+                    Debug.logError(e, errMsg, module);
                     try {
                         // only rollback the transaction if we started one...
-                        TransactionUtil.rollback(beganTransaction);
+                        TransactionUtil.rollback(beganTransaction, errMsg, e);
                     } catch (GenericEntityException e2) {
                         Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
                     }

@@ -862,9 +862,14 @@ public class CheckOutHelper {
                         UtilMisc.toMap("orderId", orderId, "userLogin", userLogin), 180, true);
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, module);
+                throw new GeneralException("Error in authOrderPayments service: " + e.toString(), e.getNested());
             }
             if (Debug.verboseOn()) Debug.logVerbose("Finsished w/ Payment Service", module);
 
+            if (paymentResult != null && ServiceUtil.isError(paymentResult)) {
+                throw new GeneralException(ServiceUtil.getErrorMessage(paymentResult));
+            }
+            
             // grab the customer messages -- only passed back in the case of an error or failure
             List messages = (List) paymentResult.get("authResultMsgs");
 

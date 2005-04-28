@@ -301,7 +301,7 @@ public class ServiceMultiEventHandler implements EventHandler {
         if (errorMessages.size() > 0) {
             // rollback the transaction
             try {
-                TransactionUtil.rollback(beganTrans);
+                TransactionUtil.rollback(beganTrans, "Error in multi-service event handling: " + errorMessages.toString(), null);
             } catch (GenericTransactionException e) {
                 Debug.logError(e, "Could not rollback transaction", module);
             }

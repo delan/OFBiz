@@ -244,7 +244,7 @@ public class ControlServlet extends HttpServlet {
 
             // now resume/rollback any suspended txs
             if (TransactionUtil.suspendedTransactionsHeld()) {
-                int suspended = TransactionUtil.cleanSuspendedTranactions();
+                int suspended = TransactionUtil.cleanSuspendedTransactions();
                 Debug.logWarning("Resumed/Rolled Back [" + suspended + "] transactions.", module);
             }
         } catch (GenericTransactionException e) {

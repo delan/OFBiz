@@ -841,10 +841,10 @@ public class ProductEvents {
                 }
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                    String errMsg = "Error updating quick admin shipping settings: " + e.toString();
+                String errMsg = "Error updating quick admin shipping settings: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                    TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
                 return "error";
             }
         } catch (GenericTransactionException gte) {
@@ -986,7 +986,7 @@ public class ProductEvents {
                 String errMsg = "Error updating quick admin selectable feature settings: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
                 return "error";
             }
         } catch (GenericTransactionException gte) {

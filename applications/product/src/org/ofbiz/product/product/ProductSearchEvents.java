@@ -96,7 +96,7 @@ public class ProductSearchEvents {
                 errMsg = UtilProperties.getMessage(resource,"productsearchevents.error_getting_search_results", messageMap, UtilHttp.getLocale(request));
                 Debug.logError(e, errMsg, module);
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
                 return "error";
             }
         } catch (GenericTransactionException e) {
@@ -170,7 +170,7 @@ public class ProductSearchEvents {
                errMsg = UtilProperties.getMessage(resource,"productsearchevents.error_getting_search_results", messageMap, UtilHttp.getLocale(request));
                Debug.logError(e, errMsg, module);
                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-               TransactionUtil.rollback(beganTransaction);
+               TransactionUtil.rollback(beganTransaction, errMsg, e);
                return "error";
            }
        } catch (GenericTransactionException e) {
@@ -239,7 +239,7 @@ public class ProductSearchEvents {
                errMsg = UtilProperties.getMessage(resource,"productsearchevents.error_getting_search_results", messageMap, UtilHttp.getLocale(request));
                Debug.logError(e, errMsg, module);
                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-               TransactionUtil.rollback(beganTransaction);
+               TransactionUtil.rollback(beganTransaction, errMsg, e);
                return "error";
            }
        } catch (GenericTransactionException e) {
@@ -328,7 +328,7 @@ public class ProductSearchEvents {
                 String errorMsg = UtilProperties.getMessage(resource, "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
                 request.setAttribute("_ERROR_MESSAGE_", errorMsg);
                 Debug.logError(e, errorMsg, module);
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errorMsg, e);
                 return "error";
             }
         } catch (GenericTransactionException e) {
@@ -377,7 +377,7 @@ public class ProductSearchEvents {
                 String errorMsg = UtilProperties.getMessage(resource, "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
                 request.setAttribute("_ERROR_MESSAGE_", errorMsg);
                 Debug.logError(e, errorMsg, module);
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errorMsg, e);
                 return "error";
             }
         } catch (GenericTransactionException e) {

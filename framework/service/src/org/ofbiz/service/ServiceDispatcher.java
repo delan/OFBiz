@@ -379,10 +379,11 @@ public class ServiceDispatcher {
                 if (Debug.timingOn()) {
                     UtilTimer.closeTimer(localName + " / " + modelService.name, "Sync service failed...", module);
                 }
-                Debug.logError(t, "Service [" + modelService.name + "] threw an unexpected exception/error", module);
+                String errMsg = "Service [" + modelService.name + "] threw an unexpected exception/error";
+                Debug.logError(t, errMsg, module);
                 engine.sendCallbacks(modelService, context, t, GenericEngine.SYNC_MODE);
                 try {
-                    TransactionUtil.rollback(beganTrans);
+                    TransactionUtil.rollback(beganTrans, errMsg, t);
                 } catch (GenericTransactionException te) {
                     Debug.logError(te, "Cannot rollback transaction", module);
                 }
@@ -400,12 +401,13 @@ public class ServiceDispatcher {
             } finally {
                 // if there was an error, rollback transaction, otherwise commit
                 if (isError) {
+                    String errMsg = "Service Error [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result);
                     // try to log the error
-                    Debug.logError("Service Error [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result), module);
+                    Debug.logError(errMsg, module);
 
                     // rollback the transaction
                     try {
-                        TransactionUtil.rollback(beganTrans);
+                        TransactionUtil.rollback(beganTrans, errMsg, null);
                     } catch (GenericTransactionException e) {
                         Debug.logError(e, "Could not rollback transaction", module);
                     }
@@ -557,10 +559,11 @@ public class ServiceDispatcher {
                 if (Debug.timingOn()) {
                     UtilTimer.closeTimer(localName + " / " + service.name, "ASync service failed...", module);
                 }
-                Debug.logError(t, "Service [" + service.name + "] threw an unexpected exception/error", module);
+                String errMsg = "Service [" + service.name + "] threw an unexpected exception/error";
+                Debug.logError(t, errMsg, module);
                 engine.sendCallbacks(service, context, t, GenericEngine.ASYNC_MODE);
                 try {
-                    TransactionUtil.rollback(beganTrans);
+                    TransactionUtil.rollback(beganTrans, errMsg, t);
                 } catch (GenericTransactionException te) {
                     Debug.logError(te, "Cannot rollback transaction", module);
                 }

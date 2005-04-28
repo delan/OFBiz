@@ -351,7 +351,7 @@ public class SurveyWrapper {
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error getting survey question responses", e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
@@ -498,7 +498,7 @@ public class SurveyWrapper {
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error getting survey question responses Boolean result", e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
@@ -552,7 +552,7 @@ public class SurveyWrapper {
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error getting survey question responses Number result", e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
@@ -628,7 +628,7 @@ public class SurveyWrapper {
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error getting survey question responses Option result", e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }

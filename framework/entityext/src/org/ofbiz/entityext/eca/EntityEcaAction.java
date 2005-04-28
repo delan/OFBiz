@@ -110,8 +110,9 @@ public class EntityEcaAction implements java.io.Serializable {
         } catch (GenericServiceException e) {
             // check abortOnError and rollbackOnError
             if (rollbackOnError) {
-                Debug.logError("Entity ECA action service failed and rollback-on-error is true, so setting rollback only.", module);
-                TransactionUtil.setRollbackOnly();
+                String errMsg = "Entity ECA action service failed and rollback-on-error is true, so setting rollback only.";
+                Debug.logError(errMsg, module);
+                TransactionUtil.setRollbackOnly(errMsg, e);
             }
 
             if (this.abortOnError) {

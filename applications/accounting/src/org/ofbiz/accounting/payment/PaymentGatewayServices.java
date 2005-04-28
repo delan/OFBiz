@@ -419,22 +419,18 @@ public class PaymentGatewayServices {
         }
 
         // get some contact info.
-        GenericValue contactPerson = orh.getBillToPerson();
-        GenericValue contactEmail = null;
-        Collection emails = null;
+        GenericValue billToParty = orh.getBillToParty();
+        GenericValue billToEmail = null;
+        Collection emails = emails = ContactHelper.getContactMech(billToParty, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
 
-        try {
-            emails = ContactHelper.getContactMech(contactPerson.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
-        } catch (GenericEntityException gee) {
-            Debug.logError("Problems getting contact information: " + gee.getMessage(), module);
+        if (emails != null && emails.size() > 0) {
+            billToEmail = (GenericValue) emails.iterator().next();
         }
-        if (emails != null && emails.size() > 0)
-            contactEmail = (GenericValue) emails.iterator().next();
 
-        toContext.put("contactPerson", contactPerson);
-        toContext.put("contactEmail", contactEmail);
+        toContext.put("billToParty", billToParty);
+        toContext.put("billToEmail", billToEmail);
 
-        return contactPerson.getString("partyId");
+        return billToParty.getString("partyId");
     }
 
     /**
@@ -1871,19 +1867,21 @@ public class PaymentGatewayServices {
             }
             requestContext.put("billingAddress", billingAddress);
 
+            /* This is not needed any more, using names on CC as a kludge instead of these kludge names until we get a firstName/lastName on the shipping PostalAddress
             GenericValue contactPerson = delegator.makeValue("Person", null);
             contactPerson.setAllFields(context, true, null, null);
             if (contactPerson.get("firstName") == null || contactPerson.get("lastName") == null) {
                 return ServiceUtil.returnError("Contact person is missing required fields.");
             }
             requestContext.put("contactPerson", contactPerson);
+            */
 
-            GenericValue contactEmail = delegator.makeValue("ContactMech", null);
-            contactEmail.set("infoString", context.get("infoString"));
-            if (contactEmail.get("infoString") == null) {
+            GenericValue billToEmail = delegator.makeValue("ContactMech", null);
+            billToEmail.set("infoString", context.get("infoString"));
+            if (billToEmail.get("infoString") == null) {
                 return ServiceUtil.returnError("Email address field cannot be empty.");
             }
-            requestContext.put("contactEmail", contactEmail);
+            requestContext.put("billToEmail", billToEmail);
             requestContext.put("referenceCode", referenceCode);
             requestContext.put("currency", "USD");
             requestContext.put("creditAmount", context.get("amount")); // TODO fix me to work w/ other services

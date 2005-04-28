@@ -229,8 +229,9 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                 }
                 TransactionUtil.commit(beganTransaction);
             } catch (Exception e) {
-                Debug.logError(e, "An error occurred saving the data, rolling back transaction (" + beganTransaction + ")", module);
-                TransactionUtil.rollback(beganTransaction);
+                String errMsg = "An error occurred saving the data, rolling back transaction (" + beganTransaction + ")";
+                Debug.logError(e, errMsg, module);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
                 throw new SAXException("A transaction error occurred reading data", e);
             }
         } catch (GenericTransactionException e) {
