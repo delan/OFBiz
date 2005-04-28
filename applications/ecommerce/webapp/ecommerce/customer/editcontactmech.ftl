@@ -60,7 +60,7 @@
         <input type='hidden' name='DONE_PAGE' value='${donePage}'>
         <input type='hidden' name='contactMechTypeId' value='${contactMechTypeId}'>
         <#if contactMechPurposeType?exists>
-            <div>(${uiLabelMap.PartyNewContactHavePurpose} <b>"${contactMechPurposeType.description?if_exists}"</b>)</div>
+            <div class="tabletext">(${uiLabelMap.PartyNewContactHavePurpose} <b>"${contactMechPurposeType.description?if_exists}"</b>)</div>
         </#if>
         <#if cmNewPurposeTypeId?has_content><input type='hidden' name='contactMechPurposeTypeId' value='${cmNewPurposeTypeId}'></#if>
         <#if preContactMechTypeId?has_content><input type='hidden' name='preContactMechTypeId' value='${preContactMechTypeId}'></#if>
