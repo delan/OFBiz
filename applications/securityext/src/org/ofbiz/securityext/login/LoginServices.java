@@ -285,7 +285,7 @@ public class LoginServices {
                                 }
                             } catch (GenericEntityException e) {
                                 try {
-                                    TransactionUtil.rollback(beganTransaction);
+                                    TransactionUtil.rollback(beganTransaction, "Error saving UserLoginHistory", e);
                                 } catch (GenericTransactionException e2) {
                                     Debug.logError(e2, "Could not rollback nested transaction: " + e2.getMessage(), module);
                                 }

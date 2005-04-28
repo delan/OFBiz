@@ -97,9 +97,9 @@ public class VariantEvents {
                 // read the product, duplicate it with the given id
                 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
                 if (product == null) {
-                    TransactionUtil.rollback(beganTransacton);
                     Map messageMap = UtilMisc.toMap("productId", productId);
                     errMsg = UtilProperties.getMessage(resource,"variantevents.product_not_found_with_ID", messageMap, UtilHttp.getLocale(request));
+                    TransactionUtil.rollback(beganTransacton, errMsg, null);
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     return "error";
                 }
@@ -134,9 +134,9 @@ public class VariantEvents {
                 for (int i = 0; i < featureTypeSize; i++) {
                     String productFeatureId = request.getParameter("feature_" + i);
                     if (productFeatureId == null) {
-                        TransactionUtil.rollback(beganTransacton);
                         Map messageMap = UtilMisc.toMap("i", Integer.toString(i));
                         errMsg = UtilProperties.getMessage(resource,"variantevents.productFeatureId_for_feature_type_number_not_found", messageMap, UtilHttp.getLocale(request));
+                        TransactionUtil.rollback(beganTransacton, errMsg, null);
                         request.setAttribute("_ERROR_MESSAGE_", errMsg);
                         return "error";
                     }
@@ -157,10 +157,10 @@ public class VariantEvents {
 
                 TransactionUtil.commit(beganTransacton);
             } catch (GenericEntityException e) {
-                TransactionUtil.rollback(beganTransacton);
-                Debug.logError(e, "Entity error creating quick add variant data", module);
                 Map messageMap = UtilMisc.toMap("errMessage", e.toString());
                 errMsg = UtilProperties.getMessage(resource,"variantevents.entity_error_quick_add_variant_data", messageMap, UtilHttp.getLocale(request));
+                TransactionUtil.rollback(beganTransacton, errMsg, null);
+                Debug.logError(e, "Entity error creating quick add variant data", module);
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }

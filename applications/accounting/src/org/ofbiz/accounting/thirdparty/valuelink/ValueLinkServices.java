@@ -787,7 +787,7 @@ public class ValueLinkServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         GenericValue giftCard = (GenericValue) context.get("giftCard");
-        GenericValue person = (GenericValue) context.get("contactPerson");
+        GenericValue party = (GenericValue) context.get("billToParty");
         String paymentConfig = (String) context.get("paymentConfig");
         String currency = (String) context.get("currency");
         String orderId = (String) context.get("orderId");
@@ -805,7 +805,7 @@ public class ValueLinkServices {
         redeemCtx.put("pin", giftCard.get("pinNumber"));
         redeemCtx.put("currency", currency);
         redeemCtx.put("orderId", orderId);
-        redeemCtx.put("partyId", person.get("partyId"));
+        redeemCtx.put("partyId", party.get("partyId"));
         redeemCtx.put("amount", amount);
 
         // invoke the redeem service

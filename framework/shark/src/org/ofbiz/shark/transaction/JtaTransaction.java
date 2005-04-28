@@ -79,7 +79,7 @@ public class JtaTransaction implements SharkTransaction, UserTransaction,
     public void rollback() throws TransactionException {
         if (active) {
             try {
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Transaction rollback from Shark", null);
             } catch (GenericTransactionException e) {
                 Debug.logError(e, module);
                 throw new TransactionException(e);

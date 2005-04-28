@@ -183,7 +183,7 @@ public class RequesterFactory {
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error in Shark Requester restore", e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }

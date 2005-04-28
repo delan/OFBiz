@@ -38,6 +38,7 @@ import javax.transaction.xa.XAResource;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilValidate;
 
 /**
  * <p>Transaction Utility to help with some common transaction tasks
@@ -84,10 +85,13 @@ public class TransactionUtil implements Status {
                         Debug.logWarning("[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun", module);
                     }
 
-                    //Throwing this exception is just too much of a pain and hides the real problem, so not doing this for now and we'll see how it goes... DEJ20050427
-                    //throw new GenericTransactionException("The current transaction is marked for rollback, not beginning a new transaction and aborting current operation.");
-                    
-                    return false;
+                    RollbackOnlyCause roc = getSetRollbackOnlyCause();
+                    // do we have a cause? if so, throw special exception
+                    if (!roc.isEmpty()) {
+                        throw new GenericTransactionException("The current transaction is marked for rollback, not beginning a new transaction and aborting current operation; the rollbackOnly was caused by: " + roc.getCauseMessage(), roc.getCauseThrowable());
+                    } else {
+                        return false;
+                    }
                 }
 
                 // set the timeout for THIS transaction
@@ -160,105 +164,6 @@ public class TransactionUtil implements Status {
         }
     }
 
-    private static ThreadLocal suspendedTxStack = new ThreadLocal();
-
-    /** BE VERY CARFUL WHERE YOU CALL THIS!! */
-    public static int cleanSuspendedTranactions() throws GenericTransactionException {
-        Transaction trans = null;
-        int num = 0;
-        while ((trans = popSuspendedTransaction()) != null) {
-            resume(trans);
-            rollback();
-            num++;
-        }
-        return num;
-    }
-
-    public static boolean suspendedTransactionsHeld() {
-        List tl = (List) suspendedTxStack.get();
-        if (tl != null && tl.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    protected static void pushSuspendedTransaction(Transaction t) {
-        List tl = (List) suspendedTxStack.get();
-        if (tl == null) {
-            tl = new LinkedList();
-            suspendedTxStack.set(tl);
-        }
-        tl.add(0, t);
-    }
-
-    protected static Transaction popSuspendedTransaction() {
-        List tl = (List) suspendedTxStack.get();
-        if (tl != null && tl.size() > 0) {
-            return (Transaction) tl.remove(0);
-        } else {
-            return null;
-        }
-    }
-
-    protected static void removeSuspendedTransaction(Transaction t) {
-        List tl = (List) suspendedTxStack.get();
-        if (tl != null && tl.size() > 0) {
-            tl.remove(t);
-        }
-    }
-
-    private static ThreadLocal transactionBeginStack = new ThreadLocal();
-    private static ThreadLocal transactionBeginStackSave = new ThreadLocal();
-
-    private static void pushTransactionBeginStackSave(Exception e) {
-        List el = (List) transactionBeginStackSave.get();
-        if (el == null) {
-            el = new LinkedList();
-            transactionBeginStackSave.set(el);
-        }
-        el.add(0, e);
-    }
-    private static Exception popTransactionBeginStackSave() {
-        List el = (List) transactionBeginStackSave.get();
-        if (el != null && el.size() > 0) {
-            return (Exception) el.remove(0);
-        } else {
-            return null;
-        }
-    }
-
-    private static void setTransactionBeginStack() {
-        Exception e = new Exception("Tx Stack Placeholder");
-        setTransactionBeginStack(e);
-    }
-    private static void setTransactionBeginStack(Exception newExc) {
-        if (transactionBeginStack.get() != null) {
-            Exception e = (Exception) transactionBeginStack.get();
-            Debug.logWarning(e, "WARNING: In setTransactionBeginStack a stack placeholder was already in place, here is where the transaction began: ", module);
-            Exception e2 = new Exception("Current Stack Trace");
-            Debug.logWarning(e2, "WARNING: In setTransactionBeginStack a stack placeholder was already in place, here is the current location: ", module);
-        }
-        transactionBeginStack.set(newExc);
-    }
-    private static Exception clearTransactionBeginStack() {
-        Exception e = (Exception) transactionBeginStack.get();
-        if (e == null) {
-            Exception e2 = new Exception("Current Stack Trace");
-            Debug.logWarning("WARNING: In clearTransactionBeginStack no stack placeholder was in place, here is the current location: ", module);
-            return null;
-        } else {
-            transactionBeginStack.set(null);
-            return e;
-        }
-    }
-    public static Exception getTransactionBeginStack() {
-        if (transactionBeginStack.get() == null) {
-            Exception e2 = new Exception("Current Stack Trace");
-            Debug.logWarning("WARNING: In getTransactionBeginStack no stack placeholder was in place, here is the current location: ", module);
-        }
-        return (Exception) transactionBeginStack.get();
-    }
 
     /** Commits the transaction in the current thread IF transactions are available
      *  AND if beganTransaction is true
@@ -283,6 +188,7 @@ public class TransactionUtil implements Status {
                     clearTransactionStamps();
                     // clear out the stack too
                     clearTransactionBeginStack();
+                    clearSetRollbackOnlyCause();
 
                     ut.commit();
                     Debug.logVerbose("[TransactionUtil.commit] transaction committed", module);
@@ -308,15 +214,18 @@ public class TransactionUtil implements Status {
         }
     }
 
+    //public static void rollback(boolean beganTransaction) throws GenericTransactionException {
+    //    rollback(beganTransaction, null, null);
+    //}
     /** Rolls back transaction in the current thread IF transactions are available
      *  AND if beganTransaction is true; if beganTransaction is not true,
      *  setRollbackOnly is called to insure that the transaction will be rolled back
      */
-    public static void rollback(boolean beganTransaction) throws GenericTransactionException {
+    public static void rollback(boolean beganTransaction, String causeMessage, Throwable causeThrowable) throws GenericTransactionException {
         if (beganTransaction) {
             TransactionUtil.rollback();
         } else {
-            TransactionUtil.setRollbackOnly();
+            TransactionUtil.setRollbackOnly(causeMessage, causeThrowable);
         }
     }
 
@@ -340,6 +249,7 @@ public class TransactionUtil implements Status {
                     clearTransactionStamps();
                     // clear out the stack too
                     clearTransactionBeginStack();
+                    clearSetRollbackOnlyCause();
 
                     ut.rollback();
                     Debug.logInfo("[TransactionUtil.rollback] transaction rolled back", module);
@@ -356,7 +266,7 @@ public class TransactionUtil implements Status {
     }
 
     /** Makes a rollback the only possible outcome of the transaction in the current thread IF transactions are available */
-    public static void setRollbackOnly() throws GenericTransactionException {
+    public static void setRollbackOnly(String causeMessage, Throwable causeThrowable) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
@@ -367,6 +277,7 @@ public class TransactionUtil implements Status {
                     if (status != STATUS_MARKED_ROLLBACK) {
                         if (Debug.warningOn()) Debug.logWarning(new Exception(), "[TransactionUtil.setRollbackOnly] Calling transaction setRollbackOnly; this stack trace shows where this is happening:", module);
                         ut.setRollbackOnly();
+                        setSetRollbackOnlyCause(causeMessage, causeThrowable);
                     } else {
                         Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction rollback only not set, rollback only is already set.", module);
                     }
@@ -388,6 +299,7 @@ public class TransactionUtil implements Status {
                 TransactionManager txMgr = TransactionFactory.getTransactionManager();
                 if (txMgr != null ) {
                     pushTransactionBeginStackSave(clearTransactionBeginStack());
+                    pushSetRollbackOnlyCauseSave(clearSetRollbackOnlyCause());
                     Transaction trans = txMgr.suspend();
                     pushSuspendedTransaction(trans);
                     return trans;
@@ -409,6 +321,7 @@ public class TransactionUtil implements Status {
             TransactionManager txMgr = TransactionFactory.getTransactionManager();
             if (txMgr != null ) {
                 setTransactionBeginStack(popTransactionBeginStackSave());
+                setSetRollbackOnlyCause(popSetRollbackOnlyCauseSave());
                 txMgr.resume(parentTx);
                 removeSuspendedTransaction(parentTx);
             }
@@ -529,6 +442,178 @@ public class TransactionUtil implements Status {
         }
     }
 
+    // =======================================
+    // =======================================
+    private static ThreadLocal suspendedTxStack = new ThreadLocal();
+
+    /** BE VERY CARFUL WHERE YOU CALL THIS!! */
+    public static int cleanSuspendedTransactions() throws GenericTransactionException {
+        Transaction trans = null;
+        int num = 0;
+        while ((trans = popSuspendedTransaction()) != null) {
+            resume(trans);
+            rollback();
+            num++;
+        }
+        return num;
+    }
+    public static boolean suspendedTransactionsHeld() {
+        List tl = (List) suspendedTxStack.get();
+        if (tl != null && tl.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    protected static void pushSuspendedTransaction(Transaction t) {
+        List tl = (List) suspendedTxStack.get();
+        if (tl == null) {
+            tl = new LinkedList();
+            suspendedTxStack.set(tl);
+        }
+        tl.add(0, t);
+    }
+    protected static Transaction popSuspendedTransaction() {
+        List tl = (List) suspendedTxStack.get();
+        if (tl != null && tl.size() > 0) {
+            return (Transaction) tl.remove(0);
+        } else {
+            return null;
+        }
+    }
+    protected static void removeSuspendedTransaction(Transaction t) {
+        List tl = (List) suspendedTxStack.get();
+        if (tl != null && tl.size() > 0) {
+            tl.remove(t);
+        }
+    }
+
+    // =======================================
+    // =======================================
+    private static ThreadLocal transactionBeginStack = new ThreadLocal();
+    private static ThreadLocal transactionBeginStackSave = new ThreadLocal();
+
+    private static void pushTransactionBeginStackSave(Exception e) {
+        List el = (List) transactionBeginStackSave.get();
+        if (el == null) {
+            el = new LinkedList();
+            transactionBeginStackSave.set(el);
+        }
+        el.add(0, e);
+    }
+    private static Exception popTransactionBeginStackSave() {
+        List el = (List) transactionBeginStackSave.get();
+        if (el != null && el.size() > 0) {
+            return (Exception) el.remove(0);
+        } else {
+            return null;
+        }
+    }
+
+    private static void setTransactionBeginStack() {
+        Exception e = new Exception("Tx Stack Placeholder");
+        setTransactionBeginStack(e);
+    }
+    private static void setTransactionBeginStack(Exception newExc) {
+        if (transactionBeginStack.get() != null) {
+            Exception e = (Exception) transactionBeginStack.get();
+            Debug.logWarning(e, "WARNING: In setTransactionBeginStack a stack placeholder was already in place, here is where the transaction began: ", module);
+            Exception e2 = new Exception("Current Stack Trace");
+            Debug.logWarning(e2, "WARNING: In setTransactionBeginStack a stack placeholder was already in place, here is the current location: ", module);
+        }
+        transactionBeginStack.set(newExc);
+    }
+    private static Exception clearTransactionBeginStack() {
+        Exception e = (Exception) transactionBeginStack.get();
+        if (e == null) {
+            Exception e2 = new Exception("Current Stack Trace");
+            Debug.logWarning("WARNING: In clearTransactionBeginStack no stack placeholder was in place, here is the current location: ", module);
+            return null;
+        } else {
+            transactionBeginStack.set(null);
+            return e;
+        }
+    }
+    public static Exception getTransactionBeginStack() {
+        if (transactionBeginStack.get() == null) {
+            Exception e2 = new Exception("Current Stack Trace");
+            Debug.logWarning("WARNING: In getTransactionBeginStack no stack placeholder was in place, here is the current location: ", module);
+        }
+        return (Exception) transactionBeginStack.get();
+    }
+
+    // =======================================
+    // =======================================
+    private static class RollbackOnlyCause {
+        protected String causeMessage;
+        protected Throwable causeThrowable;
+        public RollbackOnlyCause(String causeMessage, Throwable causeThrowable) {
+            this.causeMessage = causeMessage;
+            this.causeThrowable = causeThrowable;
+        }
+        public String getCauseMessage() { return this.causeMessage + (this.causeThrowable == null ? "" : this.causeThrowable.toString()); }
+        public Throwable getCauseThrowable() { return this.causeThrowable; }
+        public void logError(String message) { Debug.logError(this.getCauseThrowable(), (message == null ? "" : message) + this.getCauseMessage(), module); }
+        public boolean isEmpty() { return (UtilValidate.isEmpty(this.getCauseMessage()) && this.getCauseThrowable() == null); }
+    }
+    
+    private static ThreadLocal setRollbackOnlyCause = new ThreadLocal();
+    private static ThreadLocal setRollbackOnlyCauseSave = new ThreadLocal();
+
+    private static void pushSetRollbackOnlyCauseSave(RollbackOnlyCause e) {
+        List el = (List) setRollbackOnlyCauseSave.get();
+        if (el == null) {
+            el = new LinkedList();
+            setRollbackOnlyCauseSave.set(el);
+        }
+        el.add(0, e);
+    }
+    private static RollbackOnlyCause popSetRollbackOnlyCauseSave() {
+        List el = (List) setRollbackOnlyCauseSave.get();
+        if (el != null && el.size() > 0) {
+            return (RollbackOnlyCause) el.remove(0);
+        } else {
+            return null;
+        }
+    }
+
+    private static void setSetRollbackOnlyCause(String causeMessage, Throwable causeThrowable) {
+        RollbackOnlyCause roc = new RollbackOnlyCause(causeMessage, causeThrowable);
+        setSetRollbackOnlyCause(roc);
+    }
+    private static void setSetRollbackOnlyCause(RollbackOnlyCause newRoc) {
+        if (setRollbackOnlyCause.get() != null) {
+            RollbackOnlyCause roc = (RollbackOnlyCause) setRollbackOnlyCause.get();
+            roc.logError("WARNING: In setSetRollbackOnlyCause a stack placeholder was already in place, here is the original rollbackOnly cause: ");
+            Exception e2 = new Exception("Current Stack Trace");
+            Debug.logWarning(e2, "WARNING: In setSetRollbackOnlyCause a stack placeholder was already in place, here is the current location: ", module);
+        }
+        setRollbackOnlyCause.set(newRoc);
+    }
+    private static RollbackOnlyCause clearSetRollbackOnlyCause() {
+        RollbackOnlyCause roc = (RollbackOnlyCause) setRollbackOnlyCause.get();
+        if (roc == null) {
+            if (Debug.verboseOn()) {
+                // for this in particular, unlike the begin location, normally there will not be a setRollbackOnlyCause, so don't complain about it except in verbose
+                Exception e2 = new Exception("Current Stack Trace");
+                Debug.logWarning(e2, "In clearSetRollbackOnlyCause no stack placeholder was in place, here is the current location: ", module);
+            }
+            return null;
+        } else {
+            setRollbackOnlyCause.set(null);
+            return roc;
+        }
+    }
+    public static RollbackOnlyCause getSetRollbackOnlyCause() {
+        if (setRollbackOnlyCause.get() == null) {
+            Exception e2 = new Exception("Current Stack Trace");
+            Debug.logWarning("WARNING: In getSetRollbackOnlyCause no stack placeholder was in place, here is the current location: ", module);
+        }
+        return (RollbackOnlyCause) setRollbackOnlyCause.get();
+    }
+
+    // =======================================
+    // =======================================
     private static ThreadLocal transactionStartStamp = new ThreadLocal();
     private static ThreadLocal transactionLastNowStamp = new ThreadLocal();
 

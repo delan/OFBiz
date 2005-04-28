@@ -405,7 +405,7 @@ public class SimpleMethod {
     }
 
     public String getShortDescription() {
-        return this.shortDescription;
+        return this.shortDescription + " [" + this.methodName + "]";
     }
 
     public String getDefaultErrorCode() {
@@ -492,6 +492,7 @@ public class SimpleMethod {
     public String exec(MethodContext methodContext) {
         // always put the null field object in as "null"
         methodContext.putEnv("null", GenericEntity.NULL_FIELD);
+        methodContext.putEnv("nullField", GenericEntity.NULL_FIELD);
         
         methodContext.putEnv(delegatorName, methodContext.getDelegator());
         methodContext.putEnv(securityName, methodContext.getSecurity());
@@ -563,6 +564,7 @@ public class SimpleMethod {
         
         String returnValue = null;
         String response = null;
+        StringBuffer summaryErrorStringBuffer = new StringBuffer();
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             boolean forceError = false;
             
@@ -571,11 +573,16 @@ public class SimpleMethod {
                 errorMsg += tempErrorMsg;
                 methodContext.getRequest().setAttribute("_ERROR_MESSAGE_", errorMsg);
                 forceError = true;
+                
+                summaryErrorStringBuffer.append(errorMsg);
             }
             List tempErrorMsgList = (List) methodContext.getEnv(eventErrorMessageListName);
             if (tempErrorMsgList != null && tempErrorMsgList.size() > 0) {
                 methodContext.getRequest().setAttribute("_ERROR_MESSAGE_LIST_", tempErrorMsgList);
                 forceError = true;
+                
+                summaryErrorStringBuffer.append("; ");
+                summaryErrorStringBuffer.append(tempErrorMsgList.toString());
             }
 
             String eventMsg = (String) methodContext.getEnv(eventEventMessageName);
@@ -607,18 +614,26 @@ public class SimpleMethod {
                 errorMsg += tempErrorMsg;
                 methodContext.putResult(ModelService.ERROR_MESSAGE, errorMsg);
                 forceError = true;
+
+                summaryErrorStringBuffer.append(errorMsg);
             }
 
             List errorMsgList = (List) methodContext.getEnv(serviceErrorMessageListName);
             if (errorMsgList != null && errorMsgList.size() > 0) {
                 methodContext.putResult(ModelService.ERROR_MESSAGE_LIST, errorMsgList);
                 forceError = true;
+                
+                summaryErrorStringBuffer.append("; ");
+                summaryErrorStringBuffer.append(errorMsgList.toString());
             }
 
             Map errorMsgMap = (Map) methodContext.getEnv(serviceErrorMessageMapName);
             if (errorMsgMap != null && errorMsgMap.size() > 0) {
                 methodContext.putResult(ModelService.ERROR_MESSAGE_MAP, errorMsgMap);
                 forceError = true;
+                
+                summaryErrorStringBuffer.append("; ");
+                summaryErrorStringBuffer.append(errorMsgMap.toString());
             }
 
             String successMsg = (String) methodContext.getEnv(serviceSuccessMessageName);
@@ -651,10 +666,8 @@ public class SimpleMethod {
 
         // decide whether or not to commit based on the response message, ie only rollback if error is returned and not finished
         boolean doCommit = true;
-        if (!finished) {
-            if (defaultErrorCode.equals(response)) {
-                doCommit = false;
-            }
+        if (!finished && defaultErrorCode.equals(response)) {
+            doCommit = false;
         }
 
         if (doCommit) {
@@ -663,18 +676,16 @@ public class SimpleMethod {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException e) {
                 String errMsg = "Error trying to commit transaction, could not process method: " + e.getMessage();
-                Debug.logWarning(errMsg, module);
-                Debug.logWarning(e, module);
+                Debug.logWarning(e, errMsg, module);
                 errorMsg += errMsg + "<br/>";
             }
         } else {
             // rollback here passing beganTransaction to either rollback, or set rollback only
             try {
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error in simple-method [" + this.getShortDescription() + "]: " + summaryErrorStringBuffer, null);
             } catch (GenericTransactionException e) {
                 String errMsg = "Error trying to rollback transaction, could not process method: " + e.getMessage();
-                Debug.logWarning(errMsg, module);
-                Debug.logWarning(e, module);
+                Debug.logWarning(e, errMsg, module);
                 errorMsg += errMsg + "<br/>";
             }
         }

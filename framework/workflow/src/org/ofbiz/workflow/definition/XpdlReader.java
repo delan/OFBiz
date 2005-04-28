@@ -87,7 +87,7 @@ public class XpdlReader {
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error importing XPDL", e);
             } catch (GenericEntityException e2) {                
                 Debug.logError(e2, "Problems rolling back transaction", module);
             }                                  

@@ -203,7 +203,7 @@ public class EntitySyncContext {
             this.startDate = (Timestamp) context.get("startDate");
         } catch (GenericEntityException e) {
             try {
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Entity Engine error while getting Entity Sync init information", e);
             } catch (GenericTransactionException e2) {
                 Debug.logWarning(e2, "Unable to call rollback()", module);
             }
@@ -415,14 +415,15 @@ public class EntitySyncContext {
                 }
             } catch (GenericEntityException e) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Entity Engine error in assembleValuesToCreate", e);
+                    
                 } catch (GenericTransactionException e2) {
                     Debug.logWarning(e2, "Unable to call rollback()", module);
                 }
                 throw new SyncDataErrorException("Error getting values to create from the datasource", e);
             } catch (Throwable t) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Throwable error in assembleValuesToCreate", t);
                 } catch (GenericTransactionException e2) {
                     Debug.logWarning(e2, "Unable to call rollback()", module);
                 }
@@ -559,14 +560,14 @@ public class EntitySyncContext {
                 }
             } catch (GenericEntityException e) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Entity Engine error in assembleValuesToStore", e);
                 } catch (GenericTransactionException e2) {
                     Debug.logWarning(e2, "Unable to call rollback()", module);
                 }
                 throw new SyncDataErrorException("Error getting values to store from the datasource", e);
             } catch (Throwable t) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "General error in assembleValuesToStore", t);
                 } catch (GenericTransactionException e2) {
                     Debug.logWarning(e2, "Unable to call rollback()", module);
                 }
@@ -681,14 +682,14 @@ public class EntitySyncContext {
             }
         } catch (GenericEntityException e) {
             try {
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Entity Engine error in assembleKeysToRemove", e);
             } catch (GenericTransactionException e2) {
                 Debug.logWarning(e2, "Unable to call rollback()", module);
             }
             throw new SyncDataErrorException("Error getting keys to remove from the datasource", e);
         } catch (Throwable t) {
             try {
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "General error in assembleKeysToRemove", t);
             } catch (GenericTransactionException e2) {
                 Debug.logWarning(e2, "Unable to call rollback()", module);
             }

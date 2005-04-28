@@ -488,8 +488,9 @@ public class ProductSearch {
 
                     TransactionUtil.commit(beganTransaction);
                 } catch (GenericEntityException e1) {
-                    TransactionUtil.rollback(beganTransaction);
-                    Debug.logError(e1, "Error saving product search result info/stats", module);
+                    String errMsg = "Error saving product search result info/stats";
+                    Debug.logError(e1, errMsg, module);
+                    TransactionUtil.rollback(beganTransaction, errMsg, e1);
                 }
             } catch (GenericTransactionException e) {
                 Debug.logError(e, "Error saving product search result info/stats", module);

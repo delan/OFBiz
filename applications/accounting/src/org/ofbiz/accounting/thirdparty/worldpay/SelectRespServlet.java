@@ -189,7 +189,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             }
         } else {
             try {
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Failure in Worldpay callback/response processing.", null);
             } catch (GenericTransactionException gte) {
                 Debug.logError(gte, "Unable to rollback transaction", module);
             }

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -120,7 +120,7 @@ public class WorkflowEngine extends AbstractEngine {
                 req = WfFactory.getWfRequester();
             } catch (WfException e) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Error getting Workflow Requester", e);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
@@ -140,9 +140,10 @@ public class WorkflowEngine extends AbstractEngine {
             try {
                 mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(), packageId, packageVersion, processId, processVersion);
             } catch (WfException e) {
-                Debug.logError(e, "Process manager error", module);
+                String errMsg = "Process manager error";
+                Debug.logError(e, errMsg, module);
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, errMsg, e);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
@@ -158,28 +159,28 @@ public class WorkflowEngine extends AbstractEngine {
                 process = mgr.createProcess(req);
             } catch (NotEnabled ne) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Error in create workflow process: Not Enabled", ne);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(ne.getMessage(), ne);
             } catch (InvalidRequester ir) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Error in create workflow process: Invalid Requester", ir);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(ir.getMessage(), ir);
             } catch (RequesterRequired rr) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Error in create workflow process: Requester Required", rr);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(rr.getMessage(), rr);
             } catch (WfException wfe) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Error in create workflow process: general workflow error error", wfe);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
@@ -202,20 +203,22 @@ public class WorkflowEngine extends AbstractEngine {
                         GenericValue wepa = dispatcher.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
                         dispatcher.getDelegator().create(wepa);
                     } catch (GenericEntityException e) {
+                        String errMsg = "Cannot set ownership of workflow";
                         try {
-                            TransactionUtil.rollback(beganTransaction);
+                            TransactionUtil.rollback(beganTransaction, errMsg, e);
                         } catch (GenericTransactionException gte) {
                             Debug.logError(gte, "Unable to rollback nested exception.", module);
                         }
-                        throw new GenericServiceException("Cannot set ownership of workflow", e);
+                        throw new GenericServiceException(errMsg, e);
                     }
                 } catch (WfException we) {
+                    String errMsg = "Cannot get the workflow process runtime key";
                     try {
-                        TransactionUtil.rollback(beganTransaction);
+                        TransactionUtil.rollback(beganTransaction, errMsg, we);
                     } catch (GenericTransactionException gte) {
                         Debug.logError(gte, "Unable to rollback nested exception.", module);
                     }
-                    throw new GenericServiceException("Cannot get the workflow process runtime key");
+                    throw new GenericServiceException(errMsg);
                 }
             }
         
@@ -235,7 +238,7 @@ public class WorkflowEngine extends AbstractEngine {
                 }
             } catch (WfException wfe) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, wfe.getMessage(), wfe);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
@@ -250,7 +253,7 @@ public class WorkflowEngine extends AbstractEngine {
                     process.setProcessContext(pContext);
                 } catch (WfException wfe) {
                     try {
-                        TransactionUtil.rollback(beganTransaction);
+                        TransactionUtil.rollback(beganTransaction, wfe.getMessage(), wfe);
                     } catch (GenericTransactionException gte) {
                         Debug.logError(gte, "Unable to rollback nested exception.", module);
                     }
@@ -265,7 +268,7 @@ public class WorkflowEngine extends AbstractEngine {
                 dispatcher.getJobManager().runJob(job);
             } catch (JobManagerException je) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, je.getMessage(), je);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }

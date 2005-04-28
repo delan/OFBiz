@@ -380,13 +380,13 @@ public class IcsPaymentServices {
         }
         String avsCodes = UtilProperties.getPropertyValue(configString, "payment.cybersource.avsDeclineCodes", null);
 
-        GenericValue person = (GenericValue) context.get("contactPerson");
-        if (person != null) {
+        GenericValue party = (GenericValue) context.get("billToParty");
+        if (party != null) {
             GenericValue avsOverride = null;
 
             try {
-                avsOverride = person.getDelegator().findByPrimaryKey("PartyIcsAvsOverride",
-                        UtilMisc.toMap("partyId", person.getString("partyId")));
+                avsOverride = party.getDelegator().findByPrimaryKey("PartyIcsAvsOverride",
+                        UtilMisc.toMap("partyId", party.getString("partyId")));
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
@@ -408,10 +408,10 @@ public class IcsPaymentServices {
 
     private static void appendFullBillingInfo(Map request, Map context) {
         // person info
-        GenericValue person = (GenericValue) context.get("contactPerson");
+        GenericValue party = (GenericValue) context.get("billToParty");
 
         // contact info
-        GenericValue email = (GenericValue) context.get("contactEmail");
+        GenericValue email = (GenericValue) context.get("billToEmail");
         if (email != null) {
             request.put("billTo_email", email.getString("infoString"));
         } else {
@@ -465,8 +465,11 @@ public class IcsPaymentServices {
         // order shipping information
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
         if (shippingAddress != null) {
-            request.put("shipTo_firstName", person.get("firstName"));
-            request.put("shipTo_lastName", person.get("lastName"));
+            if (creditCard != null) {
+                // TODO: this is just a kludge since we don't have a firstName and lastName on the PostalAddress entity, that needs to be done
+                request.put("shipTo_firstName", creditCard.getString("firstNameOnCard"));
+                request.put("shipTo_lastName", creditCard.getString("lastNameOnCard"));
+            }
 
             request.put("shipTo_street1", shippingAddress.getString("address1"));
             if (shippingAddress.get("address2") != null) {

@@ -497,19 +497,17 @@ public class OrderReadHelper {
         return billingAccount;
     }
 
-    public GenericValue getBillToPerson() {
+    public GenericValue getBillToParty() {
         GenericDelegator delegator = orderHeader.getDelegator();
-
         try {
             GenericEntity billToRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER")));
-
             if (billToRole != null) {
-                return delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", billToRole.getString("partyId")));
+                return delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", billToRole.getString("partyId")));
             } else {
                 return null;
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, module);
+            Debug.logWarning(e, "Error getting Order bill-to Party", module);
         }
         return null;
     }

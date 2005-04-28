@@ -310,16 +310,17 @@ public class PayPalEvents {
                 okay = setPaymentPreferences(delegator, orderId, request);
             }
         } catch (Exception e) {
-            Debug.logError(e, "Error handling PayPal notification", module);
+            String errMsg = "Error handling PayPal notification";
+            Debug.logError(e, errMsg, module);
             try {
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
             } catch (GenericTransactionException gte2) {
                 Debug.logError(gte2, "Unable to rollback transaction", module);
             }
         } finally {
             if (!okay) {
                 try {
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, "Failure in processing PayPal callback", null);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback transaction", module);
                 }
@@ -378,7 +379,7 @@ public class PayPalEvents {
             }
         } else {
             try {
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Failure in processing PayPal cancel callback", null);
             } catch (GenericTransactionException gte) {
                 Debug.logError(gte, "Unable to rollback transaction", module);
             }

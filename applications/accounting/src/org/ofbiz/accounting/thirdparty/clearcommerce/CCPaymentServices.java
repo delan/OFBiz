@@ -556,9 +556,9 @@ public class CCPaymentServices {
         Element consumerElement = UtilXml.addChildElement(orderFormDocElement, "Consumer", requestDocument);
 
         // email address
-        GenericValue contactEmail = (GenericValue) context.get("contactEmail");
-        if (contactEmail != null) {
-            UtilXml.addChildElementValue(consumerElement, "Email", contactEmail.getString("infoString"), requestDocument);
+        GenericValue billToEmail = (GenericValue) context.get("billToEmail");
+        if (billToEmail != null) {
+            UtilXml.addChildElementValue(consumerElement, "Email", billToEmail.getString("infoString"), requestDocument);
         }
 
         // payment mech

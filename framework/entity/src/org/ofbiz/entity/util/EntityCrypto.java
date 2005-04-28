@@ -157,7 +157,7 @@ public class EntityCrypto {
                 delegator.create(newValue);
             } catch (GenericEntityException e) {
                 try {
-                    TransactionUtil.rollback(beganTrans);
+                    TransactionUtil.rollback(beganTrans, "Error creating encrypted value", e);
                 } catch (GenericTransactionException e1) {
                     Debug.logError(e1, "Could not rollback transaction", module);
                 }

@@ -212,7 +212,7 @@ public class ShoppingListServices {
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error creating shopping list auto-reorders", e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
@@ -380,7 +380,7 @@ public class ShoppingListServices {
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error making shopping list from order", e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
