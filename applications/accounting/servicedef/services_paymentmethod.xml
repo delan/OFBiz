@@ -308,8 +308,8 @@
         <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
         <attribute name="orderItems" type="List" mode="IN" optional="false"/>
-        <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
-        <attribute name="contactEmail" type="GenericValue" mode="IN" optional="true"/>
+        <attribute name="billToParty" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="billToEmail" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="billingAddress" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="shippingAddress" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="customerIpAddress" type="String" mode="IN" optional="true"/>
@@ -354,8 +354,8 @@
         <attribute name="referenceCode" type="String" mode="IN" optional="false"/>
         <attribute name="creditAmount" type="Double" mode="INOUT" optional="false"/>
         <attribute name="orderItems" type="List" mode="IN" optional="true"/>
-        <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
-        <attribute name="contactEmail" type="GenericValue" mode="IN" optional="true"/>
+        <attribute name="billToParty" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="billToEmail" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="billingAddress" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
