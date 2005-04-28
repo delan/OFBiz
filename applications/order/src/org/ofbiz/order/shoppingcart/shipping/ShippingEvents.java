@@ -238,7 +238,8 @@ public class ShippingEvents {
                 Map serviceResp = null;
                 try {
                     Debug.log("Service : " + serviceName + " / " + configProps + " -- " + context, module);
-                    serviceResp = dispatcher.runSync(serviceName, context);
+                    // because we don't want to blow up too big or rollback the transaction when this happens, always have it run in its own transaction...
+                    serviceResp = dispatcher.runSync(serviceName, context, 0, true);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Shipment Service Error", module);
                     throw new GeneralException();
@@ -246,8 +247,9 @@ public class ShippingEvents {
                 if (!ServiceUtil.isError(serviceResp)) {
                     externalShipAmt = (Double) serviceResp.get("shippingEstimateAmount");
                 } else {
-                    Debug.logError(ServiceUtil.getErrorMessage(serviceResp), module);
-                    throw new GeneralException();
+                    String errMsg = "Error getting external shipment cost estimate: " + ServiceUtil.getErrorMessage(serviceResp); 
+                    Debug.logError(errMsg, module);
+                    throw new GeneralException(errMsg);
                 }
             }
         }
