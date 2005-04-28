@@ -41,23 +41,7 @@ function submitForm(form, mode, value) {
         form.submit();
     } else if (mode == "EA") {
         // edit address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId="+value+"</@ofbizUrl>";
-        form.submit();
-    } else if (mode == "NC") {
-        // new credit card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions</@ofbizUrl>";
-        form.submit();
-    } else if (mode == "EC") {
-        // edit credit card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
-        form.submit();
-    } else if (mode == "NE") {
-        // new eft account
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions</@ofbizUrl>";
-        form.submit();
-    } else if (mode == "EE") {
-        // edit eft account
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@ofbizUrl>";
         form.submit();
     }
 }

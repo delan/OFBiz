@@ -35,14 +35,6 @@ function submitForm(form, mode, value) {
         // continue shopping
         form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
         form.submit();
-    } else if (mode == "NA") {
-        // new address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutpayment</@ofbizUrl>";
-        form.submit();
-    } else if (mode == "EA") {
-        // edit address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@ofbizUrl>";
-        form.submit();
     } else if (mode == "NC") {
         // new credit card
         form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment</@ofbizUrl>";
