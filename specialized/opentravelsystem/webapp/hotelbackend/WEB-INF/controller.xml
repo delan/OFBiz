@@ -262,11 +262,20 @@
         <response name="success" type="view" value="downloadorder"/>
     </request-map>
 
-    <request-map uri="statistics"><security https="true" auth="true"/><response name="success" type="view" value="statistics"/></request-map>
-    <request-map uri="reports"><security https="true" auth="true"/><response name="success" type="view" value="reports"/></request-map>
+    <request-map uri="statistics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="statistics"/>
+    </request-map>
+    
+    <request-map uri="reports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="reports"/>
+    </request-map>
+    
     <request-map uri="OrderPurchaseReportPayment.pdf"><security https="true" auth="true"/>
         <response name="success" type="view" value="OrderPurchaseReportPayment"/>
     </request-map>
+    
     <request-map uri="OrderPurchaseReportProduct.pdf"><security https="true" auth="true"/>
         <response name="success" type="view" value="OrderPurchaseReportProduct"/>
     </request-map>

@@ -15,6 +15,7 @@
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.opentravelsystemCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.opentravelsystemCompanySubtitle" global="true"/>
                 <set field="layoutSettings.headerImageUrl" value="/images/opentravelsystem_logo.jpg" global="true"/>
+                <!--set field="layoutSettings.extraHead" value=" "/-->
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="hotelbackend" global="true"/>
