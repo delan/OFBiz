@@ -107,6 +107,7 @@
     <entity-group group="org.ofbiz" entity="GlReconciliationEntry" />
     <entity-group group="org.ofbiz" entity="GlResourceType" />
     <entity-group group="org.ofbiz" entity="GlXbrlClass" />
+    <entity-group group="org.ofbiz" entity="PartyAcctgPreference" />
     <entity-group group="org.ofbiz" entity="SettlementTerm" />
 
   <!-- ========================================================= -->

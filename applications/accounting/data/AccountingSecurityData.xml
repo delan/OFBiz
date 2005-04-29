@@ -46,4 +46,9 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUAL_PAYMENT"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUAL_PAYMENT"/>
 
+    <!-- Set up accounting organization preferences security -->
+    <!-- Target file: applications/accounting/data/AccountingSecurityData.xml -->
+    <SecurityPermission description="Set organization accounting preferences" permissionId="ACCTG_PREF_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCTG_PREF_CREATE"/>
+    
 </entity-engine-xml>
