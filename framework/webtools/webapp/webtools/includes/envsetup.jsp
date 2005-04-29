@@ -46,4 +46,32 @@
     String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
     request.setAttribute("externalKeyParam", externalKeyParam);
     request.setAttribute("externalLoginKey", externalLoginKey);
+
+    List eventMessageList = (List) request.getAttribute("eventMessageList");
+    if (eventMessageList == null) eventMessageList = new LinkedList();
+    List errorMessageList = (List) request.getAttribute("errorMessageList");
+    if (errorMessageList == null) errorMessageList = new LinkedList();
+
+    if (request.getAttribute("_EVENT_MESSAGE_") != null) {
+        eventMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_EVENT_MESSAGE_"), "\n", "<br/>"));
+        request.removeAttribute("_EVENT_MESSAGE_");
+    }
+    if (request.getAttribute("_EVENT_MESSAGE_LIST_") != null) {
+        eventMessageList.addAll((List) request.getAttribute("_EVENT_MESSAGE_LIST_"));
+        request.removeAttribute("_EVENT_MESSAGE_LIST_");
+    }
+    if (request.getAttribute("_ERROR_MESSAGE_") != null) {
+        errorMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
+        request.removeAttribute("_ERROR_MESSAGE_");
+    }
+    if (session.getAttribute("_ERROR_MESSAGE_") != null) {
+        errorMessageList.add(UtilFormatOut.replaceString((String) session.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
+        session.removeAttribute("_ERROR_MESSAGE_");
+    }
+    if (request.getAttribute("_ERROR_MESSAGE_LIST_") != null) {
+        errorMessageList.addAll((List) request.getAttribute("_ERROR_MESSAGE_LIST_"));
+        request.removeAttribute("_ERROR_MESSAGE_LIST_");
+    }
+    request.setAttribute("eventMessageList", eventMessageList);
+    request.setAttribute("errorMessageList", errorMessageList);
 %>
