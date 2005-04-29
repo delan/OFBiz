@@ -758,8 +758,10 @@ public class SqlJdbcUtil {
                 sqlP.setValue((java.util.Collection) fieldValue);
                 break;
             }
+        } catch (GenericNotImplementedException e) {
+            throw new GenericNotImplementedException("Not Implemented Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName + ": " + e.toString(), e);
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("SQL Exception while setting value (" + modelField.getName() + "): ", sqle);
+            throw new GenericDataSourceException("SQL Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName + ": ", sqle);
         }
     }
 
