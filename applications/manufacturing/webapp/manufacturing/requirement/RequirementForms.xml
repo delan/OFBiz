@@ -50,7 +50,7 @@
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><date-find type="date"/></field>
-        <field name="requirementByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><date-find type="date"/></field>
+        <field name="requiredByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><date-find type="date"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -79,7 +79,7 @@
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
         <field name="requirementStartDate"><display/></field>
-        <field name="requirementByDate"><display/></field>
+        <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" widget-style="smallSubmit">
