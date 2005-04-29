@@ -137,7 +137,7 @@
               <option>${creditCard.cardType}</option>
               <option value="${creditCard.cardType}">---</option>
             </#if>
-            ${pages.get("/includes/cctypes.ftl")}
+            ${common.get("/includes/cctypes.ftl")}
           </select>
         *</td>
       </tr>
@@ -177,7 +177,7 @@
             <#if ccExprMonth?has_content>
               <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
             </#if>
-            ${pages.get("/includes/ccmonths.ftl")}
+            ${common.get("/includes/ccmonths.ftl")}
           </select>
           <select name="expYear" class='selectBox'>
             <#if creditCard?has_content && expYear?has_content>
@@ -188,7 +188,7 @@
             <#if ccExprYear?has_content>
               <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
             </#if>
-            ${pages.get("/includes/ccyears.ftl")}
+            ${common.get("/includes/ccyears.ftl")}
           </select>
         *</td>
       </tr>
@@ -243,7 +243,7 @@
             <#else>
               <option value="">No State</option>
             </#if>
-            ${pages.get("/includes/states.ftl")}
+            ${common.get("/includes/states.ftl")}
           </select>
         </td>
       </tr>
@@ -263,10 +263,8 @@
               <option>${postalFields.countryGeoId}</option>
               <option value="${postalFields.countryGeoId}">---</option>
             </#if>
-            ${pages.get("/includes/countries.ftl")}
+            ${common.get("/includes/countries.ftl")}
           </select>
         *</td>
       </tr>
-
     </#if>
-
