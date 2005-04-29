@@ -1284,6 +1284,23 @@
       <field name="description" type="description"></field>
       <prim-key field="glXbrlClassId"/>
     </entity>
+    <entity entity-name="PartyAcctgPreference"
+            package-name="org.ofbiz.accounting.ledger"
+            title="Party (organization) accounting preferences">
+       <field name="partyId" type="id-ne"/>
+       <field name="taxFormId" type="id-ne"/>
+       <field name="COGSMethodId" type="id-ne"/>
+       <prim-key field="partyId"/>
+       <relation type="one" rel-entity-name="Party" fk-name="PARTY_ACTG_PREF_PARTY">
+           <key-map field-name="partyId"/>
+       </relation>
+       <relation type="one" rel-entity-name="Enumeration" fk-name="PARTY_ACTG_TAX_FORM">
+           <key-map field-name="taxFormId" rel-field-name="enumId"/>
+       </relation>
+       <relation type="one" rel-entity-name="Enumeration" fk-name="PARTY_ACTG_COGS_ENUM">
+           <key-map field-name="COGSMethodId" rel-field-name="enumId"/>
+       </relation>
+    </entity>
     <entity entity-name="SettlementTerm"
             package-name="org.ofbiz.accounting.ledger"
             title="Settlement Term Entity">

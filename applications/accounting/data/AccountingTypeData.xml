@@ -229,4 +229,21 @@
     <SettlementTerm settlementTermId="NET_30" termName="Net Due in 30 Days" termValue="30" uomId="TF_day"/>
     <SettlementTerm settlementTermId="NET_60" termName="Net Due in 60 Days" termValue="60" uomId="TF_day"/>
     <SettlementTerm settlementTermId="NET_90" termName="Net Due in 90 Days" termValue="90" uomId="TF_day"/>
+
+    <!-- tax forms for accounting preferences -->
+    <EnumerationType description="Tax Forms" enumTypeId="TAX_FORMS" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Form 1120 (US IRS)" enumCode="1120" enumId="US_IRS_1120" sequenceId="01" enumTypeId="TAX_FORMS"/>
+    <Enumeration description="Form 1120S (US IRS)" enumCode="1120S" enumId="US_IRS_1120" sequenceId="02" enumTypeId="TAX_FORMS"/>
+    <Enumeration description="Form 1065 (US IRS)" enumCode="1065" enumId="US_IRS_1065" sequenceId="03" enumTypeId="TAX_FORMS"/>
+    <Enumeration description="Form 990 (US IRS)" enumCode="990" enumId="US_IRS_990" sequenceId="04" enumTypeId="TAX_FORMS"/>
+    <Enumeration description="Form 990-PF (US IRS)" enumCode="990PF" enumId="US_IRS_990PF" sequenceId="05" enumTypeId="TAX_FORMS"/>
+    <Enumeration description="Form 990-T (US IRS)" enumCode="990T" enumId="US_IRS_990T" sequenceId="06" enumTypeId="TAX_FORMS"/>
+    <Enumeration description="Form 1040 (US IRS)" enumCode="1040" enumId="US_IRS_1040" sequenceId="07" enumTypeId="TAX_FORMS"/>
+
+    <!-- cost of goods sold methods for accounting preferences -->
+    <EnumerationType description="COGS Methods" enumTypeId="COGS_METHODS" hasTable="N" parentTypeId=""/>
+    <Enumeration description="LIFO" enumCode="LIFO" enumId="COGS_LIFO" sequenceId="01" enumTypeId="COGS_METHODS"/>
+    <Enumeration description="FIFO" enumCode="FIFO" enumId="COGS_FIFO" sequenceId="02" enumTypeId="COGS_METHODS"/>
+    <Enumeration description="Average Cost" enumCode="AVG_COST" enumId="COGS_AVG_COST" sequenceId="03" enumTypeId="COGS_METHODS"/>
+
 </entity-engine-xml>
