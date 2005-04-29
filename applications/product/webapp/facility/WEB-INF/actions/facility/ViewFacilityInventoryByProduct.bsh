@@ -58,9 +58,10 @@ if (action != null) {
     prodView.addMemberEntity("PRFA", "ProductFacility");
     prodView.addAliasAll("PRFA", null);
 
+    prodView.addMemberEntity("PROD", "Product");
+    prodView.addViewLink("PROD", "PRFA", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+    prodView.addAlias("PROD", "isVirtual");
     if (productTypeId != null && productTypeId.length() > 0) {
-        prodView.addMemberEntity("PROD", "Product");
-        prodView.addViewLink("PROD", "PRFA", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
         prodView.addAlias("PROD", "productTypeId");
         conditionMap.put("productTypeId", productTypeId);
     }
@@ -71,7 +72,9 @@ if (action != null) {
         conditionMap.put("productCategoryId", productCategoryId);
     }
 
-    EntityCondition whereCondition = new EntityFieldMap(conditionMap, EntityOperator.AND);
+    EntityCondition searchCondition = new EntityFieldMap(conditionMap, EntityOperator.AND);
+    EntityCondition notVirtualCondition = new EntityExpr("isVirtual", EntityComparisonOperator.NOT_EQUAL, "Y");
+    EntityCondition whereCondition = new EntityConditionList(UtilMisc.toList(searchCondition, notVirtualCondition), EntityOperator.AND);
 
     boolean beganTransaction = false;
     List prods = null;
