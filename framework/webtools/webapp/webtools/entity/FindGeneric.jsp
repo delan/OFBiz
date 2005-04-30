@@ -1,5 +1,5 @@
 <%--
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -109,7 +109,7 @@
             Debug.logError(e, "Failure in operation, rolling back transaction", "FindGeneric.jsp");
             try {
                 // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, "Error looking up entity values in WebTools Entity Data Maintenance", e);
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), "FindGeneric.jsp");
             }
