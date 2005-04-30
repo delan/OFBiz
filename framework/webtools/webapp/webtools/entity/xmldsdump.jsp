@@ -216,8 +216,9 @@
             Debug.log("Wrote [" + curNumberWritten + "] from entity : " + curEntityName);
             TransactionUtil.commit(beganTransaction);
         } catch (Exception e) {
-            Debug.logError(e, "Error reading data for XML export:", "JSP");
-            TransactionUtil.rollback(beganTransaction);
+            String errMsg = "Error reading data for XML export:";
+            Debug.logError(e, errMsg, "JSP");
+            TransactionUtil.rollback(beganTransaction, errMsg, e);
         }
     }
     writer.println("</entity-engine-xml>");
@@ -305,7 +306,7 @@
                 String thisResult = "["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex;
                 Debug.log(thisResult);
                 results.add(thisResult);
-                TransactionUtil.rollback(beganTransaction);
+                TransactionUtil.rollback(beganTransaction, thisResult, ex);
             } finally {
                 // only commit the transaction if we started one... this will throw an exception if it fails
                 TransactionUtil.commit(beganTransaction);
