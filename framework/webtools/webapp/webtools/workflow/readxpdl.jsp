@@ -1,5 +1,5 @@
 <%--
- *  Copyright (c) 2001 The Open For Business Project and respective authors.
+ *  Copyright (c) 2001-2005 The Open For Business Project and respective authors.
  
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -51,12 +51,12 @@
     if (toBeStored != null && xpdlImport) {
     	boolean beganTransaction = false;
         try {
-        	beganTransaction = TransactionUtil.begin();
+            beganTransaction = TransactionUtil.begin();
             delegator.storeAll(toBeStored);
             TransactionUtil.commit(beganTransaction);
             messages.add("Wrote/Updated " + toBeStored.size() + " toBeStored objects to the data source.");
         } catch (GenericEntityException e) {
-        	TransactionUtil.rollback(beganTransaction);
+            TransactionUtil.rollback(beganTransaction, "Error storing data from XPDL file", e);
             messages.add(e.getMessage()); messages.add(e.toString()); Debug.log(e);
         }
     }

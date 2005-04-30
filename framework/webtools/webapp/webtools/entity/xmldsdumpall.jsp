@@ -124,10 +124,11 @@
                     results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex);
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Failure in operation, rolling back transaction", "xmldsdumpall.jsp");
+                String errMsg = "Failure in operation, rolling back transaction";
+                Debug.logError(e, errMsg, "xmldsdumpall.jsp");
                 try {
                     // only rollback the transaction if we started one...
-                    TransactionUtil.rollback(beganTransaction);
+                    TransactionUtil.rollback(beganTransaction, errMsg, e);
                 } catch (GenericEntityException e2) {
                     Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), "xmldsdumpall.jsp");
                 }
