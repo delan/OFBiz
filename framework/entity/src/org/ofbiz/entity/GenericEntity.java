@@ -411,6 +411,12 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             return;
         }
         
+        boolean isNullString = false;
+        if ("null".equals(value)) {
+            // count this as a null too, but only for numbers and stuff, not for Strings
+            isNullString = true;
+        }
+        
         ModelField field = getModelEntity().getField(name);
         if (field == null) set(name, value); // this will get an error in the set() method...
 
@@ -430,35 +436,35 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                 break;
 
             case 2:
-                set(name, java.sql.Timestamp.valueOf(value));
+                set(name, isNullString ? null : java.sql.Timestamp.valueOf(value));
                 break;
 
             case 3:
-                set(name, java.sql.Time.valueOf(value));
+                set(name, isNullString ? null : java.sql.Time.valueOf(value));
                 break;
 
             case 4:
-                set(name, java.sql.Date.valueOf(value));
+                set(name, isNullString ? null : java.sql.Date.valueOf(value));
                 break;
 
             case 5:
-                set(name, Integer.valueOf(value));
+                set(name, isNullString ? null : Integer.valueOf(value));
                 break;
 
             case 6:
-                set(name, Long.valueOf(value));
+                set(name, isNullString ? null : Long.valueOf(value));
                 break;
 
             case 7:
-                set(name, Float.valueOf(value));
+                set(name, isNullString ? null : Float.valueOf(value));
                 break;
 
             case 8:
-                set(name, Double.valueOf(value));
+                set(name, isNullString ? null : Double.valueOf(value));
                 break;
 
             case 9:
-                set(name, Boolean.valueOf(value));
+                set(name, isNullString ? null : Boolean.valueOf(value));
                 break;
 
             case 10:
