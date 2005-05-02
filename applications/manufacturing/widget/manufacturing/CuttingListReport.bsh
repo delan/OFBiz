@@ -121,7 +121,7 @@ if (shipmentPlans != null) {
         Double widthD = product.getDouble("productWidth");
         int width = 0;
         if (widthD != null) width = (int)(widthD.doubleValue() * 1000);
-        Dimension dim = new Dimension(height, width);
+        Dimension dim = new Dimension(width, height);
         if (!dimensionToProducts.containsKey(dim)) {
             dimensionToProducts.put(dim, new ArrayList());
         }
