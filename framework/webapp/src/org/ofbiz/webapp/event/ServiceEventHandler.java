@@ -24,18 +24,23 @@
  */
 package org.ofbiz.webapp.event;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Arrays;
+import java.util.ArrayList;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
 
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.FileUploadException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
@@ -50,11 +55,6 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
-
-import org.apache.commons.fileupload.DiskFileUpload;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * ServiceEventHandler - Service Event Handler
@@ -157,10 +157,25 @@ public class ServiceEventHandler implements EventHandler {
                 while (i.hasNext()) {
                     FileItem item = (FileItem) i.next();
                     String fieldName = item.getFieldName();
+                    byte[] itemBytes = item.get();
 
                     //Debug.log("Item Info : " + item.getName() + " / " + item.getSize() + " / " + item.getContentType(), module);
                     if (item.isFormField() || item.getSize() == 0) {
-                        multiPartMap.put(fieldName, item.getString());
+                        if (multiPartMap.containsKey(fieldName)) {
+                            Object mapValue = multiPartMap.get(fieldName);
+                            if (mapValue instanceof List) {
+                                ((List) mapValue).add(item.getString());
+                            } else if (mapValue instanceof String) {
+                                List newList = new ArrayList();
+                                newList.add((String) mapValue);
+                                newList.add(item.getString());
+                                multiPartMap.put(fieldName, newList);
+                            } else {
+                                Debug.logWarning("Form field found [" + fieldName + "] which was not handled!", module);
+                            }
+                        } else {
+                            multiPartMap.put(fieldName, item.getString());
+                        }
                     } else {
                         String fileName = item.getName();
                         if (fileName.indexOf('\\') > -1 || fileName.indexOf('/') > -1) {
@@ -218,7 +233,7 @@ public class ServiceEventHandler implements EventHandler {
                         } else {
                             value = paramArr[0];
                         }
-                    }                    
+                    }
                 }
 
                 // next check attributes
