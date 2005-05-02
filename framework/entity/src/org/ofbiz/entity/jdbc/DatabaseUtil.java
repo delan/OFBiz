@@ -2160,7 +2160,7 @@ public class DatabaseUtil {
             } else {
                 sqlBuf.append(" PRIMARY KEY");
             }
-            sqlBuf.append(" CASCADE");
+            // DEJ20050502 not sure why this is here, shouldn't be needed and some dbs don't support like this, ie when used with PRIMARY KEY; may still want to put it in for the CONSTRAINT variation, if needed: sqlBuf.append(" CASCADE");
 
             if (Debug.verboseOn()) Debug.logVerbose("[deletePrimaryKey] sql=" + sqlBuf.toString(), module);
             try {
