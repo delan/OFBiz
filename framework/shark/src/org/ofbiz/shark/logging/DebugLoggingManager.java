@@ -39,7 +39,7 @@ import org.enhydra.shark.api.RootException;
 public class DebugLoggingManager implements LoggingManager {
 
     public static final String module = DebugLoggingManager.class.getName();
-    private CallbackUtilities cus = null;
+    protected  CallbackUtilities cus = null;
 
     public void configure(CallbackUtilities cus) throws RootException {
         this.cus = cus;

@@ -45,10 +45,8 @@ public class CreateProcessEventAudit extends EventAudit implements CreateProcess
     protected GenericValue createProcessEventAudit = null;
     private boolean newValue = false;
 
-    protected CreateProcessEventAudit() {}
-
-    public CreateProcessEventAudit(GenericDelegator delegator, String eventAuditId) {
-        super(delegator, eventAuditId);
+    public CreateProcessEventAudit(EntityAuditMgr mgr, GenericDelegator delegator, String eventAuditId) {
+        super(mgr, delegator, eventAuditId);
         if (this.delegator != null) {
             try {
                 this.createProcessEventAudit = delegator.findByPrimaryKey("WfCreateProcessEventAudit", UtilMisc.toMap("eventAuditId", eventAuditId));
@@ -60,14 +58,14 @@ public class CreateProcessEventAudit extends EventAudit implements CreateProcess
         }
     }
 
-    public CreateProcessEventAudit(GenericDelegator delegator) {
-        super(delegator);
+    public CreateProcessEventAudit(EntityAuditMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
         this.createProcessEventAudit = delegator.makeValue("WfCreateProcessEventAudit", UtilMisc.toMap("eventAuditId", this.eventAuditId));
     }
 
-    public CreateProcessEventAudit(GenericValue createProcessEventAudit) {
-        super(createProcessEventAudit.getDelegator(), createProcessEventAudit.getString("eventAuditId"));
+    public CreateProcessEventAudit(EntityAuditMgr mgr, GenericValue createProcessEventAudit) {
+        super(mgr, createProcessEventAudit.getDelegator(), createProcessEventAudit.getString("eventAuditId"));
         this.createProcessEventAudit = createProcessEventAudit;
     }
 
@@ -117,6 +115,14 @@ public class CreateProcessEventAudit extends EventAudit implements CreateProcess
 
     public String getPActivityDefinitionId() {
         return createProcessEventAudit.getString("pActivityDefId");
+    }
+
+    public void setPActivitySetDefinitionId(String s) {
+        // TODO: Implement Me!
+    }
+
+    public String getPActivitySetDefinitionId() {
+        return null;  // TODO: Implement Me!
     }
 
     public void setPProcessDefinitionId(String ppdId) {

@@ -45,9 +45,7 @@ public class EntityApplicationMap implements ApplicationMap {
     protected GenericDelegator delegator = null;
     protected GenericValue application = null;
     protected boolean isNew = false;
-
-    protected EntityApplicationMap() {}
-
+    
     protected EntityApplicationMap(GenericDelegator delegator, String packageId, String processDefId, String applicationDefId) throws RootException {
         this.delegator = delegator;
         try {

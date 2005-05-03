@@ -39,19 +39,16 @@ import org.enhydra.shark.api.internal.eventaudit.EventAuditPersistenceInterface;
  * @version    $Rev$
  * @since      3.1
  */
-public class EventAudit implements EventAuditPersistenceInterface {
+public class EventAudit extends AuditEntityObject implements EventAuditPersistenceInterface {
 
     public static final String module = EventAudit.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected String eventAuditId = null;
     private GenericValue eventAudit = null;
     private boolean newValue = false;
 
-    protected EventAudit() {}
-
-    public EventAudit(GenericDelegator delegator, String eventAuditId) {
-        this.delegator = delegator;
+    public EventAudit(EntityAuditMgr mgr, GenericDelegator delegator, String eventAuditId) {
+        super(mgr, delegator);
         this.eventAuditId = eventAuditId;
         if (this.delegator != null) {
             try {
@@ -64,18 +61,17 @@ public class EventAudit implements EventAuditPersistenceInterface {
         }
     }
 
-    public EventAudit(GenericDelegator delegator) {
+    public EventAudit(EntityAuditMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
-
         this.eventAuditId = delegator.getNextSeqId("WfEventAudit");
         this.eventAudit = delegator.makeValue("WfEventAudit", UtilMisc.toMap("eventAuditId", eventAuditId));
     }
 
-    public EventAudit(GenericValue eventAudit) {
+    public EventAudit(EntityAuditMgr mgr, GenericValue eventAudit) {
+        super(mgr, eventAudit.getDelegator());
         this.eventAuditId = eventAudit.getString("eventAuditId");
         this.eventAudit = eventAudit;
-        this.delegator = eventAudit.getDelegator();
     }
 
     public String getEventAuditId() {
@@ -152,6 +148,14 @@ public class EventAudit implements EventAuditPersistenceInterface {
 
     public String getActivityDefinitionId() {
         return eventAudit.getString("activityDefId");
+    }
+
+    public void setActivitySetDefinitionId(String s) {
+        // TODO: Implement Me!
+    }
+
+    public String getActivitySetDefinitionId() {
+        return null;  // TODO: Implement Me!
     }
 
     public void setProcessDefinitionId(String pdId) {

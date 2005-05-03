@@ -42,17 +42,15 @@ import org.enhydra.shark.api.internal.instancepersistence.PersistenceException;
  * @version    $Rev$
  * @since      3.1
  */
-public class ActivityVariable implements ActivityVariablePersistenceInterface {
+public class ActivityVariable extends InstanceEntityObject implements ActivityVariablePersistenceInterface {
 
     public static final String module = ActivityVariable.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected GenericValue activityVariable = null;
     protected boolean newValue = false;
 
-    protected ActivityVariable() {}
-
-    protected ActivityVariable(GenericDelegator delegator, String activityVariableId) throws PersistenceException {
+    protected ActivityVariable(EntityPersistentMgr mgr, GenericDelegator delegator, String activityVariableId) throws PersistenceException {
+        super(mgr, delegator);
         this.delegator = delegator;
         if (this.delegator != null) {
             try {
@@ -65,29 +63,28 @@ public class ActivityVariable implements ActivityVariablePersistenceInterface {
         }
     }
 
-    protected ActivityVariable(GenericValue activityVariable) {
+    protected ActivityVariable(EntityPersistentMgr mgr, GenericValue activityVariable) {
+        super(mgr, activityVariable.getDelegator());
         this.activityVariable = activityVariable;
-        this.delegator = activityVariable.getDelegator();
     }
 
-    public ActivityVariable(GenericDelegator delegator) {
+    public ActivityVariable(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
-
         this.activityVariable = delegator.makeValue("WfActivityVariable", UtilMisc.toMap("activityVariableId", delegator.getNextSeqId("WfActivityVariable")));
         Debug.log("******* New activity variable created", module);
     }
 
-    public static ActivityVariable getInstance(GenericValue activityVariable) throws PersistenceException {
-        ActivityVariable var = new ActivityVariable(activityVariable);
+    public static ActivityVariable getInstance(EntityPersistentMgr mgr, GenericValue activityVariable) {
+        ActivityVariable var = new ActivityVariable(mgr, activityVariable);
         if (var.isLoaded()) {
             return var;
         }
         return null;
     }
 
-    public static ActivityVariable getInstance(String activityVariableId) throws PersistenceException {
-        ActivityVariable var = new ActivityVariable(SharkContainer.getDelegator(), activityVariableId);
+    public static ActivityVariable getInstance(EntityPersistentMgr mgr, String activityVariableId) throws PersistenceException {
+        ActivityVariable var = new ActivityVariable(mgr, SharkContainer.getDelegator(), activityVariableId);
         if (var.isLoaded()) {
             return var;
         }
@@ -118,13 +115,31 @@ public class ActivityVariable implements ActivityVariablePersistenceInterface {
     }
 
     public void setValue(Object val) {
-        byte[] value = UtilObject.getBytes(val);
-        activityVariable.setBytes("varValue", (value != null ? value : null));
+        if (val instanceof String) {
+            activityVariable.set("valueField", "strValue");
+            activityVariable.set("strValue", val);
+        } else if (val instanceof Number) {
+            if (val instanceof Double) {
+                activityVariable.set("valueField", "dblValue");
+                activityVariable.set("dblValue", val);
+            } else {
+                activityVariable.set("valueField", "numValue");
+                activityVariable.set("numValue", val);
+            }
+        } else {
+            byte[] value = UtilObject.getBytes(val);
+            activityVariable.setBytes("objValue", (value != null ? value : null));
+        }
     }
 
     public Object getValue() {
-        byte[] value = activityVariable.getBytes("varValue");
-        return UtilObject.getObject(value);
+        String fieldName = activityVariable.getString("valueField");
+        if ("objValue".equals(fieldName)) {
+            byte[] value = activityVariable.getBytes(fieldName);
+            return UtilObject.getObject(value);
+        } else {
+            return activityVariable.get(fieldName);
+        }
     }
 
     public void setResultVariable(boolean modified) {

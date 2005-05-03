@@ -9,11 +9,20 @@ admin = SharkContainer.getAdminInterface();
 repMgr = SharkContainer.getRepositoryMgr();
 pkgMgr = admin.getPackageAdministration();
 
+pkgMgr.clearXPDLCache();
+String[] foo = pkgMgr.getOpenedPackageIds();
+if (foo != null) {
+    for (int i = 0; i < foo.length; i++) {
+        Debug.log("Open Package : " + foo[i] + " - " + pkgMgr.isPackageOpened(foo[i]));
+    }
+}
+
+
 // open package
 if (request.getParameter("open") != null) {
-    packageId = request.getParameter("open");
+    packageData = request.getParameter("open");
     try {
-        pkgMgr.openPackage(packageId);
+        pkgMgr.openPackage(packageData);
     } catch (Exception e) {
         request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
     }
@@ -22,8 +31,10 @@ if (request.getParameter("open") != null) {
 // close package
 if (request.getParameter("close") != null) {
     packageId = request.getParameter("close");
+    version = request.getParameter("version");
     try {
-        pkgMgr.closePackage(packageId);
+        pkgMgr.closePackage(packageId, version);
+        pkgMgr.clearXPDLCache();
     } catch (Exception e) {
         request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
     }
@@ -32,10 +43,14 @@ if (request.getParameter("close") != null) {
 // delete package
 if (request.getParameter("delete") != null) {
     deleteXpdl = request.getParameter("delete");
-    try {
-        repMgr.deletePackage(deleteXpdl);
-    } catch (Exception e) {
-        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    if (pkgMgr.isPackageOpened(deleteXpdl)) {
+        request.setAttribute("_ERROR_MESSAGE_", "Cannot remove an opened package; close the package first!");
+    } else {
+        try {
+            repMgr.deletePackage(deleteXpdl);
+        } catch (Exception e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+        }
     }
 }
 

@@ -41,17 +41,15 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * @version    $Rev$
  * @since      3.1
  */
-public class Activity implements ActivityPersistenceInterface {
+public class Activity extends InstanceEntityObject implements ActivityPersistenceInterface {
 
     public static final String module = Activity.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected GenericValue activity = null;
     protected boolean newValue = false;
 
-    protected Activity() {}
-
-    protected Activity(GenericDelegator delegator, String activityId) throws PersistenceException {
+    protected Activity(EntityPersistentMgr mgr, GenericDelegator delegator, String activityId) throws PersistenceException {
+        super(mgr, delegator);
         this.delegator = delegator;
         if (this.delegator != null) {
             try {
@@ -64,27 +62,27 @@ public class Activity implements ActivityPersistenceInterface {
         }
     }
 
-    protected Activity(GenericValue activity) {
+    protected Activity(EntityPersistentMgr mgr, GenericValue activity) {
+        super(mgr, activity.getDelegator());
         this.activity = activity;
-        this.delegator = activity.getDelegator();
     }
 
-    public Activity(GenericDelegator delegator) {
+    public Activity(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
         this.activity = delegator.makeValue("WfActivity", null);
     }
 
-    public static Activity getInstance(GenericValue activity) throws PersistenceException {
-        Activity act = new Activity(activity);
+    public static Activity getInstance(EntityPersistentMgr mgr, GenericValue activity) {
+        Activity act = new Activity(mgr, activity);
         if (act.isLoaded()) {
             return act;
         }
         return null;
     }
 
-    public static Activity getInstance(String activityId) throws PersistenceException {
-        Activity act = new Activity(SharkContainer.getDelegator(), activityId);
+    public static Activity getInstance(EntityPersistentMgr mgr, String activityId) throws PersistenceException {
+        Activity act = new Activity(mgr, SharkContainer.getDelegator(), activityId);
         if (act.isLoaded()) {
             return act;
         }
@@ -136,6 +134,15 @@ public class Activity implements ActivityPersistenceInterface {
 
     public String getSubflowProcessId() {
         return activity.getString("subFlowId");
+    }
+
+    public void setSubflowAsynchronous(boolean b) {
+        activity.set("isSubAsync", (b ? "Y" : "N"));
+    }
+
+    public boolean isSubflowAsynchronous() {
+        String isAsync = activity.getString("isSubAsync");
+        return isAsync != null && isAsync.equals("Y") ? true : false;        
     }
 
     public void setResourceUsername(String s) {

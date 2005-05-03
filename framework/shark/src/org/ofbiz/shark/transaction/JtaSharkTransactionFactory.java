@@ -25,9 +25,9 @@
 package org.ofbiz.shark.transaction;
 
 import org.enhydra.shark.api.internal.transaction.TransactionFactory;
+import org.enhydra.shark.api.internal.transaction.SharkInternalTransaction;
 import org.enhydra.shark.api.internal.working.CallbackUtilities;
 import org.enhydra.shark.api.RootException;
-import org.enhydra.shark.api.SharkTransaction;
 import org.enhydra.shark.api.TransactionException;
 
 /**
@@ -45,7 +45,7 @@ public class JtaSharkTransactionFactory implements TransactionFactory {
         this.callBack = callBack;
     }
 
-    public SharkTransaction createTransaction() throws TransactionException {
+    public SharkInternalTransaction createTransaction() throws TransactionException {
         return new JtaTransaction();
-    }
+    }    
 }

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,31 +22,44 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.shark.requester;
+package org.ofbiz.shark.audit;
 
-import java.sql.Timestamp;
-
-import org.enhydra.shark.api.client.wfmodel.WfRequester;
-import org.enhydra.shark.api.client.wfmodel.WfProcess;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
 
 /**
- * OFBiz -> Shark Re-Loadable WfRequester
- *
+ * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev$
- * @since      3.1
+ * @version    $Rev:$
+ * @since      3.3
  */
-public interface PersistentRequester extends WfRequester {
 
-    public String getRequesterId();
+public abstract class AuditEntityObject {
 
-    public Timestamp getFromDate();
+    protected transient GenericDelegator delegator = null;
+    protected EntityAuditMgr mgr = null;
+    protected String delegatorName = null;
 
-    public void addPerformer(WfProcess process);
-    
-    public String getClassName();
+    public AuditEntityObject(EntityAuditMgr mgr, GenericDelegator delegator) {
+        this.delegatorName = delegator.getDelegatorName();
+        this.delegator = delegator;
+        this.mgr = mgr;
+    }
 
-    public String getDataString() throws PersistentRequesterException;
+    public EntityAuditMgr getAuditManager() {
+        return this.mgr;
+    }
 
-    public void restoreData(String dataString) throws PersistentRequesterException;
+    public GenericDelegator getGenericDelegator() {
+        if (this.delegator == null && delegatorName != null) {
+            this.delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
+        return this.delegator;
+    }
+
+    public abstract void store() throws GenericEntityException;
+
+    public abstract void reload() throws GenericEntityException;
+
+    public abstract void remove() throws GenericEntityException;
 }

@@ -45,10 +45,8 @@ public class StateEventAudit extends EventAudit implements StateEventAuditPersis
     protected GenericValue stateEventAudit = null;
     private boolean newValue = false;
 
-    protected StateEventAudit() {}
-
-    public StateEventAudit(GenericDelegator delegator, String eventAuditId) {
-        super(delegator, eventAuditId);
+    public StateEventAudit(EntityAuditMgr mgr, GenericDelegator delegator, String eventAuditId) {
+        super(mgr, delegator, eventAuditId);
         if (this.delegator != null) {
             try {
                 this.stateEventAudit = delegator.findByPrimaryKey("WfStateEventAudit", UtilMisc.toMap("eventAuditId", eventAuditId));
@@ -60,14 +58,14 @@ public class StateEventAudit extends EventAudit implements StateEventAuditPersis
         }
     }
 
-    public StateEventAudit(GenericDelegator delegator) {
-        super(delegator);
+    public StateEventAudit(EntityAuditMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
         this.stateEventAudit = delegator.makeValue("WfStateEventAudit", UtilMisc.toMap("eventAuditId", this.eventAuditId));
     }
 
-    public StateEventAudit(GenericValue stateEventAudit) {
-        super(stateEventAudit.getDelegator(), stateEventAudit.getString("eventAuditId"));
+    public StateEventAudit(EntityAuditMgr mgr, GenericValue stateEventAudit) {
+        super(mgr, stateEventAudit.getDelegator(), stateEventAudit.getString("eventAuditId"));
         this.stateEventAudit = stateEventAudit;
     }
 

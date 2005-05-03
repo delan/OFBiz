@@ -83,10 +83,12 @@ if (mgrName != null) {
     // get the process manager
     mgr = exMgr.getProcessMgr(mgrName);
 
-    // get the processes
-    count = mgr.how_many_process();
-    procs = mgr.get_sequence_process(count);
-    context.put("processes", procs);
+    if (mgr != null) {
+        // get the processes
+        count = mgr.how_many_process();
+        procs = mgr.get_sequence_process(count);
+        context.put("processes", procs);
+    }
 }
 
 // disconnect from the engine

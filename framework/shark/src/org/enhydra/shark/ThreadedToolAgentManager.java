@@ -44,7 +44,7 @@ import org.enhydra.shark.xpdl.XMLComplexElement;
 /**
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
- * @since      Mar 30, 2004
+ * @since      3.2
  */
 public class ThreadedToolAgentManager implements ToolAgentManager {
 

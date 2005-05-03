@@ -29,7 +29,7 @@ if (request.getParameter("create") != null) {
     try {
         mgr = exMgr.getProcessMgr(mgrName);
         if (mgr != null) {
-            PersistentRequester req = new LoggingRequester();
+            LoggingRequester req = new LoggingRequester(userLogin);
             WfProcess proc = mgr.create_process(req);
             req.addPerformer(proc);
             proc.start();            

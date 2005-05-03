@@ -52,10 +52,8 @@ public class DataEventAudit extends EventAudit implements DataEventAuditPersiste
     protected GenericValue dataEventAudit = null;
     private boolean newValue = false;
 
-    protected DataEventAudit() {}
-
-    public DataEventAudit(GenericDelegator delegator, String eventAuditId) {
-        super(delegator, eventAuditId);
+    public DataEventAudit(EntityAuditMgr mgr, GenericDelegator delegator, String eventAuditId) {
+        super(mgr, delegator, eventAuditId);
         if (this.delegator != null) {
             try {
                 this.dataEventAudit = delegator.findByPrimaryKey("WfDataEventAudit", UtilMisc.toMap("eventAuditId", eventAuditId));
@@ -67,14 +65,14 @@ public class DataEventAudit extends EventAudit implements DataEventAuditPersiste
         }
     }
 
-    public DataEventAudit(GenericDelegator delegator) {
-        super(delegator);
+    public DataEventAudit(EntityAuditMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
         this.dataEventAudit = delegator.makeValue("WfDataEventAudit", UtilMisc.toMap("eventAuditId", this.eventAuditId));
     }
 
-    public DataEventAudit(GenericValue dataEventAudit) {
-        super(dataEventAudit.getDelegator(), dataEventAudit.getString("eventAuditId"));
+    public DataEventAudit(EntityAuditMgr mgr, GenericValue dataEventAudit) {
+        super(mgr, dataEventAudit.getDelegator(), dataEventAudit.getString("eventAuditId"));
         this.dataEventAudit = dataEventAudit;
     }
         

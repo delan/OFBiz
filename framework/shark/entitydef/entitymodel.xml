@@ -29,7 +29,7 @@
  */
 -->
 
-<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
@@ -149,8 +149,9 @@
       <field name="processId" type="id-vlong"></field>
       <field name="setDefinitionId" type="id-long"></field>
       <field name="definitionId" type="id-long"></field>
-      <field name="subFlowId" type="id-long"></field>
-      <field name="blockId" type="id-long"></field>
+      <field name="subFlowId" type="id-vlong"></field>
+      <field name="blockId" type="id-vlong"></field>
+      <field name="isSubAsync" type="indicator"></field>
       <field name="resourceUser" type="long-varchar"></field>
       <field name="activityName" type="long-varchar"></field>
       <field name="description" type="long-varchar"></field>
@@ -160,6 +161,12 @@
       <field name="acceptedTime" type="date-time"></field>
       <field name="lastStateTime" type="date-time"></field>
       <prim-key field="activityId"/>
+      <relation type="one" fk-name="WF_ACT_PROC" rel-entity-name="WfProcess">
+          <key-map field-name="processId"/>
+      </relation>
+      <relation type="one" fk-name="WF_ACT_SUBF" rel-entity-name="WfProcess">
+          <key-map field-name="subFlowId" rel-field-name="processId"/>
+      </relation>
     </entity>
     <entity entity-name="WfActivityVariable"
             package-name="org.ofbiz.shark.instance"
@@ -167,7 +174,11 @@
       <field name="activityVariableId" type="id"></field>
       <field name="activityId" type="id-vlong"></field>
       <field name="definitionId" type="id-long"></field>
-      <field name="varValue" type="blob"></field>
+      <field name="valueField" type="name"></field>
+      <field name="strValue" type="very-long"></field>
+      <field name="numValue" type="numeric"></field>
+      <field name="dblValue" type="floating-point"></field>
+      <field name="objValue" type="blob"></field>
       <field name="isModified" type="indicator"></field>
       <prim-key field="activityVariableId"/>
     </entity>
@@ -187,8 +198,15 @@
       <field name="activityId" type="id-vlong"></field>
       <field name="processId" type="id-vlong"></field>
       <field name="userName" type="id-vlong"></field>
+      <field name="isValid" type="indicator"></field>
       <prim-key field="activityId"/>
       <prim-key field="userName"/>
+      <relation type="one" fk-name="WF_ASSIGN_PROC" rel-entity-name="WfProcess">
+          <key-map field-name="processId"/>
+      </relation>
+      <relation type="one" fk-name="WF_ASSIGN_ACT" rel-entity-name="WfActivity">
+          <key-map field-name="activityId"/>
+      </relation>
     </entity>
     <entity entity-name="WfDeadline"
             package-name="org.ofbiz.shark.instance"
@@ -198,13 +216,22 @@
       <field name="activityId" type="id-vlong"></field>
       <field name="exceptionName" type="long-varchar"></field>
       <field name="timeLimit" type="numeric"></field>
+      <field name="isExecuted" type="indicator"></field>
       <field name="isSync" type="indicator"></field>
       <prim-key field="deadlineId"/>
+      <relation type="one" fk-name="WF_DEADLINE_PROC" rel-entity-name="WfProcess">
+          <key-map field-name="processId"/>
+      </relation>
+      <relation type="one" fk-name="WF_DEADLINE_ACT" rel-entity-name="WfActivity">
+          <key-map field-name="activityId"/>
+      </relation>
     </entity>
     <entity entity-name="WfProcess"
             package-name="org.ofbiz.shark.instance"
             title="">
       <field name="processId" type="id-vlong"></field>
+      <field name="packageId" type="id-long"></field>
+      <field name="packageVer" type="long-varchar"></field>
       <field name="mgrName" type="id-vlong"></field>
       <field name="definitionId" type="id-long"></field>
       <field name="activityReqProcessId" type="id-long"></field>
@@ -214,17 +241,22 @@
       <field name="description" type="long-varchar"></field>
       <field name="currentState" type="long-varchar"></field>
       <field name="priority" type="numeric"></field>
+      <field name="externalReq" type="blob"></field>
+      <field name="createdTime" type="date-time"></field>
       <field name="startedTime" type="date-time"></field>
       <field name="lastStateTime" type="date-time"></field>
       <prim-key field="processId"/>
+      <relation type="one" fk-name="WF_PROC_MGR" rel-entity-name="WfProcessMgr">
+          <key-map field-name="mgrName"/>
+      </relation>
     </entity>
     <entity entity-name="WfProcessMgr"
             package-name="org.ofbiz.shark.instance"
             title="">
       <field name="mgrName" type="id-vlong"></field>
       <field name="packageId" type="id-long"></field>
+      <field name="packageVer" type="long-varchar"></field>
       <field name="definitionId" type="id-long"></field>
-      <field name="procVersion" type="long-varchar"></field>
       <field name="created" type="long-varchar"></field>
       <field name="currentState" type="numeric"></field>
       <prim-key field="mgrName"/>
@@ -235,7 +267,11 @@
       <field name="processVariableId" type="id"></field>
       <field name="processId" type="id-vlong"></field>
       <field name="definitionId" type="id-long"></field>
-      <field name="varValue" type="blob"></field>      
+      <field name="valueField" type="name"></field>
+      <field name="strValue" type="very-long"></field>
+      <field name="numValue" type="numeric"></field>
+      <field name="dblValue" type="floating-point"></field>
+      <field name="objValue" type="blob"></field>
       <prim-key field="processVariableId"/>
     </entity>
     <entity entity-name="WfResource"

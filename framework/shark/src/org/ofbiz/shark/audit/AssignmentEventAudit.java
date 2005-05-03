@@ -45,10 +45,8 @@ public class AssignmentEventAudit extends EventAudit implements AssignmentEventA
     protected GenericValue assignmentEventAudit = null;
     private boolean newValue = false;
 
-    protected AssignmentEventAudit() {}
-
-    public AssignmentEventAudit(GenericDelegator delegator, String eventAuditId) {
-        super(delegator, eventAuditId);
+    public AssignmentEventAudit(EntityAuditMgr mgr, GenericDelegator delegator, String eventAuditId) {
+        super(mgr, delegator, eventAuditId);
         if (this.delegator != null) {
             try {
                 this.assignmentEventAudit = delegator.findByPrimaryKey("WfAssignmentEventAudit", UtilMisc.toMap("eventAuditId", eventAuditId));
@@ -60,14 +58,14 @@ public class AssignmentEventAudit extends EventAudit implements AssignmentEventA
         }
     }
 
-    public AssignmentEventAudit(GenericDelegator delegator) {
-        super(delegator);
+    public AssignmentEventAudit(EntityAuditMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
         this.assignmentEventAudit = delegator.makeValue("WfAssignmentEventAudit", UtilMisc.toMap("eventAuditId", this.eventAuditId));
     }
 
-    public AssignmentEventAudit(GenericValue assignmentEventAudit) {
-        super(assignmentEventAudit.getDelegator(), assignmentEventAudit.getString("eventAuditId"));
+    public AssignmentEventAudit(EntityAuditMgr mgr, GenericValue assignmentEventAudit) {
+        super(mgr, assignmentEventAudit.getDelegator(), assignmentEventAudit.getString("eventAuditId"));
         this.assignmentEventAudit = assignmentEventAudit;
     }
 
