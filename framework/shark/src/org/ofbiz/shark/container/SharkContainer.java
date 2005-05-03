@@ -39,7 +39,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.shark.requester.RequesterFactory;
 
 import org.enhydra.shark.Shark;
 import org.enhydra.shark.corba.SharkCORBAServer;
@@ -79,7 +78,7 @@ public class SharkContainer implements Container, Runnable {
     public void init(String[] args, String configFile) {
         this.configFile = configFile;
     }
-    
+
     public boolean start() throws ContainerException {
         ContainerConfig.Container cfg = ContainerConfig.getContainer("shark-container", configFile);
         ContainerConfig.Container.Property dispatcherProp = cfg.getProperty("dispatcher-name");
@@ -126,7 +125,7 @@ public class SharkContainer implements Container, Runnable {
 
         // make sure the admin user exists
         if (SharkContainer.adminUser == null) {
-            Debug.logWarning("Invalid admi-user; UserLogin not found not starting Shark!", module);
+            Debug.logWarning("Invalid admin-user; UserLogin not found not starting Shark!", module);
             return false;
         }
 
@@ -145,7 +144,7 @@ public class SharkContainer implements Container, Runnable {
                     orbThread = new Thread(this);
                     orbThread.setDaemon(false);
                     orbThread.setName(this.getClass().getName());
-                    orbThread.start();                    
+                    orbThread.start();
                     Debug.logInfo("Started Shark CORBA service", module);
                 } catch (IllegalArgumentException e) {
                     throw new ContainerException(e);
@@ -154,11 +153,7 @@ public class SharkContainer implements Container, Runnable {
                 }
             }
         }
-
-        // restore the persisted requesters
-        int restored = RequesterFactory.restoreRequesters(adminUser);
-        Debug.logInfo("Restored persisted requesters [" + restored + "]", module);
-
+       
         // re-eval current assignments
         ExecutionAdministration exAdmin = SharkContainer.getAdminInterface().getExecutionAdministration();
         try {
@@ -204,6 +199,10 @@ public class SharkContainer implements Container, Runnable {
 
     public static LocalDispatcher getDispatcher() {
         return SharkContainer.dispatcher;
+    }
+
+    public static GenericValue getAdminUser() {
+        return SharkContainer.adminUser;
     }
 
     public static AdminInterface getAdminInterface() {

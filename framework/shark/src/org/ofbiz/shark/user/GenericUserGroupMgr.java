@@ -129,6 +129,10 @@ public class GenericUserGroupMgr implements UserGroupManager {
         return userNames;
     }
 
+    public List getAllImmediateUsers(UserTransaction trans, String groupName) throws RootException {
+        return this.getAllUsers(trans, groupName);
+    }
+
     public List getAllSubgroups(UserTransaction trans, String groupName) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         List subGroups = new ArrayList();
@@ -159,6 +163,10 @@ public class GenericUserGroupMgr implements UserGroupManager {
             }
         }
         return subGroups;
+    }
+
+    public List getAllImmediateSubgroups(UserTransaction trans, String groupName) throws RootException {
+        return this.getAllSubgroups(trans, groupName);
     }
 
     public void createGroup(UserTransaction trans, String groupName, String description) throws RootException {
@@ -240,6 +248,14 @@ public class GenericUserGroupMgr implements UserGroupManager {
         }
     }
 
+    public void removeGroupTree(UserTransaction trans, String s) throws RootException {
+        // TODO: Implement Me!
+    }
+
+    public void removeUsersFromGroupTree(UserTransaction trans, String s) throws RootException {
+        // TODO: Implement Me!
+    }
+
     public void moveGroup(UserTransaction trans, String currentParentGroup, String newParentGroup, String groupName) throws RootException {
         this.removeGroupFromGroup(trans, currentParentGroup, groupName);
         this.addGroupToGroup(trans, newParentGroup, groupName);
@@ -297,7 +313,7 @@ public class GenericUserGroupMgr implements UserGroupManager {
         user.set("userName", username);
         user.set("firstName", firstName);
         user.set("lastName", lastName);
-        user.set("password", password);
+        user.set("passwd", password);
         user.set("emailAddress", email);
         try {
             delegator.create(user);
@@ -348,7 +364,7 @@ public class GenericUserGroupMgr implements UserGroupManager {
     public void setPassword(UserTransaction trans, String username, String password) throws RootException {
         GenericValue user = getUser(username);
         if (user != null) {
-            user.set("password", password);
+            user.set("passwd", password);
             try {
                 user.store();
             } catch (GenericEntityException e) {

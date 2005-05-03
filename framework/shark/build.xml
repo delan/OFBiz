@@ -30,22 +30,24 @@
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <target name="init">                
+    <target name="init">
         <property environment="env"/>
         <property name="desc" value="Shark Component"/>
         <property name="name" value="ofbiz-shark"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
-        <property name="lib.dir" value="lib"/>        
-        <property name="build.dir" value="build"/>        
+        <property name="lib.dir" value="lib"/>
+        <property name="build.dir" value="build"/>
     </target>
 
-    <target name="classpath">		        
+    <target name="classpath">
         <path id="local.class.path">
             <fileset dir="${lib.dir}" includes="*.jar"/>
-            <fileset dir="../../base/lib" includes="*.jar"/>          
+            <fileset dir="../../base/lib" includes="*.jar"/>
+            <fileset dir="../../base/lib/commons" includes="*.jar"/>
             <fileset dir="../../base/lib/scripting" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
+            <fileset dir="../minerva/lib" includes="*.jar"/>
             <fileset dir="../entity/lib" includes="*.jar"/>
             <fileset dir="../entity/build/lib" includes="*.jar"/>
             <fileset dir="../security/build/lib" includes="*.jar"/>
@@ -54,67 +56,79 @@
             <fileset dir="../entityext/build/lib" includes="*.jar"/>
         </path>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
 
     <target name="clean" depends="clean-lib">
-        <delete dir="${build.dir}"/>               
+        <delete dir="${build.dir}"/>
     </target>
 
     <target name="clean-lib" depends="init">
         <delete dir="${build.dir}/lib"/>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Makes sure the needed directory structure is in place              -->
     <!-- ================================================================== -->
 
     <target name="prepare" depends="clean-lib">
-        <mkdir dir="${build.dir}/classes"/>         
+        <mkdir dir="${build.dir}/classes"/>
         <mkdir dir="${build.dir}/lib"/>
     </target>
-    
+
     <target name="prepare-docs" depends="init">
-        <mkdir dir="${build.dir}/javadocs"/>        
+        <mkdir dir="${build.dir}/javadocs"/>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Compilation of the source files                                                                                                                         -->
-    <!-- ================================================================== -->               
+    <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,classpath">
     	<javac debug="on" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
-                <path refid="local.class.path"/>                
+                <path refid="local.class.path"/>
             </classpath>
             <src path="${src.dir}"/>
             <exclude name="org/ofbiz/shark/SharkGuiContainer.java"/>
         </javac>
-        <!-- also put the DTDs in the jar file... -->       
+        <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
             <!--<fileset dir="${dtd.dir}" includes="*.dtd"/>-->
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
     </target>
-    
+
     <target name="jar" depends="classes">
-        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>         
-    </target>    
-    
+        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Build JavaDoc                                                      -->
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs,classpath">
-        <javadoc packagenames="org.ofbiz.shark.*" 
+        <javadoc packagenames="org.ofbiz.shark.*"
                  classpathref="local.class.path"
-                 destdir="${build.dir}/javadocs" 
+                 destdir="${build.dir}/javadocs"
                  Windowtitle="Open for Business - ${desc}">
-            <sourcepath path="${src.dir}"/>            
+            <sourcepath path="${src.dir}"/>
         </javadoc>
     </target>
-    
-    <target name="all" depends="jar,docs"/>   
+
+    <target name="all" depends="jar,docs"/>
+
+    <!-- ================================================================== -->
+    <!-- Copy Libs                                                          -->
+    <!-- ================================================================== -->
+
+    <target name="copyLibs">
+        <copy todir="lib" flatten="true">
+            <fileset dir="../../../Shark/output/Shark/lib/wrapper" includes="*.jar" excludes="**/*-dods.jar"/>
+            <fileset dir="../../../Shark/output/Shark/lib/engine" includes="*.jar" excludes="**/*-dods.jar"/>
+            <fileset dir="../../../Shark/output/Shark/lib" includes="*.jar" excludes="**/*-dods.jar"/>
+        </copy>
+    </target>
 </project>

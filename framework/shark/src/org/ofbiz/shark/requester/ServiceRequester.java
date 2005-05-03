@@ -24,28 +24,22 @@
  */
 package org.ofbiz.shark.requester;
 
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.shark.container.SharkContainer;
 
 import org.enhydra.shark.api.SharkTransaction;
 import org.enhydra.shark.api.client.wfbase.BaseException;
 import org.enhydra.shark.api.client.wfmodel.InvalidPerformer;
 import org.enhydra.shark.api.client.wfmodel.SourceNotAvailable;
 import org.enhydra.shark.api.client.wfmodel.WfEventAudit;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.entity.serialize.SerializeException;
-import org.ofbiz.entity.serialize.XmlSerializer;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.shark.container.SharkContainer;
-import org.xml.sax.SAXException;
 
 /**
  * 
@@ -59,20 +53,19 @@ public class ServiceRequester extends AbstractRequester {
     public static final int ASYNC = 0;
     public static final int SYNC = 1;
 
-    protected Map serviceContext = new HashMap();
-
-    // --------------------
-    // factory constructors
-    // --------------------
+    protected Map initialContext = new HashMap();
+    protected String serviceName = null;
+    protected String eventType = null;
+    protected int serviceMode = 1;
 
     // new requester
-    public ServiceRequester() {
-        this(RequesterFactory.getNextId(), UtilDateTime.nowTimestamp());
+    public ServiceRequester(GenericValue userLogin, String eventType) {
+        super(userLogin);
+        this.setEventType(eventType);
     }
 
-    // restore requester
-    public ServiceRequester(String requesterId, Timestamp fromDate) {
-        super(requesterId, fromDate);
+    public ServiceRequester(GenericValue userLogin) {
+        super(userLogin);
     }
 
     // -------------------
@@ -80,46 +73,18 @@ public class ServiceRequester extends AbstractRequester {
     // -------------------
 
     public void receive_event(WfEventAudit event) throws BaseException, InvalidPerformer {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (this.getEventType() == null || this.getEventType().equals(event.event_type())) {
+            try {
+                this.run(event);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                throw new BaseException(e);
+            }
+        }
     }
 
     public void receive_event(SharkTransaction trans, WfEventAudit event) throws BaseException, InvalidPerformer {
         receive_event(event);
-    }
-
-    // --------------------------
-    // PersistedRequester methods
-    // --------------------------
-
-    public String getClassName() {
-        return this.getClass().getName();
-    }
-
-    public String getDataString() throws PersistentRequesterException {
-        String xmlData = null;
-        try {
-            xmlData = XmlSerializer.serialize(serviceContext);
-        } catch (SerializeException e) {
-            throw new PersistentRequesterException(e);
-        } catch (IOException e) {
-            throw new PersistentRequesterException(e);
-        }
-        return xmlData;
-    }
-
-    public void restoreData(String data) throws PersistentRequesterException {
-        Map xmlData = null;
-        try {
-            xmlData = (Map) XmlSerializer.deserialize(data, SharkContainer.getDelegator());
-        } catch (SerializeException e) {
-            throw new PersistentRequesterException(e);
-        } catch (SAXException e) {
-            throw new PersistentRequesterException(e);
-        } catch (ParserConfigurationException e) {
-            throw new PersistentRequesterException(e);
-        } catch (IOException e) {
-            throw new PersistentRequesterException(e);
-        }
     }
 
     // -------------
@@ -127,9 +92,17 @@ public class ServiceRequester extends AbstractRequester {
     // -------------
 
 
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public String getEventType() {
+        return this.eventType;
+    }
+
     public void setService(String serviceName, int serviceMode) {
-        serviceContext.put("_service_name", serviceName);
-        serviceContext.put("_service_mode", new Integer(serviceMode));
+        this.serviceName = serviceName;
+        this.serviceMode = serviceMode;
     }
 
     public void setService(String serviceName) {
@@ -137,15 +110,15 @@ public class ServiceRequester extends AbstractRequester {
     }
 
     public String getServiceName() {
-        return (String) serviceContext.get("_service_name");
+        return this.serviceName;
     }
 
     public int getServiceMode() {
-        return ((Integer) serviceContext.get("_service_mode")).intValue();
+        return this.serviceMode;
     }
 
     public void setInitalContextValues(Map initialContext) {
-        serviceContext.putAll(initialContext);
+        this.initialContext = new HashMap(initialContext);
     }
 
     private void run(WfEventAudit event) throws GenericServiceException {
@@ -159,50 +132,25 @@ public class ServiceRequester extends AbstractRequester {
         Map serviceContext = makeServiceContext(event, dispatcher);
 
         // invoke the service
-        String serviceName = getServiceName();
+        String serviceName = this.getServiceName();
         if (serviceName != null) {
-            int mode = getServiceMode();
+            int mode = this.getServiceMode();
             if (mode == ServiceRequester.SYNC) {
                 dispatcher.runSyncIgnore(serviceName, serviceContext);
             } else {
                 dispatcher.runAsync(serviceName, serviceContext);
             }
+        } else {
+            Debug.logWarning("ServiceRequester -> receive_event() called with no service defined!", module);
         }
     }
 
     private Map makeServiceContext(WfEventAudit event, LocalDispatcher dispatcher) throws GenericServiceException {
         DispatchContext dctx = dispatcher.getDispatchContext();
         try {
-            return dctx.getModelService(this.getServiceName()).makeValid(getWRD(event), ModelService.IN_PARAM);
+            return dctx.getModelService(this.getServiceName()).makeValid(getWRD(event, initialContext), ModelService.IN_PARAM);
         } catch (BaseException e) {
             throw new GenericServiceException(e);
         }
-    }
-
-    private Map getWRD(WfEventAudit event) throws BaseException {
-        Map wrdMap = new HashMap();
-
-        // these are static values available to the service
-        wrdMap.put("eventType", event.event_type());
-        wrdMap.put("activityId", event.activity_key());
-        wrdMap.put("activityName", event.activity_name());
-        wrdMap.put("processId", event.process_key());
-        wrdMap.put("processName", event.process_name());
-        wrdMap.put("processMgrName", event.process_mgr_name());
-        wrdMap.put("processMgrVersion", event.process_mgr_version());
-        wrdMap.put("eventTime", event.time_stamp().getTimestamp());
-
-        // all WRD is also available to the service, but what this contains is not known
-        try {
-            Map wrd = new HashMap(event.source().process_context());
-            if (wrd != null) {
-                wrdMap.put("_WRDMap", wrd);
-                wrdMap.putAll(wrd);
-            }
-        } catch (SourceNotAvailable e) {
-            Debug.logError(e, "No WRD available since event.source() cannot be obtained", module);
-        }
-
-        return wrdMap;
     }
 }

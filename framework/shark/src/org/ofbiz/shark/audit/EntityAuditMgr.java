@@ -43,19 +43,19 @@ public class EntityAuditMgr implements EventAuditManagerInterface {
 
     // create (new) methods
     public AssignmentEventAuditPersistenceInterface createAssignmentEventAudit() {
-        return new AssignmentEventAudit(SharkContainer.getDelegator());
+        return new AssignmentEventAudit(this, SharkContainer.getDelegator());
     }
 
     public CreateProcessEventAuditPersistenceInterface createCreateProcessEventAudit() {
-        return new CreateProcessEventAudit(SharkContainer.getDelegator());
+        return new CreateProcessEventAudit(this, SharkContainer.getDelegator());
     }
 
     public DataEventAuditPersistenceInterface createDataEventAudit() {
-        return new DataEventAudit(SharkContainer.getDelegator());
+        return new DataEventAudit(this, SharkContainer.getDelegator());
     }
 
     public StateEventAuditPersistenceInterface createStateEventAudit() {
-        return new StateEventAudit(SharkContainer.getDelegator());
+        return new StateEventAudit(this, SharkContainer.getDelegator());
     }
 
     // persist (store) methods
@@ -174,7 +174,7 @@ public class EntityAuditMgr implements EventAuditManagerInterface {
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 if (v != null) {
-                    createProcessEvents.add(new CreateProcessEventAudit(delegator, v.getString("eventAuditId")));
+                    createProcessEvents.add(new CreateProcessEventAudit(this, delegator, v.getString("eventAuditId")));
                 }
             }
         }
@@ -197,7 +197,7 @@ public class EntityAuditMgr implements EventAuditManagerInterface {
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 if (v != null) {
-                    stateEvents.add(new StateEventAudit(delegator, v.getString("eventAuditId")));
+                    stateEvents.add(new StateEventAudit(this, delegator, v.getString("eventAuditId")));
                 }
             }
         }
@@ -220,7 +220,7 @@ public class EntityAuditMgr implements EventAuditManagerInterface {
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 if (v != null) {
-                    dataEvents.add(new DataEventAudit(delegator, v.getString("eventAuditId")));
+                    dataEvents.add(new DataEventAudit(this, delegator, v.getString("eventAuditId")));
                 }
             }
         }
@@ -244,7 +244,7 @@ public class EntityAuditMgr implements EventAuditManagerInterface {
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 if (v != null) {
-                    assignmentEvents.add(new AssignmentEventAudit(delegator, v.getString("eventAuditId")));
+                    assignmentEvents.add(new AssignmentEventAudit(this, delegator, v.getString("eventAuditId")));
                 }
             }
         }
@@ -267,7 +267,7 @@ public class EntityAuditMgr implements EventAuditManagerInterface {
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 if (v != null) {
-                    stateEvents.add(new StateEventAudit(delegator, v.getString("eventAuditId")));
+                    stateEvents.add(new StateEventAudit(this, delegator, v.getString("eventAuditId")));
                 }
             }
         }
@@ -290,7 +290,7 @@ public class EntityAuditMgr implements EventAuditManagerInterface {
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 if (v != null) {
-                    dataEvents.add(new DataEventAudit(delegator, v.getString("eventAuditId")));
+                    dataEvents.add(new DataEventAudit(this, delegator, v.getString("eventAuditId")));
                 }
             }
         }

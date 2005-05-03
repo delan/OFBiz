@@ -40,18 +40,15 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * @version    $Rev$
  * @since      3.1
  */
-public class Assignment implements AssignmentPersistenceInterface {
+public class Assignment extends InstanceEntityObject implements AssignmentPersistenceInterface {
 
     public static final String module = Assignment.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected GenericValue assignment = null;
     protected boolean newValue = false;
 
-    protected Assignment() {}
-
-    protected Assignment(GenericDelegator delegator, String activityId, String userName) throws PersistenceException {
-        this.delegator = delegator;
+    protected Assignment(EntityPersistentMgr mgr, GenericDelegator delegator, String activityId, String userName) throws PersistenceException {
+        super(mgr, delegator);
         if (this.delegator != null) {
             try {
                 this.assignment = delegator.findByPrimaryKey("WfAssignment", UtilMisc.toMap("activityId", activityId, "userName", userName));
@@ -63,28 +60,28 @@ public class Assignment implements AssignmentPersistenceInterface {
         }
     }
 
-    protected Assignment(GenericValue assignment) {
+    protected Assignment(EntityPersistentMgr mgr, GenericValue assignment) {
+        super(mgr, assignment.getDelegator());
         this.assignment = assignment;
-        this.delegator = assignment.getDelegator();
     }
 
-    public Assignment(GenericDelegator delegator) {
+    public Assignment(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
         this.assignment = delegator.makeValue("WfAssignment", null);
         Debug.log("******* New assignment created", module);
     }
 
-    public static Assignment getInstance(GenericValue assignment) throws PersistenceException {
-        Assignment assign = new Assignment(assignment);
+    public static Assignment getInstance(EntityPersistentMgr mgr, GenericValue assignment) {
+        Assignment assign = new Assignment(mgr, assignment);
         if (assign.isLoaded()) {
             return assign;
         }
         return null;
     }
 
-    public static Assignment getInstance(String activityId, String userName) throws PersistenceException {
-        Assignment assign = new Assignment(SharkContainer.getDelegator(), activityId, userName);
+    public static Assignment getInstance(EntityPersistentMgr mgr, String activityId, String userName) throws PersistenceException {
+        Assignment assign = new Assignment(mgr, SharkContainer.getDelegator(), activityId, userName);
         if (assign.isLoaded()) {
             return assign;
         }
@@ -134,6 +131,14 @@ public class Assignment implements AssignmentPersistenceInterface {
 
     public String getProcessId() {
         return assignment.getString("processId");
+    }
+
+    public void setValid(boolean valid) {
+        assignment.set("isValid", valid ? "Y" : "N");
+    }
+
+    public boolean isValid() {
+        return (assignment.get("isValid") == null ? false : "Y".equalsIgnoreCase(assignment.getString("isValid")));
     }
 
     public void store() throws GenericEntityException {

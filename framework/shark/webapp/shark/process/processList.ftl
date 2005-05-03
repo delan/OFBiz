@@ -27,7 +27,7 @@
           <td align="center"><a href="<@ofbizUrl>/processes?enable=${mgr.name()?replace("#", "%23")}</@ofbizUrl>" class="buttontext">Enable</a></td>
         </#if>
         <td align="center">
-          <#if mgr.category()?upper_case == "PUBLIC">
+          <#if (mgr.category()?upper_case == "PUBLIC" && enabledCode == state)>
             <a href="<@ofbizUrl>/processes?create=${mgr.name()?replace("#", "%23")}</@ofbizUrl>" class="buttontext">Create</a>
           <#else>
             &nbsp;

@@ -15,23 +15,20 @@ import org.enhydra.shark.api.internal.instancepersistence.DeadlinePersistenceInt
 import org.enhydra.shark.api.internal.instancepersistence.PersistenceException;
 
 /**
- * 
+ *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
- * @since      Jul 11, 2004
+ * @since      3.3
  */
-public class Deadline implements DeadlinePersistenceInterface {
+public class Deadline extends InstanceEntityObject implements DeadlinePersistenceInterface {
 
     public static final String module = Deadline.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected GenericValue deadline = null;
     protected boolean newValue = false;
 
-    protected Deadline() {}
-
-    protected Deadline(GenericDelegator delegator, String deadlineId) throws PersistenceException {
-        this.delegator = delegator;
+    protected Deadline(EntityPersistentMgr mgr, GenericDelegator delegator, String deadlineId) throws PersistenceException {
+        super(mgr, delegator);
         if (this.delegator != null) {
             try {
                 this.deadline = delegator.findByPrimaryKey("WfDeadline", UtilMisc.toMap("deadlineId", deadlineId));
@@ -43,27 +40,27 @@ public class Deadline implements DeadlinePersistenceInterface {
         }
     }
 
-    protected Deadline(GenericValue deadline) {
+    protected Deadline(EntityPersistentMgr mgr, GenericValue deadline) {
+        super(mgr, deadline.getDelegator());
         this.deadline = deadline;
-        this.delegator = deadline.getDelegator();
     }
 
-    public Deadline(GenericDelegator delegator) {
+    public Deadline(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
         this.deadline = delegator.makeValue("WfDeadline", UtilMisc.toMap("deadlineId", delegator.getNextSeqId("WfDeadline")));
     }
 
-    public static Deadline getInstance(GenericValue deadlineV) {
-        Deadline deadline = new Deadline(deadlineV);
+    public static Deadline getInstance(EntityPersistentMgr mgr, GenericValue deadlineV) {
+        Deadline deadline = new Deadline(mgr, deadlineV);
         if (deadline.isLoaded()) {
             return deadline;
         }
         return null;
     }
 
-    public static Deadline getInstance(String deadlineId) throws PersistenceException {
-        Deadline deadline = new Deadline(SharkContainer.getDelegator(), deadlineId);
+    public static Deadline getInstance(EntityPersistentMgr mgr, String deadlineId) throws PersistenceException {
+        Deadline deadline = new Deadline(mgr, SharkContainer.getDelegator(), deadlineId);
         if (deadline.isLoaded()) {
             return deadline;
         }
@@ -119,6 +116,22 @@ public class Deadline implements DeadlinePersistenceInterface {
 
     public boolean isSynchronous() {
         return (this.deadline.get("isSync") == null ? false : "Y".equalsIgnoreCase(this.deadline.getString("isSync")));
+    }
+
+    public void setExecuted(boolean ex) {
+        this.deadline.set("isExecuted", ex ? "Y" : "N");        
+    }
+
+    public boolean isExecuted() {
+        return (this.deadline.get("isExecuted") == null ? false : "Y".equalsIgnoreCase(this.deadline.getString("isExecuted")));
+    }
+
+    public void setUniqueId(String s) {
+        this.deadline.set("deadlineId", s);
+    }
+
+    public String getUniqueId() {
+        return this.deadline.getString("deadlineId");
     }
 
     public void store() throws GenericEntityException {

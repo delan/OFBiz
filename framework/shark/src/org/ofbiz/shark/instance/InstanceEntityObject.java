@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,31 +22,45 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.shark.requester;
+package org.ofbiz.shark.instance;
 
-import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericDelegator;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev$
- * @since      3.1
+ * @version    $Rev:$
+ * @since      3.3
  */
-public class PersistentRequesterException extends GeneralException {
+public abstract class InstanceEntityObject {
 
-    public PersistentRequesterException() {
-        super();
+    protected transient GenericDelegator delegator = null;
+    protected EntityPersistentMgr mgr = null;
+    protected String delegatorName = null;
+
+    public InstanceEntityObject(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        this.delegatorName = delegator.getDelegatorName();
+        this.delegator = delegator;
+        this.mgr = mgr;
     }
 
-    public PersistentRequesterException(String str) {
-        super(str);
+    public EntityPersistentMgr getPersistentManager() {
+        return this.mgr;
     }
 
-    public PersistentRequesterException(String str, Throwable nested) {
-        super(str, nested);
+    public GenericDelegator getGenericDelegator() {
+        if (this.delegator == null && delegatorName != null) {
+            this.delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
+        return this.delegator;
     }
 
-    public PersistentRequesterException(Throwable nested) {
-        super(nested);
-    }
+    public abstract boolean isLoaded();
+
+    public abstract void store() throws GenericEntityException;
+
+    public abstract void reload() throws GenericEntityException;
+
+    public abstract void remove() throws GenericEntityException;
 }

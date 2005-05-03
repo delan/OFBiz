@@ -5,8 +5,6 @@
 package org.ofbiz.shark.repository;
 
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -15,10 +13,16 @@ import org.ofbiz.shark.container.SharkContainer;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.Debug;
 
 import org.enhydra.shark.api.internal.repositorypersistence.RepositoryPersistenceManager;
 import org.enhydra.shark.api.internal.repositorypersistence.RepositoryException;
@@ -43,19 +47,23 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public void uploadXPDL(RepositoryTransaction t, String xpdlId, byte[] xpdl) throws RepositoryException {
+        Debug.log("XPDL Upload : " + xpdlId, module);
         GenericDelegator delegator = SharkContainer.getDelegator();
         try {
             GenericValue v = delegator.makeValue("WfRepository", null);
             v.set("xpdlId", xpdlId);
             v.set("xpdlVersion", UtilDateTime.nowDateString());
+            v.set("isHistorical", "N");
             v.setBytes("xpdlData", xpdl);
             delegator.create(v);
+            Debug.log("Created Value - " + v, module);
         } catch (GenericEntityException e) {
             throw new RepositoryException(e);
         }
     }
 
     public void updateXPDL(RepositoryTransaction t, String xpdlId, String xpdlVersion, byte[] xpdl) throws RepositoryException {
+        Debug.log("XPDL Update : " + xpdlId + "/" + xpdlVersion + " - " + StringUtil.toHexString(xpdl), module);
         GenericValue value = this.getXpdlValue(xpdlId, xpdlVersion, false);
         if (value != null) {
             value.setBytes("xpdlData", xpdl);
@@ -68,6 +76,7 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public void deleteXPDL(RepositoryTransaction t, String xpdlId, String xpdlVersion) throws RepositoryException {
+        Debug.log("XPDL Delete : " + xpdlId + "/" + xpdlVersion, module);
         GenericValue value = this.getXpdlValue(xpdlId, xpdlVersion, false);
         if (value != null) {
             try {
@@ -79,6 +88,7 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public void moveToHistory(RepositoryTransaction t, String xpdlId, String xpdlVersion) throws RepositoryException {
+        Debug.log("XPDL Move to History : " + xpdlId + "/" + xpdlVersion, module);
         GenericValue value = this.getXpdlValue(xpdlId, xpdlVersion, false);
         value.set("isHistorical", "Y");
         try {
@@ -89,6 +99,7 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public void deleteFromHistory(RepositoryTransaction t, String xpdlId, String xpdlVersion) throws RepositoryException {
+        Debug.log("XPDL Delete from History: " + xpdlId + "/" + xpdlVersion, module);
         GenericValue value = this.getXpdlValue(xpdlId, xpdlVersion, true);
         if (value != null) {
             try {
@@ -100,6 +111,7 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public void clearRepository(RepositoryTransaction t) throws RepositoryException {
+        Debug.log("XPDL Clear Repository", module);
         GenericDelegator delegator = SharkContainer.getDelegator();
         try {
             delegator.removeByAnd("WfRepository", null);
@@ -109,12 +121,14 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public String getCurrentVersion(RepositoryTransaction t, String xpdlId) throws RepositoryException {
+        Debug.log("XPDL get current version : " + xpdlId, module);
         List lookupList = this.getXpdlValues(xpdlId, null, false);
         GenericValue value = EntityUtil.getFirst(lookupList);
         if (value != null) {
             return value.getString("xpdlVersion");
+        } else {
+            throw new RepositoryException("XPDL not found in repository!");
         }
-        return null;
     }
 
     public String getNextVersion(RepositoryTransaction t, String xpdlId) throws RepositoryException {
@@ -122,23 +136,28 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public byte[] getXPDL(RepositoryTransaction t, String xpdlId) throws RepositoryException {
+        Debug.log("XPDL Get : " + xpdlId, module);
         List lookupList = this.getXpdlValues(xpdlId, null, false);
         GenericValue value = EntityUtil.getFirst(lookupList);
         if (value != null) {
             return value.getBytes("xpdlData");
+        } else {
+            throw new RepositoryException("XPDL not found in repository!");
         }
-        return null;
     }
 
     public byte[] getXPDL(RepositoryTransaction t, String xpdlId, String xpdlVersion) throws RepositoryException {
+        Debug.log("XPDL Get : " + xpdlId + "/" + xpdlVersion, module);
         GenericValue value = this.getXpdlValue(xpdlId, xpdlVersion, false);
         if (value != null) {
             return value.getBytes("xpdlData");
+        } else {
+            throw new RepositoryException("XPDL not found in repository!");
         }
-        return null;
     }
 
     public List getXPDLVersions(RepositoryTransaction t, String xpdlId) throws RepositoryException {
+        Debug.log("XPDL Get Versions : " + xpdlId, module);
         List lookupList = this.getXpdlValues(xpdlId, null, false);
         List versionList = new ArrayList();
         if (!UtilValidate.isEmpty(lookupList)) {
@@ -153,21 +172,25 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
 
     public boolean doesXPDLExist(RepositoryTransaction t, String xpdlId) throws RepositoryException {
         List xpdls = this.getXpdlValues(xpdlId, null, false);
-        return !UtilValidate.isEmpty(xpdls);
+        Debug.log("Does XPDL [" + xpdlId + "] Exist - " + xpdls + "(" + (xpdls != null && xpdls.size() > 0 ? true : false) + ")", module);
+        return (xpdls != null && xpdls.size() > 0 ? true : false);
     }
 
     public boolean doesXPDLExist(RepositoryTransaction t, String xpdlId, String xpdlVersion) throws RepositoryException {
         GenericValue xpdl = this.getXpdlValue(xpdlId, xpdlVersion, false);
+        Debug.log("Does XPDL [" + xpdlId + "/" + xpdlVersion + "] Exist - " + xpdl + "(" + (xpdl != null) + ")", module);
         return (xpdl != null);
     }
 
     public List getExistingXPDLIds(RepositoryTransaction t) throws RepositoryException {
+        Debug.log("Get Existing XPDL IDs", module);
         List lookupList = this.getXpdlValues(null, null, false);
         List idList = new ArrayList();
-        if (!UtilValidate.isEmpty(lookupList)) {
+        if (UtilValidate.isNotEmpty(lookupList)) {
             Iterator i = lookupList.iterator();
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
+                Debug.log("Checking - " + v, module);
                 String id = v.getString("xpdlId");
                 if (!idList.contains(id)) {
                     idList.add(id);
@@ -178,6 +201,7 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public void addXPDLReference(RepositoryTransaction t, String referredXPDLId, String referringXPDLId, String referringXPDLVersion) throws RepositoryException {
+        Debug.log("Add XPDL Reference", module);
         GenericDelegator delegator = SharkContainer.getDelegator();
         GenericValue ref = delegator.makeValue("WfRepositoryRef", null);
         ref.set("xpdlId", referringXPDLId);
@@ -191,6 +215,7 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public List getReferringXPDLIds(RepositoryTransaction t, String referredXPDLId) throws RepositoryException {
+        Debug.log("Get XPDL Reference IDs", module);
         GenericDelegator delegator = SharkContainer.getDelegator();
         List referringIds = new ArrayList();
         List refs = null;
@@ -210,6 +235,7 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public List getReferringXPDLVersions(RepositoryTransaction t, String referredXPDLId, String referringXPDLId) throws RepositoryException {
+        Debug.log("Get Referring XPDL Versions", module);
         GenericDelegator delegator = SharkContainer.getDelegator();
         List referringVers = new ArrayList();
         List refs = null;
@@ -229,6 +255,7 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
     }
 
     public List getReferredXPDLIds(RepositoryTransaction t, String referringXPDLId, String referringXPDLVersion) throws RepositoryException {
+        Debug.log("Get Referring XPDL IDs", module);
         GenericDelegator delegator = SharkContainer.getDelegator();
         List referringIds = new ArrayList();
         List refs = null;
@@ -268,24 +295,26 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
 
     private List getXpdlValues(String xpdlId, String xpdlVersion, boolean includeHistory) throws RepositoryException {
         GenericDelegator delegator = SharkContainer.getDelegator();
-        Map lookupMap = new HashMap();
+        List exprList = new ArrayList();
         if (xpdlId != null) {
-            lookupMap.put("xpdlId", xpdlId);
+            exprList.add(new EntityExpr("xpdlId", EntityOperator.EQUALS, xpdlId));
         }
         if (xpdlVersion != null) {
-            lookupMap.put("xpdlVersion", xpdlVersion);
+            exprList.add(new EntityExpr("xpdlVersion", EntityOperator.EQUALS, xpdlVersion));
         }
-        if (includeHistory) {
-            lookupMap.put("isHistorical", "Y");
+        if (!includeHistory) {
+            exprList.add(new EntityExpr("isHistorical", EntityOperator.NOT_EQUAL, "Y"));
         }
 
+        EntityCondition cond = new EntityConditionList(exprList, EntityOperator.AND);
         List lookupList = null;
         try {
-            lookupList = delegator.findByAnd("WfRepository", lookupMap, UtilMisc.toList("xpdlVersion"));
+            lookupList = delegator.findByCondition("WfRepository", cond, null, UtilMisc.toList("-xpdlVersion"));
         } catch (GenericEntityException e) {
             throw new RepositoryException(e);
-        }
-
+        } finally {
+            Debug.set(Debug.VERBOSE, false);
+        }        
         return lookupList;
     }
 }

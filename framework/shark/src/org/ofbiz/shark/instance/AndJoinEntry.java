@@ -40,18 +40,15 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * @version    $Rev$
  * @since      3.1
  */
-public class AndJoinEntry implements AndJoinEntryInterface {
+public class AndJoinEntry extends InstanceEntityObject implements AndJoinEntryInterface {
 
     public static final String module = AndJoinEntry.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected GenericValue andJoin = null;
     protected boolean newValue = false;
 
-    protected AndJoinEntry() {}
-
-    protected AndJoinEntry(GenericDelegator delegator, String andJoinId) throws PersistenceException {
-        this.delegator = delegator;
+    protected AndJoinEntry(EntityPersistentMgr mgr, GenericDelegator delegator, String andJoinId) {
+        super(mgr, delegator);
         if (this.delegator != null) {
             try {
                 this.andJoin = delegator.findByPrimaryKey("WfAndJoin", UtilMisc.toMap("andJoinId", andJoinId));
@@ -63,28 +60,27 @@ public class AndJoinEntry implements AndJoinEntryInterface {
         }
     }
 
-    protected AndJoinEntry(GenericValue andJoin) {
+    protected AndJoinEntry(EntityPersistentMgr mgr, GenericValue andJoin) {
+        super(mgr, andJoin.getDelegator());
         this.andJoin = andJoin;
-        this.delegator = andJoin.getDelegator();
     }
 
-    public AndJoinEntry(GenericDelegator delegator) {
+    public AndJoinEntry(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
-
         this.andJoin = delegator.makeValue("WfAndJoin", UtilMisc.toMap("andJoinId", delegator.getNextSeqId("WfAndJoin")));
     }
 
-    public static AndJoinEntry getInstance(GenericValue andJoin) throws PersistenceException {
-        AndJoinEntry var = new AndJoinEntry(andJoin);
+    public static AndJoinEntry getInstance(EntityPersistentMgr mgr, GenericValue andJoin) {
+        AndJoinEntry var = new AndJoinEntry(mgr, andJoin);
         if (var.isLoaded()) {
             return var;
         }
         return null;
     }
 
-    public static AndJoinEntry getInstance(String andJoinId) throws PersistenceException {
-        AndJoinEntry var = new AndJoinEntry(SharkContainer.getDelegator(), andJoinId);
+    public static AndJoinEntry getInstance(EntityPersistentMgr mgr, String andJoinId) {
+        AndJoinEntry var = new AndJoinEntry(mgr, SharkContainer.getDelegator(), andJoinId);
         if (var.isLoaded()) {
             return var;
         }

@@ -40,18 +40,15 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * @version    $Rev$
  * @since      3.1
  */
-public class Resource implements ResourcePersistenceInterface {
+public class Resource extends InstanceEntityObject implements ResourcePersistenceInterface {
 
     public static final String module = Resource.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected GenericValue resource = null;
     protected boolean newValue = false;
 
-    protected Resource() {}
-
-    protected Resource(GenericDelegator delegator, String name) throws PersistenceException {
-        this.delegator = delegator;
+    protected Resource(EntityPersistentMgr mgr, GenericDelegator delegator, String name) throws PersistenceException {
+        super(mgr, delegator);
         if (this.delegator != null) {
             try {
                 this.resource = delegator.findByPrimaryKey("WfResource", UtilMisc.toMap("userName", name));
@@ -63,27 +60,27 @@ public class Resource implements ResourcePersistenceInterface {
         }
     }
 
-    protected Resource(GenericValue resource) {
+    protected Resource(EntityPersistentMgr mgr, GenericValue resource) {
+        super(mgr, resource.getDelegator());
         this.resource = resource;
-        this.delegator = resource.getDelegator();
     }
 
-    public Resource(GenericDelegator delegator) {
+    public Resource(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
         this.resource = delegator.makeValue("WfResource", null);
     }
 
-    public static Resource getInstance(GenericValue resource) throws PersistenceException {
-        Resource res = new Resource(resource);
+    public static Resource getInstance(EntityPersistentMgr mgr, GenericValue resource) {
+        Resource res = new Resource(mgr, resource);
         if (res.isLoaded()) {
             return res;
         }
         return null;
     }
 
-    public static Resource getInstance(String name) throws PersistenceException {
-        Resource res = new Resource(SharkContainer.getDelegator(), name);
+    public static Resource getInstance(EntityPersistentMgr mgr, String name) throws PersistenceException {
+        Resource res = new Resource(mgr, SharkContainer.getDelegator(), name);
         if (res.isLoaded()) {
             return res;
         }

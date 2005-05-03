@@ -24,15 +24,13 @@
  */
 package org.ofbiz.shark.requester;
 
-import java.sql.Timestamp;
-
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.entity.GenericValue;
 
-import org.enhydra.shark.api.client.wfmodel.WfEventAudit;
-import org.enhydra.shark.api.client.wfmodel.InvalidPerformer;
-import org.enhydra.shark.api.client.wfbase.BaseException;
 import org.enhydra.shark.api.SharkTransaction;
+import org.enhydra.shark.api.client.wfbase.BaseException;
+import org.enhydra.shark.api.client.wfmodel.InvalidPerformer;
+import org.enhydra.shark.api.client.wfmodel.WfEventAudit;
 
 /**
  * OFBiz -> Shark Logging Requester
@@ -45,18 +43,9 @@ public class LoggingRequester extends AbstractRequester {
 
     public static final String module = LoggingRequester.class.getName();
 
-    /// --------------------
-    // factory constructors
-    // --------------------
-
     // new requester
-    public LoggingRequester() {
-        this(RequesterFactory.getNextId(), UtilDateTime.nowTimestamp());
-    }
-
-    // restore requester
-    public LoggingRequester(String requesterId, Timestamp fromDate) {
-        super(requesterId, fromDate);
+    public LoggingRequester(GenericValue userLogin) {
+        super(userLogin);
     }
 
     // -------------------
@@ -68,22 +57,6 @@ public class LoggingRequester extends AbstractRequester {
     }
 
     public void receive_event(SharkTransaction sharkTransaction, WfEventAudit event) throws BaseException, InvalidPerformer {
-        Debug.log("Received event - " + event.event_type(), module);
-    }
-
-    // --------------------------
-    // PersistedRequester methods
-    // --------------------------
-
-    public String getClassName() {
-        return this.getClass().getName();
-    }
-
-    public String getDataString() throws PersistentRequesterException {
-        return null; // no data
-    }
-
-    public void restoreData(String data) throws PersistentRequesterException {
-        // nothing to restore
+        this.receive_event(event);
     }
 }

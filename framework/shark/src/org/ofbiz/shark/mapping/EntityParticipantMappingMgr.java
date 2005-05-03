@@ -64,10 +64,7 @@ public class EntityParticipantMappingMgr implements ParticipantMappingManager {
         return true;
     }
 
-    public boolean deleteParticipantMapping(ParticipantMappingTransaction mappingTransaction, ParticipantMap participantMap) throws RootException {
-        if (!doesParticipantMappingExist(mappingTransaction, participantMap)) {
-            return false;
-        }
+    public boolean deleteParticipantMapping(ParticipantMappingTransaction mappingTransaction, ParticipantMap participantMap) throws RootException {       
         ((EntityParticipantMap) participantMap).remove();
         return true;
     }

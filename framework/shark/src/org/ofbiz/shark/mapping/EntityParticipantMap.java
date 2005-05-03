@@ -28,6 +28,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.shark.container.SharkContainer;
 
 import org.enhydra.shark.api.internal.partmappersistence.ParticipantMap;
@@ -42,11 +43,11 @@ import org.enhydra.shark.api.RootException;
  */
 public class EntityParticipantMap implements ParticipantMap {
 
+    public static final String module = EntityParticipantMap.class.getName();
+    
     protected GenericDelegator delegator = null;
     protected GenericValue participant = null;
     protected boolean newValue = false;
-
-    protected EntityParticipantMap() {}
 
     protected EntityParticipantMap(GenericDelegator delegator, String packageId, String processDefId, String participantId) throws RootException {
         this.delegator = delegator;
@@ -69,7 +70,7 @@ public class EntityParticipantMap implements ParticipantMap {
         this.participant = delegator.makeValue("WfParticipantMap", UtilMisc.toMap("participantMapId", delegator.getNextSeqId("WfParticipantMap")));
     }
 
-    public static EntityParticipantMap getInstance(GenericValue participant) throws RootException {
+    public static EntityParticipantMap getInstance(GenericValue participant) {
         EntityParticipantMap part = new EntityParticipantMap(participant);
         if (part.isLoaded()) {
             return part;
@@ -160,6 +161,7 @@ public class EntityParticipantMap implements ParticipantMap {
     }
 
     public void remove() throws RootException {
+        Debug.log("::Remove Participant Map::", module);
         if (!newValue) {
             try {
                 delegator.removeValue(participant);

@@ -41,18 +41,15 @@ import org.ofbiz.shark.container.SharkContainer;
  * @version    $Rev$
  * @since      3.1
  */
-public class ProcessVariable implements ProcessVariablePersistenceInterface {
+public class ProcessVariable extends InstanceEntityObject implements ProcessVariablePersistenceInterface {
 
     public static final String module = ProcessVariable.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected GenericValue processVariable = null;
     protected boolean newValue = false;
 
-    protected ProcessVariable() {}
-
-    protected ProcessVariable(GenericDelegator delegator, String processVariableId) throws PersistenceException {
-        this.delegator = delegator;
+    protected ProcessVariable(EntityPersistentMgr mgr, GenericDelegator delegator, String processVariableId) throws PersistenceException {
+        super(mgr, delegator);
         if (this.delegator != null) {
             try {
                 this.processVariable = delegator.findByPrimaryKey("WfProcessVariable", UtilMisc.toMap("processVariableId", processVariableId));
@@ -64,29 +61,28 @@ public class ProcessVariable implements ProcessVariablePersistenceInterface {
         }
     }
 
-    protected ProcessVariable(GenericValue processVariable) {
+    protected ProcessVariable(EntityPersistentMgr mgr, GenericValue processVariable) {
+        super(mgr, processVariable.getDelegator());
         this.processVariable = processVariable;
-        this.delegator = processVariable.getDelegator();
     }
 
-    public ProcessVariable(GenericDelegator delegator) {
+    public ProcessVariable(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
-
         this.processVariable = delegator.makeValue("WfProcessVariable", UtilMisc.toMap("processVariableId", delegator.getNextSeqId("WfProcessVariable")));
         Debug.log("******* New process variable created", module);
     }
 
-    public static ProcessVariable getInstance(GenericValue processVariable) throws PersistenceException {
-        ProcessVariable var = new ProcessVariable(processVariable);
-        if (var.isLoaded()) {            
+    public static ProcessVariable getInstance(EntityPersistentMgr mgr, GenericValue processVariable) {
+        ProcessVariable var = new ProcessVariable(mgr, processVariable);
+        if (var.isLoaded()) {
             return var;
         }
         return null;
     }
 
-    public static ProcessVariable getInstance(String processVariableId) throws PersistenceException {
-        ProcessVariable var = new ProcessVariable(SharkContainer.getDelegator(), processVariableId);
+    public static ProcessVariable getInstance(EntityPersistentMgr mgr, String processVariableId) throws PersistenceException {
+        ProcessVariable var = new ProcessVariable(mgr, SharkContainer.getDelegator(), processVariableId);
         if (var.isLoaded()) {
             return var;
         }
@@ -117,13 +113,31 @@ public class ProcessVariable implements ProcessVariablePersistenceInterface {
     }
 
     public void setValue(Object val) {
-        byte[] value = UtilObject.getBytes(val);
-        processVariable.setBytes("varValue", (value != null ? value : null));
+        if (val instanceof String) {
+            processVariable.set("valueField", "strValue");
+            processVariable.set("strValue", val);
+        } else if (val instanceof Number) {
+            if (val instanceof Double) {
+                processVariable.set("valueField", "dblValue");
+                processVariable.set("dblValue", val);
+            } else {
+                processVariable.set("valueField", "numValue");
+                processVariable.set("numValue", val);
+            }
+        } else {
+            byte[] value = UtilObject.getBytes(val);
+            processVariable.setBytes("objValue", (value != null ? value : null));
+        }
     }
 
     public Object getValue() {
-        byte[] value = processVariable.getBytes("varValue");
-        return UtilObject.getObject(value);
+        String fieldName = processVariable.getString("valueField");
+        if ("objValue".equals(fieldName)) {
+            byte[] value = processVariable.getBytes(fieldName);
+            return UtilObject.getObject(value);
+        } else {
+            return processVariable.get(fieldName);
+        }
     }
 
     public void store() throws GenericEntityException {

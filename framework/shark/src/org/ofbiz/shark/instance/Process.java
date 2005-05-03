@@ -30,6 +30,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.shark.container.SharkContainer;
 
 import org.enhydra.shark.api.internal.instancepersistence.*;
@@ -41,18 +42,15 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * @version    $Rev$
  * @since      3.1
  */
-public class Process implements ProcessPersistenceInterface {
+public class Process extends InstanceEntityObject implements ProcessPersistenceInterface {
 
     public static final String module = Process.class.getName();
 
-    protected GenericDelegator delegator = null;
     protected GenericValue process = null;
     protected boolean newValue = false;
 
-    protected Process() {}
-
-    protected Process(GenericDelegator delegator, String processId) throws PersistenceException {
-        this.delegator = delegator;
+    protected Process(EntityPersistentMgr mgr, GenericDelegator delegator, String processId) throws PersistenceException {
+        super(mgr, delegator);
         if (this.delegator != null) {
             try {
                 this.process = delegator.findByPrimaryKey("WfProcess", UtilMisc.toMap("processId", processId));
@@ -64,27 +62,27 @@ public class Process implements ProcessPersistenceInterface {
         }
     }
 
-    protected Process(GenericValue process) {
+    protected Process(EntityPersistentMgr mgr, GenericValue process) {
+        super(mgr, process.getDelegator());
         this.process = process;
-        this.delegator = process.getDelegator();
     }
 
-    public Process(GenericDelegator delegator) {
+    public Process(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
         this.process = delegator.makeValue("WfProcess", null);
     }
 
-    public static Process getInstance(GenericValue process) throws PersistenceException {
-        Process proc = new Process(process);
+    public static Process getInstance(EntityPersistentMgr mgr, GenericValue process) {
+        Process proc = new Process(mgr, process);
         if (proc.isLoaded()) {
             return proc;
         }
         return null;
     }
 
-    public static Process getInstance(String processId) throws PersistenceException {
-        Process proc = new Process(SharkContainer.getDelegator(), processId);
+    public static Process getInstance(EntityPersistentMgr mgr, String processId) throws PersistenceException {
+        Process proc = new Process(mgr, SharkContainer.getDelegator(), processId);
         if (proc.isLoaded()) {
             Debug.log("Returning loaded Process", module);
             return proc;
@@ -111,10 +109,27 @@ public class Process implements ProcessPersistenceInterface {
 
     public void setProcessMgrName(String s) {
         process.set("mgrName", s);
+        try {
+            ProcessMgrPersistenceInterface pm = mgr.restoreProcessMgr(s, null);
+            process.set("packageId", pm.getPackageId());
+            process.set("packageVer", pm.getVersion());
+        } catch (PersistenceException e) {
+            Debug.logError(e, "Unable to set package information", module);
+        }
     }
 
     public String getProcessMgrName() {
         return process.getString("mgrName");
+    }
+
+    public void setExternalRequester(Object o) {
+        byte[] value = UtilObject.getBytes(o);
+        process.setBytes("externalReq", (value != null ? value : null));
+    }
+
+    public Object getExternalRequester() {
+        byte[] value = process.getBytes("externalReq");
+        return UtilObject.getObject(value);
     }
 
     public void setActivityRequesterId(String s) {
@@ -179,6 +194,14 @@ public class Process implements ProcessPersistenceInterface {
 
     public void setLastStateTime(long timestamp) {
         process.set("lastStateTime", UtilDateTime.getTimestamp(timestamp));
+    }
+
+    public long getCreatedTime() {
+        return process.get("createdTime") != null ? process.getTimestamp("createdTime").getTime() : 0;
+    }
+
+    public void setCreatedTime(long time) {
+        process.set("createdTime", UtilDateTime.getTimestamp(time));
     }
 
     public long getStartedTime() {

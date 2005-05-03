@@ -40,18 +40,15 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * @version    $Rev$
  * @since      3.1
  */
-public class ProcessMgr implements ProcessMgrPersistenceInterface {
+public class ProcessMgr extends InstanceEntityObject implements ProcessMgrPersistenceInterface {
 
     public static final String module = ProcessMgr.class.getName();
-
-    protected GenericDelegator delegator = null;
+    
     protected GenericValue processMgr = null;
     protected boolean newValue = false;
 
-    protected ProcessMgr() {}
-
-    protected ProcessMgr(GenericDelegator delegator, String name) throws PersistenceException {
-        this.delegator = delegator;
+    protected ProcessMgr(EntityPersistentMgr mgr, GenericDelegator delegator, String name) throws PersistenceException {
+        super(mgr, delegator);
         if (this.delegator != null) {
             try {
                 this.processMgr = delegator.findByPrimaryKey("WfProcessMgr", UtilMisc.toMap("mgrName", name));
@@ -63,27 +60,27 @@ public class ProcessMgr implements ProcessMgrPersistenceInterface {
         }
     }
 
-    protected ProcessMgr(GenericValue processMgr) {
+    protected ProcessMgr(EntityPersistentMgr mgr, GenericValue processMgr) {
+        super(mgr, processMgr.getDelegator());
         this.processMgr = processMgr;
-        this.delegator = processMgr.getDelegator();
     }
 
-    public ProcessMgr(GenericDelegator delegator) {
+    public ProcessMgr(EntityPersistentMgr mgr, GenericDelegator delegator) {
+        super(mgr, delegator);
         this.newValue = true;
-        this.delegator = delegator;
         this.processMgr = delegator.makeValue("WfProcessMgr", UtilMisc.toMap("currentState", new Long(0)));
     }
 
-    public static ProcessMgr getInstance(GenericValue processMgr) throws PersistenceException {
-        ProcessMgr mgr = new ProcessMgr(processMgr);
+    public static ProcessMgr getInstance(EntityPersistentMgr pmgr, GenericValue processMgr) {
+        ProcessMgr mgr = new ProcessMgr(pmgr, processMgr);
         if (mgr.isLoaded()) {
             return mgr;
         }
         return null;
     }
 
-    public static ProcessMgr getInstance(String name) throws PersistenceException {
-        ProcessMgr mgr = new ProcessMgr(SharkContainer.getDelegator(), name);
+    public static ProcessMgr getInstance(EntityPersistentMgr pmgr, String name) throws PersistenceException {
+        ProcessMgr mgr = new ProcessMgr(pmgr, SharkContainer.getDelegator(), name);
         if (mgr.isLoaded()) {
             return mgr;
         }
@@ -130,11 +127,11 @@ public class ProcessMgr implements ProcessMgrPersistenceInterface {
     }
 
     public String getVersion() {
-        return processMgr.getString("procVersion");
+        return processMgr.getString("packageVer");
     }
 
     public void setVersion(String version) {
-        processMgr.set("procVersion", version);
+        processMgr.set("packageVer", version);
     }
 
     public String getCreated() {
