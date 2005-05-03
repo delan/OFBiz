@@ -84,6 +84,8 @@
                 <set field="tabButtonItem" value="calendar"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="calendar"/>
+                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="50"/>
 
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/FindCalendar.bsh"/>
             </actions>
