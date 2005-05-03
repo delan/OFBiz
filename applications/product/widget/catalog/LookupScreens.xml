@@ -35,8 +35,8 @@
                 <set field="title" value="Lookup Product"/>
                 <set field="entityName" value="Product"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
                 <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">
@@ -58,10 +58,10 @@
             <actions>
                 <set field="title" value="Lookup Virtual Product"/>
                 <set field="entityName" value="Product"/>
-                <set field="requestParameters.isVirtual" to-scope="screen" default-value="Y"/>
+                <set field="parameters.isVirtual" to-scope="screen" default-value="Y"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
                 <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">
@@ -83,10 +83,10 @@
             <actions>
                 <set field="title" value="Lookup Variant Product"/>
                 <set field="entityName" value="Product"/>
-                <set field="requestParameters.isVirtual" to-scope="screen" default-value="Y"/>
+                <set field="parameters.isVirtual" to-scope="screen" default-value="Y"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/lookup/LookupVariantProduct.bsh"/>
             </actions>
             <widgets>
@@ -111,8 +111,8 @@
                 <set field="title" value="Lookup Product Feature"/>
                 <set field="entityName" value="ProductFeature"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
                 <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">

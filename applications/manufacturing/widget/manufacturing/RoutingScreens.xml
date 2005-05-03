@@ -100,8 +100,8 @@
                 <set field="titleProperty" value="PageTitleFindRouting"/>
                 <set field="tabButtonItem" value="findRouting"/>
                 <set field="headerItem" value="routing"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
 
                 <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="ROUTING"/>
                 <set field="requestParameters.currentStatusId" to-scope="screen" default-value="ROU_ACTIVE"/>
