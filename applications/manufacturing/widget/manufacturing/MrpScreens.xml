@@ -83,8 +83,8 @@
                 <set field="titleProperty" value="PageTitleFindInventoryEventPlan"/>
                 <set field="tabButtonItem" value="findInventoryEventPlan"/>
                 <set field="headerItem" value="mrp"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
 
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/mrp/findInventoryEventPlan.bsh"/>
             </actions>
