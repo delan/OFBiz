@@ -1290,6 +1290,7 @@
        <field name="partyId" type="id-ne"/>
        <field name="taxFormId" type="id-ne"/>
        <field name="COGSMethodId" type="id-ne"/>
+       <field name="baseCurrencyUomId" type="id-ne"/>
        <prim-key field="partyId"/>
        <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREF_PTY">
            <key-map field-name="partyId"/>
@@ -1299,6 +1300,9 @@
        </relation>
        <relation type="one" rel-entity-name="Enumeration" fk-name="ACTG_PREF_COGS">
            <key-map field-name="COGSMethodId" rel-field-name="enumId"/>
+       </relation>
+       <relation type="one" rel-entity-name="Uom" fk-name="ACCTG_PREF_CURNCY">
+           <key-map field-name="baseCurrencyUomId" rel-field-name="uomId"/>
        </relation>
     </entity>
     <entity entity-name="SettlementTerm"
