@@ -1295,10 +1295,10 @@
        <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREF_PTY">
            <key-map field-name="partyId"/>
        </relation>
-       <relation type="one" rel-entity-name="Enumeration" fk-name="ACTG_PREF_TAX_FORM">
+       <relation type="one" title="TaxForm" rel-entity-name="Enumeration" fk-name="ACTG_PREF_TAX_FORM">
            <key-map field-name="taxFormId" rel-field-name="enumId"/>
        </relation>
-       <relation type="one" rel-entity-name="Enumeration" fk-name="ACTG_PREF_COGS">
+       <relation type="one" title="COGS" rel-entity-name="Enumeration" fk-name="ACTG_PREF_COGS">
            <key-map field-name="COGSMethodId" rel-field-name="enumId"/>
        </relation>
        <relation type="one" rel-entity-name="Uom" fk-name="ACCTG_PREF_CURNCY">
