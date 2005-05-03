@@ -356,11 +356,11 @@
     <service name="addProductToCategories" default-entity-name="ProductCategoryMember" engine="simple"
                 location="org/ofbiz/product/category/CategoryServices.xml" invoke="addProductToCategories" auth="true">
         <description>Add Product To Multiple Categories</description>
-        <attribute name="categories" type="List" mode="IN" optional="false"/>
         <auto-attributes include="pk" mode="IN" optional="false">
             <exclude field-name="productCategoryId"/>
-        </auto-attributes>        
+        </auto-attributes>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="categories" type="List" mode="IN" optional="false"/>
         <override name="fromDate" optional="true"/>
     </service>
     <service name="addProductToCategory" default-entity-name="ProductCategoryMember" engine="simple"
