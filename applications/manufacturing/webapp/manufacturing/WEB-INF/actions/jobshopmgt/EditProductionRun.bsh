@@ -79,11 +79,11 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             actionForm = "beforeActionProductionRun";
         }
         context.put("actionForm",actionForm);
-        String quantity, estimatedStartDate, estimatedCompletionDate, productionRunName, description;
+        String quantity, estimatedStartDate, estimatedCompletionDate, workEffortName, description;
         if (actionForm.equals("updateProductionRun")){
             quantity = request.getParameter("quantity");
             estimatedStartDate = request.getParameter("estimatedStartDate");
-            productionRunName = request.getParameter("productionRunName");
+            workEffortName = request.getParameter("workEffortName");
             description = request.getParameter("description");
         }
         if (quantity != null) {
@@ -99,10 +99,10 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         }
         productionRunData.put("estimatedCompletionDate",productionRun.getEstimatedCompletionDate());
 
-        if (productionRunName != null) {
-            productionRunData.put("productionRunName",productionRunName);
+        if (workEffortName != null) {
+            productionRunData.put("workEffortName", workEffortName);
         } else {
-            productionRunData.put("productionRunName",productionRun.getProductionRunName());
+            productionRunData.put("workEffortName", productionRun.getProductionRunName());
         }
 
         if (description != null) {
