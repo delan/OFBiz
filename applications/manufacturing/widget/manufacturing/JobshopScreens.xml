@@ -150,6 +150,8 @@
                 <set field="tabButtonItem" value="find"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="jobshop"/>
+                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="50"/>
 
                 <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="PROD_ORDER_HEADER"/>
             </actions>
