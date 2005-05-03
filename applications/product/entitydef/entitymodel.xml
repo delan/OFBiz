@@ -2463,13 +2463,17 @@
       <prim-key field="facilityGroupId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
-      <relation type="one" rel-entity-name="FacilityGroup">
+      <relation type="one" fk-name="FGROUP_RLE_FGRP" rel-entity-name="FacilityGroup">
         <key-map field-name="facilityGroupId"/>
       </relation>
-      <relation type="one" fk-name="FGROUP_RLE_PARTY" rel-entity-name="Party">
+      <relation type="one" fk-name="FGROUP_RLE_PTRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="FGROUP_RLE_ROLE" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
@@ -2798,13 +2802,17 @@
       <prim-key field="productStoreGroupId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
-      <relation type="one" rel-entity-name="ProductStoreGroup">
+      <relation type="one" fk-name="PSGRP_RLE_PSGP" rel-entity-name="ProductStoreGroup">
         <key-map field-name="productStoreGroupId"/>
       </relation>
-      <relation type="one" fk-name="PSGRP_RLE_PARTY" rel-entity-name="Party">
+      <relation type="one" fk-name="PSGRP_RLE_PTRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="PSGRP_RLE_ROLE" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
