@@ -52,4 +52,44 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <remove-by-and entity-name="KeywordThesaurus" map-name="newEntity"/>
     </simple-method>
+    
+    <!-- Uom Conversion service -->
+    <simple-method method-name="convertUom" short-description="Convert UOM values" login-required="false">
+        <!-- first try the regular UomConversion entity (no dates) -->
+        <entity-one entity-name="UomConversion" value-name="uomConversion" auto-field-map="true" use-cache="true"/>
+        
+        <!-- if not found, try the dated uom conversion entity -->
+        <if-empty field-name="uomConversion">
+            <entity-condition entity-name="UomConversionDated" list-name="uomConversions" use-cache="true">
+                <condition-list combine="and">
+                    <condition-expr field-name="uomId" env-name="uomId"/>
+                    <condition-expr field-name="uomIdTo" env-name="uomIdTo"/>
+                </condition-list>
+                <!-- sort by descending fromDate to get newest (biggest) first -->
+                <order-by field-name="-fromDate"/>
+            </entity-condition>
+            <filter-list-by-date list-name="uomConversions"/>
+            <first-from-list list-name="uomConversions" entry-name="uomConversion"/>
+        </if-empty>
+        <log level="verbose" message="using conversion factor=${uomConversion.conversionFactor}"/>
+        
+        <if-empty field-name="uomConversion">
+            <!-- if still no uom conversion entity, then no conversion is possible -->
+            <add-error><fail-property property="NoUomConversionFound" resource="CommonUiLabels"/></add-error>
+            <check-errors/>        
+        <else>
+            <!-- do the conversion -->
+            <calculate field-name="convertedValue" type="Double">
+                <!-- TODO: many of these will be currency UOMs, add some way to round to 2 decimal digits -->
+                <calcop operator="multiply">
+                    <calcop operator="get" field-name="parameters.originalValue"/>
+                    <calcop operator="get" field-name="uomConversion.conversionFactor"/>
+                </calcop> 
+            </calculate>
+        </else>
+        </if-empty>
+        
+        <!-- all done -->
+        <field-to-result field-name="convertedValue"/>
+    </simple-method>
 </simple-methods>

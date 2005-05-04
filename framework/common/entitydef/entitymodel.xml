@@ -392,6 +392,24 @@
         <key-map field-name="uomIdTo" rel-field-name="uomId"/>
       </relation>
     </entity>
+    <entity entity-name="UomConversionDated"
+            package-name="org.ofbiz.common.uom"
+            title="Unit Of Measure Conversion Entity for those Units of Measure whose conversion values change over time (ie, currencies)">
+      <field name="uomId" type="id-ne"></field>
+      <field name="uomIdTo" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="conversionFactor" type="floating-point"></field>
+      <prim-key field="uomId"/>
+      <prim-key field="uomIdTo"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="DATE_UOM_CONV_MAIN" title="DatedMain" rel-entity-name="Uom">
+        <key-map field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="DATE_UOM_CONV_TO" title="DatedConvTo" rel-entity-name="Uom">
+        <key-map field-name="uomIdTo" rel-field-name="uomId"/>
+      </relation>
+    </entity>
     <entity entity-name="UomType"
             package-name="org.ofbiz.common.uom"
             title="Unit Of Measure Type Entity">
