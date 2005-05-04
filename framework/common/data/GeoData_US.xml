@@ -25,7 +25,7 @@
     <Geo abbreviation="IN" geoCode="IN" geoId="IN" geoName="Indiana" geoTypeId="STATE"/>
     <Geo abbreviation="KS" geoCode="KS" geoId="KS" geoName="Kansas" geoTypeId="STATE"/>
     <Geo abbreviation="KY" geoCode="KY" geoId="KY" geoName="Kentucky" geoTypeId="STATE"/>
-    <Geo abbreviation="LA" geoCode="LA" geoId="LA" geoName="Louisianna" geoTypeId="STATE"/>
+    <Geo abbreviation="LA" geoCode="LA" geoId="LA" geoName="Louisiana" geoTypeId="STATE"/>
     <Geo abbreviation="MA" geoCode="MA" geoId="MA" geoName="Massachusetts" geoTypeId="STATE"/>
     <Geo abbreviation="MD" geoCode="MD" geoId="MD" geoName="Maryland" geoTypeId="STATE"/>
     <Geo abbreviation="ME" geoCode="ME" geoId="ME" geoName="Maine" geoTypeId="STATE"/>
@@ -75,7 +75,7 @@
     <Geo abbreviation="ON" geoCode="ON" geoId="ON" geoName="Ontario" geoTypeId="STATE"/>
     <Geo abbreviation="PE" geoCode="PE" geoId="PE" geoName="Prince Edward Island" geoTypeId="STATE"/>
     <Geo abbreviation="QC" geoCode="QC" geoId="QC" geoName="Quebec" geoTypeId="STATE"/>
-    <Geo abbreviation="SK" geoCode="SK" geoId="SK" geoName="Sasakatchewan" geoTypeId="STATE"/>
+    <Geo abbreviation="SK" geoCode="SK" geoId="SK" geoName="Saskatchewan" geoTypeId="STATE"/>
     <Geo abbreviation="YT" geoCode="YT" geoId="YT" geoName="Yukon" geoTypeId="STATE"/>
 
     <Geo abbreviation="USAF" geoCode="USAF" geoId="USAF" geoName="US Armed Forces" geoTypeId="GROUP"/>
@@ -221,17 +221,18 @@
     <GeoAssoc geoId="USA" geoIdTo="WV" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="USA" geoIdTo="WY" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="USA" geoIdTo="VI" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="AB" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="BC" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="MB" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="NB" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="NF" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="NS" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="NT" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="NU" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="ON" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="PE" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="QC" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="SK" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="USA" geoIdTo="YT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="AB" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="BC" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="MB" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="NB" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="NF" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="NS" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="NT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="NU" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="ON" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="PE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="QC" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="SK" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="YT" geoAssocTypeId="REGIONS"/>
 </entity-engine-xml>
+
