@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+    <!-- Based on: ISO 3166 http://www.iso.org/iso/en/prods-services/iso3166ma/index.html -->
+    <Geo abbreviation="_NA_"geoCode="_NA_" geoId="_NA_" geoName="Not Applicable"/>
     <Geo abbreviation="IRQ" geoCode="IQ" geoId="IRQ" geoName="Iraq" geoSecCode="368" geoTypeId="COUNTRY"/>
     <Geo abbreviation="NIU" geoCode="NU" geoId="NIU" geoName="Niue" geoSecCode="570" geoTypeId="COUNTRY"/>
     <Geo abbreviation="CAN" geoCode="CA" geoId="CAN" geoName="Canada" geoSecCode="124" geoTypeId="COUNTRY"/>
@@ -177,11 +179,11 @@
     <Geo abbreviation="POL" geoCode="PL" geoId="POL" geoName="Poland" geoSecCode="616" geoTypeId="COUNTRY"/>
     <Geo abbreviation="PRT" geoCode="PT" geoId="PRT" geoName="Portugal" geoSecCode="620" geoTypeId="COUNTRY"/>
     <Geo abbreviation="GNB" geoCode="GW" geoId="GNB" geoName="Guinea-bissau" geoSecCode="624" geoTypeId="COUNTRY"/>
-    <Geo abbreviation="TMP" geoCode="TP" geoId="TMP" geoName="East Timor" geoSecCode="626" geoTypeId="COUNTRY"/>
+    <Geo abbreviation="TLS" geoCode="TL" geoId="TLS" geoName="East Timor" geoSecCode="626" geoTypeId="COUNTRY"/>
     <Geo abbreviation="PRI" geoCode="PR" geoId="PRI" geoName="Puerto Rico" geoSecCode="630" geoTypeId="COUNTRY"/>
     <Geo abbreviation="QAT" geoCode="QA" geoId="QAT" geoName="Qatar" geoSecCode="634" geoTypeId="COUNTRY"/>
     <Geo abbreviation="REU" geoCode="RE" geoId="REU" geoName="Reunion" geoSecCode="638" geoTypeId="COUNTRY"/>
-    <Geo abbreviation="ROM" geoCode="RO" geoId="ROM" geoName="Romania" geoSecCode="642" geoTypeId="COUNTRY"/>
+    <Geo abbreviation="ROU" geoCode="RO" geoId="ROU" geoName="Romania" geoSecCode="642" geoTypeId="COUNTRY"/>
     <Geo abbreviation="RUS" geoCode="RU" geoId="RUS" geoName="Russian Federation" geoSecCode="643" geoTypeId="COUNTRY"/>
     <Geo abbreviation="RWA" geoCode="RW" geoId="RWA" geoName="Rwanda" geoSecCode="646" geoTypeId="COUNTRY"/>
     <Geo abbreviation="SHN" geoCode="SH" geoId="SHN" geoName="St. Helena" geoSecCode="654" geoTypeId="COUNTRY"/>
@@ -313,3 +315,4 @@
       <GeoAssoc geoId="GBR" geoIdTo="Wts" geoAssocTypeId="REGIONS" />
     -->
 </entity-engine-xml>
+
