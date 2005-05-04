@@ -118,7 +118,8 @@ fieldsToSelect = null;
 orderBy = UtilMisc.toList(sortField);
 
 // entity find options
-findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false); 
+// note distinct is false because it is not needed for a non-view-entity, and won't work with some databases when selecting a long text/clob field; also slows things down
 
 boolean beganTransaction = false;
 try {
