@@ -75,7 +75,7 @@ import freemarker.template.TemplateException;
 
 /**
  * DataResourceWorker Class
- * 
+ *
  * @author      <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author      <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author      <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
@@ -90,7 +90,7 @@ public class DataResourceWorker {
     /**
      * Traverses the DataCategory parent/child structure and put it in categoryNode. Returns non-null error string if there is an error.
      * @param depth The place on the categoryTypesIds to start collecting.
-     * @param getAll Indicates that all descendants are to be gotten. Used as "true" to populate an 
+     * @param getAll Indicates that all descendants are to be gotten. Used as "true" to populate an
      *     indented select list.
      */
     public static String getDataCategoryMap(GenericDelegator delegator, int depth, Map categoryNode, List categoryTypeIds, boolean getAll) throws GenericEntityException {
@@ -98,8 +98,8 @@ public class DataResourceWorker {
         String parentCategoryId = (String) categoryNode.get("id");
         String currentDataCategoryId = null;
         int sz = categoryTypeIds.size();
-    
-        // The categoryTypeIds has the most senior types at the end, so it is necessary to 
+
+        // The categoryTypeIds has the most senior types at the end, so it is necessary to
         // work backwards. As "depth" is incremented, that is the effect.
         // The convention for the topmost type is "ROOT".
         if (depth >= 0 && (sz - depth) > 0) {
@@ -397,14 +397,14 @@ public class DataResourceWorker {
     /** @deprecated */
     public static String getImageType(GenericDelegator delegator, GenericValue dataResource) {
         String imageType = null;
-        if (dataResource != null) { 
+        if (dataResource != null) {
             imageType = (String) dataResource.get("mimeTypeId");
             if (UtilValidate.isEmpty(imageType)) {
                 String imageFileNameExt = null;
                 String imageFileName = (String)dataResource.get("objectInfo");
                 if (UtilValidate.isNotEmpty(imageFileName)) {
                     int pos = imageFileName.lastIndexOf(".");
-                    if (pos >= 0) 
+                    if (pos >= 0)
                         imageFileNameExt = imageFileName.substring(pos + 1);
                 }
                 imageType = "image/" + imageFileNameExt;
@@ -418,13 +418,13 @@ public class DataResourceWorker {
         renderDataResourceAsText(delegator, dataResourceId, outWriter, templateContext, view, locale, mimeTypeId);
         return outWriter.toString();
     }
-    
+
     public static void renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
         if (templateContext == null) {
             templateContext = new HashMap();
         }
 
-        
+
 //        Map context = (Map) templateContext.get("context");
 //        if (context == null) {
 //            context = new HashMap();
@@ -433,7 +433,7 @@ public class DataResourceWorker {
         if (UtilValidate.isEmpty(mimeTypeId)) {
             mimeTypeId = "text/html";
         }
-        
+
         // if the target mimeTypeId is not a text type, throw an exception
         if (!mimeTypeId.startsWith("text/")) {
             throw new GeneralException("The desired mime-type is not a text type, cannot render as text: " + mimeTypeId);
@@ -463,14 +463,14 @@ public class DataResourceWorker {
         if (dataResource == null || dataResource.isEmpty()) {
             throw new GeneralException("DataResource not found with id=" + dataResourceId);
         }
-        
+
         String drMimeTypeId = dataResource.getString("mimeTypeId");
         if (UtilValidate.isEmpty(drMimeTypeId)) {
             drMimeTypeId = "text/plain";
         }
-        
+
         String dataTemplateTypeId = dataResource.getString("dataTemplateTypeId");
-        
+
         // if this is a template, we need to get the full template text and interpret it, otherwise we should just write a bit at a time to the writer to better support large text
         if (UtilValidate.isEmpty(dataTemplateTypeId) || "NONE".equals(dataTemplateTypeId)) {
             writeDataResourceText(dataResource, mimeTypeId, locale, templateContext, delegator, out);
@@ -484,17 +484,17 @@ public class DataResourceWorker {
                 templateContext.put("contentId", subContentId);
                 templateContext.put("subContentId", null);
             }
-            
+
 
             // get the full text of the DataResource
             String templateText = getDataResourceText(dataResource, mimeTypeId, locale, templateContext, delegator);
-            
+
             //String subContentId3 = (String)context.get("subContentId");
-            
+
 //            context.put("mimeTypeId", null);
             templateContext.put("mimeTypeId", null);
 //            templateContext.put("context", context);
-            
+
             if ("FTL".equals(dataTemplateTypeId)) {
                 try {
                     FreeMarkerWorker.renderTemplate("DataResource:" + dataResourceId, templateText, templateContext, out);
@@ -506,14 +506,14 @@ public class DataResourceWorker {
             }
         }
     }
-    
+
     public static String renderDataResourceAsTextCache(GenericDelegator delegator, String dataResourceId, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
         Writer outWriter = new StringWriter();
         renderDataResourceAsTextCache(delegator, dataResourceId, outWriter, templateContext, view, locale, mimeTypeId);
         return outWriter.toString();
     }
-    
-    
+
+
     public static void renderDataResourceAsTextCache(GenericDelegator delegator, String dataResourceId, Writer out, Map templateRoot, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
 
         if (templateRoot == null) {
@@ -524,7 +524,7 @@ public class DataResourceWorker {
         //if (context == null) {
             //context = new HashMap();
         //}
-        
+
         String disableCache = UtilProperties.getPropertyValue("content", "disable.ftl.template.cache");
         if (disableCache == null || !disableCache.equalsIgnoreCase("true")) {
             Template cachedTemplate = FreeMarkerWorker.getTemplateCached(dataResourceId);
@@ -548,7 +548,7 @@ public class DataResourceWorker {
         if (UtilValidate.isEmpty(mimeTypeId)) {
             mimeTypeId = "text/html";
         }
-        
+
         // if the target mimeTypeId is not a text type, throw an exception
         if (!mimeTypeId.startsWith("text/")) {
             throw new GeneralException("The desired mime-type is not a text type, cannot render as text: " + mimeTypeId);
@@ -570,7 +570,7 @@ public class DataResourceWorker {
                 thisDataResourceId = (String) view.get("dataResourceId");
             }
             if (UtilValidate.isEmpty(thisDataResourceId)) {
-                if (UtilValidate.isNotEmpty(dataResourceId)) 
+                if (UtilValidate.isNotEmpty(dataResourceId))
                     view = null; // causes lookup of DataResource
                 else
                     throw new GeneralException("The dataResourceId [" + dataResourceId + "] is empty.");
@@ -586,15 +586,15 @@ public class DataResourceWorker {
         if (dataResource == null || dataResource.isEmpty()) {
             throw new GeneralException("DataResource not found with id=" + dataResourceId);
         }
-        
+
         String drMimeTypeId = dataResource.getString("mimeTypeId");
         if (UtilValidate.isEmpty(drMimeTypeId)) {
             drMimeTypeId = "text/plain";
         }
-        
+
         String dataTemplateTypeId = dataResource.getString("dataTemplateTypeId");
         //if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsText, dataTemplateTypeId :" + dataTemplateTypeId ,"");
-        
+
         // if this is a template, we need to get the full template text and interpret it, otherwise we should just write a bit at a time to the writer to better support large text
         if (UtilValidate.isEmpty(dataTemplateTypeId) || "NONE".equals(dataTemplateTypeId)) {
             writeDataResourceTextCache(dataResource, mimeTypeId, locale, templateRoot, delegator, out);
@@ -604,9 +604,9 @@ public class DataResourceWorker {
                 templateRoot.put("contentId", subContentId);
                 templateRoot.put("subContentId", null);
             }
-            
+
             templateRoot.put("mimeTypeId", null);
-            
+
             if ("FTL".equals(dataTemplateTypeId)) {
                 try {
                     // This is something of a hack. FTL templates should need "contentId" value and
@@ -652,13 +652,13 @@ public class DataResourceWorker {
             }
         }
     }
-    
+
     public static String getDataResourceText(GenericValue dataResource, String mimeTypeId, Locale locale, Map context, GenericDelegator delegator) throws IOException, GeneralException {
         Writer outWriter = new StringWriter();
         writeDataResourceText(dataResource, mimeTypeId, locale, context, delegator, outWriter);
         return outWriter.toString();
     }
-    
+
     public static void writeDataResourceText(GenericValue dataResource, String mimeTypeId, Locale locale, Map templateContext, GenericDelegator delegator, Writer outWriter) throws IOException, GeneralException {
 
         Map context = (Map)templateContext.get("context");
@@ -672,13 +672,13 @@ public class DataResourceWorker {
             if (context != null)
                 https = (String) context.get("https");
         }
-        
+
         String dataResourceId = dataResource.getString("dataResourceId");
         String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
         if (UtilValidate.isEmpty(dataResourceTypeId)) {
             dataResourceTypeId = "SHORT_TEXT";
         }
-        
+
         if (dataResourceTypeId.equals("SHORT_TEXT")) {
             String text = dataResource.getString("objectInfo");
             outWriter.write(text);
@@ -687,8 +687,8 @@ public class DataResourceWorker {
             String text = electronicText.getString("textData");
             outWriter.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-            // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning 
-            //the ID, maybe is okay, but maybe should create the whole image tag so that text and images can be 
+            // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning
+            //the ID, maybe is okay, but maybe should create the whole image tag so that text and images can be
             //interchanged without changing the wrapping template, and so the wrapping template doesn't have to know what the root is, etc
             /*
             // decide how to render based on the mime-types
@@ -699,7 +699,7 @@ public class DataResourceWorker {
                 throw new GeneralException("The renderDataResourceAsText operation does not yet support the desired mime-type: " + mimeTypeId);
             }
             */
-            
+
             String text = (String) dataResource.get("dataResourceId");
             outWriter.write(text);
         } else if (dataResourceTypeId.equals("LINK")) {
@@ -750,23 +750,23 @@ public class DataResourceWorker {
         writeDataResourceText(dataResource, mimeTypeId, locale, context, delegator, outWriter);
         return outWriter.toString();
     }
-    
+
     public static void writeDataResourceTextCache(GenericValue dataResource, String mimeTypeId, Locale locale, Map context, GenericDelegator delegator, Writer outWriter) throws IOException, GeneralException {
 
-        if (context == null) 
+        if (context == null)
             context = new HashMap();
 
         String text = null;
         String webSiteId = (String) context.get("webSiteId");
         String https = (String) context.get("https");
-        
+
         String dataResourceId = dataResource.getString("dataResourceId");
         String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
         String dataResourceMimeTypeId = dataResource.getString("mimeTypeId");
         if (UtilValidate.isEmpty(dataResourceTypeId)) {
             dataResourceTypeId = "SHORT_TEXT";
         }
-        
+
         if (dataResourceTypeId.equals("SHORT_TEXT")) {
             text = dataResource.getString("objectInfo");
             writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
@@ -777,8 +777,8 @@ public class DataResourceWorker {
                 writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
             }
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-            // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning 
-            //the ID, maybe is okay, but maybe should create the whole image tag so that text and images can be 
+            // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning
+            //the ID, maybe is okay, but maybe should create the whole image tag so that text and images can be
             //interchanged without changing the wrapping template, and so the wrapping template doesn't have to know what the root is, etc
             /*
             // decide how to render based on the mime-types
@@ -789,13 +789,13 @@ public class DataResourceWorker {
                 throw new GeneralException("The renderDataResourceAsText operation does not yet support the desired mime-type: " + mimeTypeId);
             }
             */
-            
+
             text = (String) dataResource.get("dataResourceId");
             writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
         } else if (dataResourceTypeId.equals("LINK")) {
             text = dataResource.getString("objectInfo");
             writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
-        } else if (dataResourceTypeId.equals("URL_RESOURCE")) { 
+        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
             URL url = new URL(dataResource.getString("objectInfo"));
             if (url.getHost() != null) { // is absolute
                 InputStream in = url.openStream();
@@ -867,7 +867,7 @@ public class DataResourceWorker {
 
     public static void renderFile(String dataResourceTypeId, String objectInfo, String rootDir, Writer out) throws GeneralException, IOException {
         // TODO: this method assumes the file is a text file, if it is an image we should respond differently, see the comment above for IMAGE_OBJECT type data resource
-        
+
         if (dataResourceTypeId.equals("LOCAL_FILE")) {
             File file = new File(objectInfo);
             if (!file.isAbsolute()) {
@@ -976,7 +976,7 @@ public class DataResourceWorker {
                 GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
                 //if (Debug.infoOn()) Debug.logInfo("getDataResourceMimeType, dataResource(2):" + dataResource, "");
                 mimeType = dataResource.getString("mimeTypeId");
-                
+
         }
         return mimeType;
     }
@@ -1015,6 +1015,12 @@ public class DataResourceWorker {
                 if (subs[i].isDirectory()) {
                     dirMap.put(new Long(subs[0].lastModified()), subs[i]);
                 }
+            }
+        } else {
+            // if the parent doesn't exist; create it now
+            boolean created = parent.mkdir();
+            if (!created) {
+                Debug.logWarning("Unable to create top level upload directory [" + parentDir + "].", module);
             }
         }
 
