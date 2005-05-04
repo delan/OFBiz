@@ -33,4 +33,8 @@
     <classpath type="jar" location="build/lib/*"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
+
+    <!-- these are for unit testing -->
+    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_test.xml"/>
+    <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup_test.xml"/>
 </ofbiz-component>
