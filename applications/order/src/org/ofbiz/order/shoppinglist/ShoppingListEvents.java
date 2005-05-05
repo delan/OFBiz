@@ -357,6 +357,7 @@ public class ShoppingListEvents {
         }
 
         String autoSaveListId = null;
+        // TODO: add sorting, just in case there are multiple...
         List persistantLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", partyId,
                 "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME));
 

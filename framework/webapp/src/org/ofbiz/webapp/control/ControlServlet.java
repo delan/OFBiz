@@ -103,6 +103,7 @@ public class ControlServlet extends HttpServlet {
         String contentType = "text/html";
         if (charset.length() > 0 && !"none".equals(charset)) {
             response.setContentType(contentType + "; charset=" + charset);
+            response.setCharacterEncoding(charset);
         } else {
             response.setContentType(contentType);
         }
