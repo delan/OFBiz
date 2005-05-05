@@ -107,7 +107,7 @@ public class otsEvents {
         List productStoreRoles = null;
         // productstore not selected, check to see to which stores the user has access.
         try {
-            productStoreRoles = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreRole",UtilMisc.toMap("partyId",userLogin.getString("userLoginId"))), nowTimestamp, "fromDate", "thruDate", true);
+            productStoreRoles = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreRole",UtilMisc.toMap("partyId",userLogin.getString("partyId"),"roleTypeId","ADMIN")), nowTimestamp, "fromDate", "thruDate", true);
         } catch (GenericEntityException e) {
             // no stores: show error message and redirect to logoff screen.
             String excMsg = "Could not find any stores you have access to, loggin off.....";

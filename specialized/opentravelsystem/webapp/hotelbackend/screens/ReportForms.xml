@@ -26,7 +26,7 @@
     <form name="OrderPurchaseReportOptions" type="single" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
-        <field name="productStoreId"><hidden value="$productStoreId"/></field>
+        <field name="productStoreId"><hidden value="${productStoreId}"/></field>
         <!--field name="productStoreId"  title="Product Store">
             <drop-down allow-empty="false">
                 <option key="" description="- Any -"/>

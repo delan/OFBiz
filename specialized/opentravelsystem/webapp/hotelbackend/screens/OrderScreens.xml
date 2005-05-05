@@ -190,9 +190,10 @@
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="Order Purchase Report Payment"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <entity-condition entity-name="OrderPurchasePaymentSummary" list-name="orderPurchasePaymentSummaryList">
                     <condition-list combine="and">
-                        <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="productStoreId" operator="equals" env-name="productStoreId" ignore-if-empty="true"/>
                         <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-empty="true"/>
                         <condition-expr field-name="terminalId" operator="equals" env-name="parameters.terminalId" ignore-if-empty="true"/>
                         <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId" ignore-if-empty="true"/>
@@ -224,10 +225,11 @@
         <section>
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="title" value="Order Purchase Report Product"/>
                 <entity-condition entity-name="OrderPurchaseProductSummary" list-name="orderPurchaseProductSummaryList">
                     <condition-list combine="and">
-                        <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="productStoreId" operator="equals" env-name="productStoreId" ignore-if-empty="true"/>
                         <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-empty="true"/>
                         <condition-expr field-name="terminalId" operator="equals" env-name="parameters.terminalId" ignore-if-empty="true"/>
                         <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId" ignore-if-empty="true"/>

@@ -102,8 +102,6 @@
                             </html>
                         </platform-specific>
                     <!--include-screen name="choosecatalog" location="component://ecommerce/widget/CatalogScreens.xml"/>
-                    <include-screen name="keywordsearchbox" location="component://ecommerce/widget/CatalogScreens.xml"/>
-                    <include-screen name="sidedeepcategory" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minireorderprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minipoll" location="component://ecommerce/widget/ContentScreens.xml"/>
                     <include-screen name="forums" location="component://ecommerce/widget/ForumScreens.xml"/>
@@ -117,6 +115,8 @@
             <widgets>
                 <container style="right">
                     <include-screen name="language"/>
+                    <!--include-screen name="keywordsearchbox" location="component://ecommerce/widget/CatalogScreens.xml"/-->
+                    <include-screen name="sidedeepcategory" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minicart" location="component://opentravelsystem/webapp/hotelfrontend/screens/CartScreens.xml"/>
                     <include-screen name="minipromotext" location="component://ecommerce/widget/CartScreens.xml"/>
                     <include-screen name="miniassocprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
