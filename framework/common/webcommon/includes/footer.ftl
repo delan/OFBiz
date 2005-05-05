@@ -25,6 +25,8 @@
  *@since      2.1
 -->
 
+<#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
+
 <br/>
 <div align="center">
     <a href="http://jigsaw.w3.org/css-validator/"><img style="border:0;width:88px;height:31px" src="http://jigsaw.w3.org/css-validator/images/vcss" alt="Valid CSS!"/></a>
@@ -32,7 +34,7 @@
 </div>
 <br/>
 <div class="tabletext" align="center">
-    <div class="tabletext">Copyright (c) 2001-2005 The Open For Business Project - <a href="http://www.ofbiz.org" class="tabletext" target="_blank">www.ofbiz.org</a></div>
+    <div class="tabletext">Copyright (c) 2001-${nowTimestamp?string("yyyy")} The Open For Business Project - <a href="http://www.ofbiz.org" class="tabletext" target="_blank">www.ofbiz.org</a></div>
     <div class="tabletext">Powered By <a href="http://www.ofbiz.org" class="tabletext" target="_blank">OFBiz</a></div>
 </div>
 <br/>
