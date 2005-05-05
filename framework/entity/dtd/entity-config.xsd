@@ -2,24 +2,24 @@
 <!--
     *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
     *
-    *  Permission is hereby granted, free of charge, to any person obtaining a 
-    *  copy of this software and associated documentation files (the "Software"), 
-    *  to deal in the Software without restriction, including without limitation 
-    *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-    *  and/or sell copies of the Software, and to permit persons to whom the 
+    *  Permission is hereby granted, free of charge, to any person obtaining a
+    *  copy of this software and associated documentation files (the "Software"),
+    *  to deal in the Software without restriction, including without limitation
+    *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    *  and/or sell copies of the Software, and to permit persons to whom the
     *  Software is furnished to do so, subject to the following conditions:
     *
-    *  The above copyright notice and this permission notice shall be included 
+    *  The above copyright notice and this permission notice shall be included
     *  in all copies or substantial portions of the Software.
     *
-    *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
-    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
-    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
-    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+    *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     *  This is the DTD for the Open For Business Entity Engine configuration XML file.
     *  $Id: entity-config.dtd 3868 2004-11-04 22:43:35Z jonesde $
 -->
@@ -252,7 +252,7 @@
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="proxy-cursor-name" default="p_cursor"/>
-        <xs:attribute type="xs:nonNegativeInteger" name="result-fetch-size" default="0"/>
+        <xs:attribute type="xs:integer" name="result-fetch-size" default="-1"/>
         <xs:attribute name="use-foreign-keys" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
