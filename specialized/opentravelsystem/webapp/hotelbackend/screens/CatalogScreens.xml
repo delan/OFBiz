@@ -672,9 +672,10 @@
             <actions>
                 <set field="layoutSettings.extraHead" value="&lt;link rel='stylesheet' href='/images/calendarTable.css' type='text/css'&gt;" global="true"/>
                 <set field="title" value="Edit Fixed Asset Calendar"/>
-                <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
-                <set field="page.headerItem" value="ListFixedAssets"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="fixedassets"/>
                 <set field="page.tabButtonItem" value="ListFixedAssetCalendar"/>
+                <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
                 <set field="labelTitleProperty" value="Calendar"/>
                 <set field="nowTimestamp" value="UtilDateTime.nowTimestamp()"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
@@ -684,6 +685,9 @@
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
+                       <platform-specific>
+                           <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                       </platform-specific>
                                 <container>
                                    <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
                                 </container>
