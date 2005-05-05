@@ -360,7 +360,7 @@
             <exclude field-name="productCategoryId"/>
         </auto-attributes>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <attribute name="categories" type="List" mode="IN" optional="false"/>
+        <attribute name="categories" type="Object" mode="IN" optional="false"/>
         <override name="fromDate" optional="true"/>
     </service>
     <service name="addProductToCategory" default-entity-name="ProductCategoryMember" engine="simple"
@@ -439,6 +439,15 @@
         <description>Add ProductCategory To Category</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="addProductCategoryToCategories" engine="simple"
+                location="org/ofbiz/product/category/CategoryServices.xml" invoke="addProductCategoryToCategories" auth="true">
+        <description>Add ProductCategory To Categories</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="categories" type="Object" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
