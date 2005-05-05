@@ -97,6 +97,7 @@
 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-name="custRequest"/>
+
                 <set field="statusId" from-field="custRequest.statusId"/>
                 <entity-one entity-name="StatusItem" value-name="currentStatus"/>
             </actions>
@@ -106,7 +107,7 @@
                         <container>
                             <link target="request" text="[${uiLabelMap.WorkEffortNewRequest}]" style="buttontext"/>
                         </container>
-                        <include-form name="EditCustRequest" location="component://workeffort/webapp/workeffort/request/RequestForms.xml"/>
+                           <include-form name="EditCustRequest" location="component://workeffort/webapp/workeffort/request/RequestForms.xml"/>
                         <!--
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/request/request.ftl"/></html>
@@ -183,7 +184,7 @@
                             <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
                         </container>
                         <container>
-                            <link target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.WorkEffortNewRequestItem}]" style="buttontext"/>
+                            <link  target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.WorkEffortNewRequestItem}]" style="buttontext"/>
                         </container>
                         <include-form name="EditCustRequestItem" location="component://workeffort/webapp/workeffort/request/RequestForms.xml"/>
                     </decorator-section>
@@ -191,6 +192,38 @@
             </widgets>
         </section>
     </screen>
+    <screen name="EditRequestItemWorkEffort">
+        <section>
+            <actions>
+                <set field="title" value="Edit a Request Item"/>
+                <set field="tabButtonItem" value="task"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+                
+                <entity-one entity-name="CustRequest" value-name="custRequest"  />
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+                <entity-one entity-name="CustRequestItemWorkEffort" value-name="custRequestItemWorkEffort"/>
+                <entity-one entity-name="WorkEffort" value-name="workEffort"/>
+                <set field="statusId" from-field="workEffort.statusId"/>
+                <entity-one entity-name="StatusItem" value-name="currentStatus"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
+                        </container>
+                        <container>
+                            <link  target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.WorkEffortNewRequestItem}]" style="buttontext"/>
+                        </container>
+                        <include-form name="EditWorkEffort" location="component://workeffort/webapp/workeffort/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="RequestItemNotes">
         <section>
             <actions>
@@ -310,7 +343,7 @@
                 <set field="tabButtonItem" value="requestitemquotes"/>
                 <set field="headerItem" value="request"/>
                 
-                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestId"  from-field="parameters.custRequestId"/>
                 <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <set field="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>

@@ -29,6 +29,15 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <form name="EditWorkEffort" type="single"
+            target="updateworkeffort" title="" default-map-name="workEffort"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="workEffort==null" target="createworkeffort"/>
+        <auto-fields-entity entity-name="WorkEffort" default-field-type="edit" />
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
     <form name="ListRequests" type="list" use-row-submit="true" 
             title="" list-name="custRequestAndRoles" paginate-target="requestlist"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
@@ -61,50 +70,6 @@
         </field>
     </form>
 
-    <form name="EditCustRequest" type="single"
-            target="updaterequest" title="Customer Request" default-map-name="custRequest"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <alt-target use-when="custRequest==null" target="createrequest"/>
-        <auto-fields-entity entity-name="CustRequest" default-field-type="edit"   />
-        <field name="custRequestId"><hidden/></field>
-        <field name="custRequestTypeId" title="Request Type">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="CustRequestType" description="${description}"/>
-            </drop-down>
-        </field>
-        <field name="custRequestCategoryId" title="Request Category">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="CustRequestCategory" description="${description}"/>
-            </drop-down>
-        </field>
-        <field use-when="custRequest==null" name="statusId" title="Status" widget-style="selectBox">
-            <drop-down allow-empty="false" current="first-in-list">
-                <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" value="CUSTREQ_STTS"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="priority" widget-style="selectBox">
-            <drop-down allow-empty="false">
-                <option key="9"/>
-                <option key="8"/>
-                <option key="7"/>
-                <option key="6"/>
-                <option key="5"/>
-                <option key="4"/>
-                <option key="3"/>
-                <option key="2"/>
-                <option key="1"/>
-            </drop-down>
-        </field>
-        <field name="custRequestDate" title="Request Date" > <date-time type="timestamp" /></field>
-        <field name="responseRequiredDate" title="Response Required Date"><date-time type="timestamp" /></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-	
     <form name="ListRequestQuoteItems" type="list" use-row-submit="true" 
             title="" list-name="quotes" paginate-target="RequestItemQuotes"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
@@ -284,6 +249,13 @@
         <field name="firstName"><hidden/></field>
         <field name="lastName"><hidden/></field>
     </form>
+    <form name="ListRequestItemWorkEffortReq" type="list" use-row-submit="true" 
+            title="" list-name="requirements" paginate-target="requestitemrequirements"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="Requirement" default-field-type="display"/>
+        <field name="requirementId"><hidden/></field>
+    </form>
+    
     <form name="EditRequestItemNote" type="single"
             target="createrequestitemnote" title="" default-map-name="quoteItem"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -331,3 +303,4 @@
         </field>
     </form>
 </forms>
+
