@@ -136,15 +136,16 @@
     </simple-method>
 
     <simple-method method-name="addProductToCategories" short-description="Add Product to Multiple Categories">
-        <!-- note that the security semantics require the user to have the general admin permission,
-            or the role limited permission and association with the category, not the product -->
-        <string-to-field string="addProductToCategories" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
-        <call-simple-method method-name="checkCategoryRelatedPermission"/>
-        <check-errors/>
-
         <if-instance-of field-name="parameters.categories" class="java.util.List">
             <iterate entry-name="category" list-name="parameters.categories">
+                <!-- note that the security semantics require the user to have the general admin permission,
+                    or the role limited permission and association with the category, not the product -->
+                <field-to-field field-name="category" to-field-name="productCategoryIdToCheck"/>
+                <string-to-field string="addProductToCategories" field-name="callingMethodName"/>
+                <string-to-field string="CREATE" field-name="checkAction"/>
+                <call-simple-method method-name="checkCategoryRelatedPermission"/>
+                <check-errors/>
+
                 <make-value value-name="newEntity" entity-name="ProductCategoryMember"/>
                 <field-to-field field-name="category" to-field-name="productCategoryId" to-map-name="newEntity"/>
                 <set-pk-fields map-name="parameters" value-name="newEntity"/>
@@ -158,6 +159,14 @@
                 <create-value value-name="newEntity"/>
             </iterate>
             <else>
+                <!-- note that the security semantics require the user to have the general admin permission,
+                    or the role limited permission and association with the category, not the product -->
+                <field-to-field field-name="parameters.categories" to-field-name="productCategoryIdToCheck"/>
+                <string-to-field string="addProductToCategories" field-name="callingMethodName"/>
+                <string-to-field string="CREATE" field-name="checkAction"/>
+                <call-simple-method method-name="checkCategoryRelatedPermission"/>
+                <check-errors/>
+
                 <make-value value-name="newEntity" entity-name="ProductCategoryMember"/>
                 <field-to-field field-name="parameters.categories" to-field-name="productCategoryId" to-map-name="newEntity"/>
                 <set-pk-fields map-name="parameters" value-name="newEntity"/>
@@ -275,6 +284,50 @@
         </if-empty>
 
         <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="addProductCategoryToCategories" short-description="Add ProductCategory to Categories">
+        <if-instance-of field-name="parameters.categories" class="java.util.List">
+            <iterate entry-name="category" list-name="parameters.categories">
+                <string-to-field string="addProductCategoryToCategories" field-name="callingMethodName"/>
+                <string-to-field string="CREATE" field-name="checkAction"/>
+                <!-- note the the user must be associated with the parent category with the role limited permission -->
+                <field-to-field field-name="category" to-field-name="productCategoryIdToCheck"/>
+                <call-simple-method method-name="checkCategoryRelatedPermission"/>
+                <check-errors/>
+
+                <make-value value-name="newEntity" entity-name="ProductCategoryRollup"/>
+                <field-to-field field-name="category" to-field-name="parentProductCategoryId" to-map-name="newEntity"/>
+                <set-pk-fields map-name="parameters" value-name="newEntity"/>
+                <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+                <if-empty field-name="fromDate" map-name="newEntity">
+                    <now-timestamp-to-env env-name="nowTimestamp"/>
+                    <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+                </if-empty>
+
+                <create-value value-name="newEntity"/>
+            </iterate>
+            <else>
+                <string-to-field string="addProductCategoryToCategories" field-name="callingMethodName"/>
+                <string-to-field string="CREATE" field-name="checkAction"/>
+                <!-- note the the user must be associated with the parent category with the role limited permission -->
+                <field-to-field field-name="parameters.categories" to-field-name="productCategoryIdToCheck"/>                
+                <call-simple-method method-name="checkCategoryRelatedPermission"/>
+                <check-errors/>
+
+                <make-value value-name="newEntity" entity-name="ProductCategoryRollup"/>
+                <field-to-field field-name="parameters.categories" to-field-name="parentProductCategoryId" to-map-name="newEntity"/>
+                <set-pk-fields map-name="parameters" value-name="newEntity"/>
+                <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+                <if-empty field-name="fromDate" map-name="newEntity">
+                    <now-timestamp-to-env env-name="nowTimestamp"/>
+                    <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+                </if-empty>
+
+                <create-value value-name="newEntity"/>
+            </else>
+        </if-instance-of>
     </simple-method>
     <simple-method method-name="updateProductCategoryToCategory" short-description="Update ProductCategory to Category Application">
         <string-to-field string="updateProductCategoryToCategory" field-name="callingMethodName"/>
@@ -481,6 +534,9 @@
         <if-empty field-name="productCategoryIdName">
             <string-to-field string="productCategoryId" field-name="productCategoryIdName"/>
         </if-empty>
+        <if-empty field-name="productCategoryIdToCheck">
+            <field-to-field field-name="${productCategoryIdName}" map-name="parameters" to-field-name="productCategoryIdToCheck"/>
+        </if-empty>
 
         <!-- find all role-categories that this category is a member of -->
         <if>
@@ -488,7 +544,7 @@
                 <not><if-has-permission permission="CATALOG" action="_${checkAction}"/></not>
             </condition>
             <then>
-                <field-to-field field-name="${productCategoryIdName}" map-name="parameters" to-field-name="productCategoryId" to-map-name="lookupRoleCategoriesMap"/>
+                <field-to-field field-name="productCategoryIdToCheck" to-field-name="productCategoryId" to-map-name="lookupRoleCategoriesMap"/>
                 <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
                 <string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
                 <find-by-and entity-name="ProductCategoryRollupAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
