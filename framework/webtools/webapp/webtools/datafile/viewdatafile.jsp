@@ -77,25 +77,25 @@
 
   <hr>
 
-  <%if(messages.size() > 0) {%>
+  <%if (messages.size() > 0) {%>
     <H4>The following occurred:</H4>
     <UL>
     <%Iterator errMsgIter = messages.iterator();%>
-    <%while(errMsgIter.hasNext()) {%>
+    <%while (errMsgIter.hasNext()) {%>
       <LI><%=errMsgIter.next()%>
     <%}%>
     </UL>
   <%}%>
 
-  <%if(dataFile != null && modelDataFile != null) {%>
+  <%if (dataFile != null && modelDataFile != null) {%>
     <FORM method="post" action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
-      <INPUT name='DATAFILE_LOCATION' type="hidden" value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'>
-      <%=dataFileIsUrl?"<INPUT type="hidden" name='DATAFILE_IS_URL' value='true'>":""%>
-      <INPUT name='DEFINITION_LOCATION' type="hidden" value='<%=UtilFormatOut.checkNull(definitionLoc)%>'>
-      <%=definitionIsUrl?"<INPUT type="hidden" name='DEFINITION_IS_URL' value='true'>":""%>
-      <INPUT name='DEFINITION_NAME' type="hidden" value='<%=UtilFormatOut.checkNull(definitionName)%>'>
-      Save to file: <INPUT name='DATAFILE_SAVE' type="text" size='60' value='<%=UtilFormatOut.checkNull(dataFileSave)%>'>
-      <INPUT type="submit" value='Save'>
+      <INPUT name="DATAFILE_LOCATION" type="hidden" value="<%=UtilFormatOut.checkNull(dataFileLoc)%>">
+      <%=dataFileIsUrl?"<INPUT type=\"hidden\" name=\"DATAFILE_IS_URL\" value=\"true\">":""%>
+      <INPUT name="DEFINITION_LOCATION" type="hidden" value='<%=UtilFormatOut.checkNull(definitionLoc)%>'>
+      <%=definitionIsUrl?"<INPUT type=\"hidden\" name=\"DEFINITION_IS_URL\" value=\"true\">":""%>
+      <INPUT name="DEFINITION_NAME" type="hidden" value="<%=UtilFormatOut.checkNull(definitionName)%>">
+      Save to file: <INPUT name="DATAFILE_SAVE" type="text" size="60" value="<%=UtilFormatOut.checkNull(dataFileSave)%>"/>
+      <INPUT type="submit" value="Save"/>
     </FORM>
     <BR>
 
