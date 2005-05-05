@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -36,7 +36,7 @@
     <a href="<@ofbizUrl>/RequestItemQuotes?custRequestId=${custRequest.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="${selectedClassMap.requestitemquotes?default(unselectedClassName)}">${uiLabelMap.WorkEffortQuotes}</a>
     </#if>
     <a href="<@ofbizUrl>/requestitemrequirements?custRequestId=${custRequest.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="${selectedClassMap.requestitemrequirements?default(unselectedClassName)}">${uiLabelMap.WorkEffortRequirements}</a>
-    <a href="#" class="tabButton">${uiLabelMap.WorkEffortTasks}</a>
+    <a href="<@ofbizUrl>/EditRequestItemWorkEffort?custRequestId=${custRequest.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortTasks}</a>
   </#if>
 </div>
 </#if>
