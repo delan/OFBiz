@@ -43,17 +43,15 @@
 	<#assign displayApps = [
 <#--		 {"title":"Main", 				"url":"main"} -->
  		{"title":"Product",				"url":"mainCatalog"}
-<#-- 		,{"title":"Assets",				"url":"ListFixedAssets?parentFixedAssetId=${productStoreId}"}-->
 		,{"title":"Reservations",		"url":"findorders?productStoreId=${productStoreId}"}
 		,{"title":"Customers",			"url":"findparty"}
 		,{"title":"Settings",				"url":"mainSettings"}
-<#--		,{"title":"Profile",				"url":"EditProductStore?productStoreId=${productStoreId}"}-->
-		,{"title":"Website", 			"url":"http://127.0.0.1:8080/hotelfrontend?productStoreId=${productStoreId}"}
+		,{"title":"Website", 			"url":"/hotelfrontend?productStoreId=${productStoreId}"}
 		,{"title":"Logout", 				"url":"logout"}
 		]>
 <#else>
 	<#assign displayApps = [
-		{"title":"Website", 			"url":"http://127.0.0.1:8080/hotelfrontend?productStoreId=${productStoreId}"}
+		{"title":"Website", 			"url":"/hotelfrontend?productStoreId=${productStoreId}"}
 		,{"title":"Login",				"url":"checkLogin/main"}
 		]>
 </#if>
