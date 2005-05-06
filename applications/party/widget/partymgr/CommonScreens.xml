@@ -47,7 +47,7 @@
                 
                 <container style="centerarea">
                     <!-- render appheader -->
-                    <platform-specific><html><html-template location="component://party/webapp/partymgr/includes/header.ftl"/></html></platform-specific>
+                    <platform-specific><html><html-template location="component://party/webapp/partymgr/includes/appheader.ftl"/></html></platform-specific>
                     
                     <container style="contentarea">
                         <container style="column-main">

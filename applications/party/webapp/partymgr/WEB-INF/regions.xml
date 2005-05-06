@@ -4,7 +4,7 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/regions.xsd">
     <define id='MAIN_REGION' template='/templates/main_template.jsp'>
         <put section='title'>Application Page</put> <!-- this is a default and is meant to overridden -->
-        <put section='header' type="jpublish" content='/includes/header.ftl'/>
+        <put section='appheader' type="jpublish" content='/includes/appheader.ftl'/>
         <put section='appbar' type="jpublish" content='/includes/appbar.ftl'/>
         <put section='error' type="jpublish" content='/includes/errormsg.ftl'/>
         <put section='content' content='/main.jsp'/> <!-- this is a default and is meant to overridden -->

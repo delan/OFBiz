@@ -32,7 +32,7 @@
 		    <set field="headerItem" value="CMS"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="main" location="component://content/widget/CommonScreens.xml" >
+                       <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml" >
                          <decorator-section name="body">
                            <include-menu name="cms" location="component://content/webapp/content/cms/CMSMenus.xml" />
                            <decorator-section-include name="body"/>

@@ -75,9 +75,14 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html>
-                        </platform-specific>
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="${uiLabelMap.AccountingMainPage}"/>
+                            </container>
+                            <container style="screenlet-body">
+                                <container><label style="tabletext" text="${uiLabelMap.AccountingMainPageNote}"/></container>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -97,4 +102,3 @@
         </section>
     </screen>
 </screens>
-
