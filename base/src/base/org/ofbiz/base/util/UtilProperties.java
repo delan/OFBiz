@@ -31,6 +31,9 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.ofbiz.base.util.collections.FlexibleProperties;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
@@ -45,21 +48,21 @@ import org.ofbiz.base.util.cache.UtilCache;
  * @since      1.0
  */
 public class UtilProperties implements java.io.Serializable {
-    
+
     public static final String module = UtilProperties.class.getName();
 
-    /** An instance of the generic cache for storing the FlexibleProperties 
+    /** An instance of the generic cache for storing the FlexibleProperties
      *  corresponding to each properties file keyed by a String for the resource location.
      * This will be used for both non-locale and locale keyed FexibleProperties instances.
      */
     protected static UtilCache resourceCache = new UtilCache("properties.UtilPropertiesResourceCache");
 
-    /** An instance of the generic cache for storing the FlexibleProperties 
+    /** An instance of the generic cache for storing the FlexibleProperties
      *  corresponding to each properties file keyed by a URL object
      */
     protected static UtilCache urlCache = new UtilCache("properties.UtilPropertiesUrlCache");
 
-    /** An instance of the generic cache for storing the ResourceBundle 
+    /** An instance of the generic cache for storing the ResourceBundle
      *  corresponding to each properties file keyed by a String for the resource location and the locale
      */
     protected static UtilCache bundleLocaleCache = new UtilCache("properties.UtilPropertiesBundleLocaleCache");
@@ -180,7 +183,7 @@ public class UtilProperties implements java.io.Serializable {
         }
         return properties;
     }
-    
+
     /** Returns the specified resource/properties file
      * @param url The URL to the resource
      * @return The properties file
@@ -191,7 +194,7 @@ public class UtilProperties implements java.io.Serializable {
         Properties properties = (FlexibleProperties) resourceCache.get(url);
 
         if (properties == null) {
-            try {                                
+            try {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
                 resourceCache.put(url, properties);
             } catch (MissingResourceException e) {
@@ -204,7 +207,7 @@ public class UtilProperties implements java.io.Serializable {
         }
         return properties;
     }
-    
+
 
     // ========= URL Based Methods ==========
 
@@ -338,8 +341,41 @@ public class UtilProperties implements java.io.Serializable {
         }
         return value == null ? "" : value.trim();
     }
-    
-    
+
+    public static void setPropertyValue(String resource, String name, String value) {
+        if (resource == null || resource.length() <= 0) return;
+        if (name == null || name.length() <= 0) return;
+        FlexibleProperties properties = (FlexibleProperties) resourceCache.get(resource);
+
+        if (properties == null) {
+            try {
+                URL url = UtilURL.fromResource(resource);
+
+                if (url == null) return;
+                properties = FlexibleProperties.makeFlexibleProperties(url);
+                resourceCache.put(resource, properties);
+            } catch (MissingResourceException e) {
+                Debug.log(e.getMessage(), module);
+            }
+        }
+
+        if (properties == null) {
+            Debug.log("[UtilProperties.setPropertyValue] could not find resource: " + resource, module);
+            return;
+        }
+
+        try {
+            properties.setProperty(name, value);
+            FileOutputStream propFile = new FileOutputStream(resource);
+            properties.store(propFile, "Dynamically modified by OFBiz Framework (UtilProperties)");
+            propFile.close();
+        } catch (FileNotFoundException e) {
+            Debug.log(e, "Unable to located the resource file.", module);
+        } catch (IOException e) {
+            Debug.logError(e, module);
+        }
+    }
+
     // ========= Locale & Resource Based Methods ==========
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding to the given locale.
@@ -371,7 +407,7 @@ public class UtilProperties implements java.io.Serializable {
         return value == null ? "" : value.trim();
     }
 
-    /** Returns the value of the specified property name from the specified resource/properties file corresponding 
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -381,18 +417,18 @@ public class UtilProperties implements java.io.Serializable {
      */
     public static String getMessage(String resource, String name, Object[] arguments, Locale locale) {
         String value = getMessage(resource, name, locale);
-        
+
         if (value == null || value.length() == 0) {
             return "";
         } else {
             if (arguments != null && arguments.length > 0) {
                 value = MessageFormat.format(value, arguments);
-            }   
+            }
             return value;
         }
     }
 
-    /** Returns the value of the specified property name from the specified resource/properties file corresponding 
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -402,18 +438,18 @@ public class UtilProperties implements java.io.Serializable {
      */
     public static String getMessage(String resource, String name, List arguments, Locale locale) {
         String value = getMessage(resource, name, locale);
-        
+
         if (value == null || value.length() == 0) {
             return "";
         } else {
             if (arguments != null && arguments.size() > 0) {
                 value = MessageFormat.format(value, arguments.toArray());
-            }   
+            }
             return value;
         }
     }
 
-    /** Returns the value of the specified property name from the specified resource/properties file corresponding 
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the FlexibleStringExpander class
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -423,13 +459,13 @@ public class UtilProperties implements java.io.Serializable {
      */
     public static String getMessage(String resource, String name, Map context, Locale locale) {
         String value = getMessage(resource, name, locale);
-        
+
         if (value == null || value.length() == 0) {
             return "";
         } else {
             if (context != null && context.size() > 0) {
                 value = FlexibleStringExpander.expandString(value, context);
-            }   
+            }
             return value;
         }
     }
@@ -447,7 +483,7 @@ public class UtilProperties implements java.io.Serializable {
         ResourceBundle theBundle = bundleMap.getResourceBundle();
         return theBundle;
     }
-    
+
     /** Returns the specified resource/properties file as a Map with the original ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
      * @param resource The name of the resource - can be a file, class, or URL
      * @param locale The locale that the given resource will correspond to
@@ -457,13 +493,13 @@ public class UtilProperties implements java.io.Serializable {
         if (locale == null) {
             throw new IllegalArgumentException("Locale cannot be null");
         }
-        
+
         ResourceBundleMapWrapper.InternalRbmWrapper bundleMap = getInternalRbmWrapper(resource, locale);
         return new ResourceBundleMapWrapper(bundleMap);
     }
 
     public static ResourceBundleMapWrapper.InternalRbmWrapper getInternalRbmWrapper(String resource, Locale locale) {
-        String resourceCacheKey = resource + "_" + locale.toString();        
+        String resourceCacheKey = resource + "_" + locale.toString();
         ResourceBundleMapWrapper.InternalRbmWrapper bundleMap = (ResourceBundleMapWrapper.InternalRbmWrapper) bundleLocaleCache.get(resourceCacheKey);
         if (bundleMap == null) {
             synchronized (UtilProperties.class) {
@@ -477,12 +513,12 @@ public class UtilProperties implements java.io.Serializable {
                     if (bundleMap != null) {
                         bundleLocaleCache.put(resourceCacheKey, bundleMap);
                     }
-                }                
+                }
             }
         }
         return bundleMap;
     }
-    
+
     protected static ResourceBundle getBaseResourceBundle(String resource, Locale locale) {
         if (resource == null || resource.length() <= 0) return null;
         if (locale == null) locale = Locale.getDefault();
@@ -499,41 +535,41 @@ public class UtilProperties implements java.io.Serializable {
             Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
             return null;
         }
-        
+
         return bundle;
     }
-    
+
     /** Returns the specified resource/properties file
      *
      * NOTE: This is NOT fully implemented yet to fulfill all of the requirements
      *  for i18n messages. Do NOT use.
      *
-     * To be used in an i18n context this still needs to be extended quite 
-     *  a bit. The behavior needed is that for each getMessage the most specific 
-     *  locale (with fname_en_US for instance) is searched first, then the next 
+     * To be used in an i18n context this still needs to be extended quite
+     *  a bit. The behavior needed is that for each getMessage the most specific
+     *  locale (with fname_en_US for instance) is searched first, then the next
      *  less specific (fname_en for instance), then without the locale if it is
      *  still not found (plain fname for example, not that these examples would
      *  have .properties appended to them).
      * This would be accomplished by returning the following structure:
      *    1. Get "fname" FlexibleProperties object
-     *    2. Get the "fname_en" FlexibleProperties object and if the "fname" one 
+     *    2. Get the "fname_en" FlexibleProperties object and if the "fname" one
      *      is not null, set it as the default/parent of the "fname_en" object
-     *    3. Get the "fname_en_US" FlexibleProperties object and if the 
-     *      "fname_en" one is not null, set it as the default/parent of the 
+     *    3. Get the "fname_en_US" FlexibleProperties object and if the
+     *      "fname_en" one is not null, set it as the default/parent of the
      *      "fname_en_US" object; if the "fname_en" one is null, but the "fname"
-     *      one is not, set the "fname" object as the default/parent of the 
+     *      one is not, set the "fname" object as the default/parent of the
      *      "fname_en_US" object
      * Then return the fname_en_US object if not null, else the fname_en, else the fname.
      *
-     * To make this all more fun, the default locale should be the parent of 
-     *  the "fname" object in this example so that there is an even higher 
+     * To make this all more fun, the default locale should be the parent of
+     *  the "fname" object in this example so that there is an even higher
      *  chance of finding something for each request.
      *
      * For efficiency all of these should be cached indendependently so the same
      *  instance can be shared, speeding up loading time/efficiency.
      *
-     * All of this should work with the setDefaultProperties method of the 
-     *  FlexibleProperties class, but it should be tested and updated as 
+     * All of this should work with the setDefaultProperties method of the
+     *  FlexibleProperties class, but it should be tested and updated as
      *  necessary. It's a bit tricky, so chances are it won't work as desired...
      *
      * @param resource The name of the resource - can be a file, class, or URL
@@ -543,7 +579,7 @@ public class UtilProperties implements java.io.Serializable {
     public static Properties getProperties(String resource, Locale locale) {
         if (resource == null || resource.length() <= 0) return null;
         if (locale == null) locale = Locale.getDefault();
-        
+
         String localeString = locale.toString();
         String resourceLocale = resource + "_" + localeString;
         Properties properties = (FlexibleProperties) resourceCache.get(resourceLocale);
@@ -560,8 +596,8 @@ public class UtilProperties implements java.io.Serializable {
                 Debug.log(e.getMessage(), module);
             }
             resourceCache.put(resourceLocale, properties);
-        }      
-        
+        }
+
         if (properties == null)
             Debug.logInfo("[UtilProperties.getProperties] could not find resource: " + resource + ", locale: " + locale, module);
 
