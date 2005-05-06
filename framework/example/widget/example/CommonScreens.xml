@@ -69,9 +69,20 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://example/webapp/example/main.ftl"/></html>
-                        </platform-specific>
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="Example Main Page"/>
+                            </container>
+                            <container style="screenlet-body">
+                                <section>
+                                    <condition><if-empty field-name="userLogin"/></condition>
+                                    <widgets>
+                                        <container><label style="tabletext" text="For something interesting make sure you are logged in, try username:admin, password:ofbiz."/></container>
+                                    </widgets>
+                                </section>
+                                <container><label style="tabletext" text="Welcome to the Example application!"/></container>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -91,4 +102,3 @@
         </section>
     </screen>
 </screens>
-

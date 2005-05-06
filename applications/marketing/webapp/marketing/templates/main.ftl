@@ -63,10 +63,10 @@
   </tr>
 </table>
 
-${pages.get("/includes/appbar.ftl")}
+${common.get("/includes/appbar.ftl")}
 
 <div class="centerarea">
-  ${pages.get("/includes/header.ftl")}
+  ${pages.get("/includes/appheader.ftl")}
   <div class="contentarea">
     <div style="border: 0; margin: 0; padding: 0; width: 100%;">
       <table style="border: 0; margin: 0; padding: 0; width: 100%;" cellpadding="0" cellspacing="0">
@@ -84,7 +84,7 @@ ${pages.get("/includes/appbar.ftl")}
   </div>
 </div>
 
-${pages.get("/includes/footer.ftl")}
+${common.get("/includes/footer.ftl")}
 
 </body>
 </html>

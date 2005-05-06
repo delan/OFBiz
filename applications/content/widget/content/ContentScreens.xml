@@ -31,7 +31,7 @@
                 <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="main" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-menu name="content" location="component://content/webapp/content/content/ContentMenus.xml"/>
                         <decorator-section-include name="body"/>

@@ -28,19 +28,19 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
 
-	<screen name="common">
+	<screen name="common-decorator">
 		<section>
 		<actions>
 		    <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user"/>
 		</actions>
-                  <widgets>
-                       <decorator-screen name="main" location="component://content/widget/CommonScreens.xml" >
-                         <decorator-section name="body">
-                           <include-menu name="contentsetup" location="component://content/webapp/content/contentsetup/ContentSetupMenus.xml" />
-                           <decorator-section-include name="body"/>
-                          </decorator-section>
-                        </decorator-screen>
-                  </widgets>
+             <widgets>
+                 <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+                         <include-menu name="contentsetup" location="component://content/webapp/content/contentsetup/ContentSetupMenus.xml"/>
+                         <decorator-section-include name="body"/>
+                     </decorator-section>
+                 </decorator-screen>
+             </widgets>
 		</section>
 	</screen>
 	
@@ -49,16 +49,16 @@
 		<actions>
 		    <set field="headerItem" value="Content"/>
 		    <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user" default-value="FindContent"/>
-		    <set field="subScreens.ContentPurposeOp" value="ContentPurposeOp" />
-		    <set field="subScreens.ContentOp" value="ContentOp" />
-		    <set field="subScreens.assocPrep" value="assocPrep" />
-		    <set field="subScreens.typeAttr" value="typeAttr" />
-		    <set field="subScreens.purposeType" value="purposeType" />
-		    <set field="subScreens.assocType" value="assocType" />
-		    <set field="subScreens.type" value="type" />
+		    <set field="subScreens.ContentPurposeOp" value="ContentPurposeOp"/>
+		    <set field="subScreens.ContentOp" value="ContentOp"/>
+		    <set field="subScreens.assocPrep" value="assocPrep"/>
+		    <set field="subScreens.typeAttr" value="typeAttr"/>
+		    <set field="subScreens.purposeType" value="purposeType"/>
+		    <set field="subScreens.assocType" value="assocType"/>
+		    <set field="subScreens.type" value="type"/>
 		</actions>
                   <widgets>
-                           <include-screen name="${subScreens.${currentMenuItemName}}" />
+                           <include-screen name="${subScreens.${currentMenuItemName}}"/>
                   </widgets>
 		</section>
 	</screen>
@@ -73,10 +73,10 @@
 		  <set field="currentMenuItemName" to-scope="user" value="type"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
-              <include-form name="UpdateContentType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
-              <include-form name="AddContentType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
+              <include-form name="UpdateContentType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
+              <include-form name="AddContentType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
             </decorator-section>
           </decorator-screen>
         </widgets>
@@ -93,10 +93,10 @@
 		  <set field="currentMenuItemName" to-scope="user" value="typeAttr"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
-              <include-form name="UpdateContentTypeAttr" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
-              <include-form name="AddContentTypeAttr" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
+              <include-form name="UpdateContentTypeAttr" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
+              <include-form name="AddContentTypeAttr" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
             </decorator-section>
           </decorator-screen>
         </widgets>
@@ -113,10 +113,10 @@
 		  <set field="currentMenuItemName" to-scope="user" value="assocType"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
-              <include-form name="UpdateContentAssocType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
-              <include-form name="AddContentAssocType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
+              <include-form name="UpdateContentAssocType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
+              <include-form name="AddContentAssocType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
             </decorator-section>
           </decorator-screen>
         </widgets>
@@ -133,10 +133,10 @@
 		  <set field="currentMenuItemName" to-scope="user" value="purposeType"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
-              <include-form name="UpdateContentPurposeType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
-              <include-form name="AddContentPurposeType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
+              <include-form name="UpdateContentPurposeType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
+              <include-form name="AddContentPurposeType" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
             </decorator-section>
           </decorator-screen>
         </widgets>
@@ -153,10 +153,10 @@
 		  <set field="currentMenuItemName" to-scope="user" value="assocPred"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
-              <include-form name="UpdateContentAssocPredicate" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
-              <include-form name="AddContentAssocPredicate" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
+              <include-form name="UpdateContentAssocPredicate" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
+              <include-form name="AddContentAssocPredicate" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
             </decorator-section>
           </decorator-screen>
         </widgets>
@@ -173,10 +173,10 @@
 		  <set field="currentMenuItemName" to-scope="user" value="contentPurposeOp"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
-              <include-form name="UpdateContentPurposeOperation" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
-              <include-form name="AddContentPurposeOperation" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
+              <include-form name="UpdateContentPurposeOperation" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
+              <include-form name="AddContentPurposeOperation" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
             </decorator-section>
           </decorator-screen>
         </widgets>
@@ -195,7 +195,7 @@
    	      <script location="component://content/widget/contentsetup/userpermprep.bsh"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
             <platform-specific>
                 <html>
@@ -217,10 +217,10 @@
 		  <set field="currentMenuItemName" to-scope="user" value="contentOp"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
-              <include-form name="UpdateContentOperation" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
-              <include-form name="AddContentOperation" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
+              <include-form name="UpdateContentOperation" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
+              <include-form name="AddContentOperation" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
             </decorator-section>
           </decorator-screen>
         </widgets>
@@ -237,16 +237,13 @@
 		  <set field="currentMenuItemName" to-scope="user" value="contentPurposeOp"/>
 		</actions>
         <widgets>
-          <decorator-screen name="common" >
+          <decorator-screen name="common-decorator">
             <decorator-section name="body">
-              <include-form name="UpdateContentPurpose" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
-              <include-form name="AddContentPurpose" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml" />
+              <include-form name="UpdateContentPurpose" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
+              <include-form name="AddContentPurpose" location="component://content/webapp/content/contentsetup/ContentSetupForms.xml"/>
             </decorator-section>
           </decorator-screen>
         </widgets>
 	  </section>
 	</screen>
-
-
 </screens>
-

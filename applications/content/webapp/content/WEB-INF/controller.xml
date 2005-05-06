@@ -1361,8 +1361,8 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" page="/main.ftl" type="jpublish"/>
-    <view-map name="login" page="/login.ftl" type="jpublish"/>
+    <view-map name="main" type="screen" page="component://content/widget/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://content/widget/CommonScreens.xml#login"/>
     <view-map name="fonts.fo" page="/fonts.fo.ftl" type="fop"/>
     
     <view-map name="FindWebSite" page="/website/FindWebSite.ftl" type="jpublish"/>
