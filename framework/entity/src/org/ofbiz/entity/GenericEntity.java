@@ -117,6 +117,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     
     /** Creates new GenericEntity */
     public static GenericEntity createGenericEntity(ModelEntity modelEntity) {
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
+        }
+        
         GenericEntity newEntity = new GenericEntity();
         newEntity.init(modelEntity);
         return newEntity;
@@ -124,6 +128,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     /** Creates new GenericEntity from existing Map */
     public static GenericEntity createGenericEntity(ModelEntity modelEntity, Map fields) {
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
+        }
+        
         GenericEntity newEntity = new GenericEntity();
         newEntity.init(modelEntity, fields);
         return newEntity;
@@ -131,6 +139,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     /** Copy Factory Method: Creates new GenericEntity from existing GenericEntity */
     public static GenericEntity createGenericEntity(GenericEntity value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Cannot create a GenericEntity with a null value parameter");
+        }
+        
         GenericEntity newEntity = new GenericEntity();
         newEntity.init(value);
         return newEntity;
