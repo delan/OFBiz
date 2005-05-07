@@ -33,7 +33,7 @@ ${virtualJavaScript?if_exists}
 <script language="JavaScript" type="text/javascript">
 <!--
     var detailImageUrl = null;
-     function setAddProductId(name) {
+    function setAddProductId(name) {
         document.addform.add_product_id.value = name;
         if (document.addform.quantity == null) return;
         if (name == 'NULL' || isVirtual(name) == true) {
@@ -41,8 +41,8 @@ ${virtualJavaScript?if_exists}
         } else {
             document.addform.quantity.disabled = false;
         }
-     }
-     function isVirtual(product) {
+    }
+    function isVirtual(product) {
         var isVirtual = false;
         <#if virtualJavaScript?exists>
         for (i = 0; i < VIR.length; i++) {
@@ -52,18 +52,18 @@ ${virtualJavaScript?if_exists}
         }
         </#if>
         return isVirtual;
-     }
+    }
     function addItem() {
        if (document.addform.add_product_id.value == 'NULL') {
-           alert("Please enter all the required information.");
+           alert("Please select all of the required options.");
            return;
        } else {
-             if (isVirtual(document.addform.add_product_id.value)) {
-                document.location = '<@ofbizUrl>/product?category_id=${categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
-                return;
-             } else {
-                 document.addform.submit();
-             }
+           if (isVirtual(document.addform.add_product_id.value)) {
+               document.location = '<@ofbizUrl>/product?category_id=${categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
+               return;
+           } else {
+               document.addform.submit();
+           }
        }
     }
 
@@ -321,7 +321,7 @@ ${virtualJavaScript?if_exists}
       <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name='addform'  style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
-        <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
+        <#if product.isVirtual?if_exists?upper_case == "Y">
           <#if variantTree?exists && (variantTree.size() > 0)>
             <#list featureSet as currentType>
               <div class="tabletext">
@@ -335,7 +335,7 @@ ${virtualJavaScript?if_exists}
           <#else>
             <input type='hidden' name="product_id" value='${product.productId}'>
             <input type='hidden' name="add_product_id" value='NULL'>
-            <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
+            <div class="tabletext"><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
             <#assign inStock = false>
           </#if>
         <#else>
@@ -345,10 +345,10 @@ ${virtualJavaScript?if_exists}
           <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
           <#if isStoreInventoryNotAvailable>
             <#if isStoreInventoryRequired>
-              <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
+              <div class="tabletext"><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
             <#else>
-              <div class='tabletext'><b>${product.inventoryMessage?if_exists}</b></div>
+              <div class="tabletext"><b>${product.inventoryMessage?if_exists}</b></div>
             </#if>
           </#if>
         </#if>
@@ -356,10 +356,10 @@ ${virtualJavaScript?if_exists}
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
         <p>&nbsp;</p>
-          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
+          <div class="tabletext" style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
-          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNoLongerAvailable}.</div>
+          <div class="tabletext" style='color: red;'>${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>
           <#if inStock>
@@ -372,11 +372,16 @@ ${virtualJavaScript?if_exists}
               <nobr><b>Amount:</b></nobr>&nbsp;
               <input type="text" class="inputBox" size="5" name="add_amount" value="">
             </div>
-            <#if product.productTypeId == "ASSET_USAGE"><table width="100%"><tr><td  width="80%">&nbsp;</td><td class="tabletext" nowrap align="right">Start Date<br/>(yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStart"></td><td class="tabletext" nowrap align="right">Number<br/>of days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td></tr><tr><td>&nbsp;</td><td class="tabletext" align="right" nowrap>Number of<br/>persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table><#else><input type="text" class="inputBox" size="5" name="quantity" value="1"></#if>
-            <a href='javascript:additemSubmit()' class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
+            <#if product.productTypeId == "ASSET_USAGE">
+                <table width="100%"><tr><td  width="80%">&nbsp;</td><td class="tabletext" nowrap align="right">Start Date<br/>(yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStart"/></td><td class="tabletext" nowrap align="right">Number<br/>of days</td><td><input type="text" class="inputBox" size="4" name="reservLength"/></td></tr><tr><td>&nbsp;</td><td class="tabletext" align="right" nowrap>Number of<br/>persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"/></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"/></td></tr></table>
+            <#else/>
+                <input type="text" class="inputBox" size="5" name="quantity" value="1"<#if product.isVirtual?if_exists?upper_case == "Y"> disabled="disabled"</#if>/>
+            </#if>
+            <#-- This calls addItem() so that variants of virtual products can't be added before distinguishing features are selected, it should not be changed to additemSubmit() -->
+            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
           </#if>
           <#if requestParameters.category_id?exists>
-            <input type='hidden' name='category_id' value='${requestParameters.category_id}'>
+            <input type="hidden" name="category_id" value="${requestParameters.category_id}"/>
           </#if>
         </#if>
       </form>
@@ -398,7 +403,12 @@ ${virtualJavaScript?if_exists}
             <option value="">${uiLabelMap.EcommerceNewShoppingList}</option>
           </select>
           &nbsp;&nbsp;
-          <#if product.productTypeId == "ASSET_USAGE"><table><tr><td>&nbsp;</td><td class="tabletext" align="right">Start Date (yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStartStr" ></td><td class="tabletext">Number of&nbsp;days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td><td>&nbsp;</td><td class="tabletext" align="right">Number of&nbsp;persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table><#else><input type="text" class="inputBox" size="5" name="quantity" value="1"><input type="hidden" name="reservStartStr" value= ""></#if>
+          <#if product.productTypeId == "ASSET_USAGE">
+              <table><tr><td>&nbsp;</td><td class="tabletext" align="right">Start Date (yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStartStr" ></td><td class="tabletext">Number of&nbsp;days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td><td>&nbsp;</td><td class="tabletext" align="right">Number of&nbsp;persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table>
+          <#else>
+              <input type="text" class="inputBox" size="5" name="quantity" value="1"/>
+              <input type="hidden" name="reservStartStr" value= ""/>
+          </#if>
           <a href='javascript:addShoplistSubmit();' class="buttontext">[${uiLabelMap.EcommerceAddToShoppingList}]</a>
         </form>
       <#else> <br/>
