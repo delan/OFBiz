@@ -286,7 +286,7 @@
         <field name="comments" title="${uiLabelMap.ProductComments}" ><ignored/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeProductFromCategory?productId=${productCategoryMember.productId}&amp;productCategoryId=${productCategoryMember.productCategoryId}&amp;fromDate=${productCategoryMember.fromDate}"
+            <hyperlink target="removeProductFromCategory?productId=${productId}&amp;productCategoryId=${productCategoryId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
