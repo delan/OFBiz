@@ -139,18 +139,18 @@
     <form name="UpdateProductStoreCatalog" type="list"
         target="updateProductStoreCatalog" title="" list-name="productStoreCatalogs"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <auto-fields-service service-name="updateProductStoreCatalog" map-name=""/>
+        <auto-fields-service service-name="updateProductStoreCatalog"/>
         <field name="productStoreId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.ProductCatalogId}" widget-style="tabletext">
             <display-entity entity-name="ProdCatalog" description="${catalogName}" also-hidden="true">
-                <sub-hyperlink target="EditProdCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}" description="[${prodCatalogId}]" link-style="buttontext"/>
+                <sub-hyperlink target="EditProdCatalog?prodCatalogId=${prodCatalogId}" description="[${prodCatalogId}]" link-style="buttontext"/>
             </display-entity>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="deleteProductStoreCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}&amp;productStoreId=${productStoreCatalog.productStoreId}&amp;fromDate=${productStoreCatalog.fromDate}"
+            <hyperlink target="deleteProductStoreCatalog?prodCatalogId=${prodCatalogId}&amp;productStoreId=${productStoreId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
