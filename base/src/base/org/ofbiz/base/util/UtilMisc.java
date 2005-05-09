@@ -168,6 +168,19 @@ public class UtilMisc {
         return map;
     }
 
+    public static String printMap(Map theMap) {
+        StringBuffer theBuf = new StringBuffer();
+        Iterator entryIter = theMap.entrySet().iterator();
+        while (entryIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) entryIter.next();
+            theBuf.append(entry.getKey());
+            theBuf.append(" --> ");
+            theBuf.append(entry.getValue());
+            theBuf.append("\n");
+        }
+        return theBuf.toString();
+    }
+    
     /**
      * Sort a List of Maps by specified consistent keys.
      * @param listOfMaps List of Map objects to sort.
