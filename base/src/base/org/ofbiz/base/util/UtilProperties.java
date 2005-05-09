@@ -31,9 +31,12 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import javolution.util.FastSet;
 
 import org.ofbiz.base.util.collections.FlexibleProperties;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
@@ -519,6 +522,7 @@ public class UtilProperties implements java.io.Serializable {
         return bundleMap;
     }
 
+    protected static Set resourceNotFoundMessagesShown = FastSet.newInstance();
     protected static ResourceBundle getBaseResourceBundle(String resource, Locale locale) {
         if (resource == null || resource.length() <= 0) return null;
         if (locale == null) locale = Locale.getDefault();
@@ -528,12 +532,20 @@ public class UtilProperties implements java.io.Serializable {
         try {
             bundle = ResourceBundle.getBundle(resource, locale, loader);
         } catch (MissingResourceException e) {
-            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString() + ": " + e.toString(), module);
-            return null;
+            String resourceFullName = resource + "_" + locale.toString();
+            if (!resourceNotFoundMessagesShown.contains(resourceFullName)) {
+                resourceNotFoundMessagesShown.add(resourceFullName);
+                Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString() + ": " + e.toString(), module);
+                return null;
+            }
         }
         if (bundle == null) {
-            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
-            return null;
+            String resourceFullName = resource + "_" + locale.toString();
+            if (!resourceNotFoundMessagesShown.contains(resourceFullName)) {
+                resourceNotFoundMessagesShown.add(resourceFullName);
+                Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
+                return null;
+            }
         }
 
         return bundle;

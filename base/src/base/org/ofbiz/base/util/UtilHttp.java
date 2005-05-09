@@ -33,13 +33,22 @@ import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Currency;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.map.LinkedMap;
+import javolution.util.FastMap;
 
 /**
  * HttpUtil - Misc TTP Utility Functions
@@ -58,7 +67,7 @@ public class UtilHttp {
      * @return The resulting Map
      */
     public static Map getParameterMap(HttpServletRequest request) {
-        Map paramMap = new LinkedMap();
+        Map paramMap = FastMap.newInstance();
         // first add in all path info parameters /~name1=value1/~name2=value2/
         String pathInfoStr = request.getPathInfo();
 
@@ -102,6 +111,17 @@ public class UtilHttp {
                 paramMap.putAll(multiPartMap);
             }
         }
+        
+        //Debug.logInfo("Made parameterMap: \n" + UtilMisc.printMap(paramMap), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Made Request Parameter Map with [" + paramMap.size() + "] Entries", module);
+            Iterator entryIter = paramMap.entrySet().iterator();
+            while (entryIter.hasNext()) {
+                Map.Entry entry = (Map.Entry) entryIter.next();
+                Debug.logVerbose("Request Parameter Map Entry: [" + entry.getKey() + "] --> " + entry.getValue(), module);
+            }
+        }
+        
         return paramMap;
     }
 
