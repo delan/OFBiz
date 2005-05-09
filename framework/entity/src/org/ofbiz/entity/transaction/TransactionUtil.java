@@ -596,11 +596,12 @@ public class TransactionUtil implements Status {
     private static RollbackOnlyCause clearSetRollbackOnlyCause() {
         RollbackOnlyCause roc = (RollbackOnlyCause) setRollbackOnlyCause.get();
         if (roc == null) {
+            /* this is an obnoxious message, leaving out for now; could be added manually if a problem with this is suspected
             if (Debug.verboseOn()) {
                 // for this in particular, unlike the begin location, normally there will not be a setRollbackOnlyCause, so don't complain about it except in verbose
-                Exception e2 = new Exception("Current Stack Trace");
-                Debug.logWarning(e2, "In clearSetRollbackOnlyCause no stack placeholder was in place, here is the current location: ", module);
+                Debug.logVerbose(new Exception("Current Stack Trace"), "In clearSetRollbackOnlyCause no stack placeholder was in place, here is the current location: ", module);
             }
+            */
             return null;
         } else {
             setRollbackOnlyCause.set(null);
