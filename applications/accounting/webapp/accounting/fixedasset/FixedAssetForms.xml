@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -64,7 +64,7 @@
             </drop-down>
         </field>
 
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" ><lookup target-form-name="LookupPerson"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPerson"/></field>
 
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}" widget-style="selectBox">
             <drop-down allow-empty="true">
@@ -84,7 +84,7 @@
             
         <field name="calendarId"><hidden/></field>  <!-- not show, can better be maintained by the system -->
     
-        <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParent}" ><lookup target-form-name="LookupFixedAsset"/></field>
+        <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParent}"><lookup target-form-name="LookupFixedAsset"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
@@ -109,9 +109,9 @@
             target="addFixedAssetProduct" title="" default-map-name="fixedAssetProduct"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         
-         <auto-fields-service service-name="addFixedAssetProduct" map-name="fixedAssetProduct"/>
+        <auto-fields-service service-name="addFixedAssetProduct" map-name="fixedAssetProduct"/>
 
-         <field name="fixedAssetId"><hidden/></field>
+        <field name="fixedAssetId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
         <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductTypeId}" widget-style="selectBox">
             <drop-down allow-empty="true">
@@ -138,19 +138,19 @@
 
         <field name="week" title="${uiLabelMap.Common${month}} ${year}" widget-area-style="calendarWeek" widget-style="calendarWeek"><display description="Week ${week}"/></field>
         <field name="Monday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
-        <field name="MondayData" title="${uiLabelMap.CommonMonday}" ><display/></field>
+        <field name="MondayData" title="${uiLabelMap.CommonMonday}"><display/></field>
         <field name="Tuesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="TuesdayData" title="${uiLabelMap.CommonTuesday}" > <display/></field>
+        <field name="TuesdayData" title="${uiLabelMap.CommonTuesday}"> <display/></field>
         <field name="Wendesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="WendesdayData" title="${uiLabelMap.CommonWendesday}" > <display/></field>
+        <field name="WendesdayData" title="${uiLabelMap.CommonWendesday}"> <display/></field>
         <field name="Thursday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="ThursdayData" title="${uiLabelMap.CommonThursday}" > <display/></field>
+        <field name="ThursdayData" title="${uiLabelMap.CommonThursday}"> <display/></field>
         <field name="Friday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="FridayData" title="${uiLabelMap.CommonFriday}" > <display/></field>
+        <field name="FridayData" title="${uiLabelMap.CommonFriday}"> <display/></field>
         <field name="Saturday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="SaterdayData" title="${uiLabelMap.CommonSaturday}" > <display/></field>
+        <field name="SaturdayData" title="${uiLabelMap.CommonSaturday}"> <display/></field>
         <field name="Sunday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="SundayData" title="${uiLabelMap.CommonSunday}" > <display/></field>
+        <field name="SundayData" title="${uiLabelMap.CommonSunday}"> <display/></field>
     </form>
 
     <!-- update the availability on a date basis of a fixed asset -->
@@ -161,9 +161,6 @@
         <auto-fields-service service-name="updateFixedAssetCalendar" map-name="parameters"/>
 
         <field name="fixedAssetId"><hidden/></field>
-        
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-
-    
 </forms>
