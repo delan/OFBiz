@@ -129,7 +129,7 @@
             <property name="redirectPort" value=""/>
             <property name="scheme" value="http"/>
             <property name="secure" value="false"/>
-            <property name="URIEncoding" value="ISO-8859-1"/>
+            <property name="URIEncoding" value="UTF-8"/>
             <property name="useBodyEncodingForURI" value="false"/>
             <property name="xpoweredBy" value="true"/>
             <!-- AJP/13 connector attributes -->
@@ -155,7 +155,7 @@
             <property name="redirectPort" value=""/>
             <property name="scheme" value="http"/>
             <property name="secure" value="false"/>
-            <property name="URIEncoding" value="ISO-8859-1"/>
+            <property name="URIEncoding" value="UTF-8"/>
             <property name="useBodyEncodingForURI" value="false"/>
             <property name="xpoweredBy" value="true"/>
             <!-- HTTP connector attributes -->
@@ -193,7 +193,7 @@
             <property name="redirectPort" value=""/>
             <property name="scheme" value="https"/>
             <property name="secure" value="true"/>
-            <property name="URIEncoding" value="ISO-8859-1"/>
+            <property name="URIEncoding" value="UTF-8"/>
             <property name="useBodyEncodingForURI" value="false"/>
             <property name="xpoweredBy" value="true"/>
             <!-- HTTP connector attributes -->

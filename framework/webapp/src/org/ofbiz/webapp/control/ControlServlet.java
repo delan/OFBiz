@@ -95,6 +95,8 @@ public class ControlServlet extends HttpServlet {
         String charset = getServletContext().getInitParameter("charset");
         if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
         if (charset == null || charset.length() == 0) charset = "UTF-8";
+        Debug.logInfo("The character encoding of the request is: [" + request.getCharacterEncoding() + "]. The character encoding we will use for the request and response is: [" + charset + "]", module);
+
         if (!"none".equals(charset)) {
             request.setCharacterEncoding(charset);
         }
