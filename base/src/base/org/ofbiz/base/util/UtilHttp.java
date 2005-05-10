@@ -99,6 +99,7 @@ public class UtilHttp {
                     value = Arrays.asList(paramArr);
                 } else {
                     value = paramArr[0];
+                    // does the same thing basically, nothing better about it as far as I can see: value = request.getParameter(name);
                 }
             }
             paramMap.put(name, value);
