@@ -36,6 +36,7 @@ import javax.servlet.jsp.PageContext;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -954,20 +955,14 @@ public class ContactMechWorker {
         // get and clean the address strings
         String addr1 = postalAddress.getString("address1");
         String addr2 = postalAddress.getString("address2");
-        if (addr1 != null) {
-            addr1 = addr1.replaceAll("\\W", "").toLowerCase();
-        }
-        if (addr2 != null) {
-            addr2 = addr2.replaceAll("\\W", "").toLowerCase();
-        }
 
         // get the matching string from general.properties
         String matcher = UtilProperties.getPropertyValue("general.properties", "usps.address.match");
-        if (matcher != null && matcher.length() > 0) {
-            if (addr1 != null && addr1.matches(".*(" + matcher + ").*")) {
+        if (UtilValidate.isNotEmpty(matcher)) {
+            if (addr1 != null && addr1.toLowerCase().matches(matcher)) {
                 return true;
             }
-            if (addr2 != null && addr2.matches(".*(" + matcher + ").*")) {
+            if (addr2 != null && addr2.toLowerCase().matches(matcher)) {
                 return true;
             }
         }
