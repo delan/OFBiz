@@ -42,18 +42,18 @@ import java.util.Map;
  * @since 2.0
  */
 public class UtilDateTime {
-    protected static String[] months = {// // to be translated over CommonMonthName, see example in accounting
+    public static final String[] months = {// // to be translated over CommonMonthName, see example in accounting
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November",
         "December"
     };
 
-    protected static String[] days = {// to be translated over CommonDayName, see example in accounting
+    public static final String[] days = {// to be translated over CommonDayName, see example in accounting
         "Monday", "Tuesday", "Wendesday",
         "Thursday", "Friday", "Saturday", "Sunday"
     };
 
-    protected static String[][] timevals = {
+    public static final String[][] timevals = {
         {"1000", "millisecond"},
         {"60", "second"},
         {"60", "minute"},
@@ -61,7 +61,7 @@ public class UtilDateTime {
         {"168", "week"}
     };
 
-    protected static DecimalFormat df = new DecimalFormat("0.00;-0.00");
+    public static final DecimalFormat df = new DecimalFormat("0.00;-0.00");
 
     public static double getInterval(Date from, Date thru) {
         return thru != null ? thru.getTime() - from.getTime() : 0;
