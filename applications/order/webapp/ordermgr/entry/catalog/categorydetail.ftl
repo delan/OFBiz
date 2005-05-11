@@ -58,17 +58,17 @@
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
-        <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+        <option value="#">Page ${viewIndex?int} of ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
-          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">Go to Page ${curViewNum}</option>
         </#list>
       </select>
       <#-- End Page Select Drop-Down -->
       <b>
-        <#if 0 < viewIndex?int>
+        <#if (viewIndex?int > 1)>
           <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
-        <#if 0 < listSize?int>
+        <#if (listSize?int > 0)>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
@@ -78,13 +78,7 @@
     </div>
 
     <div class="productsummary-container">
-        <#assign startIndex = viewSize * viewIndex/>
-        <#if highIndex < listSize>
-          <#assign endIndex = highIndex - 1/>
-        <#else>
-          <#assign endIndex = listSize - 1/>
-        </#if>
-        <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>
+        <#list productCategoryMembers as productCategoryMember>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}
             ${setRequestAttribute("productCategoryMember", productCategoryMember)}
             ${setRequestAttribute("listIndex", productCategoryMember_index)}
@@ -96,9 +90,9 @@
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
-        <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+        <option value="#">Page ${viewIndex?int} of ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
-          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">Go to Page ${curViewNum}</option>
         </#list>
       </select>
       <#-- End Page Select Drop-Down -->
