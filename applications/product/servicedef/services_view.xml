@@ -129,9 +129,10 @@
         <attribute name="viewIndexString" type="String" mode="IN" optional="true"/>
         <attribute name="viewSizeString" type="String" mode="IN" optional="true"/>
         <attribute name="useCacheForMembers" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="activeOnly" type="Boolean" mode="IN" optional="true"/>
         <attribute name="productCategory" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
-        <attribute name="productCategoryMembers" type="java.util.Collection" mode="OUT" optional="true"/>
-        <attribute name="viewIndex" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="productCategoryMembers" type="java.util.Collection" mode="OUT" optional="true"/> <!-- this list will only contain the limited members if limitView=true -->
+        <attribute name="viewIndex" type="Integer" mode="OUT" optional="false"/> <!-- this is a 1 based index, ie the first results are in index 1 -->
         <attribute name="viewSize" type="Integer" mode="OUT" optional="false"/>
         <attribute name="lowIndex" type="Integer" mode="OUT" optional="false"/>
         <attribute name="highIndex" type="Integer" mode="OUT" optional="false"/>

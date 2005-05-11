@@ -49,6 +49,7 @@ if (isOpen) {
 	paramInMap.put("defaultViewSize", 30);
 	paramInMap.put("limitView", true);
 	paramInMap.put("useCacheForMembers", false);
+	paramInMap.put("checkViewAllow", false);
 	
     // Returns: viewIndex, viewSize, lowIndex, highIndex, listSize, productCategory, productCategoryMembers
 	outMap = dispatcher.runSync("getProductCategoryAndLimitedMembers", paramInMap);

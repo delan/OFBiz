@@ -1,7 +1,8 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2002-2005 The Open For Business Project (www.ofbiz.org)
+ * 
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -22,6 +23,7 @@
  */
 package org.ofbiz.product.category;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,11 +31,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javolution.util.FastList;
+
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.DispatchContext;
@@ -144,21 +155,20 @@ public class CategoryServices {
         boolean limitView = ((Boolean) context.get("limitView")).booleanValue();
         int defaultViewSize = ((Integer) context.get("defaultViewSize")).intValue();
 
-        // checkViewAllow defaults to false, must be set to true and pass the prodCatalogId to enable
-        Boolean cvaBool = (Boolean) context.get("checkViewAllow");
-        boolean checkViewAllow = (cvaBool == null ? false : cvaBool.booleanValue());
         String prodCatalogId = (String) context.get("prodCatalogId");
 
-        boolean useCacheForMembers = true;
-        if (context.get("useCacheForMembers") != null) {
-            useCacheForMembers = ((Boolean) context.get("useCacheForMembers")).booleanValue();
-        }
+        boolean useCacheForMembers = (context.get("useCacheForMembers") != null ? ((Boolean) context.get("useCacheForMembers")).booleanValue() : true);
+        boolean activeOnly = (context.get("activeOnly") != null ? ((Boolean) context.get("activeOnly")).booleanValue() : true);
+        // checkViewAllow defaults to false, must be set to true and pass the prodCatalogId to enable
+        boolean checkViewAllow = (context.get("checkViewAllow") != null ? ((Boolean) context.get("checkViewAllow")).booleanValue() : false);
+        
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        int viewIndex = 0;
+        int viewIndex = 1;
         try {
             viewIndex = Integer.valueOf((String) context.get("viewIndexString")).intValue();
         } catch (Exception e) {
-            viewIndex = 0;
+            viewIndex = 1;
         }
         
         int viewSize = defaultViewSize;
@@ -176,15 +186,71 @@ public class CategoryServices {
             productCategory = null;
         }
 
+        int listSize = 0;
+        int lowIndex = 0;
+        int highIndex = 0;
+
+        if (limitView) {
+            // get the indexes for the partial list
+            lowIndex = (((viewIndex - 1) * viewSize) + 1);
+            highIndex = viewIndex * viewSize;
+        }
+        
         List productCategoryMembers = null;
         if (productCategory != null) {
             try {
                 if (useCacheForMembers) {
                     productCategoryMembers = productCategory.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum"));
+                    if (activeOnly) {
+                        productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
+                    }
+                    listSize = productCategoryMembers.size();
+                    if (highIndex > listSize) {
+                        highIndex = listSize;
+                    }
+
+                    if (limitView) {
+                        productCategoryMembers = productCategoryMembers.subList(lowIndex-1, highIndex);
+                    } else {
+                        lowIndex = 1;
+                        highIndex = listSize;
+                    }
                 } else {
-                    productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum"));
+                    List mainCondList = UtilMisc.toList(new EntityExpr("productCategoryId", EntityOperator.EQUALS, productCategory.getString("productCategoryId")));
+                    if (activeOnly) {
+                        mainCondList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
+                        mainCondList.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
+                    }
+                    EntityCondition mainCond = new EntityConditionList(mainCondList, EntityOperator.AND);
+                
+                    // set distinct on so we only get one row per order
+                    EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+                    // using list iterator
+                    EntityListIterator pli = delegator.findListIteratorByCondition("ProductCategoryMember", mainCond, null, null, UtilMisc.toList("sequenceNum", "productId"), findOpts);
+                
+                    // get the partial list for this page
+                    if (limitView) {
+                        productCategoryMembers = pli.getPartialList(lowIndex, viewSize);
+                        // attempt to get the full size
+                        pli.last();
+                        listSize = pli.currentIndex();
+                    } else {
+                        productCategoryMembers = pli.getCompleteList();
+                        listSize = productCategoryMembers.size();
+                        lowIndex = 1;
+                        highIndex = listSize;
+                    }
+                    if (productCategoryMembers == null) {
+                        productCategoryMembers = FastList.newInstance();
+                    }
+                
+                    if (highIndex > listSize) {
+                        highIndex = listSize;
+                    }
+                
+                    // close the list iterator
+                    pli.close();
                 }
-                productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
                 
                 // first check to see if there is a view allow category and if this product is in it...
                 if (checkViewAllow && prodCatalogId != null && productCategoryMembers != null && productCategoryMembers.size() > 0) {
@@ -196,23 +262,6 @@ public class CategoryServices {
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
-        }
-
-        int lowIndex;
-        int highIndex;
-        int listSize = 0;
-
-        if (productCategoryMembers != null) {
-            listSize = productCategoryMembers.size();
-        }
-
-        if (limitView) {
-            lowIndex = viewIndex * viewSize + 1;
-            highIndex = (viewIndex + 1) * viewSize;
-            if (listSize < highIndex) highIndex = listSize;
-        } else {
-            lowIndex = 1;
-            highIndex = listSize;
         }
 
         Map result = new HashMap();

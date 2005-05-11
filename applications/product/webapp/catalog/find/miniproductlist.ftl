@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,15 +24,14 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <div class="screenlet">
     <div class="screenlet-header">
         <div class="simple-right-small">
             <#if isOpen>
-                <a href='<@ofbizUrl>/main?CategoryProductsState=close</@ofbizUrl>' class='lightbuttontext'>&nbsp;_&nbsp;</a>
+                <a href="<@ofbizUrl>/main?CategoryProductsState=close</@ofbizUrl>" class="lightbuttontext">&nbsp;_&nbsp;</a>
             <#else>
-                <a href='<@ofbizUrl>/main?CategoryProductsState=open</@ofbizUrl>' class='lightbuttontext'>&nbsp;[]&nbsp;</a>
+                <a href="<@ofbizUrl>/main?CategoryProductsState=open</@ofbizUrl>" class="lightbuttontext">&nbsp;[]&nbsp;</a>
             </#if>
         </div>
         <div class="boxhead">Category&nbsp;Products</div>
@@ -41,8 +40,7 @@
     <div class="screenlet-body">
       	<#if productCategory?exists>
           <#if productCategoryMembers?has_content>
-              <#assign upperBound = highIndex - 1>
-              <#list productCategoryMembers[0..upperBound] as productCategoryMember>
+              <#list productCategoryMembers as productCategoryMember>
                 <#assign product = productCategoryMember.getRelatedOneCache("Product")>
                   <div>
                     <a href='<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>' class='buttontext'>
