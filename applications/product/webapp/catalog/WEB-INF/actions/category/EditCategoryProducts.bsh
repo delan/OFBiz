@@ -25,27 +25,19 @@
  *@since      2.2
  */
 
-import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.entity.model.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.transaction.*;
 
 //default this to true, ie only show active
 boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
 
-productCategoryMembers = null;
-if (productCategory != null) {
-    productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productId"));
-}
-if (activeOnly) {
-    productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
-}
-
-productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-
 context.put("activeOnly", activeOnly);
-context.put("productCategoryMembers", productCategoryMembers);
-context.put("productCategories", productCategories);
 
-int viewIndex = 0;
+int viewIndex = 1;
 int viewSize = 20;
 int highIndex = 0;
 int lowIndex = 0;
@@ -54,7 +46,7 @@ int listSize = 0;
 try {
     viewIndex = Integer.valueOf((String) parameters.get("VIEW_INDEX")).intValue();
 } catch (Exception e) {
-    viewIndex = 0;
+    viewIndex = 1;
 }
 
 try {
@@ -63,18 +55,63 @@ try {
     viewSize = 20;
 }
 
-if (productCategoryMembers != null) {
-    listSize = productCategoryMembers.size();
-}
+if (productCategory != null) {
+    boolean beganTransaction = false;
+    try {
+        beganTransaction = TransactionUtil.begin();
+        
+        mainCondList = UtilMisc.toList(new EntityExpr("productCategoryId", EntityOperator.EQUALS, productCategory.getString("productCategoryId")));
+        if (activeOnly) {
+            mainCondList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
+            mainCondList.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
+        }
+        mainCond = new EntityConditionList(mainCondList, EntityOperator.AND);
+    
+        // set distinct on so we only get one row per order
+        EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+        // using list iterator
+        EntityListIterator pli = delegator.findListIteratorByCondition("ProductCategoryMember", mainCond, null, null, UtilMisc.toList("sequenceNum", "productId"), findOpts);
+    
+        // get the indexes for the partial list
+        lowIndex = (((viewIndex - 1) * viewSize) + 1);
+        highIndex = viewIndex * viewSize;
+    
+        // get the partial list for this page
+        productCategoryMembers = pli.getPartialList(lowIndex, viewSize);
+        if (productCategoryMembers == null) {
+            productCategoryMembers = new ArrayList();
+        }
+    
+        // attempt to get the full size
+        pli.last();
+        listSize = pli.currentIndex();
+        if (highIndex > listSize) {
+            highIndex = listSize;
+        }
+    
+        // close the list iterator
+        pli.close();
 
-lowIndex = viewIndex * viewSize;
-highIndex = (viewIndex + 1) * viewSize;
-if (listSize < highIndex) {
-    highIndex = listSize;
+        context.put("productCategoryMembers", productCategoryMembers);
+    } catch (GenericEntityException e) {
+        String errMsg = "Failure in operation, rolling back transaction";
+        Debug.logError(e, errMsg, module);
+        try {
+            // only rollback the transaction if we started one...
+            TransactionUtil.rollback(beganTransaction, errMsg, e);
+        } catch (GenericEntityException e2) {
+            Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+        }
+        // after rolling back, rethrow the exception
+        throw e;
+    } finally {
+        // only commit the transaction if we started one... this will throw an exception if it fails
+        TransactionUtil.commit(beganTransaction);
+    }
 }
 
 context.put("viewIndex", viewIndex);
 context.put("viewSize", viewSize);
-context.put("listSize", listSize);
 context.put("lowIndex", lowIndex);
+context.put("listSize", listSize);
 context.put("highIndex", highIndex);

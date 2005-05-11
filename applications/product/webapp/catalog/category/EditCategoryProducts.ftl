@@ -36,10 +36,10 @@
                 <td align="right">
                     <span class="tabletext">
                     <b>
-                    <#if (viewIndex > 0)>
+                    <#if (viewIndex > 1)>
                     <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
-                    ${lowIndex+1} - ${highIndex} of ${listSize}
+                    ${lowIndex} - ${highIndex} of ${listSize}
                     <#if (listSize > highIndex)>
                     | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
@@ -59,7 +59,7 @@
         </tr>
         <#if (listSize > 0)>
             <#assign line = 0>
-            <#list productCategoryMembers[lowIndex..highIndex-1] as productCategoryMember>
+            <#list productCategoryMembers as productCategoryMember>
             <#assign product = productCategoryMember.getRelatedOne("Product")>
             <#assign hasntStarted = false>
             <#if productCategoryMember.fromDate?exists && nowTimestamp.before(productCategoryMember.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
@@ -69,7 +69,7 @@
                 <td><a href="<@ofbizUrl>/EditProduct?productId=${(productCategoryMember.productId)?if_exists}</@ofbizUrl>" class="buttontext"><#if product?exists>${(product.internalName)?if_exists}</#if> [${(productCategoryMember.productId)?if_exists}]</a></td>
                 <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productCategoryMember.fromDate)?if_exists}</div></td>
                 <td align="center">
-                    <FORM method="post" action="<@ofbizUrl>/updateCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
+                    <form method="post" action="<@ofbizUrl>/updateCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
                         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
                         <input type="hidden" name="productId" value="${(productCategoryMember.productId)?if_exists}">
                         <input type="hidden" name="productCategoryId" value="${(productCategoryMember.productCategoryId)?if_exists}">
@@ -78,8 +78,8 @@
                         <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productCategoryMember.thruDate)?default(nowTimestamp?string)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                         <input type="text" size="5" name="sequenceNum" value="${(productCategoryMember.sequenceNum)?if_exists}" class="inputBox">
                         <input type="text" size="5" name="quantity" value="${(productCategoryMember.quantity)?if_exists}" class="inputBox">
-                        <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
-                    </FORM>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+                    </form>
                 </td>
                 <td align="center">
                 <a href="<@ofbizUrl>/removeCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&productId=${(productCategoryMember.productId)?if_exists}&productCategoryId=${(productCategoryMember.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue((productCategoryMember.getTimestamp("fromDate").toString()))}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
@@ -97,10 +97,10 @@
                 <td align="right">
                     <span class="tabletext">
                     <b>
-                    <#if (viewIndex > 0)>
+                    <#if (viewIndex > 1)>
                         <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                         </#if>
-                        ${lowIndex+1} - ${highIndex} of ${listSize}
+                        ${lowIndex} - ${highIndex} of ${listSize}
                         <#if (listSize > highIndex)>
                         | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
