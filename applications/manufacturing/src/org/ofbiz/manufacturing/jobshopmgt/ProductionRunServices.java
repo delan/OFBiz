@@ -1488,6 +1488,9 @@ public class ProductionRunServices {
             while (selComponents.hasNext()) {
                 Double componentQuantity = null;
                 GenericValue selComponent = (GenericValue)selComponents.next();
+                if (selComponent.get("quantity") != null) {
+                    componentQuantity = selComponent.getDouble("quantity");
+                }
                 if (componentQuantity == null) {
                     componentQuantity = new Double(1);
                 }
