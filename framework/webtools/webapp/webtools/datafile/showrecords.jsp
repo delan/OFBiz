@@ -56,6 +56,7 @@
         <%for(int f=0;f<modelRecord.fields.size(); f++) {%>
           <%ModelField modelField = (ModelField)modelRecord.fields.get(f);%>
           <%Object value = record.get(modelField.name);%>
+          <%if (value == null) value = modelField.defaultValue;%>
           <%if(value instanceof Double) {%>
             <TD align="right"><%=UtilFormatOut.formatPrice((Double)value)%></TD>
           <%}else{%>
