@@ -35,6 +35,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
@@ -112,7 +114,8 @@ public class SurveyWrapper {
             currentAnswers = this.getResponseAnswers(responseId);
         }
 
-        Map templateContext = new HashMap();
+        Map templateContext = FastMap.newInstance();
+        FreeMarkerWorker.addAllOfbizTransforms(templateContext);
         templateContext.put("partyId", partyId);
         templateContext.put("survey", survey);
         templateContext.put("surveyResults", results);
