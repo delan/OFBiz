@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.NoSuchElementException;
 
 /**
  * Record
@@ -158,6 +160,42 @@ public class Record implements Serializable {
         }
     }
 
+    /**
+     * little endian reader for 2 byte short.
+     */
+    public final short readLEShort(byte[] byteArray) {
+        return  (short)(
+               (byteArray[1]&0xff) << 8 |
+               (byteArray[0]&0xff));
+
+    }
+
+    /**
+     * little endian reader for 4 byte int.
+     */
+    public final int readLEInt(byte []byteArray) {
+        return
+        (byteArray[3])      << 24 |
+        (byteArray[2]&0xff) << 16 |
+        (byteArray[1]&0xff) <<  8 |
+        (byteArray[0]&0xff);
+    }
+
+    /**
+    * little endian reader for 8 byte long.
+    */
+    public final long readLELong(byte []byteArray) {
+       return
+           (long)(byteArray[7])      << 56 |  /* long cast needed or shift done modulo 32 */
+           (long)(byteArray[6]&0xff) << 48 |
+           (long)(byteArray[5]&0xff) << 40 |
+           (long)(byteArray[4]&0xff) << 32 |
+           (long)(byteArray[3]&0xff) << 24 |
+           (long)(byteArray[2]&0xff) << 16 |
+           (long)(byteArray[1]&0xff) <<  8 |
+           (long)(byteArray[0]&0xff);
+    }
+
     /** Sets the named field to the passed value, converting the value from a String to the corrent type using <code>Type.valueOf()</code>
      * @param name The field name to set
      * @param value The String value to convert and set
@@ -224,7 +262,10 @@ public class Record implements Serializable {
         } // standard types
         else if (fieldType.equals("java.lang.String") || fieldType.equals("String"))
             set(name, value);
-        else if (fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
+        else if (fieldType.equals("NullTerminatedString")) {
+            int terminate = value.indexOf(0x0);
+            set(name, terminate>0?value.substring(0,terminate):value);
+        } else if (fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
             set(name, java.sql.Timestamp.valueOf(value));
         else if (fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
             set(name, java.sql.Time.valueOf(value));
@@ -238,7 +279,13 @@ public class Record implements Serializable {
             set(name, Float.valueOf(value));
         else if (fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
             set(name, Double.valueOf(value));
-        else {
+        else if (fieldType.equals("LEShort"))
+            set(name, new Short(readLEShort(value.getBytes())));
+        else if (fieldType.equals("LEInteger"))
+            set(name, new Integer(readLEInt(value.getBytes())));
+        else if (fieldType.equals("LELong"))
+            set(name, new Long(readLELong(value.getBytes())));
+       else {
             throw new IllegalArgumentException("Field type " + fieldType + " not currently supported. Sorry.");
         }
     }
@@ -442,6 +489,7 @@ public class Record implements Serializable {
             ModelField modelField = (ModelField) modelRecord.fields.get(i);
             String strVal = null;
 
+            
             try {
                 strVal = line.substring(modelField.position, modelField.position + modelField.length);
             } catch (IndexOutOfBoundsException ioobe) {
@@ -461,5 +509,57 @@ public class Record implements Serializable {
         }
         return record;
     }
+    
+    /**
+     * @param line
+     * @param lineNum
+     * @param modelRecord
+     * @param delimiter
+     * @throws DataFileException Exception thown for various errors, generally has a nested exception
+     * @return
+     */
+    public static Record createDelimitedRecord(String line, int lineNum, ModelRecord modelRecord, char delimiter) throws DataFileException {
+        Record record = new Record(modelRecord);
+
+        StringTokenizer st = new StringTokenizer(line, "" + delimiter, true);
+        for (int i = 0; i < modelRecord.fields.size(); i++) {
+            ModelField modelField = (ModelField) modelRecord.fields.get(i);
+            String strVal = null;
+
+            if (modelField.expression) {
+                if (modelField.refField != null && modelField.refField.length() > 0) {
+                    strVal = record.getString(modelField.refField);
+                }
+                if (strVal == null) {
+                    strVal = (String)modelField.defaultValue;
+                }
+            } else {
+                try {
+                    strVal = st.nextToken();
+                    if (strVal.equals("" + delimiter)) {
+                        strVal = null;
+                    } else {
+                        if (st.hasMoreTokens()) {
+                            st.nextToken();
+                        }
+                    }
+                } catch (NoSuchElementException nsee) {
+                    throw new DataFileException("Field " + modelField.name + " could not be read from a line (" + lineNum + ") with only " +
+                            line.length() + " chars.", nsee);
+                }
+            }
+            try {
+                record.setString(modelField.name, strVal);
+            } catch (java.text.ParseException e) {
+                throw new DataFileException("Could not parse field " + modelField.name + ", format string \"" + modelField.format + "\" with value " + strVal +
+                        " on line " + lineNum, e);
+            } catch (java.lang.NumberFormatException e) {
+                throw new DataFileException("Number not valid for field " + modelField.name + ", format string \"" + modelField.format + "\" with value " +
+                        strVal + " on line " + lineNum, e);
+            }
+        }
+        return record;
+    }
+
 }
 

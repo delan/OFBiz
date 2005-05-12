@@ -35,6 +35,8 @@
 
   String dataFileSave = request.getParameter("DATAFILE_SAVE");
 
+  String entityXmlFileSave = request.getParameter("ENTITYXML_FILE_SAVE");
+
   String dataFileLoc = request.getParameter("DATAFILE_LOCATION");
   String definitionLoc = request.getParameter("DEFINITION_LOCATION");
   String definitionName = request.getParameter("DEFINITION_NAME");
@@ -63,6 +65,15 @@
       messages.add("Data File saved to: " + dataFileSave);
     } catch (Exception e) { messages.add(e.getMessage()); }
   }
+
+  if (dataFile != null && entityXmlFileSave != null) {
+    try {
+      //dataFile.writeDataFile(entityXmlFileSave);
+      DataFile2EntityXml.writeToEntityXml(entityXmlFileSave, dataFile);
+      messages.add("Entity File saved to: " + entityXmlFileSave);
+    } catch (Exception e) { messages.add(e.getMessage()); }
+  }
+
 %>
 <h3>View Data File</h3>
 <div>This page is used to view data from data files parsed by the configurable data file parser.</div>
@@ -95,6 +106,7 @@
       <%=definitionIsUrl?"<INPUT type=\"hidden\" name=\"DEFINITION_IS_URL\" value=\"true\">":""%>
       <INPUT name="DEFINITION_NAME" type="hidden" value="<%=UtilFormatOut.checkNull(definitionName)%>">
       Save to file: <INPUT name="DATAFILE_SAVE" type="text" size="60" value="<%=UtilFormatOut.checkNull(dataFileSave)%>"/>
+      Save to entity xml file: <INPUT name="ENTITYXML_FILE_SAVE" type="text" size="60" value="<%=UtilFormatOut.checkNull(entityXmlFileSave)%>">
       <INPUT type="submit" value="Save"/>
     </FORM>
     <BR>

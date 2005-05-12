@@ -77,7 +77,11 @@ public class RecordIterator {
     protected void setupStream(InputStream dataFileStream, String locationInfo) throws DataFileException {
         this.locationInfo = locationInfo;
         this.dataFileStream = dataFileStream;
-        this.br = new BufferedReader(new InputStreamReader(dataFileStream));
+        try {
+            this.br = new BufferedReader(new InputStreamReader(dataFileStream, "UTF-8"));
+        } catch(Exception e) {
+            throw new DataFileException("UTF-8 is not supported");
+        }
 
         // get the line seeded
         this.getNextLine();
@@ -88,6 +92,8 @@ public class RecordIterator {
         this.nextRecord = null;
         
         boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
+        boolean isFixedLength = ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle);
+        boolean isDelimited = ModelDataFile.SEP_DELIMITED.equals(modelDataFile.separatorStyle);
         // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord, module);
 
         if (isFixedRecord) {
@@ -121,7 +127,11 @@ public class RecordIterator {
         if (nextLine != null) {
             nextLineNum++;
             ModelRecord modelRecord = findModelForLine(nextLine, nextLineNum, modelDataFile);
-            this.nextRecord = Record.createRecord(nextLine, nextLineNum, modelRecord);
+            if (isDelimited) {
+                this.nextRecord = Record.createDelimitedRecord(nextLine, nextLineNum, modelRecord, modelDataFile.delimiter);
+            } else {
+                this.nextRecord = Record.createRecord(nextLine, nextLineNum, modelRecord);
+            }
             return true;
         } else {
             this.close();
@@ -142,7 +152,7 @@ public class RecordIterator {
             return null;
         }
         
-        if (ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
+        if (ModelDataFile.SEP_DELIMITED.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
             boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
             // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord, module);
             
@@ -192,8 +202,6 @@ public class RecordIterator {
                     this.getNextLine();
                 }
             }
-        } else if (ModelDataFile.SEP_DELIMITED.equals(modelDataFile.separatorStyle)) {
-            throw new DataFileException("Delimited files not yet supported");
         } else {
             throw new DataFileException("Separator style " + modelDataFile.separatorStyle + " not recognized.");
         }

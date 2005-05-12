@@ -318,10 +318,22 @@ public class ModelDataFileReader {
         field.format = UtilXml.checkEmpty(fieldElement.getAttribute("format"));
         field.validExp = UtilXml.checkEmpty(fieldElement.getAttribute("valid-exp"));
         field.description = UtilXml.checkEmpty(fieldElement.getAttribute("description"));
-
+        field.defaultValue = UtilXml.checkEmpty(fieldElement.getAttribute("default-value"));
+        field.refField = UtilXml.checkEmpty(fieldElement.getAttribute("ref-field"));
+        
         tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("prim-key"));
         if (tempStr != null && tempStr.length() > 0) {
             field.isPk = Boolean.valueOf(tempStr).booleanValue();
+        }
+
+        tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("ignored"));
+        if (tempStr != null && tempStr.length() > 0) {
+            field.ignored = Boolean.valueOf(tempStr).booleanValue();
+        }
+
+        tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("expression"));
+        if (tempStr != null && tempStr.length() > 0) {
+            field.expression = Boolean.valueOf(tempStr).booleanValue();
         }
 
         return field;

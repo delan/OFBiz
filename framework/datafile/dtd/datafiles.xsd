@@ -103,6 +103,7 @@
         <xs:attribute name="format"/>
         <xs:attribute name="valid-exp"/>
         <xs:attribute name="description"/>
+        <xs:attribute name="default-value"/>
         <xs:attribute name="prim-key" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -111,5 +112,22 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="ignored" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="expression" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="ref-field"/>
     </xs:attributeGroup>
 </xs:schema>
