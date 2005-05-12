@@ -42,6 +42,8 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -155,7 +157,7 @@ public class FreeMarkerWorker {
         }
         
         if (context == null) {
-            context = new HashMap();
+            context = FastMap.newInstance();
         }
         
         // add the OFBiz transforms/methods
