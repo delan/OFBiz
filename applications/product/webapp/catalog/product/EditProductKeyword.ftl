@@ -51,6 +51,7 @@
                 <form method="post" action="<@ofbizUrl>/UpdateProductKeyword</@ofbizUrl>" style="margin: 0;">
                     <input type="hidden" name="UPDATE_MODE" value="CREATE">
                     <input type="hidden" name="PRODUCT_ID" value="${productId?if_exists}">
+                    <input type="hidden" name="productId" value="${productId?if_exists}">
                     <span class="tabletext">${uiLabelMap.ProductKeyword}: </span><input type="text" size="20" name="KEYWORD" value="" class="inputBox">
                     <span class="tabletext">${uiLabelMap.ProductWeight}: </span><input type="text" size="4" name="relevancyWeight" value="1" class="inputBox">
                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
@@ -72,7 +73,7 @@
                 <DIV class="boxhead">${uiLabelMap.ProductKeywords}</DIV>
             </TD>
             <TD align="right">
-                <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductReInduceKeywords}</a><a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductDeleteAllKeywords}</a>
+                <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}&productId=${productId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductReInduceKeywords}</a><a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&productId=${productId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductDeleteAllKeywords}</a>
             </td>
         </tr>
         </table>
@@ -94,8 +95,13 @@
                     <td align="left">&nbsp;${(productKeyword.keyword)?if_exists}</td>
                     <td>&nbsp;&nbsp;</td>
                     <td align="left">
-                        <a href="<@ofbizUrl>/UpdateProductKeyword?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&KEYWORD=${(productKeyword.keyword)?if_exists}</@ofbizUrl>" class="buttontext">
-                        [${uiLabelMap.CommonDelete}]</a>
+                        <form method="post" action="<@ofbizUrl>/UpdateProductKeyword</@ofbizUrl>">
+                            <input type="hidden" name="productId" value="${productId}">
+                            <input type="hidden" name="UPDATE_MODE" value="DELETE">
+                            <input type="hidden" name="PRODUCT_ID" value="${productId}">
+                            <input type="hidden" name="KEYWORD" value="${(productKeyword.keyword)?if_exists}">
+                            <input type="submit" value="${uiLabelMap.CommonDelete}" class="smallSubmit">
+                        </form>
                     </td>
                 </tr>
                 <#assign kIdx = kIdx + 1>
