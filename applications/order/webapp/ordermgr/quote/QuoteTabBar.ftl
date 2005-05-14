@@ -29,8 +29,10 @@
 
 <#if quote?has_content>
     <div class='tabContainer'>
-        <a href="<@ofbizUrl>/EditQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.EditQuote?default(unselectedClassName)}">${uiLabelMap.OrderQuote}</a>
-        <a href="<@ofbizUrl>/ListQuoteItems?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteItems?default(unselectedClassName)}">${uiLabelMap.OrderQuoteItems}</a>
-        <a href="<@ofbizUrl>/ListQuoteAttributes?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteAttributes?default(unselectedClassName)}">${uiLabelMap.OrderQuoteAttributes}</a>
+        <a href="<@ofbizUrl>/EditQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.EditQuote?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuote}</a>
+        <a href="<@ofbizUrl>/ListQuoteItems?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteItems?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteItems}</a>
+        <a href="<@ofbizUrl>/ListQuoteCoefficients?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteCoefficients?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteCoefficients}</a>
+        <a href="<@ofbizUrl>/ListQuoteAttributes?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteAttributes?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteAttributes}</a>
+        <a href="<@ofbizUrl>/ManageQuotePrices?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ManageQuotePrices?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuotePrices}</a>
     </div>
 </#if>

@@ -78,6 +78,25 @@
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <!-- QuoteCoefficient  -->
+    <service name="createQuoteCoefficient" default-entity-name="QuoteCoefficient" engine="simple"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteCoefficient" auth="true">
+        <description>Create a QuoteCoefficient</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateQuoteCoefficient" default-entity-name="QuoteCoefficient" engine="simple"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="updateQuoteCoefficient" auth="true">
+        <description>Update a QuoteCoefficient</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeQuoteCoefficient" engine="simple" default-entity-name="QuoteCoefficient"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="removeQuoteCoefficient" auth="true">
+        <description>Remove a QuoteCoefficient</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
     <!-- Specialized Quote services -->
     <service name="createQuoteAndQuoteItemForRequest" engine="simple" default-entity-name="QuoteItem"
                 location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteAndQuoteItemForRequest" auth="true">
@@ -87,5 +106,14 @@
         <attribute name="attrName" type="String" mode="IN" optional="true"/>
         <attribute name="attrValue" type="String" mode="IN" optional="true"/>
         <override name="custRequestId" optional="false"/>
+    </service>
+    <service name="autoUpdateQuotePrice" engine="simple" default-entity-name="QuoteItem"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="autoUpdateQuotePrice" auth="true">
+        <description>Update the QuoteItem price with the passed value (if present) or automatically from the averageCost</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="manualQuoteUnitPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="defaultQuoteUnitPrice" type="Double" mode="IN" optional="true"/>
+        <!--<attribute name="averageCost" type="Double" mode="IN" optional="true"/>
+        <attribute name="costToPriceMult" type="Double" mode="IN" optional="true"/>-->
     </service>
 </services>

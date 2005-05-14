@@ -693,6 +693,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditQuoteAttribute"/>
     </request-map>
+    <request-map uri="ListQuoteCoefficients">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListQuoteCoefficients"/>
+    </request-map>
+    <request-map uri="EditQuoteCoefficient">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuoteCoefficient"/>
+    </request-map>
+    <request-map uri="ManageQuotePrices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ManageQuotePrices"/>
+    </request-map>
     
     <request-map uri="createQuote">
         <security https="true" auth="true"/>
@@ -733,6 +745,27 @@
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeQuoteAttribute"/>
         <response name="success" type="view" value="ListQuoteAttributes"/>
+    </request-map>
+    <request-map uri="createQuoteCoefficient">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createQuoteCoefficient"/>
+        <response name="success" type="view" value="EditQuoteCoefficient"/>
+    </request-map>
+    <request-map uri="updateQuoteCoefficient">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateQuoteCoefficient"/>
+        <response name="success" type="view" value="EditQuoteCoefficient"/>
+    </request-map>
+    <request-map uri="removeQuoteCoefficient">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeQuoteCoefficient"/>
+        <response name="success" type="view" value="ListQuoteCoefficients"/>
+    </request-map>
+    <request-map uri="autoUpdateQuotePrices">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="autoUpdateQuotePrice"/>
+        <response name="success" type="view" value="ManageQuotePrices"/>
+        <response name="error" type="view" value="ManageQuotePrices"/>
     </request-map>
 
     <!-- Lookup request mappings -->
@@ -824,6 +857,9 @@
     <view-map name="EditQuoteItem" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteItem"/>
     <view-map name="ListQuoteAttributes" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteAttributes"/>
     <view-map name="EditQuoteAttribute" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteAttribute"/>
+    <view-map name="ListQuoteCoefficients" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteCoefficients"/>
+    <view-map name="EditQuoteCoefficient" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteCoefficient"/>
+    <view-map name="ManageQuotePrices" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ManageQuotePrices"/>
 
     <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
     <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>

@@ -26,7 +26,7 @@
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="requirementId"><text-find default-value="equals"/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="requirementByDate"><date-find type="date"/>        </field>
+        <field name="requirementByDate"><date-find type="date"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="RequirementsList" type="multi" use-row-submit="true" target="addRequirementsToCart" title="" list-iterator-name="requirementsForSupplier"
@@ -63,6 +63,7 @@
             <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="statusId"><hidden/></field>
+        <field name="currencyUomId"><hidden/></field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
         <field name="description"><hidden/></field>
