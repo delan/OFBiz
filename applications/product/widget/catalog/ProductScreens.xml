@@ -412,7 +412,6 @@
 
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
-                <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductInventoryItems.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator">
