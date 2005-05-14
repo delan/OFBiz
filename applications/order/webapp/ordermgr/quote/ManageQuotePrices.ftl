@@ -1,4 +1,4 @@
-/*
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,16 +19,14 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
- *@version    1.0
- */
+ *@author     Jacopo Cappellato (tiz@sastau.it)
+ *@version    $Rev$
+-->
 
-import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
-
-// Get the Cart and put it in the context.
-
-shoppingCart = ShoppingCartEvents.getCartObject(request);
-context.put("shoppingCart", shoppingCart);
-context.put("currencyUomId", shoppingCart.getCurrency());
-context.put("partyId", shoppingCart.getPartyId());
-
+<#list quoteCoefficients as quoteCoefficient>
+    <div class="tabletext">${quoteCoefficient.coeffName}:&nbsp;${quoteCoefficient.coeffValue}</div>
+</#list>
+<br/>
+<div class="tabletext">${uiLabelMap.totCostMult}:&nbsp;${costMult}</div>
+<div class="tabletext">${uiLabelMap.costToPriceMult}:&nbsp;${costToPriceMult}</div>
+<br/>

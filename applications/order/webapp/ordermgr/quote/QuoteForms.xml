@@ -44,6 +44,13 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="currencyUomId">
+            <drop-down allow-empty="true">
+                <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
         <field name="description"><hidden/></field>
@@ -91,6 +98,13 @@
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="QUOTE_STATUS"/>
                     <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="currencyUomId">
+            <drop-down allow-empty="true">
+                <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -174,4 +188,49 @@
             <submit button-type="button"/>
         </field>
     </form>
+
+    <form name="ListQuoteCoefficients" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="quoteCoefficients"
+            target="" paginate-target="ListQuoteCoefficients" title="" type="list">
+        <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="display"/>
+        <field name="quoteId"><hidden/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeQuoteCoefficient?coeffName=${coeffName}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="EditQuoteCoefficient" type="single"
+            target="updateQuoteCoefficient" title="" default-map-name="quoteCoefficient"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="quoteCoefficient==null" target="createQuoteCoefficient"/>
+        <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="edit"/>
+        <field name="quoteId"><hidden/></field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="ManageQuotePrices" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext" use-row-submit="true"
+            list-name="quoteItemAndCostInfos" target="autoUpdateQuotePrices?quoteId=${quoteId}" paginate-target="ManageQuotePrices" title="" type="multi">
+        <field name="custRequestId" title="View Request" widget-style="buttontext">
+            <hyperlink target-type="inter-app" also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="/workeffort/control/requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
+        </field>
+        <field name="custRequestItemSeqId"><hidden/></field>
+        <field name="quoteId"><hidden/></field>
+        <field name="quoteItemSeqId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="true" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
+        </field>
+        <field name="productId"><display/></field>
+        <field name="quantity"><display/></field>
+        <field name="averageCost"><display/></field>
+        <field name="costToPriceMult"><display/></field>
+        <field name="defaultQuoteUnitPrice"><display/></field>
+        <field name="quoteUnitPrice"><display/></field>
+        <field name="manualQuoteUnitPrice"><text/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="submitButton" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+
 </forms>

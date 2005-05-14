@@ -1424,6 +1424,18 @@
         <key-map field-name="quoteTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="QuoteCoefficient"
+            package-name="org.ofbiz.order.quote"
+            title="Quote Coefficient Entity">
+      <field name="quoteId" type="id-ne"></field>
+      <field name="coeffName" type="id-long-ne"></field>
+      <field name="coeffValue" type="floating-point"></field>
+      <prim-key field="quoteId"/>
+      <prim-key field="coeffName"/>
+      <relation type="one" fk-name="QUOTE_COEFF" rel-entity-name="Quote">
+        <key-map field-name="quoteId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.request -->

@@ -105,6 +105,7 @@
     <entity-group group="org.ofbiz" entity="QuoteTermAttribute" />
     <entity-group group="org.ofbiz" entity="QuoteType" />
     <entity-group group="org.ofbiz" entity="QuoteTypeAttr" />
+    <entity-group group="org.ofbiz" entity="QuoteCoefficient" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.request -->
