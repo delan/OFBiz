@@ -151,6 +151,45 @@
         <check-errors/>
     </simple-method>
     
+    <!-- create a new QuoteCoefficient -->
+    <simple-method method-name="createQuoteCoefficient" short-description="Create a QuoteCoefficient">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run createQuoteCoefficient you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <!-- create new entity and create all the fields -->
+        <make-value value-name="newEntity" entity-name="QuoteCoefficient"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- update an existing QuoteCoefficient -->
+    <simple-method method-name="updateQuoteCoefficient" short-description="Update an existing QuoteCoefficient">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run updateQuoteCoefficient you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="QuoteCoefficient" value-name="quoteCoefficient" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="quoteCoefficient"/>
+        <store-value value-name="quoteCoefficient"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- remove an existing QuoteCoefficient -->
+    <simple-method method-name="removeQuoteCoefficient" short-description="Remove an existing QuoteCoefficient">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run removeQuoteCoefficient you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="QuoteCoefficient" value-name="quoteCoefficient" auto-field-map="true"/>
+        <check-errors/>
+        <remove-value value-name="quoteCoefficient"/>
+        <check-errors/>
+    </simple-method>
+
     <!-- create a new Quote and QuoteItem for a given CustRequest -->
     <simple-method method-name="createQuoteAndQuoteItemForRequest" short-description="Create a Quote">
         <check-permission permission="ORDERMGR" action="_CREATE">
@@ -199,6 +238,33 @@
             <create-value value-name="newQuoteAttribute"/>
         </if-not-empty>
         <check-errors/>
+    </simple-method>
+    <simple-method method-name="autoUpdateQuotePrice" short-description="Auto update a QuoteItem price">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run autoUpdateQuotePrice you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="QuoteItem" value-name="quoteItem" auto-field-map="true"/>
+        <check-errors/>
+        <if-not-empty field-name="parameters.manualQuoteUnitPrice">
+            <field-to-field field-name="parameters.manualQuoteUnitPrice" to-field-name="quoteItem.quoteUnitPrice"/>
+        </if-not-empty>
+        <if-empty field-name="parameters.manualQuoteUnitPrice">
+            <if-not-empty field-name="parameters.defaultQuoteUnitPrice">
+                <field-to-field field-name="parameters.defaultQuoteUnitPrice" to-field-name="quoteItem.quoteUnitPrice"/>
+            </if-not-empty>
+            <!--
+            <calculate field-name="quoteItem.quoteUnitPrice" type="Double">
+                <calcop operator="multiply">
+                    <calcop operator="get" field-name="parameters.averageCost"/>
+                    <calcop operator="get" field-name="parameters.costToPriceMult"/>
+                </calcop>
+            </calculate>
+            -->
+        </if-empty>
+        <store-value value-name="quoteItem"/>
+        <check-errors/>
+        <field-to-request field-name="quoteItem.quoteId" request-name="quoteId"/>
     </simple-method>
 
 </simple-methods>
