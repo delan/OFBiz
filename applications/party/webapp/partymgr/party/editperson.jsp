@@ -60,7 +60,6 @@
 
     String donePage = request.getParameter("DONE_PAGE");
     if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
-    if (partyId != null) donePage = donePage + "?partyId=" + partyId;
     pageContext.setAttribute("donePage", donePage);
 %>
 
@@ -74,7 +73,7 @@
 </ofbiz:if>
 
 <% if (partyId != null) { %>
-<input type="hidden" name="partyId" value="<%=partyId%>">
+<input type="hidden" name="partyId" value="<%=partyId%>"/>
 <% } %>
 
 &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>

@@ -43,7 +43,7 @@
     if (partyId == null) partyId = (String) request.getAttribute("partyId");
 
     String donePage = request.getParameter("DONE_PAGE");
-    if(donePage == null || donePage.length() <= 0) donePage="viewprofile?partyId=" + partyId;    
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
 
 <%PaymentWorker.getPaymentMethodAndRelated(pageContext, partyId,
@@ -77,10 +77,10 @@
       <%}%>
       <form method="post" action='<ofbiz:url>/updateCreditCard/<%=donePage%></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type="hidden" name='paymentMethodId' value='<ofbiz:print attribute="paymentMethodId"/>'>
+        <input type="hidden" name='paymentMethodId' value='<ofbiz:print attribute="paymentMethodId"/>'/>
     </ofbiz:if>
 
-    <input type="hidden" name="partyId" value="<%=partyId%>">
+    <input type="hidden" name="partyId" value="<%=partyId%>"/>
 
     <tr>
       <td width="26%" align="right" valign="top"><div class="tabletext">Name on Card</div></td>
