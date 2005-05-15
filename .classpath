@@ -40,7 +40,6 @@
 	<classpathentry kind="lib" path="base/lib/scripting/js.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/bsf.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/oro.jar"/>
-	<classpathentry kind="lib" path="base/lib/scripting/jython.jar"/>
 	<classpathentry kind="lib" path="base/lib/junit.jar"/>
 	<classpathentry kind="lib" path="base/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="base/lib/log4j.jar"/>
@@ -76,7 +75,6 @@
 	<classpathentry kind="lib" path="framework/webapp/lib/velocity-dep-1.3.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/velocity-1.3.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/MinML2.jar"/>
-	<classpathentry kind="lib" path="framework/webapp/lib/krysalis-barcode.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/JPublish.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/jasperreports-applet.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/jasperreports.jar"/>
@@ -86,7 +84,6 @@
 	<classpathentry kind="lib" path="framework/webapp/lib/EdenLib.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/DataVision.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/batik.jar"/>
-	<classpathentry kind="lib" path="framework/webapp/lib/avalon-framework-cvs-20020806.jar"/>
 	<classpathentry kind="lib" path="framework/tests/lib/Quick4util.jar"/>
 	<classpathentry kind="lib" path="framework/tests/lib/Quick4rt.jar"/>
 	<classpathentry kind="lib" path="framework/tests/lib/jxweb.jar"/>
@@ -157,5 +154,8 @@
 	<classpathentry kind="lib" path="framework/catalina/lib/jmx.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/catalina-cluster.jar"/>
 	<classpathentry kind="lib" path="base/lib/javolution.jar"/>
+	<classpathentry kind="lib" path="base/lib/avalon-framework-4.1.5.jar"/>
+	<classpathentry kind="lib" path="base/lib/scripting/jython-nooro.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/barcode4j-fop-ext-0.20.5-complete.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
