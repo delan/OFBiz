@@ -28,14 +28,12 @@ import nu.xom.Node;
 import nu.xom.Nodes;
 import nu.xom.converters.DOMConverter;
 
-import org.ofbiz.base.util.Debug;
-
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.logger.Log4JLogger;
-import org.apache.avalon.framework.logger.Logger;
-import org.krysalis.barcode.BarcodeException;
-import org.krysalis.barcode.BarcodeUtil;
+import org.krysalis.barcode4j.BarcodeException;
+import org.krysalis.barcode4j.BarcodeUtil;
+import org.ofbiz.base.util.Debug;
 import org.w3c.dom.DocumentFragment;
 
 /**
@@ -49,7 +47,7 @@ public class BarcodeGenerator {
     public static final String module = BarcodeGenerator.class.getName();
 
     private Configuration config;
-    private Logger log;
+    // removing this because the new version of Barcode4J doesn't have a parameter for it: private Logger log;
     private BarcodeUtil barcodeUtil;
 
     public BarcodeGenerator(String barcodeFormat) {
@@ -62,26 +60,25 @@ public class BarcodeGenerator {
             Debug.logError(e, "Couldn't create config for Barcode Generator", module);
         }
 
-        log = new Log4JLogger(Debug.getLogger(module));
+        //log = new Log4JLogger(Debug.getLogger(module));
 
         barcodeUtil = BarcodeUtil.getInstance();
     }
 
-    public String generateSvgXml(String message) throws BarcodeException {
-        if (config != null && log != null) {
-            DocumentFragment fragment = barcodeUtil.generateBarcode(config, log, message);
+    public String generateSvgXml(String message) throws BarcodeException, ConfigurationException {
+        if (config != null) {
+            DocumentFragment fragment = barcodeUtil.generateSVGBarcode(config, message);
 
             Nodes nodes = DOMConverter.convert(fragment);
-            StringBuffer buffer = new StringBuffer();
 
+            StringBuffer buffer = new StringBuffer();
             for (int i = 0; i < nodes.size(); i++) {
                 Node node = nodes.get(i);
                 buffer.append(node.toXML());
             }
 
             return buffer.toString();
-        }
-        else {
+        } else {
             return "";
         }
     }

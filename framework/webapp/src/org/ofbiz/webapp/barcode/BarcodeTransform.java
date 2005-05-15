@@ -26,13 +26,13 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.krysalis.barcode4j.BarcodeException;
+import org.ofbiz.base.util.Debug;
+
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
-
-import org.ofbiz.base.util.Debug;
-
-import org.krysalis.barcode.BarcodeException;
 
 /**
  * BarcodeTransform - Freemarker Transform for Barcodes
@@ -84,9 +84,10 @@ public class BarcodeTransform implements TemplateTransformModel {
 
                 try {
                     out.write(generator.generateSvgXml(buf.toString()));
-                }
-                catch (BarcodeException e) {
-                    throw new IOException(e.getMessage());
+                } catch (BarcodeException e) {
+                    throw new IOException(e.toString());
+                } catch (ConfigurationException e) {
+                    throw new IOException(e.toString());
                 }
             }
         };
