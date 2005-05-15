@@ -18,7 +18,7 @@
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
     String donePage = request.getParameter("DONE_PAGE");
-    if(donePage == null || donePage.length() <= 0) donePage="viewprofile?partyId=" + partyId;
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
   
   <p class="head1">Add Note</p>
@@ -27,7 +27,7 @@
     &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[Save]</a>
 
   <form method="post" action="<ofbiz:url>/createpartynote/<%=donePage%></ofbiz:url>" name="createnoteform">
-  <input type="hidden" name="partyId" value="<%=partyId%>">
+  <input type="hidden" name="partyId" value="<%=partyId%>"/>
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td width="26%" align="right"><div class="tabletext">Note</div></td>

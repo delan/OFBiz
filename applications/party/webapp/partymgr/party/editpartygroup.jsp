@@ -59,7 +59,6 @@
 
         String donePage = request.getParameter("DONE_PAGE");    
         if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
-        if (partyId != null) donePage = donePage + "?partyId=" + partyId;
         pageContext.setAttribute("donePage", donePage);
 %>
 

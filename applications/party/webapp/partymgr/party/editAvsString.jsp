@@ -22,7 +22,7 @@
     if (avsOverride != null) pageContext.setAttribute("avsOverride", avsOverride);
 
     String donePage = request.getParameter("DONE_PAGE");
-    if(donePage == null || donePage.length() <= 0) donePage="viewprofile?partyId=" + partyId;
+    if (donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
  
   <p class="head1">Edit AVS Override String</p>

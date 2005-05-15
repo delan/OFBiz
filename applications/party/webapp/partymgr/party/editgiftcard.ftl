@@ -45,7 +45,7 @@
         <input type='hidden' name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
 
-    <input type='hidden' name='partyId' value='${partyId}'>
+    <input type='hidden' name='partyId' value='${partyId}'/>
 
     <tr>
       <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>

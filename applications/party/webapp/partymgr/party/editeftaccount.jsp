@@ -43,7 +43,7 @@
     if (partyId == null) partyId = (String) request.getAttribute("partyId");
 
     String donePage = request.getParameter("DONE_PAGE");
-    if(donePage == null || donePage.length() <= 0) donePage="viewprofile?partyId=" + partyId;     
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
 <%PaymentWorker.getPaymentMethodAndRelated(pageContext, partyId, 
     "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity");%>
