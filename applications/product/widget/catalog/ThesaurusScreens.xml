@@ -56,6 +56,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStore"/>
                 <set field="tabButtonItem" value="EditKeywordThesaurus"/>
+                <set field="headerItem" value="thesaurus"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/thesaurus/EditKeywordThesaurus.bsh"/>
 			</actions>
