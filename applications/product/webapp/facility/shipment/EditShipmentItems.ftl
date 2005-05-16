@@ -80,8 +80,13 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 		<tr>
 			<td><div class="tabletext">&nbsp;</div></td>
 			<td colspan="2"><div class="tabletext">${uiLabelMap.ProductPackage} :${shipmentPackageContent.shipmentPackageSeqId}</div></td>
-			<td><div class="tabletext">${shipmentPackageContent.quantity?if_exists}</div></td>
+			<td><div class="tabletext">${shipmentPackageContent.quantity?if_exists}&nbsp;</div></td>
+                        <#if shipmentPackageContent.subProductId?has_content>
+                        <td><div class="tabletext">${uiLabelMap.ProductSubProduct} :${shipmentPackageContent.subProductId}</div></td>
+                        <td><div class="tabletext">${shipmentPackageContent.subProductQuantity?if_exists}</div></td>
+                        <#else>
 			<td colspan="2"><div class="tabletext">&nbsp;</div></td>
+                        </#if>
 			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItemPackageContent?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
 		</tr>
 	</#list>
