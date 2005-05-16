@@ -33,7 +33,7 @@
 
 <!-- Sales Order Entry -->
 <#if !(updateParty?exists) | shoppingCart.getOrderType() = "SALES_ORDER">
-<table border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
+<table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td>
       <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -60,7 +60,7 @@
       <form method="post" name="salesentryform" action="<@ofbizUrl>/initorderentry</@ofbizUrl>">
       <input type='hidden' name='finalizeMode' value='type'>
       <input type='hidden' name='orderMode' value='SALES_ORDER'>
-      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td >&nbsp;</td>
           <td align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.ProductProductStore}</div></td>
@@ -73,7 +73,7 @@
                   <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected</#if>>${productStore.storeName}</option>
                 </#list>
               </select>
-              <#if !sessionAttributes.orderMode?exists>&nbsp;&nbsp;*<font color='red'>${uiLabelMap.OrderRequiredForSO}</font><#else>${uiLabelMap.OrderCannotBeChanged}</#if>
+              <#if sessionAttributes.orderMode?exists>${uiLabelMap.OrderCannotBeChanged}</#if>
             </div>
           </td>
         </tr>
@@ -117,7 +117,9 @@
           <td valign='middle'>
             <div class='tabletext' valign='top'>
               <input type='text' class='inputBox' name='partyId' value='${thisPartyId?if_exists}'>
-              ${uiLabelMap.CommonOverridesSelection}
+              <a href="javascript:call_fieldlookup2(document.salesentryform.partyId,'LookupPartyName');">
+                <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+              </a>
             </div>
           </td>
         </tr>         
@@ -127,10 +129,10 @@
   </tr>
 </table>
 </#if>
-
+<br/>
 <!-- Purchase Order Entry -->
 <#if !(updateParty?exists) | shoppingCart.getOrderType() = "PURCHASE_ORDER">
-<table border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
+<table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td>
       <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -157,7 +159,7 @@
       <form method="post" name="poentryform" action="<@ofbizUrl>/initorderentry</@ofbizUrl>">
       <input type='hidden' name='finalizeMode' value='type'>
       <input type='hidden' name='orderMode' value='PURCHASE_ORDER'>
-      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <#if partyId?exists>
           <#assign thisPartyId = partyId>
         <#else>
