@@ -171,6 +171,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="MainColumnStyle" value="leftonly"/>
+                <set field="headerItem" value="main"/>
     
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
