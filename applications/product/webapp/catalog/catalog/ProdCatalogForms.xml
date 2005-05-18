@@ -133,7 +133,7 @@
         <field name="thruDate"></field>
         <field name="sequenceNum"></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogId}&amp;productproductCategoryId=${productCategoryId}&amp;fromDate=${fromDate}&amp;prodCatalogCategoryTypeId=${prodCatalogCategoryTypeId}"
+            <hyperlink target="removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogId}&amp;productCategoryId=${productCategoryId}&amp;fromDate=${fromDate}&amp;prodCatalogCategoryTypeId=${prodCatalogCategoryTypeId}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
         <field name="makeTopLink" title="&amp;nbsp;" widget-style="buttontext">
