@@ -29,7 +29,7 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- SecurityGroup methods -->
     <simple-method method-name="createSecurityGroup" short-description="Create an SecurityGroup">
-        <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run createSecurityGroup you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run createSecurityGroup you must have the SECURITY_CREATE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="SecurityGroup"/>
@@ -39,7 +39,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateSecurityGroup" short-description="Update an SecurityGroup">
-        <check-permission permission="SECURITY" action="_UPDATE"><fail-message message="Security Error: to run updateSecurityGroup you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_UPDATE"><fail-message message="Security Error: to run updateSecurityGroup you must have the SECURITY_UPDATE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="SecurityGroup" value-name="lookupPKMap"/>
@@ -51,7 +51,7 @@
 
     <!-- SecurityPermission methods -->
     <simple-method method-name="createSecurityPermission" short-description="Create an SecurityPermission">
-        <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run createSecurityPermission you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run createSecurityPermission you must have the SECURITY_CREATE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="SecurityPermission"/>
@@ -61,7 +61,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateSecurityPermission" short-description="Update an SecurityPermission">
-        <check-permission permission="SECURITY" action="_UPDATE"><fail-message message="Security Error: to run updateSecurityPermission you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_UPDATE"><fail-message message="Security Error: to run updateSecurityPermission you must have the SECURITY_UPDATE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="SecurityPermission" value-name="lookupPKMap"/>
@@ -73,7 +73,7 @@
 
     <!-- SecurityPermission to SecurityGroup methods -->
     <simple-method method-name="addSecurityPermissionToSecurityGroup" short-description="Add SecurityPermission To SecurityGroup">
-        <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run addSecurityPermissionToSecurityGroup you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run addSecurityPermissionToSecurityGroup you must have the SECURITY_CREATE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="SecurityGroupPermission"/>
@@ -84,7 +84,7 @@
         <call-bsh><![CDATA[ org.ofbiz.security.Security.securityGroupPermissionCache.remove(newEntity); ]]></call-bsh>
     </simple-method>
     <simple-method method-name="removeSecurityPermissionFromSecurityGroup" short-description="Remove SecurityPermission From SecurityGroup">
-        <check-permission permission="SECURITY" action="_DELETE"><fail-message message="Security Error: to run removeSecurityPermissionFromSecurityGroup you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_DELETE"><fail-message message="Security Error: to run removeSecurityPermissionFromSecurityGroup you must have the SECURITY_DELETE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="SecurityGroupPermission" value-name="lookupPKMap"/>
@@ -98,7 +98,7 @@
 
     <!-- UserLogin to SecurityGroup methods -->
     <simple-method method-name="addUserLoginToSecurityGroup" short-description="Add UserLogin To SecurityGroup">
-        <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run addUserLoginToSecurityGroup you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run addUserLoginToSecurityGroup you must have the SECURITY_CREATE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="UserLoginSecurityGroup"/>
@@ -116,7 +116,7 @@
         <call-bsh><![CDATA[ org.ofbiz.security.Security.userLoginSecurityGroupByUserLoginId.remove(parameters.get("userLoginId")); ]]></call-bsh>
     </simple-method>
     <simple-method method-name="updateUserLoginToSecurityGroup" short-description="Update UserLogin to SecurityGroup">
-        <check-permission permission="SECURITY" action="_UPDATE"><fail-message message="Security Error: to run updateUserLoginToSecurityGroup you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_UPDATE"><fail-message message="Security Error: to run updateUserLoginToSecurityGroup you must have the SECURITY_UPDATE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="UserLoginSecurityGroup" value-name="lookupPKMap"/>
@@ -129,7 +129,7 @@
         <call-bsh><![CDATA[ org.ofbiz.security.Security.userLoginSecurityGroupByUserLoginId.remove(parameters.get("userLoginId")); ]]></call-bsh>
     </simple-method>
     <simple-method method-name="removeUserLoginFromSecurityGroup" short-description="Remove UserLogin From SecurityGroup">
-        <check-permission permission="SECURITY" action="_DELETE"><fail-message message="Security Error: to run removeUserLoginFromSecurityGroup you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="SECURITY" action="_DELETE"><fail-message message="Security Error: to run removeUserLoginFromSecurityGroup you must have the SECURITY_DELETE or SECURITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="UserLoginSecurityGroup" value-name="lookupPKMap"/>
