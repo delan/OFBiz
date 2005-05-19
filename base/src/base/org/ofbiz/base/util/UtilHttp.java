@@ -298,21 +298,19 @@ public class UtilHttp {
     }
 
     private static Locale getLocale(HttpServletRequest request, HttpSession session) {
-        Map userLogin = (Map) session.getAttribute("userLogin");
-        if (userLogin == null) {
-            userLogin = (Map) session.getAttribute("autoUserLogin");
-        }
+        // check session first, should override all if anything set there 
+        Object localeObject = localeObject = session != null ? session.getAttribute("locale") : null;
 
-        Object localeObject = null;
-
-        // check userLogin first
-        if (userLogin != null) {
-            localeObject = userLogin.get("lastLocale");
-        }
-
-        // session second
+        // next see if the userLogin has a value
         if (localeObject == null) {
-            localeObject = session != null ? session.getAttribute("locale") : null;
+            Map userLogin = (Map) session.getAttribute("userLogin");
+            if (userLogin == null) {
+                userLogin = (Map) session.getAttribute("autoUserLogin");
+            }
+
+            if (userLogin != null) {
+                localeObject = userLogin.get("lastLocale");
+            }
         }
 
         // finally request (w/ a fall back to default)
@@ -345,11 +343,17 @@ public class UtilHttp {
     }
 
     public static void setLocale(HttpServletRequest request, String localeString) {
-        UtilHttp.setLocale(request, UtilMisc.parseLocale(localeString));
+        UtilHttp.setLocale(request.getSession(), UtilMisc.parseLocale(localeString));
     }
 
-    public static void setLocale(HttpServletRequest request, Locale locale) {
-        request.getSession().setAttribute("locale", locale);
+    public static void setLocale(HttpSession session, Locale locale) {
+        session.setAttribute("locale", locale);
+    }
+
+    public static void setLocaleIfNone(HttpSession session, String localeString) {
+        if (UtilValidate.isNotEmpty(localeString) && session.getAttribute("locale") == null) {
+            UtilHttp.setLocale(session, UtilMisc.parseLocale(localeString));
+        }
     }
 
     /**
@@ -358,26 +362,23 @@ public class UtilHttp {
      * @return String The ISO currency code
      */
     public static String getCurrencyUom(HttpSession session) {
-        Map userLogin = (Map) session.getAttribute("userLogin");
-        if (userLogin == null) {
-            userLogin = (Map) session.getAttribute("autoUserLogin");
-        }
+        // session, should override all if set there
+        String iso = (String) session.getAttribute("currencyUom");
 
-        String iso = null;
-
-        // check userLogin first
-        if (userLogin != null) {
-            iso = (String) userLogin.get("lastCurrencyUom");
-        }
-
-        // session next
+        // check userLogin next, ie if nothing to override in the session
         if (iso == null) {
-            iso = (String) session.getAttribute("currencyUom");
+            Map userLogin = (Map) session.getAttribute("userLogin");
+            if (userLogin == null) {
+                userLogin = (Map) session.getAttribute("autoUserLogin");
+            }
+
+            if (userLogin != null) {
+                iso = (String) userLogin.get("lastCurrencyUom");
+            }
         }
 
         // if none is set we will use the configured default
         if (iso == null) {
-
             try {
                 iso = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
             } catch (Exception e) {
@@ -405,8 +406,14 @@ public class UtilHttp {
     }
 
     /** Simple event to set the users per-session currency uom value */
-    public static void setCurrencyUom(HttpServletRequest request, String currencyUom) {
-        request.getSession().setAttribute("currencyUom", currencyUom);
+    public static void setCurrencyUom(HttpSession session, String currencyUom) {
+        session.setAttribute("currencyUom", currencyUom);
+    }
+
+    public static void setCurrencyUomIfNone(HttpSession session, String currencyUom) {
+        if (UtilValidate.isNotEmpty(currencyUom) && session.getAttribute("currencyUom") == null) {
+            session.setAttribute("currencyUom", currencyUom);
+        }
     }
 
     /** URL Encodes a Map of arguements */

@@ -206,7 +206,7 @@ public class CommonEvents {
         String currencyUom = request.getParameter("currencyUom");
         if (UtilValidate.isNotEmpty(currencyUom)) {
             // update the session
-            UtilHttp.setCurrencyUom(request, currencyUom);
+            UtilHttp.setCurrencyUom(request.getSession(), currencyUom);
 
             // update the UserLogin object
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");

@@ -52,6 +52,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+import org.ofbiz.order.shoppinglist.ShoppingListEvents;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
@@ -76,7 +77,6 @@ public class ShoppingCart implements Serializable {
     private String firstAttemptOrderId = null;
     private String billingAccountId = null;
     private double billingAccountAmt = 0.00;
-    private String currencyUom = null;
     private String agreementId = null;
     private String quoteId = null;
 
@@ -483,6 +483,7 @@ public class ShoppingCart implements Serializable {
     protected GenericValue autoUserLogin = null;
 
     protected Locale locale;  // holds the locale from the user session
+    protected String currencyUom = null;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -565,8 +566,25 @@ public class ShoppingCart implements Serializable {
         return this.productStoreId;
     }
 
+    /** 
+     * This is somewhat of a dangerous method, changing the productStoreId changes a lot of stuff including:
+     * - some items in the cart may not be valid in any catalog in the new store
+     * - promotions need to be recalculated for the products that remain
+     * - what else? lots of settings on the ProductStore...
+     * 
+     * So for now this can only be called if the cart is empty... otherwise it wil throw an exception 
+     * 
+     */
     public void setProductStoreId(String productStoreId) {
-        this.productStoreId = productStoreId;
+        if ((productStoreId == null && this.productStoreId == null) || (productStoreId != null && productStoreId.equals(this.productStoreId))) {
+            return;
+        }
+        
+        if (this.size() == 0) {
+            this.productStoreId = productStoreId;
+        } else {
+            throw new IllegalArgumentException("Cannot set productStoreId when the cart is not empty; cart size is " + this.size());
+        }
     }
 
     public String getTransactionId() {
@@ -599,6 +617,29 @@ public class ShoppingCart implements Serializable {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    /** Sets the currency for the cart. */
+    public void setCurrency(LocalDispatcher dispatcher, String currencyUom) throws CartItemModifyException {
+        String previousCurrency = this.currencyUom;
+        this.currencyUom = currencyUom;
+        if (!previousCurrency.equals(this.currencyUom)) {
+            Iterator itemIterator = this.iterator();
+            while (itemIterator.hasNext()) {
+                ShoppingCartItem item = (ShoppingCartItem) itemIterator.next();
+                item.updatePrice(dispatcher, this);
+            }
+        }
+    }
+
+    /** Get the current currency setting. */
+    public String getCurrency() {
+        if (this.currencyUom != null) {
+            return this.currencyUom;
+        } else {
+            // uh oh, not good, should always be passed in on init, we can't really do anything without it, so throw an exception
+            throw new IllegalStateException("The Currency UOM is not set in the shopping cart, this is not a valid state, it should always be passed in when the cart is created.");
+        }
     }
 
     public Timestamp getCartCreatedTime() {
@@ -1031,7 +1072,7 @@ public class ShoppingCart implements Serializable {
         this.additionalPartyRole.clear();        
         
         // clear the auto-save info
-        if (org.ofbiz.product.store.ProductStoreWorker.autoSaveCart(this.getDelegator(), productStoreId)) {
+        if (ProductStoreWorker.autoSaveCart(this.getDelegator(), this.getProductStoreId())) {
             GenericValue ul = this.getUserLogin();
             if (ul == null) {
                 ul = this.getAutoUserLogin();
@@ -1040,7 +1081,7 @@ public class ShoppingCart implements Serializable {
             // load the auto-save list ID
             if (autoSaveListId == null) {
                 try {
-                    autoSaveListId = org.ofbiz.order.shoppinglist.ShoppingListEvents.getAutoSaveListId(this.getDelegator(), null, ul);
+                    autoSaveListId = ShoppingListEvents.getAutoSaveListId(this.getDelegator(), null, null, ul, this.getProductStoreId());
                 } catch (GeneralException e) {
                     Debug.logError(e, module);
                 }
@@ -2219,32 +2260,9 @@ public class ShoppingCart implements Serializable {
         this.orderId = orderId;
     }
 
-    /** Sets the first attempt orderId for this cart. */
+    /** TODO: Sets the first attempt orderId for this cart. */
     public void setFirstAttemptOrderId(String orderId) {
         this.firstAttemptOrderId = orderId;
-    }
-
-    /** Sets the currency for the cart. */
-    public void setCurrency(LocalDispatcher dispatcher, String currencyUom) throws CartItemModifyException {
-        String previousCurrency = this.currencyUom;
-        this.currencyUom = currencyUom;
-        if (!previousCurrency.equals(this.currencyUom)) {
-            Iterator itemIterator = this.iterator();
-            while (itemIterator.hasNext()) {
-                ShoppingCartItem item = (ShoppingCartItem) itemIterator.next();
-                item.updatePrice(dispatcher, this);
-            }
-        }
-    }
-
-    /** Get the current currency setting. */
-    public String getCurrency() {
-        if (this.currencyUom != null) {
-            return this.currencyUom;
-        } else {
-            // uh oh, not good, should always be passed in on init, we can't really do anything without it, so throw an exception
-            throw new IllegalStateException("The Currency UOM is not set in the shopping cart, this is not a valid state, it should always be passed in when the cart is created.");
-        }
     }
 
     public void removeAllFreeShippingProductPromoActions() {
@@ -2891,11 +2909,6 @@ public class ShoppingCart implements Serializable {
         return result;
     }
 
-    protected void finalize() throws Throwable {
-        this.clear();
-        super.finalize();
-    }
-
     public List getLineListOrderedByBasePrice(boolean ascending) {
         List result = new ArrayList(this.cartLines);
         Collections.sort(result, new BasePriceOrderComparator(ascending));
@@ -2929,5 +2942,10 @@ public class ShoppingCart implements Serializable {
                 return false;
             }
         }
+    }
+
+    protected void finalize() throws Throwable {
+        // DEJ20050518 we should not call clear because it kills the auto-save shopping list and is unnecessary given that when this object is GC'ed it will cause everything it points to that isn't referenced anywhere else to be GC'ed too: this.clear();
+        super.finalize();
     }
 }

@@ -368,10 +368,8 @@ public class ProductEvents {
     /**
      * Updates ProductAssoc information according to UPDATE_MODE parameter
      *
-     * @param request
-     *                The HTTPRequest object for the current request
-     * @param response
-     *                The HTTPResponse object for the current request
+     * @param request The HTTPRequest object for the current request
+     * @param response The HTTPResponse object for the current request
      * @return String specifying the exit status of this event
      */
     public static String updateProductAssoc(HttpServletRequest request, HttpServletResponse response) {
@@ -647,83 +645,6 @@ public class ProductEvents {
             return "error";
         }
 
-        return "success";
-    }
-
-    public static String tellAFriend(HttpServletRequest request, HttpServletResponse response) {
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-
-        GenericValue productStore = ProductStoreWorker.getProductStore(request);
-        GenericValue productStoreEmail = null;
-        String emailType = "PRDS_TELL_FRIEND";
-        try {
-            productStoreEmail =
-                delegator.findByPrimaryKey(
-                    "ProductStoreEmailSetting",
-                    UtilMisc.toMap("productStoreId", productStore.get("productStoreId"), "emailType", emailType));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Unable to get product store email setting for tell-a-friend", module);
-            return "error";
-        }
-        if (productStoreEmail == null) {
-            return "error";
-        }
-
-        Map paramMap = UtilHttp.getParameterMap(request);
-        String subjectString = productStoreEmail.getString("subject");
-        subjectString = FlexibleStringExpander.expandString(subjectString, paramMap);
-
-        String ofbizHome = System.getProperty("ofbiz.home");
-        Map context = new HashMap();
-        context.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
-        context.put("templateData", paramMap);
-        context.put("sendTo", paramMap.get("sendTo"));
-        context.put("contentType", productStoreEmail.get("contentType"));
-        context.put("sendFrom", productStoreEmail.get("fromAddress"));
-        context.put("sendCc", productStoreEmail.get("ccAddress"));
-        context.put("sendBcc", productStoreEmail.get("bccAddress"));
-        context.put("subject", subjectString);
-
-        try {
-            dispatcher.runAsync("sendGenericNotificationEmail", context);
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Problem sending mail", module);
-            return "error";
-        }
-        return "success";
-    }
-
-    /** Simple event to set the users initial locale and currency Uom based on website product store */
-    public static String setDefaultStoreSettings(HttpServletRequest request, HttpServletResponse response) {
-        GenericValue productStore = ProductStoreWorker.getProductStore(request);
-        if (productStore != null) {
-            String currencyStr = null;
-            String localeStr = null;
-
-            HttpSession session = request.getSession();
-            GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-            if (userLogin != null) {
-                // user login currency
-                currencyStr = userLogin.getString("lastCurrencyUom");
-                // user login locale
-                localeStr = userLogin.getString("lastLocale");
-            }
-
-            // if currency is not set, the store's default currency is used
-            if (currencyStr == null && productStore.get("defaultCurrencyUomId") != null) {
-                currencyStr = productStore.getString("defaultCurrencyUomId");
-            }
-
-            // if locale is not set, the store's default locale is used
-            if (localeStr == null && productStore.get("defaultLocaleString") != null) {
-                localeStr = productStore.getString("defaultLocaleString");
-            }
-            
-            UtilHttp.setCurrencyUom(request, currencyStr);
-            UtilHttp.setLocale(request, localeStr);
-
-        }
         return "success";
     }
 
@@ -1255,6 +1176,94 @@ public class ProductEvents {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
+        }
+        return "success";
+    }
+
+    /** Simple event to set the users initial locale and currency Uom based on website product store */
+    public static String setDefaultStoreSettings(HttpServletRequest request, HttpServletResponse response) {
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);
+        if (productStore != null) {
+            String currencyStr = null;
+            String localeStr = null;
+
+            HttpSession session = request.getSession();
+            GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+            if (userLogin != null) {
+                // user login currency
+                currencyStr = userLogin.getString("lastCurrencyUom");
+                // user login locale
+                localeStr = userLogin.getString("lastLocale");
+            }
+
+            // if currency is not set, the store's default currency is used
+            if (currencyStr == null && productStore.get("defaultCurrencyUomId") != null) {
+                currencyStr = productStore.getString("defaultCurrencyUomId");
+            }
+
+            // if locale is not set, the store's default locale is used
+            if (localeStr == null && productStore.get("defaultLocaleString") != null) {
+                localeStr = productStore.getString("defaultLocaleString");
+            }
+            
+            UtilHttp.setCurrencyUom(session, currencyStr);
+            UtilHttp.setLocale(request, localeStr);
+
+        }
+        return "success";
+    }
+
+    public static String tellAFriend(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);
+        if (productStore == null) {
+            String errMsg = "Could not send tell a friend email, no ProductStore found";
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
+        String productStoreId = productStore.getString("productStoreId");
+        
+        GenericValue productStoreEmail = null;
+        String emailType = "PRDS_TELL_FRIEND";
+        try {
+            productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting",
+                    UtilMisc.toMap("productStoreId", productStoreId, "emailType", emailType));
+        } catch (GenericEntityException e) {
+            String errMsg = "Unable to get product store email setting for tell-a-friend: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
+        if (productStoreEmail == null) {
+            String errMsg = "Could not find tell a friend [" + emailType + "] email settings for the store [" + productStoreId + "]";
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
+
+        Map paramMap = UtilHttp.getParameterMap(request);
+        String subjectString = productStoreEmail.getString("subject");
+        subjectString = FlexibleStringExpander.expandString(subjectString, paramMap);
+
+        String ofbizHome = System.getProperty("ofbiz.home");
+        Map context = new HashMap();
+        context.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
+        context.put("templateData", paramMap);
+        context.put("sendTo", paramMap.get("sendTo"));
+        context.put("contentType", productStoreEmail.get("contentType"));
+        context.put("sendFrom", productStoreEmail.get("fromAddress"));
+        context.put("sendCc", productStoreEmail.get("ccAddress"));
+        context.put("sendBcc", productStoreEmail.get("bccAddress"));
+        context.put("subject", subjectString);
+
+        try {
+            dispatcher.runAsync("sendGenericNotificationEmail", context);
+        } catch (GenericServiceException e) {
+            String errMsg = "Problem sending mail: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
         }
         return "success";
     }
