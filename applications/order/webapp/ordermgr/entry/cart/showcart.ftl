@@ -27,7 +27,6 @@
 -->
 
 <script language="JavaScript" type="text/javascript">
-<!--
 function toggle(e) {
     e.checked = !e.checked;    
 }
@@ -99,7 +98,6 @@ function gwAll(e) {
     }
     cform.submit();
 }
-//-->
 </script>
 
 <TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -183,9 +181,7 @@ function gwAll(e) {
 </TABLE>
 
 <script language="JavaScript" type="text/javascript">
-<!--
   document.quickaddform.add_product_id.focus();
-//-->
 </script>
 <BR>
 
@@ -410,3 +406,5 @@ function gwAll(e) {
     </TD>
   </TR>
 </TABLE>
+
+<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()} locale=${shoppingCart.getLocale()} currencyUom=${shoppingCart.getCurrency()} -->

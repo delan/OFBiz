@@ -129,6 +129,24 @@
         <response name="success" type="view" value="passwordemail"/>
     </request-map>
 
+    <request-map uri="setSessionLocale">
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    
+    <request-map uri="setSessionCurrencyUom">
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionCurrencyUom"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    
+    <request-map uri="setSessionProductStore">
+        <event type="java" path="org.ofbiz.order.shoppingcart.product.ProductStoreCartAwareEvents" invoke="setSessionProductStore"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    
     <request-map uri="editShoppingList">
         <security auth="true"/>
         <response name="success" type="view" value="editShoppingList"/>
@@ -549,12 +567,6 @@
         <security https="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="autoApproveOrder"/>
         <response name="success" type="view" value="ordercomplete"/>
-    </request-map>
-
-    <request-map uri="setSessionLocale">
-        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="main"/>
     </request-map>
 
     <request-map uri="confirmorder">

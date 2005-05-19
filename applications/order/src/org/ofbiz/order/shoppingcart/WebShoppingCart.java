@@ -24,13 +24,14 @@
 package org.ofbiz.order.shoppingcart;
 
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.store.ProductStoreWorker;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
@@ -50,7 +51,8 @@ public class WebShoppingCart extends ShoppingCart {
 
     public WebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
         super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request),
-                WebSiteWorker.getWebSiteId(request), locale, currencyUom);
+                WebSiteWorker.getWebSiteId(request), (locale != null ? locale : UtilHttp.getLocale(request)), 
+                (currencyUom != null ? currencyUom : UtilHttp.getCurrencyUom(request)));
 
         HttpSession session = request.getSession(true);
         this.userLogin = (GenericValue) session.getAttribute("userLogin");

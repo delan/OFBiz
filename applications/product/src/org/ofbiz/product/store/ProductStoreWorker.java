@@ -89,12 +89,14 @@ public class ProductStoreWorker {
         } else {
             GenericValue webSite = CatalogWorker.getWebSite(request);
             if (webSite != null) {
-                return webSite.getString("productStoreId");
+                String productStoreId = webSite.getString("productStoreId");
+                // might be nice to do this, but not needed and has a problem with dependencies: setSessionProductStore(productStoreId, httpRequest);
+                return productStoreId;
             }
         }
         return null;
     }
-
+    
     public static String makeProductStoreOrderId(GenericDelegator delegator, String productStoreId) {
         return makeProductStoreOrderId(delegator, productStoreId, delegator.getNextSeqId("OrderHeader"));
     }

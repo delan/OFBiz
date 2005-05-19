@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.order.shoppinglist;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.sql.Timestamp;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,20 +38,20 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
+import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
-import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
@@ -97,7 +97,7 @@ public class ShoppingListEvents {
         String errMsg = null;
 
         if (items == null || items.length == 0) {
-            errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.select_items_to_add_to_list", cart.getLocale());
+            errMsg = UtilProperties.getMessage(resource, "shoppinglistevents.select_items_to_add_to_list", cart.getLocale());
             throw new IllegalArgumentException(errMsg);
         }
                 
@@ -351,15 +351,15 @@ public class ShoppingListEvents {
     /**
      * Finds or creates a specialized (auto-save) shopping list used to record shopping bag contents between user visits.
      */
-    public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, String partyId, GenericValue userLogin) throws GenericEntityException, GenericServiceException {
-        if (partyId == null) {
+    public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, String partyId, GenericValue userLogin, String productStoreId) throws GenericEntityException, GenericServiceException {
+        if (partyId == null && userLogin != null) {
             partyId = userLogin.getString("partyId");
         }
 
         String autoSaveListId = null;
         // TODO: add sorting, just in case there are multiple...
         List persistantLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", partyId,
-                "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME));
+                "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME));
 
         GenericValue list = null;
         if (persistantLists != null && !persistantLists.isEmpty()) {
@@ -368,7 +368,7 @@ public class ShoppingListEvents {
         }
 
         if (list == null && dispatcher != null && userLogin != null) {
-            Map listFields = UtilMisc.toMap("userLogin", userLogin, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
+            Map listFields = UtilMisc.toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
             Map newListResult = dispatcher.runSync("createShoppingList", listFields);
 
             if (newListResult != null) {
@@ -379,14 +379,6 @@ public class ShoppingListEvents {
         return autoSaveListId;
     }
 
-    public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException, GenericServiceException {
-        return getAutoSaveListId(delegator, dispatcher, null, userLogin);
-    }
-
-    public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, String partyId) throws GenericEntityException, GenericServiceException {
-        return getAutoSaveListId(delegator, dispatcher, partyId, null);
-    }
-
     /**
      * Fills the specialized shopping list with the current shopping cart if one exists (if not leaves it alone)
      */
@@ -395,7 +387,7 @@ public class ShoppingListEvents {
             GenericValue userLogin = ShoppingListEvents.getCartUserLogin(cart);
             if (userLogin == null) return; //only save carts when a user is logged in....
             GenericDelegator delegator = cart.getDelegator();
-            String autoSaveListId = getAutoSaveListId(delegator, dispatcher, userLogin);
+            String autoSaveListId = getAutoSaveListId(delegator, dispatcher, null, userLogin, cart.getProductStoreId());
 
             try {
                 addBulkFromCart(delegator, dispatcher, cart, userLogin, autoSaveListId, makeCartItemsArray(cart), false, false);
@@ -441,7 +433,7 @@ public class ShoppingListEvents {
         String autoSaveListId = cart.getAutoSaveListId();
         if (autoSaveListId == null) {
             try {
-                autoSaveListId = getAutoSaveListId(delegator, dispatcher, userLogin);
+                autoSaveListId = getAutoSaveListId(delegator, dispatcher, null, userLogin, cart.getProductStoreId());
             } catch (GeneralException e) {
                 Debug.logError(e, module);
             }
