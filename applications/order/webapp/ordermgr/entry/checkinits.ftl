@@ -32,7 +32,8 @@
 <#if shoppingCart?exists>
 
 <!-- Sales Order Entry -->
-<#if !(updateParty?exists) | shoppingCart.getOrderType() = "SALES_ORDER">
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+<#if !(updateParty?exists) || shoppingCart.getOrderType() = "SALES_ORDER">
 <table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td>
@@ -129,9 +130,11 @@
   </tr>
 </table>
 </#if>
+</#if>
 <br/>
 <!-- Purchase Order Entry -->
-<#if !(updateParty?exists) | shoppingCart.getOrderType() = "PURCHASE_ORDER">
+<#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
+  <#if !(updateParty?exists) || shoppingCart.getOrderType() = "PURCHASE_ORDER">
 <table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td>
@@ -195,6 +198,6 @@
     </td>
   </tr>
 </table>
+  </#if>
 </#if>
-
 </#if>
