@@ -443,13 +443,13 @@
         <response name="success" type="view" value="EditProductAssetUsage"/>
     </request-map>
 	
-	<request-map uri="updateProductAssetUsage">
+    <request-map uri="updateProductAssetUsage">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProduct"/>
         <response name="success" type="view" value="EditProductAssetUsage"/>
         <response name="error" type="view" value="EditProductAssetUsage"/>
     </request-map>
-   <!-- ================ Fixed Asset to Product Requests ================= -->
+    <!-- ================ Fixed Asset to Product Requests ================= -->
     <request-map uri="showFixedAssetProduct">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="showFixedAssetProduct"/>
@@ -463,7 +463,7 @@
     <request-map uri="addFixedAssetProduct">
         <security https="true" auth="true"/>
         <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="addFixedAssetProduct"/>
-        <response name="success" type="view" value="showProductAssetUsage"/>
+        <response name="success" type="view" value="EditProductAssetUsage"/>
         <response name="error" type="view" value="newFixedAssetProduct"/>
     </request-map>
     <request-map uri="updFixedAssetProduct">
