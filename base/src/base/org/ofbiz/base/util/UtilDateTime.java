@@ -149,7 +149,16 @@ public class UtilDateTime {
      * @return String formatted for right now
      */
     public static String nowDateString() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        return nowDateString("yyyyMMddHHmmss");
+    }
+    
+    /**
+     * Return a string formatted as format
+     *
+     * @return String formatted for right now
+     */
+    public static String nowDateString(String format) {
+        SimpleDateFormat df = new SimpleDateFormat(format);
         return df.format(new Date());
     }
 
@@ -558,35 +567,33 @@ public class UtilDateTime {
     }
 
     /**
+     * Makes a date String in the given from a Date
+     *
+     * @param date The Date
+     * @return A date String in the given format
+     */
+    public static String toDateString(java.util.Date date, String format) {
+        if (date == null) return "";
+        SimpleDateFormat dateFormat = null;
+        if (format != null) {
+            dateFormat = new SimpleDateFormat(format);
+        } else {
+            dateFormat = new SimpleDateFormat();
+        }
+        
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(date);
+        return dateFormat.format(date);
+    }
+    /**
      * Makes a date String in the format MM/DD/YYYY from a Date
      *
      * @param date The Date
      * @return A date String in the format MM/DD/YYYY
      */
     public static String toDateString(java.util.Date date) {
-        if (date == null) return "";
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.setTime(date);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        String monthStr;
-        String dayStr;
-        String yearStr;
-
-        if (month < 10) {
-            monthStr = "0" + month;
-        } else {
-            monthStr = "" + month;
-        }
-        if (day < 10) {
-            dayStr = "0" + day;
-        } else {
-            dayStr = "" + day;
-        }
-        yearStr = "" + year;
-        return monthStr + "/" + dayStr + "/" + yearStr;
+        return toDateString(date, "MM/dd/yyyy");
     }
 
     /**
