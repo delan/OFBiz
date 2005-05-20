@@ -43,6 +43,9 @@ context.put("nowTimestampString", nowTimestampString);
 productFeatureCategoryId = request.getParameter("productFeatureCategoryId");
 context.put("productFeatureCategoryId", productFeatureCategoryId);
 
+selFeatureApplTypeId = request.getParameter("productFeatureApplTypeId");
+context.put("selFeatureApplTypeId", selFeatureApplTypeId);
+
 curProductFeatureCategory = delegator.findByPrimaryKey("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureCategoryId));
 context.put("curProductFeatureCategory", curProductFeatureCategory);
 
