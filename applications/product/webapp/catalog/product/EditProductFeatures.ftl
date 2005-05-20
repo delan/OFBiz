@@ -93,7 +93,7 @@
         </table>
 
         <br/>
-        <form method="post" action="<@ofbizUrl>/ApplyFeaturesFromCategory?productId=${productId}</@ofbizUrl>" style='margin: 0;'>
+        <form method="post" action="<@ofbizUrl>/ApplyFeaturesFromCategory</@ofbizUrl>" style='margin: 0;'>
         <input type="hidden" name="productId" value="${productId}">
         <div class='head2'>${uiLabelMap.ProductAddProductFeatureFromCategory}:</div>
         <br/>

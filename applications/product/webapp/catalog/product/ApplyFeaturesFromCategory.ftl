@@ -78,6 +78,7 @@
   </tr>
 <#assign rowCount = 0>
 <#if (listSize > 0)>
+<#assign selectedFeatureApplTypeId = selFeatureApplTypeId>
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType")>
     <tr valign="middle" class="viewOneTR1">
@@ -88,7 +89,7 @@
         <td>
           <select name="productFeatureApplTypeId_o_${rowCount}" size="1" class="selectBox">
             <#list productFeatureApplTypes as productFeatureApplType>
-              <option value="${productFeatureApplType.productFeatureApplTypeId}" <#if (defaultFeatureApplTypeId?has_content) && (productFeatureApplType.productFeatureApplTypeId == defaultFeatureApplTypeId)>selected</#if>>${productFeatureApplType.description}</option>
+              <option value="${productFeatureApplType.productFeatureApplTypeId}" <#if (selectedFeatureApplTypeId?has_content) && (productFeatureApplType.productFeatureApplTypeId == selectedFeatureApplTypeId)>selected</#if>>${productFeatureApplType.description}</option>
             </#list>
           </select>
         </td>
