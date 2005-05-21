@@ -92,9 +92,7 @@
     </target>
 
     <target name="clean-data">
-        <delete verbose="on">
-            <fileset dir="data" includes="**/*"/>
-        </delete>
+        <delete verbose="on" dir="data"/>
     </target>
 
     <target name="clean-logs">
