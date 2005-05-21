@@ -28,21 +28,13 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="FindRequirements" type="single" 
-            target="FindRequirements" title=""
+            target="ApproveRequirements" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><text-find default-value="equals"/></field>
         <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RequirementType" description="${description}"/>
-            </drop-down>
-        </field>
-        <field name="statusId" title="${uiLabelMap.ManufacturingRequirementStatusId}">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" operator="equals" value="REQUIREMENT_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
             </drop-down>
         </field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
@@ -55,23 +47,20 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="ListRequirements" type="multi" use-row-submit="true" 
-            target="approveRequirements" title="" list-iterator-name="listIt" paginate-target="FindRequirements"
+    <form name="ApproveRequirements" type="multi" use-row-submit="true" 
+            target="approveRequirements" title="" list-iterator-name="listIt" paginate-target="ApproveRequirements"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <set field="entityName" value="Requirement"/>
+            <set field="requestParameters.statusId" value="REQ_CREATED"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
         </actions>
         <field name="requirementId" widget-style="buttontext">
-            <hyperlink description="${requirementId}" target="EditRequirement?requirementId=${requirementId}"/>
+            <hyperlink target-type="inter-app" also-hidden="true" description="${requirementId}" target="/ordermgr/control/EditRequirement?requirementId=${requirementId}"/>
         </field>
-        <field name="statusId">
-            <display-entity also-hidden="false" entity-name="StatusItem"/>
-        </field>
-
         <field name="requirementTypeId">
             <display-entity entity-name="RequirementType" also-hidden="true"/>
         </field>
@@ -84,29 +73,6 @@
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" widget-style="smallSubmit">
           <submit/>
-        </field>
-    </form>
-    <form name="EditRequirement" type="single"
-            target="updateRequirement" title="" default-map-name="requirement"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <alt-target use-when="requirement==null" target="createRequirement"/>
-        <auto-fields-entity entity-name="Requirement" default-field-type="edit"/>
-        <field name="requirementId"><hidden/></field>
-        <field name="requirementTypeId">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="RequirementType" description="${description}"/>
-            </drop-down>
-        </field>
-        <field name="statusId" title="Status" widget-style="selectBox">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" value="REQUIREMENT_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
-            <submit button-type="button"/>
         </field>
     </form>
 </forms>
