@@ -53,6 +53,9 @@
     </simple-method>
 
     <simple-method method-name="deleteRequirement" short-description="Delete a requirement">
+        <entity-one entity-name="Requirement" value-name="requirement" auto-field-map="true"/>
+        <check-errors/>
+        <remove-value value-name="requirement"/>
     </simple-method>
 
     <simple-method method-name="associateRequirementWithRequestItem" short-description="Associate a requirement and CustRequestItem">
