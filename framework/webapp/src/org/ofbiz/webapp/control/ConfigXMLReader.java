@@ -35,13 +35,11 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * ConfigXMLReader.java - Reads and parses the XML site config files.
@@ -177,147 +175,98 @@ public class ConfigXMLReader {
 
         if (root == null) return map;
 
-        NodeList list = root.getElementsByTagName(INCLUDE);
+        List includeElementList = UtilXml.childElementList(root, INCLUDE);
+        Iterator includeElementIter = includeElementList.iterator();
+        while (includeElementIter.hasNext()) {
+            Element includeElement = (Element) includeElementIter.next();
+            String includeFile = includeElement.getAttribute(INCLUDE_FILE);
 
-        for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
-            Node node = list.item(rootCount);
+            if ((includeFile != null) && (includeFile.length() > 0)) {
+                File oldFile = new File(xml.getFile());
+                File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
 
-            // Make sure we are an element.
-            if (node instanceof Element) {
-                // Get the file to include
-                Element mapping = (Element) node;
-                String includeFile = mapping.getAttribute(INCLUDE_FILE);
+                try {
+                    Map subMap = loadRequestMap(null, newFile.toURL());
 
-                if ((includeFile != null) && (includeFile.length() > 0)) {
-                    File oldFile = new File(xml.getFile());
-                    File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
-
-                    try {
-                        Map subMap = loadRequestMap(null, newFile.toURL());
-
-                        map.putAll(subMap);
-                    } catch (MalformedURLException mue) {
-                        mue.printStackTrace();
-                    }
+                    map.putAll(subMap);
+                } catch (MalformedURLException mue) {
+                    mue.printStackTrace();
                 }
+            }
 
-                String includeURL = mapping.getAttribute(INCLUDE_URL);
-
-                if ((includeURL != null) && (includeURL.length() > 0)) {
-                    try {
-                        Map subMap = loadRequestMap(null, new URL(includeURL));
-                        map.putAll(subMap);
-                    } catch (MalformedURLException mue) {
-                        mue.printStackTrace();
-                    }
+            String includeURL = includeElement.getAttribute(INCLUDE_URL);
+            if ((includeURL != null) && (includeURL.length() > 0)) {
+                try {
+                    Map subMap = loadRequestMap(null, new URL(includeURL));
+                    map.putAll(subMap);
+                } catch (MalformedURLException mue) {
+                    mue.printStackTrace();
                 }
-
             }
         }
 
-        list = root.getElementsByTagName(REQUEST_MAPPING);
-        for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
+        List requestMapElementList = UtilXml.childElementList(root, REQUEST_MAPPING);
+        Iterator requestMapElementIter = requestMapElementList.iterator();
+        while (requestMapElementIter.hasNext()) {
+            Element requestMapElement = (Element) requestMapElementIter.next();
+            
             // Create a URI-MAP for each element found.
             FastMap uriMap = FastMap.newInstance();
-            // Get the node.
-            Node node = list.item(rootCount);
 
-            // Make sure we are an element.
-            if (node instanceof Element) {
-                // Get the URI info.
-                Element mapping = (Element) node;
-                String uri = mapping.getAttribute(REQUEST_URI);
-                String edit = mapping.getAttribute(REQUEST_EDIT);
+            // Get the URI info.
+            String uri = requestMapElement.getAttribute(REQUEST_URI);
+            String edit = requestMapElement.getAttribute(REQUEST_EDIT);
 
-                if (edit == null || edit.equals(""))
-                    edit = "true";
-                if (uri != null) {
-                    uriMap.put(REQUEST_URI, uri);
-                    uriMap.put(REQUEST_EDIT, edit);
-                }
-
-                // Check for security.
-                NodeList securityList = mapping.getElementsByTagName(SECURITY);
-
-                if (securityList.getLength() > 0) {
-                    Node securityNode = securityList.item(0);  // There should be only one.
-
-                    if (securityNode instanceof Element) {       // We must be an element.
-                        Element security = (Element) securityNode;
-                        String securityHttps = security.getAttribute(SECURITY_HTTPS);
-                        String securityAuth = security.getAttribute(SECURITY_AUTH);
-                        String securityExtView = security.getAttribute(SECURITY_EXTVIEW);
-                        String securityDirectRequest = security.getAttribute(SECURITY_DIRECT);
-
-                        uriMap.put(SECURITY_HTTPS, securityHttps);
-                        uriMap.put(SECURITY_AUTH, securityAuth);
-                        uriMap.put(SECURITY_EXTVIEW, securityExtView);
-                        uriMap.put(SECURITY_DIRECT, securityDirectRequest);
-                    }
-                }
-
-                // Check for an event.
-                NodeList eventList = mapping.getElementsByTagName(EVENT);
-
-                if (eventList.getLength() > 0) {
-                    Node eventNode = eventList.item(0);  // There should be only one.
-
-                    if (eventNode instanceof Element) {   // We must be an element.
-                        Element event = (Element) eventNode;
-                        String type = event.getAttribute(EVENT_TYPE);
-                        String path = event.getAttribute(EVENT_PATH);
-                        String invoke = event.getAttribute(EVENT_METHOD);
-
-                        uriMap.put(EVENT_TYPE, type);
-                        uriMap.put(EVENT_PATH, path);
-                        uriMap.put(EVENT_METHOD, invoke);
-                    }
-                }
-
-                // Check for a description.
-                NodeList descList = mapping.getElementsByTagName(REQUEST_DESCRIPTION);
-
-                if (descList.getLength() > 0) {
-                    Node descNode = descList.item(0);   // There should be only one.
-
-                    if (descNode instanceof Element) {   // We must be an element.
-                        NodeList children = descNode.getChildNodes();
-
-                        if (children.getLength() > 0) {
-                            Node cdata = children.item(0);  // Just get the first one.
-                            String description = cdata.getNodeValue();
-
-                            if (description != null)
-                                description = description.trim();
-                            else
-                                description = "";
-                            uriMap.put(REQUEST_DESCRIPTION, description);
-                        }
-                    }
-                } else {
-                    uriMap.put(REQUEST_DESCRIPTION, "");
-                }
-
-                // Get the response(s).
-                NodeList respList = mapping.getElementsByTagName(RESPONSE);
-
-                for (int respCount = 0; respCount < respList.getLength(); respCount++) {
-                    Node responseNode = respList.item(respCount);
-
-                    if (responseNode instanceof Element) {
-                        Element response = (Element) responseNode;
-                        String name = response.getAttribute(RESPONSE_NAME);
-                        String type = response.getAttribute(RESPONSE_TYPE);
-                        String value = response.getAttribute(RESPONSE_VALUE);
-
-                        uriMap.put(name, type + ":" + value);
-                    }
-                }
-
-                if (uri != null)
-                    map.put(uri, uriMap);
+            if (edit == null || edit.equals(""))
+                edit = "true";
+            if (uri != null) {
+                uriMap.put(REQUEST_URI, uri);
+                uriMap.put(REQUEST_EDIT, edit);
             }
 
+            // Check for security.
+            Element securityElement = UtilXml.firstChildElement(requestMapElement, SECURITY);
+            if (securityElement != null) {
+                String securityHttps = securityElement.getAttribute(SECURITY_HTTPS);
+                String securityAuth = securityElement.getAttribute(SECURITY_AUTH);
+                String securityExtView = securityElement.getAttribute(SECURITY_EXTVIEW);
+                String securityDirectRequest = securityElement.getAttribute(SECURITY_DIRECT);
+                uriMap.put(SECURITY_HTTPS, securityHttps);
+                uriMap.put(SECURITY_AUTH, securityAuth);
+                uriMap.put(SECURITY_EXTVIEW, securityExtView);
+                uriMap.put(SECURITY_DIRECT, securityDirectRequest);
+            }
+
+            // Check for an event.
+            Element eventElement = UtilXml.firstChildElement(requestMapElement, EVENT);
+            if (eventElement != null) {
+                String type = eventElement.getAttribute(EVENT_TYPE);
+                String path = eventElement.getAttribute(EVENT_PATH);
+                String invoke = eventElement.getAttribute(EVENT_METHOD);
+
+                uriMap.put(EVENT_TYPE, type);
+                uriMap.put(EVENT_PATH, path);
+                uriMap.put(EVENT_METHOD, invoke);
+            }
+
+            // Check for a description.
+            String description = UtilXml.childElementValue(requestMapElement, REQUEST_DESCRIPTION);
+            uriMap.put(REQUEST_DESCRIPTION, UtilValidate.isNotEmpty(description) ? description : "");
+
+            // Get the response(s).
+            List responseElementList = UtilXml.childElementList(requestMapElement, RESPONSE);
+            Iterator responseElementIter = responseElementList.iterator();
+            while (responseElementIter.hasNext()) {
+                Element responseElement = (Element) responseElementIter.next();
+                String name = responseElement.getAttribute(RESPONSE_NAME);
+                String type = responseElement.getAttribute(RESPONSE_TYPE);
+                String value = responseElement.getAttribute(RESPONSE_VALUE);
+                uriMap.put(name, type + ":" + value);
+            }
+
+            if (uri != null) {
+                map.put(uri, uriMap);
+            }
         }
 
         /* Debugging */
@@ -372,96 +321,62 @@ public class ConfigXMLReader {
             return map;
         }
 
-        NodeList list = root.getElementsByTagName(INCLUDE);
+        List includeElementList = UtilXml.childElementList(root, INCLUDE);
+        Iterator includeElementIter = includeElementList.iterator();
+        while (includeElementIter.hasNext()) {
+            Element includeElement = (Element) includeElementIter.next();
+            String includeFile = includeElement.getAttribute(INCLUDE_FILE);
 
-        for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
-            Node node = list.item(rootCount);
+            if ((includeFile != null) && (includeFile.length() > 0)) {
+                File oldFile = new File(xml.getFile());
+                File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
 
-            // Make sure we are an element.
-            if (node instanceof Element) {
-                // Get the file to include
-                Element mapping = (Element) node;
-                String includeFile = mapping.getAttribute(INCLUDE_FILE);
+                try {
+                    Map subMap = loadRequestMap(null, newFile.toURL());
 
-                if ((includeFile != null) && (includeFile.length() > 0)) {
-                    File oldFile = new File(xml.getFile());
-                    File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
-
-                    try {
-                        Map subMap = loadViewMap(null, newFile.toURL());
-                        map.putAll(subMap);
-                    } catch (MalformedURLException mue) {
-                        mue.printStackTrace();
-                    }
+                    map.putAll(subMap);
+                } catch (MalformedURLException mue) {
+                    mue.printStackTrace();
                 }
+            }
 
-                String includeURL = mapping.getAttribute(INCLUDE_URL);
-
-                if ((includeURL != null) && (includeURL.length() > 0)) {
-                    try {
-                        Map subMap = loadViewMap(null, new URL(includeURL));
-                        map.putAll(subMap);
-                    } catch (MalformedURLException mue) {
-                        mue.printStackTrace();
-                    }
+            String includeURL = includeElement.getAttribute(INCLUDE_URL);
+            if ((includeURL != null) && (includeURL.length() > 0)) {
+                try {
+                    Map subMap = loadRequestMap(null, new URL(includeURL));
+                    map.putAll(subMap);
+                } catch (MalformedURLException mue) {
+                    mue.printStackTrace();
                 }
-
             }
         }
 
-        list = root.getElementsByTagName(VIEW_MAPPING);
-        for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
+        List viewMapElementList = UtilXml.childElementList(root, VIEW_MAPPING);
+        Iterator viewMapElementIter = viewMapElementList.iterator();
+        while (viewMapElementIter.hasNext()) {
+            Element viewMapElement = (Element) viewMapElementIter.next();
             // Create a URI-MAP for each element found.
             FastMap uriMap = FastMap.newInstance();
-            // Get the node.
-            Node node = list.item(rootCount);
 
-            // Make sure we are an element.
-            if (node instanceof Element) {
-                // Get the view info.
-                Element mapping = (Element) node;
-                String name = mapping.getAttribute(VIEW_NAME);
-                String page = mapping.getAttribute(VIEW_PAGE);
-                String type = mapping.getAttribute(VIEW_TYPE);
-
-                if (page == null || page.length() == 0) {
-                    page = name;
-                }
-
-                uriMap.put(VIEW_NAME, name);
-                uriMap.put(VIEW_PAGE, page);
-                uriMap.put(VIEW_TYPE, type);
-                uriMap.put(VIEW_INFO, mapping.getAttribute(VIEW_INFO));
-                uriMap.put(VIEW_CONTENT_TYPE, mapping.getAttribute(VIEW_CONTENT_TYPE));
-                uriMap.put(VIEW_ENCODING, mapping.getAttribute(VIEW_ENCODING));
-
-                // Check for a description.
-                NodeList descList = mapping.getElementsByTagName(VIEW_DESCRIPTION);
-
-                if (descList.getLength() > 0) {
-                    Node descNode = descList.item(0);   // There should be only one.
-
-                    if (descNode instanceof Element) {   // We must be an element.
-                        NodeList children = descNode.getChildNodes();
-
-                        if (children.getLength() > 0) {
-                            Node cdata = children.item(0);  // Just get the first one.
-                            String description = cdata.getNodeValue();
-
-                            if (description != null)
-                                description = description.trim();
-                            else
-                                description = "";
-                            uriMap.put(VIEW_DESCRIPTION, description);
-                        }
-                    }
-                } else {
-                    uriMap.put(VIEW_DESCRIPTION, "");
-                }
-
-                if (name != null)
-                    map.put(name, uriMap);
+            // Get the view info.
+            String name = viewMapElement.getAttribute(VIEW_NAME);
+            String page = viewMapElement.getAttribute(VIEW_PAGE);
+            if (page == null || page.length() == 0) {
+                page = name;
             }
+
+            uriMap.put(VIEW_NAME, name);
+            uriMap.put(VIEW_PAGE, page);
+            uriMap.put(VIEW_TYPE, viewMapElement.getAttribute(VIEW_TYPE));
+            uriMap.put(VIEW_INFO, viewMapElement.getAttribute(VIEW_INFO));
+            uriMap.put(VIEW_CONTENT_TYPE, viewMapElement.getAttribute(VIEW_CONTENT_TYPE));
+            uriMap.put(VIEW_ENCODING, viewMapElement.getAttribute(VIEW_ENCODING));
+
+            // Check for a description.
+            String description = UtilXml.childElementValue(viewMapElement, VIEW_DESCRIPTION);
+            uriMap.put(VIEW_DESCRIPTION, UtilValidate.isNotEmpty(description) ? description : "");
+
+            if (name != null) map.put(name, uriMap);
         }
 
         /* Debugging */
@@ -511,133 +426,103 @@ public class ConfigXMLReader {
             root = loadDocument(xml);
         }
 
-        NodeList list = null;
-
         if (root != null) {
             // default error page
-            list = root.getElementsByTagName(DEFAULT_ERROR_PAGE);
-            if (list.getLength() > 0) {
-                Node node = list.item(0);
-                NodeList children = node.getChildNodes();
-                Node child = children.item(0);
+            String errorpage = UtilXml.childElementValue(root, DEFAULT_ERROR_PAGE);
+            if (UtilValidate.isNotEmpty(errorpage)) map.put(DEFAULT_ERROR_PAGE, errorpage);
 
-                if (child.getNodeName() != null)
-                    map.put(DEFAULT_ERROR_PAGE, child.getNodeValue());
-            }
-            list = null;
             // site owner
-            list = root.getElementsByTagName(SITE_OWNER);
-            if (list.getLength() > 0) {
-                Node node = list.item(0);
-                NodeList children = node.getChildNodes();
-                Node child = children.item(0);
+            String owner = UtilXml.childElementValue(root, SITE_OWNER);
+            if (UtilValidate.isNotEmpty(owner)) map.put(SITE_OWNER, owner);
 
-                if (child.getNodeName() != null)
-                    map.put(SITE_OWNER, child.getNodeValue());
-            }
-            list = null;
             // security class
-            list = root.getElementsByTagName(SECURITY_CLASS);
-            if (list.getLength() > 0) {
-                Node node = list.item(0);
-                NodeList children = node.getChildNodes();
-                Node child = children.item(0);
+            String securityClass = UtilXml.childElementValue(root, SECURITY_CLASS);
+            if (UtilValidate.isNotEmpty(securityClass)) map.put(SECURITY_CLASS, securityClass);
 
-                if (child.getNodeName() != null)
-                    map.put(SECURITY_CLASS, child.getNodeValue());
-            }
-            list = null;
-            // first visit events
-            list = root.getElementsByTagName(FIRSTVISIT);
-            if (list.getLength() > 0) {
+            // first visit event
+            Element firstvisitElement = UtilXml.firstChildElement(root, FIRSTVISIT);
+            if (firstvisitElement != null) {
                 List eventList = FastList.newInstance();
-                Node node = list.item(0);
-                if (node instanceof Element) {
-                    Element nodeElement = (Element) node;
-                    NodeList procEvents = nodeElement.getElementsByTagName(EVENT);
-
-                    for (int procCount = 0; procCount < procEvents.getLength(); procCount++) {
-                        Node eventNode = procEvents.item(procCount);
-
-                        if (eventNode instanceof Element) {
-                            Element event = (Element) eventNode;
-                            String type = event.getAttribute(EVENT_TYPE);
-                            String path = event.getAttribute(EVENT_PATH);
-                            String invoke = event.getAttribute(EVENT_METHOD);
-
-                            FastMap eventMap = FastMap.newInstance();
-
-                            eventMap.put(EVENT_TYPE, type);
-                            eventMap.put(EVENT_PATH, path);
-                            eventMap.put(EVENT_METHOD, invoke);
-                            eventList.add(eventMap);
-                        }
-                    }
+                List eventElementList = UtilXml.childElementList(firstvisitElement, EVENT);
+                Iterator eventElementIter = eventElementList.iterator();
+                while (eventElementIter.hasNext()) {
+                    Element eventElement = (Element) eventElementIter.next();
+                    FastMap eventMap = FastMap.newInstance();
+                    eventMap.put(EVENT_TYPE, eventElement.getAttribute(EVENT_TYPE));
+                    eventMap.put(EVENT_PATH, eventElement.getAttribute(EVENT_PATH));
+                    eventMap.put(EVENT_METHOD, eventElement.getAttribute(EVENT_METHOD));
+                    eventList.add(eventMap);
                 }
                 map.put(FIRSTVISIT, eventList);
             }
-            list = null;
+
             // preprocessor events
-            list = root.getElementsByTagName(PREPROCESSOR);
-            if (list.getLength() > 0) {
+            Element preprocessorElement = UtilXml.firstChildElement(root, PREPROCESSOR);
+            if (preprocessorElement != null) {
                 List eventList = FastList.newInstance();
-                Node node = list.item(0);
-                if (node instanceof Element) {
-                    Element nodeElement = (Element) node;
-                    NodeList procEvents = nodeElement.getElementsByTagName(EVENT);
-
-                    for (int procCount = 0; procCount < procEvents.getLength(); procCount++) {
-                        Node eventNode = procEvents.item(procCount);
-
-                        if (eventNode instanceof Element) {
-                            Element event = (Element) eventNode;
-                            String type = event.getAttribute(EVENT_TYPE);
-                            String path = event.getAttribute(EVENT_PATH);
-                            String invoke = event.getAttribute(EVENT_METHOD);
-
-                            FastMap eventMap = FastMap.newInstance();
-
-                            eventMap.put(EVENT_TYPE, type);
-                            eventMap.put(EVENT_PATH, path);
-                            eventMap.put(EVENT_METHOD, invoke);
-                            eventList.add(eventMap);
-                        }
-                    }
+                List eventElementList = UtilXml.childElementList(preprocessorElement, EVENT);
+                Iterator eventElementIter = eventElementList.iterator();
+                while (eventElementIter.hasNext()) {
+                    Element eventElement = (Element) eventElementIter.next();
+                    FastMap eventMap = FastMap.newInstance();
+                    eventMap.put(EVENT_TYPE, eventElement.getAttribute(EVENT_TYPE));
+                    eventMap.put(EVENT_PATH, eventElement.getAttribute(EVENT_PATH));
+                    eventMap.put(EVENT_METHOD, eventElement.getAttribute(EVENT_METHOD));
+                    eventList.add(eventMap);
                 }
                 map.put(PREPROCESSOR, eventList);
             }
-            list = null;
+
             // postprocessor events
-            list = root.getElementsByTagName(POSTPROCESSOR);
-            if (list.getLength() > 0) {
+            Element postprocessorElement = UtilXml.firstChildElement(root, POSTPROCESSOR);
+            if (postprocessorElement != null) {
                 List eventList = FastList.newInstance();
-                Node node = list.item(0);
-
-                if (node instanceof Element) {
-                    Element nodeElement = (Element) node;
-                    NodeList procEvents = nodeElement.getElementsByTagName(EVENT);
-
-                    for (int procCount = 0; procCount < procEvents.getLength(); procCount++) {
-                        Node eventNode = procEvents.item(procCount);
-
-                        if (eventNode instanceof Element) {
-                            Element event = (Element) eventNode;
-                            String type = event.getAttribute(EVENT_TYPE);
-                            String path = event.getAttribute(EVENT_PATH);
-                            String invoke = event.getAttribute(EVENT_METHOD);
-
-                            FastMap eventMap = FastMap.newInstance();
-
-                            eventMap.put(EVENT_TYPE, type);
-                            eventMap.put(EVENT_PATH, path);
-                            eventMap.put(EVENT_METHOD, invoke);
-                            eventList.add(eventMap);
-                        }
-                    }
+                List eventElementList = UtilXml.childElementList(postprocessorElement, EVENT);
+                Iterator eventElementIter = eventElementList.iterator();
+                while (eventElementIter.hasNext()) {
+                    Element eventElement = (Element) eventElementIter.next();
+                    FastMap eventMap = FastMap.newInstance();
+                    eventMap.put(EVENT_TYPE, eventElement.getAttribute(EVENT_TYPE));
+                    eventMap.put(EVENT_PATH, eventElement.getAttribute(EVENT_PATH));
+                    eventMap.put(EVENT_METHOD, eventElement.getAttribute(EVENT_METHOD));
+                    eventList.add(eventMap);
                 }
                 map.put(POSTPROCESSOR, eventList);
             }
-            list = null;
+
+            // after-login events
+            Element afterLoginElement = UtilXml.firstChildElement(root, "after-login");
+            if (afterLoginElement != null) {
+                List eventList = FastList.newInstance();
+                List eventElementList = UtilXml.childElementList(afterLoginElement, EVENT);
+                Iterator eventElementIter = eventElementList.iterator();
+                while (eventElementIter.hasNext()) {
+                    Element eventElement = (Element) eventElementIter.next();
+                    FastMap eventMap = FastMap.newInstance();
+                    eventMap.put(EVENT_TYPE, eventElement.getAttribute(EVENT_TYPE));
+                    eventMap.put(EVENT_PATH, eventElement.getAttribute(EVENT_PATH));
+                    eventMap.put(EVENT_METHOD, eventElement.getAttribute(EVENT_METHOD));
+                    eventList.add(eventMap);
+                }
+                map.put("after-login", eventList);
+            }
+
+            // before-logout events
+            Element beforeLogoutElement = UtilXml.firstChildElement(root, "before-logout");
+            if (beforeLogoutElement != null) {
+                List eventList = FastList.newInstance();
+                List eventElementList = UtilXml.childElementList(beforeLogoutElement, EVENT);
+                Iterator eventElementIter = eventElementList.iterator();
+                while (eventElementIter.hasNext()) {
+                    Element eventElement = (Element) eventElementIter.next();
+                    FastMap eventMap = FastMap.newInstance();
+                    eventMap.put(EVENT_TYPE, eventElement.getAttribute(EVENT_TYPE));
+                    eventMap.put(EVENT_PATH, eventElement.getAttribute(EVENT_PATH));
+                    eventMap.put(EVENT_METHOD, eventElement.getAttribute(EVENT_METHOD));
+                    eventList.add(eventMap);
+                }
+                map.put("before-logout", eventList);
+            }
         }
 
         /* Debugging */
@@ -680,19 +565,18 @@ public class ConfigXMLReader {
         if (root == null) {
             root = loadDocument(xml);
         }
-        NodeList list = null;
 
         if (root != null) {
             Map rMap = FastMap.newInstance();
             Map vMap = FastMap.newInstance();
 
-            list = root.getElementsByTagName(HANDLER);
-            for (int i = 0; i < list.getLength(); i++) {
-                Element handler = (Element) list.item(i);
-                String hName = checkEmpty(handler.getAttribute(HANDLER_NAME));
-                String hClass = checkEmpty(handler.getAttribute(HANDLER_CLASS));
-                String hType = checkEmpty(handler.getAttribute(HANDLER_TYPE));
-
+            List handlerElementList = UtilXml.childElementList(root, HANDLER);
+            Iterator handlerElementIter = handlerElementList.iterator();
+            while (handlerElementIter.hasNext()) {
+                Element handlerElement = (Element) handlerElementIter.next();
+                String hName = checkEmpty(handlerElement.getAttribute(HANDLER_NAME));
+                String hClass = checkEmpty(handlerElement.getAttribute(HANDLER_CLASS));
+                String hType = checkEmpty(handlerElement.getAttribute(HANDLER_TYPE));
                 if (hType.equals("view")) {
                     vMap.put(hName, hClass);
                 } else {
@@ -744,27 +628,6 @@ public class ConfigXMLReader {
             return string;
         else
             return "";
-    }
-
-    /** Not used right now */
-    public static String getSubTagValue(Node node, String subTagName) {
-        String returnString = "";
-
-        if (node != null) {
-            NodeList children = node.getChildNodes();
-
-            for (int innerLoop = 0; innerLoop < children.getLength(); innerLoop++) {
-                Node child = children.item(innerLoop);
-
-                if ((child != null) && (child.getNodeName() != null) && child.getNodeName().equals(subTagName)) {
-                    Node grandChild = child.getFirstChild();
-
-                    if (grandChild.getNodeValue() != null)
-                        return grandChild.getNodeValue();
-                }
-            }
-        }
-        return returnString;
     }
 
     public static void main(String args[]) throws Exception {
