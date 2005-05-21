@@ -41,7 +41,7 @@
     <div class="col"><a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="${selectedLeftClassMap.calendar?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingCalendar}</a></div>
     <div class="col"><a href="<@ofbizUrl>/BomSimulation</@ofbizUrl>" class="${selectedLeftClassMap.bom?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingBillOfMaterials}</a></div>
     <div class="col"><a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedLeftClassMap.mrp?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingMrp}</a></div>
-    <div class="col"><a href="<@ofbizUrl>/FindRequirements</@ofbizUrl>" class="${selectedLeftClassMap.requirement?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingRequirements}</a></div>
+    <div class="col"><a href="<@ofbizUrl>/ApproveRequirements</@ofbizUrl>" class="${selectedLeftClassMap.requirement?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingApproveRequirements}</a></div>
   </#if>  
   <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>

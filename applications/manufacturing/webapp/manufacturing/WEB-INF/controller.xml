@@ -382,32 +382,18 @@
     </request-map>
  
      <!-- Requirement request mappings -->
-    <request-map uri="FindRequirements">
+    <request-map uri="ApproveRequirements">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindRequirements"/>
-    </request-map>
-    <request-map uri="EditRequirement">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditRequirement"/>
+        <response name="success" type="view" value="ApproveRequirements"/>
     </request-map>
     <request-map uri="approveRequirements">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="approveRequirement"/>
-        <response name="success" type="view" value="FindRequirements"/>
-        <response name="error" type="view" value="FindRequirements"/>
-    </request-map>
-    <request-map uri="createRequirement">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createRequirement"/>
-        <response name="success" type="view" value="EditRequirement"/>
-    </request-map>
-    <request-map uri="updateRequirement">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateRequirement"/>
-        <response name="success" type="view" value="EditRequirement"/>
+        <response name="success" type="view" value="ApproveRequirements"/>
+        <response name="error" type="view" value="ApproveRequirements"/>
     </request-map>
 
-     <!-- MRP request mappings -->
+    <!-- MRP request mappings -->
     <request-map uri="FindInventoryEventPlan">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindMrpPlannedEvents"/>
@@ -440,6 +426,10 @@
         <response name="docs_not_printed" type="view" value="EditProductionRun"/>
         <response name="docs_printed" type="view" value="ProductionRunDeclaration"/>
         <response name="error" type="view" value="FindProductionRun"/>
+    </request-map>
+    <request-map uri="ManufacturingReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ManufacturingReports"/>
     </request-map>
     <request-map uri="FindProductionRun">
         <security https="true" auth="true"/>
@@ -539,6 +529,31 @@
         <event type="bsf" path="/jobshopmgt/" invoke="ShipmentWorkEffortTasksPrepare.bsh"/>
         <response name="success" type="view" value="ShipmentWorkEffortTasks"/>
     </request-map>
+    <request-map uri="ReportE0.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportE0"/>
+    </request-map>
+    <request-map uri="ReportE1.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportE1"/>
+    </request-map>
+    <request-map uri="ReportF0.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportF0"/>
+    </request-map>
+    <request-map uri="ReportF2.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportF2"/>
+    </request-map>
+    <request-map uri="ReportC.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportC"/>
+    </request-map>
+    <request-map uri="test.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="test"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -577,12 +592,12 @@
     <view-map name="BomSimulation" page="component://manufacturing/widget/manufacturing/BomScreens.xml#BomSimulation" type="screen"/>
     
     <!-- MRP view mappings -->
-    <view-map name="FindRequirements" page="component://manufacturing/widget/manufacturing/RequirementScreens.xml#FindRequirements" type="screen"/>
-    <view-map name="EditRequirement" page="component://manufacturing/widget/manufacturing/RequirementScreens.xml#EditRequirement" type="screen"/>
+    <view-map name="ApproveRequirements" page="component://manufacturing/widget/manufacturing/RequirementScreens.xml#ApproveRequirements" type="screen"/>
     
     <!-- MRP view mappings -->
     <view-map name="FindMrpPlannedEvents" page="component://manufacturing/widget/manufacturing/MrpScreens.xml#FindMrpPlannedEvents" type="screen"/>
     <view-map name="MrpExecution" page="component://manufacturing/widget/manufacturing/MrpScreens.xml#MrpExecution" type="screen"/>
+    <view-map name="ManufacturingReports" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#ManufacturingReports" type="screen"/>
     
     <!-- JobShop Management view mappings -->
     <view-map name="CreateProductionRun" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#CreateProductionRun" type="screen"/>
@@ -592,9 +607,15 @@
     <view-map name="WorkWithShipmentPlans" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#WorkWithShipmentPlans" type="screen"/>
     
     <!-- Report view mappings -->
-    <view-map name="CuttingListReport" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#CuttingListReport" content-type="application/pdf" encoding="none"/>
     <view-map name="ShipmentPlanStockReport" type="jasperpdf" page="/jobshopmgt/ShipmentPlanStockReport.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="ShipmentLabel" type="jasperpdf" page="/jobshopmgt/ShipmentLabel.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="ShipmentWorkEffortTasks" type="jasperpdf" page="/jobshopmgt/ShipmentWorkEffortTasks.xml" content-type="application/pdf" encoding="none"/>
+    <view-map name="CuttingListReport" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#CuttingListReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="ReportE0" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportE0" content-type="application/pdf" encoding="none"/>
+    <view-map name="ReportE1" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportE1" content-type="application/pdf" encoding="none"/>
+    <view-map name="ReportF0" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportF0" content-type="application/pdf" encoding="none"/>
+    <view-map name="ReportF2" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportF2" content-type="application/pdf" encoding="none"/>
+    <view-map name="ReportC" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportC" content-type="application/pdf" encoding="none"/>
+    <view-map name="test" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#test" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>
