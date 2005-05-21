@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Nicolas.Malin@librenberry.net
+ *@version    $Rev$
+ *@since      3.0
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <form name="FindRequirements" type="single" 
+            target="ApproveRequirements" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find default-value="equals"/></field>
+        <field name="requirementTypeId" title="${uiLabelMap.OrderRequirementTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RequirementType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.OrderRequirementStatusId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="REQUIREMENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
+        <field name="requirementStartDate" title="${uiLabelMap.OrderRequirementStartDate}"><date-find type="date"/></field>
+        <field name="requiredByDate" title="${uiLabelMap.OrderRequirementByDate}"><date-find type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListRequirements" type="list" use-row-submit="true" 
+            target="approveRequirements" title="" list-iterator-name="listIt" paginate-target="FindRequirements"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <set field="entityName" value="Requirement"/>
+            <set field="requestParameters.statusId" value="REQ_CREATED"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <field name="requirementId" widget-style="buttontext">
+            <hyperlink target-type="inter-app" also-hidden="true" description="${requirementId}" target="/ordermgr/control/EditRequirement?requirementId=${requirementId}"/>
+        </field>
+        <field name="requirementTypeId">
+            <display-entity entity-name="RequirementType" also-hidden="true"/>
+        </field>
+        <field name="productId">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
+        </field>
+        <field name="requirementStartDate"><display/></field>
+        <field name="requiredByDate"><display/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+        <field name="deleteLink" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteRequirement?requirementId=${requirementId}"/>
+        </field>
+    </form>
+    <form name="EditRequirement" type="single"
+            target="updateRequirement" title="" default-map-name="requirement"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="requirement==null" target="createRequirement"/>
+        <auto-fields-entity entity-name="Requirement" default-field-type="edit"/>
+        <field name="requirementId"><hidden/></field>
+        <field name="requirementTypeId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="RequirementType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="statusId" title="Status" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="REQUIREMENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+</forms>
