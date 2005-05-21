@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: CommonScreens.xml 2951 2004-08-03 16:33:32Z jonesde $
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="CommonRequestDecorator">
+        <section>
+            <actions>
+                <!-- <set field="leftbarScreenName" value="leftbar"/> -->
+                <!-- <set field="leftbarScreenLocation" value=""/> -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!--
+                            <condition>
+                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                            </condition>
+                            -->
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/request/RequestTabBar.ftl"/></html>
+                                </platform-specific>
+                                <container>
+                                    <label style="head1">[${uiLabelMap.CommonId}:${custRequest.custRequestId}] ${custRequest.custRequestName}</label>
+                                </container>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <!--
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.OrderViewPermissionError}</label>
+                            </fail-widgets>
+                            -->
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindRequest">
+        <section>
+            <actions>
+                <set field="title" value="Find Requests"/>
+                <set field="headerItem" value="request"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">${uiLabelMap.OrderRequestList}</label>
+                        </container>
+                        <container>
+                            <link target="request" text="[${uiLabelMap.OrderNewRequest}]" style="buttontext"/>
+                        </container>
+                        <include-form name="FindRequests" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                        <include-form name="ListRequests" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="EditRequest">
+        <section>
+            <actions>
+                <set field="title" value="Request"/>
+                <set field="tabButtonItem" value="request"/>
+                <set field="headerItem" value="request"/>
+
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+
+                <set field="statusId" from-field="custRequest.statusId"/>
+                <entity-one entity-name="StatusItem" value-name="currentStatus"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="request" text="[${uiLabelMap.OrderNewRequest}]" style="buttontext"/>
+                        </container>
+                        <include-form name="EditCustRequest" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="RequestRoles">
+        <section>
+            <actions>
+                <set field="title" value="Request Roles"/>
+                <set field="tabButtonItem" value="requestroles"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <entity-and entity-name="CustRequestRole" list-name="custRequestRoles">
+                    <field-map env-name="custRequestId" field-name="custRequestId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <include-form name="ListRequestRoles" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                        <include-form name="EditRequestRole" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="RequestItems">
+        <section>
+            <actions>
+                <set field="title" value="Request Items"/>
+                <set field="tabButtonItem" value="requestitems"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <entity-and entity-name="CustRequestItem" list-name="custRequestItems">
+                    <field-map env-name="custRequestId" field-name="custRequestId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.OrderNewRequestItem}]" style="buttontext"/>
+                        </container>
+                        <include-form name="ListRequestItems" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditRequestItem">
+        <section>
+            <actions>
+                <set field="title" value="Edit a Request Item"/>
+                <set field="tabButtonItem" value="requestitem"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+                <set field="statusId" from-field="custRequestItem.statusId"/>
+                <entity-one entity-name="StatusItem" value-name="currentStatus"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
+                        </container>
+                        <container>
+                            <link  target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.OrderNewRequestItem}]" style="buttontext"/>
+                        </container>
+                        <include-form name="EditCustRequestItem" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditRequestItemWorkEffort">
+        <section>
+            <actions>
+                <set field="title" value="Edit a Request Item"/>
+                <set field="tabButtonItem" value="task"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+                
+                <entity-one entity-name="CustRequest" value-name="custRequest"  />
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+                <entity-one entity-name="CustRequestItemWorkEffort" value-name="custRequestItemWorkEffort"/>
+                <entity-one entity-name="WorkEffort" value-name="workEffort"/>
+                <set field="statusId" from-field="workEffort.statusId"/>
+                <entity-one entity-name="StatusItem" value-name="currentStatus"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
+                        </container>
+                        <container>
+                            <link  target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.OrderNewRequestItem}]" style="buttontext"/>
+                        </container>
+                        <include-form name="EditWorkEffort" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="RequestItemNotes">
+        <section>
+            <actions>
+                <set field="title" value="Request Item Notes"/>
+                <set field="tabButtonItem" value="requestitemnotes"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/request/requestitemnotes.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
+                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/request/requestitemnotes.ftl"/></html>
+                        </platform-specific>
+                        <include-form name="ListRequestItemNotes" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                        <include-form name="EditRequestItemNote" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="RequestItemRequirements">
+        <section>
+            <actions>
+                <set field="title" value="Request Item Requirements"/>
+                <set field="tabButtonItem" value="requestitemrequirements"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/request/requestitemrequirements.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
+                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/request/requestitemrequirements.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="RequestItemQuotes">
+        <section>
+            <actions>
+                <set field="title" value="Request Item Quotes"/>
+                <set field="tabButtonItem" value="requestitemquotes"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+                <entity-and entity-name="QuoteItem" list-name="quotes">
+                    <field-map env-name="custRequestItem.custRequestId" field-name="custRequestId"/>
+                    <field-map env-name="custRequestItem.custRequestItemSeqId" field-name="custRequestItemSeqId"/>
+                </entity-and>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/request/setRequestQuote.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
+                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/request/QuoteLinks.ftl"/></html>
+                        </platform-specific>
+                        <include-form name="ListRequestQuoteItems" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditQuoteItemForRequest">
+        <section>
+            <actions>
+                <set field="title" value="Edit a QuoteItem For a CustRequest"/>
+                <set field="tabButtonItem" value="requestitemquotes"/>
+                <set field="headerItem" value="request"/>
+                
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <set field="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+                <entity-one entity-name="QuoteItem" value-name="quoteItem"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
+                        </container>
+                        <include-form name="EditQuoteItemForRequest" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreateQuoteAndQuoteItemForRequest">
+        <section>
+            <actions>
+                <set field="title" value="Create a new Quote and QuoteItem for a CustRequest"/>
+                <set field="tabButtonItem" value="requestitemquotes"/>
+                <set field="headerItem" value="request"/>
+                
+                <set field="custRequestId"  from-field="parameters.custRequestId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <set field="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
+                        </container>
+                        <include-form name="CreateQuoteAndQuoteItemForRequest" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>
+
