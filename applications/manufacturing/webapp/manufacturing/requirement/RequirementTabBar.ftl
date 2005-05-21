@@ -28,6 +28,6 @@
 
 <#if requirement?exists>
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditRequirement?requirementId=${requirement.requirementId}</@ofbizUrl>" class="${selectedClassMap.EditRequirement?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRequirement}</a>
+    <a href="<@ofbizUrl>/EditRequirement?requirementId=${requirement.requirementId}</@ofbizUrl>" class="${selectedClassMap.EditRequirement?default(unselectedClassName)}">${uiLabelMap.OrderEditRequirement}</a>
 </div>
 </#if>

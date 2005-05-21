@@ -31,24 +31,32 @@
             target="ApproveRequirements" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><text-find default-value="equals"/></field>
-        <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
+        <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find default-value="equals"/></field>
+        <field name="requirementTypeId" title="${uiLabelMap.OrderRequirementTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RequirementType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.OrderRequirementStatusId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="REQUIREMENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
             </drop-down>
         </field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
-        <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><date-find type="date"/></field>
-        <field name="requiredByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><date-find type="date"/></field>
+        <field name="requirementStartDate" title="${uiLabelMap.OrderRequirementStartDate}"><date-find type="date"/></field>
+        <field name="requiredByDate" title="${uiLabelMap.OrderRequirementByDate}"><date-find type="date"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="ApproveRequirements" type="multi" use-row-submit="true" 
-            target="approveRequirements" title="" list-iterator-name="listIt" paginate-target="ApproveRequirements"
+    <form name="ListRequirements" type="list" use-row-submit="true" 
+            target="approveRequirements" title="" list-iterator-name="listIt" paginate-target="FindRequirements"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <set field="entityName" value="Requirement"/>
@@ -70,9 +78,34 @@
         <field name="requirementStartDate"><display/></field>
         <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
-        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitButton" widget-style="smallSubmit">
-          <submit/>
+        <field name="deleteLink" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteRequirement?requirementId=${requirementId}"/>
+        </field>
+    </form>
+    <form name="EditRequirement" type="single"
+            target="updateRequirement" title="" default-map-name="requirement"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="requirement==null" target="createRequirement"/>
+        <auto-fields-entity entity-name="Requirement" default-field-type="edit"/>
+        <field name="requirementId"><hidden/></field>
+        <field name="requirementTypeId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="RequirementType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="statusId" title="Status" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="REQUIREMENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
         </field>
     </form>
 </forms>

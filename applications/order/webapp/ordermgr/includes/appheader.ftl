@@ -50,6 +50,7 @@
   <div class="col"><a href="<@ofbizUrl>/findreturn</@ofbizUrl>" class="${selectedLeftClassMap.return?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderReturns}</a></div>
   </#if>
   <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session) || security.hasRolePermission("ORDERMGR_ROLE", "_VIEW", "", "", session)>
+  <div class="col"><a href="<@ofbizUrl>FindRequirements</@ofbizUrl>" class="${selectedLeftClassMap.requirement?default(unselectedLeftClassName)}">${uiLabelMap.OrderRequirements}</a></div>
   <div class="col"><a href="<@ofbizUrl>/tasklist</@ofbizUrl>" class="${selectedLeftClassMap.orderlist?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderTasks}</a></div>
   </#if>
 
