@@ -1,0 +1,23 @@
+import java.util.*;
+import org.ofbiz.security.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.service.*;
+import org.ofbiz.workeffort.workeffort.*;
+
+delegator = request.getAttribute("delegator");
+
+String custRequestId = request.getParameter("custRequestId");
+String custRequestItemSeqId = request.getParameter("custRequestItemSeqId");
+
+GenericValue custRequestItem = null;
+if (custRequestId != null && custRequestItemSeqId != null) {
+	custRequestItem = delegator.findByPrimaryKey("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId));
+   	if (custRequestItem != null) context.put("custRequestItem", custRequestItem);
+}	
+
+List requirements = delegator.findByAnd("RequirementCustRequestView", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId));
+if (requirements != null && requirements.size() > 0) context.put("requirements", requirements);	
+
+context.put("custRequestId",custRequestId);
+context.put("custRequestItemSeqId",custRequestItemSeqId);
