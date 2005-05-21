@@ -32,10 +32,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD>
-            <div class='boxhead'>${uiLabelMap.WorkEffortRequirementsForRequestItem}: ${custRequestItem.description?if_exists}</div>
+            <div class='boxhead'>${uiLabelMap.OrderRequirementsForRequestItem}: ${custRequestItem.description?if_exists}</div>
           </TD>
           <td align="right" valign="middle">
-            <a href="<@ofbizUrl>/requirement?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&productId=${custRequestItem.productId?if_exists}&quantity=${custRequestItem.quantity?if_exists}&donePage=requestitemrequirements</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.WorkEffortNewRequirement}]</a>
+            <a href="<@ofbizUrl>/requirement?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&productId=${custRequestItem.productId?if_exists}&quantity=${custRequestItem.quantity?if_exists}&donePage=requestitemrequirements</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.OrderNewRequirement}]</a>
           </td>
         </tr>
       </table>
@@ -52,14 +52,14 @@
                   <TD>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
-                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortRequirementId}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.OrderRequirementId}</div></td>
                         <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
-                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortProductId}</div></td>
-                        <td align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortQuantity}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>
+                        <td align='right'><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></td>
                         <td>&nbsp;&nbsp;</td>
-                        <td align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortEstBudget}</div></td>
+                        <td align='right'><div class="tableheadtext">${uiLabelMap.OrderEstBudget}</div></td>
                         <td>&nbsp;&nbsp;</td>
-                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortRequiredByDate}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.OrderRequiredByDate}</div></td>
                         <td>&nbsp;</td>
                       </tr>
                       <tr>
@@ -84,7 +84,7 @@
                 </TR>
                 <#else>
                 <TR>
-                    <TD><div class="tabletext">&nbsp;<b>${uiLabelMap.WorkEffortNoRequirementsCreated}.</b></div></TD>
+                    <TD><div class="tabletext">&nbsp;<b>${uiLabelMap.OrderNoRequirementsCreated}.</b></div></TD>
                   </TR>
                 </#if>                                 
               </TABLE>       
