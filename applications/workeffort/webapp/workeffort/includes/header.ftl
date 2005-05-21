@@ -40,7 +40,7 @@
   <div class="col"><a href="<@ofbizUrl>/mytasks</@ofbizUrl>" class="${selectedLeftClassMap.task?default(unselectedLeftClassName)}">${uiLabelMap.WorkEffortTaskList}</a></div>
   <div class="col"><a href="<@ofbizUrl>/day</@ofbizUrl>" class="${selectedLeftClassMap.calendar?default(unselectedLeftClassName)}">${uiLabelMap.WorkEffortCalendar}</a></div>
   <div class="col"><a href="<@ofbizUrl>/projectlist</@ofbizUrl>" class="${selectedLeftClassMap.project?default(unselectedLeftClassName)}">${uiLabelMap.WorkEffortProjects}</a></div>
-  <div class="col"><a href="<@ofbizUrl>/requestlist</@ofbizUrl>" class="${selectedLeftClassMap.request?default(unselectedLeftClassName)}">${uiLabelMap.WorkEffortRequests}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/requestlist</@ofbizUrl>" class="${selectedLeftClassMap.request?default(unselectedLeftClassName)}">${uiLabelMap.WorkEffortRequestList}</a></div>  
   <#if userLogin?has_content>
   <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>

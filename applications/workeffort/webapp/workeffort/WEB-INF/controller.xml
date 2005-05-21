@@ -196,106 +196,6 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="RequestList"/>
     </request-map>
-    <request-map uri="request">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditRequest"/>
-    </request-map>
-    <request-map uri="createrequest">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="createCustRequest"/>
-    	<response name="success" type="view" value="EditRequest"/>
-        <response name="error" type="view" value="EditRequest"/>
-    </request-map>
-    <request-map uri="updaterequest">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="updateCustRequest"/>
-    	<response name="success" type="view" value="EditRequest"/>
-        <response name="error" type="view" value="EditRequest"/>
-    </request-map>
-
-    <request-map uri="requestroles">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestRoles"/>
-    </request-map>
-    <request-map uri="createrequestrole">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="createCustRequestRole"/>
-    	<response name="success" type="view" value="RequestRoles"/>
-        <response name="error" type="view" value="RequestRoles"/>
-    </request-map>
-    <request-map uri="removerequestrole">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="removeCustRequestRole"/>
-    	<response name="success" type="view" value="RequestRoles"/>
-        <response name="error" type="view" value="RequestRoles"/>
-    </request-map>
-
-    <request-map uri="requestitems">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestItems"/>
-    </request-map>
-    <request-map uri="requestitem">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditRequestItem"/>
-    </request-map>    
-    <request-map uri="createrequestitem">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="createCustRequestItem"/>
-    	<response name="success" type="view" value="RequestItems"/>
-        <response name="error" type="view" value="RequestItems"/>
-    </request-map>
-    <request-map uri="updaterequestitem">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="updateCustRequestItem"/>
-    	<response name="success" type="view" value="RequestItems"/>
-        <response name="error" type="view" value="RequestItems"/>
-    </request-map>
-    
-    <request-map uri="requestitemnotes">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestItemNotes"/>    	
-    </request-map>
-    <request-map uri="createrequestitemnote">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="createCustRequestItemNote"/>
-    	<response name="success" type="view" value="RequestItemNotes"/>
-        <response name="error" type="view" value="RequestItemNotes"/>
-    </request-map>
-    <request-map uri="RequestItemQuotes">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestItemQuotes"/>
-    </request-map>
-    <request-map uri="requestitemrequirements">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestItemRequirements"/>
-    </request-map>
-    <request-map uri="EditRequestItemWorkEffort">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditRequestItemWorkEffort"/>
-    </request-map>
-    <request-map uri="CreateQuoteAndQuoteItemForRequest">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="CreateQuoteAndQuoteItemForRequest"/>
-    </request-map>
-    <request-map uri="createQuoteAndQuoteItemForRequest">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="createQuoteAndQuoteItemForRequest"/>
-    	<response name="success" type="view" value="RequestItemQuotes"/>
-    </request-map>
-    <request-map uri="EditQuoteItemForRequest">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditQuoteItemForRequest"/>
-    </request-map>
-    <request-map uri="createQuoteItemForRequest">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="createQuoteItem"/>
-    	<response name="success" type="view" value="RequestItemQuotes"/>
-    </request-map>
-    <request-map uri="updateQuoteItemForRequest">
-    	<security https="true" auth="true"/>
-        <event type="service" invoke="updateQuoteItem"/>
-    	<response name="success" type="view" value="RequestItemQuotes"/>
-    </request-map>
     
     <request-map uri="openApplication">        
         <security https="false" auth="false"/>
@@ -604,17 +504,7 @@
     <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
 
-    <view-map name="EditRequest" type="screen" page="component://workeffort/widget/RequestScreens.xml#EditRequest"/>
-    <view-map name="EditRequestItem" type="screen" page="component://workeffort/widget/RequestScreens.xml#EditRequestItem"/>
     <view-map name="RequestList" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestList"/>
-    <view-map name="RequestItems" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestItems"/>
-    <view-map name="RequestRoles" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestRoles"/>
-    <view-map name="RequestItemNotes" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestItemNotes"/>
-    <view-map name="RequestItemQuotes" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestItemQuotes"/>
-    <view-map name="RequestItemRequirements" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestItemRequirements"/>
-    <view-map name="EditRequestItemWorkEffort" type="screen" page="component://workeffort/widget/RequestScreens.xml#EditRequestItemWorkEffort"/>
-    <view-map name="CreateQuoteAndQuoteItemForRequest" type="screen" page="component://workeffort/widget/RequestScreens.xml#CreateQuoteAndQuoteItemForRequest"/>
-    <view-map name="EditQuoteItemForRequest" type="screen" page="component://workeffort/widget/RequestScreens.xml#EditQuoteItemForRequest"/>
     
     <view-map name="requirementlist" type="jpublish" page="/requirement/requirementlist.ftl"/>
     <view-map name="requirement" type="region"/>
