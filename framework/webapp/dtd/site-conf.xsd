@@ -34,6 +34,8 @@
                 <xs:element minOccurs="0" ref="firstvisit"/>
                 <xs:element minOccurs="0" ref="preprocessor"/>
                 <xs:element minOccurs="0" ref="postprocessor"/>
+                <xs:element minOccurs="0" ref="after-login"/>
+                <xs:element minOccurs="0" ref="before-logout"/>
                 <xs:element maxOccurs="unbounded" ref="request-map"/>
                 <xs:element maxOccurs="unbounded" ref="view-map"/>
             </xs:sequence>

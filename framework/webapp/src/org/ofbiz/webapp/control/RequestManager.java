@@ -343,4 +343,14 @@ public class RequestManager implements Serializable {
         Collection c = (Collection) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.POSTPROCESSOR);
         return c;
     }
+
+    public List getAfterLoginEventList() {
+        List lst = (List) ConfigXMLReader.getConfigMap(configFileUrl).get("after-login");
+        return lst;
+    }
+
+    public List getBeforeLogoutEventList() {
+        List lst = (List) ConfigXMLReader.getConfigMap(configFileUrl).get("before-logout");
+        return lst;
+    }
 }

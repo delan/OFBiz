@@ -481,4 +481,4 @@ function setAlternateGwp(field) {
   ${screens.render("component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline")}
 </#if>
 
-<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()} locale=${shoppingCart.getLocale()} currencyUom=${shoppingCart.getCurrency()} -->
+<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()} locale=${shoppingCart.getLocale()} currencyUom=${shoppingCart.getCurrency()} userLogin=${shoppingCart.getUserLogin()} autoUserLogin=${shoppingCart.getAutoUserLogin()} -->

@@ -69,6 +69,16 @@ public class RequestHandler implements Serializable {
 
     public static final String module = RequestHandler.class.getName();
     public static final String err_resource = "ContentErrorUiLabels";
+
+    public static RequestHandler getRequestHandler(ServletContext servletContext) {
+        RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
+        if (rh == null) {
+            rh = new RequestHandler();
+            rh.init(servletContext);
+            servletContext.setAttribute("_REQUEST_HANDLER_", rh);
+        }
+        return rh;
+    }
     
     private ServletContext context = null;
     private RequestManager requestManager = null;
@@ -711,4 +721,45 @@ public class RequestHandler implements Serializable {
         return rh.makeLink(request, response, url, fullPath, secure, encode);
     }
 
+    public void runAfterLoginEvents(HttpServletRequest request, HttpServletResponse response) {
+        List afterLoginEvents = requestManager.getAfterLoginEventList();
+        if (afterLoginEvents != null) {
+            Iterator i = afterLoginEvents.iterator();
+            while (i.hasNext()) {
+                Map eventMap = (Map) i.next();
+                String eType = (String) eventMap.get(ConfigXMLReader.EVENT_TYPE);
+                String ePath = (String) eventMap.get(ConfigXMLReader.EVENT_PATH);
+                String eMeth = (String) eventMap.get(ConfigXMLReader.EVENT_METHOD);
+                try {
+                    String returnString = this.runEvent(request, response, eType, ePath, eMeth);                        
+                    if (returnString != null && !returnString.equalsIgnoreCase("success")) {
+                        throw new EventHandlerException("Pre-Processor event did not return 'success'.");
+                    }
+                } catch (EventHandlerException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+    }
+
+    public void runBeforeLogoutEvents(HttpServletRequest request, HttpServletResponse response) {
+        List beforeLogoutEvents = requestManager.getBeforeLogoutEventList();
+        if (beforeLogoutEvents != null) {
+            Iterator i = beforeLogoutEvents.iterator();
+            while (i.hasNext()) {
+                Map eventMap = (Map) i.next();
+                String eType = (String) eventMap.get(ConfigXMLReader.EVENT_TYPE);
+                String ePath = (String) eventMap.get(ConfigXMLReader.EVENT_PATH);
+                String eMeth = (String) eventMap.get(ConfigXMLReader.EVENT_METHOD);
+                try {
+                    String returnString = this.runEvent(request, response, eType, ePath, eMeth);                        
+                    if (returnString != null && !returnString.equalsIgnoreCase("success")) {
+                        throw new EventHandlerException("Pre-Processor event did not return 'success'.");
+                    }
+                } catch (EventHandlerException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+    }
 }

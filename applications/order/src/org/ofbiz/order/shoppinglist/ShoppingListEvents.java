@@ -146,6 +146,7 @@ public class ShoppingListEvents {
             if (cartIdInt != null) {            
                 ShoppingCartItem item = cart.findCartItem(cartIdInt.intValue());
                 if (allowPromo || !item.getIsPromo()) {
+                    Debug.logInfo("Adding cart item to shopping list [" + shoppingListId + "], allowPromo=" + allowPromo + ", item.getIsPromo()=" + item.getIsPromo() + ", item.getProductId()=" + item.getProductId() + ", item.getQuantity()=" + item.getQuantity(), module);
                     Map serviceResult = null;
                     try {
                         Map ctx = UtilMisc.toMap("userLogin", userLogin, "shoppingListId", shoppingListId, "productId", item.getProductId(), "quantity", new Double(item.getQuantity()));
@@ -358,12 +359,13 @@ public class ShoppingListEvents {
 
         String autoSaveListId = null;
         // TODO: add sorting, just in case there are multiple...
-        List persistantLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", partyId,
-                "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME));
+        Map findMap = UtilMisc.toMap("partyId", partyId, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
+        List existingLists = delegator.findByAnd("ShoppingList", findMap);
+        Debug.logInfo("Finding existing auto-save shopping list with:  \nfindMap: " + findMap + "\nlists: " + existingLists, module);
 
         GenericValue list = null;
-        if (persistantLists != null && !persistantLists.isEmpty()) {
-            list = EntityUtil.getFirst(persistantLists);
+        if (existingLists != null && !existingLists.isEmpty()) {
+            list = EntityUtil.getFirst(existingLists);
             autoSaveListId = list.getString("shoppingListId");
         }
 
@@ -397,6 +399,23 @@ public class ShoppingListEvents {
         }
     }
 
+    /**
+     * Saves the shopping cart to the specialized (auto-save) shopping list
+     */
+    public static String saveCartToAutoSaveList(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        
+        try {
+            fillAutoSaveList(cart, dispatcher);
+        } catch (GeneralException e) {
+            Debug.logError(e, "Error saving the cart to the auto-save list: " + e.toString(), module);
+        }
+        
+        return "success";
+    }
+    
     /**
      * Restores the specialized (auto-save) shopping list back into the shopping cart
      */
