@@ -43,6 +43,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -239,6 +240,11 @@ public class LoginEvents {
         }
 
         request.setAttribute("_LOGIN_PASSED_", "TRUE");
+        
+        // run the after-login events
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getSession().getServletContext());
+        rh.runAfterLoginEvents(request, response);
+        
         // make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
         return autoLoginSet(request, response);
     }
@@ -269,6 +275,11 @@ public class LoginEvents {
      *        JSP should generate its own content. This allows an event to override the default content.
      */
     public static String logout(HttpServletRequest request, HttpServletResponse response) {
+        // run the before-logout events
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getSession().getServletContext());
+        rh.runBeforeLogoutEvents(request, response);
+        
+
         // invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 

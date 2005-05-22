@@ -266,13 +266,7 @@ public class ControlServlet extends HttpServlet {
     }
 
     protected RequestHandler getRequestHandler() {
-        RequestHandler rh = (RequestHandler) getServletContext().getAttribute("_REQUEST_HANDLER_");
-        if (rh == null) {
-            rh = new RequestHandler();
-            rh.init(getServletContext());
-            getServletContext().setAttribute("_REQUEST_HANDLER_", rh);
-        }
-        return rh;
+        return RequestHandler.getRequestHandler(getServletContext());
     }
 
     protected void configureBsf() {
