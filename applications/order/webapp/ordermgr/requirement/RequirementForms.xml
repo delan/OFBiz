@@ -28,7 +28,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="FindRequirements" type="single" 
-            target="ApproveRequirements" title=""
+            target="FindRequirements" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find default-value="equals"/></field>
@@ -60,7 +60,6 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <set field="entityName" value="Requirement"/>
-            <set field="requestParameters.statusId" value="REQ_CREATED"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
