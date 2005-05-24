@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -32,6 +32,7 @@ import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 
 delegator = request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
 cart = session.getAttribute("shoppingCart");
 partyId = cart.getPartyId();
 currencyUomId = cart.getCurrency();
@@ -58,21 +59,9 @@ if (partyId != null && !partyId.equals("_NA_")) {
     context.put("person", person);
     if (party != null) {
         context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true));
-        billingAccountRoleList = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "BILL_TO_CUSTOMER"));
-        billingAccountRoleList = EntityUtil.filterByDate(billingAccountRoleList);
-        if (billingAccountRoleList != null && billingAccountRoleList.size() > 0) {
-            billingAcctIter = billingAccountRoleList.iterator();
-            billingAccountList = new ArrayList();
-            while (billingAcctIter.hasNext()) {
-                billingAccountRole = billingAcctIter.next();
-                billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");
-                if (currencyUomId.equals(billingAccountVO.getString("accountCurrencyUomId"))) {
-                    accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
-                    billingAccount = new HashMap(billingAccountVO);
-                    billingAccount.put("accountBalance", new Double(accountBalance));
-                    billingAccountList.add(billingAccount);
-                }
-            }
+
+        billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, delegator, dispatcher);
+        if (billingAccountList != null && billingAccountList.size() > 0) {
             context.put("selectedBillingAccountId", cart.getBillingAccountId());
             context.put("billingAccountList", billingAccountList);
         }
@@ -132,4 +121,3 @@ requestPaymentMethodType = request.getParameter("paymentMethodType");
 if (requestPaymentMethodType != null && requestPaymentMethodType.length() > 0) {
     context.put("paymentMethodType", requestPaymentMethodType);
 }
-

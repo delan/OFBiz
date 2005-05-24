@@ -146,6 +146,13 @@ function toggleBillingAccount(box) {
                         <td width="1" nowrap>&nbsp;</td>
                       </tr>
                       <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                    <#if !paymentMethodList?has_content>
+                      <tr>
+                        <td colspan="3">
+                          <div class='tabletext'><b>${uiLabelMap.AccountingNoPaymentMethodsOnFile}.</b></div>
+                        </td>
+                      </tr>
+                    <#else/>
                       <#list paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
                           <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
@@ -217,6 +224,7 @@ function toggleBillingAccount(box) {
                           <tr><td colspan="3"><hr class='sepbar'></td></tr>
                         </#if>
                       </#list>
+                    </#if>
 
                       <#-- special billing account functionality to allow use w/ a payment method -->
                       <#if billingAccountList?has_content>
@@ -239,8 +247,8 @@ function toggleBillingAccount(box) {
                             </td>
                             <td align="left" valign="top" width="99%" nowrap>
                               <div class="tabletext">
-                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(cart.getCurrency())/>)<br/>
-                               <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
+                               ${billingAccount.description?default("Bill Account")} [#<b>${billingAccount.billingAccountId}</b>]&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(cart.getCurrency())/>)<br/>
+                               <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="8" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>
                             <td>&nbsp;</td>
@@ -308,9 +316,6 @@ function toggleBillingAccount(box) {
                         </td>
                       </tr>
                     </table>
-                    <#if !paymentMethodList?has_content>
-                      <div class='tabletext'><b>${uiLabelMap.AccountingNoPaymentMethodsOnFile}.</b></div>
-                    </#if>
                   </td>
                 </tr>
               </table>

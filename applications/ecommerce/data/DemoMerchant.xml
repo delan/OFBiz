@@ -10,14 +10,4 @@
     <PartyContactMechPurpose partyId="Company" contactMechId="9000" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
     <PartyContactMechPurpose partyId="Company" contactMechId="9000" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
     <PartyContactMechPurpose partyId="Company" contactMechId="9000" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-
-    <Party partyId="DemoSupplier" partyTypeId="PARTY_GROUP"/>
-    <PartyGroup partyId="DemoSupplier" groupName="Demo Supplier"/>
-    <PartyRole partyId="DemoSupplier" roleTypeId="SUPPLIER"/>
-    <ContactMech contactMechId="9001" contactMechTypeId="POSTAL_ADDRESS"/>
-    <PartyContactMech partyId="DemoSupplier" contactMechId="9001" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
-    <PostalAddress contactMechId="9001" toName="Demo Supplier Company" address1="2004 Factory Blvd" city="City of Industry" postalCode="90000" countryGeoId="USA" stateProvinceGeoId="CA"/>
-    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
 </entity-engine-xml>

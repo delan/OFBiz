@@ -392,7 +392,10 @@ public class ShoppingListEvents {
             String autoSaveListId = getAutoSaveListId(delegator, dispatcher, null, userLogin, cart.getProductStoreId());
 
             try {
-                addBulkFromCart(delegator, dispatcher, cart, userLogin, autoSaveListId, makeCartItemsArray(cart), false, false);
+                String[] itemsArray = makeCartItemsArray(cart);
+                if (itemsArray != null && itemsArray.length != 0) {
+                    addBulkFromCart(delegator, dispatcher, cart, userLogin, autoSaveListId, itemsArray, false, false);
+                }
             } catch (IllegalArgumentException e) {
                 throw new GeneralException(e.getMessage(), e);
             }

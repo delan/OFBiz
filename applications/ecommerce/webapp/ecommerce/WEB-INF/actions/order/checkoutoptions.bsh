@@ -40,16 +40,9 @@ userLogin = session.getAttribute("userLogin");
 party = userLogin.getRelatedOne("Party");
 productStoreId = ProductStoreWorker.getProductStoreId(request);
 
-checkOutPaymentId = "";
 shippingEstWpr = null;
 
 if (cart != null) {
-    if (cart.getPaymentMethodIds().size() > 0) {
-        checkOutPaymentId = cart.getPaymentMethodIds().get(0);
-    } else if (cart.getPaymentMethodTypeIds().size() > 0) {
-        checkOutPaymentId = cart.getPaymentMethodTypeIds().get(0);
-    }
-
     shippingEstWpr = new ShippingEstimateWrapper(dispatcher, cart, 0);
     context.put("shippingEstWpr", shippingEstWpr);
     context.put("carrierShipmentMethodList", shippingEstWpr.getShippingMethods());
@@ -61,37 +54,8 @@ context.put("profiledefs", profiledefs);
 context.put("shoppingCart", cart);
 context.put("userLogin", userLogin);
 context.put("productStoreId", productStoreId);
-context.put("checkOutPaymentId", checkOutPaymentId);
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
-context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, UtilMisc.toList("paymentMethodTypeId")), true));
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
-
-
-
-billingAccountRoleList = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeId", "BILL_TO_CUSTOMER"));
-billingAccountRoleList = EntityUtil.filterByDate(billingAccountRoleList);
-if (billingAccountRoleList != null && billingAccountRoleList.size() > 0) {
-    totalAvailable = 0.00;
-    sortedAccounts = new TreeMap();
-    billingAcctIter = billingAccountRoleList.iterator();
-    while (billingAcctIter.hasNext()) {
-        billingAccountRole = billingAcctIter.next();
-        billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");
-        if (currencyUomId.equals(billingAccountVO.getString("accountCurrencyUomId"))) {
-            accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
-            billingAccount = new HashMap(billingAccountVO);
-            accountLimit = billingAccountVO.getDouble("accountLimit").doubleValue();
-            billingAccount.put("accountBalance", new Double(accountBalance));
-            accountAvailable = accountLimit - accountBalance;
-            totalAvailable += accountAvailable;
-            sortedAccounts.put(new Double(accountAvailable), billingAccount);
-        }
-    }
-
-    billingAccountList = new ArrayList(sortedAccounts.values());
-    context.put("selectedBillingAccount", cart.getBillingAccountId());
-    context.put("billingAccountList", billingAccountList);
-}
 
 if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null) {
     context.put("chosenShippingMethod", cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId());
@@ -106,6 +70,3 @@ if (cart.getShippingAddress() == null && profiledefs != null && profiledefs.get(
 if (cart.selectedPayments() == 0 && profiledefs != null && profiledefs.get("defaultPayMeth") != null) {
     cart.addPayment(profiledefs.get("defaultPayMeth"));
 }
-
-
-
