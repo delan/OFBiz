@@ -108,6 +108,7 @@ public class InventoryServices {
                 if (xferQty.doubleValue() < atp.doubleValue() || atp.doubleValue() < qoh.doubleValue()) {
                     Double negXferQty = new Double(-xferQty.doubleValue());
                     newItem = GenericValue.create(inventoryItem);
+                    
                     String newSeqId = null;
                     try {
                         newSeqId = delegator.getNextSeqId("InventoryItem");
@@ -117,6 +118,7 @@ public class InventoryServices {
                     
                     newItem.set("inventoryItemId", newSeqId);
                     newItem.create();
+                    
                     results.put("inventoryItemId", newItem.get("inventoryItemId"));
     
                     // TODO: how do we get this here: "inventoryTransferId", inventoryTransferId
@@ -151,6 +153,8 @@ public class InventoryServices {
             if (inventoryType.equals("NON_SERIAL_INV_ITEM")) {
                 // set the transfered inventory item's atp to 0 and the qoh to the xferQty; at this point atp and qoh will always be the same, so we can safely zero the atp for now
                 GenericValue inventoryItemToClear = newItem == null ? inventoryItem : newItem;
+
+                inventoryItemToClear.refresh();
                 double atp = inventoryItemToClear.get("availableToPromiseTotal") == null ? 0 : inventoryItemToClear.getDouble("availableToPromiseTotal").doubleValue();
                 if (atp != 0) { 
                     Map createDetailMap = UtilMisc.toMap("availableToPromiseDiff", new Double(-atp), 
@@ -167,13 +171,16 @@ public class InventoryServices {
             } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
                 // set the status to avoid re-moving or something
             	if (newItem != null) {
-            		newItem.set("statusId", "INV_BEING_TRANSFERED");
+                    newItem.refresh();
+                    newItem.set("statusId", "INV_BEING_TRANSFERED");
+                    newItem.store();
             	} else {
-            		inventoryItem.set("statusId", "INV_BEING_TRANSFERED");
+                    inventoryItem.refresh();
+                    inventoryItem.set("statusId", "INV_BEING_TRANSFERED");
+                    inventoryItem.store();
             	}
             }
                                     
-            inventoryItem.store();
             return results;     
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Inventory store/create problem [" + e.getMessage() + "]");
@@ -206,11 +213,6 @@ public class InventoryServices {
             inventoryTransfer.set("receiveDate", UtilDateTime.nowTimestamp());
         }
             
-        // set the fields on the item
-        inventoryItem.set("facilityId", inventoryTransfer.get("facilityIdTo"));
-        inventoryItem.set("containerId", inventoryTransfer.get("containerIdTo"));
-        inventoryItem.set("locationSeqId", inventoryTransfer.get("locationSeqIdTo"));
-        
         if (inventoryType.equals("NON_SERIAL_INV_ITEM")) { 
             // add an adjusting InventoryItemDetail so set ATP back to QOH: ATP = ATP + (QOH - ATP), diff = QOH - ATP
             double atp = inventoryItem.get("availableToPromiseTotal") == null ? 0 : inventoryItem.getDouble("availableToPromiseTotal").doubleValue();
@@ -225,10 +227,20 @@ public class InventoryServices {
             } catch (GenericServiceException e1) {
                 return ServiceUtil.returnError("Inventory Item Detail create problem in complete inventory transfer: [" + e1.getMessage() + "]");
             }
+            try {
+                inventoryItem.refresh();
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("Inventory refresh problem [" + e.getMessage() + "]");
+            }
         } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
             inventoryItem.set("statusId", "INV_AVAILABLE");
         }
-        
+
+        // set the fields on the item
+        inventoryItem.set("facilityId", inventoryTransfer.get("facilityIdTo"));
+        inventoryItem.set("containerId", inventoryTransfer.get("containerIdTo"));
+        inventoryItem.set("locationSeqId", inventoryTransfer.get("locationSeqIdTo"));
+
         // store the entities
         try {
             inventoryTransfer.store();
