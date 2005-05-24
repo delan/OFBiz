@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -32,6 +32,7 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
 
 delegator = request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
 cart = session.getAttribute("shoppingCart");
 currencyUomId = cart.getCurrency();
 userLogin = session.getAttribute("userLogin");
@@ -53,32 +54,8 @@ context.put("productStoreId", productStoreId);
 context.put("checkOutPaymentId", checkOutPaymentId);
 context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, UtilMisc.toList("paymentMethodTypeId")), true));
 
-billingAccountRoleList = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeId", "BILL_TO_CUSTOMER"));
-billingAccountRoleList = EntityUtil.filterByDate(billingAccountRoleList);
-if (billingAccountRoleList != null && billingAccountRoleList.size() > 0) {
-    totalAvailable = 0.00;
-    sortedAccounts = new TreeMap();
-    billingAcctIter = billingAccountRoleList.iterator();
-    while (billingAcctIter.hasNext()) {
-        billingAccountRole = billingAcctIter.next();        
-        billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");
-        if (currencyUomId.equals(billingAccountVO.getString("accountCurrencyUomId"))) {
-            accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
-        
-            billingAccount = new HashMap(billingAccountVO);
-            accountLimit = billingAccountVO.getDouble("accountLimit").doubleValue();
-        
-            billingAccount.put("accountBalance", new Double(accountBalance)); 
-            accountAvailable = accountLimit - accountBalance;
-            totalAvailable += accountAvailable;    
-            sortedAccounts.put(new Double(accountAvailable), billingAccount);
-        }
-    }
-    
-    billingAccountList = new ArrayList(sortedAccounts.values());
-    context.put("selectedBillingAccount", cart.getBillingAccountId());
-    context.put("billingAccountList", billingAccountList);     
+billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, delegator, dispatcher);
+if (billingAccountList != null && billingAccountList.size() > 0) {
+    context.put("selectedBillingAccountId", cart.getBillingAccountId());
+    context.put("billingAccountList", billingAccountList);
 }
-
-  
-

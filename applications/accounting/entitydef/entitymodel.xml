@@ -1326,7 +1326,7 @@
       <field name="billingAccountId" type="id-ne"></field>
       <field name="accountLimit" type="currency-amount"></field>
       <field name="accountCurrencyUomId" type="id"></field>
-      <field name="contactMechId" type="id"></field>
+      <field name="contactMechId" type="id"><!-- This is a PostalAddress --></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>
@@ -1461,7 +1461,7 @@
       <field name="middleNameOnCard" type="name"></field>
       <field name="lastNameOnCard" type="name"></field>
       <field name="suffixOnCard" type="name"></field>
-      <field name="contactMechId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"><!-- The Billing PostalAddress --></field>
       <prim-key field="paymentMethodId"/>
       <relation type="one" fk-name="CREDCARD_PMNTMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
