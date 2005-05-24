@@ -41,11 +41,13 @@
                 <field-map field-name="requirementConditions" env-name="resultConditions.entityConditionList"/>
             </service>
         </actions>
-        <field name="productId"><hidden value="${productId}"/></field>
         <field name="requirementId"><display/></field>
-        <field name="productId"><display/></field>
-        <field name="internalName"><display/></field>
-        <field name="requirementByDate"><display/></field>
+        <field name="productId"><hidden value="${productId}"/></field>
+        <field name="productId">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
+        </field>
+
+        <field name="requiredByDate"><display/></field>
         <field name="quantity"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" widget-style="smallSubmit"><submit/></field>
