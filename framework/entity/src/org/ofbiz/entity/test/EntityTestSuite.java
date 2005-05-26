@@ -72,12 +72,12 @@ public class EntityTestSuite extends TestCase {
     }
 
     /*
-     * Tests storing values with the delegator's .makeValue and .storeAll methods
+     * Tests storing values with the delegator's .create, .makeValue, and .storeAll methods
      */
     public void testMakeValue() throws Exception {
         try {
             // This method call directly stores a new value into the entity engine
-            delegator.create("TestingType", UtilMisc.toMap("testingTypeId", "TEST-1", "description", "Testing Type #4"));
+            delegator.create("TestingType", UtilMisc.toMap("testingTypeId", "TEST-1", "description", "Testing Type #1"));
             
             // This sequence creates the GenericValue entities first, puts them in a List, then calls the delegator to store them all
             List newValues = new LinkedList();
@@ -94,6 +94,30 @@ public class EntityTestSuite extends TestCase {
             TestCase.fail(ex.getMessage());
         }
     }
+    
+    /*
+     * Tests updating entities by doing a GenericValue .put(key, value) and .store()
+     */
+    public void testUpdateValue() throws Exception {
+        try {
+            
+            // retrieve a sample GenericValue, make sure it's correct 
+            GenericValue testValue = delegator.findByPrimaryKey("TestingType", UtilMisc.toMap("testingTypeId", "TEST-1"));
+            TestCase.assertEquals("Retrieved value has the correct description", testValue.getString("description"), "Testing Type #1");
+            
+            // now update and store it
+            testValue.put("description", "New Testing Type #1");
+            testValue.store();
+            
+            // now retrieve it again and make sure that the updated value is correct
+            testValue = delegator.findByPrimaryKey("TestingType", UtilMisc.toMap("testingTypeId", "TEST-1"));
+            TestCase.assertEquals("Retrieved value has the correct description", testValue.getString("description"), "New Testing Type #1");
+            
+        } catch (GenericEntityException ex) {
+            TestCase.fail(ex.getMessage());
+        }
+    }
+    
     
     /*
      * Tests storing data with the delegator's .create method.  Also tests .findCountByCondition and .getNextSeqId 
