@@ -267,14 +267,26 @@ public class EntityTestSuite extends TestCase {
     /*
      * Tests foreign key integrity by trying to remove an entity which has foreign-key dependencies.  Should cause an exception.
      */
-    public void testForeignKey() throws Exception {
+    public void testForeignKeyCreate() throws Exception {
+        try {
+            delegator.create("Testing", UtilMisc.toMap("testingId", delegator.getNextSeqId("Testing"), "testingTypeId", "NO-SUCH-KEY"));
+        } catch(GenericEntityException e) {
+            return;
+        }
+        TestCase.fail("Foreign key referential integrity is not observed for create (INSERT)");
+    }    
+      
+    /*
+     * Tests foreign key integrity by trying to remove an entity which has foreign-key dependencies.  Should cause an exception.
+     */
+    public void testForeignKeyRemove() throws Exception {
         try {
             EntityCondition isLevel1 = new EntityExpr("description", EntityOperator.EQUALS, "node-level #1");
             delegator.removeByCondition("TestingNode", isLevel1);
         } catch(GenericEntityException e) {
             return;
         }
-        TestCase.fail("testForeignKey should have thrown an exception - db integrity is corrupted.");
+        TestCase.fail("Foreign key referential integrity is not observed for remove (DELETE)");
     }
     
     /*
