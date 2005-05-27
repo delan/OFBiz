@@ -50,6 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
+ * @author     <a href="mailto:sichen@opensourcestrategies.com">Si Chen</a> 
  * @version    $Rev$
  * @since      2.2
  */
@@ -382,7 +383,7 @@ public class InvoiceServices {
                 }
 
                 GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, lookupType, "INV_FPROD_ITEM"));
+                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, lookupType, invoiceType, "INV_FPROD_ITEM"));
                 invoiceItem.set("description", orderItem.get("itemDescription"));
                 invoiceItem.set("quantity", billingQuantity);
                 invoiceItem.set("amount", orderItem.get("unitPrice"));
@@ -439,7 +440,7 @@ public class InvoiceServices {
                         // pro-rate the amount
                         double amount = ((adj.getDouble("amount").doubleValue() / orderItem.getDouble("quantity").doubleValue()) * invoiceItem.getDouble("quantity").doubleValue());
                         GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                        adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ITM_ADJ"));
+                        adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceType, "INVOICE_ITM_ADJ"));
                         adjInvItem.set("productId", orderItem.get("productId"));
                         adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
                         //adjInvItem.set("uomId", "");
@@ -477,7 +478,7 @@ public class InvoiceServices {
                             totalAmount += amountPerQty.doubleValue() * invoiceItem.getDouble("quantity").doubleValue();
 
                         GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                        adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ITM_ADJ"));
+                        adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceType, "INVOICE_ITM_ADJ"));
                         adjInvItem.set("productId", orderItem.get("productId"));
                         adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
                         //adjInvItem.set("uomId", "");
@@ -529,7 +530,7 @@ public class InvoiceServices {
                 taxAdjustments.add(adj);
             } else {
                 // other adjustment type
-                double adjAmount = calcHeaderAdj(delegator, adj, invoiceId, itemSeqId, toStore, orderSubTotal, invoiceSubTotal, invoiceQuantity);
+                double adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, itemSeqId, toStore, orderSubTotal, invoiceSubTotal, invoiceQuantity);
                 // these will effect the shipping pro-rate (unless commented)
                 // invoiceShipProRateAmount += adjAmount;
                 // do adjustments compound or are they based off subtotal? Here we will (unless commented)
@@ -550,7 +551,7 @@ public class InvoiceServices {
                     continue;
                 } else {
                     // this is the first invoice; bill it all now
-                    double adjAmount = calcHeaderAdj(delegator, adj, invoiceId, itemSeqId, toStore, 1, 1, totalItemsInOrder);
+                    double adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, itemSeqId, toStore, 1, 1, totalItemsInOrder);
                     // should shipping effect the tax pro-rate?
                     invoiceSubTotal += adjAmount; // here we do
 
@@ -559,7 +560,7 @@ public class InvoiceServices {
                 }
             } else {
                 // pro-rate the shipping amount based on shippable information
-                double adjAmount = calcHeaderAdj(delegator, adj, invoiceId, itemSeqId, toStore, shippableAmount, invoiceShipProRateAmount, invoiceQuantity);
+                double adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, itemSeqId, toStore, shippableAmount, invoiceShipProRateAmount, invoiceQuantity);
                 // should shipping effect the tax pro-rate?
                 invoiceSubTotal += adjAmount; // here we do
 
@@ -572,7 +573,7 @@ public class InvoiceServices {
         Iterator taxAdjIter = taxAdjustments.iterator();
         while (taxAdjIter.hasNext()) {
             GenericValue adj = (GenericValue) taxAdjIter.next();
-            double adjAmount = calcHeaderAdj(delegator, adj, invoiceId, itemSeqId, toStore, orderSubTotal, invoiceSubTotal, invoiceQuantity);
+            double adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, itemSeqId, toStore, orderSubTotal, invoiceSubTotal, invoiceQuantity);
             // this doesn't really effect anything; but just for our totals
             invoiceSubTotal += adjAmount;
         }
@@ -817,10 +818,10 @@ public class InvoiceServices {
         return response;
     }
 
-    private static String getInvoiceItemType(GenericDelegator delegator, String key, String defaultValue) {
+    private static String getInvoiceItemType(GenericDelegator delegator, String key, String invoiceTypeId, String defaultValue) {
         GenericValue itemMap = null;
         try {
-            itemMap = delegator.findByPrimaryKey("InvoiceItemTypeMap", UtilMisc.toMap("invoiceItemMapKey", key));
+            itemMap = delegator.findByPrimaryKey("InvoiceItemTypeMap", UtilMisc.toMap("invoiceItemMapKey", key, "invoiceTypeId", invoiceTypeId));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting InvoiceItemTypeMap entity", module);
             return defaultValue;
@@ -884,7 +885,8 @@ public class InvoiceServices {
         return ServiceUtil.returnSuccess();
     }
 
-    private static double calcHeaderAdj(GenericDelegator delegator, GenericValue adj, String invoiceId, int itemSeqId, List toStore, double divisor, double multiplier, double invoiceQuantity) {
+    private static double calcHeaderAdj(GenericDelegator delegator, GenericValue adj, String invoiceTypeId, String invoiceId, int itemSeqId, List toStore, 
+            double divisor, double multiplier, double invoiceQuantity) {
         //Debug.log("Divisor : " + divisor + " / Multiplier: " + multiplier, module);
         double adjAmount = 0.00;
         if (adj.get("amount") != null) {
@@ -892,7 +894,7 @@ public class InvoiceServices {
             double amount = ((adj.getDouble("amount").doubleValue() / divisor) * multiplier);
             if (amount != 0) {
                 GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ADJ"));
+                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceTypeId, "INVOICE_ADJ"));
                 //invoiceItem.set("productId", orderItem.get("productId"));
                 //invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
                 //invoiceItem.set("uomId", "");
@@ -914,7 +916,7 @@ public class InvoiceServices {
 
             if (totalAmount != 0) {
                 GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ITM_ADJ"));
+                adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceTypeId, "INVOICE_ITM_ADJ"));
                 //adjInvItem.set("productId", orderItem.get("productId"));
                 //adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
                 //adjInvItem.set("uomId", "");
