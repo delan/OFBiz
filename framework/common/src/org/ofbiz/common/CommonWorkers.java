@@ -34,6 +34,10 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 
 /**
  * Common Workers
@@ -73,12 +77,13 @@ public class CommonWorkers {
     
     public static List getStateList(GenericDelegator delegator) {
         List geoList = new ArrayList();       
-        Map findMap = UtilMisc.toMap("geoTypeId", "STATE");
+        EntityCondition condition = new EntityConditionList(UtilMisc.toList(
+                new EntityExpr("geoTypeId", EntityOperator.EQUALS, "STATE"), new EntityExpr("geoTypeId", EntityOperator.EQUALS, "PROVINCE")), EntityOperator.OR);
         List sortList = UtilMisc.toList("geoName");
         try {
-            geoList = delegator.findByAndCache("Geo", findMap, sortList);
+            geoList = delegator.findByConditionCache("Geo", condition, null, sortList);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot lookup Geo", module);
+            Debug.logError(e, "Cannot lookup State Geos: " + e.toString(), module);
         }                        
         return geoList;            
     }    
