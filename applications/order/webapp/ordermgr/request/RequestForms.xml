@@ -338,5 +338,13 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="ListRequestItemRequirements" type="list"
+            title="" list-name="custRequestRequirements" paginate-target="requestitemrequirements"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="Requirement" default-field-type="display"/>
+        <field name="requirementId" widget-style="buttontext">
+            <hyperlink description="${requirementId}" target="EditRequirement?requirementId=${requirementId}"/>
+        </field>
+    </form>
 </forms>
 

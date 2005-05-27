@@ -103,8 +103,23 @@
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <lookup target-form-name="LookupProduct"/>
         </field>
+        <field name="custRequestId" map-name="parameters"><text/></field>
+        <field name="custRequestItemSeqId" map-name="parameters"><text/></field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="ListRequirementCustRequests" type="list"
+            title="" list-name="requirementCustRequests" paginate-target="ListRequirementCustRequests"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="RequirementCustRequest" default-field-type="display"/>
+        <field name="requirementId"><hidden/></field>
+        <field name="custRequestId" widget-style="buttontext">
+            <hyperlink description="${custRequestId}" target="request?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
+        </field>
+        <field name="custRequestItemSeqId" widget-style="buttontext">
+            <hyperlink description="${custRequestItemSeqId}" target="requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
+        </field>
+    </form>
+
 </forms>

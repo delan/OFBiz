@@ -672,6 +672,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditRequirement"/>
     </request-map>
+    <request-map uri="ListRequirementCustRequests">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListRequirementCustRequests"/>
+    </request-map>
     <request-map uri="createRequirement">
         <security https="true" auth="true"/>
         <event type="service" invoke="createRequirement"/>
@@ -981,6 +985,7 @@
     
     <view-map name="FindRequirements" page="component://order/widget/ordermgr/RequirementScreens.xml#FindRequirements" type="screen"/>
     <view-map name="EditRequirement" page="component://order/widget/ordermgr/RequirementScreens.xml#EditRequirement" type="screen"/>
+    <view-map name="ListRequirementCustRequests" page="component://order/widget/ordermgr/RequirementScreens.xml#ListRequirementCustRequests" type="screen"/>
     <view-map name="RequirementsForSupplier" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#RequirementsForSupplier"/>
     <view-map name="FindQuoteForCart" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindQuoteForCart"/>
     
