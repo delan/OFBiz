@@ -233,18 +233,18 @@ public class BOMServices {
                 allProducts.add(product);
             }
             delegator.storeAll(allProducts);
-                        
+            Debug.logInfo("Low Level Code set to 0 for all the products", module);
+
             productsIt = products.iterator();
-            List productLLCs = new ArrayList();
             while (productsIt.hasNext()) {
                 GenericValue product = (GenericValue)productsIt.next();
                 try {
                     Map depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.toMap("productIdTo", product.getString("productId"), "alsoComponents", Boolean.valueOf(false), "alsoVariants", Boolean.valueOf(false)));
-                    productLLCs.add(product.getString("productId") + " - " + depthResult.get("lowLevelCode"));
+                    Debug.logInfo("Product [" + product.getString("productId") + "] Low Level Code [" + depthResult.get("lowLevelCode") + "]", module);
                 } catch(Exception exc) {
+                    Debug.logWarning(exc.getMessage(), module);
                 }
             }
-            result.put("productLLCs", productLLCs);
             // FIXME: also all the variants llc should be updated?
         } catch (Exception e) {
             return ServiceUtil.returnError("Error running initLowLevelCode: " + e.getMessage());
