@@ -253,7 +253,10 @@
                 <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
                 <entity-one entity-name="CustRequest" value-name="custRequest"/>
                 <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/request/requestitemrequirements.bsh"/>
+                <entity-and entity-name="RequirementCustRequestView" list-name="custRequestRequirements">
+                    <field-map env-name="custRequestItem.custRequestId" field-name="custRequestId"/>
+                    <field-map env-name="custRequestItem.custRequestItemSeqId" field-name="custRequestItemSeqId"/>
+                </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
@@ -261,9 +264,11 @@
                         <container>
                             <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
                         </container>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/request/requestitemrequirements.ftl"/></html>
-                        </platform-specific>
+                        <container>
+                            <link target="EditRequirement?custRequestId=${custRequestItem.custRequestId}&amp;custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}" text="[${uiLabelMap.OrderNewRequirement}]" style="buttontext"/>
+                        </container>
+
+                        <include-form name="ListRequestItemRequirements" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
