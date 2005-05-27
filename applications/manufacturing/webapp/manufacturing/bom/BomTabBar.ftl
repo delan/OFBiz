@@ -28,7 +28,6 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/InitLowLevelCode</@ofbizUrl>" class="${selectedClassMap.ManufacturingLLCInit?default(unselectedClassName)}">${uiLabelMap.ManufacturingLLCInit}</a>
     <a href="<@ofbizUrl>/BomSimulation</@ofbizUrl>" class="${selectedClassMap.findBom?default(unselectedClassName)}">${uiLabelMap.ManufacturingBomSimulation}</a>
     <a href="<@ofbizUrl>/EditProductBom</@ofbizUrl>" class="${selectedClassMap.EditProductBom?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditProductBom}</a>
     <a href="<@ofbizUrl>/EditProductManufacturingRules</@ofbizUrl>" class="${selectedClassMap.productManufacturingRules?default(unselectedClassName)}">${uiLabelMap.ManufacturingManufacturingRules}</a>

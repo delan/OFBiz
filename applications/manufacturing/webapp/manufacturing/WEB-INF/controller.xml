@@ -353,10 +353,6 @@
         <response name="success" type="view" value="EditProductBom"/>
         <response name="error" type="view" value="EditProductBom"/>
     </request-map>
-    <request-map uri="InitLowLevelCode">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="InitLowLevelCode"/>
-    </request-map>
 
     <request-map uri="EditProductManufacturingRules">
         <security https="true" auth="true"/>
@@ -588,7 +584,6 @@
     <!-- BOM view mappings -->
     <view-map name="EditProductBom" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductBom" type="screen"/>
     <view-map name="EditProductManufacturingRules" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductManufacturingRules" type="screen"/>
-    <view-map name="InitLowLevelCode" page="component://manufacturing/widget/manufacturing/BomScreens.xml#InitLowLevelCode" type="screen"/>
     <view-map name="BomSimulation" page="component://manufacturing/widget/manufacturing/BomScreens.xml#BomSimulation" type="screen"/>
     
     <!-- MRP view mappings -->
