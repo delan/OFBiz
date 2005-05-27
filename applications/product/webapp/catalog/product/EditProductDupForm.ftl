@@ -51,7 +51,7 @@
                 <b>${uiLabelMap.CommonRemove}:</b>
                 ${uiLabelMap.ProductPrices}&nbsp;<input type="checkbox" class="checkBox" name="removePrices" value="Y"/>
                 ${uiLabelMap.CommonId}&nbsp;<input type="checkbox" class="checkBox" name="removeIDs" value="Y"/>
-                ${uiLabelMap.ProductContent}&nbsp;<input type="checkbox" class="checkBox" name="removeContent" value="Y" checked="checked"/>
+                ${uiLabelMap.ProductContent}&nbsp;<input type="checkbox" class="checkBox" name="removeContent" value="Y"/>
                 ${uiLabelMap.ProductCategoryMembers}&nbsp;<input type="checkbox" class="checkBox" name="removeCategoryMembers" value="Y"/>
                 ${uiLabelMap.ProductAssocs}&nbsp;<input type="checkbox" class="checkBox" name="removeAssocs" value="Y"/>
                 ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" class="checkBox" name="removeAttributes" value="Y"/>
