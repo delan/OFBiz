@@ -413,7 +413,7 @@
     <service name="initLowLevelCode" engine="java"
             location="org.ofbiz.manufacturing.bom.BOMServices" invoke="initLowLevelCode">
         <description>Updates the low level code of all the products in the Product entity</description>
-        <attribute mode="OUT" name="productLLCs" optional="false" type="java.util.List"/>
+        <!--<attribute mode="OUT" name="productLLCs" optional="false" type="java.util.List"/>-->
     </service>
 
     <service name="searchDuplicatedAncestor" default-entity-name="ProductAssoc" engine="java"
