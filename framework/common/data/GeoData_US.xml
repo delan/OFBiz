@@ -64,19 +64,20 @@
     <Geo abbreviation="WV" geoCode="WV" geoId="WV" geoName="West Virginia" geoTypeId="STATE"/>
     <Geo abbreviation="WY" geoCode="WY" geoId="WY" geoName="Wyoming" geoTypeId="STATE"/>
     <Geo abbreviation="VI" geoCode="VI" geoId="VI" geoName="Virgin Islands" geoTypeId="STATE"/>
-    <Geo abbreviation="AB" geoCode="AB" geoId="AB" geoName="Alberta" geoTypeId="STATE"/>
-    <Geo abbreviation="BC" geoCode="BC" geoId="BC" geoName="British Columbia" geoTypeId="STATE"/>
-    <Geo abbreviation="MB" geoCode="MB" geoId="MB" geoName="Manitoba" geoTypeId="STATE"/>
-    <Geo abbreviation="NB" geoCode="NB" geoId="NB" geoName="New Brunswick" geoTypeId="STATE"/>
-    <Geo abbreviation="NF" geoCode="NF" geoId="NF" geoName="Newfoundland" geoTypeId="STATE"/>
-    <Geo abbreviation="NS" geoCode="NS" geoId="NS" geoName="Nova Scotia" geoTypeId="STATE"/>
-    <Geo abbreviation="NT" geoCode="NT" geoId="NT" geoName="Northwest Territories" geoTypeId="STATE"/>
-    <Geo abbreviation="NU" geoCode="NU" geoId="NU" geoName="Nunavut" geoTypeId="STATE"/>
-    <Geo abbreviation="ON" geoCode="ON" geoId="ON" geoName="Ontario" geoTypeId="STATE"/>
-    <Geo abbreviation="PE" geoCode="PE" geoId="PE" geoName="Prince Edward Island" geoTypeId="STATE"/>
-    <Geo abbreviation="QC" geoCode="QC" geoId="QC" geoName="Quebec" geoTypeId="STATE"/>
-    <Geo abbreviation="SK" geoCode="SK" geoId="SK" geoName="Saskatchewan" geoTypeId="STATE"/>
-    <Geo abbreviation="YT" geoCode="YT" geoId="YT" geoName="Yukon" geoTypeId="STATE"/>
+
+    <Geo abbreviation="AB" geoCode="AB" geoId="AB" geoName="Alberta" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BC" geoCode="BC" geoId="BC" geoName="British Columbia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MB" geoCode="MB" geoId="MB" geoName="Manitoba" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NB" geoCode="NB" geoId="NB" geoName="New Brunswick" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NF" geoCode="NF" geoId="NF" geoName="Newfoundland" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NS" geoCode="NS" geoId="NS" geoName="Nova Scotia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NT" geoCode="NT" geoId="NT" geoName="Northwest Territories" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NU" geoCode="NU" geoId="NU" geoName="Nunavut" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="ON" geoCode="ON" geoId="ON" geoName="Ontario" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PE" geoCode="PE" geoId="PE" geoName="Prince Edward Island" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="QC" geoCode="QC" geoId="QC" geoName="Quebec" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="SK" geoCode="SK" geoId="SK" geoName="Saskatchewan" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="YT" geoCode="YT" geoId="YT" geoName="Yukon" geoTypeId="PROVINCE"/>
 
     <Geo abbreviation="USAF" geoCode="USAF" geoId="USAF" geoName="US Armed Forces" geoTypeId="GROUP"/>
     <GeoAssoc geoId="AA" geoIdTo="USAF" geoAssocTypeId="GROUP_MEMBER"/>
@@ -221,6 +222,7 @@
     <GeoAssoc geoId="USA" geoIdTo="WV" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="USA" geoIdTo="WY" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="USA" geoIdTo="VI" geoAssocTypeId="REGIONS"/>
+
     <GeoAssoc geoId="CAN" geoIdTo="AB" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="CAN" geoIdTo="BC" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="CAN" geoIdTo="MB" geoAssocTypeId="REGIONS"/>
