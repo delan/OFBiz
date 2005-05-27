@@ -50,6 +50,7 @@
         <#else>
           ${uiLabelMap.PartyNewUser}
        </#if>
+       [${partyId}]
       </div>
     </td>
     <td align='right'>
