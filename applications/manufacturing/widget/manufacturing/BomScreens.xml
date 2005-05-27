@@ -103,28 +103,6 @@
             </widgets>
         </section>
     </screen>
-    <screen name="InitLowLevelCode">
-        <section>
-            <actions>
-                <set field="title" value="Initialize Low Level Codes"/>
-                <set field="titleProperty" value="ManufacturingLLCInit"/>
-                <set field="tabButtonItem" value="ManufacturingLLCInit"/>
-                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
-                <set field="headerItem" value="bom"/>
-
-                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/InitLowLevelCode.bsh"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonBomDecorator">
-                    <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://manufacturing/webapp/manufacturing/bom/InitLowLevelCode.ftl"/></html>
-                        </platform-specific>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="BomSimulation">
         <section>
             <actions>
