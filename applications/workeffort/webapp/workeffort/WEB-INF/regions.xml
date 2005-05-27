@@ -26,11 +26,6 @@
         <put section='content' content='/task/task.jsp'/>
     </define>
 
-    <define id='requirement' region='MAIN_REGION'>
-        <put section='title'>Edit Requirement</put>
-        <put section='content' content='/requirement/requirement.jsp'/>
-    </define>
-
     <define id='activity' region='MAIN_REGION'>
         <put section='title'>Edit Activity</put>
         <put section='content' content='/task/activity.jsp'/>
@@ -41,44 +36,10 @@
         <put section='content' content='/task/mytasks.jsp'/>
     </define>
 
-    <define id='requirementlist' region='MAIN_REGION'>
-        <put section='title'>View Requirement List</put>
-        <put section='content' content='/requirement/requirementlist.jsp'/>
-    </define>
-
     <define id='workefforts' region='MAIN_REGION'>
         <put section='title'>View WorkEffort List</put>
         <put section='content' content='/requirement/tasks.jsp'/>
     </define>
-
-    <define id='requestlist' region='MAIN_REGION'>
-        <put section='title'>Edit Request</put>
-        <put section='content' content='/request/requestlist.jsp'/>
-    </define>
-    <define id='request' region='MAIN_REGION'>
-        <put section='title'>Edit Request</put>
-        <put section='content' content='/request/request.jsp'/>
-    </define>
-    <define id='requestroles' region='MAIN_REGION'>
-    	<put section='title'>Request Roles</put>
-    	<put section='content' content='/request/requestroles.jsp'/>
-    </define>
-    <define id='requestitems' region='MAIN_REGION'>
-        <put section='title'>Request Items</put>
-        <put section='content' content='/request/requestitems.jsp'/>
-    </define>
-    <define id='requestitem' region='MAIN_REGION'>
-        <put section='title'>Request Item Detail</put>
-        <put section='content' content='/request/requestitem.jsp'/>
-    </define>    
-    <define id='requestitemnotes' region='MAIN_REGION'>
-        <put section='title'>Request Item Notes</put>
-        <put section='content' content='/request/requestitemnotes.jsp'/>
-    </define>
-    <define id='requestitemrequirements' region='MAIN_REGION'>
-        <put section='title'>Request Item Requirements</put>
-        <put section='content' content='/request/requestitemrequirements.jsp'/>
-    </define>    	
 
     <define id='event' region='MAIN_REGION'>
         <put section='title'>Edit Calendar Event</put>
