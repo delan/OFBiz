@@ -112,6 +112,7 @@
     <GlFiscalType description="Plan" glFiscalTypeId="PLAN"/>
     <GlFiscalType description="Scenario" glFiscalTypeId="SCENARIO"/>
 
+    <!-- invoice item types for sales (AR) invoices -->
     <InvoiceItemType description="Invoice Adjustment" hasTable="N" invoiceItemTypeId="INVOICE_ADJ" parentTypeId=""/>
     <InvoiceItemType description="Invoice Promotion" hasTable="N" invoiceItemTypeId="INV_PROMOTION_ADJ" parentTypeId="INVOICE_ADJ"/>
     <InvoiceItemType description="Invoice Discount" hasTable="N" invoiceItemTypeId="INV_DISCOUNT_ADJ" parentTypeId="INVOICE_ADJ"/>
@@ -145,22 +146,71 @@
     <InvoiceItemType description="Invoice Work-Effort Item" hasTable="N" invoiceItemTypeId="INV_WE_ITEM" parentTypeId=""/>
     <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="INV_TE_ITEM" parentTypeId=""/>
 
-    <InvoiceItemTypeMap invoiceItemMapKey="FINISHED_GOOD" invoiceItemTypeId="INV_FPROD_ITEM"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="DIGITAL_GOOD" invoiceItemTypeId="INV_DPROD_ITEM"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="FINDIG_GOOD" invoiceItemTypeId="INV_FDPROD_ITEM"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="ITM_PROMOTION_ADJ"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="REPLACE_ADJUSTMENT" invoiceItemTypeId="ITM_REPLACE_ADJ"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="DISCOUNT_ADJUSTMENT" invoiceItemTypeId="ITM_DISCOUNT_ADJ"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="FEE" invoiceItemTypeId="ITM_FEE"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="MISCELLANEOUS_CHARGE" invoiceItemTypeId="ITM_MISC_CHARGE"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="SALES_TAX" invoiceItemTypeId="ITM_SALES_TAX"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="SHIPPING_CHARGES" invoiceItemTypeId="ITM_SHIPPING_CHARGES"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="SURCHARGE_ADJUSTMENT" invoiceItemTypeId="ITM_SURCHARGE_ADJ"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="ADDITIONAL_FEATURE" invoiceItemTypeId="ITM_ADD_FEATURE"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="WARRANTY_ADJUSTMENT" invoiceItemTypeId="ITM_WARRANTY_ADJ"/>
+    <!-- invoice item types for purchase (AP) invoices -->
+    <InvoiceItemType description="Invoice Adjustment" hasTable="N" invoiceItemTypeId="PINVOICE_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Promotion" hasTable="N" invoiceItemTypeId="PINV_PROMOTION_ADJ" parentTypeId="PINVOICE_ADJ"/>
+    <InvoiceItemType description="Invoice Discount" hasTable="N" invoiceItemTypeId="PINV_DISCOUNT_ADJ" parentTypeId="PINVOICE_ADJ"/>
+    <InvoiceItemType description="Invoice Fee" hasTable="N" invoiceItemTypeId="P_FEE" parentTypeId="PINVOICE_ADJ"/>
+    <InvoiceItemType description="Invoice Miscellaneous Charges" hasTable="N" invoiceItemTypeId="PINV_MISC_CHARGE" parentTypeId="PINVOICE_ADJ"/>
+    <InvoiceItemType description="Invoice Sales Tax" hasTable="N" invoiceItemTypeId="PINV_SALES_TAX" parentTypeId="PINVOICE_ADJ"/>
+    <InvoiceItemType description="Invoice Shipping and Handling" hasTable="N" invoiceItemTypeId="PINV_SHIP_CHARGES" parentTypeId="PINVOICE_ADJ"/>
+    <InvoiceItemType description="Invoice Surcharge" hasTable="N" invoiceItemTypeId="PINV_SURCHARGE_ADJ" parentTypeId="PINVOICE_ADJ"/>
+    <InvoiceItemType description="Invoice Additional Feature" hasTable="N" invoiceItemTypeId="PINV_ADD_FEATURE" parentTypeId="PINVOICE_ADJ"/>
+    <InvoiceItemType description="Invoice Warranty" hasTable="N" invoiceItemTypeId="PINV_WARRANTY_ADJ" parentTypeId="PINVOICE_ADJ"/>
+
+    <InvoiceItemType description="Invoice Item Adjustment" hasTable="N" invoiceItemTypeId="PINVOICE_ITM_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Item Promotion" hasTable="N" invoiceItemTypeId="PITM_PROMOTION_ADJ" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Replacement" hasTable="N" invoiceItemTypeId="PITM_REPLACE_ADJ" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Discount" hasTable="N" invoiceItemTypeId="PITM_DISCOUNT_ADJ" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Fee" hasTable="N" invoiceItemTypeId="PITM_FEE" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Miscellaneous Charges" hasTable="N" invoiceItemTypeId="PITM_MISC_CHARGE" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Sales Tax" hasTable="N" invoiceItemTypeId="PITM_SALES_TAX" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Shipping and Handling" hasTable="N" invoiceItemTypeId="PITM_SHIP_CHARGES" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Surcharge" hasTable="N" invoiceItemTypeId="PITM_SURCHARGE_ADJ" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Additional Feature" hasTable="N" invoiceItemTypeId="PITM_ADD_FEATURE" parentTypeId="PINVOICE_ITM_ADJ"/>
+    <InvoiceItemType description="Invoice Item Warranty" hasTable="N" invoiceItemTypeId="PITM_WARRANTY_ADJ" parentTypeId="PINVOICE_ITM_ADJ"/>
+
+    <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="PINV_PROD_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="PINV_FPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Digital Good Item" hasTable="N" invoiceItemTypeId="PINV_DPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Finished/Digital Good Item" hasTable="N" invoiceItemTypeId="PINV_FDPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Product-Feature Item" hasTable="N" invoiceItemTypeId="PINV_PROD_FEATR_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Service Product Item" hasTable="N" invoiceItemTypeId="PINV_SPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+
+    <InvoiceItemType description="Invoice Work-Effort Item" hasTable="N" invoiceItemTypeId="PINV_WE_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="PINV_TE_ITEM" parentTypeId=""/>
 
     <InvoiceType description="Purchase" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
     <InvoiceType description="Sales" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>
+
+    <!-- maps line items such as order items to invoice item types.  separate mapping for sales and purchase invoices -->
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="FINISHED_GOOD" invoiceItemTypeId="INV_FPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="DIGITAL_GOOD" invoiceItemTypeId="INV_DPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="FINDIG_GOOD" invoiceItemTypeId="INV_FDPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="ITM_PROMOTION_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="REPLACE_ADJUSTMENT" invoiceItemTypeId="ITM_REPLACE_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="DISCOUNT_ADJUSTMENT" invoiceItemTypeId="ITM_DISCOUNT_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="FEE" invoiceItemTypeId="ITM_FEE"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="MISCELLANEOUS_CHARGE" invoiceItemTypeId="ITM_MISC_CHARGE"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="SALES_TAX" invoiceItemTypeId="ITM_SALES_TAX"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="SHIPPING_CHARGES" invoiceItemTypeId="ITM_SHIPPING_CHARGES"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="SURCHARGE_ADJUSTMENT" invoiceItemTypeId="ITM_SURCHARGE_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="ADDITIONAL_FEATURE" invoiceItemTypeId="ITM_ADD_FEATURE"/>
+    <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="WARRANTY_ADJUSTMENT" invoiceItemTypeId="ITM_WARRANTY_ADJ"/>
+
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="FINISHED_GOOD" invoiceItemTypeId="PINV_FPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="DIGITAL_GOOD" invoiceItemTypeId="PINV_DPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="FINDIG_GOOD" invoiceItemTypeId="PINV_FDPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="PITM_PROMOTION_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="REPLACE_ADJUSTMENT" invoiceItemTypeId="PITM_REPLACE_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="DISCOUNT_ADJUSTMENT" invoiceItemTypeId="PITM_DISCOUNT_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="FEE" invoiceItemTypeId="PITM_FEE"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="MISCELLANEOUS_CHARGE" invoiceItemTypeId="PITM_MISC_CHARGE"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="SALES_TAX" invoiceItemTypeId="PITM_SALES_TAX"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="SHIPPING_CHARGES" invoiceItemTypeId="PITM_SHIP_CHARGES"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="SURCHARGE_ADJUSTMENT" invoiceItemTypeId="PITM_SURCHARGE_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="ADDITIONAL_FEATURE" invoiceItemTypeId="PITM_ADD_FEATURE"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="WARRANTY_ADJUSTMENT" invoiceItemTypeId="PITM_WARRANTY_ADJ"/>
 
     <PaymentMethodType description="Credit Card" paymentMethodTypeId="CREDIT_CARD"/>
     <PaymentMethodType description="Gift Card" paymentMethodTypeId="GIFT_CARD"/>

@@ -716,10 +716,15 @@
             package-name="org.ofbiz.accounting.invoice"
             title="Invoice Item Type Map Entity">
       <field name="invoiceItemMapKey" type="id-ne"></field>
+      <field name="invoiceTypeId" type="id-ne"></field>
       <field name="invoiceItemTypeId" type="id-ne"></field>
       <prim-key field="invoiceItemMapKey"/>
+      <prim-key field="invoiceTypeId"/>
       <relation type="one" fk-name="INVOICE_ITEM_MAP" rel-entity-name="InvoiceItemType">
         <key-map field-name="invoiceItemTypeId"/>
+      </relation>
+      <relation type="one" fk-name="INVITMMAP_INVTYP" rel-entity-name="InvoiceType">
+        <key-map field-name="invoiceTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceItemTypeId"/>
