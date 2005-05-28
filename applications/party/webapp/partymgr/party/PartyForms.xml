@@ -37,4 +37,55 @@
         <field name="manifestPolicies" title="${uiLabelMap.PartyManifestPolicies}"><textarea cols="60" rows="15"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <!-- PartyTaxInfo -->
+    <form name="AddPartyTaxInfo" type="single"
+        target="createPartyTaxInfo" title="" 
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createPartyTaxInfo"/>
+        <field name="partyId"><hidden/></field>
+        <field name="geoId" title="Geo (jurisdiction)">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonCountry}: [${geoId}] ${geoName}">
+                    <entity-constraint name="geoTypeId" value="COUNTRY"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonState}: [${geoId}] ${geoName}">
+                    <entity-constraint name="geoTypeId" value="STATE"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonProvince}: [${geoId}] ${geoName}">
+                    <entity-constraint name="geoTypeId" value="PROVINCE"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonCounty}: [${geoId}] ${geoName}">
+                    <entity-constraint name="geoTypeId" value="COUNTY"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonCountyCity}: [${geoId}] ${geoName}">
+                    <entity-constraint name="geoTypeId" value="COUNTY_CITY"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonCity}: [${geoId}] ${geoName}">
+                    <entity-constraint name="geoTypeId" value="CITY"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdatePartyTaxInfo" type="list"
+        target="updatePartyTaxInfo" title="" list-name="partyTaxInfos"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updatePartyTaxInfo"/>
+        <field name="partyId"><hidden/></field>
+        <field name="geoId" title="Geo (jurisdiction)" widget-style="tabletext"><display-entity entity-name="Geo" description="[${geoId}] ${geoName}" also-hidden="true"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deletePartyTaxInfo?partyId=${partyId}&amp;geoId=${geoId}&amp;fromDate=${fromDate}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
 </forms>
