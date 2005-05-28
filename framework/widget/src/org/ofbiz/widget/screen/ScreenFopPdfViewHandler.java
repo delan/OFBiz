@@ -64,7 +64,7 @@ public class ScreenFopPdfViewHandler extends ScreenWidgetViewHandler {
         // render and obtain the XSL-FO 
         Writer writer = new StringWriter();
         try {
-            MapStack context = new MapStack();
+            MapStack context = MapStack.create();
             ScreenRenderer screens = new ScreenRenderer(writer, context, htmlScreenRenderer);
             populateContext(context, screens, request, response, servletContext);
             screens.render(page);

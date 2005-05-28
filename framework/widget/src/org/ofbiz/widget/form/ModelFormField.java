@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -1535,8 +1536,17 @@ public class ModelFormField {
                 Iterator valueIter = values.iterator();
                 while (valueIter.hasNext()) {
                     GenericValue value = (GenericValue) valueIter.next();
-                    // add key and description with string expansion, ie expanding ${} stuff, passing locale explicitly to expand value stirng because it won't be found in the Entity
-                    String optionDesc = this.description.expandString(value, UtilMisc.ensureLocale(context.get("locale")));
+                    // add key and description with string expansion, ie expanding ${} stuff, passing locale explicitly to expand value string because it won't be found in the Entity
+                    //create a context that is a MapStack with the value at the bottom to override everything, but still allow for common things like uiLabelMap and such
+                    MapStack localContext = null;
+                    if (context instanceof MapStack) {
+                        localContext = ((MapStack) context).standAloneStack();
+                        localContext.push(value);
+                    } else {
+                        localContext = MapStack.create(context);
+                        localContext.push(value);
+                    }
+                    String optionDesc = this.description.expandString(localContext, UtilMisc.ensureLocale(context.get("locale")));
                     Object keyFieldObject = value.get(this.getKeyFieldName());
                     if (keyFieldObject == null) {
                     	throw new IllegalArgumentException("The value found for key-name [" + this.getKeyFieldName() + "], may not be a valid key field name.");

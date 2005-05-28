@@ -627,7 +627,7 @@ public class DataResourceWorker {
                 }
             } else if ("SCREEN_COMBINED".equals(dataTemplateTypeId)) {
                 try {
-                    Map context = new MapStack(templateRoot);
+                    Map context = MapStack.create(templateRoot);
                     ScreenStringRenderer screenStringRenderer = null;
                     ScreenRenderer screenRenderer = (ScreenRenderer)context.get("screens");
                      if (screenRenderer != null) {

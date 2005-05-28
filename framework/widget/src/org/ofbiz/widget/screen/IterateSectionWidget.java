@@ -100,7 +100,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
     
         boolean isEntrySet = false;
             if (!(context instanceof MapStack)) {
-                context = new MapStack(context);
+                context = MapStack.create(context);
             }
             
             MapStack contextMs = (MapStack) context;

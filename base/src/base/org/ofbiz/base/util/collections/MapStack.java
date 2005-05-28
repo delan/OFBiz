@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,13 +25,16 @@ package org.ofbiz.base.util.collections;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javolution.lang.Reusable;
+import javolution.realtime.ObjectFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 
@@ -43,32 +46,49 @@ import org.ofbiz.base.util.Debug;
  * @version    $Rev$
  * @since      3.1
  */
-public class MapStack implements Map {
+public class MapStack implements Map, Reusable {
 
     public static final String module = MapStack.class.getName();
 
-    protected List stackList = new LinkedList();
+    protected static final ObjectFactory mapStackFactory = new ObjectFactory() {
+        protected Object create() {
+            return new MapStack();
+        }
+    };
     
-    public MapStack() {
-        super();
+    public static MapStack create() {
+        MapStack newValue = (MapStack) mapStackFactory.object();
         // initialize with a single entry
-        push();
+        newValue.push();
+        return newValue;
     }
-    
-    public MapStack(Map baseMap) {
-        super();
-        this.stackList.add(0, baseMap);
+
+    public static MapStack create(Map baseMap) {
+        MapStack newValue = (MapStack) mapStackFactory.object();
+        newValue.stackList.add(0, baseMap);
+        return newValue;
     }
-    
+
     /** Does a shallow copy of the internal stack of the passed MapStack; enables simultaneous stacks that share common parent Maps */
-    public MapStack(MapStack source) {
+    public static MapStack create(MapStack source) {
+        MapStack newValue = (MapStack) mapStackFactory.object();
+        newValue.stackList.addAll(source.stackList);
+        return newValue;
+    }
+
+    protected MapStack() {
         super();
-        this.stackList.addAll(source.stackList);
+    }
+    
+    protected List stackList = FastList.newInstance();
+    
+    public void reset() {
+        stackList = FastList.newInstance();
     }
     
     /** Puts a new Map on the top of the stack */
     public void push() {
-        this.stackList.add(0, new HashMap());
+        this.stackList.add(0, FastMap.newInstance());
     }
     
     /** Puts an existing Map on the top of the stack (top meaning will override lower layers on the stack) */
@@ -104,7 +124,7 @@ public class MapStack implements Map {
      * using two different MapStack objects, but sharing the Maps in common  
      */
     public MapStack standAloneStack() {
-        MapStack standAlone = new MapStack(this);
+        MapStack standAlone = MapStack.create(this);
         return standAlone;
     }
 
@@ -115,7 +135,7 @@ public class MapStack implements Map {
      * using two different MapStack objects, but sharing the Maps in common  
      */
     public MapStack standAloneChildStack() {
-        MapStack standAloneChild = new MapStack(this);
+        MapStack standAloneChild = MapStack.create(this);
         standAloneChild.push();
         return standAloneChild;
     }
@@ -165,7 +185,7 @@ public class MapStack implements Map {
      */
     public boolean containsValue(Object value) {
         // walk the stackList and the entries for each Map and if nothing is in for the current key, consider it an option, otherwise ignore
-        Set resultKeySet = new HashSet();
+        Set resultKeySet = FastSet.newInstance();
         Iterator stackIter = this.stackList.iterator();
         while (stackIter.hasNext()) {
             Map curMap = (Map) stackIter.next();
@@ -256,7 +276,7 @@ public class MapStack implements Map {
      */
     public Set keySet() {
         // walk the stackList and aggregate all keys
-        Set resultSet = new HashSet();
+        Set resultSet = FastSet.newInstance();
         Iterator stackIter = this.stackList.iterator();
         while (stackIter.hasNext()) {
             Map curMap = (Map) stackIter.next();
@@ -270,8 +290,8 @@ public class MapStack implements Map {
      */
     public Collection values() {
         // walk the stackList and the entries for each Map and if nothing is in for the current key, put it in
-        Set resultKeySet = new HashSet();
-        List resultValues = new LinkedList();
+        Set resultKeySet = FastSet.newInstance();
+        List resultValues = FastList.newInstance();
         Iterator stackIter = this.stackList.iterator();
         while (stackIter.hasNext()) {
             Map curMap = (Map) stackIter.next();
@@ -292,8 +312,8 @@ public class MapStack implements Map {
      */
     public Set entrySet() {
         // walk the stackList and the entries for each Map and if nothing is in for the current key, put it in
-        Set resultKeySet = new HashSet();
-        Set resultEntrySet = new HashSet();
+        Set resultKeySet = FastSet.newInstance();
+        Set resultEntrySet = FastSet.newInstance();
         Iterator stackIter = this.stackList.iterator();
         while (stackIter.hasNext()) {
             Map curMap = (Map) stackIter.next();
