@@ -342,7 +342,7 @@ public abstract class ModelScreenWidget {
             boolean protectScope = !shareScope(context);
             if (protectScope) {
                 if (!(context instanceof MapStack)) {
-                    context = new MapStack(context);
+                    context = MapStack.create(context);
                 }
                 
                 ((MapStack) context).push();
@@ -445,7 +445,7 @@ public abstract class ModelScreenWidget {
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             // isolate the scope
             if (!(context instanceof MapStack)) {
-                context = new MapStack(context);
+                context = MapStack.create(context);
             }
             
             MapStack contextMs = (MapStack) context;
@@ -617,7 +617,7 @@ public abstract class ModelScreenWidget {
             boolean protectScope = !shareScope(context);
             if (protectScope) {
                 if (!(context instanceof MapStack)) {
-                    context = new MapStack(context);
+                    context = MapStack.create(context);
                 }
                 ((MapStack) context).push();
             }
@@ -708,7 +708,7 @@ public abstract class ModelScreenWidget {
             boolean protectScope = !shareScope(context);
             if (protectScope) {
                 if (!(context instanceof MapStack)) {
-                    context = new MapStack(context);
+                    context = MapStack.create(context);
                 }
                 ((MapStack) context).push();
             }
@@ -834,7 +834,7 @@ public abstract class ModelScreenWidget {
                 // and this is a step to make sure that it is there.
                 String expandedContentId = getContentId(context);
                 if (!(context instanceof MapStack)) {
-                    context = new MapStack(context);
+                    context = MapStack.create(context);
                 }
                 
                 // This is an important step to make sure that the current contentId is in the context

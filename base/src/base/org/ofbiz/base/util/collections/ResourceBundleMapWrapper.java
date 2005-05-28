@@ -47,7 +47,7 @@ public class ResourceBundleMapWrapper implements Map {
     protected ResourceBundle initialResourceBundle;
 
     protected ResourceBundleMapWrapper() {
-        rbmwStack = new MapStack();
+        rbmwStack = MapStack.create();
     }
 
     /**
@@ -55,7 +55,7 @@ public class ResourceBundleMapWrapper implements Map {
      */
     public ResourceBundleMapWrapper(InternalRbmWrapper initialInternalRbmWrapper) {
         this.initialResourceBundle = initialInternalRbmWrapper.getResourceBundle();
-        this.rbmwStack = new MapStack(initialInternalRbmWrapper);
+        this.rbmwStack = MapStack.create(initialInternalRbmWrapper);
     }
     
     /**
@@ -66,7 +66,7 @@ public class ResourceBundleMapWrapper implements Map {
             throw new IllegalArgumentException("Cannot create ResourceBundleMapWrapper with a null initial ResourceBundle.");
         }
         this.initialResourceBundle = initialResourceBundle;
-        this.rbmwStack = new MapStack(new InternalRbmWrapper(initialResourceBundle));
+        this.rbmwStack = MapStack.create(new InternalRbmWrapper(initialResourceBundle));
     }
     
     /** Puts ResourceBundle on the BOTTOM of the stack (bottom meaning will be overriden by higher layers on the stack, ie everything else already there) */

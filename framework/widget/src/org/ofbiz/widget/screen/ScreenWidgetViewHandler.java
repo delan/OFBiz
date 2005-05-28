@@ -102,7 +102,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
                 writer = response.getWriter();
             }
 
-            MapStack context = new MapStack();
+            MapStack context = MapStack.create();
             ScreenRenderer screens = new ScreenRenderer(writer, context, htmlScreenRenderer);
             populateContext(context, screens, request, response, servletContext);
             screens.render(page);
