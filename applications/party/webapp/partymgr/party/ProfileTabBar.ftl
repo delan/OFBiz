@@ -56,10 +56,11 @@
     <td align='right'>
       <div class='tabContainer'>
         <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewprofile?default(unselectedClassName)}">${uiLabelMap.PartyProfile}</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewvendor?default(unselectedClassName)}">${uiLabelMap.PartyVendor}</a>
         <a href="<@ofbizUrl>/viewroles?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewroles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
         <a href="<@ofbizUrl>/viewrelationships?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewrelationships?default(unselectedClassName)}">${uiLabelMap.PartyRelationships}</a>
         <a href="<@ofbizUrl>/viewcommunications?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.listCommunications?default(unselectedClassName)}">${uiLabelMap.PartyCommunications}</a>
+        <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewvendor?default(unselectedClassName)}">${uiLabelMap.PartyVendor}</a>
+        <a href="<@ofbizUrl>/EditPartyTaxInfos?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyTaxInfos?default(unselectedClassName)}">${uiLabelMap.PartyTaxInfos}</a>
         <a href="<@ofbizUrl>/editShoppingList?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.editShoppingList?default(unselectedClassName)}">${uiLabelMap.PartyShoppingLists}</a>
       </div>
     </td>

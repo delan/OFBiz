@@ -202,6 +202,26 @@
         <attribute name="partyRelationshipName" type="String" mode="IN" optional="true"/>
     </service>
 
+    <!-- PartyTaxInfo services -->
+    <service name="createPartyTaxInfo" default-entity-name="PartyTaxInfo" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyTaxInfo" auth="true">
+        <description>Create a PartyTaxInfo record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updatePartyTaxInfo" default-entity-name="PartyTaxInfo" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="updatePartyTaxInfo" auth="true">
+        <description>Update a PartyTaxInfo record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePartyTaxInfo" default-entity-name="PartyTaxInfo" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="deletePartyTaxInfo" auth="true">
+        <description>Delete a PartyTaxInfo record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
     <!-- ContactMech services -->
     <service name="createContactMech" engine="simple"
             location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="createContactMech" auth="true">

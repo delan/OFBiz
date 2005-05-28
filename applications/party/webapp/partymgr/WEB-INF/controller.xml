@@ -416,6 +416,29 @@
         <response name="error" type="view" value="viewvendor"/>
     </request-map>
 
+    <request-map uri="EditPartyTaxInfos">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPartyTaxInfos"/>
+    </request-map>
+    <request-map uri="createPartyTaxInfo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyTaxInfo"/>
+        <response name="success" type="view" value="EditPartyTaxInfos"/>
+        <response name="error" type="view" value="EditPartyTaxInfos"/>
+    </request-map>
+    <request-map uri="updatePartyTaxInfo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyTaxInfo"/>
+        <response name="success" type="view" value="EditPartyTaxInfos"/>
+        <response name="error" type="view" value="EditPartyTaxInfos"/>
+    </request-map>
+    <request-map uri="deletePartyTaxInfo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyTaxInfo"/>
+        <response name="success" type="view" value="EditPartyTaxInfos"/>
+        <response name="error" type="view" value="EditPartyTaxInfos"/>
+    </request-map>
+    
     <request-map uri="editlogin">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editlogin"/>
@@ -690,9 +713,10 @@
     <view-map name="createNew" type="jpublish" page="/party/createnew.ftl"/>
 
     <view-map name="viewprofile" type="jpublish" page="/party/viewprofile.ftl"/>
-    <view-map name="viewvendor" type="jpublish" page="/party/viewvendor.ftl"/>
     <view-map name="viewroles" type="jpublish" page="/party/viewroles.ftl"/>
     <view-map name="viewrelationships" type="region"/>
+    <view-map name="viewvendor" type="jpublish" page="/party/viewvendor.ftl"/>
+    <view-map name="EditPartyTaxInfos" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyTaxInfos"/>
     <view-map name="editcontactmech" type="jpublish" page="/party/editcontactmech.ftl"/>
 
     <view-map name="editcreditcard" type="region"/>
@@ -723,9 +747,9 @@
     <view-map name="listCommunications" type="jpublish" page="/communication/listCommunications.ftl"/>
     <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>
     
-    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
-    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
-    <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
+    <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
+    <view-map name="LookupPartyAndUserLoginAndPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson"/>
+    <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
 
     <!-- end of view mappings -->
 </site-conf>
