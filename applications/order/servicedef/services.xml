@@ -84,6 +84,14 @@
             location="org.ofbiz.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="placingCustomerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="billToCustomerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipToCustomerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="endUserCustomerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="billFromVendorPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipFromVendorPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="supplierAgentPartyId" type="String" mode="IN" optional="true"/>
+        
         <attribute name="visitId" type="String" mode="IN" optional="true"/>
         <attribute name="affiliateId" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
@@ -147,6 +155,10 @@
         <attribute name="productFeatureId" type="String" mode="IN" optional="true"/>
         <attribute name="correspondingProductId" type="String" mode="IN" optional="true"/>
         <attribute name="sourceReferenceId" type="String" mode="IN" optional="true"/>
+        <attribute name="customerReferenceId" type="String" mode="IN" optional="true"/>
+        <attribute name="primaryGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="secondaryGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="exemptAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="includeInTax" type="Boolean" mode="IN" optional="true"/>
         <attribute name="includeInShipping" type="Boolean" mode="IN" optional="true"/>
         <attribute name="orderAdjustmentId" type="String" mode="OUT" optional="false"/>
@@ -407,6 +419,7 @@
     <service name="calcTaxInterface" engine="interface" location="" invoke="">
         <description>Tax Calc Service Interface</description>
         <attribute name="productStoreId" type="String" mode="IN"/>
+        <attribute name="billToPartyId" type="String" mode="IN" optional="true"/> <!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is -->
         <attribute name="itemProductList" type="java.util.List" mode="IN"/>
         <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
         <attribute name="itemPriceList" type="java.util.List" mode="IN"/>

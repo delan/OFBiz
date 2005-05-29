@@ -76,6 +76,11 @@
       <field name="productFeatureId" type="id"></field>
       <field name="correspondingProductId" type="id"></field>
       <field name="sourceReferenceId" type="id-long"></field>
+      <field name="sourcePercentage" type="floating-point"><!-- for tax entries this is the tax percentage --></field>
+      <field name="customerReferenceId" type="id-long"><!-- for tax entries this is partyTaxId --></field>
+      <field name="primaryGeoId" type="id"><!-- for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city) --></field>
+      <field name="secondaryGeoId" type="id"><!-- for tax entries this is the secondary jurisdiction Geo (usually a country, or other Geo that the primary is within) --></field>
+      <field name="exemptAmount" type="currency-amount"><!-- an amount that would normally apply, but not to this order; for tax exemption represents the what the tax would have been --></field>
       <field name="includeInTax" type="indicator"></field>
       <field name="includeInShipping" type="indicator"></field>
       <field name="createdDate" type="date-time"></field>
