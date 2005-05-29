@@ -1138,6 +1138,7 @@ public class OrderServices {
                     Map serviceContext = UtilMisc.toMap("productStoreId", orh.getProductStoreId(), "itemProductList", products, "itemAmountList", amounts,
                         "itemShippingList", shipAmts, "itemPriceList", itPrices, "orderShippingAmount", orderShipping);
                     serviceContext.put("shippingAddress", shippingAddress);
+                    if (orh.getBillToParty() != null) serviceContext.put("billToPartyId", orh.getBillToParty().getString("partyId"));
 
                     // invoke the calcTax service
                     Map serviceResult = null;
