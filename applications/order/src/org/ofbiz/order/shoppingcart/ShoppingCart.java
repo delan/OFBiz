@@ -477,8 +477,21 @@ public class ShoppingCart implements Serializable {
     protected String facilityId = null;
     protected String webSiteId = null;
     protected String terminalId = null;
+
+    /** General partyId for the Order, all other IDs default to this one if not specified explicitly */
     protected String orderPartyId = null;
 
+    // sales order parties
+    protected String placingCustomerPartyId = null;
+    protected String billToCustomerPartyId = null;
+    protected String shipToCustomerPartyId = null;
+    protected String endUserCustomerPartyId = null;
+
+    // purchase order parties
+    protected String billFromVendorPartyId = null;
+    protected String shipFromVendorPartyId = null;
+    protected String supplierAgentPartyId = null;
+    
     protected GenericValue userLogin = null;
     protected GenericValue autoUserLogin = null;
 
@@ -982,11 +995,78 @@ public class ShoppingCart implements Serializable {
    }
 
     public String getOrderPartyId() {
-        return this.orderPartyId;
+        return this.orderPartyId != null ? this.orderPartyId : this.getPartyId();
     }
 
     public void setOrderPartyId(String orderPartyId) {
         this.orderPartyId = orderPartyId;
+    }
+    
+    public String getPlacingCustomerPartyId() {
+        return this.placingCustomerPartyId != null ? this.placingCustomerPartyId : this.getPartyId();
+    }
+
+    public void setPlacingCustomerPartyId(String placingCustomerPartyId) {
+        this.placingCustomerPartyId = placingCustomerPartyId;
+        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = placingCustomerPartyId;
+    }
+    
+    public String getBillToCustomerPartyId() {
+        return this.billToCustomerPartyId != null ? this.billToCustomerPartyId : this.getPartyId();
+    }
+
+    public void setBillToCustomerPartyId(String billToCustomerPartyId) {
+        this.billToCustomerPartyId = billToCustomerPartyId;
+        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = billToCustomerPartyId;
+    }
+    
+    public String getShipToCustomerPartyId() {
+        return this.shipToCustomerPartyId != null ? this.shipToCustomerPartyId : this.getPartyId();
+    }
+
+    public void setShipToCustomerPartyId(String shipToCustomerPartyId) {
+        this.shipToCustomerPartyId = shipToCustomerPartyId;
+        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = shipToCustomerPartyId;
+    }
+    
+    public String getEndUserCustomerPartyId() {
+        return this.endUserCustomerPartyId != null ? this.endUserCustomerPartyId : this.getPartyId();
+    }
+
+    public void setEndUserCustomerPartyId(String endUserCustomerPartyId) {
+        this.endUserCustomerPartyId = endUserCustomerPartyId;
+        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = endUserCustomerPartyId;
+    }
+
+//    protected String billFromVendorPartyId = null;
+  //  protected String shipFromVendorPartyId = null;
+    //protected String supplierAgentPartyId = null;
+    
+    public String getBillFromVendorPartyId() {
+        return this.billFromVendorPartyId != null ? this.billFromVendorPartyId : this.getPartyId();
+    }
+
+    public void setBillFromVendorPartyId(String billFromVendorPartyId) {
+        this.billFromVendorPartyId = billFromVendorPartyId;
+        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = billFromVendorPartyId;
+    }
+    
+    public String getShipFromVendorPartyId() {
+        return this.shipFromVendorPartyId != null ? this.shipFromVendorPartyId : this.getPartyId();
+    }
+
+    public void setShipFromVendorPartyId(String shipFromVendorPartyId) {
+        this.shipFromVendorPartyId = shipFromVendorPartyId;
+        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = shipFromVendorPartyId;
+    }
+    
+    public String getSupplierAgentPartyId() {
+        return this.supplierAgentPartyId != null ? this.supplierAgentPartyId : this.getPartyId();
+    }
+
+    public void setSupplierAgentPartyId(String supplierAgentPartyId) {
+        this.supplierAgentPartyId = supplierAgentPartyId;
+        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = supplierAgentPartyId;
     }
     
     public String getPartyId() {
@@ -2674,7 +2754,7 @@ public class ShoppingCart implements Serializable {
                         while (fsppas.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) fsppas.next();
 
-                            // TODO - fix this!!
+                            // TODO - fix the free shipping promotions!!
                             /*
                             if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(item.getShipmentMethodTypeId())) &&
                                 (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(item.getCarrierPartyId()))) {
@@ -2906,6 +2986,20 @@ public class ShoppingCart implements Serializable {
         result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
         result.put("currencyUom", this.getCurrency());
         result.put("billingAccountId", this.getBillingAccountId());
+
+        if (this.isSalesOrder()) {
+            result.put("placingCustomerPartyId", this.getPlacingCustomerPartyId());
+            result.put("billToCustomerPartyId", this.getBillToCustomerPartyId());
+            result.put("shipToCustomerPartyId", this.getShipToCustomerPartyId());
+            result.put("endUserCustomerPartyId", this.getEndUserCustomerPartyId());
+        }
+
+        if (this.isPurchaseOrder()) {
+            result.put("billFromVendorPartyId", this.getBillFromVendorPartyId());
+            result.put("shipFromVendorPartyId", this.getShipFromVendorPartyId());
+            result.put("supplierAgentPartyId", this.getSupplierAgentPartyId());
+        }
+
         return result;
     }
 

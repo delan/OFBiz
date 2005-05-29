@@ -164,7 +164,7 @@ public class ShoppingCartServices {
         // set the ordering party ID
         GenericValue placingParty = orh.getPlacingParty();
         if (placingParty != null) {
-            cart.setOrderPartyId(placingParty.getString("partyId"));
+            cart.setPlacingCustomerPartyId(placingParty.getString("partyId"));
         }
 
         // set the shipping info

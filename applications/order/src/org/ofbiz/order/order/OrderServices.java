@@ -38,6 +38,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -86,6 +88,20 @@ public class OrderServices {
 
     public static final String module = OrderServices.class.getName();
     public static final String resource = "org.ofbiz.order.order.PackageMessages";
+    
+    public static Map salesAttributeRoleMap = FastMap.newInstance();
+    public static Map purchaseAttributeRoleMap = FastMap.newInstance();
+    static {
+        salesAttributeRoleMap.put("placingCustomerPartyId", "PLACING_CUSTOMER");
+        salesAttributeRoleMap.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
+        salesAttributeRoleMap.put("shipToCustomerPartyId", "SHIP_TO_CUSTOMER");
+        salesAttributeRoleMap.put("endUserCustomerPartyId", "END_USER_CUSTOMER");
+    
+        purchaseAttributeRoleMap.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
+        purchaseAttributeRoleMap.put("shipFromVendorPartyId", "SHIP_FROM_VENDOR");
+        purchaseAttributeRoleMap.put("supplierAgentPartyId", "SUPPLIER_AGENT");
+    }
+
 
     /** Service for creating a new order */
     public static Map createOrder(DispatchContext ctx, Map context) {
@@ -683,6 +699,7 @@ public class OrderServices {
             }
         }
 
+        /* DEJ20050529 the OLD way, where a single party had all roles... no longer doing things this way...
         // define the roles for the order
         List userOrderRoleTypes = null;
         if ("SALES_ORDER".equals(orderTypeId)) {
@@ -711,6 +728,24 @@ public class OrderServices {
                 toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleType)));
             }
         }
+        */
+        
+        // see the attributeRoleMap definition near the top of this file for attribute-role mappings
+        Map attributeRoleMap = salesAttributeRoleMap;
+        if ("PURCHASE_ORDER".equals(orderTypeId)) {
+            attributeRoleMap = purchaseAttributeRoleMap;
+        }
+        Iterator attributeRoleEntryIter = attributeRoleMap.entrySet().iterator();
+        while (attributeRoleEntryIter.hasNext()) {
+            Map.Entry attributeRoleEntry = (Map.Entry) attributeRoleEntryIter.next();
+            
+            if (UtilValidate.isNotEmpty((String) context.get(attributeRoleEntry.getKey()))) {
+                // make sure the party is in the role before adding
+                toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", context.get(attributeRoleEntry.getKey()), "roleTypeId", attributeRoleEntry.getValue())));
+                toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", context.get(attributeRoleEntry.getKey()), "roleTypeId", attributeRoleEntry.getValue())));
+            }
+        }
+        
 
         // set the affiliate -- This is going to be removed...
         String affiliateId = (String) context.get("affiliateId");
@@ -2216,6 +2251,7 @@ public class OrderServices {
     public static Map simpleTaxCalc(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         String productStoreId = (String) context.get("productStoreId");
+        String billToPartyId = (String) context.get("billToPartyId");
         List itemProductList = (List) context.get("itemProductList");
         List itemAmountList = (List) context.get("itemAmountList");
         List itemPriceList = (List) context.get("itemPriceList");
@@ -2246,22 +2282,22 @@ public class OrderServices {
             Double shippingAmount = (Double) itemShippingList.get(i);
             List taxList = null;
             if (shippingAddress != null) {
-                taxList = getTaxAmount(delegator, product, productStoreId, countryCode, stateCode, itemPrice.doubleValue(), itemAmount.doubleValue(), shippingAmount.doubleValue());
+                taxList = getTaxAmount(delegator, product, productStoreId, billToPartyId, countryCode, stateCode, itemPrice.doubleValue(), itemAmount.doubleValue(), shippingAmount.doubleValue());
             }
             itemAdjustments.add(taxList);
         }
         if (orderShippingAmount.doubleValue() > 0) {
-            List taxList = getTaxAmount(delegator, null, productStoreId, countryCode, stateCode, 0.00, 0.00, orderShippingAmount.doubleValue());
+            List taxList = getTaxAmount(delegator, null, productStoreId, billToPartyId, countryCode, stateCode, 0.00, 0.00, orderShippingAmount.doubleValue());
             orderAdjustments.addAll(taxList);
         }
 
         Map result = UtilMisc.toMap("orderAdjustments", orderAdjustments, "itemAdjustments", itemAdjustments);
 
         return result;
-
     }
 
-    private static List getTaxAmount(GenericDelegator delegator, GenericValue item, String productStoreId, String countryCode, String stateCode, double itemPrice, double itemAmount, double shippingAmount) {
+    private static List getTaxAmount(GenericDelegator delegator, GenericValue item, String productStoreId, String billToPartyId, String countryCode, String stateCode, double itemPrice, double itemAmount, double shippingAmount) {
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         List adjustments = new ArrayList();
 
         // store expr
@@ -2310,6 +2346,7 @@ public class OrderServices {
                 double minPrice = taxLookup.get("minItemPrice") != null ? taxLookup.getDouble("minItemPrice").doubleValue() : 0.00;
                 double minAmount = taxLookup.get("minPurchase") != null ? taxLookup.getDouble("minPurchase").doubleValue() : 0.00;
 
+                // DEJ20050528 not sure why this is done like this, could put this condition in the query sent to the database, though perhaps it is this way because of issues with that of some sort?
                 if (itemPrice >= minPrice && itemAmount >= minAmount) {
                     double taxRate = taxLookup.get("salesTaxPercentage") != null ? taxLookup.getDouble("salesTaxPercentage").doubleValue() : 0;
                     double taxable = 0.00;
@@ -2321,6 +2358,9 @@ public class OrderServices {
                         taxable += shippingAmount;
                     }
 
+                    // TODO: DEJ20050528 this is an interesting way to round the number, according to the JavaDoc 
+                    //this uses the "ROUND_HALF_EVEN" method (as defined in the BigDecimal class, see JavaDoc 
+                    //of that for details); it seems we might want to use the ROUND_HALF_UP method... 
                     String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
                     DecimalFormat formatter = new DecimalFormat(currencyFormat);
                     double taxTotal = taxable * taxRate;
@@ -2331,11 +2371,47 @@ public class OrderServices {
                     } catch (ParseException e) {
                         throw new GeneralException("Problem getting parsed amount from string", e);
                     }
-
+                    
+                    String primaryGeoId = taxLookup.getString("stateProvinceGeoId");
+                    String secondaryGeoId = taxLookup.getString("countryGeoId");
+                    
+                    // if no state/province, the country is the primary
+                    if (primaryGeoId == null || "_NA_".equals(primaryGeoId)) {
+                        primaryGeoId = secondaryGeoId;
+                        secondaryGeoId = null;
+                    }
+                    
                     Map adjMap = new HashMap();
                     adjMap.put("amount", taxAmount);
+                    adjMap.put("sourcePercentage", new Double(taxRate));
                     adjMap.put("orderAdjustmentTypeId", "SALES_TAX");
+                    // the primary Geo should be the main jurisdiction that the tax is for, and the secondary would just be to define a parent or wrapping jurisdiction of the primary
+                    adjMap.put("primaryGeoId", primaryGeoId);
+                    if (secondaryGeoId != null) adjMap.put("secondaryGeoId", secondaryGeoId);
                     adjMap.put("comments", taxLookup.getString("description"));
+                    
+                    // check to see if this party has a tax ID for this, and if the party is tax exempt in the primary (most-local) jurisdiction
+                    if (UtilValidate.isNotEmpty(billToPartyId) && primaryGeoId != null) {
+                        List ptiConditionList = UtilMisc.toList(
+                                new EntityExpr("partyId", EntityOperator.EQUALS, billToPartyId), 
+                                new EntityExpr("geoId", EntityOperator.EQUALS, primaryGeoId));
+                        ptiConditionList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
+                        ptiConditionList.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
+                        EntityCondition ptiCondition = new EntityConditionList(ptiConditionList, EntityOperator.AND);
+                        // sort by -fromDate to get the newest (largest) first, just in case there is more than one, we only want the most recent valid one, should only be one per jurisdiction...
+                        List partyTaxInfos = delegator.findByCondition("PartyTaxInfo", ptiCondition, null, UtilMisc.toList("-fromDate"));
+                        if (partyTaxInfos.size() > 0) {
+                            GenericValue partyTaxInfo = (GenericValue) partyTaxInfos.get(0);
+                            adjMap.put("customerReferenceId", partyTaxInfo.get("partyTaxId"));
+                            if ("Y".equals(partyTaxInfo.getString("isExempt"))) {
+                                adjMap.put("amount", new Double(0));
+                                adjMap.put("exemptAmount", taxAmount);
+                            }
+                        }
+                    } else {
+                        Debug.logInfo("NOTE: A tax calculation was done without a billToPartyId or primaryGeoId, so no tax exemptions or tax IDs considered; billToPartyId=[" + billToPartyId + "] primaryGeoId=[" + primaryGeoId + "]", module);
+                    }
+                    
                     adjustments.add(delegator.makeValue("OrderAdjustment", adjMap));
                 }
             }
