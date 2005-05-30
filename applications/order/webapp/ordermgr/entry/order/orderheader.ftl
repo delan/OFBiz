@@ -33,11 +33,11 @@
   </div>
 </#if>
 
-      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <#-- shipping address -->
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">
@@ -48,16 +48,16 @@
                        </td>
                        <td width="5">&nbsp;</td>
                        <td align="left" valign="top" width="80%" class="tabletext">
-                       <#if person?has_content>
-                          ${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]
-                       <#elseif partyGroup?has_content>
-                          ${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]
+                       <#if orderPerson?has_content>
+                          ${orderPerson.firstName?if_exists}&nbsp;${orderPerson.lastName?if_exists}&nbsp;[${orderPerson.partyId}]
+                       <#elseif orderPartyGroup?has_content>
+                          ${orderPartyGroup.groupName?if_exists}&nbsp;[${orderPartyGroup.partyId}]
                        <#else>
                           [${uiLabelMap.PartyPartyNotDefined}]
                        </#if>
                       </td>
                     </tr>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                   </#if>
                     <#if shippingAddress?has_content>
                       <tr>
@@ -77,7 +77,7 @@
                           </div>
                         </td>
                       </tr>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                     </#if>
                     <#if orderTerms?has_content>
                       <tr>
@@ -88,27 +88,27 @@
                         <td align="left" valign="top" width="80%">
                            <table>
                              <tr>
-	                       <td width="33%"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermType}</b></div></td>
+                               <td width="33%"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermType}</b></div></td>
                                <td width="33%"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermValue}</b></div></td>
-	                       <td width="33%"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermDays}</b></div></td>
-	                     </tr>
-                            <tr><td colspan="3"><hr class='sepbar'></td></tr>
-                            <#assign index=0>
-                            <#list orderTerms as orderTerm>
-                            <tr>
-                              <td width="33%"><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description")}</div></td>
-	                      <td width="33%"><div class="tabletext">${orderTerm.termValue?default("")}</div></td>
-	                      <td width="33%"><div class="tabletext">${orderTerm.termDays?default("")}</div></td>
-	                    </tr>
-                           <#if orderTerms.size()&lt;index >
-                              <tr><td colspan="3"><hr class='sepbar'></td></tr>
-                           </#if>
-                           <#assign index=index+1>
-                          </#list>
+                               <td width="33%"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermDays}</b></div></td>
+                             </tr>
+                             <tr><td colspan="3"><hr class="sepbar"/></td></tr>
+                             <#assign index=0/>
+                             <#list orderTerms as orderTerm>
+                               <tr>
+                                 <td width="33%"><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description")}</div></td>
+                                 <td width="33%"><div class="tabletext">${orderTerm.termValue?default("")}</div></td>
+                                 <td width="33%"><div class="tabletext">${orderTerm.termDays?default("")}</div></td>
+                               </tr>
+                               <#if orderTerms.size()&lt;index>
+                                 <tr><td colspan="3"><hr class="sepbar"/></td></tr>
+                               </#if>
+                               <#assign index=index+1/>
+                             </#list>
                         </table>
                       </td>
                     </tr>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                   </#if>
                   <#if orderType != "PURCHASE_ORDER">
                     <tr>
@@ -124,7 +124,7 @@
                         </div>
                       </td>
                     </tr>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                   </#if>
                     <#-- tracking number -->
                     <#if trackingNumber?has_content>
@@ -138,7 +138,7 @@
                           <div class="tabletext">${trackingNumber}</div>
                         </td>
                       </tr>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                     </#if>
 
                     <#-- splitting preference -->
@@ -156,7 +156,7 @@
                     </tr>
                     <#-- shipping instructions -->
                     <#if shippingInstructions?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonInstructions}</b></div>
@@ -167,7 +167,7 @@
                         </td>
                       </tr>
                     </#if>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                   <#if orderType != "PURCHASE_ORDER">
                     <#-- gift settings -->
                     <tr>
@@ -182,7 +182,7 @@
                         </div>
                       </td>
                     </tr>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                     <#if giftMessage?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -193,7 +193,7 @@
                           <div class="tabletext">${giftMessage}</div>
                         </td>
                       </tr>
-                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                       <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                     </#if>
                   </#if>
                   <#if shipBeforeDate?has_content>
@@ -228,11 +228,11 @@
    
       <#if paymentMethod?has_content || paymentMethodType?has_content || billingAccount?has_content>
       <br/>      
-      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <#-- order payment info -->
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentInformation}</div>
@@ -242,8 +242,8 @@
           </td>
         </tr>
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">
@@ -254,7 +254,7 @@
                           <td colspan="3" valign="top">
                             <div class="tabletext" align="center"><b>${uiLabelMap.AccountingOfflinePayment}</b></div>                            
                             <#if orderHeader?has_content && paymentAddress?has_content> 
-                              <div class="tabletext" align="center"><hr class="sepbar"></div>
+                              <div class="tabletext" align="center"><hr class="sepbar"/></div>
                               <div class="tabletext" align="center"><b>${uiLabelMap.AccountingPleaseSendPaymentTo}:</b></div>
                               <#if paymentAddress.toName?has_content><div class="tabletext" align="center">${paymentAddress.toName}</div></#if>
                               <#if paymentAddress.attnName?has_content><div class="tabletext" align="center"><b>${uiLabelMap.CommonAttn}:</b> ${paymentAddress.attnName}</div></#if>
@@ -262,7 +262,7 @@
                               <#if paymentAddress.address2?has_content><div class="tabletext" align="center">${paymentAddress.address2}</div></#if>                            
                               <div class="tabletext" align="center">${paymentAddress.city}<#if paymentAddress.stateProvinceGeoId?has_content>, ${paymentAddress.stateProvinceGeoId}</#if> ${paymentAddress.postalCode}
                               <div class="tabletext" align="center">${paymentAddress.countryGeoId}</div>                                                                                                                
-                              <div class="tabletext" align="center"><hr class="sepbar"></div>
+                              <div class="tabletext" align="center"><hr class="sepbar"/></div>
                               <div class="tabletext" align="center"><b>${uiLabelMap.OrderBeSureIncludeOrder} #</b></div>
                             </#if>                         
                           </td>                  
@@ -317,9 +317,9 @@
                     <#-- billing account info -->
                     <#if billingAccount?has_content>
                       <#if outputted?default(false)>
-                        <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                        <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                       </#if>
-                      <#assign outputted = true>
+                      <#assign outputted = true/>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountigBillingAccount}</b></div>
@@ -331,7 +331,7 @@
                           </div>
                         </td>
                       </tr>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderPurchaseOrderNumber}</b></div>

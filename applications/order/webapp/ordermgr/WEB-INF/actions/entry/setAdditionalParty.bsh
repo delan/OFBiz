@@ -49,7 +49,3 @@ if (request.getParameterValues("additionalRoleTypeId") == null) {
     }
     context.put("roles", roleData);
 }
-  
-
-
-

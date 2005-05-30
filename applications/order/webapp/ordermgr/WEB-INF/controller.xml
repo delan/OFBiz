@@ -40,7 +40,6 @@
 
     <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
-    <handler name="fop" type="view" class="org.ofbiz.webapp.view.FopPdfViewHandler"/>
     <handler name="screenfop" type="view" class="org.ofbiz.widget.screen.ScreenFopPdfViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
@@ -703,104 +702,104 @@
         <response name="success" type="view" value="FindRequest"/>
     </request-map>
     <request-map uri="request">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditRequest"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRequest"/>
     </request-map>
     <request-map uri="createrequest">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequest"/>
-    	<response name="success" type="view" value="EditRequest"/>
+        <response name="success" type="view" value="EditRequest"/>
         <response name="error" type="view" value="EditRequest"/>
     </request-map>
     <request-map uri="updaterequest">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="updateCustRequest"/>
-    	<response name="success" type="view" value="EditRequest"/>
+        <response name="success" type="view" value="EditRequest"/>
         <response name="error" type="view" value="EditRequest"/>
     </request-map>
 
     <request-map uri="requestroles">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestRoles"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RequestRoles"/>
     </request-map>
     <request-map uri="createrequestrole">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestRole"/>
-    	<response name="success" type="view" value="RequestRoles"/>
+        <response name="success" type="view" value="RequestRoles"/>
         <response name="error" type="view" value="RequestRoles"/>
     </request-map>
     <request-map uri="removerequestrole">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="removeCustRequestRole"/>
-    	<response name="success" type="view" value="RequestRoles"/>
+        <response name="success" type="view" value="RequestRoles"/>
         <response name="error" type="view" value="RequestRoles"/>
     </request-map>
 
     <request-map uri="requestitems">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestItems"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RequestItems"/>
     </request-map>
     <request-map uri="requestitem">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditRequestItem"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRequestItem"/>
     </request-map>    
     <request-map uri="createrequestitem">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItem"/>
-    	<response name="success" type="view" value="RequestItems"/>
+        <response name="success" type="view" value="RequestItems"/>
         <response name="error" type="view" value="RequestItems"/>
     </request-map>
     <request-map uri="updaterequestitem">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="updateCustRequestItem"/>
-    	<response name="success" type="view" value="RequestItems"/>
+        <response name="success" type="view" value="RequestItems"/>
         <response name="error" type="view" value="RequestItems"/>
     </request-map>
     
     <request-map uri="requestitemnotes">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestItemNotes"/>    	
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RequestItemNotes"/>        
     </request-map>
     <request-map uri="createrequestitemnote">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItemNote"/>
-    	<response name="success" type="view" value="RequestItemNotes"/>
+        <response name="success" type="view" value="RequestItemNotes"/>
         <response name="error" type="view" value="RequestItemNotes"/>
     </request-map>
     <request-map uri="RequestItemQuotes">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestItemQuotes"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RequestItemQuotes"/>
     </request-map>
     <request-map uri="requestitemrequirements">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="RequestItemRequirements"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RequestItemRequirements"/>
     </request-map>
     <request-map uri="EditRequestItemWorkEffort">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditRequestItemWorkEffort"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRequestItemWorkEffort"/>
     </request-map>
     <request-map uri="CreateQuoteAndQuoteItemForRequest">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="CreateQuoteAndQuoteItemForRequest"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateQuoteAndQuoteItemForRequest"/>
     </request-map>
     <request-map uri="createQuoteAndQuoteItemForRequest">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="createQuoteAndQuoteItemForRequest"/>
-    	<response name="success" type="view" value="RequestItemQuotes"/>
+        <response name="success" type="view" value="RequestItemQuotes"/>
     </request-map>
     <request-map uri="EditQuoteItemForRequest">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditQuoteItemForRequest"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuoteItemForRequest"/>
     </request-map>
     <request-map uri="createQuoteItemForRequest">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="createQuoteItem"/>
-    	<response name="success" type="view" value="RequestItemQuotes"/>
+        <response name="success" type="view" value="RequestItemQuotes"/>
     </request-map>
     <request-map uri="updateQuoteItemForRequest">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="updateQuoteItem"/>
-    	<response name="success" type="view" value="RequestItemQuotes"/>
+        <response name="success" type="view" value="RequestItemQuotes"/>
     </request-map>
 
     <!-- =============== Quote mapping =================-->
@@ -957,8 +956,8 @@
 
     <view-map name="custsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#CustSettings"/>
     <view-map name="shipsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#ShipSettings"/>
-    <view-map name="billsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#BillSettings"/>
     <view-map name="optionsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OptionSettings"/>
+    <view-map name="billsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#BillSettings"/>
     <view-map name="confirm" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#ConfirmOrder"/>
     <view-map name="ordercomplete" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OrderComplete"/>
     <view-map name="orderTerm" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OrderTerms"/>
@@ -983,9 +982,9 @@
     <view-map name="OrderPurchaseReportPayment" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportPayment" content-type="application/pdf" encoding="none"/>
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     
-    <view-map name="FindRequirements" page="component://order/widget/ordermgr/RequirementScreens.xml#FindRequirements" type="screen"/>
-    <view-map name="EditRequirement" page="component://order/widget/ordermgr/RequirementScreens.xml#EditRequirement" type="screen"/>
-    <view-map name="ListRequirementCustRequests" page="component://order/widget/ordermgr/RequirementScreens.xml#ListRequirementCustRequests" type="screen"/>
+    <view-map name="FindRequirements" type="screen" page="component://order/widget/ordermgr/RequirementScreens.xml#FindRequirements"/>
+    <view-map name="EditRequirement" type="screen" page="component://order/widget/ordermgr/RequirementScreens.xml#EditRequirement"/>
+    <view-map name="ListRequirementCustRequests" type="screen" page="component://order/widget/ordermgr/RequirementScreens.xml#ListRequirementCustRequests"/>
     <view-map name="RequirementsForSupplier" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#RequirementsForSupplier"/>
     <view-map name="FindQuoteForCart" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindQuoteForCart"/>
     
@@ -1011,11 +1010,11 @@
     <view-map name="CreateQuoteAndQuoteItemForRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#CreateQuoteAndQuoteItemForRequest"/>
     <view-map name="EditQuoteItemForRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditQuoteItemForRequest"/>
 
-    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
-    <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
-    <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
-    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
-    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
-    <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>
+    <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
+    <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+    <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
+    <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
     <!-- end of view mappings -->
 </site-conf>

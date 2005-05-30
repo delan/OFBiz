@@ -66,14 +66,14 @@
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
                 <form method="post" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
-                <select name="locale" class="selectBox">
+                  <select name="locale" class="selectBox">
                     <option value="${locale.toString()}">${locale.getDisplayName(locale)}</option>
                     <option value="${locale.toString()}">----</option>
                     <#list availableLocales as availableLocale>
                         <option value="${availableLocale.toString()}">${availableLocale.getDisplayName(locale)}</option>
                     </#list>
-                </select>
-                <input type="submit" value="${uiLabelMap.CommonSet}" class="smallSubmit"/>
+                  </select>
+                  <input type="submit" value="${uiLabelMap.CommonSet}" class="smallSubmit"/>
                 </form>
             </div>
           </td>

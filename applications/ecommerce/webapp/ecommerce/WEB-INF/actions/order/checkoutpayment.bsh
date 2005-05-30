@@ -38,6 +38,7 @@ currencyUomId = cart.getCurrency();
 userLogin = session.getAttribute("userLogin");
 party = userLogin.getRelatedOne("Party");
 productStoreId = ProductStoreWorker.getProductStoreId(request);
+partyId = userLogin.getString("partyId");
 
 checkOutPaymentId = "";
 if (cart != null) {
@@ -54,7 +55,7 @@ context.put("productStoreId", productStoreId);
 context.put("checkOutPaymentId", checkOutPaymentId);
 context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, UtilMisc.toList("paymentMethodTypeId")), true));
 
-billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, delegator, dispatcher);
+billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher);
 if (billingAccountList != null && billingAccountList.size() > 0) {
     context.put("selectedBillingAccountId", cart.getBillingAccountId());
     context.put("billingAccountList", billingAccountList);

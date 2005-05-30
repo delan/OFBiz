@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -40,14 +40,14 @@ productStoreId = ProductStoreWorker.getProductStoreId(request);
 request.removeAttribute("_EVENT_MESSAGE_");
 
 party = null;
-partyId = cart.getPartyId();
-if (partyId != null) {
-    party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-    context.put("party", party);
+orderPartyIdId = cart.getPartyId();
+if (orderPartyIdId != null) {
+    orderPartyId = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", orderPartyIdId));
+    context.put("orderPartyId", orderPartyId);
 }
 
 context.put("carrierShipmentMethodList", delegator.findByAndCache("ProductStoreShipmentMethView", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNumber")));
-context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
+context.put("emailList",  ContactHelper.getContactMechByType(orderPartyId, "EMAIL_ADDRESS", false));
 
 if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null) {
     context.put("chosenShippingMethod", cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId());

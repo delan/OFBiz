@@ -25,18 +25,18 @@
  *@since      2.2
 -->
 
-<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderItems}</div>
           </td>
           <#if maySelectItems?default(false)>
             <td valign="middle" align="right" nowrap>
-              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="lightbuttontext">[${uiLabelMap.EcommerceAddAlltoCart}]</a>
-              <a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="lightbuttontext">[${uiLabelMap.EcommerceAddCheckedtoCart}]</a>
+              <a href="javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()" class="lightbuttontext">[${uiLabelMap.EcommerceAddAlltoCart}]</a>
+              <a href="javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()" class="lightbuttontext">[${uiLabelMap.EcommerceAddCheckedtoCart}]</a>
             </td>
           </#if>
         </tr>
@@ -44,12 +44,12 @@
     </td>
   </tr>
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="0">
-              <tr align='left' valign='bottom'>
+              <tr align="left" valign="bottom">
                 <td width="65%" align="left"><span class="tableheadtext"><b>${uiLabelMap.ProductProduct}</b></span></td>
                 <td width="5%" align="right"><span class="tableheadtext"><b>${uiLabelMap.OrderQuantity}</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>${uiLabelMap.CommonUnitPrice}</b></span></td>
@@ -58,7 +58,7 @@
               </tr>
               <#list orderItems?if_exists as orderItem>
                 <#assign itemType = orderItem.getRelatedOne("OrderItemType")>
-                <tr><td colspan="6"><hr class='sepbar'></td></tr>
+                <tr><td colspan="6"><hr class="sepbar"/></td></tr>
                 <tr>     
                   <#if orderItem.productId?exists && orderItem.productId == "_?_">           
                     <td colspan="1" valign="top">    
@@ -111,7 +111,7 @@
                 <#list itemAdjustments as orderItemAdjustment>
                   <tr>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'>
+                      <div class="tabletext" style="font-size: xx-small;">
                         <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
@@ -120,7 +120,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/></div>
+                      <div class="tabletext" style="font-size: xx-small;"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/></div>
                     </td>
                     <td>&nbsp;</td>
                     <#if maySelectItems?default(false)><td>&nbsp;</td></#if>
@@ -131,7 +131,7 @@
                  <tr><td><font color="red">${uiLabelMap.checkhelpertotalsdonotmatchordertotal}</font></td></tr>
                </#if>
 
-              <tr><td colspan="8"><hr class='sepbar'></td></tr>
+              <tr><td colspan="8"><hr class="sepbar"/></td></tr>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>${uiLabelMap.OrderSubTotal}</b></div></td>
                 <td align="right" nowrap><div class="tabletext">&nbsp;<#if orderSubTotal?exists><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></#if></div></td>
@@ -151,7 +151,7 @@
                 <td align="right" nowrap><div class="tabletext"><#if orderTaxTotal?exists><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></#if></div></td>
               </tr>
               
-              <tr><td colspan=2></td><td colspan="8"><hr class='sepbar'></td></tr>
+              <tr><td colspan=2></td><td colspan="8"><hr class="sepbar"/></td></tr>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>${uiLabelMap.OrderGrandTotal}</b></div></td>
                 <td align="right" nowrap>
