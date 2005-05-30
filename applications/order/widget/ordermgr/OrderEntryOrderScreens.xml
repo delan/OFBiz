@@ -26,77 +26,61 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
 
-    <screen name="OrderTerms">
+    <screen name="CommonOrderCheckoutDecorator">
         <section>
             <actions>
-                <set field="stepTitleId" value="OrderOrderEntryOrderTerms"/>
-                <set field="stepLabelId" value="OrderOrderTerms"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderterms.bsh"/>
+                <set field="headerItem" value="orderentry"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.bsh"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="body">
-                      <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/orderterms.ftl"/></html>
-                        </platform-specific>
+                        <section>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCheckOutTabBar.ftl"/></html>
+                                </platform-specific>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
-                  </decorator-screen>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <screen name="BillSettings">
-        <section>
-            <actions>
-                <set field="stepTitleId" value="OrderOrderEntryPaymentSettings"/>
-                <set field="stepLabelId" value="AccountingPayment"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/billsettings.bsh"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
-                    <decorator-section name="body">
-                      <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/billsettings.ftl"/></html>
-                        </platform-specific>
-                    </decorator-section>
-                  </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="ConfirmOrder">
-        <section>
-            <actions>
-                <set field="stepTitleId" value="OrderOrderConfirmation"/>
-                <set field="stepLabelId" value="OrderReviewOrder"/>
-            
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/checkoutreview.bsh"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
-                    <decorator-section name="body">
-                      <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheader.ftl"/></html>
-                        </platform-specific>
-                      <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderitems.ftl"/></html>
-                        </platform-specific>
-                    </decorator-section>
-                  </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+
     <screen name="CustSettings">
         <section>
             <actions>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/shipsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                <decorator-screen name="CommonOrderCheckoutDecorator">
                     <decorator-section name="body">
-                      <platform-specific>
+                        <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/entry/custsettings.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
-                  </decorator-screen>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ShipSettings">
+        <section>
+            <actions>
+                <set field="stepTitleId" value="OrderOrderEntryShipToSettings"/>
+                <set field="stepLabelId" value="FacilityShipping"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/shipsettings.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderCheckoutDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/shipsettings.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -108,31 +92,28 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/optionsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                <decorator-screen name="CommonOrderCheckoutDecorator">
                     <decorator-section name="body">
-                      <platform-specific>
+                        <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/entry/optionsettings.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
-                  </decorator-screen>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <screen name="OrderComplete">
+    <screen name="BillSettings">
         <section>
             <actions>
-                <set field="headerItem" value="orderentry"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderstatus.bsh"/>
+                <set field="stepTitleId" value="OrderOrderEntryPaymentSettings"/>
+                <set field="stepLabelId" value="AccountingPayment"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/billsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
-                <!--<decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">-->
+                <decorator-screen name="CommonOrderCheckoutDecorator">
                     <decorator-section name="body">
                       <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheader.ftl"/></html>
-                        </platform-specific>
-                      <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderitems.ftl"/></html>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/billsettings.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                   </decorator-screen>
@@ -148,31 +129,74 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/additionalPartyListing.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                <decorator-screen name="CommonOrderCheckoutDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/setAdditionalParty.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/additionalPartyListing.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="OrderTerms">
+        <section>
+            <actions>
+                <set field="stepTitleId" value="OrderOrderEntryOrderTerms"/>
+                <set field="stepLabelId" value="OrderOrderTerms"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderterms.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderCheckoutDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/orderterms.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ConfirmOrder">
+        <section>
+            <actions>
+                <set field="stepTitleId" value="OrderOrderConfirmation"/>
+                <set field="stepLabelId" value="OrderReviewOrder"/>
+            
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/checkoutreview.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderCheckoutDecorator">
                     <decorator-section name="body">
                       <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/setAdditionalParty.ftl"/></html>
-                      </platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheader.ftl"/></html>
+                        </platform-specific>
                       <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/additionalPartyListing.ftl"/></html>
-                      </platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderitems.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                   </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <screen name="ShipSettings">
+    <screen name="OrderComplete">
         <section>
             <actions>
-                <set field="stepTitleId" value="OrderOrderEntryShipToSettings"/>
-                <set field="stepLabelId" value="FacilityShipping"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/shipsettings.bsh"/>
+                <set field="headerItem" value="orderentry"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderstatus.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <!--<decorator-screen name="CommonOrderCheckoutDecorator">-->
                     <decorator-section name="body">
                       <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/shipsettings.ftl"/></html>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheader.ftl"/></html>
+                        </platform-specific>
+                      <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderitems.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                   </decorator-screen>

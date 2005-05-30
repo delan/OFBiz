@@ -34,7 +34,7 @@ import org.ofbiz.party.contact.*;
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
 cart = session.getAttribute("shoppingCart");
-partyId = cart.getPartyId();
+orderPartyId = cart.getPartyId();
 currencyUomId = cart.getCurrency();
 context.put("cart", cart);
 context.put("paymentMethodType", request.getParameter("paymentMethodType"));
@@ -42,15 +42,15 @@ context.put("paymentMethodType", request.getParameter("paymentMethodType"));
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");
 
-if (partyId != null && !partyId.equals("_NA_")) {
-    party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-    person = party.getRelatedOne("Person");
-    context.put("party", party);
-    context.put("person", person);
-    if (party != null) { 
-        context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true));
+if (orderPartyId != null && !orderPartyId.equals("_NA_")) {
+    orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", orderPartyId));
+    orderPerson = orderParty.getRelatedOne("Person");
+    context.put("orderParty", orderParty);
+    context.put("orderPerson", orderPerson);
+    if (orderParty != null) { 
+        context.put("paymentMethodList", EntityUtil.filterByDate(orderParty.getRelated("PaymentMethod"), true));
         
-        billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, delegator, dispatcher);
+        billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, orderPartyId, delegator, dispatcher);
         if (billingAccountList != null && billingAccountList.size() > 0) {
             context.put("selectedBillingAccountId", cart.getBillingAccountId());
             context.put("billingAccountList", billingAccountList);
@@ -70,7 +70,7 @@ if (cart != null) {
     if (cart.getPaymentMethodIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodIds().get(0);
         context.put("checkOutPaymentId", checkOutPaymentId); 
-        if (party == null) {                                
+        if (orderParty == null) {                                
             paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", checkOutPaymentId));           
             if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
                 paymentMethodType = "CC";

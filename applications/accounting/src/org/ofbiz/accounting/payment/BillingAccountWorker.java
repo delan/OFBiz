@@ -61,9 +61,8 @@ public class BillingAccountWorker {
     
     public static final String module = BillingAccountWorker.class.getName();
 
-    public static List makePartyBillingAccountList(GenericValue userLogin, String currencyUomId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GeneralException {
+    public static List makePartyBillingAccountList(GenericValue userLogin, String currencyUomId, String partyId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GeneralException {
         List billingAccountList = FastList.newInstance();
-        String partyId = userLogin.getString("partyId");
 
         Map agentResult = dispatcher.runSync("getRelatedParties", UtilMisc.toMap("userLogin", userLogin, "partyIdFrom", partyId, 
                 "roleTypeIdFrom", "AGENT", "roleTypeIdTo", "CUSTOMER", "partyRelationshipTypeId", "AGENT", "includeFromToSwitched", "Y"));

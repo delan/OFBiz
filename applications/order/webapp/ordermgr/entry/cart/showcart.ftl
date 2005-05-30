@@ -100,36 +100,36 @@ function gwAll(e) {
 }
 </script>
 
-<TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-  <TR>
-    <TD >
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
+  <tr>
+    <td>
       <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>           
             <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
               <table border="0">
                 <tr>
-                  <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :<div></td>
-                  <td><input type="text" class="inputBox" size="25" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
+                  <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :</div></td>
+                  <td><input type="text" class="inputBox" size="25" name="add_product_id" value="${requestParameters.add_product_id?if_exists}"/>
                     <span class='tabletext'>
                       <a href="javascript:call_fieldlookup2(document.quickaddform.add_product_id,'LookupProduct');">
-                        <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+                        <img src="/images/fieldlookup.gif" width="15" height="14" border="0" alt="Click here For Field Lookup"/>
                       </a>
                     </span>
                   </td>
                 </tr>
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.OrderQuantity} :</div></td>
-                  <td><input type="text" class="inputBox" size="6" name="quantity" value="${requestParameters.quantity?default("1")}"></td>
+                  <td><input type="text" class="inputBox" size="6" name="quantity" value="${requestParameters.quantity?default("1")}"/></td>
                 </tr>
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.OrderDesiredDeliveryDate} :</div></td>
                   <td>
                     <div class="tabletext">
-                    <input type="text" class="inputBox" size="25" maxlength="30" name="itemDesiredDeliveryDate" <#if useAsDefaultDesiredDeliveryDate?exists>value="${defaultDesiredDeliveryDate}"</#if>>
-                    <a href="javascript:call_cal(document.quickaddform.itemDesiredDeliveryDate,'${defaultDesiredDeliveryDate} 00:00:00.0');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}"/></a>
-		    <input type="checkbox" class="inputBox" name="useAsDefaultDesiredDeliveryDate" value="true" <#if useAsDefaultDesiredDeliveryDate?exists>checked</#if>>
-		    ${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
+                      <input type="text" class="inputBox" size="25" maxlength="30" name="itemDesiredDeliveryDate"<#if useAsDefaultDesiredDeliveryDate?exists> value="${defaultDesiredDeliveryDate}"</#if>/>
+                      <a href="javascript:call_cal(document.quickaddform.itemDesiredDeliveryDate,'${defaultDesiredDeliveryDate} 00:00:00.0');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}"/></a>
+                      <input type="checkbox" class="inputBox" name="useAsDefaultDesiredDeliveryDate" value="true"<#if useAsDefaultDesiredDeliveryDate?exists> checked="checked"</#if>/>
+                      ${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
                     </div>
                   </td>
                 </tr>
@@ -137,22 +137,22 @@ function gwAll(e) {
                   <td align="right"><div class="tableheadtext">${uiLabelMap.CommonComment} :</div></td>
                   <td>
                     <div class="tabletext">
-                    <input type="text" class="inputBox" size="25" name="itemComment" value="${defaultComment?if_exists}">
-                    <input type="checkbox" class="inputBox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment?exists>checked</#if>>
-                    ${uiLabelMap.OrderUseDefaultComment}
+                      <input type="text" class="inputBox" size="25" name="itemComment" value="${defaultComment?if_exists}">
+                      <input type="checkbox" class="inputBox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment?exists>checked</#if>>
+                      ${uiLabelMap.OrderUseDefaultComment}
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td><input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"></td>
+                  <td><input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/></td>
                 </tr>
               </table>
             </form>
           </td>
         </tr>
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-        <tr><td><hr class="sepbar"></td></tr>
+        <tr><td><hr class="sepbar"/></td></tr>
         <tr>
           <td>
             <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
@@ -176,18 +176,18 @@ function gwAll(e) {
         </tr>  
         </#if>      
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
 
 <script language="JavaScript" type="text/javascript">
   document.quickaddform.add_product_id.focus();
 </script>
-<BR>
+<br/>
 
-<TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-  <TR>
-    <TD>
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
+  <tr>
+    <td>
       <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
@@ -197,45 +197,46 @@ function gwAll(e) {
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD>
+    </td>
+  </tr>
+  <tr>
+    <td>
       <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>          
   <#if (shoppingCartSize > 0)>
-    <FORM METHOD="POST" ACTION="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
-      <input type="hidden" name="removeSelected" value="false">
+    <form method="post" action="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
+      <input type="hidden" name="removeSelected" value="false"/>
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-        <input type="hidden" name="finalizeReqShipInfo" value="false">
-        <input type="hidden" name="finalizeReqOptions" value="false">
-        <input type="hidden" name="finalizeReqPayInfo" value="false">
-        <input type="hidden" name="finalizeReqAdditionalParty" value="false">
+        <input type="hidden" name="finalizeReqShipInfo" value="false"/>
+        <input type="hidden" name="finalizeReqOptions" value="false"/>
+        <input type="hidden" name="finalizeReqPayInfo" value="false"/>
+        <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
       <table cellspacing="0" cellpadding="1" border="0">
-        <TR> 
-          <TD NOWRAP>&nbsp;</TD>
-          <TD NOWRAP><div class="tabletext"><b>${uiLabelMap.ProductProduct}</b></div></TD>
-          <#if showOrderGiftWrap?default("true") == "true">
-            <td NOWRAP align="right">
-              <select class="selectBox" name="GWALL" onchange="javascript:gwAll(this);">
-                <option value="">${uiLabelMap.OrderGiftWrapAllItems}</option>
-                <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
-                <#if allgiftWraps?has_content>
-                <#list allgiftWraps as option>
-                    <option value="${option.productFeatureId?default("")}">${option.description?default("")} : <@ofbizCurrency amount=option.defaultAmount?default(0) isoCode=currencyUomId/></option>
-                </#list>
-                </#if>
-              </select>
-          <#else>
-            <td NOWRAP>&nbsp;</td>
-          </#if>
-          <TD NOWRAP align="center"><div class="tabletext"><b>${uiLabelMap.OrderQuantity}</b></div></TD>
-          <TD NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.CommonUnitPrice}</b></div></TD>
-          <TD NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.OrderAdjustments}</b></div></TD>
-          <TD NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.OrderItemTotal}</b></div></TD>         
-        </TR>
+        <tr>
+          <td>&nbsp;</td>
+          <td>
+            <div class="tabletext">
+              <b>${uiLabelMap.ProductProduct}</b>
+              <#if showOrderGiftWrap?default("true") == "true">
+                  <select class="selectBox" name="GWALL" onchange="javascript:gwAll(this);">
+                    <option value="">${uiLabelMap.OrderGiftWrapAllItems}</option>
+                    <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
+                    <#if allgiftWraps?has_content>
+                      <#list allgiftWraps as option>
+                        <option value="${option.productFeatureId?default("")}">${option.description?default("")} : <@ofbizCurrency amount=option.defaultAmount?default(0) isoCode=currencyUomId/></option>
+                      </#list>
+                    </#if>
+                  </select>
+              </#if>
+            </div>
+          </td>
+          <td align="center"><div class="tabletext"><b>${uiLabelMap.OrderQuantity}</b></div></td>
+          <td align="right"><div class="tabletext"><b>${uiLabelMap.CommonUnitPrice}</b></div></td>
+          <td align="right"><div class="tabletext"><b>${uiLabelMap.OrderAdjustments}</b></div></td>
+          <td align="right"><div class="tabletext"><b>${uiLabelMap.OrderItemTotal}</b></div></td>
+        </tr>
 
         <#assign itemsFromList = false>
         <#list shoppingCart.items() as cartLine>
@@ -245,13 +246,13 @@ function gwAll(e) {
           <tr>
             <td>&nbsp;</td>         
             <td>
-	      <table border="0">
-	      <tr><td colspan="2">
+          <table border="0">
+          <tr><td colspan="2">
                 <div class="tabletext">                    
                   <#if cartLine.getProductId()?exists>
                     <#-- product item -->
                     <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()}</a> -
-                    <input size="60" class="inputBox" type="text" name="description_${cartLineIndex}" value="${cartLine.getName()?default("")}"><br/>
+                    <input size="60" class="inputBox" type="text" name="description_${cartLineIndex}" value="${cartLine.getName()?default("")}"/><br/>
                     <i>${cartLine.getDescription()?if_exists}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                       <#-- only applies to sales orders, not purchase orders
@@ -273,38 +274,38 @@ function gwAll(e) {
                        <#assign features = cartLine.getStandardFeatureList()>
                    </#if>
                    <#if features?has_content>
-                     <br/><i>${uiLabelMap.CommonFeatures}: <#list features as feature>${feature.description?default("")} </#list></i>
+                     <br/><i>${uiLabelMap.ProductFeatures}: <#list features as feature>${feature.description?default("")} </#list></i>
                    </#if>
-		  		  
+                    
                 </div>
-	        </td></tr>
-	        <#if cartLine.getRequirementId()?has_content>
-	          <tr>
+            </td></tr>
+            <#if cartLine.getRequirementId()?has_content>
+                <tr>
                     <td colspan="2" align="left">
                       <div class="tabletext"><b>${uiLabelMap.OrderRequirementId}</b>: ${cartLine.getRequirementId()?if_exists}</div>
                     </td>
-                  </tr>
-	        </#if>
-	        <#if cartLine.getQuoteId()?has_content>
+                </tr>
+            </#if>
+            <#if cartLine.getQuoteId()?has_content>
                 <#if cartLine.getQuoteItemSeqId()?has_content>
-	          <tr>
+                  <tr>
                     <td colspan="2" align="left">
                       <div class="tabletext"><b>${uiLabelMap.OrderQuoteId}</b>: ${cartLine.getQuoteId()?if_exists} - ${cartLine.getQuoteItemSeqId()?if_exists}</div>
                     </td>
                   </tr>
                 </#if>
-	        </#if>
-	        <#if cartLine.getItemComment()?has_content>
-	          <tr><td align="left"><div class="tableheadtext">${uiLabelMap.CommonComment} : </div></td>
-	              <td align="left"><div class="tabletext">${cartLine.getItemComment()?if_exists}</div>
-	          </td></tr>
-	        </#if>
-	        <#if cartLine.getDesiredDeliveryDate()?has_content>
-	          <tr><td align="left"><div class="tableheadtext">${uiLabelMap.OrderDesiredDeliveryDate}: </div></td>
-	              <td align="left"><div class="tabletext">${cartLine.getDesiredDeliveryDate()?if_exists}</div>
-	          </td></tr>
-	        </#if>
-	      </table>
+            </#if>
+            <#if cartLine.getItemComment()?has_content>
+              <tr><td align="left"><div class="tableheadtext">${uiLabelMap.CommonComment} : </div></td>
+                  <td align="left"><div class="tabletext">${cartLine.getItemComment()?if_exists}</div>
+              </td></tr>
+            </#if>
+            <#if cartLine.getDesiredDeliveryDate()?has_content>
+              <tr><td align="left"><div class="tableheadtext">${uiLabelMap.OrderDesiredDeliveryDate}: </div></td>
+                  <td align="left"><div class="tabletext">${cartLine.getDesiredDeliveryDate()?if_exists}</div>
+              </td></tr>
+            </#if>
+          </table>
 
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
@@ -343,7 +344,7 @@ function gwAll(e) {
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
                     ${cartLine.getQuantity()?string.number}
                 <#else>
-                    <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}">
+                    <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}"/>
                 </#if>
               </div>
             </td>
@@ -352,17 +353,17 @@ function gwAll(e) {
                 <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
                   <@ofbizCurrency amount=cartLine.getBasePrice() isoCode=currencyUomId/>
                 <#else>
-                  <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}">
+                  <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}"/>
                 </#if>
               </div>
             </td>
             <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=currencyUomId/></div></td>
             <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=currencyUomId/></div></td>
-          </TR>
+          </tr>
         </#list>
 
         <#if shoppingCart.getAdjustments()?has_content>
-            <tr><td colspan="7"><hr class="sepbar"></td></tr>
+            <tr><td colspan="7"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="4" nowrap align="right"><div class="tabletext">${uiLabelMap.OrderSubTotal}:</div></td>
                 <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=currencyUomId/></div></td>
@@ -384,11 +385,11 @@ function gwAll(e) {
         </#if>
         
         <tr> 
-          <td colspan="6" align="right" valign=bottom>
+          <td colspan="6" align="right" valign="bottom">
             <div class="tabletext"><b>${uiLabelMap.OrderCartTotal}:</b></div>
           </td>
-          <td align="right" valign=bottom>
-            <hr size="1" class="sepbar">
+          <td align="right" valign="bottom">
+            <hr class="sepbar"/>
             <div class="tabletext"><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></b></div>
           </td>
         </tr>       
@@ -396,15 +397,15 @@ function gwAll(e) {
           <td colspan="8">&nbsp;</td>
         </tr>      
       </table>    
-    </FORM>
+    </form>
   <#else>
     <div class="tabletext">${uiLabelMap.OrderNoOrderItemsToDisplay}</div>
   </#if>
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
 
 <!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()} locale=${shoppingCart.getLocale()} currencyUom=${shoppingCart.getCurrency()} -->

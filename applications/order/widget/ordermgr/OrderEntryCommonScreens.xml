@@ -73,29 +73,6 @@
             </widgets>
         </section>
     </screen>
-    <screen name="CommonOrderCheckoutDecorator">
-        <section>
-            <actions>
-                <set field="headerItem" value="orderentry"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.bsh"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.bsh"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCheckOutTabBar.ftl"/></html>
-                                </platform-specific>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     
     <screen name="leftbar">
         <section>

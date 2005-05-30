@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -32,36 +32,35 @@ import org.ofbiz.product.catalog.*;
 
 delegator = request.getAttribute("delegator");
 cart = session.getAttribute("shoppingCart");
-partyId = cart.getPartyId();
+orderPartyId = cart.getPartyId();
 context.put("cart", cart);
 
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");
 
 if ("SALES_ORDER".equals(cart.getOrderType())) {
-if (partyId != null && !partyId.equals("_NA_")) {
-    party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-    if (party != null) {                
-        shippingContactMechList = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
-        person = party.getRelatedOne("Person");
-        context.put("party", party);
-        context.put("person", person);
-        context.put("shippingContactMechList", shippingContactMechList);
+    if (orderPartyId != null && !orderPartyId.equals("_NA_")) {
+        orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", orderPartyId));
+        if (orderParty != null) {                
+            shippingContactMechList = ContactHelper.getContactMech(orderParty, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
+            orderPerson = orderParty.getRelatedOne("Person");
+            context.put("orderParty", orderParty);
+            context.put("orderPerson", orderPerson);
+            context.put("shippingContactMechList", shippingContactMechList);
+        }
     }
-}
 } else {
     // Purchase order
-    if (partyId != null && !partyId.equals("_NA_")) {
-        party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-        if (party != null) {
-           person = party.getRelatedOne("Person");
-           context.put("party", party);
-           context.put("person", person);
+    if (orderPartyId != null && !orderPartyId.equals("_NA_")) {
+        orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", orderPartyId));
+        if (orderParty != null) {
+           orderPerson = orderParty.getRelatedOne("Person");
+           context.put("orderParty", orderParty);
+           context.put("orderPerson", orderPerson);
          }
     }
-     String storeId = cart.getProductStoreId();
-     GenericValue store = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", storeId));
-     List facilityContactMechValueMaps = ContactMechWorker.getFacilityContactMechValueMaps(delegator, store.getString("inventoryFacilityId"), false, null);
-     context.put("shippingContactMechListF", facilityContactMechValueMaps);
+    String storeId = cart.getProductStoreId();
+    GenericValue store = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", storeId));
+    List facilityContactMechValueMaps = ContactMechWorker.getFacilityContactMechValueMaps(delegator, store.getString("inventoryFacilityId"), false, null);
+    context.put("shippingContactMechListF", facilityContactMechValueMaps);
 }
-

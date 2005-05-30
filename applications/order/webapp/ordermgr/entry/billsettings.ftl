@@ -134,7 +134,7 @@ function makeExpDate() {
                           <td width="50%">
                             <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>                            
                           </td>
-                          <td align="right"><a href="/partymgr/control/editcreditcard?party_id=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></td>
+                          <td align="right"><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></td>
                         </tr>
                       <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                         <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
@@ -145,7 +145,7 @@ function makeExpDate() {
                           <td width="50%">
                             <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>                            
                           </td>
-                          <td align="right"><a href="/partymgr/control/editeftaccount?party_id=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></td>
+                          <td align="right"><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></td>
                         </tr>
                         <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                       </#if>
@@ -181,7 +181,7 @@ function makeExpDate() {
               </#if>
               
               <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS"/>
-              <input type="hidden" name="partyId" value="${cart.partyId}"/>
+              <input type="hidden" name="partyId" value="${cart.getPartyId()}"/>
               <input type="hidden" name="paymentMethodType" value="${paymentMethodType}"/>
               <input type="hidden" name="finalizeMode" value="payment"/>
               <input type="hidden" name="createNew" value="Y"/>
@@ -204,13 +204,13 @@ function makeExpDate() {
                 </tr>
                 </#if>
                 
-                <#if person?exists && person?has_content>
+                <#if orderPerson?has_content>
                   <#assign toName = "">
-                  <#if person.personalTitle?has_content><#assign toName = person.personalTitle + " "></#if>
-                  <#assign toName = toName + person.firstName + " ">
-                  <#if person.middleName?has_content><#assign toName = toName + person.middleName + " "></#if>
-                  <#assign toName = toName + person.lastName>
-                  <#if person.suffix?has_content><#assign toName = toName + " " + person.suffix></#if>
+                  <#if orderPerson.personalTitle?has_content><#assign toName = orderPerson.personalTitle + " "></#if>
+                  <#assign toName = toName + orderPerson.firstName + " ">
+                  <#if orderPerson.middleName?has_content><#assign toName = toName + orderPerson.middleName + " "></#if>
+                  <#assign toName = toName + orderPerson.lastName>
+                  <#if orderPerson.suffix?has_content><#assign toName = toName + " " + orderPerson.suffix></#if>
                 <#else>
                   <#assign toName = postalFields.toName?default("")>
                 </#if>

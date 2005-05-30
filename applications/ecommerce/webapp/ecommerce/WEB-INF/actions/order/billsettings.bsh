@@ -60,7 +60,7 @@ if (partyId != null && !partyId.equals("_NA_")) {
     if (party != null) {
         context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true));
 
-        billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, delegator, dispatcher);
+        billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher);
         if (billingAccountList != null && billingAccountList.size() > 0) {
             context.put("selectedBillingAccountId", cart.getBillingAccountId());
             context.put("billingAccountList", billingAccountList);

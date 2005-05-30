@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -58,7 +58,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=partyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[Update]</a></div>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=orderPartyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[Update]</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -99,7 +99,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=partyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=orderPartyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
                     </td>                      
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -117,15 +117,15 @@
                 <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
                 <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION">
               </#if>
-                <input type="hidden" name="partyId" value="${cart.partyId?default("_NA_")}">
+                <input type="hidden" name="partyId" value="${cart.getPartyId()?default("_NA_")}">
                 <input type="hidden" name="finalizeMode" value="ship">
-                <#if person?exists && person?has_content>
+                <#if orderPerson?exists && orderPerson?has_content>
                   <#assign toName = "">
-                  <#if person.personalTitle?has_content><#assign toName = person.personalTitle + " "></#if>
-                  <#assign toName = toName + person.firstName + " ">
-                  <#if person.middleName?has_content><#assign toName = toName + person.middleName + " "></#if>
-                  <#assign toName = toName + person.lastName>
-                  <#if person.suffix?has_content><#assign toName = toName + " " + person.suffix></#if>
+                  <#if orderPerson.personalTitle?has_content><#assign toName = orderPerson.personalTitle + " "></#if>
+                  <#assign toName = toName + orderPerson.firstName + " ">
+                  <#if orderPerson.middleName?has_content><#assign toName = toName + orderPerson.middleName + " "></#if>
+                  <#assign toName = toName + orderPerson.lastName>
+                  <#if orderPerson.suffix?has_content><#assign toName = toName + " " + orderPerson.suffix></#if>
                 <#else>
                   <#assign toName = "">
                 </#if>
