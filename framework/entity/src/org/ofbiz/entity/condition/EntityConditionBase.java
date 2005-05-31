@@ -35,6 +35,8 @@ import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.jdbc.SqlJdbcUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelViewEntity;
+import org.ofbiz.entity.model.ModelViewEntity.ModelAlias;
 
 /**
  * Represents the conditions to be used to constrain a query
@@ -80,6 +82,16 @@ public abstract class EntityConditionBase implements Serializable {
 
     protected String getColName(Map tableAliases, ModelEntity modelEntity, ModelField modelField, String fieldName, boolean includeTableNamePrefix, DatasourceInfo datasourceInfo) {
         if (modelEntity == null || modelField == null) return fieldName;
+
+        // if this is a view entity and we are configured to alias the views, use the alias here instead of the composite (ie table.column) field name 
+        if (datasourceInfo != null && datasourceInfo.aliasViews && modelEntity instanceof ModelViewEntity) {
+            ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
+            ModelAlias modelAlias = modelViewEntity.getAlias(fieldName);
+            if (modelAlias != null) {
+                return modelAlias.getColAlias();
+            }
+        }
+        
         String colName = getColName(modelField, fieldName);
         if (includeTableNamePrefix && datasourceInfo != null) {
             String tableName = modelEntity.getTableName(datasourceInfo);

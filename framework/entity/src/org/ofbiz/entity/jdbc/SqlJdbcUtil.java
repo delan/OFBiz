@@ -161,6 +161,7 @@ public class SqlJdbcUtil {
                         if (condBuffer.length() > 0) {
                             condBuffer.append(" AND ");
                         }
+                        
                         condBuffer.append(viewLink.getEntityAlias());
                         condBuffer.append(".");
                         condBuffer.append(filterColName(linkField.getColName()));
@@ -353,7 +354,7 @@ public class SqlJdbcUtil {
                    }
                 }
             } else {
-                throw new GenericModelException("The join-style " + joinStyle + " is not yet supported");
+                throw new GenericModelException("The join-style " + joinStyle + " is not supported");
             }
 
             if (whereString.length() > 0) {
