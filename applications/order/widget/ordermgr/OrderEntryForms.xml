@@ -56,20 +56,22 @@
             default-tooltip-style="tabletext" default-widget-style="inputBox"
             target="FindQuoteForCart" title="" type="single">
         <auto-fields-entity entity-name="Quote" default-field-type="find"/>
-        <field name="quoteTypeId">
+        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"></field>
+        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId"/>
             </drop-down>
         </field>
-        <field name="partyId">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <lookup target-form-name="LookupPartyName"/>
         </field>
+        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
         <field name="statusId"><hidden/></field>
         <field name="currencyUomId"><hidden/></field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
         <field name="description"><hidden/></field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -84,13 +86,20 @@
           </service>
         </actions>
         <auto-fields-entity entity-name="Quote" default-field-type="display"/>
-        <field name="quoteId" title="Add" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${quoteId}" target="addQuoteToCart?quoteId=${quoteId}"/>
+
+        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${quoteId}" target="EditQuote?quoteId=${quoteId}"/>
         </field>
-        <field name="quoteTypeId">
+        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
             <display-entity entity-name="QuoteType"/>
         </field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"></field>
+        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
+        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
+        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
         <field name="statusId"><hidden/></field>
+        <field name="currencyUomId"><hidden/></field>
     </form>
 
 </forms>

@@ -52,7 +52,7 @@
                 <#if shoppingCart.getOrderType() == "SALES_ORDER">
                   <tr>
                     <td>
-                      <a href="<@ofbizUrl>/FindQuoteForCart</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderQuotes}]</a>
+                      <a href="<@ofbizUrl>/FindQuoteForCart</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderOrderQuotes}]</a>
                     </td>
                   </tr>
                 </#if>
