@@ -56,8 +56,15 @@
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreKeywordOvrd productStoreId="9000" keyword="gizmo" fromDate="2001-05-13 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
 
-    <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="_NA_" stateProvinceGeoId="_NA_" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="10% OFB Tax" minItemPrice="25.00" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.1"/>
-
+    <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="_NA_" stateProvinceGeoId="_NA_" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="1% OFB Tax" minItemPrice="25.00" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.01"/>
+    
+    <!-- some interesting information at: http://www.taxadmin.org/fta/rate/tax_stru.html -->
+    <!-- note that these rates are for the given Geo only and do not include local taxes (county, city) -->
+    <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="USA" stateProvinceGeoId="CA" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="California State Sales Tax" minItemPrice="0.0" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.0625"/>
+    <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="USA" stateProvinceGeoId="NY" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="New York State Sales Tax" minItemPrice="0.0" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.0425"/>
+    <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="USA" stateProvinceGeoId="TX" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="Texas State Sales Tax" minItemPrice="0.0" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.0625"/>
+    <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="USA" stateProvinceGeoId="UT" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="Utah State Sales Tax" minItemPrice="0.0" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.0475"/>
+    
     <WebSite webSiteId="WebStore" siteName="eCommerce Web Site" productStoreId="9000"/>
     <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site" productStoreId="9000"/>
 
