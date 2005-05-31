@@ -34,7 +34,7 @@
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 
-<div class="apptitle">&nbsp;Order Manager Application&nbsp;</div>
+<div class="apptitle">&nbsp;${uiLabelMap.OrderOrderManagerApplication}&nbsp;</div>
 <div class="row">
   <#-- Just goes to Find Orders for now <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div> -->
   <#if (security.hasEntityPermission("ORDERMGR", "_VIEW", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_VIEW", session))>

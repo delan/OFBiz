@@ -79,7 +79,7 @@
                 </#if>
                 <#if quoteId?has_content>
                 <tr>
-                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.OrderQuote}<b>:</div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.OrderOrderQuote}<b>:</div></td>
                   <td valign="bottom"><div class="tabletext">${quoteId}</div></td>
                 </tr>
                 </#if>

@@ -27,15 +27,17 @@
     <form name="FindQuotes" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="inputBox"
             target="FindQuote" title="" type="single">
-        <auto-fields-entity entity-name="Quote" default-field-type="find"/>
-        <field name="quoteTypeId">
+        <auto-fields-entity entity-name="Quote" default-field-type="find"/> 
+        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"></field>
+        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId"/>
             </drop-down>
         </field>
-        <field name="partyId">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <lookup target-form-name="LookupPartyName"/>
         </field>
+        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
@@ -44,17 +46,17 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currencyUomId">
+        <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}">
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="description"><hidden/></field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
-        <field name="description"><hidden/></field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -69,31 +71,39 @@
           </service>
         </actions>
         <auto-fields-entity entity-name="Quote" default-field-type="display"/>
-        <field name="quoteId" title="Edit" widget-style="buttontext">
+        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${quoteId}" target="EditQuote?quoteId=${quoteId}"/>
         </field>
-        <field name="quoteTypeId">
+        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
             <display-entity entity-name="QuoteType"/>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
-    </form>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
+	 <field name="description" title="${uiLabelMap.CommonDescription}"></field>
+        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"></field>
+        <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}"></field>
+        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
+        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
+      </form>
     <form name="EditQuote" type="single"
             target="updateQuote" title="" default-map-name="quote"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="quote==null" target="createQuote"/>
         <auto-fields-entity entity-name="Quote" default-field-type="edit"/>
-        <field name="quoteId"><display/></field>
-        <field name="quoteTypeId">
+        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"><display/></field>
+        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId"/>
             </drop-down>
         </field>
-        <field name="partyId">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="statusId" title="Status" widget-style="selectBox">
+        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="QUOTE_STATUS"/>
@@ -101,14 +111,17 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currencyUomId">
+        <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}">
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
+        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -117,16 +130,21 @@
             list-name="quoteItems" target="" paginate-target="ListQuoteItems" title="" type="list">
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
         <field name="quoteId"><hidden/></field>
-        <field name="quoteItemSeqId" title="Edit" widget-style="buttontext">
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"></field>
+        <field name="workEffortId" title="${uiLabelMap.OrderOrderQuoteWorkEffortId}"></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"></field>
+        <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}"></field>
+        <field name="estimatedDeliveryDate" title="${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}"></field>
         <field name="productFeatureId"><hidden/></field>
         <field name="skillTypeId"><hidden/></field>
         <field name="deliverableTypeId"><hidden/></field>
         <field name="comments"><hidden/></field>
         <field name="uomId"><hidden/></field>
         <!--<field name="custRequestId"><display description="${custRequestId} - ${custRequestItemSeqId}"/></field>-->
-        <field name="custRequestId" title="View Request" widget-style="buttontext">
+        <field name="custRequestId" title="${uiLabelMap.CommonViewRequest}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
@@ -140,31 +158,36 @@
         <alt-target use-when="quoteItem==null" target="createQuoteItem"/>
         <auto-fields-entity entity-name="QuoteItem" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
-        <field name="quoteItemSeqId"><display/></field>
-        <field name="productId">
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}"><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
             <lookup target-form-name="LookupProduct"/>
         </field>
-        <field name="productFeatureId">
+        <field name="productFeatureId" title="${uiLabelMap.ProductFeatures}">
             <lookup target-form-name="LookupProductFeature"/>
         </field>
-        <field name="deliverableTypeId">
+        <field name="deliverableTypeId" title="${uiLabelMap.OrderOrderQuoteDeliverableTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="DeliverableType" key-field-name="deliverableTypeId"/>
             </drop-down>
         </field>
-        <field name="skillTypeId">
+        <field name="skillTypeId" title="${uiLabelMap.OrderOrderQuoteSkillTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId"/>
             </drop-down>
         </field>
-        <field name="uomId">
+        <field name="uomId" title="${uiLabelMap.OrderOrderQuoteuomId}">
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
                     <!--<entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>-->
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="workEffortId" title="${uiLabelMap.OrderOrderQuoteWorkEffortId}"></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"></field>
+        <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}"></field>
+        <field name="estimatedDeliveryDate" title="${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}"></field>
+        <field name="comments" title="${uiLabelMap.CommonComments}"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -173,6 +196,8 @@
             default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="quoteAttributes"
             target="" paginate-target="ListQuoteAttributes" title="" type="list">
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="display"/>
+        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}"></field>
+        <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeQuoteAttribute?attrName=${attrName}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
@@ -183,8 +208,10 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="quoteAttribute==null" target="createQuoteAttribute"/>
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="edit"/>
+        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}"></field>
+        <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -193,6 +220,8 @@
             default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="quoteCoefficients"
             target="" paginate-target="ListQuoteCoefficients" title="" type="list">
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="display"/>
+        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}"></field>
+        <field name="coeffValue" title="${uiLabelMap.OrderOrderQuoteCoeffName}"></field>
         <field name="quoteId"><hidden/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeQuoteCoefficient?coeffName=${coeffName}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
@@ -212,23 +241,23 @@
     <form name="ManageQuotePrices" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="tabletext" use-row-submit="true"
             list-name="quoteItemAndCostInfos" target="autoUpdateQuotePrices?quoteId=${quoteId}" paginate-target="ManageQuotePrices" title="" type="multi">
-        <field name="custRequestId" title="View Request" widget-style="buttontext">
+        <field name="custRequestId" title="${uiLabelMap.OrderOrderQuoteViewRequest}" widget-style="buttontext">
             <hyperlink target-type="inter-app" also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="/workeffort/control/requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="quoteId"><hidden/></field>
-        <field name="quoteItemSeqId" title="Edit" widget-style="buttontext">
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext">
             <hyperlink also-hidden="true" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
-        <field name="productId"><display/></field>
-        <field name="quantity"><display/></field>
-        <field name="averageCost"><display/></field>
-        <field name="costToPriceMult"><display/></field>
-        <field name="defaultQuoteUnitPrice"><display/></field>
-        <field name="quoteUnitPrice"><display/></field>
-        <field name="manualQuoteUnitPrice"><text/></field>
-        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitButton" widget-style="smallSubmit">
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+        <field name="averageCost" title="${uiLabelMap.OrderOrderQuoteAverageCost}"><display/></field>
+        <field name="costToPriceMult" title="${uiLabelMap.OrderOrderQuoteCostToPrice}"><display/></field>
+        <field name="defaultQuoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteDefaultUnitPrice}"><display/></field>
+        <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}"><display/></field>
+        <field name="manualQuoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteManualUnitPrice}"><text/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit/>
         </field>
     </form>

@@ -102,7 +102,7 @@
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1">${uiLabelMap.OrderQuotes}</label>
+                            <label style="head1">${uiLabelMap.OrderOrderQuotes}</label>
                         </container>
                         <include-form name="FindQuotes" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
                         <include-form name="ListQuotes" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>

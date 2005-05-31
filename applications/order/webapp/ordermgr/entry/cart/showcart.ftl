@@ -290,7 +290,7 @@ function gwAll(e) {
                 <#if cartLine.getQuoteItemSeqId()?has_content>
                   <tr>
                     <td colspan="2" align="left">
-                      <div class="tabletext"><b>${uiLabelMap.OrderQuoteId}</b>: ${cartLine.getQuoteId()?if_exists} - ${cartLine.getQuoteItemSeqId()?if_exists}</div>
+                      <div class="tabletext"><b>${uiLabelMap.OrderOrderQuoteId}</b>: ${cartLine.getQuoteId()?if_exists} - ${cartLine.getQuoteItemSeqId()?if_exists}</div>
                     </td>
                   </tr>
                 </#if>
