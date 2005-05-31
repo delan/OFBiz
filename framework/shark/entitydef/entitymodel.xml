@@ -164,7 +164,7 @@
       <relation type="one" fk-name="WF_ACT_PROC" rel-entity-name="WfProcess">
           <key-map field-name="processId"/>
       </relation>
-      <relation type="one" fk-name="WF_ACT_SUBF" rel-entity-name="WfProcess">
+      <relation type="one" fk-name="WF_ACT_SUBF" title="SubFlow" rel-entity-name="WfProcess">
           <key-map field-name="subFlowId" rel-field-name="processId"/>
       </relation>
     </entity>
