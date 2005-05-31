@@ -561,9 +561,20 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     public byte[] getBytes(String name) {
-        ByteWrapper wrapper = (ByteWrapper) get(name);
-        if (wrapper == null) return null;
-        return wrapper.getBytes();
+        Object value = get(name);
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof ByteWrapper) {
+            ByteWrapper wrapper = (ByteWrapper) value;
+            if (wrapper == null) return null;
+            return wrapper.getBytes();
+        }
+        if (value instanceof byte[]) {
+            return (byte[]) value;
+        }
+        // uh-oh, this shouldn't happen...
+        throw new IllegalArgumentException("In call to getBytes the value is not a supported type, should be byte[] or ByteWrapper, is: " + value.getClass().getName());
     }
 
     /** Checks a resource bundle for a value for this field using the entity name, the field name
