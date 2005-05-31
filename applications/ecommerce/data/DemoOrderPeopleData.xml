@@ -23,6 +23,8 @@
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-05-13 12:00:00.0"/><Party partyId="" partyTypeId=""/>
     
     <!-- Some Demo Customers -->
+    
+    <!-- DemoCustCompany -->
     <Party partyId="DemoCustCompany" partyTypeId="PARTY_GROUP"/>
     <PartyGroup partyId="DemoCustCompany" groupName="Demo Customer Company"/>
     <UserLogin partyId="DemoCustCompany" userLoginId="DemoCustCompany" currentPassword="ofbiz" passwordHint=""/>
@@ -35,6 +37,14 @@
     <PartyContactMechPurpose partyId="DemoCustCompany" contactMechId="9010" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
     <PartyContactMechPurpose partyId="DemoCustCompany" contactMechId="9010" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
     <PartyContactMechPurpose partyId="DemoCustCompany" contactMechId="9010" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
+
+    <ContactMech contactMechId="9014" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="9014" toName="Demo Customer Company" address1="1234 Commerce Way" city="Los Angeles" stateProvinceGeoId="CA" postalCode="90010" countryGeoId="USA"/>
+    <PartyContactMech partyId="DemoCustCompany" contactMechId="9014" fromDate="2001-05-13 00:00:00.000" allowSolicitation="Y"/>
+    <PartyContactMechPurpose partyId="DemoCustCompany" contactMechId="9014" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="DemoCustCompany" contactMechId="9014" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="DemoCustCompany" contactMechId="9014" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
+
     <ContactMech contactMechId="9020" contactMechTypeId="TELECOM_NUMBER"/>
     <TelecomNumber contactMechId="9020" areaCode="801" contactNumber="555-5555"/>
     <PartyContactMech partyId="DemoCustCompany" contactMechId="9020" fromDate="2001-05-13 00:00:00.000" allowSolicitation="Y"/>
@@ -45,7 +55,11 @@
 
     <BillingAccount billingAccountId="9010" accountLimit="10000.0" accountCurrencyUomId="USD" contactMechId="9010" fromDate="2001-05-13 00:00:00.000" description="Demo Customer Company Billing Account"/>
     <BillingAccountRole billingAccountId="9010" partyId="DemoCustCompany" roleTypeId="BILL_TO_CUSTOMER" fromDate="2001-05-13 00:00:00.000"/>
-
+    
+    <PartyTaxInfo partyId="DemoCustCompany" geoId="UT" fromDate="2001-05-13 00:00:00.000" partyTaxId="12-3456789" isExempt="Y"/>
+    <PartyTaxInfo partyId="DemoCustCompany" geoId="CA" fromDate="2001-05-13 00:00:00.000" partyTaxId="98-7654321" isExempt="N"/>
+    
+    <!-- DemoCustAgent -->
     <Party partyId="DemoCustAgent" partyTypeId="PERSON"/>
     <Person partyId="DemoCustAgent" firstName="Demo" lastName="Agent"/>
     <UserLogin partyId="DemoCustAgent" userLoginId="DemoCustAgent" currentPassword="ofbiz" passwordHint=""/>
@@ -67,6 +81,7 @@
     <PartyRelationship partyIdFrom="DemoCustAgent" partyIdTo="DemoCustCompany" roleTypeIdFrom="AGENT" roleTypeIdTo="CUSTOMER" 
         fromDate="2001-05-13 00:00:00.000" partyRelationshipTypeId="AGENT" comments="Allows the DemoCustAgent to purchase on behalf of DemoCustCompany, ie purchase against BillingAccount"/>
         
+    <!-- DemoCustomer -->
     <Party partyId="DemoCustomer" partyTypeId="PERSON"/>
     <Person partyId="DemoCustomer" firstName="Demo" lastName="Customer"/>
     <UserLogin partyId="DemoCustomer" userLoginId="DemoCustomer" currentPassword="ofbiz" passwordHint=""/>
