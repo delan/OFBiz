@@ -408,4 +408,4 @@ function gwAll(e) {
   </tr>
 </table>
 
-<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()} locale=${shoppingCart.getLocale()} currencyUom=${shoppingCart.getCurrency()} -->
+<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()?if_exists} locale=${shoppingCart.getLocale()?if_exists} currencyUom=${shoppingCart.getCurrency()?if_exists} userLoginId=${(shoppingCart.getUserLogin().getString("userLoginId"))?if_exists} autoUserLogin=${(shoppingCart.getAutoUserLogin().getString("userLoginId"))?if_exists} -->
