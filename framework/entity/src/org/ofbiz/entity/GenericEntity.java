@@ -567,7 +567,6 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
         if (value instanceof ByteWrapper) {
             ByteWrapper wrapper = (ByteWrapper) value;
-            if (wrapper == null) return null;
             return wrapper.getBytes();
         }
         if (value instanceof byte[]) {
