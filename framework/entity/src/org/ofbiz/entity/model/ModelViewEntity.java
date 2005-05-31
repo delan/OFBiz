@@ -284,7 +284,7 @@ public class ModelViewEntity extends ModelEntity {
             if (alias) {
                 ModelAlias modelAlias = this.getAlias(field.name);
                 if (modelAlias != null) {
-                    returnString.append(" AS " + modelAlias.colAlias);
+                    returnString.append(" AS " + modelAlias.getColAlias());
                 }
             }
             if (fldsIt.hasNext()) {
@@ -744,8 +744,6 @@ public class ModelViewEntity extends ModelEntity {
         public ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function) {
             this.entityAlias = entityAlias;
             this.name = name;
-            this.field = field;
-            this.colAlias = colAlias;
             this.field = UtilXml.checkEmpty(field, this.name);
             this.colAlias = UtilXml.checkEmpty(colAlias, ModelUtil.javaNameToDbName(UtilXml.checkEmpty(this.name)));
             this.isPk = isPk;
