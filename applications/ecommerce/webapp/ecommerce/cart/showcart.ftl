@@ -346,6 +346,7 @@ function setAlternateGwp(field) {
             </#list>
         </#if>
 
+        <#if (shoppingCart.getTotalSalesTax() > 0.0)>
         <tr>
           <td colspan="5" align="right" valign=bottom>
             <div class="tabletext">${uiLabelMap.OrderSalesTax}:</div>
@@ -354,6 +355,7 @@ function setAlternateGwp(field) {
             <div class="tabletext"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency()/></div>
           </td>
         </tr>
+        </#if>
         <tr>
           <td colspan="5" align="right" valign=bottom>
             <div class="tabletext"><b>${uiLabelMap.EcommerceCartTotal}:</b></div>
@@ -481,4 +483,4 @@ function setAlternateGwp(field) {
   ${screens.render("component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline")}
 </#if>
 
-<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()} locale=${shoppingCart.getLocale()} currencyUom=${shoppingCart.getCurrency()} userLogin=${shoppingCart.getUserLogin()} autoUserLogin=${shoppingCart.getAutoUserLogin()} -->
+<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()?if_exists} locale=${shoppingCart.getLocale()?if_exists} currencyUom=${shoppingCart.getCurrency()?if_exists} userLoginId=${(shoppingCart.getUserLogin().getString("userLoginId"))?if_exists} autoUserLogin=${(shoppingCart.getAutoUserLogin().getString("userLoginId"))?if_exists} -->
