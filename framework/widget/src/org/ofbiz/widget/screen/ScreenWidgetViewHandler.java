@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -167,9 +168,9 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         context.put("session", session);
         context.put("application", servletContext);
         if (servletContext != null) {
-            String rootDir = (String)context.get("rootDir");
-            String webSiteId = (String)context.get("webSiteId");
-            String https = (String)context.get("https");
+            String rootDir = (String) context.get("rootDir");
+            String webSiteId = (String) context.get("webSiteId");
+            String https = (String) context.get("https");
             if (UtilValidate.isEmpty(rootDir)) {
                 rootDir = servletContext.getRealPath("/");
                 context.put("rootDir", rootDir);
@@ -193,7 +194,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         context.put("requestParameters",  UtilHttp.getParameterMap(request));
 
         // this is a dummy object to stand-in for the JPublish page object for backward compatibility
-        context.put("page", new HashMap());
+        context.put("page", FastMap.newInstance());
 
         context.put("formStringRenderer", new HtmlFormRenderer(request, response));
 
