@@ -306,6 +306,8 @@ public class ShoppingCart implements Serializable {
             } else if (paymentMethodTypeId != null) {
                 lookupFields = UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId);
                 entityName = "PaymentMethodType";
+            } else {
+                throw new IllegalArgumentException("Could not create value object because paymentMethodId and paymentMethodTypeId are null");
             }
 
             try {

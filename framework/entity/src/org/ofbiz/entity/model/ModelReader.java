@@ -430,6 +430,9 @@ public class ModelReader {
      * @return An Entity object describing the specified entity of the specified descriptor file.
      */
     public ModelEntity getModelEntity(String entityName) throws GenericEntityException {
+        if (entityName == null) {
+            throw new IllegalArgumentException("Tried to find entity definition for a null entityName");
+        }
         Map ec = getEntityCache();
         if (ec == null) {
             throw new GenericEntityConfException("ERROR: Unable to load Entity Cache");
