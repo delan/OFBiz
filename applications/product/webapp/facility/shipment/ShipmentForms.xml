@@ -31,16 +31,16 @@
         
         <auto-fields-service service-name="updateShipment"/>
         
-        <field use-when="shipment!=null" name="shipmentId" tooltip="This cannot be changed without re-creating the Shipment"><display/></field>
-        <field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" tooltip="Could not find Shipment with ID [${shipmentId}]"><display description="" also-hidden="false"/></field>
-        <field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId"><ignored/></field>
+        <field use-when="shipment!=null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" tooltip="This cannot be changed without re-creating the Shipment"><display/></field>
+        <field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" tooltip="Could not find Shipment with ID [${shipmentId}]"><display description="" also-hidden="false"/></field>
+        <field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" ><ignored/></field>
 
-        <field name="shipmentTypeId" title="Shipment Type" widget-style="selectBox">
+        <field name="shipmentTypeId" title="${uiLabelMap.ProductShipmentTypeId}" widget-style="selectBox">
             <drop-down allow-empty="false" current="first-in-list">
                 <entity-options entity-name="ShipmentType" description="${description}"/>
             </drop-down>
         </field>        
-        <field use-when="shipment==null" name="statusId" title="Status" widget-style="selectBox">
+        <field use-when="shipment==null" name="statusId" title="${uiLabelMap.ProductStatusId}" widget-style="selectBox">
             <drop-down allow-empty="false" current="first-in-list">
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="${statusItemType}"/>
@@ -48,7 +48,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field use-when="shipment!=null" name="statusId" title="Status" widget-style="selectBox">
+        <field use-when="shipment!=null" name="statusId" title="${uiLabelMap.ProductStatusId}" widget-style="selectBox">
             <drop-down allow-empty="false" current="first-in-list" current-description="${currentStatus.description}">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
                     <entity-constraint name="statusId" value="${shipment.statusId}"/>
@@ -56,8 +56,12 @@
                 </entity-options>
             </drop-down>
         </field>
-        
-        <field use-when="productStoreId!=null" name="originFacilityId" title="Origin Facility [${shipment.primaryOrderId}]" widget-style="selectBox">
+        <field name="primaryOrderId" title="${uiLabelMap.ProductPrimaryOrderId}"><text/></field>
+		<field name="primaryShipGroupSeqId" title="${uiLabelMap.ProductPrimaryShipGroupSeqId}truc"><text/></field>
+		<field name="estimatedReadyDate" title="${uiLabelMap.ProductEstimatedReadyDate}"><text/></field>
+		<field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}"><text/></field>
+		
+        <field use-when="productStoreId!=null" name="originFacilityId" title="${uiLabelMap.ProductOriginFacility} [${shipment.primaryOrderId}]" widget-style="selectBox">
             <drop-down allow-empty="true" current="first-in-list">
                 <entity-options entity-name="ProductStoreFacilityByOrder" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
                     <entity-constraint name="orderId" value="${orderHeader.orderId}"/>
@@ -65,7 +69,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="originFacilityId" title="Origin Facility" widget-style="selectBox">
+        <field name="originFacilityId" title="${uiLabelMap.ProductOriginFacility}" widget-style="selectBox">
             <drop-down allow-empty="true" current="first-in-list">
                 <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
                     <entity-order-by field-name="facilityName"/>
@@ -73,7 +77,7 @@
             </drop-down>
         </field>        
         
-        <field name="destinationFacilityId" title="Destination Facility" widget-style="selectBox">
+        <field name="destinationFacilityId" title="${uiLabelMap.ProductDestinationFacility}" widget-style="selectBox">
             <drop-down allow-empty="true" current="first-in-list">
                 <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
                     <entity-order-by field-name="facilityName"/>
@@ -81,31 +85,36 @@
             </drop-down>
         </field>
 
-        <field name="estimatedShipWorkEffId" title="Estimated Ship Event" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedShipWorkEffId}" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app"/></field>
-        <field name="estimatedArrivalWorkEffId" title="Estimated Arrival Event" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app"/></field>
-        
-        <field name="originContactMechId" title="Origin Postal Address Id" 
+        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedShipWorkEffId}" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app"/></field>
+        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><text/></field>
+		<field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app"/></field>
+        <field name="latestCancelDate" title="${uiLabelMap.ProductLatestCancelDate}"><text/></field>
+		<field name="estimatedShipCost" title="${uiLabelMap.ProductEstimatedShipCost}"><text/></field>
+		<field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}"><text/></field>
+		<field name="handlingInstructions" title="${uiLabelMap.ProductHandlingInstructions}"><text/></field>
+		 
+        <field name="originContactMechId" title="${uiLabelMap.ProductOriginPostalAddressId}" 
                 tooltip="To: ${originPostalAddress.toName}, Attn: ${originPostalAddress.attnName}, ${originPostalAddress.address1}, ${originPostalAddress.address2}, ${originPostalAddress.city}, ${originPostalAddress.stateProvinceGeoId}, ${originPostalAddress.postalCode}, ${originPostalAddress.countryGeoId}" tooltip-style="tabletext">
         </field>
-        <field name="destinationContactMechId" title="Destination Postal Address Id" 
+        <field name="destinationContactMechId" title="${uiLabelMap.ProductDestinationPostalAddressId}" 
                 tooltip="To: ${destinationPostalAddress.toName}, Attn: ${destinationPostalAddress.attnName}, ${destinationPostalAddress.address1}, ${destinationPostalAddress.address2}, ${destinationPostalAddress.city}, ${destinationPostalAddress.stateProvinceGeoId}, ${destinationPostalAddress.postalCode}, ${destinationPostalAddress.countryGeoId}" tooltip-style="tabletext">
         </field>
-        <field name="originTelecomNumberId" title="Origin Phone Number Id" 
+        <field name="originTelecomNumberId" title="${uiLabelMap.ProductOriginPhoneNumberId}" 
                 tooltip="${originTelecomNumber.countryCode}  ${originTelecomNumber.areaCode} ${originTelecomNumber.contactNumber}" tooltip-style="tabletext">
         </field>
-        <field name="destinationTelecomNumberId" title="Destination Phone Number Id" 
+        <field name="destinationTelecomNumberId" title="${uiLabelMap.ProductDestinationPhoneNumberId}" 
                 tooltip="${destinationTelecomNumber.countryCode}  ${destinationTelecomNumber.areaCode} ${destinationTelecomNumber.contactNumber}" tooltip-style="tabletext">
         </field>
 
-        <field name="partyIdTo" title="To Party" tooltip="${toPerson.firstName} ${toPerson.middleName} ${toPerson.lastName} ${toPartyGroup.groupName}" tooltip-style="tabletext"/>
-        <field name="partyIdFrom" title="From Party" tooltip="${fromPerson.firstName} ${fromPerson.middleName} ${fromPerson.lastName} ${fromPartyGroup.groupName}" tooltip-style="tabletext"/>
+        <field name="partyIdTo" title="${uiLabelMap.ProductToParty}" tooltip="${toPerson.firstName} ${toPerson.middleName} ${toPerson.lastName} ${toPartyGroup.groupName}" tooltip-style="tabletext"/>
+        <field name="partyIdFrom" title="${uiLabelMap.ProductFromParty}" tooltip="${fromPerson.firstName} ${fromPerson.middleName} ${fromPerson.lastName} ${fromPartyGroup.groupName}" tooltip-style="tabletext"/>
         
-        <field use-when="shipment!=null" name="createdDate" widget-style="tabletext"><display also-hidden="false" description="${shipment.createdDate}"/></field>
-        <field use-when="shipment!=null" name="createdByUserLogin" widget-style="tabletext"><display also-hidden="false" description="${shipment.createdByUserLogin}"/></field>
-        <field use-when="shipment!=null" name="lastModifiedDate" widget-style="tabletext"><display also-hidden="false" description="${shipment.lastModifiedDate}"/></field>
-        <field use-when="shipment!=null" name="lastModifiedByUserLogin" widget-style="tabletext"><display also-hidden="false" description="${shipment.lastModifiedByUserLogin}"/></field>
+        <field use-when="shipment!=null" name="createdDate" title="${uiLabelMap.ProductCreatedDate}" widget-style="tabletext"><display also-hidden="false" description="${shipment.createdDate}"/></field>
+        <field use-when="shipment!=null" name="createdByUserLogin" title="${uiLabelMap.ProductCreatedByUserLogin}" widget-style="tabletext"><display also-hidden="false" description="${shipment.createdByUserLogin}"/></field>
+        <field use-when="shipment!=null" name="lastModifiedDate" title="${uiLabelMap.ProductLastModifiedDate}" widget-style="tabletext"><display also-hidden="false" description="${shipment.lastModifiedDate}"/></field>
+        <field use-when="shipment!=null" name="lastModifiedByUserLogin" title="${uiLabelMap.ProductLastModifiedByUserLogin}" widget-style="tabletext"><display also-hidden="false" description="${shipment.lastModifiedByUserLogin}"/></field>
         
-        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- ******************* -->
@@ -122,15 +131,15 @@
         <!-- quantity planned in this shipment -->
         <field name="quantity" title="${uiLabelMap.ProductQuantity}"><display/></field>
         <!-- quantity issued in this shipment -->
-        <field name="issuedQuantity"><display/></field>
+        <field name="issuedQuantity" title="${uiLabelMap.ProductIssuedQuantity}"><display/></field>
         <!-- total ordered quantity -->
-        <field name="totOrderedQuantity"><display/></field>
+        <field name="totOrderedQuantity" title="${uiLabelMap.ProductTotOrderedQuantity}" ><display/></field>
         <!-- total not available quantity -->
         <field name="notAvailableQuantity" title="${uiLabelMap.ProductNotAvailable}"><display/></field>
         <!-- total planned quantity not issued -->
-        <field name="totPlannedQuantity"><display/></field>
+        <field name="totPlannedQuantity" title="${uiLabelMap.ProductTotPlannedQuantity}" ><display/></field>
         <!-- total issued quantity -->
-        <field name="totIssuedQuantity"><display/></field>
+        <field name="totIssuedQuantity" title="${uiLabelMap.ProductTotIssuedQuantity}" ><display/></field>
         <!-- planned weight -->
         <field name="weight" title="${uiLabelMap.ProductWeight}"><display/></field>
         <field name="weightUom" title="${uiLabelMap.CommonUom}"><display/></field>
@@ -152,11 +161,11 @@
         <field name="orderItemSeqId" title="${uiLabelMap.ProductOrderItem}"><display/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
         <!-- ordered quantity -->
-        <field name="orderedQuantity"><display/></field>
+        <field name="orderedQuantity" title="${uiLabelMap.ProductOrderedQuantity}"><display/></field>
         <!-- planned quantity not issued -->
-        <field name="plannedQuantity"><display/></field>
+        <field name="plannedQuantity" title="${uiLabelMap.ProductPlannedQuantity}"><display/></field>
         <!-- issued quantity -->
-        <field name="issuedQuantity"><display/></field>
+        <field name="issuedQuantity" title="${uiLabelMap.ProductIssuedQuantity}"><display/></field>
         <!-- quantity for plan -->
         <field name="quantity" title="${uiLabelMap.ProductQuantity}"><text/></field>
         <!-- planned weight -->
