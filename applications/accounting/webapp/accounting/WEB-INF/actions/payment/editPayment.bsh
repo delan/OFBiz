@@ -30,6 +30,10 @@ import org.ofbiz.widget.html.HtmlFormWrapper;
 
 delegator = request.getAttribute("delegator");
 paymentId = request.getParameter("paymentId");
+if (paymentId == null) {
+    paymentId = request.getAttribute("paymentId");
+}
+
 payment = null;
 
 if (UtilValidate.isNotEmpty(paymentId)) {
