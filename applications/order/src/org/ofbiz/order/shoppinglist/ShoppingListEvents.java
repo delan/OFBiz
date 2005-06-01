@@ -105,7 +105,7 @@ public class ShoppingListEvents {
             // create a new shopping list
             Map newListResult = null;
             try {
-                newListResult = dispatcher.runSync("createShoppingList", UtilMisc.toMap("userLogin", userLogin, "productStoreId", cart.getProductStoreId()));    
+                newListResult = dispatcher.runSync("createShoppingList", UtilMisc.toMap("userLogin", userLogin, "productStoreId", cart.getProductStoreId(), "partyId", cart.getOrderPartyId()));    
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problems creating new ShoppingList", module);
                 errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.cannot_create_new_shopping_list", cart.getLocale());
@@ -132,7 +132,7 @@ public class ShoppingListEvents {
                 clearListInfo(delegator, shoppingListId);
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                throw new IllegalArgumentException("Cannot clear current shopping list");
+                throw new IllegalArgumentException("Could not clear current shopping list: " + e.toString());
             }
         }
                 
