@@ -41,8 +41,8 @@
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
    
     <!-- data resources for initial data -->
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/HotelDemoStore.xml"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/HaagscheSuites.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HaagscheSuites/data/HotelDemoStore.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HaagscheSuites/data/HaagscheSuites.xml"/>
 
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
@@ -82,19 +82,11 @@
         mount-point="/hotelfrontendimages"
         app-bar-display="false"/>        
         
-    <!--webapp name="HaagscheSuites"
+    <webapp name="HaagscheSuites"
         title="Haagsche Suites"
         server="default-server"
         location="webapp/HaagscheSuites"
         mount-point="/HaagscheSuites"
         app-bar-display="false"/>        
-    <webapp name="HaagscheSuitesImages"
-        title="Hotel Demo Backend Images directory"
-        server="default-server"
-        location="webapp/HaagscheSuites/images"
-        mount-point="/HaagscheSuitesImages"
-        app-bar-display="false"/-->        
-        
-    
 </ofbiz-component>
 

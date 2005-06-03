@@ -2119,6 +2119,7 @@
     <view-map name="newFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#newFixedAssetProduct"/>
     <view-map name="EditCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategory"/>
     <view-map name="EditProdCatalogCategories" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProdCatalogCategories"/>
+    <view-map name="EditCategoryRollup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryRollup"/>
     <!--view-map name="EditProductCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/-->
     <view-map name="EditProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProducts"/>
     <view-map name="EditCategoryProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryProducts"/>

@@ -174,7 +174,7 @@
         </section>
     </screen>
 
-    <screen name="EditProductStorePaySetup">
+    <screen name="EditProductStorePaySetupOld"><!-- OLD VERSION -->
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Settings"/>
@@ -218,6 +218,30 @@
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    <screen name="EditProductStorePaySetup">
+       <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductStorePaySetup"/>
+                <set field="headerItem" value="store"/>
+                <set field="tabButtonItem" value="EditProductStorePaySetup"/>
+                <set field="labelTitleProperty" value="ProductProductStorePaymentSettings"/>
+
+                <set field="productStoreId"  from-scope="user"  from-field="productStoreId"/>
+                <entity-one entity-name="ProductStore" value-name="productStore" auto-field-map="true"/>
+
+                <script location="component://product/webapp/catalog/WEB-INF/actions/store/EditProductStorePaySetup.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSettingsDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/store/EditProductStorePaySetup.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+       </section>
     </screen>
 
     <screen name="EditProductStoreEmails">
