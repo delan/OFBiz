@@ -63,7 +63,7 @@ public class ProductConfigWorker {
              */
             String cacheKey = productId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId;
             if (productConfigCache != null && productConfigCache.get(cacheKey) != null) {
-                return (ProductConfigWrapper) productConfigCache.get(cacheKey);
+                return ((ProductConfigWrapper) productConfigCache.get(cacheKey)).copy();
             }
             configWrapper = new ProductConfigWrapper((GenericDelegator)request.getAttribute("delegator"),
                                                      (LocalDispatcher)request.getAttribute("dispatcher"),
