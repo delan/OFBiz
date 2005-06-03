@@ -28,14 +28,15 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/WorkWithShipmentPlans</@ofbizUrl>" class="${selectedClassMap.WorkWithShipmentPlans?default(unselectedClassName)}">${uiLabelMap.ManufacturingWorkWithShipmentPlans}</a>
-    <a href="<@ofbizUrl>/FindProductionRun</@ofbizUrl>" class="${selectedClassMap.find?default(unselectedClassName)}">${uiLabelMap.ManufacturingFindProductionRun}</a>
-    <a href="<@ofbizUrl>/CreateProductionRun</@ofbizUrl>" class="${selectedClassMap.create?default(unselectedClassName)}">${uiLabelMap.ManufacturingCreateProductionRun}</a>
+    <a href="<@ofbizUrl>WorkWithShipmentPlans</@ofbizUrl>" class="${selectedClassMap.WorkWithShipmentPlans?default(unselectedClassName)}">${uiLabelMap.ManufacturingWorkWithShipmentPlans}</a>
+    <a href="<@ofbizUrl>FindProductionRun</@ofbizUrl>" class="${selectedClassMap.find?default(unselectedClassName)}">${uiLabelMap.ManufacturingFindProductionRun}</a>
+    <a href="<@ofbizUrl>CreateProductionRun</@ofbizUrl>" class="${selectedClassMap.create?default(unselectedClassName)}">${uiLabelMap.ManufacturingCreateProductionRun}</a>
     <#if productionRun?has_content>
         <#if productionRun.getString("currentStatusId") == "PRUN_CREATED">
-        <a href="<@ofbizUrl>/EditProductionRun?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.edit?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditProductionRun}</a>
+        <a href="<@ofbizUrl>EditProductionRun?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.edit?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditProductionRun}</a>
         <#else>
-        <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.declaration?default(unselectedClassName)}">${uiLabelMap.ManufacturingProductionRunDeclaration}</a>
+        <a href="<@ofbizUrl>ProductionRunDeclaration?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.declaration?default(unselectedClassName)}">${uiLabelMap.ManufacturingProductionRunDeclaration}</a>
         </#if>
     </#if>
+    <a href="<@ofbizUrl>ManufacturingReports</@ofbizUrl>" class="${selectedClassMap.ManufacturingReports?default(unselectedClassName)}">${uiLabelMap.ManufacturingReports}</a>
 </div>
