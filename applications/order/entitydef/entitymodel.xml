@@ -123,6 +123,12 @@
         <key-map field-name="productPromoRuleId"/>
         <key-map field-name="productPromoActionSeqId"/>
       </relation>
+      <relation type="one" fk-name="ORDER_ADJ_PRGEO" title="Primary" rel-entity-name="Geo">
+        <key-map field-name="primaryGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ADJ_SCGEO" title="Secondary" rel-entity-name="Geo">
+        <key-map field-name="secondaryGeoId" rel-field-name="geoId"/>
+      </relation>
     </entity>
     <entity entity-name="OrderAdjustmentAttribute"
             package-name="org.ofbiz.order.order"
