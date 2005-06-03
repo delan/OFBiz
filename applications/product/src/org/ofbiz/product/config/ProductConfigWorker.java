@@ -31,6 +31,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.base.util.cache.UtilCache;
 
 /**
  * Product Config Worker class to reduce code in templates.
@@ -44,18 +45,36 @@ public class ProductConfigWorker {
     
     public static final String module = ProductConfigWorker.class.getName();
     public static final String resource = "ProductUiLabels";
+    public static final String SEPARATOR = "::";    // cache key separator
+
+    public static UtilCache productConfigCache;
 
     public static ProductConfigWrapper getProductConfigWrapper(String productId, String currencyUomId, HttpServletRequest request) {
+        if (productConfigCache == null) {
+            productConfigCache = new UtilCache("product.config", true);     // use soft reference to free up memory if needed
+        }
         ProductConfigWrapper configWrapper = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         String webSiteId = CatalogWorker.getWebSiteId(request);
         GenericValue autoUserLogin = (GenericValue)request.getSession().getAttribute("autoUserLogin");
         try {
+            /* caching: there is one cache created, "product.config"  Each product's config wrapper is cached with a key of
+             * productId::catalogId::webSiteId::currencyUomId, or whatever the SEPARATOR is defined above to be.
+             */
+            String cacheKey = productId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId;
+            if (productConfigCache != null && productConfigCache.get(cacheKey) != null) {
+                return (ProductConfigWrapper) productConfigCache.get(cacheKey);
+            }
             configWrapper = new ProductConfigWrapper((GenericDelegator)request.getAttribute("delegator"),
                                                      (LocalDispatcher)request.getAttribute("dispatcher"),
                                                      productId, catalogId, webSiteId,
                                                      currencyUomId, UtilHttp.getLocale(request),
                                                      autoUserLogin);
+            if (configWrapper != null) {
+                if (productConfigCache != null) {
+                    productConfigCache.put(cacheKey, configWrapper);
+                }
+            }
         } catch(ProductConfigWrapperException we) {
             configWrapper = null;
         } catch(Exception e) {
