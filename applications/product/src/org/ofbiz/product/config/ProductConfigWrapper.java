@@ -53,6 +53,7 @@ public class ProductConfigWrapper implements Serializable {
     protected GenericValue product = null; // the aggregated product
     protected double basePrice = 0.0;
     protected List questions = null; // ProductConfigs
+    protected List origQuestions = null; // ProductConfigs
     
     /** Creates a new instance of ProductConfigWrapper */
     public ProductConfigWrapper() {
@@ -61,7 +62,14 @@ public class ProductConfigWrapper implements Serializable {
     public ProductConfigWrapper(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
         init(delegator, dispatcher, productId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
     }
-    
+
+    public ProductConfigWrapper(GenericValue product, double basePrice, List questions) {
+        this.product = product;
+        this.basePrice = basePrice;
+        this.questions = questions;
+        origQuestions = null;
+    }
+
     private void init(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
         product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
         if (product == null || !product.getString("productTypeId").equals("AGGREGATED")) {
@@ -76,6 +84,7 @@ public class ProductConfigWrapper implements Serializable {
             basePrice = price.doubleValue();
         }
         questions = new ArrayList();
+        origQuestions = new ArrayList();
         List questionsValues = new ArrayList();
         if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED")) {
             questionsValues = delegator.findByAnd("ProductConfig", UtilMisc.toMap("productId", productId), UtilMisc.toList("sequenceNum"));
@@ -97,8 +106,19 @@ public class ProductConfigWrapper implements Serializable {
                     ConfigOption option = new ConfigOption(delegator, dispatcher, (GenericValue)configOptionsIt.next(), catalogId, webSiteId, currencyUomId, autoUserLogin);
                     oneQuestion.addOption(option);
                 }
+                origQuestions.add(oneQuestion.copy());
             }
         }
+    }
+    
+    public ProductConfigWrapper copy() {
+        if (origQuestions == null) return null;
+        List tmpQuestions = new ArrayList();
+        for (int i = 0; i < origQuestions.size(); i++) {
+            ConfigItem ci = (ConfigItem)origQuestions.get(i);
+            tmpQuestions.add(ci.copy());
+        }
+        return new ProductConfigWrapper(product, basePrice, tmpQuestions);
     }
     
     public void resetConfig() {
@@ -243,6 +263,23 @@ public class ProductConfigWrapper implements Serializable {
             options = new ArrayList();
         }
         
+        public ConfigItem(GenericValue questionAssoc, GenericValue configItem, List configOptions, boolean first, ProductConfigItemContentWrapper content) {
+            configItemAssoc = questionAssoc;
+            this.configItem = configItem;
+            options = configOptions;
+            this.first = first;
+            this.content = content;
+        }
+        
+        public ConfigItem copy() {
+            List tmpOptions = new ArrayList();
+            for (int i = 0; i < options.size(); i++) {
+                ConfigOption co = (ConfigOption)options.get(i);
+                tmpOptions.add(co.copy());
+            }
+            return new ConfigItem(configItemAssoc, configItem, tmpOptions, first, content);
+        }
+
         public void setContent(Locale locale, String mimeTypeId) {
             content = new ProductConfigItemContentWrapper(configItem, locale, mimeTypeId);
         }
@@ -401,6 +438,16 @@ public class ProductConfigWrapper implements Serializable {
             }
         }
         
+        public ConfigOption(GenericValue option, List components, double price) {
+            configOption = option;
+            componentList = components;
+            optionPrice = price;
+        }
+        
+        public ConfigOption copy() {
+            return new ConfigOption(configOption, componentList, optionPrice);
+        }
+
         public String getDescription() {
             return (configOption.getString("description") != null? configOption.getString("description"): "no description");
         }
