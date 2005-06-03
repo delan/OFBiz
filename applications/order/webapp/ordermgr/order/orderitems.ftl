@@ -231,10 +231,27 @@
                   <#assign orderItemAdjustments = Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentList(orderItem, orderAdjustments)>
                   <#if orderItemAdjustments?exists && orderItemAdjustments?has_content>
                     <#list orderItemAdjustments as orderItemAdjustment>
-                      <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType")>
+                      <#assign adjustmentType = orderItemAdjustment.getRelatedOneCache("OrderAdjustmentType")>
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${adjustmentType.description}</b> : ${orderItemAdjustment.description?if_exists} (${orderItemAdjustment.comments?default("")})</div>
+                          <div class="tabletext" style="font-size: xx-small;">
+                            <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${adjustmentType.description}</b>: 
+                            ${orderItemAdjustment.description?if_exists} (${orderItemAdjustment.comments?default("")})
+
+                            <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
+                              <#if orderItemAdjustment.primaryGeoId?has_content>
+                                <#assign primaryGeo = orderItemAdjustment.getRelatedOneCache("PrimaryGeo")/>
+                                <b>Jurisdiction:</b> ${primaryGeo.geoName} [${primaryGeo.abbreviation?if_exists}]
+                                <#if orderItemAdjustment.secondaryGeoId?has_content>
+                                  <#assign secondaryGeo = orderItemAdjustment.getRelatedOneCache("SecondaryGeo")/>
+                                  (<b>in:</b> ${secondaryGeo.geoName} [${secondaryGeo.abbreviation?if_exists}])
+                                </#if>
+                              </#if>
+                              <#if orderItemAdjustment.sourcePercentage?exists><b>Rate:</b> ${orderItemAdjustment.sourcePercentage}</#if>
+                              <#if orderItemAdjustment.customerReferenceId?has_content><b>Customer Tax ID:</b> ${orderItemAdjustment.customerReferenceId}</#if>
+                              <#if orderItemAdjustment.exemptAmount?exists><b>Exempt Amount:</b> ${orderItemAdjustment.exemptAmount}</#if>
+                            </#if>
+                          </div>
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
