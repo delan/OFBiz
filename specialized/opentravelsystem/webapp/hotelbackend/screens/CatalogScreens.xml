@@ -341,6 +341,7 @@
                 <set field="title" value="Edit Product"/>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="labelTitleProperty" value="ProductProduct"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
@@ -448,23 +449,26 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="products"/>
-                <set field="page.tabButtonItem" value="EditProductPrices"/>
-                <set field="title" value="Edit Product Prices"/>
+                <set field="page.tabButtonItem" value="EditProductContent"/>
+                <set field="title" value="Edit Product Content"/>
                 <set field="titleProperty" value="PageTitleEditProductPrices"/>
                 <set field="labelTitleProperty" value="ProductPrices"/>
                 <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContent.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
-                    <container>
-                       <platform-specific>
-                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
-                       </platform-specific>
-                            <label style="head1">Edit Product Content: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
-                     </container>
-                        <include-form name="EditProductContent" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <container>
+                            <platform-specific>
+                                <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
+                            </platform-specific>
+                            <label style="head1">${uiLabelMap.PageTitleEditProductContent}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
+                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://opentravelsystem/webapp/hotelbackend/product/EditProductContent.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -566,9 +570,9 @@
                 <set field="page.appTabButtonItem" value="Assets"/>
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <entity-condition entity-name="FixedAsset" list-name="fixedAssets" >
-                    <!--condition-list>
-                        <condition-expr field-name="parentFixedAssetId" operator="equals" value="HotelDemoStore" />
-                    </condition-list-->
+                    <condition-list>
+                        <condition-expr field-name="parentFixedAssetId" operator="equals" value="${productStoreId}" />
+                    </condition-list>
                 </entity-condition>
             </actions>
             <widgets>
@@ -599,6 +603,7 @@
                 <set field="page.headerItem" value="fixedassets"/>
                 <set field="page.tabButtonItem" value="EditFixedAsset"/>
                 <set field="title" value="Edit Fixed Asset"/>
+                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
             </actions>
@@ -614,7 +619,7 @@
                          <container>
                             <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                          </container>
-                        <include-form name="EditFixedAsset" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="EditFixedAsset" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -708,6 +713,44 @@
                                    <include-form name="updateFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                 </container>
  -->                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditCategoryRollup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditCategoryRollup"/>
+                <set field="headerItem" value="category"/>
+                <set field="tabButtonItem" value="EditCategoryRollup"/>
+                <set field="labelTitleProperty" value="ProductRollup"/>
+
+                <set field="productStoreId" from-scope="user" from-field="productStoreId" global="true"/>
+                <set field="productCategoryId" from-field="parameters.showProductCategoryId"/>
+                <set field="productCategoryId" from-field="parameters.productCategoryId" default-value="${productCategoryId}"/>
+                <entity-one entity-name="ProductCategory" value-name="productCategory"/>
+
+                <entity-condition entity-name="ProductCategoryRollup" list-name="currentProductCategoryRollups">
+                    <condition-expr field-name="productCategoryId" env-name="productCategoryId"/>
+                    <order-by field-name="sequenceNum"/>
+                </entity-condition>
+                <entity-condition entity-name="ProductCategoryRollup" list-name="parentProductCategoryRollups">
+                    <condition-expr field-name="parentProductCategoryId" env-name="productCategoryId"/>
+                    <order-by field-name="sequenceNum"/>
+                </entity-condition>
+
+                <entity-condition entity-name="ProductCategory" list-name="productCategoryCol">
+                    <condition-expr field-name="primaryParentCategoryId" operator="equals" value="${productStoreId}" />
+                    <order-by field-name="description"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/category/EditCategoryRollup.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
