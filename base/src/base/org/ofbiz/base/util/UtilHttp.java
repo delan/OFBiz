@@ -48,6 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 /**
@@ -68,7 +69,26 @@ public class UtilHttp {
      */
     public static Map getParameterMap(HttpServletRequest request) {
         Map paramMap = FastMap.newInstance();
-        // first add in all path info parameters /~name1=value1/~name2=value2/
+
+        // add all the actual HTTP request parameters
+        Enumeration e = request.getParameterNames();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            Object value = null;
+            String[] paramArr = request.getParameterValues(name);
+            if (paramArr != null) {
+                if (paramArr.length > 1) {
+                    value = Arrays.asList(paramArr);
+                } else {
+                    value = paramArr[0];
+                    // does the same thing basically, nothing better about it as far as I can see: value = request.getParameter(name);
+                }
+            }
+            paramMap.put(name, value);
+        }
+
+        // now add in all path info parameters /~name1=value1/~name2=value2/
+        // note that if a parameter with a given name already exists it will be put into a list with all values
         String pathInfoStr = request.getPathInfo();
 
         if (pathInfoStr != null && pathInfoStr.length() > 0) {
@@ -83,26 +103,24 @@ public class UtilHttp {
                 if (element.charAt(0) == '~' && element.indexOf('=') > -1) {
                     String name = element.substring(1, element.indexOf('='));
                     String value = element.substring(element.indexOf('=') + 1);
-                    paramMap.put(name, value);
+                    Object curValue = paramMap.get(name);
+                    if (curValue != null) {
+                        List paramList = null;
+                        if (curValue instanceof List) {
+                            paramList = (List) curValue;
+                            paramList.add(value);
+                        } else {
+                            String paramString = (String) curValue;
+                            paramList = FastList.newInstance();
+                            paramList.add(paramString);
+                            paramList.add(value);
+                        }
+                        paramMap.put(name, paramList);
+                    } else {
+                        paramMap.put(name, value);
+                    }
                 }
             }
-        }
-
-        // now add all the actual parameters; these take priority
-        java.util.Enumeration e = request.getParameterNames();
-        while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            Object value = null;
-            String[] paramArr = request.getParameterValues(name);
-            if (paramArr != null) {
-                if (paramArr.length > 1) {
-                    value = Arrays.asList(paramArr);
-                } else {
-                    value = paramArr[0];
-                    // does the same thing basically, nothing better about it as far as I can see: value = request.getParameter(name);
-                }
-            }
-            paramMap.put(name, value);
         }
 
         if (paramMap.size() == 0) {
