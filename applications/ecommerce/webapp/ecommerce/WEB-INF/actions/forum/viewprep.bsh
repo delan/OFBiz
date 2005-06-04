@@ -57,7 +57,7 @@ paramMap = UtilHttp.getParameterMap(request);
 // Strip old VIEW_INDEX from query string if present
 //since we are adding them again.
 String temp = request.getQueryString();
-String queryString = ContentManagementWorker.stripViewParamsFromQueryString(temp);
+String queryString = UtilHttp.stripViewParamsFromQueryString(temp);
 //Debug.logInfo("in viewprep, queryString(1):" + queryString,"");
 context.put("queryString", queryString);
 //Debug.logInfo("in viewprep, queryString(2):" + queryString,"");

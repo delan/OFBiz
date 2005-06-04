@@ -150,7 +150,7 @@
 <#if !listSz?has_content><#assign listSz=0/></#if>
 
 <#if queryString?has_content>
-    <#assign queryString = Static["org.ofbiz.content.ContentManagementWorker"].stripViewParamsFromQueryString(queryString) />
+    <#assign queryString = Static["org.ofbiz.base.util.UtilHttp"].stripViewParamsFromQueryString(queryString)/>
 </#if>
 
 <#assign lowIdxShow = lowIdx + 1 />

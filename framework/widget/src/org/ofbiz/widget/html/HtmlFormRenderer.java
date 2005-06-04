@@ -27,22 +27,41 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.form.FormStringRenderer;
 import org.ofbiz.widget.form.ModelForm;
 import org.ofbiz.widget.form.ModelFormField;
-import org.ofbiz.widget.form.ModelFormField.*;
+import org.ofbiz.widget.form.ModelFormField.CheckField;
+import org.ofbiz.widget.form.ModelFormField.DateFindField;
+import org.ofbiz.widget.form.ModelFormField.DateTimeField;
+import org.ofbiz.widget.form.ModelFormField.DisplayEntityField;
+import org.ofbiz.widget.form.ModelFormField.DisplayField;
+import org.ofbiz.widget.form.ModelFormField.DropDownField;
+import org.ofbiz.widget.form.ModelFormField.FileField;
+import org.ofbiz.widget.form.ModelFormField.HiddenField;
+import org.ofbiz.widget.form.ModelFormField.HyperlinkField;
+import org.ofbiz.widget.form.ModelFormField.IgnoredField;
+import org.ofbiz.widget.form.ModelFormField.ImageField;
+import org.ofbiz.widget.form.ModelFormField.LookupField;
+import org.ofbiz.widget.form.ModelFormField.PasswordField;
+import org.ofbiz.widget.form.ModelFormField.RadioField;
+import org.ofbiz.widget.form.ModelFormField.RangeFindField;
+import org.ofbiz.widget.form.ModelFormField.ResetField;
+import org.ofbiz.widget.form.ModelFormField.SubmitField;
+import org.ofbiz.widget.form.ModelFormField.TextField;
+import org.ofbiz.widget.form.ModelFormField.TextFindField;
+import org.ofbiz.widget.form.ModelFormField.TextareaField;
 
 
 /**
@@ -1679,7 +1698,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         String str = (String) context.get("_QBESTRING_");
-        String queryString = stripViewParamsFromQueryString(str);
+        String queryString = UtilHttp.stripViewParamsFromQueryString(str);
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
 
@@ -1877,26 +1896,6 @@ public class HtmlFormRenderer implements FormStringRenderer {
         this.appendTooltip(buffer, context, modelFormField);
 
         this.appendWhitespace(buffer);
-    }
-    
-    public static String stripViewParamsFromQueryString(String queryString) {
-        String retStr = null;
-        if (UtilValidate.isNotEmpty(queryString)) {
-            StringTokenizer queryTokens = new StringTokenizer(queryString, "&");
-            StringBuffer cleanQuery = new StringBuffer();
-            while (queryTokens.hasMoreTokens()) {
-                String token =  queryTokens.nextToken();
-                if ((token.indexOf("VIEW_INDEX") == -1) && (token.indexOf("VIEW_SIZE")==-1)
-                    && (token.indexOf("viewIndex") == -1) && (token.indexOf("viewSize")==-1)) {
-                    cleanQuery.append(token);
-                    if(queryTokens.hasMoreTokens()){
-                        cleanQuery.append("&");
-                    }
-                }
-            }
-            retStr = cleanQuery.toString();
-        }
-        return retStr;
     }
     
     public void renderFieldGroupOpen(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup) {
