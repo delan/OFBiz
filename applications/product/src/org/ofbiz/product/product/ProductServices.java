@@ -709,12 +709,21 @@ public class ProductServices {
                 //update entry
                 variantProduct.store();
             }
+            GenericValue variantProductAssoc = null;
+            if (variantProductExists) {
+                // Since the variant product is already a variant, first of all we remove the old features
+                // and the associations of type PRODUCT_VARIANT: a given product can be a variant of only one product.
+                delegator.removeByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", variantProductId,
+                                                                     "productAssocTypeId", "PRODUCT_VARIANT"));
+                delegator.removeByAnd("ProductFeatureAppl", UtilMisc.toMap("productId", variantProductId,
+                                                                           "productFeatureApplTypeId", "STANDARD_FEATURE"));
+            }
             // add an association from productId to variantProductId of the PRODUCT_VARIANT
             GenericValue productAssoc = delegator.makeValue("ProductAssoc",
-            UtilMisc.toMap("productId", productId, "productIdTo", variantProductId,
-            "productAssocTypeId", "PRODUCT_VARIANT", "fromDate", UtilDateTime.nowTimestamp()));
+                                                            UtilMisc.toMap("productId", productId, "productIdTo", variantProductId,
+                                                                           "productAssocTypeId", "PRODUCT_VARIANT", "fromDate", UtilDateTime.nowTimestamp()));
             productAssoc.create();
-            
+
             // add the selected standard features to the new product given the productFeatureIds
             java.util.StringTokenizer st = new java.util.StringTokenizer(productFeatureIds, "|");
             while (st.hasMoreTokens()) {
