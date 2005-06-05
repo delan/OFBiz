@@ -25,12 +25,42 @@ package org.ofbiz.widget.screen;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
+import javolution.util.FastMap;
+
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.security.Security;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.widget.html.HtmlFormRenderer;
 import org.xml.sax.SAXException;
+
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.jsp.TaglibFactory;
+import freemarker.ext.servlet.HttpRequestHashModel;
+import freemarker.ext.servlet.HttpSessionHashModel;
 
 /**
  * Widget Library - Screen model class
@@ -40,13 +70,17 @@ import org.xml.sax.SAXException;
  * @since      3.1
  */
 public class ScreenRenderer {
+
+    public static final String module = ScreenRenderer.class.getName();
+    
     protected Writer writer;
-    protected Map context;
+    protected MapStack context;
     protected ScreenStringRenderer screenStringRenderer;
     
-    public ScreenRenderer(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+    public ScreenRenderer(Writer writer, MapStack context, ScreenStringRenderer screenStringRenderer) {
         this.writer = writer;
         this.context = context;
+        if (this.context == null) this.context = MapStack.create();
         this.screenStringRenderer = screenStringRenderer;
     }
     
@@ -83,5 +117,170 @@ public class ScreenRenderer {
     public ScreenStringRenderer getScreenStringRenderer() {
         return this.screenStringRenderer;
     }
-}
 
+    public void populateBasicContext(Map parameters, GenericDelegator delegator, LocalDispatcher dispatcher, Security security, Locale locale, GenericValue userLogin) {
+        // ========== setup values that should always be in a screen context
+        // include an object to more easily render screens
+        context.put("screens", this);
+
+        // make a reference for high level variables, a global context
+        context.put("globalContext", context.standAloneStack());
+
+        // make sure the "nullField" object is in there for entity ops; note this is nullField and not null because as null causes problems in FreeMarker and such...
+        context.put("nullField", GenericEntity.NULL_FIELD);
+
+        // get all locale information
+        context.put("availableLocales", UtilMisc.availableLocales());
+
+        context.put("parameters", parameters);
+        context.put("delegator", delegator);
+        context.put("dispatcher", dispatcher);
+        context.put("security", security);
+        context.put("locale", locale);
+        context.put("userLogin", userLogin);
+    }
+    
+    /**
+     * This method populates the context for this ScreenRenderer based on the HTTP Request and Respone objects and the ServletContext.
+     * It leverages various conventions used in other places, namely the ControlServlet and so on, of OFBiz to get the different resources needed.
+     * 
+     * @param request
+     * @param response
+     * @param servletContext
+     */
+    public void populateContextForRequest(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+        HttpSession session = request.getSession();
+
+        Map parameterMap = UtilHttp.getParameterMap(request);
+        // go through all request attributes and for each name that is not already in the parameters Map add the attribute value
+        Enumeration attrNames = request.getAttributeNames();
+        while (attrNames.hasMoreElements()) {
+            String attrName = (String) attrNames.nextElement();
+            Object param = (String) parameterMap.get(attrName);
+            if (param == null) {
+                parameterMap.put(attrName, request.getAttribute(attrName));
+            } else if (param instanceof String && ((String) param).length() == 0) {
+                // also put the attribute value in if the parameter is empty
+                parameterMap.put(attrName, request.getAttribute(attrName));
+            } else {
+                // do nothing, just log something
+                Debug.logInfo("Found request attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
+            }
+        }
+
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        
+        this.populateBasicContext(parameterMap, (GenericDelegator) request.getAttribute("delegator"), 
+                (LocalDispatcher) request.getAttribute("dispatcher"), (Security) request.getAttribute("security"), 
+                UtilHttp.getLocale(request), userLogin);
+
+        context.put("autoUserLogin", session.getAttribute("autoUserLogin"));
+        context.put("person", session.getAttribute("person"));
+        context.put("partyGroup", session.getAttribute("partyGroup"));
+
+        // some things also seem to require this, so here it is:
+        request.setAttribute("userLogin", userLogin);
+
+        // ========== setup values that are specific to OFBiz webapps
+
+        // this is the object used to render forms from their definitions
+        context.put("formStringRenderer", new HtmlFormRenderer(request, response));
+
+        context.put("request", request);
+        context.put("response", response);
+        context.put("session", session);
+        context.put("application", servletContext);
+        if (servletContext != null) {
+            String rootDir = (String) context.get("rootDir");
+            String webSiteId = (String) context.get("webSiteId");
+            String https = (String) context.get("https");
+            if (UtilValidate.isEmpty(rootDir)) {
+                rootDir = servletContext.getRealPath("/");
+                context.put("rootDir", rootDir);
+            }
+            if (UtilValidate.isEmpty(webSiteId)) {
+                webSiteId = (String) servletContext.getAttribute("webSiteId");
+                context.put("webSiteId", webSiteId);
+            }
+            if (UtilValidate.isEmpty(https)) {
+                https = (String) servletContext.getAttribute("https");
+                context.put("https", https);
+            }
+        }
+
+        // these ones are FreeMarker specific and will only work in FTL templates, mainly here for backward compatibility
+        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+        context.put("sessionAttributes", new HttpSessionHashModel(session, wrapper));
+        context.put("requestAttributes", new HttpRequestHashModel(request, wrapper));
+        TaglibFactory JspTaglibs = new TaglibFactory(servletContext);
+        context.put("JspTaglibs", JspTaglibs);
+        context.put("requestParameters",  UtilHttp.getParameterMap(request));
+
+        // this is a dummy object to stand-in for the JPublish page object for backward compatibility
+        context.put("page", FastMap.newInstance());
+
+        // some information from/about the ControlServlet environment
+        context.put("controlPath", request.getAttribute("_CONTROL_PATH_"));
+        context.put("contextRoot", request.getAttribute("_CONTEXT_ROOT_"));
+        context.put("serverRoot", request.getAttribute("_SERVER_ROOT_URL_"));
+        context.put("checkLoginUrl", LoginWorker.makeLoginUrl(request, "checkLogin"));
+        String externalLoginKey = LoginWorker.getExternalLoginKey(request);
+        String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
+        context.put("externalLoginKey", externalLoginKey);
+        context.put("externalKeyParam", externalKeyParam);
+
+        // setup message lists
+        List eventMessageList = (List) request.getAttribute("eventMessageList");
+        if (eventMessageList == null) eventMessageList = new LinkedList();
+        List errorMessageList = (List) request.getAttribute("errorMessageList");
+        if (errorMessageList == null) errorMessageList = new LinkedList();
+
+        if (request.getAttribute("_EVENT_MESSAGE_") != null) {
+            eventMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_EVENT_MESSAGE_"), "\n", "<br/>"));
+            request.removeAttribute("_EVENT_MESSAGE_");
+        }
+        if (request.getAttribute("_EVENT_MESSAGE_LIST_") != null) {
+            eventMessageList.addAll((List) request.getAttribute("_EVENT_MESSAGE_LIST_"));
+            request.removeAttribute("_EVENT_MESSAGE_LIST_");
+        }
+        if (request.getAttribute("_ERROR_MESSAGE_") != null) {
+            errorMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
+            request.removeAttribute("_ERROR_MESSAGE_");
+        }
+        if (session.getAttribute("_ERROR_MESSAGE_") != null) {
+            errorMessageList.add(UtilFormatOut.replaceString((String) session.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
+            session.removeAttribute("_ERROR_MESSAGE_");
+        }
+        if (request.getAttribute("_ERROR_MESSAGE_LIST_") != null) {
+            errorMessageList.addAll((List) request.getAttribute("_ERROR_MESSAGE_LIST_"));
+            request.removeAttribute("_ERROR_MESSAGE_LIST_");
+        }
+        context.put("eventMessageList", eventMessageList);
+        context.put("errorMessageList", errorMessageList);
+
+        if (request.getAttribute("serviceValidationException") != null) {
+            context.put("serviceValidationException", request.getAttribute("serviceValidationException"));
+            request.removeAttribute("serviceValidationException");
+        }
+
+        // if there was an error message, this is an error
+        if (errorMessageList.size() > 0) {
+            context.put("isError", Boolean.TRUE);
+        } else {
+            context.put("isError", Boolean.FALSE);
+        }
+        // if a parameter was passed saying this is an error, it is an error
+        if ("true".equals((String) parameterMap.get("isError"))) {
+            context.put("isError", Boolean.TRUE);
+        }
+        context.put("nowTimestamp", UtilDateTime.nowTimestamp());
+
+        // to preserve these values, push the MapStack
+        context.push();
+    }
+
+    public void populateContextForService(DispatchContext dctx, Map serviceContext) {
+        this.populateBasicContext(serviceContext, dctx.getDelegator(), dctx.getDispatcher(), dctx.getSecurity(), 
+                (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));
+    }
+}
