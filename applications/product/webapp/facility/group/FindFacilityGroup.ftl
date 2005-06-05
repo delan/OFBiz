@@ -24,8 +24,6 @@
  *@version    $Rev$
  *@since      2.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
 <div class="head1">${uiLabelMap.ProductFacilityGroupList}</div>
 
@@ -53,9 +51,4 @@
   </#if>
 </#list>
 </table>
-<br/>
-
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
-</#if>
 

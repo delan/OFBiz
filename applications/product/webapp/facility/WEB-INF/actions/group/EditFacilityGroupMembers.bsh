@@ -32,14 +32,8 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.widget.html.*;
 
-security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
 
-if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
 nowTimestampString = UtilDateTime.nowTimestamp().toString();
 context.put("nowTimestampString", nowTimestampString);
 

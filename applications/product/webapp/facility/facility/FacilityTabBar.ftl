@@ -24,8 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 

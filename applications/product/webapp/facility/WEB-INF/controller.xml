@@ -839,11 +839,11 @@
     <view-map name="PickMoveStock" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PickMoveStock"/>
     <view-map name="PicklistReport.pdf" type="screenfop" page="component://product/widget/facility/FacilityScreens.xml#PicklistReport.fo"/>
 
-    <view-map name="FindFacilityGroup" type="jpublish" page="/group/FindFacilityGroup.ftl"/>
-    <view-map name="EditFacilityGroup" type="jpublish" page="/group/EditFacilityGroup.ftl"/>
-    <view-map name="EditFacilityGroupMembers" type="jpublish" page="/group/EditFacilityGroupMembers.ftl"/>
-    <view-map name="EditFacilityGroupRollup" type="jpublish" page="/group/EditFacilityGroupRollup.ftl"/>
-    <view-map name="EditFacilityGroupRoles" type="jpublish" page="/group/EditFacilityGroupRoles.ftl"/>
+    <view-map name="FindFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#FindFacilityGroup"/>
+    <view-map name="EditFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroup"/>
+    <view-map name="EditFacilityGroupMembers" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupMembers"/>
+    <view-map name="EditFacilityGroupRollup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRollup"/>
+    <view-map name="EditFacilityGroupRoles" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRoles"/>
 
     <view-map name="FindShipment" type="jpublish" page="/shipment/FindShipment.ftl"/>
     <view-map name="ViewShipment" type="jpublish" page="/shipment/ViewShipment.ftl"/>
