@@ -22,16 +22,12 @@
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-${pages.get("/shipment/ShipmentTabBar.ftl")}
-
 <#if shipment?exists>
     <div class="head1">Shipment Plan</div>
-    ${findOrderItemsForm.renderFormString()}
+    ${findOrderItemsForm.renderFormString(context)}
     <br/>
     <#if addToShipmentPlanRows?has_content>
-        ${addToShipmentPlanForm.renderFormString()}
+        ${addToShipmentPlanForm.renderFormString(context)}
 
 <SCRIPT language="javascript">
     function submitRows(rowCount) {
@@ -54,15 +50,11 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <hr class="sepbar">
 	<br/>
     </#if>
-    ${listShipmentPlanForm.renderFormString()}
+    ${listShipmentPlanForm.renderFormString(context)}
     <div class="head2">Total weight: ${totWeight}</div>
     <div class="head2">Total volume: ${totVolume}</div>
-    ${shipmentPlanToOrderItemsForm.renderFormString()}
+    ${shipmentPlanToOrderItemsForm.renderFormString(context)}
 
 <#else>
   <h3>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId?if_exists}]</h3>
-</#if>
-
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

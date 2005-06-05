@@ -189,7 +189,6 @@ if (shipmentPlans != null) {
 }
 HtmlFormWrapper listShipmentPlanForm = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "listShipmentPlan", request, response);
 listShipmentPlanForm.putInContext("shipmentPlan", rows);
-listShipmentPlanForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 // **************************************
 // ShipmentPlan add form
@@ -279,18 +278,15 @@ if (orderItems != null) {
 }
 // Add form
 HtmlFormWrapper addToShipmentPlanForm = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "addToShipmentPlan", request, response);
-addToShipmentPlanForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 addToShipmentPlanForm.putInContext("shipmentPlan", addRows);
 
 HtmlFormWrapper findOrderItemsForm = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "findOrderItems", request, response);
-findOrderItemsForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 findOrderItemsForm.putInContext("shipmentId", shipmentId);
 if (shipment != null && shipment.get("primaryOrderId") != null) {
     findOrderItemsForm.putInContext("orderId", shipment.getString("primaryOrderId"));
 }
 
 HtmlFormWrapper shipmentPlanToOrderItemsForm = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "shipmentPlanToOrderItems", request, response);
-shipmentPlanToOrderItemsForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 shipmentPlanToOrderItemsForm.putInContext("shipmentId", shipmentId);
 
 

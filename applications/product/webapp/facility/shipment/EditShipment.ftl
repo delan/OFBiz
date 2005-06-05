@@ -24,10 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-
-${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#-- This is now done through ECAs (see secas_shipment.xml), but we may want to allow manual usage in the future too, so leaving commented just in case
 <#if (shipment.primaryOrderId)?has_content>
@@ -38,8 +34,4 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <div><a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_blank">${uiLabelMap.ProductGenerateShipmentManifestReport}</a></div>
 </#if>
 
-${editShipmentWrapper.renderFormString()}
-
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
-</#if>
+${editShipmentWrapper.renderFormString(context)}
