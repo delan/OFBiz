@@ -24,9 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-${pages.get("/facility/FacilityTabBar.ftl")}
 
 <div class="head1">${uiLabelMap.ProductEditInventoryItemWithId} [${inventoryItemId?if_exists}]</div>
 <a href="<@ofbizUrl>/EditInventoryItem<#if facilityId?exists>?facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewInventoryItem}]</a>
@@ -76,7 +73,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td>
             <input type="text" name="productId" value="${inventoryItemData.productId?if_exists}" size="20" maxlength="20" class="inputBox">
             <#if (inventoryItem.productId)?has_content>
-                <a href="/catalog/control/EditProduct?productId=${inventoryItem.productId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[Edit&nbsp;Product&nbsp;${inventoryItem.productId}]</a>
+                <a href="/catalog/control/EditProduct?productId=${inventoryItem.productId}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">[Edit&nbsp;Product&nbsp;${inventoryItem.productId}]</a>
             </#if>
         </td>
       </tr>
@@ -224,8 +221,3 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 	<br/>
 	${viewPhysicalInventoryAndVarianceWrapper.renderFormString()}
 </#if>
-
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
-</#if>
-

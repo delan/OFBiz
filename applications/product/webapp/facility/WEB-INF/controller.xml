@@ -829,10 +829,10 @@
     <view-map name="ViewContactMechs" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewContactMechs"/>
     <view-map name="EditContactMech" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditContactMech"/>
 
-    <view-map name="EditInventoryItem" type="jpublish" page="/inventory/EditInventoryItem.ftl"/>
-    <view-map name="TransferInventoryItem" type="jpublish" page="/inventory/TransferInventoryItem.ftl"/>
-    <view-map name="ReceiveInventory" type="jpublish" page="/inventory/receiveInventory.ftl"/>
-    <view-map name="ReceiveReturn" type="jpublish" page="/returns/receiveReturn.ftl"/>
+    <view-map name="EditInventoryItem" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditInventoryItem"/>
+    <view-map name="TransferInventoryItem" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TransferInventoryItem"/>
+    <view-map name="ReceiveInventory" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReceiveInventory"/>
+    <view-map name="ReceiveReturn" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReceiveReturn"/>
 
     <view-map name="PicklistOptions" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PicklistOptions"/>
     <view-map name="PicklistManage" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PicklistManage"/>

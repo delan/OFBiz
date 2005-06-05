@@ -24,14 +24,10 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("FACILITY", "_CREATE", session)>
 
 <#if invalidProductId?exists>
 <div class='errorMessage'>${invalidProductId}</div>
 </#if>
-
-${pages.get("/facility/FacilityTabBar.ftl")}
 
 <div class="head1">${uiLabelMap.ProductReceiveInventory} <span class='head2'>into&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId} :${facility.facilityId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
@@ -116,7 +112,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductProductName}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <div class="tabletext"><a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.internalName?if_exists}</a></div>
+          <div class="tabletext"><a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.internalName?if_exists}</a></div>
         </td>                
       </tr>
       <tr>
@@ -344,7 +340,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}">                      
                     <td width="45%">
                       <div class="tabletext">
-                        ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.internalName?if_exists}</a> : ${product.description?if_exists}
+                        ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.internalName?if_exists}</a> : ${product.description?if_exists}
                       </div>                       
                     </td>
                   <#else>
@@ -352,7 +348,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                       <div class="tabletext">
                         <b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
                         <input type="text" class="inputBox" size="12" name="productId_o_${rowCount}">
-                        <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
+                        <a href="/catalog/control/EditProduct?externalLoginKey=${externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
                       </div>
                     </td>
                   </#if>
@@ -479,9 +475,4 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>        
     </table>
   </form>
-</#if>
-
-<br/>
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

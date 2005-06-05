@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Receive Return</property>
-    <property name="titleProperty">ProductReceiveReturn</property>
-    <property name="headerItem">facility</property>
-    <property name="tabButtonItem">ReceiveReturn</property>
-    <content-action name="/returns/receiveReturn.bsh"/>
-</page>

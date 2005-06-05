@@ -25,13 +25,9 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
     <#if illegalInventoryItem?exists>
         <div class="errorMessage">${illegalInventoryItem}</div>
     </#if>
-
-	${pages.get("/facility/FacilityTabBar.ftl")}
 
     <div class="head1">${uiLabelMap.ProductInventoryTransfer} <span class="head2">${uiLabelMap.CommonFrom}&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
@@ -262,6 +258,3 @@
     </table>
     </form>
     </#if>
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
-</#if>
