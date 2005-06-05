@@ -81,8 +81,14 @@ public class otsUtils {
     public static List explode(GenericValue topEntityName, String child1EntityName, String child2EntityName,String child3EntityName, PrintWriter writer)	{
         return explode( topEntityName, child1EntityName, true,child2EntityName,  true,child3EntityName, true, null,  true,null,  true, writer);
     }
+    public static List explode(GenericValue topEntityName, String child1EntityName, boolean xmlWrite1, String child2EntityName, boolean xmlWrite2, String child3EntityName, boolean xmlWrite3, PrintWriter writer)	{
+        return explode( topEntityName, child1EntityName, xmlWrite1, child2EntityName, xmlWrite2,child3EntityName, xmlWrite3, null,  true,null,  true, writer);
+    }
     public static List explode(GenericValue topEntityName, String child1EntityName, String child2EntityName,String child3EntityName,String child4EntityName, PrintWriter writer )	{
         return explode( topEntityName, child1EntityName, true,child2EntityName,  true,child3EntityName, true, child4EntityName, true, null, true, writer);
+    }
+    public static List explode(GenericValue topEntityName, String child1EntityName, boolean xmlWrite1, String child2EntityName, boolean xmlWrite2, String child3EntityName, boolean xmlWrite3, String child4EntityName, boolean xmlWrite4, PrintWriter writer )	{
+        return explode( topEntityName, child1EntityName, xmlWrite1, child2EntityName,  xmlWrite2, child3EntityName,  xmlWrite3,child4EntityName,  xmlWrite4, null, true, writer);
     }
     public static List explode(GenericValue topEntityName, String child1EntityName, String child2EntityName,String child3EntityName,String child4EntityName, String child5EntityName, PrintWriter writer )	{
         return explode( topEntityName, child1EntityName, true,child2EntityName,  true,child3EntityName, true, child4EntityName, true, child5EntityName, true, writer);
@@ -101,7 +107,7 @@ public class otsUtils {
     * @param xmlWrite
     * @return
     */
-    public static List explode(GenericValue topEntityName, String child1EntityName, boolean xmlWrite1, String child2EntityName, boolean xmlWrite2,String child3EntityName, boolean xmlWrite3,String child4EntityName,  boolean xmlWrite4,String child5EntityName, boolean xmlWrite5, PrintWriter writer)	{
+    private static List explode(GenericValue topEntityName, String child1EntityName, boolean xmlWrite1, String child2EntityName, boolean xmlWrite2,String child3EntityName, boolean xmlWrite3,String child4EntityName,  boolean xmlWrite4,String child5EntityName, boolean xmlWrite5, PrintWriter writer)	{
         List lastChildren = null;
         List children1 = null;
         try { children1 = topEntityName.getRelated(child1EntityName);
@@ -194,26 +200,27 @@ public class otsUtils {
      * @since      3.0
      *
      * This program exports all data related to the specified productStoreName.
-     * It unloads the productstore information with the roles and Unloads the Party group who has the Admin role and all users under it.
+     * It unloads the productstore information with the roles 
      * It unloads the related Catalog and Categories
      * It unloads all products which have a primary category which is the same as the productStoreName and the relations to the category
      * It unloads all fixed Assets whith a parent fixed asset with an Id which is the same as the productStoreName and the relations to the products.
-     * It
+     * It also u
      */
     public static String unLoad(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        String productStoreId = request.getParameter("productStoreId");
+        String productStoreId = (String) request.getSession().getAttribute("productStoreId");
         StringBuffer msgs = new StringBuffer();
 
-        String fileName = new String("specialized/opentravelsystem/webapp/hotelbackend/images/files/" + productStoreId + ".xml");
-        String downloadLoc = new String("hotelbackend/images/files/" + productStoreId + ".xml");
-        String output = null;
-
         // single file
-        if(fileName == null || fileName.length() == 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "No fileName supplied");
+        if(productStoreId == null || productStoreId.length() == 0) {
+            request.setAttribute("_ERROR_MESSAGE_", "No productStore defined...");
             return "error";
         }
+
+        String fileName = new String("specialized/opentravelsystem/webapp/" + productStoreId + "/data/" + productStoreId + ".xml");
+        String downloadLoc = new String(productStoreId + "/data/" + productStoreId + ".xml");
+        String output = null;
+
         FileOutputStream fos = null;
         try { fos = new FileOutputStream(fileName);
         } catch (FileNotFoundException e) {
@@ -244,8 +251,12 @@ public class otsUtils {
 
 
         // retrieve the access users. When it is a group, retrieve its users
-        explode(productStore, "ProductStoreRole",false, "Party",true, "UserLogin",false,"UserLoginSecurityGroup",false,"SecurityGroup",true, writer);
-        explode(productStore, "ProductStoreRole",true, "Party",false, "UserLogin",true,"UserLoginSecurityGroup",true,"SecurityGroup",false, writer);
+        explode(productStore, "ProductStoreRole",false, "Party",true, writer);				// party
+        explode(productStore, "ProductStoreRole",false, "Party",false, "PartyRole",true, writer);	// partyrole
+        explode(productStore, "ProductStoreRole",true, "Party",false, "UserLogin",true, writer); // productStoreRole and Userlogin
+        explode(productStore, "ProductStoreRole",false, "Party",false, "UserLogin",false, "UserLoginSecurityGroup", true, writer); // login/securitygroup
+        explode(productStore, "ProductStoreRole",false, "Party",false, "PartyGroup",true, writer);  // partygroup
+        explode(productStore, "ProductStoreRole",false, "Party",false, "Person",true, writer);	// person
     
         //get the related website records id
         explode(productStore, "WebSite", writer);
@@ -259,10 +270,7 @@ public class otsUtils {
         explode(productStore, "ProductStoreEmailSetting",writer);
 
         // get the ProductStoreShipmentMeth
-        explode(productStore, "ProductStoreShipmentMeth",writer);
-
-        // get the simple tax
-        explode(productStore, "SimpleSalesTaxLookup",writer);
+        // explode(productStore, "ProductStoreShipmentMeth",writer);  // no direct link...
 
         // see if the primary category exists, if not create
         GenericValue productCategory = null;
@@ -314,6 +322,8 @@ public class otsUtils {
                 GenericValue product = (GenericValue) p.next();
                 // save product info
                 product.writeXmlText(writer, ""); numberWritten++;
+                // get the simple tax
+                explode(product, "SimpleSalesTaxLookup",writer);
                 // get relation to fixedAsset and check if fixed asset is in the Productstore fixed asset group
                 List fixedAssetProducts = null;
                 try {	fixedAssetProducts = product.getRelated("FixedAssetProduct");
@@ -344,7 +354,7 @@ public class otsUtils {
                 // try to get product content
                 explode(product, "ProductContent", "Content", "DataResource", writer);
                 // product reviews
-//                explode(product, "ProductReview", "StatusItem", writer);
+                // explode(product, "ProductReview", "StatusItem", writer); // better not because it needs the partyId of the writer
             }
         }
 
@@ -360,11 +370,11 @@ public class otsUtils {
             while (f.hasNext()){
                 GenericValue fixedAsset = (GenericValue) f.next();
                 // check if techdataCalendar needs to be created.
-                if (fixedAsset.get("calendarId") != null)	{
+/*                if (fixedAsset.get("calendarId") != null)	{
                      explode(fixedAsset,"TechDataCalendar", writer);  // tech data first
                      explode(fixedAsset,"TechDataCalendar", false, "TechDataCalendarExcDay",true, writer);
                 }
-                // fixed asset itself
+*/             // fixed asset itself
                 fixedAsset.writeXmlText(writer, ""); numberWritten++;
 
                 // get relation to product
@@ -395,7 +405,7 @@ public class otsUtils {
             }
         }
 
-        // get related catalogs for Hotel is should be "one" only
+        // get related catalogs for Hotel , should be "one" only
         List productStoreCatalogs  = null;
         try {	productStoreCatalogs = productStore.getRelated("ProductStoreCatalog");
         } catch (GenericEntityException e) { ; }
@@ -494,10 +504,11 @@ public class otsUtils {
 
         writer.println("</entity-engine-xml>");
         writer.close();
-        msgs.append("Statistics: Entities written to output file " +  fileName + ": " + numberWritten + "\n");
-        msgs.append("            Records created:  " + numberCreated + "\n");
-        msgs.append("            Records Updated: " + numberUpdated + "\n");
-        msgs.append("Download your generated file at " + downloadLoc );
+        msgs.append("Unload ended normally, statistics:\n");
+        msgs.append("--Entities written to output file: " + numberWritten + "\n");
+        msgs.append("--Records created:  " + numberCreated + "\n");
+        msgs.append("--Records Updated: " + numberUpdated + "\n");
+        msgs.append("<a href=/"  + downloadLoc+ ">--Download your generated file here</a>");
         if (msgs.length() > 0)
             request.setAttribute("_EVENT_MESSAGE_", msgs.toString());
         numberWritten = 0;
