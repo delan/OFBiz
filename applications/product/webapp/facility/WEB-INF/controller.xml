@@ -845,14 +845,14 @@
     <view-map name="EditFacilityGroupRollup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRollup"/>
     <view-map name="EditFacilityGroupRoles" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRoles"/>
 
-    <view-map name="FindShipment" type="jpublish" page="/shipment/FindShipment.ftl"/>
-    <view-map name="ViewShipment" type="jpublish" page="/shipment/ViewShipment.ftl"/>
-    <view-map name="EditShipment" type="jpublish" page="/shipment/EditShipment.ftl"/>
-    <view-map name="EditShipmentItems" type="jpublish" page="/shipment/EditShipmentItems.ftl"/>
-    <view-map name="EditShipmentPlan" type="jpublish" page="/shipment/EditShipmentPlan.ftl"/>
-    <view-map name="EditShipmentPackages" type="jpublish" page="/shipment/EditShipmentPackages.ftl"/>
-    <view-map name="EditShipmentRouteSegments" type="jpublish" page="/shipment/EditShipmentRouteSegments.ftl"/>
-    <view-map name="AddItemsFromOrder" type="jpublish" page="/shipment/AddItemsFromOrder.ftl"/>
+    <view-map name="FindShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#FindShipment"/>
+    <view-map name="ViewShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#ViewShipment"/>
+    <view-map name="EditShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#EditShipment"/>
+    <view-map name="EditShipmentItems" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#EditShipmentItems"/>
+    <view-map name="EditShipmentPlan" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#EditShipmentPlan"/>
+    <view-map name="EditShipmentPackages" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#EditShipmentPackages"/>
+    <view-map name="EditShipmentRouteSegments" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#EditShipmentRouteSegments"/>
+    <view-map name="AddItemsFromOrder" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#AddItemsFromOrder"/>
     <view-map name="QuickShipOrder" type="jpublish" page="/shipment/QuickShipOrder.ftl"/>
 
     <view-map name="ShipmentManifestReport" type="jasperreportspdf" page="/shipmentreports/ShipmentManifestReport.xml" content-type="application/pdf" encoding="none"/>

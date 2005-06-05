@@ -24,9 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#if shipment?exists>
 <table width="100%" cellspacing="0" cellpadding="2" border="1">
@@ -131,8 +128,4 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 </table>
 <#else>
   <h3>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId?if_exists}]</h3>
-</#if>
-
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

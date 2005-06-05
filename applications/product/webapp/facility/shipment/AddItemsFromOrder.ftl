@@ -24,10 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-${pages.get("/shipment/ShipmentTabBar.ftl")}
-
 <#if shipment?exists>
 
 <form name="additemsfromorder" action="<@ofbizUrl>/AddItemsFromOrder</@ofbizUrl>">
@@ -220,8 +216,4 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#else>
   <h3>${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId?if_exists}]</h3>
-</#if>
-
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

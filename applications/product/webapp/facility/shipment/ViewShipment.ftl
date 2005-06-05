@@ -25,27 +25,10 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
-${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#if shipmentId?has_content>
     <div><a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_blank">${uiLabelMap.ProductGenerateShipmentManifestReport}</a></div>
-</#if>
-
-<#if shipment?exists>
-${pages.get("/shipment/ViewShipmentInfo.ftl")}
-
-<br/>
-${pages.get("/shipment/ViewShipmentItemInfo.ftl")}
-
-<br/>
-${pages.get("/shipment/ViewShipmentPackageInfo.ftl")}
-
-<br/>
-${pages.get("/shipment/ViewShipmentRouteInfo.ftl")}
-<#else>
-  <h3>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId?if_exists}]</h3>
 </#if>
 
 <#else>

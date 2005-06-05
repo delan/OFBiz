@@ -25,8 +25,8 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if shipmentRouteSegmentDatas?has_content>
+<br/>
 <table width="100%" cellspacing="0" cellpadding="2" border="1">
     <tr>
         <td><div class="tableheadtext">${uiLabelMap.ProductSegment}</div></td>

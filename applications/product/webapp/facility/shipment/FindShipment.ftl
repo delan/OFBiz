@@ -24,8 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 <script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupShipments() {
@@ -242,8 +240,4 @@ function lookupShipments() {
     </td>
   </tr>
 </table>
-</#if>
-
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>
