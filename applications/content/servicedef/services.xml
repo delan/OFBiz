@@ -55,13 +55,21 @@
         <attribute name="bodyUrlParameters" type="Map" mode="IN" optional="true"/>
         <attribute name="body" type="String" mode="OUT" optional="false"/>
     </service>
-
+    <service name="sendMailFromScreen" engine="java"
+        location="org.ofbiz.content.email.EmailServices" invoke="sendMailFromScreen">
+        <description>Send E-Mail From Screen Widget Service</description>
+        <implements service="sendMailInterface"/>
+        <attribute name="bodyScreenUri" type="String" mode="IN" optional="false"/>
+        <attribute name="bodyParameters" type="Map" mode="IN" optional="true"/>
+        <attribute name="body" type="String" mode="OUT" optional="false"/>
+    </service>
+    
     <service name="prepareNotificationInterface" engine="interface"
             location="" invoke="">
         <description>Send Template Based Notification Service</description>
         <implements service="sendMailInterface"/>
         <attribute name="body" type="String" mode="INOUT" optional="true"/>
-    	<attribute name="baseUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="baseUrl" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="false"/>
         <attribute name="templateData" type="Map" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>

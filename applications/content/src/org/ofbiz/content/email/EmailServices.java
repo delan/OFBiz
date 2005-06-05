@@ -24,8 +24,11 @@
  */
 package org.ofbiz.content.email;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import javax.mail.Message;
@@ -33,19 +36,27 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.widget.html.HtmlScreenRenderer;
+import org.ofbiz.widget.screen.ScreenRenderer;
+import org.xml.sax.SAXException;
 
 /**
  * Email Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Rev$
  * @since      2.0
  */
@@ -53,42 +64,7 @@ public class EmailServices {
     
     public final static String module = EmailServices.class.getName();
 
-    /**
-     * JavaMail Service that gets body content from a URL
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
-     */
-    public static Map sendMailFromUrl(DispatchContext ctx, Map context) {
-        // pretty simple, get the content and then call the sendMail method below
-        String bodyUrl = (String) context.remove("bodyUrl");
-        Map bodyUrlParameters = (Map) context.remove("bodyUrlParameters");
-
-        URL url = null;
-
-        try {
-            url = new URL(bodyUrl);
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Malformed URL: " + bodyUrl + "; error was: " + e.toString());
-        }
-
-        HttpClient httpClient = new HttpClient(url, bodyUrlParameters);
-        String body = null;
-
-        try {
-            body = httpClient.post();
-        } catch (HttpClientException e) {
-            Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Error getting content: " + e.toString());
-        }
-
-        context.put("body", body);
-        Map result = sendMail(ctx, context);
-
-        result.put("body", body);
-        return result;
-    }
+    protected static final HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
 
     /**
      * Basic JavaMail Service
@@ -189,5 +165,93 @@ public class EmailServices {
         }
         return ServiceUtil.returnSuccess();
     }
-}
 
+    /**
+     * JavaMail Service that gets body content from a URL
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map sendMailFromUrl(DispatchContext ctx, Map context) {
+        // pretty simple, get the content and then call the sendMail method below
+        String bodyUrl = (String) context.remove("bodyUrl");
+        Map bodyUrlParameters = (Map) context.remove("bodyUrlParameters");
+
+        URL url = null;
+
+        try {
+            url = new URL(bodyUrl);
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, module);
+            return ServiceUtil.returnError("Malformed URL: " + bodyUrl + "; error was: " + e.toString());
+        }
+
+        HttpClient httpClient = new HttpClient(url, bodyUrlParameters);
+        String body = null;
+
+        try {
+            body = httpClient.post();
+        } catch (HttpClientException e) {
+            Debug.logWarning(e, module);
+            return ServiceUtil.returnError("Error getting content: " + e.toString());
+        }
+
+        context.put("body", body);
+        Map result = sendMail(ctx, context);
+
+        result.put("body", body);
+        return result;
+    }
+
+    /**
+     * JavaMail Service that gets body content from a Screen Widget
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map sendMailFromScreen(DispatchContext dctx, Map serviceContext) {
+        // pretty simple, get the content and then call the sendMail method below
+        String bodyScreenUri = (String) serviceContext.remove("bodyScreenUri");
+        Map bodyParameters = (Map) serviceContext.remove("bodyParameters");
+
+        StringWriter bodyWriter = new StringWriter();
+
+        MapStack screenContext = MapStack.create();
+        ScreenRenderer screens = new ScreenRenderer(bodyWriter, screenContext, htmlScreenRenderer);
+        screens.populateContextForService(dctx, serviceContext);
+        screenContext.putAll(bodyParameters);
+
+        try {
+            screens.render(bodyScreenUri);
+        } catch (GeneralException e) {
+            String errMsg = "Error rendering screen for email: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        } catch (IOException e) {
+            String errMsg = "Error rendering screen for email: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        } catch (SAXException e) {
+            String errMsg = "Error rendering screen for email: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        } catch (ParserConfigurationException e) {
+            String errMsg = "Error rendering screen for email: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+        
+        String body = bodyWriter.toString();
+        serviceContext.put("body", body);
+        
+        // also expand the subject at this point, just in case it has the FlexibleStringExpander syntax in it...
+        String subject = (String) serviceContext.get("subject");
+        subject = FlexibleStringExpander.expandString(subject, screenContext, (Locale) screenContext.get("locale"));
+        serviceContext.put("subject", subject);
+        
+        Map result = sendMail(dctx, serviceContext);
+
+        result.put("body", body);
+        return result;
+    }
+}
