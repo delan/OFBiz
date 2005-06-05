@@ -27,9 +27,6 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.party.contact.*;
 
-externalLoginKey = request.getAttribute("externalLoginKey");
-externalKeyParam = (externalLoginKey == null) ? "" : ("&externalLoginKey=" + externalLoginKey);
-context.put("externalKeyParam", externalKeyParam);
 context.put("nowStr", UtilDateTime.nowTimestamp());
 
 delegator = request.getAttribute("delegator");

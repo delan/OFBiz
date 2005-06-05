@@ -818,17 +818,16 @@
     <view-map name="LookupOrderHeaderAndShipInfo" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeaderAndShipInfo"/>
     
     <view-map name="FindFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
-    <view-map name="EditFacility" type="jpublish" page="facility/EditFacility.ftl"/>
-    <view-map name="FindFacilityTransfers" type="jpublish" page="/facility/FindFacilityTransfers.ftl"/>
-    <view-map name="FindFacilityLocation" type="jpublish" page="/facility/FindFacilityLocation.ftl"/>
-    <view-map name="EditFacilityLocation" type="jpublish" page="/facility/EditFacilityLocation.ftl"/>
-    <view-map name="EditFacilityInventoryItems" type="jpublish" page="/facility/EditFacilityInventoryItems.ftl"/>
+    <view-map name="EditFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacility"/>
+    <view-map name="FindFacilityTransfers" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityTransfers"/>
+    <view-map name="FindFacilityLocation" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityLocation"/>
+    <view-map name="EditFacilityLocation" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityLocation"/>
+    <view-map name="EditFacilityInventoryItems" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityInventoryItems"/>
     <view-map name="ViewFacilityInventoryByProduct" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewFacilityInventoryByProduct"/>
-    <view-map name="EditFacilityGroups" type="jpublish" page="/facility/EditFacilityGroups.ftl"/>
-    <view-map name="EditFacilityRoles" type="jpublish" page="/facility/EditFacilityRoles.ftl"/>
-
-    <view-map name="ViewContactMechs" type="jpublish" page="/facility/ViewContactMechs.ftl"/>
-    <view-map name="EditContactMech" type="jpublish" page="/facility/EditContactMech.ftl"/>
+    <view-map name="EditFacilityGroups" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityGroups"/>
+    <view-map name="EditFacilityRoles" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityRoles"/>
+    <view-map name="ViewContactMechs" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewContactMechs"/>
+    <view-map name="EditContactMech" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditContactMech"/>
 
     <view-map name="EditInventoryItem" type="jpublish" page="/inventory/EditInventoryItem.ftl"/>
     <view-map name="TransferInventoryItem" type="jpublish" page="/inventory/TransferInventoryItem.ftl"/>

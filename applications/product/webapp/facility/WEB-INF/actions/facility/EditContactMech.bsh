@@ -34,10 +34,6 @@ import org.ofbiz.common.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.webapp.control.*;
 
-String externalLoginKey = LoginWorker.getExternalLoginKey(request);
-String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
-context.put("externalKeyParam",externalKeyParam);
-
 delegator = request.getAttribute("delegator");
 
 String facilityId = request.getParameter("facilityId");

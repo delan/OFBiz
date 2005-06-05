@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Edit Facility Location</property>
-    <property name="titleProperty">PageTitleEditFacilityLocation</property>
-    <property name="headerItem">facility</property>
-    <property name="tabButtonItem">FindFacilityLocation</property>
-    <content-action name="/facility/EditFacilityLocation.bsh"/>
-</page>

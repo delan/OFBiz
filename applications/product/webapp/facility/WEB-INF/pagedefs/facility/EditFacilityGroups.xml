@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Edit Facility Groups</property>
-    <property name="titleProperty">PageTitleEditFacilityGroups</property>
-    <property name="headerItem">facility</property>
-    <property name="tabButtonItem">EditFacilityGroups</property>
-    <content-action name="/facility/EditFacilityGroups.bsh"/>
-</page>

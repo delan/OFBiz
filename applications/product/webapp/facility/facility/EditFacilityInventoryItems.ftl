@@ -26,12 +26,6 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<#if hasPermission>
-
-${pages.get("/facility/FacilityTabBar.ftl")}
-
     <div class="head1">${uiLabelMap.ProductInventoryItemsFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
 
     <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
@@ -87,7 +81,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext">&nbsp;${(inventoryItem.statusId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.datetimeReceived)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.expireDate)?if_exists}</div></td>
-            <td><a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">${(inventoryItem.productId)?if_exists}</a></td>
+            <td><a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">${(inventoryItem.productId)?if_exists}</a></td>
             <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content>(${facilityLocationTypeEnum.description})</#if>[${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
@@ -139,6 +133,3 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </#if>
         <br/>
     </#if>
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
-</#if>
