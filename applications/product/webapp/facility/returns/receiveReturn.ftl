@@ -24,10 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("FACILITY", "_CREATE", session)>
-
-${pages.get("/facility/FacilityTabBar.ftl")}
 
 <div class="head1">${uiLabelMap.ProductReceiveReturn} <span class='head2'>${uiLabelMap.CommonInto}&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
@@ -37,7 +33,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 <#-- Receiving Results -->
 <#if receivedItems?has_content>
   <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-    <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptForReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${requestAttributes.externalKeyParam?if_exists}" class="buttontext">#${returnHeader.returnId}</a></div></td></tr>
+    <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptForReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam?if_exists}" class="buttontext">#${returnHeader.returnId}</a></div></td></tr>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
     <tr>
       <td><div class="tableheadtext">${uiLabelMap.ProductReceipt}</div></td>
@@ -80,7 +76,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       <#else>
         <tr>
           <td>
-            <div class="head3">${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${requestAttributes.externalKeyParam?if_exists}" class="buttontext">#${returnHeader.returnId}</a></div>
+            <div class="head3">${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam?if_exists}" class="buttontext">#${returnHeader.returnId}</a></div>
           </td>
           <td align="right">
             <span class="tableheadtext">${uiLabelMap.ProductSelectAll}</span>&nbsp;
@@ -115,7 +111,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}">                      
                     <td width="45%">
                       <div class="tabletext">
-                        ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.internalName?if_exists}</a> : ${product.description?if_exists}
+                        ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.internalName?if_exists}</a> : ${product.description?if_exists}
                         <#if serializedInv?has_content><font color='red'>**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                       </div>                       
                     </td>
@@ -124,7 +120,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                       <div class="tabletext">
                         ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
                         <input type="text" class="inputBox" size="12" name="productId_o_${rowCount}">
-                        <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
+                        <a href="/catalog/control/EditProduct?externalLoginKey=${externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
                       </div>
                     </td>
                   <#else>
@@ -249,9 +245,4 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>        
     </table>
   </form>
-</#if>
-
-<br/>
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

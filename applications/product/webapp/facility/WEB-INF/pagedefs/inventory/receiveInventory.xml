@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Receive Inventory</property>
-    <property name="titleProperty">ProductReceiveInventory</property>
-    <property name="headerItem">facility</property>
-    <property name="tabButtonItem">ReceiveInventory</property>
-    <content-action name="/inventory/receiveInventory.bsh"/>
-</page>
