@@ -81,13 +81,13 @@
         <tr><td colspan="4">&nbsp;</td></tr>
         <tr>
           <td>&nbsp;</td>
-          <td align='right' valign='middle' nowrap><div class='tableheadtext'>Sales Channel</div></td>
+          <td align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.OrderSalesChannel}</div></td>
           <td>&nbsp;</td>
           <td valign='middle'>
             <div class='tabletext' valign='top'>
               <select class="selectBox" name="salesChannelEnumId">
                 <#assign currentChannel = shoppingCart.getChannelType()?default("")>               
-                <option value="">No Channel</option>
+                <option value="">${uiLabelMap.OrderNoChannel}</option>
                 <#list salesChannels as salesChannel>
                   <option value="${salesChannel.enumId}" <#if (salesChannel.enumId == currentChannel)>selected</#if>>${salesChannel.description}</option>
                 </#list>

@@ -32,7 +32,7 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
 	        <td valign="middle" align="left">
-	          <div class="boxhead">&nbsp;Additional Party Listing</div>
+	          <div class="boxhead">&nbsp;${uiLabelMap.PartyAdditionalPartyListing}</div>
 	        </td>
 	      </tr>
         </table>
@@ -72,7 +72,7 @@
 	                    </div>
 	                  </td>
 	                  <td align="right">
-	                    <a href="<@ofbizUrl>/removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="buttontext">[remove]</a>
+                            <a href="<@ofbizUrl>/removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
 	                  </td>
 	                </tr>
 	              </#list>

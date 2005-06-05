@@ -309,10 +309,10 @@ function makeExpDate() {
                     <td width="74%">
                       <select name="titleOnCard" class="selectBox">
                         <option value="">${uiLabelMap.CommonSelectOne}</option>
-                        <option<#if ((creditCard.titleOnCard)?default("") == "Mr.")> checked="checked"</#if>>Mr.</option>
-                        <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> checked="checked"</#if>>Mrs.</option>
-                        <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> checked="checked"</#if>>Ms.</option>
-                        <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> checked="checked"</#if>>Dr.</option>
+                        <option<#if ((creditCard.titleOnCard)?default("") == "Mr.")> checked</#if>>${uiLabelMap.CommonTitleMr}</option>
+                        <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> checked</#if>>${uiLabelMap.CommonTitleMrs}</option>
+                        <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> checked</#if>>${uiLabelMap.CommonTitleMs}</option>
+                        <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> checked</#if>>${uiLabelMap.CommonTitleDr}</option>
                        </select>
                     </td>
                   </tr>
@@ -509,12 +509,12 @@ function makeExpDate() {
                   </#if>
                   <tr>
                     <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="CC"/>
-                    <td width='50%' nowrap><div class="tabletext">Credit Card: Visa/Mastercard/Amex/Discover</div></td>
+                    <td width='50%' nowrap><div class="tabletext">${uiLabelMap.AccountingVisaMastercardAmexDiscover}</div></td>
                   </tr>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="EFT"/>
-                    <td width='50%' nowrap><div class="tabletext">EFT Account: AHC/Electronic Check</div></td>
+                    <td width='50%' nowrap><div class="tabletext">${uiLabelMap.AccountingAHCElectronicCheck}</div></td>
                   </tr>
                 </table>
               </form>
