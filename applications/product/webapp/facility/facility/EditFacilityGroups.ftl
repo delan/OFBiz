@@ -25,11 +25,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<#if hasPermission>
-
-${pages.get("/facility/FacilityTabBar.ftl")}
     
     <div class="head1">${uiLabelMap.ProductGroupsFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
@@ -175,6 +170,3 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </form>
         -->
     </#if>
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
-</#if>

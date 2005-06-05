@@ -25,12 +25,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<#if hasPermission>
-
-${pages.get("/facility/FacilityTabBar.ftl")}
     
     <div class="head1">${uiLabelMap.ProductLocationFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
@@ -133,7 +127,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 	                <FORM method="post" action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
 	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
 	                    <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
-	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.facilityId)?if_exists}">
+	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)?if_exists}">
 	                    <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox">
 	                    <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox">
 	                    <INPUT type="submit" value="Update" style="font-size: x-small;">
@@ -160,6 +154,3 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             </div>
         </form>
     </#if>
-<#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
-</#if>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Edit Facility Contact Mech</property>
-    <property name="titleProperty">PageTitleEditFacilityContactMech</property>
-    <property name="headerItem">facility</property>
-    <content-action name="/facility/EditContactMech.bsh"/>
-</page>

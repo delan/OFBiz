@@ -29,9 +29,8 @@
  *@since      2.2
  */
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<#if (!security.hasEntityPermission("FACILITY", "_VIEW", session) && !mechMap.facilityContactMech?exists && mechMap.contactMech?exists)>
+<#if !mechMap.facilityContactMech?exists && mechMap.contactMech?exists>
   <p><h3>${uiLabelMap.PartyContactInfoNotBelongToYou}.</h3></p>
   &nbsp;<a href="<@ofbizUrl>/authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMapCommon.Back}]</a>
 <#else>
@@ -173,7 +172,7 @@
         <select name="stateProvinceGeoId" class="selectBox">
           <option>${(mechMap.postalAddress.stateProvinceGeoId)?if_exists}</option>
           <option></option>
-          ${pages.get("/includes/states.ftl")}
+           ${screens.render("component://common/widget/CommonScreens.xml#states")}
         </select>
       *</td>
     </tr>
@@ -191,7 +190,7 @@
         <select name="countryGeoId" class="selectBox">
           <option>${(mechMap.postalAddress.countryGeoId)?if_exists}</option>
           <option></option>
-          ${pages.get("/includes/countries.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
         </select>
       *</td>
     </tr>
