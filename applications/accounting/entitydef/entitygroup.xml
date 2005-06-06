@@ -143,6 +143,7 @@
     <entity-group group="org.ofbiz" entity="PaymentMethodTypeGlAccount" />
     <entity-group group="org.ofbiz" entity="PaymentType" />
     <entity-group group="org.ofbiz" entity="PaymentTypeAttr" />
+    <entity-group group="org.ofbiz" entity="PaymentGlAccountTypeMap" />
     <entity-group group="org.ofbiz" entity="PaymentGatewayRespMsg" />
     <entity-group group="org.ofbiz" entity="PaymentGatewayResponse" />
     <entity-group group="org.ofbiz" entity="ValueLinkFulfillment" />
