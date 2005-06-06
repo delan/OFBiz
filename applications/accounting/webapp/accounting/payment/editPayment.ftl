@@ -68,7 +68,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingPaymentMethodId}:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingPaymentMethodType}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <select name="paymentMethodTypeId" class="selectBox">
