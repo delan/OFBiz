@@ -111,7 +111,15 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupOrderHeaderAndShipInfo"/>
     </request-map>
-    
+    <request-map uri="LookupPurchaseOrderHeaderAndShipInfo">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPurchaseOrderHeaderAndShipInfo"/>
+    </request-map>
+    <request-map uri="LookupProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+
     <!-- ================ Facility Requests ================= -->
     <request-map uri="FindFacility">
         <security https="true" auth="true"/>
@@ -801,7 +809,14 @@
         <response name="success" type="view" value="EditShipmentPlan"/>
         <response name="error" type="view" value="EditShipmentPlan"/>
     </request-map>
-
+    <!--
+    <request-map uri="autoCreateShipmentPackages">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createShipmentPackages"/>
+        <response name="success" type="view" value="EditShipmentPackages"/>
+        <response name="error" type="view" value="EditShipmentItems"/>
+    </request-map>
+    -->
     <!-- ================ Shipment Manifest Report Requests ================= -->
     <request-map uri="ShipmentManifestReport.pdf">
         <security https="true" auth="true"/>
@@ -816,7 +831,9 @@
     <view-map name="login" type="screen" page="component://product/widget/facility/CommonScreens.xml#login"/>
 
     <view-map name="LookupOrderHeaderAndShipInfo" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeaderAndShipInfo"/>
-    
+    <view-map name="LookupPurchaseOrderHeaderAndShipInfo" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupPurchaseOrderHeaderAndShipInfo"/>
+    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+
     <view-map name="FindFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
     <view-map name="EditFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacility"/>
     <view-map name="FindFacilityTransfers" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityTransfers"/>

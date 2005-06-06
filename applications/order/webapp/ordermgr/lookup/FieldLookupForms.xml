@@ -103,4 +103,44 @@
         <field name="stateProvinceGeoId"><display/></field>
         <field name="grandTotal"><display/></field>
     </form>
+    <form name="lookupPurchaseOrderHeaderAndShipInfo" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupPurchaseOrderHeaderAndShipInfo" title="" type="single">
+        <actions>
+            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <auto-fields-entity entity-name="OrderHeaderAndShipGroups" default-field-type="hidden"/>
+        <field name="orderId"><text-find/></field>
+        <field name="orderTypeId"><hidden/></field>
+        <field name="partyId"><text-find/></field>
+        <field name="shipmentMethodTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ShipmentMethodType" description="${description}">
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="carrierPartyId"><text-find/></field>
+        <field name="shipAfterDate"><date-find type="date"/></field>
+        <field name="shipByDate"><date-find type="date"/></field>
+        <field name="city"><text-find/></field>
+        <field name="postalCode"><text-find/></field>
+        <field name="countryGeoId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" description="${geoName}" key-field-name="geoId">
+                    <entity-constraint name="geoTypeId" value="COUNTRY"/>
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="stateProvinceGeoId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" description="${geoName}" key-field-name="geoId">
+                    <entity-constraint name="geoTypeId" value="STATE"/>
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="grandTotal"><range-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>
