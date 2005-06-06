@@ -455,7 +455,12 @@
         <td width="25%" align='right'><div class="tabletext">${uiLabelMap.ProductPurchaseOrderNumber}</div></td>
         <td>&nbsp;</td>
         <td width="25%">
-          <input type="text" class="inputBox" name="purchaseOrderId" size="20" maxlength="20" value="${requestParameters.purchaseOrderId?if_exists}">          
+          <input type="text" class="inputBox" name="purchaseOrderId" size="20" maxlength="20" value="${requestParameters.purchaseOrderId?if_exists}">
+          <span class='tabletext'>
+            <a href="javascript:call_fieldlookup2(document.selectAllForm.purchaseOrderId,'LookupPurchaseOrderHeaderAndShipInfo');">
+              <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+            </a>
+          </span>
         </td> 
         <td><div class='tabletext'>&nbsp;(${uiLabelMap.ProductLeaveSingleProductReceiving})</div></td>
       </tr>
@@ -463,8 +468,13 @@
         <td width="25%" align='right'><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
         <td>&nbsp;</td>
         <td width="25%">
-          <input type="text" class="inputBox" name="productId" size="20" maxlength="20" value="${requestParameters.productId?if_exists}">         
-        </td>       
+          <input type="text" class="inputBox" name="productId" size="20" maxlength="20" value="${requestParameters.productId?if_exists}">
+          <span class='tabletext'>
+            <a href="javascript:call_fieldlookup2(document.selectAllForm.productId,'LookupProduct');">
+              <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+            </a>
+          </span>
+        </td>
         <td><div class='tabletext'>&nbsp;(${uiLabelMap.ProductLeaveEntirePoReceiving})</div></td>        
       </tr>      
       <tr>
