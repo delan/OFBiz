@@ -216,7 +216,7 @@ public class CheckOutHelper {
         if (UtilValidate.isNotEmpty(correspondingPoId)) {
             this.cart.setPoNumber(correspondingPoId);
         } else {
-            this.cart.setPoNumber("(none)");
+            this.cart.setPoNumber(null);
         }
 
         return errorMessages;

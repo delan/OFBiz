@@ -20,6 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Rev$
  *@since      2.1
 -->
@@ -27,18 +28,18 @@
 <table border="0" cellpadding="0" cellspacing="0">
   <tr>
     <#-- left side -->
-    <td width='50%' valign='top' align='left'>
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <td width="50%" valign="top" align="left">
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <#-- general order info -->
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</div>
                 </td>
                 <#if maySelectItems?default("N") == "Y" && returnLink?default("N") == "Y">
-                  <td valign="middle" align="right" nowrap>
+                  <td valign="middle" align="right" nowrap="nowrap">
                     <a href="<@ofbizUrl>/makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
                   </td>
                 </#if>
@@ -47,8 +48,8 @@
           </td>
         </tr>        
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>              
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">              
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">
@@ -67,7 +68,7 @@
                           </div>
                         </td>
                       </tr>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                     </#if>
                     <#-- order status information -->
                     <tr>
@@ -85,7 +86,7 @@
                     </tr>
                     <#-- ordered date -->
                     <#if orderHeader?has_content>   
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonDate}</b></div>
@@ -97,7 +98,7 @@
                       </tr>
                     </#if>
                     <#if distributorId?exists>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderDistributor}</b></div>
@@ -118,11 +119,11 @@
       <br/>
       
       <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
-      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <#-- order payment info -->
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentInformation}</div>
@@ -132,8 +133,8 @@
           </td>
         </tr>
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">
@@ -178,7 +179,7 @@
                         <#-- credit card info -->
                         <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
                           <#if outputted?default(false)>
-                            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                            <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                           </#if>
                           <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")>
                           <tr>
@@ -202,7 +203,7 @@
                         <#-- Gift Card info -->
                         <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
                           <#if outputted?default(false)>
-                            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                            <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                           </#if>
                           <#if giftCard?has_content && giftCard.cardNumber?has_content>
                             <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress")?if_exists>
@@ -234,7 +235,7 @@
                         <#-- EFT account info -->
                         <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId && eftAccount?has_content>
                           <#if outputted?default(false)>
-                            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                            <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                           </#if>
                           <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress")>
                           <tr>
@@ -278,7 +279,7 @@
                     <#-- billing account info -->
                     <#if billingAccount?has_content>
                       <#if outputted?default(false)>
-                        <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                        <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                       </#if>
                       <#assign outputted = true>
                       <tr>
@@ -292,14 +293,18 @@
                           </div>
                         </td>
                       </tr>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    </#if>
+                    <#if (customerPoNumberSet?has_content)>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderPurchaseOrderNumber}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                          <div class="tabletext">${customerPoNumber?if_exists}</div>
+                          <#list customerPoNumberSet as customerPoNumber>
+                            <div class="tabletext">${customerPoNumber?if_exists}</div>
+                          </#list>
                         </td>
                       </tr>
                     </#if>
@@ -314,13 +319,13 @@
     </td>
     <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
     <#-- right side -->
-    <td width='50%' valign='top' align='left'>
+    <td width="50%" valign="top" align="left">
       <#if orderItemShipGroups?has_content>
 
-      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">        
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${uiLabelMap.OrderShippingInformation}</div>
@@ -331,8 +336,8 @@
         </tr>
         <#-- shipping address -->
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
               <tr>
                 <td>
                   <#assign groupIdx = 0>
@@ -364,7 +369,7 @@
                           </div>
                         </td>
                       </tr>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                     </#if>
                     <tr>
                       <td align="right" valign="top" width="15%">
@@ -389,7 +394,7 @@
                     </tr>
                     <#-- tracking number -->
                     <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderTrackingNumber}</b></div>
@@ -413,7 +418,7 @@
                         </td>
                       </tr>
                     </#if>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                     <#-- splitting preference -->
                     <#if orderHeader?has_content>
                       <#assign maySplit = shipGroup.maySplit?default("N")>
@@ -440,7 +445,7 @@
                     </#if>
 
                     <#if shippingInstructions?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderIntructions}</b></div>
@@ -451,7 +456,7 @@
                         </td>
                       </tr>
                     </#if>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                     <#-- gift settings -->
                     <#if orderHeader?has_content>
                       <#assign isGift = shipGroup.isGift?default("N")>
@@ -474,7 +479,7 @@
                       </td>
                     </tr>
                     <#if giftMessage?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderGiftMessage}</b></div>
@@ -492,7 +497,7 @@
                   </table>
 
                     <#assign groupIdx = groupIdx + 1>
-                  </#list>
+                  </#list><#-- end list of orderItemShipGroups -->
                 </td>
               </tr>
             </table>
@@ -504,4 +509,3 @@
     </td>
   </tr>
 </table>
-
