@@ -24,17 +24,17 @@
  *@since      2.1
 -->
 
-<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp; ${uiLabelMap.OrderOrderItems}</div>
           </td>
           <#if maySelectItems?default("N") == "Y">
             <td valign="middle" align="right" nowrap>
-              <a href='javascript:document.addCommonToCartForm.add_all.value="true";document.addCommonToCartForm.submit()' class="submenutext">${uiLabelMap.EcommerceAddAlltoCart}</a><a href='javascript:document.addCommonToCartForm.add_all.value="false";document.addCommonToCartForm.submit()' class="submenutext">${uiLabelMap.EcommerceAddCheckedToCart}</a><a href='<@ofbizUrl>/createShoppingListFromOrder?order_id=${orderHeader.orderId}&orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>' class="submenutextright">Send Me This Every Month</a>
+              <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.EcommerceAddAlltoCart}</a><a href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.EcommerceAddCheckedToCart}</a><a href="<@ofbizUrl>/createShoppingListFromOrder?order_id=${orderHeader.orderId}&orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>" class="submenutextright">Send Me This Every Month</a>
             </td>
           </#if>
         </tr>
@@ -42,12 +42,12 @@
     </td>
   </tr>
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="0">
-              <tr align='left' valign='bottom'>
+              <tr align="left" valign="bottom">
                 <td width="35%" align="left"><span class="tableheadtext"><b>${uiLabelMap.EcommerceProduct}</b></span></td>               
                 <#if maySelectItems?default("N") == "Y">
                   <td width="10%" align="right"><span class="tableheadtext"><b>${uiLabelMap.OrderQtyOrdered}</b></span></td>
@@ -85,7 +85,7 @@
                          </#list>
                       </#if>
                 </#if>
-                <tr><td colspan="10"><hr class='sepbar'></td></tr>
+                <tr><td colspan="10"><hr class="sepbar"/></td></tr>
                 <tr>
                   <#if orderItem.productId == "_?_">
                     <td colspan="1" valign="top">
@@ -107,7 +107,7 @@
                               <#else>
                                 <#assign displayState = "Returned">
                               </#if>
-                              <div class='tabletext'><font color="red"><b>${displayState}</b></font> (#${return.returnId})</div>
+                              <div class="tabletext"><font color="red"><b>${displayState}</b></font> (#${return.returnId})</div>
                             </#if>
                           </#list>
                         </#if>
@@ -123,20 +123,20 @@
                     <#if maySelectItems?default("N") == "Y">
                     <td align="right" valign="top">
                       <#assign shippedQty = localOrderReadHelper.getItemShippedQuantity(orderItem)>
-                      <div class="tabletext" nowrap>${shippedQty?default(0)?string.number}</div>
+                      <div class="tabletext">${shippedQty?default(0)?string.number}</div>
                     </td>
                     <td align="right" valign="top">
                       <#assign canceledQty = localOrderReadHelper.getItemCanceledQuantity(orderItem)>
-                      <div class="tabletext" nowrap>${canceledQty?default(0)?string.number}</div>
+                      <div class="tabletext">${canceledQty?default(0)?string.number}</div>
                     </td>
                     </#if>
                     <td align="right" valign="top">
-                      <div class="tabletext" nowrap><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></div>
+                      <div class="tabletext"><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></div>
                     </td>
                     <td align="right" valign="top">
-                      <div class="tabletext" nowrap><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></div>
+                      <div class="tabletext"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></div>
                     </td>
-                    <td align="right" valign="top" nowrap>
+                    <td align="right" valign="top">
                     <#if workEfforts?exists>
                        <div class="tabletext"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem)*rentalQuantity isoCode=currencyUomId/></div>
                     <#else>                                          
@@ -167,7 +167,7 @@
                 <#list itemAdjustments as orderItemAdjustment>
                   <tr>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'>
+                      <div class="tabletext" style="font-size: xx-small;">
                         <b><i>${uiLabelMap.EcommerceAdjustment}</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
 
@@ -190,7 +190,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/></div>
+                      <div class="tabletext" style="font-size: xx-small;"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/></div>
                     </td>
                     <td>&nbsp;</td>
                     <#if maySelectItems?default("N") == "Y"><td>&nbsp;</td></#if>
@@ -224,30 +224,30 @@
                  <tr><td><font color="red">${uiLabelMap.OrderSalesOrderLookupFailed}.</font></td></tr>
                </#if>
 
-              <tr><td colspan="10"><hr class='sepbar'></td></tr>
+              <tr><td colspan="10"><hr class="sepbar"/></td></tr>
               <tr>
                 <td align="right" colspan="6"><div class="tabletext"><b>${uiLabelMap.CommonSubtotal}</b></div></td>
-                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></div></td>
+                <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></div></td>
               </tr>
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>
                 <tr>
                   <td align="right" colspan="6"><div class="tabletext"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
-                  <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></div></td>
+                  <td align="right"><div class="tabletext"><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></div></td>
                 </tr>
               </#list>
               <tr>
                 <td align="right" colspan="6"><div class="tabletext"><b>${uiLabelMap.OrderShippingAndHandling}</b></div></td>
-                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></div></td>
+                <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></div></td>
               </tr>
               <tr>
                 <td align="right" colspan="6"><div class="tabletext"><b>${uiLabelMap.OrderSalesTax}</b></div></td>
-                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></div></td>
+                <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></div></td>
               </tr>
 
-              <tr><td colspan=2></td><td colspan="9"><hr class='sepbar'></td></tr>
+              <tr><td colspan="2"></td><td colspan="9"><hr class="sepbar"/></td></tr>
               <tr>
                 <td align="right" colspan="6"><div class="tabletext"><b>${uiLabelMap.OrderGrandTotal}</b></div></td>
-                <td align="right" nowrap>
+                <td align="right">
                   <div class="tabletext"><@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/></div>
                 </td>
               </tr>

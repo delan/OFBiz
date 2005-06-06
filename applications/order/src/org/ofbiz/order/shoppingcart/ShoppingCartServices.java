@@ -128,7 +128,7 @@ public class ShoppingCartServices {
         if (UtilValidate.isNotEmpty(correspondingPoId)) {
             cart.setPoNumber(correspondingPoId);
         } else {
-            cart.setPoNumber("(none)");
+            cart.setPoNumber(null);
         }
 
         return ServiceUtil.returnSuccess();
