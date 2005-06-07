@@ -30,22 +30,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.widget.html.*;
 import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
-
-boolean hasTask(String taskName, GenericValue productionRun) {
-    List tasks = delegator.findByAnd("WorkEffort", UtilMisc.toMap("workEffortParentId", productionRun.getString("workEffortId"), 
-                                                     "workEffortTypeId", "PROD_ORDER_TASK",
-                                                     "workEffortName", taskName));
-    return (tasks != null && tasks.size() > 0);
-}
-
-void getLinkedProductionRuns(String productionRunId, List productionRuns) {
-    productionRuns.add(new ProductionRun(delegator, productionRunId));
-    List linkedWorkEfforts = delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY"));
-    for (int i = 0; i < linkedWorkEfforts.size(); i++) {
-        GenericValue link = (GenericValue)linkedWorkEfforts.get(i);
-        getLinkedProductionRuns(link.getString("workEffortIdFrom"), productionRuns);
-    }
-}
+import org.ofbiz.manufacturing.jobshopmgt.ProductionRunHelper;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
@@ -93,10 +78,10 @@ if (shipmentPlans != null) {
         ArrayList productionRunTree = new ArrayList();
         // TODO
         if (weId != null) {
-            getLinkedProductionRuns(weId.getString("workEffortId"), productionRunTree);
+            ProductionRunHelper.getLinkedProductionRuns(delegator, weId.getString("workEffortId"), productionRunTree);
             for (int i = 0; i < productionRunTree.size(); i++) {
                 ProductionRun oneProductionRun = (ProductionRun)productionRunTree.get(i);
-                if (hasTask(selectWorkEffortNameParameter, oneProductionRun.getGenericValue())) {
+                if (ProductionRunHelper.hasTask(delegator, selectWorkEffortNameParameter, oneProductionRun.getGenericValue().getString("workEffortId"))) {
                     GenericValue product = oneProductionRun.getProductProduced();
                     String primaryCategory = product.getString("primaryProductCategoryId");
                     if (primaryCategory != null && selectPrimaryCategoryIdParameter.equals(primaryCategory)) {

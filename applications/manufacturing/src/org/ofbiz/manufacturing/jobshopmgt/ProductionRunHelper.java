@@ -79,5 +79,30 @@ public class ProductionRunHelper {
         }
         return result;
     }
-    
+
+    public static boolean hasTask(GenericDelegator delegator, String taskName, String workEffortId) throws GenericEntityException {
+        List tasks = delegator.findByAnd("WorkEffort", UtilMisc.toMap("workEffortParentId", workEffortId, 
+                                                         "workEffortTypeId", "PROD_ORDER_TASK",
+                                                         "workEffortName", taskName));
+        return (tasks != null && tasks.size() > 0);
+    }
+
+    public static void getLinkedProductionRuns(GenericDelegator delegator, String productionRunId, List productionRuns)  throws GenericEntityException {
+        productionRuns.add(new ProductionRun(delegator, productionRunId));
+        List linkedWorkEfforts = delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY"));
+        for (int i = 0; i < linkedWorkEfforts.size(); i++) {
+            GenericValue link = (GenericValue)linkedWorkEfforts.get(i);
+            getLinkedProductionRuns(delegator, link.getString("workEffortIdFrom"), productionRuns);
+        }
+    }
+
+    public static String getRootProductionRun(GenericDelegator delegator, String productionRunId)  throws GenericEntityException {
+        List linkedWorkEfforts = delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY"));
+        GenericValue linkedWorkEffort = EntityUtil.getFirst(linkedWorkEfforts);
+        if (linkedWorkEffort != null) {
+            productionRunId = getRootProductionRun(delegator, linkedWorkEffort.getString("workEffortIdTo"));
+        }
+        return productionRunId;
+    }
+
 }
