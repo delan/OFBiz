@@ -329,7 +329,7 @@ public class OrderChangeHelper {
 
         // create the payment
         GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", delegator.getNextSeqId("Payment")));
-        payment.set("paymentTypeId", "RECEIPT");
+        payment.set("paymentTypeId", "CUSTOMER_PAYMENT");
         payment.set("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
         payment.set("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
         payment.set("amount", orderPaymentPreference.getDouble("maxAmount"));
