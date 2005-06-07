@@ -246,6 +246,9 @@
     <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
     <StatusType description="Party Asset" hasTable="N" parentTypeId="" statusTypeId="PARTY_ASSET_STATUS"/>
 
+    <!-- payments of this type trigger no accounting transactions or GL postings -->
+    <PaymentType description="Other (Non-posting)" hasTable="N" parentTypeId="" paymentTypeId="OTHER_NO_POST"/> 
+
     <!-- order payment pref status -->
     <StatusType description="Payment Preference" hasTable="N" parentTypeId="" statusTypeId="PAYMENT_PREF_STATUS"/>
     <StatusItem description="Not-Received" sequenceId="01" statusCode="NOT_RECEIVED" statusId="PAYMENT_NOT_RECEIVED" statusTypeId="PAYMENT_PREF_STATUS"/>
