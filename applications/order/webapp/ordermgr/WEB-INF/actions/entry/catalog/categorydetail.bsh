@@ -34,7 +34,6 @@ import org.ofbiz.entity.*;
 import org.ofbiz.service.*;
 import org.ofbiz.product.catalog.*;
 
-requestParameters = UtilHttp.getParameterMap(request);
 viewSize = requestParameters.get("VIEW_SIZE");
 viewIndex = requestParameters.get("VIEW_INDEX");
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
@@ -55,7 +54,6 @@ if (limitViewObj != null) {
 context.put("limitView", limitView);
 
 // get the product category & members
-dispatcher = request.getAttribute("dispatcher");
 andMap = UtilMisc.toMap("productCategoryId", request.getAttribute("productCategoryId"), 
         "viewIndexString", viewIndex, "viewSizeString", viewSize, 
         "defaultViewSize", defaultViewSize, "limitView", limitView);
