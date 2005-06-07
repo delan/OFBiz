@@ -40,8 +40,8 @@
     </form>
     <form name="FindRequests" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="inputBox"
-            target="FindRequest" title="" type="single">
-        <auto-fields-entity entity-name="CustRequest" default-field-type="find"/>
+            target="FindRequest" title="" type="single" default-map-name="parameters">
+        <auto-fields-entity entity-name="CustRequestAndRole" default-field-type="find"/>
         <field name="custRequestTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="CustRequestType" key-field-name="custRequestTypeId"/>
@@ -55,6 +55,14 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="custRequestCategoryId"><hidden/></field>
         <field name="priority"><hidden/></field>
         <field name="description"><hidden/></field>
@@ -71,7 +79,7 @@
             title="" list-name="custRequestAndRoles" paginate-target="requestlist"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
       	<actions>
-          <set field="entityName" value="CustRequest"/>
+          <set field="entityName" value="CustRequestAndRole"/>
           <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
             <field-map field-name="inputFields" env-name="requestParameters"/>
             <field-map field-name="entityName" env-name="entityName"/>
@@ -83,11 +91,11 @@
         <field name="custRequestName"><display/></field>
         <field name="priority"><display/></field>
         <field name="responseRequiredDate"><display/></field>
-        <field name="partyId"><display/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><display/></field>
         <field name="statusId">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
     </form>
