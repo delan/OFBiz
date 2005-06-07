@@ -26,8 +26,7 @@
 
 <#-- Render the category page -->
 <#if requestAttributes.productCategoryId?has_content>
-  <#if pages?exists>${pages.get("/catalog/category.ftl")}</#if>
-  <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#category-include")}</#if>
+  ${screens.render("component://ecommerce/widget/CatalogScreens.xml#category-include")}
 <#else>
   <center><h2>No PROMOTION Category found for CATALOG</h2></center>
 </#if>
