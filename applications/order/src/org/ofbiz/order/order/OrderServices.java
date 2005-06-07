@@ -2837,9 +2837,11 @@ public class OrderServices {
             Double creditAmount = new Double(creditTotal);
 
             // create a Payment record for this credit; will look just like a normal payment
+            // However, since this payment is not a DISBURSEMENT or RECEIPT but really a matter of internal record
+            // it is of type "Other (Non-posting)"
             String paymentId = delegator.getNextSeqId("Payment").toString();
             GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId));
-            payment.set("paymentTypeId", "RECEIPT");
+            payment.set("paymentTypeId", "OTHER_NO_POST");
             payment.set("paymentMethodTypeId", "EXT_BILLACT");
             payment.set("partyIdFrom", fromPartyId);
             payment.set("partyIdTo", "Company"); // TODO: need to fix this and find a partyId to use
