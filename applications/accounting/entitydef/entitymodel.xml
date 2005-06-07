@@ -1310,6 +1310,25 @@
            <key-map field-name="baseCurrencyUomId" rel-field-name="uomId"/>
        </relation>
     </entity>
+    <entity entity-name="ProductAverageCost"
+            package-name="org.ofbiz.accounting.ledger"
+            title="Running tally of average cost">
+       <description>Running tally of a product's average cost in a particular company</description>
+       <field name="organizationPartyId" type="id-ne"/>
+       <field name="productId" type="id-ne"/>
+       <field name="averageCost" type="floating-point"/>
+       <field name="fromDate" type="date-time"/>
+       <field name="thruDate" type="date-time"/>
+       <prim-key field="organizationPartyId"/>
+       <prim-key field="productId"/>
+       <prim-key field="fromDate"/>
+       <relation type="one" rel-entity-name="Party" fk-name="AVG_COST_PARTY">
+           <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+       </relation>
+       <relation type="one" rel-entity-name="Product" fk-name="AVG_COST_PROD">
+           <key-map field-name="productId"/>
+       </relation>
+    </entity>
     <entity entity-name="SettlementTerm"
             package-name="org.ofbiz.accounting.ledger"
             title="Settlement Term Entity">
