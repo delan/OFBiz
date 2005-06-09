@@ -38,7 +38,7 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${uiLabelMap.CommonInformation}</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${uiLabelMap.CommonInformation} [<a href="<@ofbizUrl>/order.pdf?order_id=${orderId}</@ofbizUrl>" class="submenutextright">PDF</a> ]</div>
                 </td>
                 <td valign="middle" align="right">
                   <#if currentStatus.statusId == "ORDER_CREATED" || currentStatus.statusId == "ORDER_PROCESSING">
@@ -855,6 +855,7 @@
     </td>
   </tr>
 </table>
+
 <#else/>
     <view class="head2">${uiLabelMap.OrderNoOrderFound} with ID: [${orderId?if_exists}]</div>
 </#if>
