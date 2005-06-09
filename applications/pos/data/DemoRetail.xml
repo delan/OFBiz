@@ -4,7 +4,7 @@
     <UserLogin userLoginId="2" partyId="ltdadmin" currentPassword="2" passwordHint="The Number Two, Yeah, Literally"/>
     <UserLoginSecurityGroup groupId="POSCLERK" userLoginId="1" fromDate="2001-01-01 12:00:00.0"/>
     <UserLoginSecurityGroup groupId="POSCLERK" userLoginId="2" fromDate="2001-01-01 12:00:00.0"/>
-    <Facility facilityId="MyRetailStore" facilityTypeId="RETAIL_STORE" facilityName="My Retail Store" description="Example Retail (POS) Store"/>
+    <Facility facilityId="MyRetailStore" ownerPartyId="Company" facilityTypeId="RETAIL_STORE" facilityName="My Retail Store" description="Example Retail (POS) Store"/>
     <ContactMech contactMechId="9300" contactMechTypeId="POSTAL_ADDRESS"/>
     <ContactMech contactMechId="9301" contactMechTypeId="TELECOM_NUMBER"/>
     <PostalAddress contactMechId="9300" toName="My Retail Store" attnName="" address1="7 E. 8th St. #308" city="New York" postalCode="10003" countryGeoId="USA" stateProvinceGeoId="NY"/>

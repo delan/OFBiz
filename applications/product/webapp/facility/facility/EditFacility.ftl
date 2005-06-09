@@ -25,10 +25,12 @@
  *@since      2.1
 -->
 
+<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+
 <div class="head1">${uiLabelMap.ProductFacility} <span class='head2'>${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 <#if facilityId?has_content>
-	<a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonViewCalendar}]</a>
+	<a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonViewCalendar}]</a>
 </#if>
 
 <#if facility?exists && facilityId?has_content>
@@ -62,6 +64,21 @@
       </select>
     </td>
   </tr>
+<#if ownerParties?has_content>
+  <tr>
+    <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductFacilityOwner}</div></td>
+    <td>&nbsp;</td>
+    <td width="74%">
+      <select name="ownerPartyId" size="1" class='selectBox'>
+        <option selected value='${facility.ownerPartyId?if_exists}'>${facility.ownerPartyId?if_exists}</option>
+        <option value='${facility.ownerPartyId?if_exists}'>----</option>
+        <#list ownerParties as party>
+          <option value='${party.partyId?if_exists}'>${party.partyId?if_exists}</option>
+        </#list>
+      </select>
+    </td>
+  </tr>
+</#if>
   <tr>
     <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductName}</div></td>
     <td>&nbsp;</td>
@@ -84,4 +101,8 @@
   </tr>
 </table>
 </form>
+
+<#else>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
+</#if>
 

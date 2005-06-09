@@ -35,6 +35,7 @@
   <tr>
     <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityNameId}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityType}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityOwner}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductSqFt}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductDescription}</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
@@ -44,6 +45,7 @@
   <tr valign="middle">
     <td><div class='tabletext'>&nbsp;<a href='<@ofbizUrl>/EditFacility?facilityId=${facility.facilityId?if_exists}</@ofbizUrl>' class="buttontext">${facility.facilityName?if_exists} [${facility.facilityId?if_exists}]</a></div></td>
     <td><div class='tabletext'>&nbsp;${facilityType.description?if_exists}</div></td>
+    <td><div class='tabletext'>&nbsp;${facility.ownerPartyId?if_exists}</div></td>
     <td><div class='tabletext'>&nbsp;${facility.squareFootage?if_exists}</div></td>
     <td><div class='tabletext'>&nbsp;${facility.description?if_exists}</div></td>
     <td>
