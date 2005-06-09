@@ -32,7 +32,7 @@
 <#if giftCardNumber?has_content>
   <#assign displayNumber = "">
   <#assign numSize = giftCardNumber?length - 4>
-  <if 0 < numSize>
+  <#if 0 < numSize>
     <#list 0 .. numSize-1 as foo>
       <#assign displayNumber = displayNumber + "*">
     </#list>
