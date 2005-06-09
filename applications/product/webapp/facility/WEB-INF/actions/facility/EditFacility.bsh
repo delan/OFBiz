@@ -51,7 +51,8 @@ Collection facilityTypes = delegator.findAll("FacilityType");
 if (facilityTypes != null)
   context.put("facilityTypes", facilityTypes);
 
-
-
+// possible owners of facilities
+ownerParties = delegator.findByAnd("PartyRole", UtilMisc.toMap("roleTypeId", "INTERNAL_ORGANIZATIO"));
+context.put("ownerParties", ownerParties);
 
 

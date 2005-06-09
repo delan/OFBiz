@@ -2306,6 +2306,7 @@
             title="Facility Entity">
       <field name="facilityId" type="id-ne"></field>
       <field name="facilityTypeId" type="id"></field>
+      <field name="ownerPartyId" type="id-ne"/>
       <field name="facilityName" type="name"></field>
       <field name="primaryFacilityGroupId" type="id"></field>
       <field name="squareFootage" type="numeric"></field>
@@ -2319,6 +2320,9 @@
       </relation>
       <relation type="one" fk-name="FACILITY_PGRP" rel-entity-name="FacilityGroup">
         <key-map field-name="primaryFacilityGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_OWNER" title="Owner" rel-entity-name="Party">
+        <key-map field-name="ownerPartyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="ProductStore">
         <!-- this was changed from the FK to better handle syncronization; this may be re-enabled in the future -->
