@@ -1383,7 +1383,7 @@ public class PaymentGatewayServices {
 
         GenericValue orderRole = EntityUtil.getFirst(orl);
 
-        Map paymentCtx = UtilMisc.toMap("paymentTypeId", "RECEIPT");
+        Map paymentCtx = UtilMisc.toMap("paymentTypeId", "CUSTOMER_PAYMENT");
         paymentCtx.put("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
         paymentCtx.put("paymentMethodId", paymentPreference.get("paymentMethodId"));
         paymentCtx.put("paymentGatewayResponseId", responseId);
@@ -1560,7 +1560,7 @@ public class PaymentGatewayServices {
                 Boolean refundResult = (Boolean) refundResponse.get("refundResult");
                 if (refundResult != null && refundResult.booleanValue()) {
                     // create a payment record
-                    Map paymentCtx = UtilMisc.toMap("paymentTypeId", "DISBURSEMENT");
+                    Map paymentCtx = UtilMisc.toMap("paymentTypeId", "CUSTOMER_REFUND");
                     paymentCtx.put("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
                     paymentCtx.put("paymentMethodId", paymentPref.get("paymentMethodId"));
                     paymentCtx.put("paymentGatewayResponseId", responseId);
