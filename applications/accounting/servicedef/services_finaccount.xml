@@ -32,7 +32,7 @@
             location="org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAccount">
         <description>Create a new Financial Account</description>
         <auto-attributes mode="IN" optional="true" include="nonpk"/>
-        <auto-attributes mode="OUT" optional="false" include="pk"/>
+        <auto-attributes mode="INOUT" optional="true" include="pk"/>
     </service>
 
     <service name="updateFinAccount" engine="simple" default-entity-name="FinAccount"
@@ -40,6 +40,12 @@
         <description>Update a Financial Account</description>
         <auto-attributes mode="IN" optional="true" include="nonpk"/>
         <auto-attributes mode="INOUT" optional="false" include="pk"/>
+    </service>
+
+    <service name="removeFinAccount" engine="simple" default-entity-name="FinAccount"
+            location="org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="removeFinAccount">
+        <description>Remove a Financial Account</description>
+        <auto-attributes mode="IN" optional="false" include="pk"/>
     </service>
 
     <service name="createFinAccountTrans" engine="simple" default-entity-name="FinAccountTrans"
@@ -66,7 +72,106 @@
 
     <service name="removeFinAccountRole" engine="simple" default-entity-name="FinAccountRole"
             location="org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="removeFinAccountRole">
-        <description>Remove a Financial Account Role</description>        
+        <description>Remove a Financial Account Role</description>
         <auto-attributes mode="IN" optional="false" include="pk"/>
+    </service>
+
+    <!-- Gift Certificate -->
+    <service name="createGiftCertificate" engine="java"
+             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="createGiftCertificate" auth="true">
+        <description>Generate a Gift Certificate number/pin and store as a FinAccount</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="initialAmount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="cardNumber" type="String" mode="OUT" optional="false"/>
+        <attribute name="pinNumber" type="String" mode="OUT" optional="false"/>
+        <attribute name="processResult" type="Boolean" mode="OUT" optional="false"/>
+        <attribute name="responseCode" type="String" mode="OUT" optional="false"/>
+        <attribute name="referenceNum" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="addFundsToGiftCertificate" engine="java"
+             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="addFundsToGiftCertificate" auth="true">
+        <description>Add funds to a Gift Certificate</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="pinNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="balance" type="Double" mode="OUT" optional="false"/>
+        <attribute name="previousBalance" type="Double" mode="OUT" optional="true"/>
+        <attribute name="processResult" type="Boolean" mode="OUT" optional="false"/>
+        <attribute name="responseCode" type="String" mode="OUT" optional="false"/>
+        <attribute name="referenceNum" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="redeemGiftCertificate" engine="java"
+             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="redeemGiftCertificate" auth="true">
+        <description>Deduct funds from a Gift Certificate</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="pinNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="balance" type="Double" mode="OUT" optional="false"/>
+        <attribute name="previousBalance" type="Double" mode="OUT" optional="true"/>
+        <attribute name="processResult" type="Boolean" mode="OUT" optional="false"/>
+        <attribute name="responseCode" type="String" mode="OUT" optional="false"/>
+        <attribute name="referenceNum" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="checkGiftCertificateBalance" engine="java"
+             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="checkGiftCertificateBalance" auth="true">
+        <description>Obtain the balanace of a Gift Certificate</description>
+        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="balance" type="Double" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="createGcFulFillmentRecord" engine="java" require-new-transaction="true" use-transaction="true"
+            location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="createFulfillmentRecord" auth="true">
+        <description>Creates the fulfillment log</description>
+        <attribute name="typeEnumId" type="String" mode="IN" optional="false"/>
+        <attribute name="merchantId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="true"/>
+        <attribute name="cardNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="pinNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="amount" type="Double" mode="IN" optional="true"/>
+        <attribute name="responseCode" type="String" mode="IN" optional="true"/>
+        <attribute name="referenceNum" type="String" mode="IN" optional="true"/>
+        <attribute name="authCode" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="refundGcPurchase" engine="java" require-new-transaction="true" use-transaction="true"
+            location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="refundGcPurchase" auth="true">
+        <description>Creates return for reload on failure</description>
+        <attribute name="orderItem" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Gift Certificate Payment Process -->
+    <service name="ofbGcProcessor" engine="java"
+             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateProcessor" auth="true">
+        <description>Process a sale using FinAccount Gift Certificate</description>
+        <implements service="giftCardProcessInterface"/>
+    </service>
+    <service name="ofbGcRefund" engine="java"
+             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateRefund" auth="true">
+        <description>Return funds back to a Gift Certificate</description>
+        <implements service="paymentRefundInterface"/>
+    </service>
+
+    <!-- Gift Certificate Fulfillment Services -->
+    <service name="ofbGcPurchase" engine="java"
+            location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificatePurchase" auth="true">
+        <description>Automatic CG Purchase Fulfillment Service</description>
+        <implements service="itemFulfillmentInterface"/>
+    </service>
+    <service name="ofbGcReload" engine="java"
+            location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateReload" auth="true">
+        <description>Automatic GC Reload Service</description>
+        <implements service="itemFulfillmentInterface"/>
     </service>
 </services>

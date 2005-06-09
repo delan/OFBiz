@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * InvoiceServices - Services for creating invoices
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:sichen@opensourcestrategies.com">Si Chen</a> 
  * @version    $Rev$
  * @since      2.2
@@ -338,7 +338,7 @@ public class InvoiceServices {
                 } else if ((orderItem == null) && (shipmentReceipt != null)) {
                     try {
                         orderItem = shipmentReceipt.getRelatedOne("OrderItem");
-                    } catch (GenericEntityException e) {                   
+                    } catch (GenericEntityException e) {
                         Debug.logError(e, "Trouble getting related OrderItem from ShipmentReceipt", module);
                         return ServiceUtil.returnError("Trouble getting OrderItem from ShipmentReceipt");
                     }
@@ -657,7 +657,7 @@ public class InvoiceServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String shipmentId = (String) context.get("shipmentId");
-        
+
         List invoicesCreated = new ArrayList();
 
         GenericValue shipment = null;
@@ -670,7 +670,7 @@ public class InvoiceServices {
 
         // check the status of the shipment
 
-        // get the items of the shipment.  They can come from ItemIssuance if the shipment were from a sales order or ShipmentReceipt 
+        // get the items of the shipment.  They can come from ItemIssuance if the shipment were from a sales order or ShipmentReceipt
         // if it were a purchase order
         List items = null;
         try {
@@ -723,7 +723,7 @@ public class InvoiceServices {
             // update the map with modified list
             shippedOrderItems.put(orderId, itemsByOrder);
         }
-        
+
         // make sure we aren't billing items already invoiced i.e. items billed as digital (FINDIG)
         Set orders = shippedOrderItems.keySet();
         Iterator ordersIter = orders.iterator();
@@ -887,7 +887,7 @@ public class InvoiceServices {
 
     private static double calcHeaderAdj(GenericDelegator delegator, GenericValue adj, String invoiceTypeId, String invoiceId, int itemSeqId, List toStore, 
             double divisor, double multiplier, double invoiceQuantity) {
-        //Debug.log("Divisor : " + divisor + " / Multiplier: " + multiplier, module);
+        Debug.log("Divisor : " + divisor + " / Multiplier: " + multiplier, module);
         double adjAmount = 0.00;
         if (adj.get("amount") != null) {
             // pro-rate the amount
@@ -931,18 +931,18 @@ public class InvoiceServices {
 
         return adjAmount;
     }
-    
+
     /* Creates InvoiceTerm entries for a list of terms, which can be BillingAccountTerms, OrderTerms, etc. */
     private static List createInvoiceTerms(GenericDelegator delegator, String invoiceId, List terms) {
         List invoiceTerms = new LinkedList();
         if ((terms != null) && (terms.size() > 0)) {
             for (Iterator termsIter = terms.iterator(); termsIter.hasNext(); ) {
         	    GenericValue term = (GenericValue) termsIter.next();
-                GenericValue invoiceTerm = delegator.makeValue("InvoiceTerm", 
+                GenericValue invoiceTerm = delegator.makeValue("InvoiceTerm",
                     UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", "_NA_"));
-                String invoiceTermId = delegator.getNextSeqId("InvoiceTerm").toString();	               
-                invoiceTerm.set("invoiceTermId", invoiceTermId);			
-                invoiceTerm.set("termTypeId", term.get("termTypeId"));	
+                String invoiceTermId = delegator.getNextSeqId("InvoiceTerm").toString();
+                invoiceTerm.set("invoiceTermId", invoiceTermId);
+                invoiceTerm.set("termTypeId", term.get("termTypeId"));
                 invoiceTerm.set("termValue", term.get("termValue"));
                 invoiceTerm.set("termDays", term.get("termDays"));
                 invoiceTerm.set("uomId", term.get("uomId"));

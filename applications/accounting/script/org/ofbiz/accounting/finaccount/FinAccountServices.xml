@@ -30,17 +30,20 @@
 
     <simple-method method-name="createFinAccount" short-description="Create a Financial Account">
         <make-value value-name="newEntity" entity-name="FinAccount"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <sequenced-id-to-env sequence-name="FinAccount" env-name="finAccountId"/>
-        <to-string field-name="finAccountId"/>
-        <env-to-field env-name="finAccountId" map-name="newEntity"/>
-        <field-to-result field-name="finAccountId" result-name="finAccountId"/>
+        <if-empty field-name="finAccountId" map-name="newEntity">
+            <sequenced-id-to-env sequence-name="FinAccount" env-name="finAccountId"/>
+            <to-string field-name="finAccountId"/>
+            <env-to-field env-name="finAccountId" map-name="newEntity"/>
+        </if-empty>
 
+        <field-to-result field-name="finAccountId" map-name="newEntity" result-name="finAccountId"/>
         <create-value value-name="newEntity"/>
     </simple-method>
 
-    <simple-method method-name="createFinAccount" short-description="Update a Financial Account">
+    <simple-method method-name="updateFinAccount" short-description="Update a Financial Account">
         <field-to-field field-name="finAccountId" map-name="parameters" to-map-name="lookupPkMap"/>
         <find-by-primary-key map-name="lookupPkMap" value-name="finAccount" entity-name="FinAccount"/>
         <set-nonpk-fields map-name="parameters" value-name="finAccount"/>
@@ -49,11 +52,18 @@
         <store-value value-name="finAccount"/>
     </simple-method>
 
+    <simple-method method-name="removeFinAccount" short-description="Remove a Financial Account">
+        <field-to-field field-name="finAccountId" map-name="parameters" to-map-name="lookupPkMap"/>
+        <find-by-primary-key map-name="lookupPkMap" value-name="finAccount" entity-name="FinAccount"/>
+
+        <remove-value value-name="finAccount"/>
+    </simple-method>
+
     <simple-method method-name="createFinAccountTrans" short-description="Create a Financial Account Transaction">
         <make-value value-name="newEntity" entity-name="FinAccountTrans"/>
         <set-nonpk-fields value-name="newEntity" map-name="parameters"/>
 
-        <sequenced-id-to-env sequence-name="FinAccount" env-name="finAccountTransId"/>
+        <sequenced-id-to-env sequence-name="FinAccountTrans" env-name="finAccountTransId"/>
         <to-string field-name="finAccountTransId"/>
         <env-to-field env-name="finAccountTransId" map-name="newEntity"/>
         <field-to-result field-name="finAccountTransId" result-name="finAccountTransId"/>
@@ -96,6 +106,6 @@
         <set-pk-fields value-name="pkLookupMap" map-name="parameters"/>
         <find-by-primary-key map-name="pkLookupMap" value-name="finAcctRole"/>
 
-        <remove-value value-name="finAcctRole"/>            
+        <remove-value value-name="finAcctRole"/>
     </simple-method>
 </simple-methods>
