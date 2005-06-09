@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<entitygroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitygroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitygroup.xsd">
 
   <!-- ========================================================= -->
@@ -135,6 +135,8 @@
     <entity-group group="org.ofbiz" entity="FinAccountType" />
     <entity-group group="org.ofbiz" entity="FinAccountTypeAttr" />
     <entity-group group="org.ofbiz" entity="GiftCard" />
+    <entity-group group="org.ofbiz" entity="GiftCardFulfillment" />
+    <entity-group group="org.ofbiz" entity="OldValueLinkFulfillment" />
     <entity-group group="org.ofbiz" entity="Payment" />
     <entity-group group="org.ofbiz" entity="PaymentAndApplication" />
     <entity-group group="org.ofbiz" entity="PaymentApplication" />
@@ -148,7 +150,6 @@
     <entity-group group="org.ofbiz" entity="PaymentGlAccountTypeMap" />
     <entity-group group="org.ofbiz" entity="PaymentGatewayRespMsg" />
     <entity-group group="org.ofbiz" entity="PaymentGatewayResponse" />
-    <entity-group group="org.ofbiz" entity="ValueLinkFulfillment" />
     <entity-group group="org.ofbiz" entity="ValueLinkKey" />
 
 </entitygroup>

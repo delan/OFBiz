@@ -826,7 +826,7 @@ public class ValueLinkServices {
                 if (previous == null) previous = new Double(0);
                 Double current = (Double) redeemResult.get("amount");
                 if (current == null) current = new Double(0);
-                double redeemed = (((double) Math.round((previous.doubleValue() - current.doubleValue()) * 100)) / 100);                
+                double redeemed = (((double) Math.round((previous.doubleValue() - current.doubleValue()) * 100)) / 100);
                 Debug.logInfo("Redeemed (" + amount + "): " + redeemed + " / " + previous + " : " + current, module);
                 if (redeemed < amount.doubleValue()) {
                     // we didn't redeem enough void the transaction and return false
@@ -1075,7 +1075,7 @@ public class ValueLinkServices {
         }
 
         // survey information
-        String surveyId = UtilProperties.getPropertyValue(paymentConfig, "payment.valuelink.purchase.surveyId");
+        String surveyId = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.purchase.surveyId");
 
         // get the survey response
         GenericValue surveyResponse = null;
@@ -1121,12 +1121,12 @@ public class ValueLinkServices {
         }
 
         // get the send to email address - key defined in properties file
-        String sendToKey = UtilProperties.getPropertyValue(paymentConfig, "payment.valuelink.purchase.survey.sendToEmail");
+        String sendToKey = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.purchase.survey.sendToEmail");
         String sendToEmail = (String) answerMap.get(sendToKey);
 
         // get the copyMe flag and set the order email address
         String orderEmails = orh.getOrderEmailString();
-        String copyMeField = UtilProperties.getPropertyValue(paymentConfig, "payment.valuelink.purchase.survey.copyMe");
+        String copyMeField = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.purchase.survey.copyMe");
         String copyMeResp = copyMeField != null ? (String) answerMap.get(copyMeField) : null;
         boolean copyMe = (UtilValidate.isNotEmpty(copyMeField)
                 && UtilValidate.isNotEmpty(copyMeResp) && "true".equalsIgnoreCase(copyMeResp)) ? true : false;
@@ -1172,7 +1172,7 @@ public class ValueLinkServices {
 
             // create the fulfillment record
             Map vlFulFill = new HashMap();
-            vlFulFill.put("typeEnumId", "VL_ACTIVATE");
+            vlFulFill.put("typeEnumId", "GC_ACTIVATE");
             vlFulFill.put("merchantId", UtilProperties.getPropertyValue(paymentConfig, "payment.valuelink.merchantId"));
             vlFulFill.put("partyId", partyId);
             vlFulFill.put("orderId", orderId);
@@ -1186,7 +1186,7 @@ public class ValueLinkServices {
             vlFulFill.put("authCode", activateResult.get("authCode"));
             vlFulFill.put("userLogin", userLogin);
             try {
-                dispatcher.runAsync("createVLFulFillmentRecord", vlFulFill, true);
+                dispatcher.runAsync("createGcFulFillmentRecord", vlFulFill, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError("Unable to store fulfillment info");
@@ -1311,7 +1311,7 @@ public class ValueLinkServices {
         Double amount = orderItem.getDouble("unitPrice");
 
         // survey information
-        String surveyId = UtilProperties.getPropertyValue(paymentConfig, "payment.valuelink.reload.surveyId");
+        String surveyId = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.surveyId");
 
         // get the survey response
         GenericValue surveyResponse = null;
@@ -1356,8 +1356,8 @@ public class ValueLinkServices {
             }
         }
 
-        String cardNumberKey = UtilProperties.getPropertyValue(paymentConfig, "payment.valuelink.reload.survey.cardNumber");
-        String pinNumberKey = UtilProperties.getPropertyValue(paymentConfig, "payment.valuelink.reload.survey.pinNumber");
+        String cardNumberKey = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.survey.cardNumber");
+        String pinNumberKey = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.survey.pinNumber");
         String cardNumber = (String) answerMap.get(cardNumberKey);
         String pinNumber = (String) answerMap.get(pinNumberKey);
 
@@ -1382,7 +1382,7 @@ public class ValueLinkServices {
 
         // create the fulfillment record
         Map vlFulFill = new HashMap();
-        vlFulFill.put("typeEnumId", "VL_RELOAD");
+        vlFulFill.put("typeEnumId", "GC_RELOAD");
         vlFulFill.put("merchantId", UtilProperties.getPropertyValue(paymentConfig, "payment.valuelink.merchantId"));
         vlFulFill.put("partyId", partyId);
         vlFulFill.put("orderId", orderId);
@@ -1396,7 +1396,7 @@ public class ValueLinkServices {
         vlFulFill.put("authCode", reloadResult.get("authCode"));
         vlFulFill.put("userLogin", userLogin);
         try {
-            dispatcher.runAsync("createVLFulFillmentRecord", vlFulFill, true);
+            dispatcher.runAsync("createGcFulFillmentRecord", vlFulFill, true);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Unable to store fulfillment info");
@@ -1409,7 +1409,7 @@ public class ValueLinkServices {
             // process the return
             try {
                 Map refundCtx = UtilMisc.toMap("orderItem", orderItem, "partyId", partyId, "userLogin", userLogin);
-                dispatcher.runAsync("refundVLReload", refundCtx, null, true, 300, true);
+                dispatcher.runAsync("refundGcPurchase", refundCtx, null, true, 300, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "ERROR! Unable to call create refund service; this failed reload will NOT be refunded", module);
             }
@@ -1466,161 +1466,6 @@ public class ValueLinkServices {
                 Debug.logError(e, "Problem sending mail", module);
                 // this is fatal; we will rollback and try again later
                 return ServiceUtil.returnError("Problem sending email");
-            }
-        }
-
-        return ServiceUtil.returnSuccess();
-    }
-
-    public static Map createFulfillmentRecord(DispatchContext dctx, Map context) {
-        GenericDelegator delegator = dctx.getDelegator();
-
-        // create the fulfillment record
-        GenericValue vlFulFill = delegator.makeValue("ValueLinkFulfillment", null);
-        vlFulFill.set("fulfillmentId", delegator.getNextSeqId("ValueLinkFulfillment").toString());
-        vlFulFill.set("typeEnumId", context.get("typeEnumId"));
-        vlFulFill.set("merchantId", context.get("merchantId"));
-        vlFulFill.set("partyId", context.get("partyId"));
-        vlFulFill.set("orderId", context.get("orderId"));
-        vlFulFill.set("orderItemSeqId", context.get("orderItemSeqId"));
-        vlFulFill.set("surveyResponseId", context.get("surveyResponseId"));
-        vlFulFill.set("cardNumber", context.get("cardNumber"));
-        vlFulFill.set("pinNumber", context.get("pinNumber"));
-        vlFulFill.set("amount", context.get("amount"));
-        vlFulFill.set("responseCode", context.get("responseCode"));
-        vlFulFill.set("referenceNum", context.get("referenceNum"));
-        vlFulFill.set("authCode", context.get("authCode"));
-        vlFulFill.set("fulfillmentDate", UtilDateTime.nowTimestamp());
-        try {
-            delegator.create(vlFulFill);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Unable to store fulfillment info");
-        }
-        return ServiceUtil.returnSuccess();
-    }
-
-    public static Map refundReload(DispatchContext dctx, Map context) {
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericDelegator delegator = dctx.getDelegator();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        GenericValue orderItem = (GenericValue) context.get("orderItem");
-        String partyId = (String) context.get("partyId");
-
-        // refresh the item object for status changes
-        try {
-            orderItem.refresh();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        }
-
-        Map returnableInfo = null;
-        try {
-            returnableInfo = dispatcher.runSync("getReturnableQuantity", UtilMisc.toMap("orderItem", orderItem, "userLogin", userLogin));
-        } catch (GenericServiceException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Unable to get returnable infomation for order item : " + orderItem);
-        }
-
-        if (returnableInfo != null) {
-            Double returnableQuantity = (Double) returnableInfo.get("returnableQuantity");
-            Double returnablePrice = (Double) returnableInfo.get("returnablePrice");
-            Debug.logInfo("Returnable INFO : " + returnableQuantity + " @ " + returnablePrice + " :: " + orderItem, module);
-
-            // create the return header
-            Map returnHeaderInfo = new HashMap();
-            returnHeaderInfo.put("fromPartyId", partyId);
-            returnHeaderInfo.put("userLogin", userLogin);
-            Map returnHeaderResp = null;
-            try {
-                returnHeaderResp = dispatcher.runSync("createReturnHeader", returnHeaderInfo);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError("Unable to create return header");
-            }
-
-            if (returnHeaderResp != null) {
-                String errorMessage = ServiceUtil.getErrorMessage(returnHeaderResp);
-                if (errorMessage != null) {
-                    return ServiceUtil.returnError(errorMessage);
-                }
-            }
-
-            String returnId = null;
-            if (returnHeaderResp != null) {
-                returnId = (String) returnHeaderResp.get("returnId");
-            }
-
-            if (returnId == null) {
-                return ServiceUtil.returnError("Create return did not return a valid return id");
-            }
-
-            // create the return item
-            Map returnItemInfo = new HashMap();
-            returnItemInfo.put("returnId", returnId);
-            returnItemInfo.put("returnReasonId", "RTN_DIG_FILL_FAIL");
-            returnItemInfo.put("returnTypeId", "RTN_REFUND");
-            returnItemInfo.put("returnItemType", "ITEM");
-            returnItemInfo.put("description", orderItem.get("itemDescription"));
-            returnItemInfo.put("orderId", orderItem.get("orderId"));
-            returnItemInfo.put("orderItemSeqId", orderItem.get("orderItemSeqId"));
-            returnItemInfo.put("returnQuantity", returnableQuantity);
-            returnItemInfo.put("returnPrice", returnablePrice);
-            returnItemInfo.put("userLogin", userLogin);
-            Map returnItemResp = null;
-            try {
-                returnItemResp = dispatcher.runSync("createReturnItem", returnItemInfo);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError("Unable to create return item");
-            }
-
-            if (returnItemResp != null) {
-                String errorMessage = ServiceUtil.getErrorMessage(returnItemResp);
-                if (errorMessage != null) {
-                    return ServiceUtil.returnError(errorMessage);
-                }
-            }
-
-            String returnItemSeqId = null;
-            if (returnItemResp != null) {
-                returnItemSeqId = (String) returnItemResp.get("returnItemSeqId");
-            }
-
-            if (returnItemSeqId == null) {
-                return ServiceUtil.returnError("Create return item did not return a valid sequence id");
-            } else {
-                Debug.logVerbose("Created return item : " + returnId + " / " + returnItemSeqId, module);
-            }
-
-            // need the admin userLogin to "fake" out the update service
-            GenericValue admin = null;
-            try {
-                admin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "admin"));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError("Unable to look up UserLogin from database");
-            }
-
-            // update the status to received so it can process
-            Map updateReturnInfo = new HashMap();
-            updateReturnInfo.put("returnId", returnId);
-            updateReturnInfo.put("statusId", "RETURN_RECEIVED");
-            updateReturnInfo.put("currentStatusId", "RETURN_REQUESTED");
-            updateReturnInfo.put("userLogin", admin);
-            Map updateReturnResp = null;
-            try {
-                updateReturnResp = dispatcher.runSync("updateReturnHeader", updateReturnInfo);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError("Unable to update return header status");
-            }
-
-            if (updateReturnResp != null) {
-                String errorMessage = ServiceUtil.getErrorMessage(updateReturnResp);
-                if (errorMessage != null) {
-                    return ServiceUtil.returnError(errorMessage);
-                }
             }
         }
 

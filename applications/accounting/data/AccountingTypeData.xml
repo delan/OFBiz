@@ -33,9 +33,9 @@
     <BudgetType budgetTypeId="CAPITAL_BUDGET" description="Capital" hasTable="N" parentTypeId=""/>
     <BudgetType budgetTypeId="OPERATING_BUDGET" description="Operating" hasTable="N" parentTypeId=""/>
 
-    <EnumerationType description="ValueLink Fulfillment" enumTypeId="VL_FULFILL" hasTable="N" parentTypeId=""/>
-    <Enumeration description="Activate" enumCode="ACTIVATE" enumId="VL_ACTIVATE" sequenceId="01" enumTypeId="VL_FULFILL"/>
-    <Enumeration description="Reload" enumCode="RELOAD" enumId="VL_RELOAD" sequenceId="02" enumTypeId="VL_FULFILL"/>
+    <EnumerationType description="Gift Card Fulfillment" enumTypeId="GC_FULFILL" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Activate" enumCode="ACTIVATE" enumId="GC_ACTIVATE" sequenceId="01" enumTypeId="GC_FULFILL"/>
+    <Enumeration description="Reload" enumCode="RELOAD" enumId="GC_RELOAD" sequenceId="02" enumTypeId="GC_FULFILL"/>
 
     <EnumerationType description="Payment Gateway Transaction Code" enumTypeId="PGT_CODE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Authorize" enumCode="AUTHORIZE" enumId="PGT_AUTHORIZE" sequenceId="01" enumTypeId="PGT_CODE"/>

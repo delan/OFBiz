@@ -24,19 +24,28 @@
  */
 package org.ofbiz.accounting.thirdparty.cybersource;
 
-import java.util.*;
 import java.text.DecimalFormat;
-
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.base.util.*;
-import org.ofbiz.accounting.payment.PaymentGatewayServices;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import com.cybersource.ws.client.Client;
 import com.cybersource.ws.client.ClientException;
 import com.cybersource.ws.client.FaultException;
+
+import org.ofbiz.accounting.payment.PaymentGatewayServices;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.SSLUtil;
+import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * CyberSource WS Integration Services
@@ -60,7 +69,7 @@ public class IcsPaymentServices {
         if (props == null) {
             return ServiceUtil.returnError("ERROR: Getting Cybersource property configuration");
         }
-        
+
         Map request = buildAuthRequest(context);
         request.put("merchantID", props.get("merchantID"));
 
@@ -89,10 +98,10 @@ public class IcsPaymentServices {
 
     public static Map ccCapture(DispatchContext dctx, Map context) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
-        
+
         //lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
-        
+
         if(authTransaction == null){
         	authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
@@ -230,7 +239,7 @@ public class IcsPaymentServices {
             configString = "payment.properties";
         }
 
-        String merchantId = UtilProperties.getPropertyValue(configString, "payment.cybersource.merchantID");       
+        String merchantId = UtilProperties.getPropertyValue(configString, "payment.cybersource.merchantID");
         String targetApi = UtilProperties.getPropertyValue(configString, "payment.cybersource.api.version");
         String production = UtilProperties.getPropertyValue(configString, "payment.cybersource.production");
         String enableLog = UtilProperties.getPropertyValue(configString, "payment.cybersource.log");

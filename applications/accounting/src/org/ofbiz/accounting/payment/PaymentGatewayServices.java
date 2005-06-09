@@ -356,8 +356,10 @@ public class PaymentGatewayServices {
         processContext.put("shippingAddress", EntityUtil.getFirst(orh.getShippingLocations())); // TODO refactor the payment API to handle support all addresses
         processContext.put("paymentConfig", paymentConfig);
         processContext.put("currency", orh.getCurrency());
-        processContext.put("cardSecurityCode", paymentPreference.get("securityCode"));
         processContext.put("orderPaymentPreference", paymentPreference);
+        if (paymentPreference.get("securityCode") != null) {
+            processContext.put("cardSecurityCode", paymentPreference.get("securityCode"));
+        }
 
         // get the billing information
         getBillingInformation(orh, paymentPreference, processContext);
@@ -869,7 +871,7 @@ public class PaymentGatewayServices {
 
                 //Debug.log("Capture result : " + captureResult, module);
 
-                // process the capture's results                
+                // process the capture's results
                 try {
                     processResult(dctx, captureResult, userLogin, paymentPref);
                 } catch (GeneralException e) {
@@ -892,7 +894,7 @@ public class PaymentGatewayServices {
                     newPref.set("createdDate", UtilDateTime.nowTimestamp());
                     if (userLogin != null) {
                         newPref.set("createdByUserLogin", userLogin.getString("userLoginId"));
-                    }                    
+                    }
                     Debug.logInfo("New preference : " + newPref, module);
                     try {
                         // create the new payment preference
@@ -938,7 +940,7 @@ public class PaymentGatewayServices {
     private static Map capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount) {
     	return capturePayment(dctx, userLogin, orh, paymentPref, amount, null);
     }
-    
+
     private static Map capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount, GenericValue authTrans) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         // look up the payment configuration settings
@@ -1043,7 +1045,7 @@ public class PaymentGatewayServices {
             dispatcher.runAsync("processPaymentServiceError", serviceContext);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-        }        
+        }
     }
 
     public static Map storePaymentErrorMessage(DispatchContext dctx, Map context) {
@@ -1198,7 +1200,7 @@ public class PaymentGatewayServices {
 
         return ServiceUtil.returnSuccess();
     }
-    
+
     private static GenericValue processAuthRetryResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference) throws GeneralException {
         processAuthResult(dctx, result, userLogin, paymentPreference);
         return getAuthTransaction(paymentPreference);
@@ -1320,7 +1322,7 @@ public class PaymentGatewayServices {
         }
 
         if (UtilValidate.isEmpty(serviceType)) {
-            serviceType = CAPTURE_SERVICE_TYPE;            
+            serviceType = CAPTURE_SERVICE_TYPE;
         }
 
         // create the PaymentGatewayResponse record
@@ -1659,7 +1661,7 @@ public class PaymentGatewayServices {
             } else if ("APPROVED".equals(authResp)) {
                 // approved; update the order status
                 OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-            }            
+            }
         }
 
         Map result = ServiceUtil.returnSuccess();
