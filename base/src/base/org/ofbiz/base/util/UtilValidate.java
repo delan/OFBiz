@@ -28,7 +28,7 @@ import java.util.Collection;
 
 /**
  * General input/data validation methods
- * Utility methods for validating data, especially input. 
+ * Utility methods for validating data, especially input.
  * See detailed description below.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
@@ -59,13 +59,13 @@ import java.util.Collection;
  * <br/>	   - strip whitespace/leading whitespace from a string
  * <br/>
  * <br/> ==============================================================================
- * <br/> NOTE: This code was adapted from the Netscape JavaScript form validation code, 
- * <br/> usually found in "FormChek.js". Credit card verification functions Originally 
+ * <br/> NOTE: This code was adapted from the Netscape JavaScript form validation code,
+ * <br/> usually found in "FormChek.js". Credit card verification functions Originally
  * <br< included as Starter Application 1.0.0 in LivePayment.
  * <br/> ==============================================================================
  */
 public class UtilValidate {
-    
+
     public static final String module = UtilValidate.class.getName();
 
     /** boolean specifying by default whether or not it is okay for a String to be empty */
@@ -883,13 +883,32 @@ public class UtilValidate {
         return false;
     }
 
+    /** Check to see if a card number is a valid OFB Gift Card (Certifiicate)
+     *
+     * @param stPassed a string representing a gift card
+     * @return tru, if the number passed simple checks
+     */
+    public static boolean isOFBGiftCard(String stPassed) {
+        if (isEmpty(stPassed)) return defaultEmptyOK;
+        String st = stripCharsInBag(stPassed, creditCardDelimiters);
+        if (st.length() == 15 && sumIsMod10(getLuhnSum(st))) {
+            return true;
+        }
+        return false;
+    }
+
     /** Check to see if a card number is a supported Gift Card
      *
      * @param stPassed a string representing a gift card
      * @return true, if the number passed simple checks
      */
     public static boolean isGiftCard(String stPassed) {
-        return isValueLinkCard(stPassed);
+        if (isOFBGiftCard(stPassed)) {
+            return true;
+        } else if (isValueLinkCard(stPassed)) {
+            return true;
+        }
+        return false;
     }
 
     public static int getLuhnSum(String stPassed) {
