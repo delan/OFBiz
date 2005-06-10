@@ -178,7 +178,7 @@
             <div class="form-field">
                 <select name="CUSTOMER_ADDRESS_ALLOW_SOL" class='selectBox'>
                     <option>${requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL?default("Y")}</option>
-                    <option></option><option>Y</option><option>N</option>
+                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
                 </select>
             </div>
         </div>
@@ -208,7 +208,7 @@
                 <br/>
                 <select name="CUSTOMER_HOME_ALLOW_SOL" class='selectBox'>
                     <option>${requestParameters.CUSTOMER_HOME_ALLOW_SOL?default("Y")}</option>
-                    <option></option><option>Y</option><option>N</option>
+                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
                 </select>
             </div>
         </div>
@@ -223,7 +223,7 @@
                 <br/>
                 <select name="CUSTOMER_WORK_ALLOW_SOL" class='selectBox'>
                     <option>${requestParameters.CUSTOMER_WORK_ALLOW_SOL?default("Y")}</option>
-                    <option></option><option>Y</option><option>N</option>
+                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
                 </select>
             </div>
         </div>
@@ -237,7 +237,7 @@
                 <br/>
                 <select name="CUSTOMER_FAX_ALLOW_SOL" class='selectBox'>
                     <option>${requestParameters.CUSTOMER_FAX_ALLOW_SOL?default("Y")}</option>
-                    <option></option><option>Y</option><option>N</option>
+                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
                 </select>
             </div>
         </div>
@@ -251,7 +251,7 @@
                 <br/>
                 <select name="CUSTOMER_MOBILE_ALLOW_SOL" class='selectBox'>
                     <option>${requestParameters.CUSTOMER_MOBILE_ALLOW_SOL?default("Y")}</option>
-                    <option></option><option>Y</option><option>N</option>
+                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
                 </select>
             </div>
         </div>
@@ -272,7 +272,7 @@
                 <div>
                     <select name="CUSTOMER_EMAIL_ALLOW_SOL" class='selectBox'>
                         <option>${requestParameters.CUSTOMER_EMAIL_ALLOW_SOL?default("Y")}</option>
-                        <option></option><option>Y</option><option>N</option>
+                        <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
                     </select>
                 </div>
             </div>
@@ -295,7 +295,7 @@
                 <div class="form-label"><span class="tabletext">${uiLabelMap.CommonUsername}</span></div>
                 <div class="form-field">
                     <@fieldErrors fieldName="USERNAME"/>
-                    <div>Use Email Address: <input type="checkbox" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);"/></div>
+                    <div>${uiLabelMap.EcommerceUseEmailAddress}: <input type="checkbox" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);"/></div>
                     <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50" onFocus="clickUsername();" onchange="changeEmail();"/> *</div>
                 </div>
             </div>

@@ -131,9 +131,9 @@ function toggleBillingAccount(box) {
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
                         <tr>
                           <td colspan="2" align="center">
-                            <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">[Split Into Multiple Shipments]</a>
+                            <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderSplitIntoMultipleShipments}]</a>
                             <#if (cart.getShipGroupSize() > 1)>
-                              <div class="tabletext" style="color: red;">NOTE: Multiple shipments exist, use Split Shipment.</div>
+                              <div class="tabletext" style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}.</div>
                             </#if>
                           </td>
                         </tr>
@@ -210,7 +210,7 @@ function toggleBillingAccount(box) {
                                 <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                               </#if>
                               <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}
-                              <#if shippingEst?has_content> - <#if (shippingEst > -1)?exists><@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/><#else>Calculated Offline</#if></#if>
+                              <#if shippingEst?has_content> - <#if (shippingEst > -1)?exists><@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
                             </div>
                           </td>
                         </tr>
@@ -478,7 +478,7 @@ function toggleBillingAccount(box) {
                             </td>
                             <td align="left" valign="top" width="99%" nowrap>
                               <div class="tabletext">
-                               ${billingAccount.description?default("Bill Account")} [#<b>${billingAccount.billingAccountId}</b>]&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(cart.getCurrency())/>)<br/>
+                               ${billingAccount.description?default("Bill Account")} [${uiLabelMap.OrderNbr}<b>${billingAccount.billingAccountId}</b>]&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(cart.getCurrency())/>)<br/>
                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="8" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>

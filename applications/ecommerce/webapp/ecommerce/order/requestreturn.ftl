@@ -52,7 +52,7 @@
               <input type="hidden" name="order_id" value="${orderId}">
               <table border="0" width="100%" cellpadding="2" cellspacing="0">
                 <tr>
-                  <td colspan="5"><div class="head3">${uiLabelMap.OrderReturnItemsFromOrder} #<a href="<@ofbizUrl>/orderstatus?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
+                  <td colspan="5"><div class="head3">${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.OrderNbr}<a href="<@ofbizUrl>/orderstatus?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
                   <td align="right">
                     <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
                     <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
@@ -156,7 +156,7 @@
                     </td>
                   </tr>
                 <#else>
-                  <tr><td colspan="6"><div class="tabletext">${uiLabelMap.OrderNoReturnableItems} #${orderId}</div></td></tr>
+                  <tr><td colspan="6"><div class="tabletext">${uiLabelMap.OrderNoReturnableItems} ${uiLabelMap.OrderNbr}${orderId}</div></td></tr>
                 </#if>
               </table>
             </form>

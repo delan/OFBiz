@@ -29,11 +29,17 @@
     <!-- Column Included Screens -->
     <screen name="minipoll">
         <section>
+            <actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/minipoll.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
+
     <screen name="content_categories">
         <section>
             <widgets>
@@ -49,6 +55,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="recentlyviewed">
         <section>
             <actions>
@@ -68,7 +75,7 @@
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="MainColumnStyle" value="leftonly"/>
 
-                <set field="title" value="Content Page"/>
+				<set field="title-property" value="PageTitleContentPage"/>
                 <set field="headerItem" value="main"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/main.bsh"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/contentprep.bsh"/>
@@ -89,7 +96,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="View Blog"/>
+				<set field="title-property" value="PageTitleViewBlog"/>
                 <set field="headerItem" value="Blog"/>
                 <set field="formDefFile" value="/BlogForms.xml"/>
                 <set field="entityName" value="Content"/>
@@ -112,7 +119,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="Search Sites"/>
+                <set field="title-property" value="PageTitleShoppingCart"/>
                 <set field="headerItem" value="ContentMenu"/>
                 <set field="formDefFile" value="/content/ContentForms.xml"/>
                 <set field="entityName" value=""/>
@@ -140,7 +147,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="View Content"/>
+                <set field="title-property" value="PageTitleViewContent"/>
                 <set field="headerItem" value="Content"/>
                 <set field="entityName" value="ContentAssocDataResourceViewFrom"/>
                 <set field="permissionType" value="none"/>

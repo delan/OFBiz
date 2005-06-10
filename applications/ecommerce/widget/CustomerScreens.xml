@@ -33,7 +33,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="Additional Info"/>
+                <set field="title-property" value="PageTitleAdditionalInfo"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
@@ -176,7 +176,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="Gift Card Balance"/>
+                <set field="title-property" value="PageTitleGiftCardBalance"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/giftcardbalance.bsh"/>
             </actions>
             <widgets>
@@ -195,7 +195,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="Gift Card Link"/>
+                <set field="title-property" value="PageTitleGiftCardLink"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/giftcardlink.bsh"/>
             </actions>
             <widgets>
@@ -211,7 +211,7 @@
     <screen name="customersurvey">
         <section>
             <actions>
-                <set field="title" value="Profile Survey"/>
+                <set field="title-property" value="PageTitleProfileSurvey"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/customersurvey.bsh"/>
             </actions>
             <widgets>
@@ -230,7 +230,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
-                <set field="title" value="Login"/>
+                <set field="title-property" value="PageTitleLogin"/>
                 <set field="pageHeader" value="Contact Us"/>
                 <set field="headerItem" value="contactus"/>
                 <set field="submitRequest" value="/contactsubmit"/>
@@ -247,7 +247,7 @@
     <screen name="messagelist">
         <section>
             <actions>
-                <set field="title" value="Message List"/>
+                <set field="title-property" value="PageTitleMessageList"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
@@ -271,7 +271,7 @@
     <screen name="sentmessages">
         <section>
             <actions>
-                <set field="title" value="Sent Messages"/>
+                <set field="title-property" value="PageTitleSentMessages"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/sentmessages.bsh"/>
                 <set field="useSentTo" value="true"/>
             </actions>
@@ -287,7 +287,7 @@
     <screen name="messagedetail">
         <section>
             <actions>
-                <set field="title" value="Message Detail"/>
+                <set field="title-property" value="PageTitleMessageDetail"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/messagedetail.bsh"/>
             </actions>
             <widgets>
@@ -302,7 +302,7 @@
     <screen name="messagecreate">
         <section>
             <actions>
-                <set field="title" value="New Message"/>
+                <set field="title-property" value="PageTitleNewMessage"/>
                 <set field="pageHeader" value="New Message"/>
                 <set field="showMessageLinks" value="true"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/messagecreate.bsh"/>

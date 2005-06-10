@@ -31,18 +31,18 @@
 
 ${recipientName},<br/>
 
-You have been sent a MyCompany.com Gift Card from ${senderName}!<br/><br/>
+${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}!<br/><br/> <#-- MyCompany.com (not a variable why?) must be adapted - JLR 1/6/5 -->
 <#if giftMessage?has_content>
-  The following message came with the gift:<br/><br/>
+  ${uiLabelMap.OrderGiftMessage}<br/><br/>
   ${giftMessage}
   <br/>
   <br/>
 </#if>
 
 <pre>
-  Your Card Number: ${cardNumber?if_exists}
-  Your Pin Number : ${pinNumber?if_exists}
-  Gift Amount     : ${amount?if_exists}
+  ${uiLabelMap.EcommerceYourCardNumber} ${cardNumber?if_exists}
+  ${uiLabelMap.EcommerceYourPinNumber} ${pinNumber?if_exists}
+  ${uiLabelMap.EcommerceGiftAmount} ${amount?if_exists}
 </pre>
 
 

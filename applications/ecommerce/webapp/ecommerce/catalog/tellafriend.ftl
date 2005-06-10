@@ -26,7 +26,7 @@
 
 <html>
 <head>
-  <title>Tell-A-Friend</title>
+  <title>${uiLabelMap.EcommerceTellAFriend}</title>
 </head>
 <body class="ecbody">
   <center>
@@ -41,15 +41,15 @@
       <#if !cancel?exists>
         <table>
           <tr>
-            <td>Your email:</td>
+            <td>${uiLabelMap.CommonYouremail}:</td>
             <td><input type="text" name="sendFrom" size="30"></td>
           </tr>
           <tr>
-            <td>Email To:</td>
+            <td>${uiLabelMap.CommonEmailTo}:</td>
             <td><input type="text" name="sendTo" size="30"></td>
           </tr>
           <tr>
-            <td colspan="2" align="center">Message</td>
+            <td colspan="2" align="center">${uiLabelMap.CommonMessage}</td>
           </tr>
           <tr>
             <td colspan="2" align="center">
@@ -58,7 +58,7 @@
           </tr>
           <tr>
             <td colspan="2" align="center">
-              <input type="submit" value="Send">
+              <input type="submit" value="${uiLabelMap.CommonSend}">
             </td>
           </tr>
         </table>
@@ -68,7 +68,7 @@
         window.close();
         // -->
         </script>
-        <div class="tabletext">Sorry, you cannot send this page to a friend. Please select from either a category or product.</div>
+        <div class="tabletext">${uiLabelMap.EcommerceTellAFriendSorry}</div>
       </#if>
     </form>
   </center>

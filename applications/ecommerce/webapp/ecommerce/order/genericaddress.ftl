@@ -114,7 +114,7 @@
         <option>${partyContactMech.allowSolicitation}</option>
         <option value="${partyContactMech.allowSolicitation}">---</option>
       </#if>
-      <option>Y</option><option>N</option>
+      <option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
     </select>
   </td>
 </tr>

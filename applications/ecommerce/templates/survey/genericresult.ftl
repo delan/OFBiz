@@ -72,7 +72,7 @@
           <#if question.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
             <div class="tabletext"><nobr>
-              <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>Y<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
+              <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonY}<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
             </nobr></div>
             <div class="tabletext"><nobr>
               <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>N<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]
@@ -98,9 +98,9 @@
           <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
             <div class="tabletext">${answer.floatResponse?number?default(0)?string("#")}</div>
           <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
-            <div class="tabletext">${answer.numericResponse?number?default(0)?string("#")}&nbsp;[Tally: ${results._tally?default(0)?string("#")} / Average: ${results._average?default(0)?string("#")}]</div>
+            <div class="tabletext">${answer.numericResponse?number?default(0)?string("#")}&nbsp;[${uiLabelMap.CommonTally}: ${results._tally?default(0)?string("#")} / ${uiLabelMap.CommonAverage}: ${results._average?default(0)?string("#")}]</div>
           <#elseif question.surveyQuestionTypeId == "PASSWORD">
-            <div class="tabletext">[Not Shown]</div>
+            <div class="tabletext">[${uiLabelMap.CommonNotShown}]</div>
           <#elseif question.surveyQuestionTypeId == "CONTENT">
             <#if answer.contentId?has_content>
               <#assign content = answer.getRelatedOne("Content")>
@@ -121,7 +121,7 @@
               </#list>
             </#if>
           <#else>
-            <div class="tabletext">Unsupported question type : ${question.surveyQuestionTypeId}</div>
+            <div class="tabletext">${uiLabelMap.EcommerceUnsupportedQuestionType}: ${question.surveyQuestionTypeId}</div>
           </#if>
         </td>
         <td width="90%">&nbsp;</td>

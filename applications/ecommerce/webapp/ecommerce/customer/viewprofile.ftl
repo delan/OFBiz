@@ -121,7 +121,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Loyalty Points</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceLoyaltyPoints}</div>
           </td>
         </tr>
       </table>
@@ -132,7 +132,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-<div class="tabletext">You have ${totalSubRemainingAmount} points from ${totalOrders} order(s) in the last ${monthsToInclude} months.</div>
+<div class="tabletext">${uiLabelMap.EcommerceYouHave} ${totalSubRemainingAmount} ${uiLabelMap.EcommercePointsFrom} ${totalOrders} ${uiLabelMap.EcommerceOrderInLast} ${monthsToInclude} ${uiLabelMap.EcommerceMonths}</div>
           </td>
         </tr>
       </table>
@@ -191,9 +191,9 @@
                       <#if contactMechPurposeType?exists>
                         <b>${contactMechPurposeType.description}</b>
                         <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
-                          <span class="buttontextdisabled">[Is Default]</span>
+                          <span class="buttontextdisabled">[${uiLabelMap.EcommerceIsDefaul}]</span>
                         <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
-                          <a href='<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">[Set Default]</a>
+                          <a href='<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.EcommerceSetDefault}]</a>
                         </#if>
                       <#else>
                         <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
@@ -216,7 +216,7 @@
                       <#if (addr1.indexOf(" ") > 0)>
                         <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
                         <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
-                        <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther}&c=${postalAddress.city?if_exists}&s=${postalAddress.stateProvinceGeoId?if_exists}&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
+                        <a target='_blank' href='${uiLabelMap.EcommerceLookupWhitepagesLink}' class='buttontext'>(${uiLabelMap.EcommerceLookupWhitepages})</a>
                       </#if>
                     </#if>
                   <#else>
@@ -382,10 +382,10 @@
                               </td>
                               <td align="right" valign="top" width='1%' nowrap>
                                 <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
-                                  <div class="buttontextdisabled">[Is Default]</span>
+                                  <div class="buttontextdisabled">[${uiLabelMap.EcommerceIsDefault}]</span>
                                 <#else>
                                   <div><a href='<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                                  [Set Default]</a></div>
+                                  [${uiLabelMap.EcommerceSetDefault}]</a></div>
                                 </#if>
                               </td>
                             </tr>
@@ -452,10 +452,10 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Default Shipment Method</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.OrderDefaultShipmentMethod}</div>
           </td>
           <td valign="middle" align="right">
-            <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content><a href="javascript:document.setdefaultshipmeth.submit();" class="submenutextright">Set Default</a></#if>
+            <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content><a href="javascript:document.setdefaultshipmeth.submit();" class="submenutextright">${uiLabelMap.EcommerceSetDefault}</a></#if>
           </td>
         </tr>
       </table>
@@ -479,7 +479,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
                   </tr>
                 </#list>
               <#else>
-                <div class="tabletext">Please select your default shipping address; then select a default shipping method.</div>
+                <div class="tabletext">${uiLabelMap.OrderDefaultShipmentMethodMsg}</div>
               </#if>
             </table>
           </td>
@@ -497,7 +497,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;File Manager</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceFileManager}</div>
           </td>
           <td valign="middle" align="right">
           </td>
@@ -525,17 +525,17 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
                     <td><div class="tabletext">${status.description?if_exists}</div></td>
                     <td><div class="tabletext">${contentRole.fromDate?if_exists}</div></td>
                     <td align="right">
-                      <a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">[View]</a>
-                      <a href="<@ofbizUrl>/removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+                      <a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">[${uiLabelMap.CommonView}]</a>
+                      <a href="<@ofbizUrl>/removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
                     </td>
                   </tr>
                 </#list>
               <#else>
-                <div class="tabletext">You have no files.</div>
+                <div class="tabletext">${uiLabelMap.EcommerceNoFiles}</div>
               </#if>
             </table>
             <div>&nbsp;</div>
-            <div align="right" class="head3"><b><u>Upload New File</u></b>
+            <div align="right" class="head3"><b><u>${uiLabelMap.EcommerceUploadNewFile}</u></b>
               <div>&nbsp;</div>
               <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/createPartyAsset</@ofbizUrl>" style="margin: 0;">
                 <input type="hidden" name="dataCategoryId" value="PERSONAL">
@@ -560,7 +560,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Surveys</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSurveys}</div>
           </td>
         </tr>
       </table>
@@ -580,12 +580,12 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
-                    <div class="tabletext"><#if (responses < 1)><font color="red"><b>Not Completed</b><#else>Completed - Thank-you!</#if></div>
+                    <div class="tabletext"><#if (responses < 1)><font color="red"><b>${uiLabelMap.EcommerceNotCompleted}</b><#else>${uiLabelMap.EcommerceCompleted}</#if></div>
                   </td>
                   <#if (responses == 0 || survey.allowMultiple?default("N") == "Y")>
-                    <#assign surveyLabel = "[Take Survey]">
+                    <#assign surveyLabel = uiLabelMap.EcommerceTakeSurvey>
                     <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
-                      <#assign surveyLabel = "[Update Survey]">
+                      <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey>
                     </#if>
                     <td align="right" width="10%" nowrap><a href="<@ofbizUrl>/takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">${surveyLabel}</a></td>
                   <#else>

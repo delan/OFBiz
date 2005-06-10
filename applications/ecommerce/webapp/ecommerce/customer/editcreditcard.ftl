@@ -51,45 +51,45 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">Prefix on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingPrefixCar}]</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="titleOnCard" class="selectBox">
-          <option value="">Select One</option>
-          <option<#if (creditCardData.titleOnCard?default("") == "Mr.")> checked</#if>>Mr.</option>
-          <option<#if (creditCardData.titleOnCard?default("") == "Mrs.")> checked</#if>>Mrs.</option>
-          <option<#if (creditCardData.titleOnCard?default("") == "Ms.")> checked</#if>>Ms.</option>
-          <option<#if (creditCardData.titleOnCard?default("") == "Dr.")> checked</#if>>Dr.</option>
+          <option value="">${uiLabelMap.CommonSelectOne}</option>
+          <option<#if (creditCardData.titleOnCard?default("") == "${uiLabelMap.CommonTitleMr}")> checked</#if>>${uiLabelMap.CommonTitleMr}</option>
+          <option<#if (creditCardData.titleOnCard?default("") == "Mrs.")> checked</#if>>${uiLabelMap.CommonTitleMrs}</option>
+          <option<#if (creditCardData.titleOnCard?default("") == "Ms.")> checked</#if>>${uiLabelMap.CommonTitleMs}</option>
+          <option<#if (creditCardData.titleOnCard?default("") == "Dr.")> checked</#if>>${uiLabelMap.CommonTitleDr}</option>
         </select>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">First Name on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingFirstNameCard}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCardData.firstNameOnCard)?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">Middle Name on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingMiddleNameCard}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCardData.middleNameOnCard)?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">Last Name on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingLastNameCard}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCardData.lastNameOnCard)?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">Suffix on Card</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingSuffixCard}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="suffixOnCard" class="selectBox">
-          <option value="">Select One</option>
+          <option value="">${uiLabelMap.CommonSelectOne}</option>
           <option<#if (creditCardData.suffixOnCard?default("") == "Jr.")> checked</#if>>Jr.</option>
           <option<#if (creditCardData.suffixOnCard?default("") == "Sr.")> checked</#if>>Sr.</option>
           <option<#if (creditCardData.suffixOnCard?default("") == "I")> checked</#if>>I</option>

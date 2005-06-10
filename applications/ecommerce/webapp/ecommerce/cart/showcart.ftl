@@ -92,7 +92,7 @@ function gwAll(e) {
         }
     }
     if (cartSize > passed && selectedValue != "NO^") {
-        alert("Selected Gift Wrap is not avaiable for all items. The items which are available have been selected, the others remain unchanged.");
+        alert(${uiLabelMap.EcommerceSelectedGiftWrap});
     }
     cform.submit();
 }
@@ -122,7 +122,7 @@ function setAlternateGwp(field) {
     <div class="screenlet-body">
         <div class="tabletext">
             <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform" style="margin: 0;">
-                Product&nbsp;Number: <input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id?if_exists}"/>
+                ${uiLabelMap.EcommerceProductNumber}<input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id?if_exists}"/>
                 <#-- check if rental data present  insert extra fields in Quick Add-->
                 <#if product?exists && product.getString("productTypeId") == "ASSET_USAGE">
                     ${uiLabelMap.StartDate}: <input type="text" class="inputBox" size="10" name="reservStart" value=${requestParameters.reservStart?default("")}/>
@@ -132,8 +132,8 @@ function setAlternateGwp(field) {
                     &nbsp;&nbsp;${uiLabelMap.EcommerceNbrPersons}: <input type="text" class="inputBox" size="3" name="reservPersons" value=${requestParameters.reservPersons?default("1")}/>
                 </#if> 
                 ${uiLabelMap.CommonQuantity}: <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}"/>
-                <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddToCart}"/>
-                <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a> -->
+                <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddtoCart}"/>
+                <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a> -->
             </form>
         </div>
     </div>
@@ -174,8 +174,8 @@ function setAlternateGwp(field) {
           <#if asslGiftWraps?has_content && showOrderGiftWrap?default("true") == "true">
             <td NOWRAP align="right">
               <select class="selectBox" name="GWALL" onchange="javascript:gwAll(this);">
-                <option value="">Gift Wrap All Items</option>
-                <option value="NO^">No Gift Wrap</option>
+                <option value="">${uiLabelMap.EcommerceGiftWrapAllItems}</option>
+                <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
                 <#list allgiftWraps as option>
                   <option value="${option.productFeatureId}">${option.description} : ${option.defaultAmount?default(0)}</option>
                 </#list>
@@ -183,7 +183,7 @@ function setAlternateGwp(field) {
           <#else>
             <td NOWRAP>&nbsp;</td>
           </#if>
-          <#if fixedAssetExist == true><td NOWRAP align="center"><table><tr><td class="tabletext" nowrap align="center"><b>- Startdate -</b></td><td class="tabletext" nowrap><b>- Nbr of days -</b></td></tr><tr><td class="tabletext" nowrap><b>- Nbr of persons -</b></td><td class="tabletext" nowrap align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></td></tr></table></td>
+          <#if fixedAssetExist == true><td NOWRAP align="center"><table><tr><td class="tabletext" nowrap align="center"><b>- ${uiLabelMap.Startdate} -</b></td><td class="tabletext" nowrap><b>- ${uiLabelMap.EcommerceNbrOfDays} -</b></td></tr><tr><td class="tabletext" nowrap><b>- ${uiLabelMap.EcommerceNbrOfPersons} -</b></td><td class="tabletext" nowrap align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></td></tr></table></td>
           <#else><td NOWRAP align="center"><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td></#if>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceUnitPrice}</b></div></td>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceAdjustments}</b></div></td>
@@ -258,9 +258,9 @@ function setAlternateGwp(field) {
                 
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
-                  <div class="tableheadtext">You may also choose one of the following for your gift:</div>
+                  <div class="tableheadtext">${uiLabelMap.OrderChooseFollowingForGift}:</div>
                   <select name="dummyAlternateGwpSelect${cartLineIndex}" onchange="setAlternateGwp(this);">
-                  <option value="">- Choose Another Gift -</option>
+                  <option value="">- ${uiLabelMap.OrderChooseAnotherGift} -</option>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(delegator, alternativeOptionProductId, requestAttributes.locale)>
                     <option value="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>">${alternativeOptionName?default(alternativeOptionProductId)}</option>
@@ -282,14 +282,14 @@ function setAlternateGwp(field) {
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")?if_exists>
               <#if giftWrapOption?has_content>
                 <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
-                  <option value="NO^">No Gift Wrap</option>
+                  <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
                   <#list giftWrapOption as option>
                     <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?exists && selectedOption.productFeatureId == option.productFeatureId)>SELECTED</#if>>${option.description} : ${option.amount?default(0)}</option>
                   </#list>
                 </select>
               <#elseif showNoGiftWrapOptions>
                 <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
-                  <option value="">No Gift Wrap</option>
+                  <option value="">${uiLabelMap.EcommerceNoGiftWrap}</option>
                 </select>
               <#else>
                 &nbsp;
@@ -420,16 +420,16 @@ function setAlternateGwp(field) {
 
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">&nbsp;Promotion/Coupon Codes</div>
+        <div class="boxhead">&nbsp;${uiLabelMap.ProductPromoCodes}</div>
     </div>
     <div class="screenlet-body">
         <div class="tabletext">
             <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
                 <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
-                <input type="submit" class="smallSubmit" value="Add Code">
+                <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddCode}">
                 <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>
                 <#if productPromoCodeIds?has_content>
-                    Entered Codes:
+                    ${uiLabelMap.ProductPromoCodesEntered}
                     <#list productPromoCodeIds as productPromoCodeId>
                         ${productPromoCodeId}
                     </#list>

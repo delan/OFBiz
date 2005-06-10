@@ -27,5 +27,5 @@
 <#-- ReturnHeader and a List of ReturnItem records is available to this template -->
 
 <br/>
-Your return request #${returnHeader.returnId} has been received and completed.
+${uiLabelMap.EcommerceReturnRequestNb}${returnHeader.returnId} ${uiLabelMap.EcommerceReturnRequestCompleted}
 <br/>

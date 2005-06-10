@@ -25,7 +25,7 @@
 -->
 
 ${sendTo},<br/>
-${sendFrom} has requested we send you this link with the following message:<br/><br/>
+${sendFrom} ${uiLabelMap.EcommerceFollowingMessage}<br/><br/>
 ${message}
 <br/><br/>
 <a href="${pageUrl}">${pageUrl}</a>

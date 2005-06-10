@@ -34,9 +34,9 @@
           </td>
           <td valign="middle" align="right">
             <#if profileMessages?exists || useSentTo?exists>
-              <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">View All</a>
+              <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewAll}</a>
             <#else>
-              <a href="<@ofbizUrl>/sentmessages</@ofbizUrl>" class="submenutextright">View Sent</a>
+              <a href="<@ofbizUrl>/sentmessages</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
             </#if>
           </td>
         </tr>
@@ -50,16 +50,16 @@
           <td>
             <table width="100%" border="0" cellpadding="1">
               <#if !messages?has_content>
-                <div class="tabletext">You have no messages.</div>
+                <div class="tabletext">${uiLabelMap.EcommerceNoMessages}.</div>
               <#else>
                 <tr>
                   <#if !useSentTo?exists>
-                    <td><div class="tableheadtext">From</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonFrom}</div></td>
                   <#else>
-                    <td><div class="tableheadtext">To</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonTo}</div></td>
                   </#if>
-                  <td><div class="tableheadtext">Subject</div></td>
-                  <td><div class="tableheadtext">Sent Date</div></td>
+                  <td><div class="tableheadtext">${uiLabelMap.EcommerceSubject}</div></td>
+                  <td><div class="tableheadtext">${uiLabelMap.EcommerceSentDate}</div></td>
                   <td>&nbsp;</td>
                 </tr>
                 <tr><td colspan="4"><hr class="sepbar"/></td></tr>
@@ -81,9 +81,9 @@
                     <td><div class="tabletext">${message.entryDate}</div></td>
                     <td align="right">
                       <#if !useSentTo?exists>
-                        <a href="<@ofbizUrl>/newmessage?messageId=${message.communicationEventId}</@ofbizUrl>" class="buttontext">[Reply]</a>
+                        <a href="<@ofbizUrl>/newmessage?messageId=${message.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyReply}]</a>
                       </#if>
-                      <a href="<@ofbizUrl>/readmessage?messageId=${message.communicationEventId}&useSentTo=${(useSentTo)?default("false")}</@ofbizUrl>" class="buttontext">[Read]</a>
+                      <a href="<@ofbizUrl>/readmessage?messageId=${message.communicationEventId}&useSentTo=${(useSentTo)?default("false")}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceRead}]</a>
                     </td>
                   </tr>
                 </#list>

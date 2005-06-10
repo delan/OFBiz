@@ -35,7 +35,7 @@
       <form method="post" action='<@ofbizUrl>/createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#else>
-      <p class="head1">Edit EFT Account</p>
+      <p class="head1">${uiLabelMap.PageTitleEditEFTAccount}</p>
       &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
       &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>

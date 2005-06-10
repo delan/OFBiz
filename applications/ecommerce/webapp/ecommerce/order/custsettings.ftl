@@ -98,7 +98,7 @@
                   <BR>
                   <select name="homeSol" class='selectBox'>
                     <option>${requestParameters.homeSol?default("Y")}</option>
-                    <option></option><option>Y</option><option>N</option>
+                    <option></option><option>${uiLabelMap.CommonY}</option><option>N</option>
                   </select>
                 </td>
               </tr>
@@ -113,7 +113,7 @@
                   <BR>
                   <select name="workSol" class='selectBox'>
                     <option>${requestParameters.workSol?default("Y")}</option>
-                    <option></option><option>Y</option><option>N</option>
+                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
                   </select>
                 </td>
               </tr>
@@ -128,7 +128,7 @@
                   <BR>
                   <select name="emailSol" class='selectBox'>
                     <option>${requestParameters.emailSol?default("Y")}</option>
-                    <option></option><option>Y</option><option>N</option>
+                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonY}</option>
                   </select>
                 </td>
               </tr>

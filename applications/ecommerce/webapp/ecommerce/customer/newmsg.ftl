@@ -34,7 +34,7 @@
           </td>
           <#if page.showMessageLinks?default("false")?upper_case == "TRUE">
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">View List</a>
+              <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
             </td>
           </#if>
         </tr>
@@ -63,7 +63,7 @@
           </tr>
           <tr>
             <td width="5">&nbsp;</td>
-            <td align="right"><div class="tableheadtext">From:</div></td>
+            <td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></td>
             <td><div class="tabletext">&nbsp;${sessionAttributes.autoName} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>/autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)</div></td>
           </tr>
           <#if partyIdTo?has_content>
@@ -74,7 +74,7 @@
             </tr>
             <tr>
               <td width="5">&nbsp;</td>
-              <td align="right"><div class="tableheadtext">To:</div></td>
+              <td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></td>
               <td><div class="tabletext">&nbsp;${partyToName}</div></td>
             </tr>
           </#if>
@@ -93,7 +93,7 @@
           </#if>
           <tr>
             <td width="5">&nbsp;</td>
-            <td align="right"><div class="tableheadtext">Subject:</div></td>
+            <td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></td>
             <td><input type="input" class="inputBox" name="subject" size="20" value="${defaultSubject}">
           </tr>
           <tr>
@@ -101,7 +101,7 @@
           </tr>
           <tr>
             <td width="5">&nbsp;</td>
-            <td align="right"><div class="tableheadtext">Message:</div></td>
+            <td align="right"><div class="tableheadtext">${uiLabelMap.CommonMessage}:</div></td>
             <td>&nbsp;</td>
           </tr>
           <tr>
@@ -115,7 +115,7 @@
           </tr>
           <tr>
             <td colspan="2">&nbsp;</td>
-            <td><input type="submit" class="smallSubmit" value="Send"></td>
+            <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"></td>
           </tr>
         </table>
       </form>

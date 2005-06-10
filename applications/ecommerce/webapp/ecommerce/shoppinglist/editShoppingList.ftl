@@ -138,7 +138,7 @@
                       <select name="isPublic" class="selectBox">
                         <option>${shoppingList.isPublic}</option>
                         <option value="${shoppingList.isPublic}">--</option>
-                        <option>Y</option>
+                        <option>${uiLabelMap.CommonY}</option>
                         <option>N</option>
                       </select>
                     </td>
@@ -149,7 +149,7 @@
                       <select name="isActive" class="selectBox">
                         <option>${shoppingList.isActive}</option>
                         <option value="${shoppingList.isActive}">--</option>
-                        <option>Y</option>
+                        <option>${uiLabelMap.CommonY}</option>
                         <option>N</option>
                       </select>
                     </td>
@@ -198,7 +198,7 @@
               <div class="boxhead">
                 &nbsp;${uiLabelMap.EcommerceShoppingListReorder} - ${shoppingList.listName}
                 <#if shoppingList.isActive?default("N") == "N">
-                  <font color="yellow">[Not Active]</font>
+                  <font color="yellow">[${uiLabelMap.OrderNotActive}]</font>
                 </#if>
               </div>
             </td>
@@ -218,35 +218,35 @@
                 <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}">
                 <table width="100%" cellspacing="0" cellpadding="1" border="0">
                   <tr>
-                    <td><div class="tableheadtext">Recurrence</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.EcommerceRecurrence}</div></td>
                     <td>
                       <#if recurrenceInfo?has_content>
                         <#assign recurrenceRule = recurrenceInfo.getRelatedOne("RecurrenceRule")?if_exists>
                       </#if>
                       <select name="intervalNumber" class="selectBox">
-                        <option value="">Select Interval</option>
-                        <option value="1" <#if (recurrenceRule.intervalNumber)?default(0) == 1>selected</#if>>Every</option>
-                        <option value="2" <#if (recurrenceRule.intervalNumber)?default(0) == 2>selected</#if>>Every Other</option>
-                        <option value="3" <#if (recurrenceRule.intervalNumber)?default(0) == 3>selected</#if>>Every 3rd</option>
-                        <option value="6" <#if (recurrenceRule.intervalNumber)?default(0) == 6>selected</#if>>Every 6th</option>
-                        <option value="9" <#if (recurrenceRule.intervalNumber)?default(0) == 9>selected</#if>>Every 9th</option>
+                        <option value="">${uiLabelMap.EcommerceSelectInterval}</option>
+                        <option value="1" <#if (recurrenceRule.intervalNumber)?default(0) == 1>selected</#if>>${uiLabelMap.EcommerceEveryDay}</option>
+                        <option value="2" <#if (recurrenceRule.intervalNumber)?default(0) == 2>selected</#if>>${uiLabelMap.EcommerceEveryOther}</option>
+                        <option value="3" <#if (recurrenceRule.intervalNumber)?default(0) == 3>selected</#if>>${uiLabelMap.EcommerceEvery3rd}</option>
+                        <option value="6" <#if (recurrenceRule.intervalNumber)?default(0) == 6>selected</#if>>${uiLabelMap.EcommerceEvery6th}</option>
+                        <option value="9" <#if (recurrenceRule.intervalNumber)?default(0) == 9>selected</#if>>${uiLabelMap.EcommerceEvery9th}</option>
                       </select>
                       &nbsp;
                       <select name="frequency" class="selectBox">
-                        <option value="">Select Frequency</option>
-                        <option value="5" <#if (recurrenceRule.frequency)?default("") == "WEEKLY">selected</#if>>Week</option>
-                        <option value="6" <#if (recurrenceRule.frequency)?default("") == "MONTHLY">selected</#if>>Month</option>
-                        <option value="7" <#if (recurrenceRule.frequency)?default("") == "YEARLY">selected</#if>>Year</option>
+                        <option value="">${uiLabelMap.EcommerceSelectFrequency}</option>
+                        <option value="5" <#if (recurrenceRule.frequency)?default("") == "WEEKLY">selected</#if>>${uiLabelMap.CommonWeek}</option>
+                        <option value="6" <#if (recurrenceRule.frequency)?default("") == "MONTHLY">selected</#if>>${uiLabelMap.CommonMonth}</option>
+                        <option value="7" <#if (recurrenceRule.frequency)?default("") == "YEARLY">selected</#if>>${uiLabelMap.CommonYear}</option>
                       </select>
                     </td>
                     <td>&nbsp;</td>
-                    <td><div class="tableheadtext">Start-Date</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonStartDate}</div></td>
                     <td>
                       <input type="text" class="textBox" name="startDateTime" size="20" value="${(recurrenceInfo.startDateTime)?if_exists}">
                       <a href="javascript:call_cal(document.reorderinfo.startDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                     </td>
                     <td>&nbsp;</td>
-                    <td><div class="tableheadtext">End-Date</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonEndDate}</div></td>
                     <td>
                       <input type="text" class="textBox" name="endDateTime" size="20" value="${(recurrenceRule.untilDateTime)?if_exists}">
                       <a href="javascript:call_cal(document.reorderinfo.endDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
@@ -255,25 +255,25 @@
                   </tr>
                   <tr><td colspan="9"><hr class="sepbar"/></td></tr>
                   <tr>
-                    <td><div class="tableheadtext">Ship-To</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.OrderShipTo}</div></td>
                     <td>
                       <select name="contactMechId" class="selectBox" onchange="javascript:document.reorderinfo.submit()">
-                        <option value="">Select A Shipping Address</option>
+                        <option value="">${uiLabelMap.OrderSelectAShippingAddress}</option>
                         <#if shippingContactMechList?has_content>
                           <#list shippingContactMechList as shippingContactMech>
                             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                             <option value="${shippingContactMech.contactMechId}"<#if (shoppingList.contactMechId)?default("") == shippingAddress.contactMechId> selected</#if>>${shippingAddress.address1}</option>
                           </#list>
                         <#else>
-                          <option value="">No Addresses Available</option>
+                          <option value="">${uiLabelMap.OrderNoAddressesAvailable}</option>
                         </#if>
                       </select>
                     </td>
                     <td>&nbsp;</td>
-                    <td><div class="tableheadtext">Ship-Via</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.OrderShipVia}</div></td>
                     <td>
                       <select name="shippingMethodString" class="selectBox">
-                        <option value="">Select A Shipping Method</option>
+                        <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
                         <#if carrierShipMethods?has_content>
                           <#list carrierShipMethods as shipMeth>
                             <#assign shippingEst = shippingEstWpr.getShippingEstimate(shipMeth)?default(-1)>
@@ -288,21 +288,21 @@
                                 <#if (shippingEst > -1)?exists>
                                   <@ofbizCurrency amount=shippingEst isoCode=listCart.getCurrency()/>
                                 <#else>
-                                  Calculated Offline
+                                  ${uiLabelMap.OrderCalculatedOffline}
                                 </#if>
                               </#if>
                             </option>
                           </#list>
                         <#else>
-                          <option value="">Select Address First</option>
+                          <option value="">${uiLabelMap.OrderSelectAddressFirst}</option>
                         </#if>
                       </select>
                     </td>
                     <td>&nbsp;</td>
-                    <td><div class="tableheadtext">Pay-By</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.OrderPayBy}</div></td>
                     <td>
                       <select name="paymentMethodId" class="selectBox">
-                        <option value="">Select A Payment Method</option>
+                        <option value="">${uiLabelMap.OrderSelectPaymentMethod}</option>
                         <#list paymentMethodList as paymentMethod>
                           <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                             <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
@@ -320,10 +320,10 @@
                   <tr>
                     <td align="right" colspan="9">
                       <div class="tabletext">
-                        <a href="javascript:document.reorderinfo.submit();" class="buttonText">[Save]</a>
-                        <a href="<@ofbizUrl>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[New Address]</a>
-                        <a href="<@ofbizUrl>/editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[New Credit Card]</a>
-                        <a href="<@ofbizUrl>/editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[New EFT Account]</a>
+                        <a href="javascript:document.reorderinfo.submit();" class="buttonText">[${uiLabelMap.CommonSave}]</a>
+                        <a href="<@ofbizUrl>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[${uiLabelMap.PartyAddNewAddress}]</a>
+                        <a href="<@ofbizUrl>/editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[${uiLabelMap.EcommerceNewCreditCard}]</a>
+                        <a href="<@ofbizUrl>/editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[${uiLabelMap.EcommerceNewEFTAccount}]</a>
                       </div>
                     </td>
                   </tr>
@@ -344,12 +344,12 @@
                         <div class="tabletext">
                           <table cellspacing="2" cellpadding="2" border="0">
                             <tr>
-                              <td><div class="tableheadtext">Last Ordered Date</div></td>
+                              <td><div class="tableheadtext">${uiLabelMap.OrderLastOrderedDate}</div></td>
                               <td><div class="tableheadtext">:</div></td>
                               <td><div class="tabletext">${lastOrderedString?default("Not Yet Ordered")}</div></td>
                             </tr>
                             <tr>
-                              <td><div class="tableheadtext">Estimate Next Order Date</div></td>
+                              <td><div class="tableheadtext">${uiLabelMap.OrderEstimateNextOrderDate}</div></td>
                               <td><div class="tableheadtext">:</div></td>
                               <td><div class="tabletext">${nextTimeString?default("Not Yet Known")}</div></td>
                             </tr>
@@ -456,7 +456,7 @@
                 <table width='100%' cellspacing="0" cellpadding="1" border="0">
                   <TR>
                     <TD NOWRAP><div class='tabletext'><b>${uiLabelMap.EcommerceProduct}</b></div></TD>
-                    <td><table><tr><td class="tabletext" nowrap align="center"><b>- Startdate -</b></td><td class="tabletext" nowrap><b>- Nbr of days -</b></td></tr><tr><td class="tabletext" nowrap><b>- Nbr of persons -</b></td><td class="tabletext" nowrap align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></td></tr></table></td>
+                    <td><table><tr><td class="tabletext" nowrap align="center"><b>- ${uiLabelMap.EcommerceStartdate} -</b></td><td class="tabletext" nowrap><b>- ${uiLabelMap.EcommerceNbrOfDays} -</b></td></tr><tr><td class="tabletext" nowrap><b>- ${uiLabelMap.EcommerceNbrOfPersons} -</b></td><td class="tabletext" nowrap align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></td></tr></table></td>
                     <#-- <TD NOWRAP align="center"><div class='tabletext'><b>Purchased</b></div></TD> -->
                     <TD NOWRAP align="right"><div class='tabletext'><b>${uiLabelMap.EcommercePrice}</b></div></TD>
                     <TD NOWRAP align="right"><div class='tabletext'><b>${uiLabelMap.EcommerceTotal}</b></div></TD>
@@ -630,7 +630,7 @@
               <input type="text" class="inputBox" name="productId" value="${requestParameters.add_product_id?if_exists}">
               <#if reservStart?exists></td><td class="tabletext">${uiLabelMap.EcommerceStartDate}</td><td><input type="text" class="inputBox" size="10" name="reservStart" value=${requestParameters.reservStart?default("")}></td><td class="tabletext"> ${uiLabelMap.EcommerceLength}:</td><td><input type="text" class="inputBox" size="2" name="reservLength" value=${requestParameters.reservLength?default("")}></td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td class="tabletext">${uiLabelMap.EcommerceNbrPersons}:</td><td><input type="text" class="inputBox" size="3" name="reservPersons" value=${requestParameters.reservPersons?default("1")}></td><td class="tabletext" nowrap></#if> ${uiLabelMap.CommonQuantity} :</td><td><input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}"></td><td>
 <!--              <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}">-->
-              <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddToShoppingList}">
+              <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddtoShoppingList}">
             </form>
           </td>
         </tr>

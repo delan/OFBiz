@@ -24,9 +24,9 @@
  *@since      3.0
 -->
 
-<div class="head1">Gift Card Link</div>
+<div class="head1">${uiLabelMap.AccountingGiftCardLink}</div>
 <br/>
-<div class="tabletext">Enter your physical and virtual card and pin number to link your account.</div>
+<div class="tabletext">${uiLabelMap.AccountingEnterGiftCardLink}.</div>
 <br/>
 
 <form name="gclink" method="post" action="<@ofbizUrl>/linkgiftcard</@ofbizUrl>">
@@ -37,15 +37,15 @@
   <table align="center">
     <tr>
       <td colspan="2" align="center">
-        <div class="tableheadtext">Physical Card</div>
+        <div class="tableheadtext">${uiLabelMap.AccountingPhysicalCard}</div>
       </td>
     </tr>
     <tr>
-      <td><div class="tabletext">Card Number</div></td>
+      <td><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td><input type="text" class="inputBox" name="physicalCard" size="20"></td>
     </tr>
     <tr>
-      <td><div class="tabletext">Pin Number</div></td>
+      <td><div class="tabletext">${uiLabelMap.AccountingPINNumber}</div></td>
       <td><input type="text" class="inputBox" name="physicalPin" size="20"></td>
     </tr>
     <tr>
@@ -53,15 +53,15 @@
     </tr>
     <tr>
       <td colspan="2" align="center">
-        <div class="tableheadtext">Virtual Card</div>
+        <div class="tableheadtext">${uiLabelMap.AccountingVirtualCard}</div>
       </td>
     </tr>
     <tr>
-      <td><div class="tabletext">Card Number</div></td>
+      <td><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td><input type="text" class="inputBox" name="virtualCard" size="20"></td>
     </tr>
     <tr>
-      <td><div class="tabletext">Pin Number</div></td>
+      <td><div class="tabletext">${uiLabelMap.AccountingPINNumber}</div></td>
       <td><input type="text" class="inputBox" name="virtualPin" size="20"></td>
     </tr>
     <tr>

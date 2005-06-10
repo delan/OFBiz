@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,18 +26,11 @@
 
 <BR>
 <#if orderHeader.statusId == "ORDER_REJECTED">
-This email is to inform you there was a problem with your payment method for order #${orderHeader.orderId}.<br/>
-At this time your order has been cancelled and will not be processed. Please contact customer service if you
-have any questions.<br/>
-
+	${uiLabelMap.OrderProblemWithYourPaymentMethod} ${orderHeader.orderId}.<br/>
+	${uiLabelMap.OrderProblemCancelledNotProcessed}<br/>
 <#elseif orderHeader.statusId == "ORDER_APPROVED">
-This email is to inform you that your payment for order #${orderHeader.orderId} has been accepted.<br/>
-Your order will be processed, and you will receive an email notification once the item(s) have shipped.<br/>
-<br/>
-Thank you for your order!<br/>
-
+	${uiLabelMap.OrderEmailPaymentOK} ${orderHeader.orderId} ${uiLabelMap.OrderEmailAccepted}
 <#else>
-  Sorry, there was a problem with this email, please contact customer service for information regarding your order #${orderHeader.orderId}.<br/>
+  	${uiLabelMap.OrderEmailSorry} ${orderHeader.orderId}.<br/>
 </#if>
-<br/>
-Customer Service (email@email.com)<br/>
+	<br/>${uiLabelMap.OrderEmailCustomerService} (email@email.com)<br/> <#-- Customer service email (not a variable why?) must be adapted - JLR 1/6/5 -->
