@@ -24,12 +24,6 @@
  *@version    $Revision: 1.4-OTS1 $
  *@since      3.0
 -->
-<#if (requestAttributes.configMap)?exists>
-	<#assign configMap = requestAttributes.configMap>
-	<#assign productStoreId = configMap.productStoreId>
-<#else>
-	<#assign productStoreId = "HotelDemoStore">
-</#if>
 <#if (requestAttributes.uiLabelMap)?exists>	<#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if (requestAttributes.catalogId)?exists>	<#assign catalogId = requestAttributes.catalogId>
 	<#else><#assign catalogId = "">
@@ -43,16 +37,15 @@
 	<#assign displayApps = [
 <#--		 {"title":"Main", 				"url":"main"} -->
  		{"title":"Product",				"url":"mainCatalog"}
-		,{"title":"Reservations",		"url":"findorders?productStoreId=${productStoreId}"}
+		,{"title":"Reservations",		"url":"findorders"}
 		,{"title":"Customers",			"url":"findparty"}
 		,{"title":"Settings",				"url":"mainSettings"}
-		,{"title":"Website", 			"url":"/hotelfrontend?productStoreId=${productStoreId}"}
+		,{"title":"Website", 			"url":"/${productStoreId?if_exists}"}
 		,{"title":"Logout", 				"url":"logout"}
 		]>
 <#else>
 	<#assign displayApps = [
-		{"title":"Website", 			"url":"/hotelfrontend?productStoreId=${productStoreId}"}
-		,{"title":"Login",				"url":"checkLogin/main"}
+		{"title":"Login",				"url":"checkLogin/main"}
 		]>
 </#if>
 <#assign unselectedClass = {"col" : "tabdownblock", "left" : "tabdownleft", "center" : "tabdowncenter", "right" : "tabdownright", "link" : "tablink"}>
