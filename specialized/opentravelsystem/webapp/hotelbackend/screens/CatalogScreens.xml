@@ -142,7 +142,7 @@
 	                       <platform-specific>
 	                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
 	                       </platform-specific>
-                            <label style="head1">Add/Update Category</label>
+                        <label style="head1">Add/Update Category</label>
                             <link target="EditCategory" text="[New Category]" style="buttontext"/>
                             <include-form name="editProdCatalogCategory" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                     </decorator-section>
@@ -369,7 +369,7 @@
     </screen>
     <screen name="EditProductCategories">
         <section>
-            <actions>
+            <actions>                
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="products"/>
@@ -398,7 +398,7 @@
                      </container>
                         <include-form name="ListProductCategoryMembers" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                          <label style="head1">&lt;br/&gt;${uiLabelMap.ProductAddCategory}</label>
-                        <include-form name="AddProductCategoryMember" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="AddProductCategoryMember" location="component://opentravelsystem/webapp/hotelbackend/screens/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -540,6 +540,7 @@
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="title" value="Edit Product for Asset Usage attributes"/>
                 <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
@@ -671,7 +672,6 @@
     </screen>
  
     <!-- provide a calendar to show occupation-->
-    <!-- provide a calendar to show occupation-->
     <screen name="ListFixedAssetCalendar">
         <section>
             <actions>
@@ -747,6 +747,10 @@
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator">
                     <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
+                        </platform-specific>
+                        <label style="head1">${uiLabelMap.PageTitleEditCategoryProducts} for Category "${productCategory.description}" [${productCategoryId}]</label>
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategoryRollup.ftl"/></html>
                         </platform-specific>

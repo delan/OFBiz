@@ -18,6 +18,7 @@
                 <!--set field="layoutSettings.extraHead" value=" "/-->
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
                 <set field="activeApp" value="hotelbackend" global="true"/>
             </actions>
             <widgets>
