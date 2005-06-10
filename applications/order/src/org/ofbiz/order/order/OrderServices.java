@@ -47,6 +47,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
@@ -55,14 +56,13 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
-import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
+import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -1800,45 +1800,135 @@ public class OrderServices {
 
     /** Service to email a customer with initial order confirmation */
     public static Map sendOrderConfirmNotification(DispatchContext ctx, Map context) {
-        return sendOrderNotification(ctx, context, "PRDS_ODR_CONFIRM");
+        return sendOrderNotificationScreen(ctx, context, "PRDS_ODR_CONFIRM");
     }
 
     /** Service to email a customer with order changes */
     public static Map sendOrderCompleteNotification(DispatchContext ctx, Map context) {
-        return sendOrderNotification(ctx, context, "PRDS_ODR_COMPLETE");
+        return sendOrderNotificationScreen(ctx, context, "PRDS_ODR_COMPLETE");
     }
 
     /** Service to email a customer with order changes */
     public static Map sendOrderBackorderNotification(DispatchContext ctx, Map context) {
-        return sendOrderNotification(ctx, context, "PRDS_ODR_BACKORDER");
+        return sendOrderNotificationScreen(ctx, context, "PRDS_ODR_BACKORDER");
     }
 
     /** Service to email a customer with order changes */
     public static Map sendOrderChangeNotification(DispatchContext ctx, Map context) {
-        return sendOrderNotification(ctx, context, "PRDS_ODR_CHANGE");
+        return sendOrderNotificationScreen(ctx, context, "PRDS_ODR_CHANGE");
     }
 
     /** Service to email a customer with order payment retry results */
     public static Map sendOrderPayRetryNotification(DispatchContext ctx, Map context) {
-        return sendOrderNotification(ctx, context, "PRDS_ODR_PAYRETRY");
+        return sendOrderNotificationScreen(ctx, context, "PRDS_ODR_PAYRETRY");
     }
 
-    protected static Map sendOrderNotification(DispatchContext dctx, Map context, String emailType) {
+    protected static Map defaultProductStoreEmailScreenLocation = FastMap.newInstance();
+    static {
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://ecommerce/widget/EmailOrderScreens.xml#OrderConfirmNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://ecommerce/widget/EmailOrderScreens.xml#OrderCompleteNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://ecommerce/widget/EmailOrderScreens.xml#BackorderNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://ecommerce/widget/EmailOrderScreens.xml#OrderChangeNotice");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://ecommerce/widget/EmailOrderScreens.xml#PaymentRetryNotice");
+    }
+
+    protected static Map sendOrderNotificationScreen(DispatchContext dctx, Map context, String emailType) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericDelegator delegator = dctx.getDelegator();
         String orderId = (String) context.get("orderId");
         String orderItemSeqId = (String) context.get("orderItemSeqId");
-
+        
         // prepare the order information
-        Map sendMap = prepareOrderEmail(delegator, orderId, orderItemSeqId, emailType);
-        if (sendMap != null && (ServiceUtil.isError(sendMap) || ServiceUtil.isFailure(sendMap))) {
-            return sendMap;
+        Map sendMap = FastMap.newInstance();
+
+        // get the order header and store
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting OrderHeader", module);
         }
+        
+        if (orderHeader == null) {
+            return ServiceUtil.returnFailure("Could not find OrderHeader with ID [" + orderId + "]");
+        }
+
+        GenericValue productStoreEmail = null;
+        try {
+            productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting the ProductStoreEmailSetting for productStoreId=" + orderHeader.get("productStoreId") + " and emailType=" + emailType, module);
+        }
+        if (productStoreEmail == null) {
+            return ServiceUtil.returnFailure("No valid email setting for store with productStoreId=" + orderHeader.get("productStoreId") + " and emailType=" + emailType);
+        }
+        String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+        if (UtilValidate.isEmpty(bodyScreenLocation)) {
+            bodyScreenLocation = (String) defaultProductStoreEmailScreenLocation.get(emailType);
+        }
+        sendMap.put("bodyScreenUri", bodyScreenLocation);
+        sendMap.put("webSiteId", orderHeader.get("webSiteId"));
+
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        String emailString = orh.getOrderEmailString();
+        if (UtilValidate.isEmpty(emailString)) {
+            Debug.logInfo("Customer is not setup to receive emails; no address(s) found [" + orderId + "]", module);
+            return ServiceUtil.returnError("No sendTo email address found");
+        }
+
+        // where to get the locale... from PLACING_CUSTOMER's UserLogin.lastLocale, 
+        // or if not available then from ProductStore.defaultLocaleString
+        // or if not available then the system Locale
+        Locale locale = null;
+        GenericValue placingParty = orh.getPlacingParty();
+        GenericValue placingUserLogin = null;
+        if (locale == null && placingParty != null) {
+            // just get the most recent UserLogin for this party, if there is one...
+            try {
+                List placingUserLoginList = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", placingParty.get("partyId")), UtilMisc.toList("-" + ModelEntity.STAMP_FIELD));
+                if (placingUserLoginList != null && placingUserLoginList.size() > 0) {
+                    placingUserLogin = (GenericValue) placingUserLoginList.get(0);
+                    String localeString = placingUserLogin.getString("lastLocale");
+                    if (UtilValidate.isNotEmpty(localeString)) {
+                        locale = UtilMisc.parseLocale(localeString);
+                    }
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error getting Placing Party UserLogin for order email notification, will try other sources: " + e.toString(), module);
+            }
+        }
+        GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(orderHeader);
+        if (locale == null && productStore != null) {
+            String localeString = productStore.getString("defaultLocaleString");
+            if (UtilValidate.isNotEmpty(localeString)) {
+                locale = UtilMisc.parseLocale(localeString);
+            }
+        }
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+
+        ResourceBundleMapWrapper uiLabelMap = (ResourceBundleMapWrapper) UtilProperties.getResourceBundleMap("EcommerceUiLabels", locale);
+        uiLabelMap.addBottomResourceBundle("OrderUiLabels");
+        uiLabelMap.addBottomResourceBundle("CommonUiLabels");
+
+        Map bodyParameters = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "userLogin", placingUserLogin, "uiLabelMap", uiLabelMap, "locale", locale);
+        sendMap.put("bodyParameters", bodyParameters);
+        
+        String subjectString = productStoreEmail.getString("subject");
+        sendMap.put("subject", subjectString);
+
+        sendMap.put("contentType", productStoreEmail.get("contentType"));
+        sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
+        sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
+        sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
+        sendMap.put("sendTo", emailString);
 
         // send the notification
         Map sendResp = null;
         try {
-            sendResp = dispatcher.runSync("sendGenericNotificationEmail", sendMap);
+            sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Service exception; see logs");
@@ -1849,138 +1939,6 @@ public class OrderServices {
             sendResp.put("emailType", emailType);
         }
         return sendResp;
-    }
-
-    protected static Map prepareOrderEmail(GenericDelegator delegator, String orderId, String orderItemSeqId, String emailType) {
-        Map result = new HashMap();
-        String ofbizHome = System.getProperty("ofbiz.home");
-
-        // get the order header and store
-        GenericValue orderHeader = null;
-        try {
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting OrderHeader", module);
-        }
-
-        GenericValue productStoreEmail = null;
-        if (orderHeader != null) {
-            try {
-                productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem getting the ProductStoreEmailSetting", module);
-            }
-        }
-
-        if (productStoreEmail == null) {
-            return ServiceUtil.returnFailure("No valid email setting for store");
-        }
-
-        OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        String emailString = orh.getOrderEmailString();
-        if (UtilValidate.isEmpty(emailString)) {
-            Debug.logInfo("Customer is not setup to receive emails; no address(s) found [" + orderId + "]", module);
-            return ServiceUtil.returnError("No sendTo email address found");
-        }
-
-        // prepare the parsed subject
-        Map orderEmailData = prepareOrderEmailData(delegator, orderId, orderItemSeqId);
-        String subjectString = productStoreEmail.getString("subject");
-        subjectString = FlexibleStringExpander.expandString(subjectString, orderEmailData);
-
-        result.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
-        result.put("templateData", orderEmailData);
-        result.put("subject", subjectString);
-        result.put("contentType", productStoreEmail.get("contentType"));
-        result.put("sendFrom", productStoreEmail.get("fromAddress"));
-        result.put("sendCc", productStoreEmail.get("ccAddress"));
-        result.put("sendBcc", productStoreEmail.get("bccAddress"));
-        result.put("sendTo", emailString);
-
-        return result;
-    }
-
-    /** Service to prepare notification data */
-    protected static Map prepareOrderEmailData(GenericDelegator delegator, String orderId, String orderItemSeqId) {
-        Map result = new HashMap();
-
-        try {
-            GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-            OrderReadHelper orh = new OrderReadHelper(orderHeader);
-            List orderItems = orh.getOrderItems();
-            List orderAdjustments = orh.getAdjustments();
-            List orderHeaderAdjustments = orh.getOrderHeaderAdjustments();
-            double orderSubTotal = orh.getOrderItemsSubTotal();
-            List headerAdjustmentsToShow = orh.getOrderHeaderAdjustmentsToShow();
-
-            //templateContext.put("localOrderReadHelper", orh);
-            result.put("orderId", orderId);
-            result.put("orderItemSeqId", orderItemSeqId);
-            result.put("orderHeader", orderHeader);
-            result.put("orderItems", orh.getOrderItems());
-            result.put("statusString", orh.getStatusString());
-            result.put("orderAdjustments", orderAdjustments);
-            result.put("orderHeaderAdjustments", orderHeaderAdjustments);
-            result.put("orderSubTotal", new Double(orderSubTotal));
-            result.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
-
-            double shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
-            shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
-            result.put("orderShippingTotal", new Double(shippingAmount));
-
-            double taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
-            taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);
-            result.put("orderTaxTotal", new Double(taxAmount));
-            result.put("orderGrandTotal", new Double(OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments)));
-
-            List placingCustomerOrderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
-            GenericValue placingCustomerOrderRole = EntityUtil.getFirst(placingCustomerOrderRoles);
-            GenericValue placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
-            result.put("placingCustomerPerson", placingCustomerPerson);
-
-            GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
-            result.put("billingAccount", billingAccount);
-
-            List orderPaymentPrefs = orderHeader.getRelated("OrderPaymentPreference");
-            result.put("orderPaymentPreferences", orderPaymentPrefs);
-
-            List orderItemShipGroups = orderHeader.getRelated("OrderItemShipGroup");
-            result.put("orderItemShipGroups", orderItemShipGroups);
-
-            Iterator orderItemPOIter = UtilMisc.toIterator(orderItems);
-            if (orderItemPOIter != null && orderItemPOIter.hasNext()) {
-                GenericValue orderItemPo = (GenericValue) orderItemPOIter.next();
-                result.put("customerPoNumber", orderItemPo.getString("correspondingPoId"));
-            }
-
-            // get Shipment tracking info
-            EntityCondition osisCond = new EntityFieldMap(UtilMisc.toMap("orderId", orderId), EntityOperator.AND);
-            List osisOrder = UtilMisc.toList("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId");
-            List osisFields = UtilMisc.toList("shipmentId", "shipmentRouteSegmentId", "carrierPartyId", "shipmentMethodTypeId");
-            osisFields.add("shipmentPackageSeqId");
-            osisFields.add("trackingCode");
-            osisFields.add("boxNumber");
-
-            EntityFindOptions osisFindOptions = new EntityFindOptions();
-            osisFindOptions.setDistinct(true);
-
-            List orderShipmentInfoSummaryList = null;
-            EntityListIterator osisEli = delegator.findListIteratorByCondition("OrderShipmentInfoSummary", osisCond, null, osisFields, osisOrder, osisFindOptions);
-            if (osisEli != null) {
-                orderShipmentInfoSummaryList = osisEli.getCompleteList();
-                osisEli.close();
-            }
-            result.put("orderShipmentInfoSummaryList", orderShipmentInfoSummaryList);
-
-            // is this from a demo store?
-            GenericValue productStore = orderHeader.getRelatedOne("ProductStore");
-            boolean isDemoStore = !"N".equals(productStore.getString("isDemoStore"));
-            result.put("isDemoStore", new Boolean(isDemoStore));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Entity read error", module);
-            return ServiceUtil.returnError("Problem with entity lookup, see error log");
-        }
-        return result;
     }
 
     /** Service to email order notifications for pending actions */
@@ -2071,7 +2029,6 @@ public class OrderServices {
         }
         return ServiceUtil.returnSuccess();
     }
-
 
     /** Service to create an order payment preference */
     public static Map createPaymentPreference(DispatchContext ctx, Map context) {

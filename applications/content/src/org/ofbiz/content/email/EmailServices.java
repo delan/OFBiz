@@ -77,7 +77,7 @@ public class EmailServices {
         String mailEnabled = UtilProperties.getPropertyValue("general.properties", "mail.notifications.enabled", "N");
         if (!"Y".equalsIgnoreCase(mailEnabled)) {
             // no error; just return as if we already processed
-            Debug.logImportant("Mail notifications disabled in general.properties", module);
+            Debug.logImportant("Mail notifications disabled in general.properties; here is the context with info that would have been sent: " + context, module);
             return ServiceUtil.returnSuccess();
         }      
         String sendTo = (String) context.get("sendTo");
@@ -210,15 +210,19 @@ public class EmailServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map sendMailFromScreen(DispatchContext dctx, Map serviceContext) {
-        // pretty simple, get the content and then call the sendMail method below
+        String webSiteId = (String) serviceContext.get("webSiteId");
         String bodyScreenUri = (String) serviceContext.remove("bodyScreenUri");
         Map bodyParameters = (Map) serviceContext.remove("bodyParameters");
+
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
+        }
 
         StringWriter bodyWriter = new StringWriter();
 
         MapStack screenContext = MapStack.create();
         ScreenRenderer screens = new ScreenRenderer(bodyWriter, screenContext, htmlScreenRenderer);
-        screens.populateContextForService(dctx, serviceContext);
+        screens.populateContextForService(dctx, bodyParameters);
         screenContext.putAll(bodyParameters);
 
         try {
@@ -249,8 +253,9 @@ public class EmailServices {
         subject = FlexibleStringExpander.expandString(subject, screenContext, (Locale) screenContext.get("locale"));
         serviceContext.put("subject", subject);
         
+        if (Debug.verboseOn()) Debug.logVerbose("sendMailFromScreen sendMail context: " + serviceContext, module);
+        
         Map result = sendMail(dctx, serviceContext);
-
         result.put("body", body);
         return result;
     }

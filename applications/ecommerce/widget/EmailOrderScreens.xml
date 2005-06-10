@@ -26,21 +26,11 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
 
-    <screen name="OrderConfirmationNotice">
+    <screen name="OrderConfirmNotice">
         <section>
             <actions>
                 <set field="title" value="Order Confirmation Notice"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/templates/email/OrderNoticeEmail.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="OrderChangeNotice">
-        <section>
-            <actions>
-                <set field="title" value="Order Change Notice"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
             </actions>
             <widgets>
@@ -52,6 +42,7 @@
         <section>
             <actions>
                 <set field="title" value="Order Complete Notice"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
             </actions>
             <widgets>
@@ -63,10 +54,36 @@
         <section>
             <actions>
                 <set field="title" value="Order Backorder Notice"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/templates/email/OrderNoticeEmail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="OrderChangeNotice">
+        <section>
+            <actions>
+                <set field="title" value="Order Change Notice"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/templates/email/OrderNoticeEmail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="PaymentRetryNotice">
+        <section>
+            <actions>
+                <set field="title" value="Order Payment Retry Notice"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/templates/email/emailpayretry.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
