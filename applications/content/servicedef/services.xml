@@ -61,6 +61,7 @@
         <implements service="sendMailInterface"/>
         <attribute name="bodyScreenUri" type="String" mode="IN" optional="false"/>
         <attribute name="bodyParameters" type="Map" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="body" type="String" mode="OUT" optional="false"/>
     </service>
     

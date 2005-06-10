@@ -37,6 +37,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="OUT" optional="false"/>
+        <attribute name="body" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="sendOrderConfirmation" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.order.order.OrderServices" invoke="sendOrderConfirmNotification">

@@ -41,9 +41,13 @@
 <div class="head1">${title}</div>
 <#if !isDemoStore?exists || isDemoStore><p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p></#if>
 
+<#if orderHeader?exists>
 ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
 <br/>
 ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
+<#else>
+<div class="head1">Order not found with ID [${orderId?if_exists}], or not allowed to view.</div>
+</#if>
 
 </body>
 </html>

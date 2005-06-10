@@ -261,19 +261,19 @@ public class NotificationServices {
      * <code>baseUrl</code>.
      */
     public static void setBaseUrl(GenericDelegator delegator, String webSiteId, Map context) {
-        StringBuffer httpBase = null;
-        StringBuffer httpsBase = null;
-                
-        String localServer = null;        
-               
-        String httpsPort = null;
-        String httpsServer = null;
-        String httpPort = null;
-        String httpServer = null;
-        Boolean enableHttps = null;        
-
         // If the baseUrl was not specified we can do a best effort instead
         if (!context.containsKey("baseUrl")) {
+            StringBuffer httpBase = null;
+            StringBuffer httpsBase = null;
+                    
+            String localServer = null;        
+                   
+            String httpsPort = null;
+            String httpsServer = null;
+            String httpPort = null;
+            String httpServer = null;
+            Boolean enableHttps = null;        
+
             try {
                 // using just the IP address of localhost if we don't have a defined server
                 InetAddress localHost = InetAddress.getLocalHost();

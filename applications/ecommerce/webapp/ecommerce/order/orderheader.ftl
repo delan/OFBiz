@@ -25,6 +25,10 @@
  *@since      2.1
 -->
 
+<#-- NOTE: this template is used for the orderstatus screen in ecommerce AND for order notification emails through the OrderNoticeEmail.ftl file -->
+<#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
+<#if baseEcommerceSecureUrl?exists><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
+
 <table border="0" cellpadding="0" cellspacing="0">
   <tr>
     <#-- left side -->
@@ -36,11 +40,11 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</div>
                 </td>
                 <#if maySelectItems?default("N") == "Y" && returnLink?default("N") == "Y">
                   <td valign="middle" align="right" nowrap="nowrap">
-                    <a href="<@ofbizUrl>/makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
+                    <a href="<@ofbizUrl>makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
                   </td>
                 </#if>
               </tr>

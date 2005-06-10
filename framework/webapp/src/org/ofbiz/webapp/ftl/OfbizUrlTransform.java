@@ -83,7 +83,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     BeanModel req = (BeanModel) env.getVariable("request");
                     BeanModel res = (BeanModel) env.getVariable("response");
                     Object prefix = env.getVariable("urlPrefix");
-                    if (req != null) {                    
+                    if (req != null) {
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                         HttpServletResponse response = null;
@@ -97,7 +97,16 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     } else if (prefix != null) {
                         if (prefix instanceof TemplateScalarModel) {
                             TemplateScalarModel s = (TemplateScalarModel) prefix;
-                            out.write(s + buf.toString());
+                            String prefixString = s.getAsString();
+                            String bufString = buf.toString();
+                            boolean prefixSlash = prefixString.endsWith("/");
+                            boolean bufSlash = bufString.startsWith("/");
+                            if (prefixSlash && bufSlash) {
+                                bufString = bufString.substring(1);
+                            } else if (!prefixSlash && !bufSlash) {
+                                bufString = "/" + bufString;
+                            }
+                            out.write(prefixString + bufString);
                         }
                     } else {
                         out.write(buf.toString());
