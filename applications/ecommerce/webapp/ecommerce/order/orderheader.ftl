@@ -158,7 +158,7 @@
                               <div class="tabletext" align="center">${paymentAddress.city}<#if paymentAddress.stateProvinceGeoId?has_content>, ${paymentAddress.stateProvinceGeoId}</#if> ${paymentAddress.postalCode?if_exists}
                               <div class="tabletext" align="center">${paymentAddress.countryGeoId}</div>                                                                                                                
                               <div class="tabletext" align="center"><hr class="sepbar"/></div>
-                              <div class="tabletext" align="center"><b>${uiLabelMap.OrderBesureIncludeOrder} #</b></div>
+                              <div class="tabletext" align="center"><b>${uiLabelMap.OrderBeSureToIncludeYourOrderNb}</b></div>
                             </#if>                         
                           </td>                  
                         <#else>
@@ -227,7 +227,7 @@
                           </#if>
                           <tr>
                             <td align="right" valign="top" width="15%">
-                              <div class="tabletext">&nbsp;<b>Gift Card</b></div>
+                              <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingGiftCard}</b></div>
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
@@ -266,8 +266,8 @@
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
-                                <#if pmBillingAddress.toName?has_content><b>To:</b> ${pmBillingAddress.toName}<br/></#if>
-                                <#if pmBillingAddress.attnName?has_content><b>Attn:</b> ${pmBillingAddress.attnName}<br/></#if>
+                                <#if pmBillingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${pmBillingAddress.toName}<br/></#if>
+                                <#if pmBillingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${pmBillingAddress.attnName}<br/></#if>
                                 ${pmBillingAddress.address1}<br/>
                                 <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br/></#if>
                                 ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
@@ -414,8 +414,8 @@
                               <div class="tabletext">
                                 <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
                                 Code: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
-                                <#if orderShipmentInfoSummary.boxNumber?has_content> Box #${orderShipmentInfoSummary.boxNumber}</#if> 
-                                <#if orderShipmentInfoSummary.carrierPartyId?has_content>(Carrier: ${orderShipmentInfoSummary.carrierPartyId})</#if>
+                                <#if orderShipmentInfoSummary.boxNumber?has_content>${uiLabelMap.OrderBoxNubmer}${orderShipmentInfoSummary.boxNumber}</#if> 
+                                <#if orderShipmentInfoSummary.carrierPartyId?has_content>(${uiLabelMap.ProductCarrier}: ${orderShipmentInfoSummary.carrierPartyId})</#if>
                               </div>
                             </#list>
                           </#if>

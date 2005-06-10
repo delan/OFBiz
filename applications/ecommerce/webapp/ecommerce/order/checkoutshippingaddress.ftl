@@ -87,10 +87,10 @@ function toggleBillingAccount(box) {
                     <table width="100%" border="0" cellpadding="1" cellspacing="0">
                       <tr>
                         <td colspan="2">
-                          <a href="<@ofbizUrl>/splitship</@ofbizUrl>" class="buttontext">[Split Shipment]</a>
+                          <a href="<@ofbizUrl>/splitship</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderSplitShipment}]</a>
                           <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
                           <#if (cart.getShipGroupSize() > 1)>
-                            <div class="tabletext" style="color: red;">NOTE: Multiple shipments exist, use Split Shipment.</div>
+                            <div class="tabletext" style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExis}</div>
                           </#if>
                         </td>
                       </tr>

@@ -58,7 +58,7 @@ function submitForm(form, mode, value) {
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Item Groups</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.OrderItemGroups}</div>
           </td>
           <td valign="middle" align="right">
           </td>
@@ -83,7 +83,7 @@ function submitForm(form, mode, value) {
                     <input type="hidden" name="groupIndex" value="${groupIdx}">
                     <tr>
                       <td>
-                        <div class="tabletext"><b>Group ${groupNumber}:</b></div>
+                        <div class="tabletext"><b>${uiLabelMap.CommonGroup} ${groupNumber}:</b></div>
                         <#list group.getShipItems() as item>                          
                           <#assign groupItem = group.getShipItemInfo(item)>
                           <div class="tabletext">&nbsp;&nbsp;&nbsp;${item.getName()} - (${groupItem.getItemQuantity()})</div>
@@ -97,7 +97,7 @@ function submitForm(form, mode, value) {
                         <div>
                           <#assign selectedContactMechId = cart.getShippingContactMechId(groupIdx)?default("")>
                           <select name="shippingContactMechId" class="selectBox" onchange="javascript:submitForm(document.editgroupform${groupIdx}, 'SA', null);">
-                            <option value="">Select Shipping Address</option>
+                            <option value="">${uiLabelMap.OrderSelectShippingAddress}</option>
                             <#list shippingContactMechList as shippingContactMech>
                               <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                               <option value="${shippingAddress.contactMechId}" <#if (shippingAddress.contactMechId == selectedContactMechId)>selected</#if>>${shippingAddress.address1}</option>
@@ -110,7 +110,7 @@ function submitForm(form, mode, value) {
                           <#assign selectedShippingMethod = "">
                         </#if>
                         <select name="shipmentMethodString" class="selectBox">
-                          <option value="">Select Shipping Method</option>
+                          <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
                           <#list carrierShipmentMethods as carrierShipmentMethod>
                             <#assign shippingEst = shipEstimateWrapper.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                             <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
@@ -124,7 +124,7 @@ function submitForm(form, mode, value) {
                                 <#if (shippingEst > -1)?exists>
                                   <@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
                                 <#else>
-                                  Calculated Offline
+                                  ${uiLabelMap.OrderCalculatedOffline}
                                 </#if>
                               </#if>
                             </option>
@@ -138,17 +138,17 @@ function submitForm(form, mode, value) {
                         <div>
                           <select name="maySplit" class="selectBox">
                             <#assign maySplitStr = cart.getMaySplit(groupIdx)?default("")>
-                            <option value="">Splitting Preference</option>
-                            <option value="false" <#if maySplitStr == "N">selected</#if>>Ship All Items Together</option>
-                            <option value="true" <#if maySplitStr == "Y">selected</#if>>Ship Items When Available</option>
+                            <option value="">${uiLabelMap.OrderSplittingPreference}</option>
+                            <option value="false" <#if maySplitStr == "N">selected</#if>>${uiLabelMap.OrderShipAllItemsTogether}</option>
+                            <option value="true" <#if maySplitStr == "Y">selected</#if>>${uiLabelMap.OrderShipItemsWhenAvailable}</option>
                           </select>
                         </div>
                         <div>
                           <select name="isGift" class="selectBox">
                             <#assign isGiftStr = cart.getIsGift(groupIdx)?default("")>
-                            <option value="">Is Gift?</option>
-                            <option value="false" <#if isGiftStr == "N">selected</#if>>Not A Gift</option>
-                            <option value="true" <#if isGiftStr == "Y">selected</#if>>Yes, Is A Gift</option>
+                            <option value="">${uiLabelMap.OrderIsGift}?</option>
+                            <option value="false" <#if isGiftStr == "N">selected</#if>>${uiLabelMap.OrderNotAGift}</option>
+                            <option value="true" <#if isGiftStr == "Y">selected</#if>>${uiLabelMap.OrderYesIsAGift}</option>
                           </select>
                         </div>
 
@@ -166,7 +166,7 @@ function submitForm(form, mode, value) {
                   </form>
                 </#list>
               <#else>
-                <div class="tabletext">No ship groups defined.</div>
+                <div class="tabletext">${uiLabelMap.OrderNoShipGroupsDefined}.</div>
               </#if>
             </table>
           </td>
@@ -183,7 +183,7 @@ function submitForm(form, mode, value) {
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Assign Items</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.OrderAssignItems}</div>
           </td>
           <td valign="middle" align="right">
           </td>
@@ -199,9 +199,9 @@ function submitForm(form, mode, value) {
             <table width="100%" cellspacing="0" cellpadding="1" border="0">
               <tr>
                 <td NOWRAP><div class="tabletext"><b>${uiLabelMap.EcommerceProduct}</b></div></td>
-                <td NOWRAP align="center"><div class="tabletext"><b>Total Qty</b></div></td>
+                <td NOWRAP align="center"><div class="tabletext"><b>${uiLabelMap.OrderTotalQty}</b></div></td>
                 <td NOWRAP>&nbsp;</td>
-                <td NOWRAP align="center"><div class="tabletext"><b>Move Qty</b></div></td>
+                <td NOWRAP align="center"><div class="tabletext"><b>${uiLabelMap.OrderMoveQty}</b></div></td>
                 <td NOWRAP>&nbsp;</td>
                 <td NOWRAP>&nbsp;</td>
               </tr>
@@ -233,7 +233,7 @@ function submitForm(form, mode, value) {
                           <#list itemShipGroups.entrySet() as group>
                             <div class="tabletext">
                               <#assign groupNumber = group.getKey() + 1>
-                              <b>Group - </b>${groupNumber} / <b>Quantity - </b>${group.getValue()}
+                              <b>Group - </b>${groupNumber} / <b>${uiLabelMap.CommonQuantity} - </b>${group.getValue()}
                             </div>
                           </#list>
 
@@ -264,23 +264,23 @@ function submitForm(form, mode, value) {
                       <div>&nbsp;</div>
                     </td>
                     <td>
-                      <div class="tabletext">From:
+                      <div class="tabletext">${uiLabelMap.CommonFrom}:
                         <select name="fromGroupIndex" class="selectBox">
                           <#list itemShipGroups.entrySet() as group>
                             <#assign groupNumber = group.getKey() + 1>
-                            <option value="${group.getKey()}">Group ${groupNumber}</option>
+                            <option value="${group.getKey()}">${uiLabelMap.CommonGroup} ${groupNumber}</option>
                           </#list>
                         </select>
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext">To:
+                      <div class="tabletext">${uiLabelMap.CommonTo}:
                         <select name="toGroupIndex" class="selectBox">
                           <#list 0..(cart.getShipGroupSize() - 1) as groupIdx>
                             <#assign groupNumber = groupIdx + 1>
-                            <option value="${groupIdx}">Group ${groupNumber}</option>
+                            <option value="${groupIdx}">${uiLabelMap.CommonGroup} ${groupNumber}</option>
                           </#list>
-                          <option value="-1">New Group</option>
+                          <option value="-1">${uiLabelMap.CommonNew} ${uiLabelMap.Group}</option>
                         </select>
                       </div>
                     </td>

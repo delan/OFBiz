@@ -106,7 +106,7 @@
     </div>
     <div id="middle"<#if (productStore.headerMiddleBackground)?has_content> style="background-image: <@ofbizContentUrl>${productStore.headerMiddleBackground}</@ofbizContentUrl>;"</#if>>
         <#if !productStore?exists>
-            <div class="head2">There is no ProductStore for this WebSite; Check Settings.</div>
+            <div class="head2">${uiLabelMap.EcommerceNoProductStore}</div>
         </#if>
         <#if (productStore.title)?exists><div id="company-name">${productStore.title}</div></#if>
         <#if (productStore.subtitle)?exists><div id="company-subtitle">${productStore.subtitle}</div></#if>

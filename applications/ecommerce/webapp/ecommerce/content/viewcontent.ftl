@@ -65,7 +65,7 @@
 </#if>
 <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in viewcontent, subContent:" + subContent, "")/>
 <br/>
-<div class="head1">Content for [${subContentId}] ${subContent.contentName?if_exists} - ${subContent.description?if_exists}:</div><br/>
+<div class="head1">${uiLabelMap.EcommerceContentFor} [${subContentId}] ${subContent.contentName?if_exists} - ${subContent.description?if_exists}:</div><br/>
 <table border="0" class="blogtext">
     <tr>
     <td width="40">&nbsp;</td>
@@ -122,15 +122,15 @@
          <td>
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
-              <a class="tabButton" href="<@ofbizUrl>/showcontenttree?contentId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >Back to</a> &nbsp;${content.contentName?if_exists}
+              <a class="tabButton" href="<@ofbizUrl>/showcontenttree?contentId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackto}</a> &nbsp;${content.contentName?if_exists}
             <#else>
-              <a class="tabButton" href="<@ofbizUrl>/viewcontent?contentId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >Back to</a> &nbsp;${content.contentName?if_exists}
+              <a class="tabButton" href="<@ofbizUrl>/viewcontent?contentId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackto}</a> &nbsp;${content.contentName?if_exists}
             </#if>
             <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
             [${content.contentId?if_exists}]
             <#if searchOn?has_content && searchOn?lower_case == "true">
                 &nbsp;
-              <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${siteId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >Search</a> 
+              <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${siteId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a> 
             </#if>
         </#if>
          </td>

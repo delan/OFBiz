@@ -35,13 +35,13 @@
         <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}"/>
         <tr>
           <td align="right" valign="middle">
-            <div class="tabletext">Category:</div>
+            <div class="tabletext">${uiLabelMap.ProductCategory}:</div>
           </td>
           <td valign="middle">
             <div class="tabletext">
-              <b>"${(searchCategory.description)?if_exists}"</b> Include sub-categories?
-              Yes<input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked/>
-              No<input type="radio" name="SEARCH_SUB_CATEGORIES" value="N"/>
+              <b>"${(searchCategory.description)?if_exists}". </b>${uiLabelMap.ProductIncludeSubcategories}
+              ${uiLabelMap.CommonYes}<input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked/>
+              ${uiLabelMap.CommonNo}<input type="radio" name="SEARCH_SUB_CATEGORIES" value="N"/>
             </div>
           </td>
         </tr>
@@ -87,14 +87,14 @@
           <select name="sortOrder" class="selectBox">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevency}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
-            <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
-            <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
-            <option value="SortProductField:averageCustomerRating">Customer Rating</option>
-            <option value="SortProductPrice:LIST_PRICE">List Price</option>
-            <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
+            <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
+            <option value="SortProductField:totalTimesViewed">${uiLabelMap.ProductPopularityByViews}</option>
+            <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
+            <option value="SortProductPrice:LIST_PRICE">${uiLabelMap.ProductListPrice}</option>
+            <option value="SortProductPrice:DEFAULT_PRICE">${uiLabelMap.ProductDefaultPrice}</option>
           </select>
-          Low to High<input type="radio" name="sortAscending" value="Y" checked/>
-          High to Low<input type="radio" name="sortAscending" value="N"/>
+          ${uiLabelMap.EcommerceLowToHigh}<input type="radio" name="sortAscending" value="Y" checked/>
+          ${uiLabelMap.EcommerceHighToLow}<input type="radio" name="sortAscending" value="N"/>
         </div>
       </td>
     </tr>
@@ -130,15 +130,15 @@
     <div class="head2">${uiLabelMap.EcommerceLastSearches}...</div>
   
     <div class="tabletext">
-      <a href="<@ofbizUrl>/clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">[Clear Search History]</a>
-      (Note that your history will automatically be cleared after you leave the site)
+      <a href="<@ofbizUrl>/clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceClearSearchHistory}]</a>
+	${uiLabelMap.EcommerceClearSearchHistoryNote}
     </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div class="tabletext">
-          <b>Search #${searchOptions_index + 1}</b>
-          <a href="<@ofbizUrl>/setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[Search]</a>
-          <a href="<@ofbizUrl>/setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">[Refine]</a>
+          <b>${uiLabelMap.EcommerceSearchNumber}${searchOptions_index + 1}</b>
+          <a href="<@ofbizUrl>/setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonSearch}]</a>
+          <a href="<@ofbizUrl>/setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRefine}]</a>
         </div>
         <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator)>
         <#list constraintStrings as constraintString>

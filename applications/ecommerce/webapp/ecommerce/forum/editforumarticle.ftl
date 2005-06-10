@@ -46,10 +46,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Content Information</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceContentInformation}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editforuminfo?contentId=${contentId?if_exists}&nodeTrailCsv=${nodeTrailCsv?if_exists}&contentIdTo=${contentIdTo?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>/editforuminfo?contentId=${contentId?if_exists}&nodeTrailCsv=${nodeTrailCsv?if_exists}&contentIdTo=${contentIdTo?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
           </td>
         </tr>
       </table>
@@ -61,9 +61,9 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align="right" nowrap><div class='tabletext'><b>Content ID</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${contentId?if_exists}</div></td></tr>
-    <tr><td align="right" nowrap><div class='tabletext'><b>Content Name</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${contentName?if_exists}</div></td></tr>
-    <tr><td align="right" nowrap><div class='tabletext'><b>Description</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${description?if_exists}<div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.ProductContentId}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${contentId?if_exists}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.EcommerceContentName}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${contentName?if_exists}</div></td></tr>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.CommonDescription}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${description?if_exists}<div></td></tr>
   </table>
           </td>
         </tr>
@@ -78,10 +78,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Image Information</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceImageInformation}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editaddimage?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=IMAGE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>/editaddimage?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=IMAGE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
           </td>
         </tr>
       </table>
@@ -93,7 +93,7 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align="right" nowrap><div class='tabletext'><b>Image</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.EcommerceImage}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
         <img src="<@ofbizUrl>/img?imgId=${imgDataResourceId?if_exists}</@ofbizUrl>" />
 <div></td></tr>
   </table>
@@ -110,10 +110,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Summary Information</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSummaryInformation}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=SUMMARY&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>/editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=SUMMARY&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
           </td>
         </tr>
       </table>
@@ -125,7 +125,7 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align="right" nowrap><div class='tabletext'><b>Summary</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
+    <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.EcommerceSummary}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
 ${summaryData?if_exists}
 <div></td></tr>
   </table>
@@ -142,10 +142,10 @@ ${summaryData?if_exists}
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Article Information</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceArticleInformation}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=ARTICLE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>/editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=ARTICLE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
           </td>
         </tr>
       </table>

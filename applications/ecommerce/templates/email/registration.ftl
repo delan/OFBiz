@@ -28,15 +28,15 @@
 
 ${person.firstName},
 <br/><br/>
-Thank you for registering with MyStore.com.
+${uiLabelMap.EcommerceThankForRegistering} MyStore.com. <#-- MyStore.com (not a variable why?) must be adapted - JLR 1/6/5 -->
 <br/><br/><br/>
 
-Your account login is: ${userLogin.userLoginId}<br/>
-With the password you set during registration.<br/><br/>
+${uiLabelMap.EcommerceAccountLogin} ${userLogin.userLoginId}<br/>
+${uiLabelMap.EcommercePassword}<br/><br/>
 
-If you ever lose your password, you can request a new one at any time.<br/><br/>
+${uiLabelMap.EcommerceLosePassword}<br/><br/>
 
-Thank-You,<br/>
-MyStore.com
+${uiLabelMap.EcommerceThankYou},<br/>
+MyStore.com <#-- MyStore.com (not a variable why?) must be adapted - JLR 1/6/5 -->
 <br/><br/>
 

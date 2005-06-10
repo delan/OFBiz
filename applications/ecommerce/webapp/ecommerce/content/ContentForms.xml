@@ -26,7 +26,7 @@
     <form name="searchQuery" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="AdminSearch" title="" type="single">
-        <field name="queryLine" title="Enter query parameters"><text size="60"/></field>
+        <field name="queryLine" title="${uiLabelMap.EcommerceEnterQueryParameters}"><text size="60"/></field>
         <field name="submitButton" title="Query" widget-style="standardSubmit"><submit button-type="button"/></field>
 
     </form>
@@ -34,8 +34,8 @@
         <field name="editContent" title="">
             <hyperlink also-hidden="false" description="Edit" target="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;contentIdTo=${contentIdTo}"/> 
         </field>
-        <field name="contentId" title="Content Id" ><display/></field>
-        <field name="dataResourceId" title="Data Resource Id" ><display/></field>
-        <field name="contentName" title="Name" ><display/></field>
+        <field name="contentId" title="${uiLabelMap.ProductContentId}" ><display/></field>
+        <field name="dataResourceId" title="${uiLabelMap.EcommerceDataResourceId}" ><display/></field>
+        <field name="contentName" title="${uiLabelMap.CommonName}" ><display/></field>
     </form>
 </forms>

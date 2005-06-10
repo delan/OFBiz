@@ -2,11 +2,11 @@
 <#import "/includes/bloglib.ftl" as blog/>
 
 <div class="boxoutside" >
-<div class="head1">&nbsp;&nbsp;&nbsp;&nbsp;From Site:</div><br/>
+<div class="head1">&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.EcommerceFromSite}:</div><br/>
 <div style="margin:10px;" >
 <@renderSiteAncestryPath trail=siteAncestorList?default([])/>
 <#if trailList?exists && 1 < trailList?size >
-<div class="head1">&nbsp;&nbsp;From Parent Article:</div><br/>
+<div class="head1">&nbsp;&nbsp;${uiLabelMap.EcommerceFromParentArticle}:</div><br/>
 </#if>
 <#if trailList?has_content>
     <@blog.renderAncestryPath trail=trailList startIndex=1 endIndexOffset=1 />
@@ -15,7 +15,7 @@
         <#assign pair0 = pair[0]?if_exists>
         <#assign pair1 = pair[1]?if_exists>
         <hr>
-        <div class="head1">Content for ${pair1?if_exists}[${pair0?if_exists}]:</div><br/>
+        <div class="head1">${uiLabelMap.EcommerceContentFor} ${pair1?if_exists}[${pair0?if_exists}]:</div><br/>
     </#if>
 <#else>
 </#if>
@@ -32,7 +32,7 @@
     </td>
     <td width="40" valign="bottom">
 <@checkPermission subContentId=subContentId targetOperation="CONTENT_CREATE|CONTENT_RESPOND" contentPurposeList="RESPONSE" >
-<a class="tabButton" href="<@ofbizUrl>/AddResponse?contentIdTo=${subContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
+<a class="tabButton" href="<@ofbizUrl>/AddResponse?contentIdTo=${subContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.EcommerceRespond}</a>
 </@checkPermission>
 <br/>
 
@@ -53,7 +53,7 @@
      It is not convenient to have the traverseSubContent check or recheck the first node
      because the associated ContentAssoc entity is not known.
 -->
-        <div class="head1">Responses:</div><br/>
+        <div class="head1">${uiLabelMap.EcommerceResponses}</div><br/>
 <@loopSubContentCache  contentAssocTypeId="RESPONSE" subContentId=subContentId mapKey=""
                 pickWhen="contentAssocTypeId != null && contentAssocTypeId.equals(\"RESPONSE\") && mapKey == null"
                 followWhen="contentAssocTypeId != null && contentAssocTypeId.equals(\"RESPONSE\")"
@@ -82,7 +82,7 @@
   <tr>
   <td class="tabletext">
         ${indentFill}
-        <a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+        <a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
                      ${content.contentId?if_exists}-${content.description?if_exists}<br/>
   </td>
   </tr>
@@ -113,8 +113,8 @@
                             wrapTemplateId=""
                         >
                 <#assign description=currentValue.description?default("No description")/>
-description[${currentValue.contentId?if_exists}]:${description}
-<a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+${uiLabelMap.CommonDescription}[${currentValue.contentId?if_exists}]:${description}
+<a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
                    </@traverseSubContentCache >
                 </@wrapSubContentCache>
             </#if>
@@ -133,7 +133,7 @@ description[${currentValue.contentId?if_exists}]:${description}
        <tr>
          <td >
             ${indent}
-            <a class="tabButton" href="<@ofbizUrl>/main?pubPt=${webSitePublishPoint.contentId?if_exists}</@ofbizUrl>" >Back to</a> &nbsp;${webSitePublishPoint.templateTitle?if_exists}
+            <a class="tabButton" href="<@ofbizUrl>/main?pubPt=${webSitePublishPoint.contentId?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${webSitePublishPoint.templateTitle?if_exists}
                 <#assign indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
          [${webSitePublishPoint.contentId?if_exists}]</td>
         </#if>

@@ -29,11 +29,16 @@
     <!-- Column Included Screens -->
     <screen name="choosecatalog">
         <section>
+            <actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/choosecatalog.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
+
     <screen name="keywordsearchbox">
         <section>
             <actions>
@@ -44,10 +49,12 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="sidedeepcategory">
         <section>
             <actions>
                 <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/sidedeepcategory.bsh"/>-->
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/sidedeepcategory.bsh"/>
             </actions>
             <widgets>
@@ -55,10 +62,12 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="minireorderprods">
         <section>
             <actions>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/minireorderprods.bsh"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/minireorderprods.ftl"/></html></platform-specific>
@@ -73,32 +82,46 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="minilastviewedcategories">
         <section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+       	   </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/minilastviewedcategories.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
+
     <screen name="minilastviewedproducts">
         <section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+       	   </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/minilastviewedproducts.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
+
     <screen name="minilastproductsearches">
         <section>
+            <actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/minilastproductsearches.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
-    
-    
+        
     <screen name="miniproductsummary">
-        <section>
+	    <section>
             <actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/miniproductsummary.bsh"/>
             </actions>
             <widgets>
@@ -106,9 +129,13 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="productsummary">
         <section>
             <actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/productsummary.bsh"/>
             </actions>
             <widgets>
@@ -119,6 +146,9 @@
 
     <screen name="breadcrumbs">
         <section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+       	   </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/breadcrumbs.ftl"/></html></platform-specific>
             </widgets>
@@ -147,6 +177,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="category-include">
         <section>
             <actions>
@@ -167,6 +198,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="categorydetail">
         <section>
             <actions>
@@ -179,6 +211,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="product">
         <section>
             <actions>
@@ -209,6 +242,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="productdetail">
         <section>
             <actions>
@@ -222,6 +256,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="configproductdetail">
         <section>
             <actions>
@@ -255,6 +290,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="lastviewedproducts">
         <section>
             <actions>
@@ -273,6 +309,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="detailImage">
         <section>
             <widgets>
@@ -280,10 +317,17 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="tellafriend">
         <section>
+            <actions>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>                
+            </actions>
             <widgets>
-               <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/tellafriend.ftl"/></html></platform-specific>
+				<platform-specific>
+                	<html><html-template location="component://ecommerce/webapp/ecommerce/catalog/tellafriend.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -309,6 +353,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="quickaddsummary">
         <section>
             <actions>
@@ -341,6 +386,7 @@
             </widgets>
         </section>
     </screen>
+
     <screen name="advancedsearch">
         <section>
             <actions>

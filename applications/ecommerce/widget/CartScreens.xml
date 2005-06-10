@@ -90,7 +90,7 @@
                 
                 <set field="promoUseDetailsInlineScreen" value="component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline"/>
 
-                <set field="title" value="Show All Promotions"/>
+				<set field="title-property" value="PageTitleShowAllPromotions"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showcart.bsh"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
             </actions>
@@ -112,7 +112,7 @@
 
                 <set field="productsummaryScreen" value="component://ecommerce/widget/CatalogScreens.xml#productsummary"/>
 
-                <set field="title" value="Show Promotion Details"/>
+				<set field="title-property" value="PageTitleShowPromotionDetails"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/cart/showPromotionDetails.bsh"/>
             </actions>
             <widgets>

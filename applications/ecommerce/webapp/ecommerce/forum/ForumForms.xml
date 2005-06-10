@@ -31,9 +31,9 @@
         </field>
         <field name="dataResourceId" >
             <drop-down allow-empty="false" no-current-selected-key="TEMPLATE_TEXT_ONLY">
-                <option key="TEMPLATE_TEXT_ONLY" description="Text only" />
-                <option key="TEMPLATE_IMAGE_CENTERED" description="Image centered above" />
-                <option key="TEMPLATE_IMAGE_LEFT" description="Image left, text flows around." />
+                <option key="TEMPLATE_TEXT_ONLY" description="${uiLabelMap.EcommerceTextOnly}" />
+                <option key="TEMPLATE_IMAGE_CENTERED" description="${uiLabelMap.EcommerceImageCenteredAbove}" />
+                <option key="TEMPLATE_IMAGE_LEFT" description="${uiLabelMap.EcommerceImageLeft}" />
             </drop-down>
         </field>
         <field name="ftlContentId" position="1">
@@ -51,18 +51,18 @@
         <field name="description">
             <text size="60"/>
         </field>
-       <field name="summaryData" title="Summary"
+       <field name="summaryData" title="${uiLabelMap.EcommerceSummary}"
             use-when="&quot;${summaryDataResourceTypeId}&quot;.length()>0"
             id-name="summaryData">
                 <textarea rows="8" cols="80" />
         </field>
 
-        <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="60"/></field>
+        <field name="textData" title="${uiLabelMap.ProductText}" id-name="textData"><textarea rows="20" cols="60"/></field>
         <field name="privilegeEnumId" >
             <drop-down allow-empty="false" no-current-selected-key="SUBSCRIBE_BRONZE">
-                <option key="SUBSCRIBE_BRONZE" description="Bronze" />
-                <option key="SUBSCRIBE_SILVER" description="Silver" />
-                <option key="SUBSCRIBE_GOLD" description="Gold" />
+                <option key="SUBSCRIBE_BRONZE" description="${uiLabelMap.EcommerceBronze}" />
+                <option key="SUBSCRIBE_SILVER" description="${uiLabelMap.EcommerceSilver}" />
+                <option key="SUBSCRIBE_GOLD" description="${uiLabelMap.EcommerceGold}" />
             </drop-down>
         </field>
         <field name="section" >
@@ -89,7 +89,7 @@
             <hyperlink also-hidden="false" target="createTopic${pageName}?mode=restore" description="Create Topic"/>
         </field>
         -->
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
         <field name="ftlContentId" >
@@ -203,9 +203,9 @@
         </field>
         <field name="dataResourceId" >
             <drop-down allow-empty="false" no-current-selected-key="TEMPLATE_TEXT_ONLY">
-                <option key="TEMPLATE_TEXT_ONLY" description="Text only" />
-                <option key="TEMPLATE_IMAGE_CENTERED" description="Image centered above" />
-                <option key="TEMPLATE_IMAGE_LEFT" description="Image left, text flows around." />
+                <option key="TEMPLATE_TEXT_ONLY" description="${uiLabelMap.EcommerceTextOnly}" />
+                <option key="TEMPLATE_IMAGE_CENTERED" description="${uiLabelMap.EcommerceImageCenteredAbove}" />
+                <option key="TEMPLATE_IMAGE_LEFT" description="${uiLabelMap.EcommerceImageLeft}" />
             </drop-down>
         </field>
         <field name="ftlContentId" position="1">
@@ -223,7 +223,7 @@
         <field name="description">
             <text size="60"/>
         </field>
-       <field name="summaryData" title="Summary"
+       <field name="summaryData" title="${uiLabelMap.EcommerceSummary}"
             use-when="&quot;${summaryDataResourceTypeId}&quot;.length()>0"
             id-name="summaryData">
                 <textarea rows="8" cols="80" />
@@ -261,7 +261,7 @@
             <hyperlink also-hidden="false" target="createTopic${pageName}?mode=restore" description="Create Topic"/>
         </field>
         -->
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
         <field name="ftlContentId" >
@@ -314,11 +314,11 @@
         </field>
         <field name="dataResourceId">
             <drop-down allow-empty="false" no-current-selected-key="TEMPLATE_TEXT_ONLY">
-                <option key="TEMPLATE_TEXT_ONLY" description="Text only" />
-                <option key="TEMPLATE_IMAGE_CENTERED" description="Image centered above" />
-                <option key="TEMPLATE_IMAGE_CENTERED_FILE" description="Image centered above from file" />
-                <option key="TEMPLATE_IMAGE_LEFT" description="Image left, text flows around." />
-                <option key="TEMPLATE_COMPOSITE" description="Nested content." />
+                <option key="TEMPLATE_TEXT_ONLY" description="${uiLabelMap.EcommerceTextOnly}" />
+                <option key="TEMPLATE_IMAGE_CENTERED" description="${uiLabelMap.EcommerceImageCenteredAbove}" />
+                <option key="TEMPLATE_IMAGE_CENTERED_FILE" description="${uiLabelMap.EcommerceImageCenteredAboveFile}" />
+                <option key="TEMPLATE_IMAGE_LEFT" description="${uiLabelMap.EcommerceImageLeft}" />
+                <option key="TEMPLATE_COMPOSITE" description="${uiLabelMap.EcommerceNestedContent}" />
             </drop-down>
         </field>
         <field name="ownerContentId"><lookup target-form-name="LookupContent"/></field>
@@ -348,7 +348,7 @@
         <field name="lastModifiedDate" position="2"><display/></field>
         <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
-            <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}"  target="AddContent"/>
         </field>
         <field name="findContent" title="&amp;nbsp;" widget-style="buttontext" position="2">
             <hyperlink also-hidden="false" description="Find"  target="FindContent"/>
@@ -414,7 +414,7 @@
             <display description="ELECTRONIC_TEXT" also-hidden="false" />
         </field>
         <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="120"/> </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ImageUpload" target="uploadImage" title="" type="upload"
         default-title-style="tableheadtext"
@@ -422,13 +422,13 @@
         <field name="dataResourceId" >
             <display description="${currentValue.dataResourceId}" />
         </field>
-        <field name="objectInfo" title="Image File Name">
+        <field name="objectInfo" title="${uiLabelMap.EcommerceImageFileName}">
             <display description="${currentValue.objectInfo}" />
         </field>
         <field name="imageData" entity-name="ImageDataResource">
             <file />
         </field>
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -440,28 +440,28 @@
         </field>
         <field name="dataResourceId" >
             <drop-down allow-empty="false" no-current-selected-key="TEMPLATE_TEXT_ONLY">
-                <option key="TEMPLATE_TEXT_ONLY" description="Text only" />
-                <option key="TEMPLATE_IMAGE_CENTERED" description="Image centered above" />
-                <option key="TEMPLATE_IMAGE_LEFT" description="Image left, text flows around." />
+                <option key="TEMPLATE_TEXT_ONLY" description="${uiLabelMap.EcommerceTextOnly}" />
+                <option key="TEMPLATE_IMAGE_CENTERED" description="${uiLabelMap.EcommerceImageCenteredAbove}" />
+                <option key="TEMPLATE_IMAGE_LEFT" description="${uiLabelMap.EcommerceImageLeft}" />
             </drop-down>
         </field>
         <field name="contentId" position="1">
             <ignored />
         </field>
-        <field name="contentName" title="Short Subject">
+        <field name="contentName" title="${uiLabelMap.EcommerceShortSubject}">
             <text/>
         </field>
-        <field name="description" title="Long Subject">
+        <field name="description" title="${uiLabelMap.EcommerceLongSubject}">
             <text size="60"/>
         </field>
-       <field name="summaryData" title="Summary"
+       <field name="summaryData" title="${uiLabelMap.EcommerceSummary}"
             use-when="&quot;${summaryDataResourceTypeId}&quot;.length()>0"
             id-name="summaryData">
                 <textarea rows="8" cols="80" />
         </field>
 
         <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="80"/></field>
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
         <field name="statusId" >
@@ -496,7 +496,7 @@
         default-title-style="tableheadtext"
         extends="AddContent"
         default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <field name="contentIdTo" title="In response to:">
+        <field name="contentIdTo" title="${uiLabelMap.EcommerceInResponseTo}">
             <display description="${contentIdTo}" />
         </field>
         <field name="ownerContentId" >
@@ -514,10 +514,10 @@
         <field name="contentAssocTypeId" >
             <hidden value="RESPONSE"/>
         </field>
-        <field name="contentName" title="Short Subject" map-name="replyName">
+        <field name="contentName" title="${uiLabelMap.EcommerceShortSubject}" map-name="replyName">
             <text/>
         </field>
-        <field name="description" title="Long Subject" map-name="replyName">
+        <field name="description" title="${uiLabelMap.EcommerceLongSubject}" map-name="replyName">
             <text size="60"/>
         </field>
        <field name="dataResourceTypeId" >
@@ -544,7 +544,7 @@
         default-title-style="tableheadtext"
         extends="AddContent"
         default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <field name="contentIdTo" title="In response to:">
+        <field name="contentIdTo" title="${uiLabelMap.EcommerceInResponseTo}">
             <display description="${contentIdTo}" />
         </field>
         <field name="ownerContentId" >
@@ -584,22 +584,22 @@
             use-when="&quot;${currentValue.contentId}&quot;.length()>0" >
             <display />
         </field>
-        <field name="ownerContentId" title="Owning Department" >
+        <field name="ownerContentId" title="${uiLabelMap.EcommerceOwningDepartment}">
             <hidden value="${contentIdTo}"/>
         </field>
-        <field name="contentName" title="Title" map-name="currentValue">
+        <field name="contentName" title="${uiLabelMap.CommonTitle}" map-name="currentValue">
             <display/>
         </field>
-        <field name="textData" title="Text" entry-name="summaryData" id-name="textData"
+        <field name="textData" title="${uiLabelMap.CommonText}" entry-name="summaryData" id-name="textData"
             use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;summaryData&quot;) "
          ><textarea rows="20" cols="80"/></field>
-        <field name="textData" title="Text" id-name="textData" entry-name="textData"
+        <field name="textData" title="${uiLabelMap.CommonText}" id-name="textData" entry-name="textData"
             use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;textData&quot;) "
          ><textarea rows="20" cols="80"/></field>
         <field name="privilegeEnumId" >
             <hidden/>
         </field>
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
         <field name="statusId"  map-name="currentValue">
@@ -662,13 +662,13 @@
         <field name="imageData" >
             <file />
         </field>
-        <field name="ownerContentId" title="Owning Department" >
+        <field name="ownerContentId" title="${uiLabelMap.EcommerceOwningDepartment}">
             <hidden value="${contentIdTo}"/>
         </field>
-        <field name="contentName" title="Title" map-name="currentValue">
+        <field name="contentName" title="${uiLabelMap.CommonTitle}" map-name="currentValue">
             <hidden/>
         </field>
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
         <field name="statusId"  map-name="currentValue">

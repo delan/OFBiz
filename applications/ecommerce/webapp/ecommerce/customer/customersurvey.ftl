@@ -51,7 +51,7 @@
                       ${surveyWrapper.render().toString()}
                     </form>
                   <#else>
-                    <div class="head1">Nothing to do here. This must have been a mistake, sorry.</div>
+                    <div class="head1">${uiLabelMap.EcommerceNothingToDoHere}</div>
                   </#if>
                 </td>
               </tr>

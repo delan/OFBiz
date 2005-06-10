@@ -57,10 +57,10 @@
         <#if question.surveyQuestionTypeId == "BOOLEAN">
           <#assign selectedOption = (answer.booleanResponse)?default("Y")>
           <div class="tabletext"><nobr>
-            <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>Y<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
+            <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonY}<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
           </nobr></div>
           <div class="tabletext"><nobr>
-            <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>N<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]
+            <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonN}<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]
           </nobr></div>
 
         <#elseif question.surveyQuestionTypeId == "OPTION">
@@ -78,7 +78,7 @@
             </#list>
           </#if>
         <#else>
-          <div class="tabletext">Unsupported question type : ${question.surveyQuestionTypeId}</div>
+          <div class="tabletext">${uiLabelMap.EcommerceUnsupportedQuestionType}${question.surveyQuestionTypeId}</div>
         </#if>
       </td>
     </tr>

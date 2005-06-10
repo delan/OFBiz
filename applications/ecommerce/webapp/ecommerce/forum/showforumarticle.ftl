@@ -12,7 +12,7 @@
 <#assign dummy = globalNodeTrail.add(lastNode)/>
 </#if>
 <br/>
-<div class="head1">Content for [${subContentId}] ${subContent.contentName?if_exists} - ${subContent.description?if_exists}:</div><br/>
+<div class="head1">${uiLabelMap.EcommerceContentFor} [${subContentId}] ${subContent.contentName?if_exists} - ${subContent.description?if_exists}:</div><br/>
 <table border="0" width="100%" class="blogtext">
     <tr>
     <td width="40">&nbsp;</td>
@@ -25,7 +25,7 @@
 </@wrapSubContentCache >
 -->
 <@checkPermission mode="equals" entityOperation="_CREATE" targetOperation="HAS_USER_ROLE" >
-    <a class="tabButton" href="<@ofbizUrl>/createforumresponse?contentIdTo=${requestParameters.contentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
+    <a class="tabButton" href="<@ofbizUrl>/createforumresponse?contentIdTo=${requestParameters.contentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.EcommerceRespond}</a>
 </@checkPermission>
 <br/>
 
@@ -39,7 +39,7 @@
 </@checkPermission>
 -->
 
-        <div class="head1">Responses:</div><br/>
+        <div class="head1">${uiLabelMap.EcommerceResponses}</div><br/>
 <table border="0" width="100%" class="tableheadtext">
 <@loopSubContentCache  contentAssocTypeId="RESPONSE" subContentId=subContentId mapKey=""
                 pickWhen="contentAssocTypeId != null && \"RESPONSE\".equals(contentAssocTypeId) && mapKey == null"
@@ -58,7 +58,7 @@
             </#if>
         </#if>
         <#if content?exists>
-        <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+        <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
 [${thisContentId}] ${content.contentName?if_exists}-${content.description?if_exists}
         </#if>
 

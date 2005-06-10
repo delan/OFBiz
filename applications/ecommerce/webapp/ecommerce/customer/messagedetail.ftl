@@ -36,14 +36,14 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${(message.subject)?default("[No subject]")}</div>
+            <div class="boxhead">&nbsp;${(message.subject)?default("[${uiLabelMap.EcommerceNoSubject}]")}</div>
           </td>
           <td valign="middle" align="right">
             <#if (useSentTo)?default("false")?lower_case == "false">
-              <a href="<@ofbizUrl>/newmessage?messageId=${message.communicationEventId}</@ofbizUrl>" class="submenutext">Reply</a>
+              <a href="<@ofbizUrl>/newmessage?messageId=${message.communicationEventId}</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyReply}</a>
             </#if>
-            <a href="<@ofbizUrl>/sentmessages</@ofbizUrl>" class="submenutext">View Sent</a>
-            <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">View List</a>
+            <a href="<@ofbizUrl>/sentmessages</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceViewSent}</a>
+            <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.ViewList}</a>
           </td>
         </tr>
       </table>
@@ -57,15 +57,15 @@
             <table width="100%" border="0" cellpadding="1">
               <tr><td>&nbsp;</td></tr>
               <tr>
-                <td align="right"><div class="tableheadtext">From:</div></td>
+                <td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></td>
                 <td><div class="tabletext">${fromName}</div></td>
               </tr>
               <tr>
-                <td align="right"><div class="tableheadtext">To:</div></td>
+                <td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></td>
                 <td><div class="tabletext">${toName}</div></td>
               </tr>
               <tr>
-                <td align="right"><div class="tableheadtext">Date:</div></td>
+                <td align="right"><div class="tableheadtext">${uiLabelMap.CommonDate}:</div></td>
                 <td><div class="tabletext">${message.entryDate}</div></td>
               </tr>
               <tr><td>&nbsp;</td></tr>
@@ -73,7 +73,7 @@
               <tr>
                 <td>&nbsp;</td>
                 <td>
-                  <div class="tabletext">${message.content?default("[Empty Body]")}</div>
+                  <div class="tabletext">${message.content?default("[${uiLabelMap.EcommerceEmptyBody}]")}</div>
                 </td>
               </tr>
             </table>

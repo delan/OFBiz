@@ -219,7 +219,7 @@
       <td width="74%">
         <select name="allowSolicitation" class='selectBox'>
           <option>${partyContactMechData.allowSolicitation?if_exists}</option>
-          <option></option><option>Y</option><option>N</option>
+          <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
         </select>
       </td>
     </tr>

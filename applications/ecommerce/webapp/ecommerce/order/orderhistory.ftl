@@ -49,7 +49,7 @@
                 </td>
                 <td width="10">&nbsp;</td>
                 <td width="15%">
-                  <div class="tabletext"><b><nobr>${uiLabelMap.OrderOrder} #</nobr></b></div>
+                  <div class="tabletext"><b><nobr>${uiLabelMap.OrderOrder} ${uiLabelMap.OrderNbr}</nobr></b></div>
                 </td>
                 <td width="10">&nbsp;</td>
                 <td width="15%">

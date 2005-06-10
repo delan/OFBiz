@@ -45,12 +45,12 @@
 <#if processResult>
   <#-- success -->
   <br/>
-  Your gift card : ${displayNumber} has been reloaded.<br/>
-  The new balance is : ${amount} from ${previousAmount}<br/>
+  ${uiLabelMap.EcommerceYourGiftCard} ${displayNumber} ${uiLabelMap.EcommerceYourGiftCardReloaded}<br/>
+  ${uiLabelMap.EcommerceGiftCardNewBalance} ${amount} ${uiLabelMap.CommonFrom} ${previousAmount}<br/>
 <#else>
   <#-- fail -->
   <br/>
-  Gift Card Reload Process Failed with response code: ${responseCode}<br/>
-  Your order has been flagged to be refunded.
+  ${uiLabelMap.EcommerceGiftCardReloadFailed} ${responseCode}<br/>
+  ${uiLabelMap.EcommerceGiftCardRefunded}
   <br/>
 </#if>

@@ -16,25 +16,25 @@
   <#list entityList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
         <tr>
-          <td class="tabletext"> <b>id:</b>${content.contentId} </td>
-          <td class="tabletext"> <b>name:</b>${content.contentName} </td>
+          <td class="tabletext"> <b>${uiLabelMap.CommonId}:</b>${content.contentId} </td>
+          <td class="tabletext"> <b>${uiLabelMap.CommonName}:</b>${content.contentName} </td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
           <td>
-  <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a> 
+  <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a> 
           </td>
           <td class="tabletext">
-          <b>submitted:</b>
+          <b>${uiLabelMap.CommonSubmitted}:</b>
           <input type="radio" name="statusId_o_${row}" value="BLOG_SUBMITTED" checked/>
           </td>
           <td class="tabletext">
-          <b>publish:</b>
+          <b>${uiLabelMap.CommonPublish}:</b>
           <input type="radio" name="statusId_o_${row}" value="BLOG_PUBLISHED"/>
           </td>
         </tr>
           <input type="hidden" name="contentId_o_${row}" value="${content.contentId}"/>
         <tr>
           <td colspan="5" class="tabletext">
-          <b>content:</b><br/>
+          <b>${uiLabelMap.CommonContent}:</b><br/>
             <@renderSubContentCache subContentId=content.contentId/>
           </td>
         </tr>
@@ -46,7 +46,7 @@
     <#if 0 < entityList?size >
         <tr>
           <td colspan="5">
-<div class="standardSubmit" ><a href="javascript:submitRows('${row?default(0)}')">Update</a></div>
+<div class="standardSubmit" ><a href="javascript:submitRows('${row?default(0)}')">${uiLabelMap.CommonUpdate}</a></div>
           </td>
         </tr>
     </#if>

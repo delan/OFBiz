@@ -24,9 +24,9 @@
  *@since      3.0
 -->
 
-<div class="head1">Gift Card Balance</div>
+<div class="head1">${uiLabelMap.AccountingGiftCardBalance}</div>
 <br/>
-<div class="tabletext">Enter your gift card number and PIN to check the balance</div>
+<div class="tabletext">${uiLabelMap.Enter your gift card number and PIN to check the balance}</div>
 <br/>
 
 <br/>
@@ -35,7 +35,7 @@
     <tr>
       <td colspan="2">
         <div align="center" class="tabletext">
-          Your current balance is:
+          ${uiLabelMap.AccountingCurrentBalance}
         </div>
       </td>
     </tr>
@@ -45,7 +45,7 @@
           <#if (requestAttributes.balance?default(0) > 0)>
             ${requestAttributes.balance}
           <#else>
-            Problem checking you balance; check your card and pin number and try again
+            ${uiLabelMap.AccountingCurrentBalanceProblem}
           </#if>
         </div>
       </td>
@@ -56,11 +56,11 @@
     <input type="hidden" name="currency" value="USD">
     <input type="hidden" name="paymentConfig" value="${paymentProperties?default("payment.properties")}">
     <tr>
-      <td><div class="tableheadtext">Card Number</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td><input type="text" class="inputBox" name="cardNumber" size="20" value="${(requestParameters.cardNumber)?if_exists}"></td>
     </tr>
     <tr>
-      <td><div class="tableheadtext">PIN Number</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.AccountingPINNumber}</div></td>
       <td><input type="text" class="inputBox" name="pin" size="15" value="${(requestParameters.pin)?if_exists}"></td>
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>

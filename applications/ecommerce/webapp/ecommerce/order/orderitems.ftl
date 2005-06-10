@@ -39,7 +39,7 @@
           </td>
           <#if maySelectItems?default("N") == "Y">
             <td valign="middle" align="right" nowrap>
-              <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.EcommerceAddAlltoCart}</a><a href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.EcommerceAddCheckedToCart}</a><a href="<@ofbizUrl>createShoppingListFromOrder?order_id=${orderHeader.orderId}&orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>" class="submenutextright">Send Me This Every Month</a>
+              <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.EcommerceAddAlltoCart}</a><a href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.EcommerceAddCheckedToCart}</a><a href="<@ofbizUrl>createShoppingListFromOrder?order_id=${orderHeader.orderId}&orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderSendMeThisEveryMonth}</a>
             </td>
           </#if>
         </tr>
@@ -164,7 +164,7 @@
                 <#-- show info from workeffort if it was a rental item -->
                 <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
                     <#if workEffortSave?exists>
-                          <tr><td>&nbsp;</td><td colspan="8"><div class="tabletext">From: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")} unitil ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} for ${workEffortSave.reservPersons} person(s).</div></td></tr>
+                          <tr><td>&nbsp;</td><td colspan="8"><div class="tabletext">${uiLabelMap..CommonFrom}: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonUntil} ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonFor} ${workEffortSave.reservPersons} ${uiLabelMap.CommonPerson}(s).</div></td></tr>
                       </#if>
                 </#if>
                 <#-- now show adjustment details per line item -->
@@ -179,15 +179,15 @@
                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                           <#if orderItemAdjustment.primaryGeoId?has_content>
                             <#assign primaryGeo = orderItemAdjustment.getRelatedOneCache("PrimaryGeo")/>
-                            <b>Jurisdiction:</b> ${primaryGeo.geoName} [${primaryGeo.abbreviation?if_exists}]
+                            <b>${uiLabelMap.EcommerceJurisdiction}:</b> ${primaryGeo.geoName} [${primaryGeo.abbreviation?if_exists}]
                             <#if orderItemAdjustment.secondaryGeoId?has_content>
                               <#assign secondaryGeo = orderItemAdjustment.getRelatedOneCache("SecondaryGeo")/>
-                              (<b>in:</b> ${secondaryGeo.geoName} [${secondaryGeo.abbreviation?if_exists}])
+                              (<b>${uiLabelMap.CommonIn}:</b> ${secondaryGeo.geoName} [${secondaryGeo.abbreviation?if_exists}])
                             </#if>
                           </#if>
-                          <#if orderItemAdjustment.sourcePercentage?exists><b>Rate:</b> ${orderItemAdjustment.sourcePercentage}</#if>
-                          <#if orderItemAdjustment.customerReferenceId?has_content><b>Customer Tax ID:</b> ${orderItemAdjustment.customerReferenceId}</#if>
-                          <#if orderItemAdjustment.exemptAmount?exists><b>Exempt Amount:</b> ${orderItemAdjustment.exemptAmount}</#if>
+                          <#if orderItemAdjustment.sourcePercentage?exists><b>${uiLabelMap.EcommerceRate}:</b> ${orderItemAdjustment.sourcePercentage}</#if>
+                          <#if orderItemAdjustment.customerReferenceId?has_content><b>${uiLabelMap.CustomerTaxID}:</b> ${orderItemAdjustment.customerReferenceId}</#if>
+                          <#if orderItemAdjustment.exemptAmount?exists><b>${uiLabelMap.EcommerceExemptAmount}:</b> ${orderItemAdjustment.exemptAmount}</#if>
                         </#if>
                       </div>
                     </td>
@@ -210,7 +210,7 @@
                     <#assign shipGroupAddress = (shipGroup.getRelatedOne("PostalAddress"))?if_exists>
                     <tr>
                       <td align="right">
-                        <div class="tabletext" style="font-size: xx-small;"><b><i>Ship Group</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("N/A")}</div>
+                        <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.OrderShipGroup}</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("N/A")}</div>
                       </td>
                       <td align="right">
                         <div class="tabletext" style="font-size: xx-small;">${shipGroupAssoc.quantity?string.number}</div>

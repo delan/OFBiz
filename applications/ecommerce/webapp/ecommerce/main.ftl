@@ -28,7 +28,7 @@
 <#if requestAttributes.productCategoryId?has_content>
   ${screens.render("component://ecommerce/widget/CatalogScreens.xml#category-include")}
 <#else>
-  <center><h2>No PROMOTION Category found for CATALOG</h2></center>
+  <center><h2>${uiLabelMap.EcommerceNoPROMOTIONCategory}</h2></center>
 </#if>
 
 

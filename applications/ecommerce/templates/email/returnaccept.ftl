@@ -27,7 +27,7 @@
 <#-- ReturnHeader and a List of ReturnItem records is available to this template -->
 
 <br/>
-Your return request for the following items:<br/><br/>
+${uiLabelMap.EcommerceReturnRequest}<br/><br/>
 
 <pre>
 <#list returnItems as item>
@@ -38,7 +38,7 @@ Your return request for the following items:<br/><br/>
 </pre>
 <br/><br/>
 
-Has been accepted. Your return authorization is #${returnHeader.returnId}<br/>
+${uiLabelMap.EcommerceReturnRequestAccepted}${returnHeader.returnId}<br/>
 
 <br/>
 

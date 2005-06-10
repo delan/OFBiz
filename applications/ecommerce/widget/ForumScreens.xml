@@ -47,7 +47,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="Forum Summary"/>
+                <set field="title-property" value="PageTitleForumSummary"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/BlogForms.xml"/>
                 <set field="entityName" value="Content"/>
@@ -75,7 +75,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="Forum Article"/>
+                <set field="title-property" value="PageTitleForumArticle"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/BlogForms.xml"/>
                 <set field="entityName" value="Content"/>
@@ -105,7 +105,7 @@
 
                 <set field="includeHtmlArea" value="Y"/>
 
-                <set field="title" value="Add Content"/>
+                <set field="title-property" value="PageTitleAddContent"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/forum/ForumForms.xml"/>
                 <set field="singleFormName" value="AddContent"/>
@@ -152,7 +152,7 @@
 
                 <set field="includeHtmlArea" value="Y"/>
 
-                <set field="title" value="Edit Content"/>
+                <set field="title-property" value="PageTitleEditContent"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/forum/ForumForms.xml"/>
                 <set field="singleFormName" value="AddContent"/>
@@ -200,7 +200,7 @@
 
                 <set field="includeHtmlArea" value="Y"/>
 
-                <set field="title" value="Forum Response"/>
+                <set field="title-property" value="PageTitleForumResponse"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/forum/ForumForms.xml"/>
                 <set field="singleFormName" value="ViewComboResponse"/>
@@ -245,7 +245,7 @@
 
                 <set field="includeHtmlArea" value="Y"/>
 
-                <set field="title" value="Add Response"/>
+                <set field="title-property" value="PageTitleAddResponse"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/forum/ForumForms.xml"/>
                 <set field="singleFormName" value="AddResponse"/>
@@ -295,7 +295,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="Edit Forum Content Info"/>
+                <set field="title-property" value="PageTitleEditForumContentInfo"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/forum/ForumForms.xml"/>
                 <set field="singleFormName" value="EditContentInfo"/>
@@ -337,7 +337,7 @@
 
                 <set field="includeHtmlArea" value="Y"/>
 
-                <set field="title" value="Edit/Add Content"/>
+                <set field="title-property" value="PageTitleEditAddContent"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/forum/ForumForms.xml"/>
                 <set field="singleFormName" value="EditAddContent"/>
@@ -390,7 +390,7 @@
 
                 <set field="includeHtmlArea" value="Y"/>
 
-                <set field="title" value="Edit/Add Image"/>
+                <set field="title-property" value="PageTitleEditAddImage"/>
                 <set field="headerItem" value="Forum"/>
                 <set field="formDefFile" value="/forum/ForumForms.xml"/>
                 <set field="singleFormName" value="EditAddImage"/>

@@ -20,5 +20,5 @@ if (htmlAreaObject.style.display == "none") {
 </textarea>
 </form>
 </div>
-<a href="javascript:toggleHtmlArea()">Toggle</a>
+<a href="javascript:toggleHtmlArea()">${uiLabelMap.CommonToggle}</a>
 

@@ -31,6 +31,10 @@
                 <!-- base/top/specific map first, then more common map added for shared labels --> 
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
                 
@@ -111,7 +115,6 @@
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
-                <set field="title" value="Main Page"/>
                 <set field="title-property" value="PageTitleMain"/>
                 <set field="headerItem" value="main"/>
                 <set field="randomSurveyGroup" value="testSurveyGroup"/>
@@ -133,7 +136,6 @@
     <screen name="login">
         <section>
             <actions>
-                <set field="title" value="Login"/>
                 <set field="title-property" value="PageTitleLogin"/>
                 <set field="headerItem" value="login"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/login.bsh"/>

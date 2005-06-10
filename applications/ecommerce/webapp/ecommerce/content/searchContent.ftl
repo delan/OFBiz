@@ -4,7 +4,7 @@
 
 <tr>
 <td width="20%" align="right">
-<span class="tableheadtext">Enter query parameters</span>
+<span class="tableheadtext">${uiLabelMap.EcommerceEnterQueryParameters}</span>
 </td>
 <td>&nbsp;</td>
 <td width="80%" align="left">
@@ -19,7 +19,7 @@
   <table border="0" wdith="100%">
     <tr>
       <td align="right" valign="middle">
-        <div class="tabletext">Features:</div>
+        <div class="tabletext">${uiLabelMap.ProductFeatures}:</div>
       </td>
       <td align="right" valign="middle">
         <div class="tabletext">
@@ -39,7 +39,7 @@
         <td valign="middle">
           <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
-              <option value="">- Any -</option>
+              <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
@@ -77,16 +77,16 @@
     <#if searchConstraintStrings?has_content>
       <tr>
         <td align="right" valign="top">
-          <div class="tabletext">Last Search:</div>
+          <div class="tabletext">${uiLabelMap.ProductLastSearch}:</div>
         </td>
         <td valign="top">
             <#list searchConstraintStrings as searchConstraintString>
                 <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
-            <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+            <div class="tabletext">${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
             <div class="tabletext">
-              New Search<input type="radio" name="clearSearch" value="Y" checked>
-              Refine Search<input type="radio" name="clearSearch" value="N">
+              ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked>
+              ${uiLabelMap.ProductRefineSearch}<input type="radio" name="clearSearch" value="N">
             </div>
         </td>
       </tr>
