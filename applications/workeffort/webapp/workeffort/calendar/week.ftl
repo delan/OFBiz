@@ -24,18 +24,14 @@
  *@created    May 19 2003
  *@version    1.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr> 
     <td width='100%'> 
-	  <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
       	<tr> 
-          <td align="left" width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarWeekView}</td>
-          <td align="right" width='60%'>          
-		    <a href='<@ofbizUrl>/day?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortDayView}</a><a href='<@ofbizUrl>/week?start=${start.time?string("#")}</@ofbizUrl>' class='submenutextdisabled'>${uiLabelMap.WorkEffortWeekView}</a><a href='<@ofbizUrl>/month?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortMonthView}</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortUpcomingEvents}</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewEvent}</a>
-		  </td>
-		</tr>
+          <td align="left" class="boxhead">${uiLabelMap.WorkEffortCalendarWeekView}</td>
+        </tr>
       </table>
     </td>
   </tr>

@@ -26,7 +26,6 @@
  */
 
 import java.util.*;
-import org.ofbiz.security.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.webapp.pseudotag.*;
@@ -51,7 +50,7 @@ Timestamp prev = UtilDateTime.getDayStart(start,-1);
 Timestamp next = UtilDateTime.getDayStart(start,1);
 
 dispatcher = request.getAttribute("dispatcher");
-Map serviceCtx = UtilMisc.toMap("userLogin",context.getSession().getAttribute("userLogin"),"start",start,"numPeriods",new Integer(24),"periodSeconds",new Integer(3600));
+Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"start",start,"numPeriods",new Integer(24),"periodSeconds",new Integer(3600));
 Map result = dispatcher.runSync("getWorkEffortEventsByPeriod",serviceCtx);
 context.put("periods",result.get("periods"));
 context.put("maxConcurrentEntries",result.get("maxConcurrentEntries"));

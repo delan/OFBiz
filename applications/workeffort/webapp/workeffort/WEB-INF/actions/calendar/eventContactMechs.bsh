@@ -41,7 +41,7 @@ String workEffortId = request.getParameter("workEffortId");
 if(workEffortId == null) workEffortId = request.getAttribute("workEffortId");
  
 Map serviceCtx = UtilMisc.toMap(
-    "userLogin",context.getSession().getAttribute("userLogin"),
+    "userLogin", userLogin,
     "workEffortId",workEffortId);
 Map result = dispatcher.runSync("getWorkEffort",serviceCtx);
 

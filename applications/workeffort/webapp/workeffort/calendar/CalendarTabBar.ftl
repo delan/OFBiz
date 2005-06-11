@@ -1,4 +1,4 @@
-/*
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,20 +19,15 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones (jonesde@ofbiz.org)
- *@author     Johan Isacsson
- *@version    $Rev$
- *@since      2.2
- */
+ *@author     Jacopo Cappellato (jacopo.cappellato@sastau.it)
+-->
+<#assign unselectedClassName = "tabButton">
+<#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
-import java.util.*;
-import org.ofbiz.security.*;
-import org.ofbiz.entity.*;
-import org.ofbiz.base.util.*;
-import org.ofbiz.webapp.pseudotag.*;
-import org.ofbiz.workeffort.workeffort.*;
-
-dispatcher = request.getAttribute("dispatcher");
-Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"startDay",UtilDateTime.nowTimestamp(),"numDays",new Integer(7));
-Map result = dispatcher.runSync("getWorkEffortEventsByDays",serviceCtx);
-context.put("days",result.get("days"));
+<div class="tabContainer">
+    <a href="<@ofbizUrl>day<#if start?exists>?start=${start.time?string("#")}</#if></@ofbizUrl>" class="${selectedClassMap.day?default(unselectedClassName)}">${uiLabelMap.WorkEffortDayView}</a>
+    <a href="<@ofbizUrl>week<#if start?exists>?start=${start.time?string("#")}</#if></@ofbizUrl>" class="${selectedClassMap.week?default(unselectedClassName)}">${uiLabelMap.WorkEffortWeekView}</a>
+    <a href="<@ofbizUrl>month<#if start?exists>?start=${start.time?string("#")}</#if></@ofbizUrl>" class="${selectedClassMap.month?default(unselectedClassName)}">${uiLabelMap.WorkEffortMonthView}</a>
+    <a href="<@ofbizUrl>upcoming</@ofbizUrl>" class="${selectedClassMap.upcoming?default(unselectedClassName)}">${uiLabelMap.WorkEffortUpcomingEvents}</a>
+    <a href="<@ofbizUrl>event</@ofbizUrl>" class="${selectedClassMap.event?default(unselectedClassName)}">${uiLabelMap.WorkEffortNewEvent}</a>
+</div>
