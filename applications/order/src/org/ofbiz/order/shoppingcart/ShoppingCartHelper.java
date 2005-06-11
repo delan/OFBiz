@@ -238,7 +238,7 @@ public class ShoppingCartHelper {
                 while (itemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) itemIter.next();
                     // never read: int itemId = -1;
-                    if (orderItem.get("productId") != null && orderItem.get("quantity") != null && ("RENTAL_ORDER_ITEM").compareTo(orderItem.get("orderItemTypeId")) != 0 ) { // do not store rental itrems
+                    if (orderItem.get("productId") != null && orderItem.get("quantity") != null && ("RENTAL_ORDER_ITEM").equals(orderItem.getString("orderItemTypeId"))) { // do not store rental items
                         double amount = 0.00;
                         if (orderItem.get("selectedAmount") != null) {
                             amount = orderItem.getDouble("selectedAmount").doubleValue();
