@@ -562,6 +562,9 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (this._product == null) {
             this.itemDescription = item.getName();
         }
+        if (item.configWrapper != null) {
+            this.configWrapper = new ProductConfigWrapper(item.configWrapper);
+        }
     }
 
     /** Cannot create shopping cart item with no parameters */
