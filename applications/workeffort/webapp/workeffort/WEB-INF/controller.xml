@@ -486,14 +486,14 @@
     <view-map name="activity" type="jpublish" page="/task/activity.ftl"/>
     <view-map name="mytasks" type="jpublish" page="/task/mytasks.ftl"/>
     
-    <view-map name="event" type="jpublish" page="/calendar/event.ftl"/>
-    <view-map name="day" type="jpublish" page="/calendar/day.ftl"/>
-    <view-map name="week" type="jpublish" page="/calendar/week.ftl"/>
-    <view-map name="month" type="jpublish" page="/calendar/month.ftl"/>
-    <view-map name="upcoming" type="jpublish" page="/calendar/upcoming.ftl"/>
-    
-    <view-map name="eventPartyAssignments" type="jpublish" page="/calendar/eventPartyAssignments.ftl"/>
-    <view-map name="eventContactMechs" type="jpublish" page="/calendar/eventContactMechs.ftl"/>
+    <view-map name="event" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarEvent"/>
+    <view-map name="day" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarDay"/>
+    <view-map name="week" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarWeek"/>
+    <view-map name="month" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarMonth"/>
+    <view-map name="upcoming" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarUpcoming"/>
+
+    <view-map name="eventPartyAssignments" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarEventParty"/>
+    <view-map name="eventContactMechs" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarEventContactMechs"/>
     <view-map name="editContactMech" type="jpublish" page="/workeffort/editContactMech.ftl"/>
     
     <!-- project management views -->
