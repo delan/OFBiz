@@ -97,10 +97,10 @@
       </select>
       <#-- End Page Select Drop-Down -->
       <b>
-        <#if 0 < viewIndex?int>
+        <#if (viewIndex?int > 1)>
           <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
-        <#if 0 < listSize?int>
+        <#if (listSize?int > 0)>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
