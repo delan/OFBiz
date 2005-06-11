@@ -188,7 +188,7 @@ function shipBillAddr() {
                     </td>
                   </tr>-->
                   <tr>
-                    <td width="26%" align="right" valign=middle><div class="tabletext">Expiration Date</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">${uiLabelMap.AccountingExpirationDate}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <#assign expMonth = "">
