@@ -52,7 +52,7 @@
             <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceMakeBooking}...]</a>
           <#-- check to see if it is an aggregated or configurable product; will enter parameters on the detail screen-->
           <#elseif product.productTypeId == "AGGREGATED">
-            <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[Configure...]</a>
+            <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceConfigure}...]</a>
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
             <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceChooseVariations}...]</a>
@@ -68,8 +68,8 @@
               <#if requestParameters.productPromoId?has_content><input type="hidden" name="productPromoId" value="${requestParameters.productPromoId}"/></#if>
               <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"/></#if>
               <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"/></#if>
-              <input type="hidden" name="clearSearch" value="N"/>
-              <br/><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext">[${uiLabelMap.EcommerceAddToCart}]</a>
+              <input type="hidden" name="clearSearch" value="N"/>              
+              <br/><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext">[${uiLabelMap.EcommerceAddtoCart}]</a>
             </form>
 
             <#if requestAttributes.productCategoryMember?exists>

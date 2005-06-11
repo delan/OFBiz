@@ -322,7 +322,7 @@ ${virtualJavaScript?if_exists}
               <div class="tabletext">[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
               <input type="text" class="inputBox" size="5" name="quantity" value="0" disabled></div>
             <#else>
-              <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
+              <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>&nbsp;
               <input type="text" class="inputBox" size="5" name="quantity" value="1" >
             </#if>
           </#if>
@@ -348,7 +348,7 @@ ${virtualJavaScript?if_exists}
           </select>
           &nbsp;&nbsp;
           <input type="text" size="5" class="inputBox" name="quantity" value="1">
-          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddToShoppingList}]</a>
+          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddtoShoppingList}]</a>
         </form>
       <#else> <br/>
         ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
@@ -421,7 +421,7 @@ ${virtualJavaScript?if_exists}
           <tr>
             <td>
                 <div class="tabletext">
-                    <a href="javascript:verifyConfig();" class="buttontext">Verify Configuration</a>
+                    <a href="javascript:verifyConfig();" class="buttontext">${uiLabelMap.OrderVerifyConfiguration}</a>
                 </div>
             </td>
           </tr>
