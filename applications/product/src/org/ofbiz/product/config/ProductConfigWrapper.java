@@ -53,7 +53,6 @@ public class ProductConfigWrapper implements Serializable {
     protected GenericValue product = null; // the aggregated product
     protected double basePrice = 0.0;
     protected List questions = null; // ProductConfigs
-    protected List origQuestions = null; // ProductConfigs
     
     /** Creates a new instance of ProductConfigWrapper */
     public ProductConfigWrapper() {
@@ -63,11 +62,13 @@ public class ProductConfigWrapper implements Serializable {
         init(delegator, dispatcher, productId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
     }
 
-    public ProductConfigWrapper(GenericValue product, double basePrice, List questions) {
-        this.product = product;
-        this.basePrice = basePrice;
-        this.questions = questions;
-        origQuestions = null;
+    public ProductConfigWrapper(ProductConfigWrapper pcw) {
+        product = GenericValue.create(pcw.product);
+        basePrice = pcw.basePrice;
+        questions = new ArrayList();
+        for (int i = 0; i < pcw.questions.size(); i++) {
+            questions.add(new ConfigItem((ConfigItem)pcw.questions.get(i)));
+        }
     }
 
     private void init(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
@@ -84,7 +85,6 @@ public class ProductConfigWrapper implements Serializable {
             basePrice = price.doubleValue();
         }
         questions = new ArrayList();
-        origQuestions = new ArrayList();
         List questionsValues = new ArrayList();
         if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED")) {
             questionsValues = delegator.findByAnd("ProductConfig", UtilMisc.toMap("productId", productId), UtilMisc.toList("sequenceNum"));
@@ -106,19 +106,8 @@ public class ProductConfigWrapper implements Serializable {
                     ConfigOption option = new ConfigOption(delegator, dispatcher, (GenericValue)configOptionsIt.next(), catalogId, webSiteId, currencyUomId, autoUserLogin);
                     oneQuestion.addOption(option);
                 }
-                origQuestions.add(oneQuestion.copy());
             }
         }
-    }
-    
-    public ProductConfigWrapper copy() {
-        if (origQuestions == null) return null;
-        List tmpQuestions = new ArrayList();
-        for (int i = 0; i < origQuestions.size(); i++) {
-            ConfigItem ci = (ConfigItem)origQuestions.get(i);
-            tmpQuestions.add(ci.copy());
-        }
-        return new ProductConfigWrapper(product, basePrice, tmpQuestions);
     }
     
     public void resetConfig() {
@@ -263,21 +252,15 @@ public class ProductConfigWrapper implements Serializable {
             options = new ArrayList();
         }
         
-        public ConfigItem(GenericValue questionAssoc, GenericValue configItem, List configOptions, boolean first, ProductConfigItemContentWrapper content) {
-            configItemAssoc = questionAssoc;
-            this.configItem = configItem;
-            options = configOptions;
-            this.first = first;
-            this.content = content;
-        }
-        
-        public ConfigItem copy() {
-            List tmpOptions = new ArrayList();
-            for (int i = 0; i < options.size(); i++) {
-                ConfigOption co = (ConfigOption)options.get(i);
-                tmpOptions.add(co.copy());
+        public ConfigItem(ConfigItem ci) {
+            configItem = GenericValue.create(ci.configItem);
+            configItemAssoc = GenericValue.create(ci.configItemAssoc);
+            options = new ArrayList();
+            for (int i = 0; i < ci.options.size(); i++) {
+                options.add(new ConfigOption((ConfigOption)ci.options.get(i)));
             }
-            return new ConfigItem(configItemAssoc, configItem, tmpOptions, first, content);
+            first = ci.first;
+            content = ci.content; // FIXME: this should be cloned
         }
 
         public void setContent(Locale locale, String mimeTypeId) {
@@ -438,14 +421,15 @@ public class ProductConfigWrapper implements Serializable {
             }
         }
         
-        public ConfigOption(GenericValue option, List components, double price) {
-            configOption = option;
-            componentList = components;
-            optionPrice = price;
-        }
-        
-        public ConfigOption copy() {
-            return new ConfigOption(configOption, componentList, optionPrice);
+        public ConfigOption(ConfigOption co) {
+            configOption = GenericValue.create(co.configOption);
+            componentList = new ArrayList();
+            for (int i = 0; i < co.componentList.size(); i++) {
+                componentList.add(GenericValue.create((GenericValue)co.componentList.get(i)));
+            }
+            optionPrice = co.optionPrice;
+            available = co.available;
+            selected = co.selected;
         }
 
         public String getDescription() {

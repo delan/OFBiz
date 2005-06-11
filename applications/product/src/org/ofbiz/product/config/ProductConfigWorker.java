@@ -62,18 +62,16 @@ public class ProductConfigWorker {
              * productId::catalogId::webSiteId::currencyUomId, or whatever the SEPARATOR is defined above to be.
              */
             String cacheKey = productId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId;
-            if (productConfigCache != null && productConfigCache.get(cacheKey) != null) {
-                return ((ProductConfigWrapper) productConfigCache.get(cacheKey)).copy();
-            }
-            configWrapper = new ProductConfigWrapper((GenericDelegator)request.getAttribute("delegator"),
-                                                     (LocalDispatcher)request.getAttribute("dispatcher"),
-                                                     productId, catalogId, webSiteId,
-                                                     currencyUomId, UtilHttp.getLocale(request),
-                                                     autoUserLogin);
-            if (configWrapper != null) {
-                if (productConfigCache != null) {
-                    productConfigCache.put(cacheKey, configWrapper);
-                }
+            if (!productConfigCache.containsKey(cacheKey)) {
+                configWrapper = new ProductConfigWrapper((GenericDelegator)request.getAttribute("delegator"),
+                                                         (LocalDispatcher)request.getAttribute("dispatcher"),
+                                                         productId, catalogId, webSiteId,
+                                                         currencyUomId, UtilHttp.getLocale(request),
+                                                         autoUserLogin);
+                productConfigCache.put(cacheKey, new ProductConfigWrapper(configWrapper));
+                //return ((ProductConfigWrapper) productConfigCache.get(cacheKey)).copy();
+            } else {
+                configWrapper = new ProductConfigWrapper((ProductConfigWrapper)productConfigCache.get(cacheKey));
             }
         } catch(ProductConfigWrapperException we) {
             configWrapper = null;
