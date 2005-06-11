@@ -125,7 +125,7 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <#list orders as order>
-                            <div class="tabletext">#<a href="/ordermgr/control/orderview?order_id=${order}${requestAttributes.externalKeyParam}" class="buttontext">${order}</a></div>
+                            <div class="tabletext">${uiLabelMap.OrderNbr}<a href="/ordermgr/control/orderview?order_id=${order}${requestAttributes.externalKeyParam}" class="buttontext">${order}</a></div>
                           </#list>
                         </td>
                       </tr>
