@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,40 +20,32 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
+ *@author     David E. Jones
  *@version    $Rev$
  *@since      3.1
 -->
 
-<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${page.pageHeader}</div>
-          </td>
-          <#if page.showMessageLinks?default("false")?upper_case == "TRUE">
-            <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
-            </td>
-          </#if>
-        </tr>
-     </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
+            <#if showMessageLinks?default("false")?upper_case == "TRUE">
+                <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
+            </#if>
+        </div>
+        <div class="boxhead">&nbsp;${pageHeader}</div>
+    </div>
+    <div class="screenlet-body">
       <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}">
         <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS">
         <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI">
         <input type="hidden" name="note" value="${Static["org.ofbiz.base.util.UtilHttp"].getFullRequestUrl(request).toString()}">
         <#if message?has_content>
-          <input type="hidden" name="parentCommEventId" value="${message.communicationEventId}">
-          <#if (message.origCommEventId?exists && message.origCommEventId?length > 0)>
-            <#assign orgComm = message.origCommEventId>
+          <input type="hidden" name="parentCommEventId" value="${communicationEvent.communicationEventId}">
+          <#if (communicationEvent.origCommEventId?exists && communicationEvent.origCommEventId?length > 0)>
+            <#assign orgComm = communicationEvent.origCommEventId>
           <#else>
-            <#assign orgComm = message.communicationEventId>
+            <#assign orgComm = communicationEvent.communicationEventId>
           </#if>
           <input type="hidden" name="origCommEventId" value="${orgComm}">
         </#if>
@@ -81,7 +73,7 @@
           <tr>
             <td colspan="3">&nbsp;</td>
           </tr>
-          <#assign defaultSubject = (message.subject)?default("")>
+          <#assign defaultSubject = (communicationEvent.subject)?default("")>
           <#if (defaultSubject?length == 0)>
             <#assign replyPrefix = "RE: ">
             <#if parentEvent?has_content>
@@ -119,6 +111,5 @@
           </tr>
         </table>
       </form>
-    </TD>
-  </TR>
-</TABLE>
+    </div>
+</div>

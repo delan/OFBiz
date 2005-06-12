@@ -233,7 +233,7 @@
                 <set field="title-property" value="PageTitleLogin"/>
                 <set field="pageHeader" value="Contact Us"/>
                 <set field="headerItem" value="contactus"/>
-                <set field="submitRequest" value="/contactsubmit"/>
+                <set field="submitRequest" value="contactsubmit"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
@@ -302,12 +302,15 @@
                 <set field="title-property" value="PageTitleNewMessage"/>
                 <set field="pageHeader" value="New Message"/>
                 <set field="showMessageLinks" value="true"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/messagecreate.bsh"/>
+
+                <set field="submitRequest" value="sendmessage"/>
+                <entity-one entity-name="CommunicationEvent" value-name="communicationEvent" auto-field-map="true"/>
+                <set field="partyIdTo" from-field="communicationEvent.partyIdFrom"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/messagecreate.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/newmsg.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
