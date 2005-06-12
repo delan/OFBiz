@@ -66,6 +66,39 @@
         <check-errors/>
     </simple-method>
 
+    <!-- create a new QuoteRole -->
+    <simple-method method-name="createQuoteRole" short-description="Create a QuoteRole">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run createQuoteRole you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="PartyRole" map-name="lookupPKMap" value-name="partyRole"/>
+        <if-empty map-name="partyRole" field-name="partyId">
+            <make-value value-name="partyRole" entity-name="PartyRole"/>
+            <set-pk-fields map-name="lookupPKMap" value-name="partyRole"/>
+            <create-value value-name="partyRole"/>
+        </if-empty>
+        <!-- create new entity and create all the fields -->
+        <make-value value-name="newEntity" entity-name="QuoteRole"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- remove an existing QuoteRole -->
+    <simple-method method-name="removeQuoteRole" short-description="Remove an existing QuoteRole">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run removeQuoteRole you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="QuoteRole" value-name="quoteRole" auto-field-map="true"/>
+        <check-errors/>
+        <remove-value value-name="quoteRole"/>
+        <check-errors/>
+    </simple-method>
+
     <!-- create a new QuoteItem -->
     <simple-method method-name="createQuoteItem" short-description="Create a QuoteItem">
         <check-permission permission="ORDERMGR" action="_CREATE">
@@ -230,6 +263,12 @@
         <!-- finally create the records -->
         <create-value value-name="newQuote"/>
         <create-value value-name="newQuoteItem"/>
+        <!-- TODO add the roles -->
+        <!--
+        <call-service service-name="createQuoteRole" in-map-name="context">
+        </service>
+        -->
+        <!-- set the attribute -->
         <if-not-empty field-name="parameters.attrName">
             <make-value value-name="newQuoteAttribute" entity-name="QuoteAttribute"/>
             <env-to-field env-name="quoteId" map-name="newQuoteAttribute"/>

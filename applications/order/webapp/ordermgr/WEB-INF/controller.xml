@@ -811,6 +811,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditQuote"/>
     </request-map>
+    <request-map uri="ListQuoteRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListQuoteRoles"/>
+    </request-map>
+    <request-map uri="EditQuoteRole">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuoteRole"/>
+    </request-map>
     <request-map uri="ListQuoteItems">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListQuoteItems"/>
@@ -849,6 +857,16 @@
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateQuote"/>
         <response name="success" type="view" value="EditQuote"/>
+    </request-map>
+    <request-map uri="createQuoteRole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createQuoteRole"/>
+        <response name="success" type="view" value="EditQuoteRole"/>
+    </request-map>
+    <request-map uri="removeQuoteRole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeQuoteRole"/>
+        <response name="success" type="view" value="ListQuoteRoles"/>
     </request-map>
     <request-map uri="createQuoteItem">
         <security https="true" auth="true"/>
@@ -996,6 +1014,8 @@
     
     <view-map name="FindQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#FindQuote"/>
     <view-map name="EditQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuote"/>
+    <view-map name="ListQuoteRoles" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteRoles"/>
+    <view-map name="EditQuoteRole" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteRole"/>
     <view-map name="ListQuoteItems" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteItems"/>
     <view-map name="EditQuoteItem" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteItem"/>
     <view-map name="ListQuoteAttributes" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteAttributes"/>
