@@ -347,8 +347,89 @@
 
 </div>
 
-
 <!-- =============================================================== -->
+<p class="contenttext">See the Case Study from Integral Business Solutions about their projects
+based on OFBiz, especially recent work they have done for the US Air Force.</p>
+
+<p class="contenttext">Here is a quote from the document: &quot;Integral started using OFBiz to develop a web-based Document Management System and has 
+subsequently used it to deploy a number of automation solutions to the United States Air Force.  This 
+case study focuses on one of our recently deployed applications that went from prototype to production 
+in six months.  The primary enabler in deploying the application so quickly was OFBiz.&quot;</p>
+
+<p class="contenttext"><a href="IntegralAirForceCaseStudy.pdf">Download the complete document here.</a></p>
+
+<div class="contenttext"><b>Chris Chesney (<a href="mailto:cchesney@go-integral.com">cchesney@go-integral.com</a>)</b></div>
+<div class="contenttext"><b>Chief Systems Architect</b></div>
+<div class="contenttext"><b>Integral Business Solutions (<a href="http://www.go-integral.com" target="_blank">www.go-integral.com</a>)</b></div>
+      
+<br/>
+<hr class="sepbar"/>
+<!-- =============================================================== -->
+
+<p class="contenttext">I am working for a service company called Telaside, just created
+(www.telaside.com).</p>
+
+<p class="contenttext">I started studying and using ofbiz 3 months ago, while building a proposal
+for an e-commerce site here in France (budget between 250 000 - 350 000€).
+Our answer was a mix between ofbiz for the e-commerce 'plumbing' and an
+opensource content management solution for the visual front office parts.
+The customer was a big company, we were short listed, but they preferred a
+100% Microsoft/.NET solution.</p>
+
+<p class="contenttext">Nevertheless, I was convinced enough of the huge ofbiz potential that we
+built another proposal, for a customer selling on-line lessons mainly to
+people who would like to learn about arts, food, wine and so on. The budget
+is quite different, the global envelope is about 15000 Euros. We won the deal,
+so I started developing on the ofbiz platform.</p>
+
+<p class="contenttext">So a first point I would like to emphasize is that whatever big is the
+targeted site, ofbiz can be an answer.</p>
+
+<p class="contenttext">How have I overcome the obstacles and supported the important  
+things for my organization?</p>
+
+<p class="contenttext">- The site I am developing is a mix and match of the principles found in
+ofbiz, so I did not have to change a lot of things. The big difference is
+mainly that a product is a lesson, and there is a schedule attached to it. I
+am linking a product to a fixed asset (already existing) but modified a
+couple of things here and there in order to be as close to my needs as I
+can. For example I've modified the order cancellation process in order to
+decrement the seats occupation in the fixed asset calendar, the
+checkAvailability() of the ShoppingCart not to compare with now() but with
+the fromDate of the fixedassetproduct, otherwise my future lessons are never
+available (the same apply for the createOrder() dates filtering), the
+filterByDate method of the EntityUtil class to include the given date
+instead of using only after or before, for the same reason...etc.</p>
+
+<p class="contenttext">- One important thing that I know now is to always look at what has been
+done in the code before trying to do it from scratch. Often, somewhere,
+there is a bsh file, a service, a static method or something else probably
+waiting to be called and that will do nearly what I am looking for. And if
+it does not, then a combination of elements will probably answer my
+question. <b>'Study a lot, code a little'</b> is in one of the docs. I totally agree with
+that!</p>
+
+<p class="contenttext">- Also, the fact that I was involved with Si in the entity test engine suite
+helped me a lot discovering the entity engine features. Need less to say
+that it was a great help. So helping the community helps you also. That is a
+very important point I think.</p>
+
+<p class="contenttext">- The book 'The Data Model Resource Book' is also a must have, in order to
+understand the data model.</p>
+
+<p class="contenttext">- There is quite a learning curve, that is sure. But the efforts really
+worth it. There is so much to win using all those technologies.</p> 
+
+<p class="contenttext">- This community model is really interesting. It's very pleasant to work and
+share with people all around the world.</p> 
+
+<div class="contenttext"><b>Manuel Meyer (<a href="mailto:m.meyer@wanadoo.fr">m.meyer@wanadoo.fr</a>)</b></div>
+<div class="contenttext"><b>Telaside (<a href="http://www.telaside.com" target="_blank">www.telaside.com</a>)</b></div>
+
+<br/>
+<hr class="sepbar"/>
+<!-- =============================================================== -->
+
 <p class="contenttext">Powerful, flexible, and free...what more could a developer ask for?
 When I began work on sharing information between retail Point of Sale
 systems and online stores, my client had already selected a commercial
