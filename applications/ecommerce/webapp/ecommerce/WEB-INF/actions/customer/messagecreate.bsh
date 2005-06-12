@@ -32,8 +32,8 @@ delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 if (userLogin != null) {
     partyId = userLogin.getString("partyId");
-    messageId = request.getParameter("messageId");
-    messages = delegator.findByAnd("CommunicationEvent", UtilMisc.toMap("communicationEventId", messageId, "partyIdTo", partyId));
+    communicationEventId = request.getParameter("communicationEventId");
+    messages = delegator.findByAnd("CommunicationEvent", UtilMisc.toMap("communicationEventId", communicationEventId, "partyIdTo", partyId));
     message = EntityUtil.getFirst(messages);
     context.put("message", message);
     context.put("partyIdTo", message.get("partyIdFrom"));    

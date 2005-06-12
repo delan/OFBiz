@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,78 +20,67 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Rev$
  *@since      3.1
 -->
 
-<TABLE border="0" width="100%" cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Messages</div>
-          </td>
-          <td valign="middle" align="right">
-            <#if profileMessages?exists || useSentTo?exists>
-              <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewAll}</a>
+<#macro showMessage communicationEvent isSentMessage>
+  <#if communicationEvent.partyIdFrom?has_content>
+    <#assign partyNameFrom = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, communicationEvent.partyIdFrom, true)>
+  <#else/>
+    <#assign partyNameFrom = "N/A">
+  </#if>
+  <#if communicationEvent.partyIdTo?has_content>
+    <#assign partyNameTo = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, communicationEvent.partyIdTo, true)>
+  <#else/>
+    <#assign partyNameTo = "N/A">
+  </#if>
+              <tr>
+                <td><div class="tabletext">${partyNameFrom}</div></td>
+                <td><div class="tabletext">${partyNameTo}</div></td>
+                <td><div class="tabletext">${communicationEvent.subject?default("")}</div></td>
+                <td><div class="tabletext">${communicationEvent.entryDate}</div></td>
+                <td align="right">
+                  <a href="<@ofbizUrl>/readmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceRead}]</a>
+                  <#if isSentMessage>
+                    <a href="<@ofbizUrl>/newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyReply}]</a>
+                  </#if>
+                </td>
+              </tr>
+</#macro>
+
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
+            <#if parameters.showSent?if_exists == "true">
+              <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewReceivedOnly}</a>
             <#else>
-              <a href="<@ofbizUrl>/sentmessages</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
+              <a href="<@ofbizUrl>/messagelist?showSent=true</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
             </#if>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <table width="100%" border="0" cellpadding="1">
-              <#if !messages?has_content>
-                <div class="tabletext">${uiLabelMap.EcommerceNoMessages}.</div>
-              <#else>
-                <tr>
-                  <#if !useSentTo?exists>
-                    <td><div class="tableheadtext">${uiLabelMap.CommonFrom}</div></td>
-                  <#else>
-                    <td><div class="tableheadtext">${uiLabelMap.CommonTo}</div></td>
-                  </#if>
-                  <td><div class="tableheadtext">${uiLabelMap.EcommerceSubject}</div></td>
-                  <td><div class="tableheadtext">${uiLabelMap.EcommerceSentDate}</div></td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr><td colspan="4"><hr class="sepbar"/></td></tr>
-                <#list messages as message>
-                  <#assign delegator = requestAttributes.delegator>
-                  <#if useSentTo?exists>
-                    <#assign partyId = message.partyIdTo?if_exists>
-                  <#else>
-                    <#assign partyId = message.partyIdFrom?if_exists>
-                  </#if>
-                  <#if partyId?has_content>
-                    <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, true)>
-                  <#else>
-                    <#assign partyName = "N/A">
-                  </#if>
-                  <tr>
-                    <td><div class="tabletext">${partyName}</div></td>
-                    <td><div class="tabletext">${message.subject?default("")}</div></td>
-                    <td><div class="tabletext">${message.entryDate}</div></td>
-                    <td align="right">
-                      <#if !useSentTo?exists>
-                        <a href="<@ofbizUrl>/newmessage?messageId=${message.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyReply}]</a>
-                      </#if>
-                      <a href="<@ofbizUrl>/readmessage?messageId=${message.communicationEventId}&useSentTo=${(useSentTo)?default("false")}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceRead}]</a>
-                    </td>
-                  </tr>
-                </#list>
-              </#if>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+        </div>
+        <div class="boxhead">&nbsp;Messages</div>
+    </div>
+    <div class="screenlet-body">
+        <table width="100%" border="0" cellpadding="1">
+          <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
+            <div class="tabletext">${uiLabelMap.EcommerceNoMessages}.</div>
+          <#else/>
+            <tr>
+              <td><div class="tableheadtext">${uiLabelMap.CommonFrom}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.CommonTo}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.EcommerceSubject}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.EcommerceSentDate}</div></td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr><td colspan="5"><hr class="sepbar"/></td></tr>
+            <#list receivedCommunicationEvents as receivedCommunicationEvent>
+              <@showMessage communicationEvent=receivedCommunicationEvent isSentMessage=false/>
+            </#list>
+            <#list sentCommunicationEvents as sentCommunicationEvent>
+              <@showMessage communicationEvent=sentCommunicationEvent isSentMessage=true/>
+            </#list>
+          </#if>
+        </table>
+    </div>
+</div>

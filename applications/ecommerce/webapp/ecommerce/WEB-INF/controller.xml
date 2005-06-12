@@ -953,13 +953,9 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="messagelist"/>
     </request-map>
-    <request-map uri="sentmessages">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="sentmessages"/>
-    </request-map>
     <request-map uri="readmessage">
         <security https="true" auth="true"/>
-        <event type="service" invoke="markMessageRead"/>
+        <event type="service" invoke="markCommEventRead"/>
         <response name="success" type="view" value="messagedetail"/>
         <response name="error" type="view" value="messagedetail"/>
     </request-map>
@@ -1162,7 +1158,6 @@
 
     <view-map name="contactus" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#contactus"/>
     <view-map name="messagelist" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagelist"/>
-    <view-map name="sentmessages" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#sentmessages"/>
     <view-map name="messagedetail" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagedetail"/>
     <view-map name="messagecreate" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagecreate"/>
 

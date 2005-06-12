@@ -261,26 +261,23 @@
     <screen name="messagelist-include">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/messagelist.bsh"/>
+                <entity-condition entity-name="CommunicationEvent" list-name="receivedCommunicationEvents">
+                    <condition-expr field-name="partyIdTo" operator="equals" env-name="userLogin.partyId"/>
+                    <order-by field-name="-entryDate"/>
+                </entity-condition>
             </actions>
             <widgets>
+                <section>
+                    <condition><if-compare field-name="parameters.showSent" operator="equals" value="true"/></condition>
+                    <actions>
+                        <entity-condition entity-name="CommunicationEvent" list-name="sentCommunicationEvents">
+                            <condition-expr field-name="partyIdFrom" operator="equals" env-name="userLogin.partyId"/>
+                            <order-by field-name="-entryDate"/>
+                        </entity-condition>
+                    </actions>
+                    <widgets></widgets>
+                </section>
                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/messagelist.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="sentmessages">
-        <section>
-            <actions>
-                <set field="title-property" value="PageTitleSentMessages"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/sentmessages.bsh"/>
-                <set field="useSentTo" value="true"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <include-screen name="messagelist-include"/>
-                    </decorator-section>
-                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -288,7 +285,7 @@
         <section>
             <actions>
                 <set field="title-property" value="PageTitleMessageDetail"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/messagedetail.bsh"/>
+                <entity-one entity-name="CommunicationEvent" value-name="communicationEvent" auto-field-map="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
