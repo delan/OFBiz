@@ -74,10 +74,10 @@
               <td>&nbsp;</td>
             </tr>
             <tr><td colspan="5"><hr class="sepbar"/></td></tr>
-            <#list receivedCommunicationEvents as receivedCommunicationEvent>
+            <#list receivedCommunicationEvents?if_exists as receivedCommunicationEvent>
               <@showMessage communicationEvent=receivedCommunicationEvent isSentMessage=false/>
             </#list>
-            <#list sentCommunicationEvents as sentCommunicationEvent>
+            <#list sentCommunicationEvents?if_exists as sentCommunicationEvent>
               <@showMessage communicationEvent=sentCommunicationEvent isSentMessage=true/>
             </#list>
           </#if>

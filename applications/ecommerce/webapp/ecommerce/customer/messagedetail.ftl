@@ -36,7 +36,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <#if (useSentTo)?default("false")?lower_case == "false">
+            <#if (communicationEvent.partyIdFrom?if_exists != (userLogin.partyId)?if_exists)>
               <a href="<@ofbizUrl>/newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyReply}</a>
             </#if>
             <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.ViewList}</a>
