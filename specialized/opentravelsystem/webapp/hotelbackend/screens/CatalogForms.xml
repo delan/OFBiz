@@ -68,7 +68,7 @@
     
     <form name="addProductToCategory" type="single" 
              default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="addCategoryProductMember">
-        <field name="productId"><lookup target-form-name="lookUpProduct"></lookup></field>        
+        <field name="productId"><lookup target-form-name="LookupProduct"></lookup></field>        
         <field name="productCategoryId"><hidden/></field>
         <field name="fromDate"><date-time/></field>
         <field name="submitButton" widget-style="standardSubmit"><submit button-type="button"/></field>    

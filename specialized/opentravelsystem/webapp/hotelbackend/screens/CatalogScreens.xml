@@ -386,6 +386,7 @@
                 </entity-condition>
                 <property-to-field field="defaultCurrencyUomId"
                     resource="general" property="currency.uom.id.default" default="USD"/>
+            <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator">
@@ -398,7 +399,7 @@
                      </container>
                         <include-form name="ListProductCategoryMembers" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                          <label style="head1">&lt;br/&gt;${uiLabelMap.ProductAddCategory}</label>
-                        <include-form name="AddProductCategoryMember" location="component://opentravelsystem/webapp/hotelbackend/screens/ProductForms.xml"/>
+                        <include-form name="AddProductCategoryMember" location="component://opentravelsystem/webapp/hotelbackend/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
