@@ -35,7 +35,7 @@ import org.ofbiz.securityext.login.*;
 
 quantitySummaryByFacility = new HashMap();
 // The warehouse list is selected
-facilityList = delegator.findByAnd("Facility", UtilMisc.toMap("facilityTypeId", "WAREHOUSE"));
+facilityList = delegator.findAll("Facility");
 facilityIterator = facilityList.iterator();
 dispatcher = request.getAttribute("dispatcher");
 Map contextInput = null;
