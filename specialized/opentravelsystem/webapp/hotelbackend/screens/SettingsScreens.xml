@@ -91,8 +91,8 @@
                           <container>
                             <label style="head1">${uiLabelMap.PageTitleEditProductStore}:</label>
                             <label style="head2"> ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]</label>
-                             </container>
-                        <include-form name="EditProductStore" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
+                          </container>
+                        <include-form name="EditProductStore" location="component://opentravelsystem/webapp/hotelbackend/screens/ProductStoreForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -235,6 +235,15 @@
             <widgets>
                 <decorator-screen name="CommonSettingsDecorator">
                     <decorator-section name="body">
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
+                            </html>
+                        </platform-specific>
+                        <container>
+                            <label style="head1">${uiLabelMap.PageTitleEditProductStorePaySetup}:</label>
+                            <label style="head2"> ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]</label>
+                        </container>
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/EditProductStorePaySetup.ftl"/></html>
                         </platform-specific>
