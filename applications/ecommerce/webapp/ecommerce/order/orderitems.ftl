@@ -164,7 +164,7 @@
                 <#-- show info from workeffort if it was a rental item -->
                 <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
                     <#if workEffortSave?exists>
-                          <tr><td>&nbsp;</td><td colspan="8"><div class="tabletext">${uiLabelMap..CommonFrom}: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonUntil} ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonFor} ${workEffortSave.reservPersons} ${uiLabelMap.CommonPerson}(s).</div></td></tr>
+                          <tr><td>&nbsp;</td><td colspan="8"><div class="tabletext">${uiLabelMap.CommonFrom}: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonUntil} ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonFor} ${workEffortSave.reservPersons} ${uiLabelMap.CommonPerson}(s).</div></td></tr>
                       </#if>
                 </#if>
                 <#-- now show adjustment details per line item -->
