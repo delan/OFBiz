@@ -352,7 +352,7 @@ public class LoginEvents {
         if (!UtilValidate.isNotEmpty(userLoginId)) {
             // the password was incomplete
             errMsg = UtilProperties.getMessage(resource,"loginevents.username_was_empty_reenter", UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -366,7 +366,7 @@ public class LoginEvents {
         if (supposedUserLogin == null) {
             // the Username was not found
             errMsg = UtilProperties.getMessage(resource,"loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -375,7 +375,7 @@ public class LoginEvents {
         if (!UtilValidate.isNotEmpty(passwordHint)) {
             // the Username was not found
             errMsg = UtilProperties.getMessage(resource,"loginevents.no_password_hint_specified_try_password_emailed", UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -413,7 +413,7 @@ public class LoginEvents {
         if (!UtilValidate.isNotEmpty(userLoginId)) {
             // the password was incomplete
             errMsg = UtilProperties.getMessage(resource,"loginevents.username_was_empty_reenter", UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -425,7 +425,7 @@ public class LoginEvents {
             if (supposedUserLogin == null) {
                 // the Username was not found
                 errMsg = UtilProperties.getMessage(resource,"loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
             if (useEncryption) {
