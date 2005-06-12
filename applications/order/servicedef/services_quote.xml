@@ -40,6 +40,18 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <!-- QuoteRole  -->
+    <service name="createQuoteRole" default-entity-name="QuoteRole" engine="simple"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteRole" auth="true">
+        <description>Create a QuoteRole</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="removeQuoteRole" default-entity-name="QuoteRole" engine="simple"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="removeQuoteRole" auth="true">
+        <description>Remove a QuoteRole</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
     <!-- QuoteItem  -->
     <service name="createQuoteItem" default-entity-name="QuoteItem" engine="simple"
                 location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteItem" auth="true">

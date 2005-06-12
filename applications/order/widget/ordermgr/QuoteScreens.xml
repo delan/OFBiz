@@ -103,6 +103,58 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ListQuoteRoles">
+        <section>
+            <actions>
+                <set field="title" value="List Quote Roles"/>
+                <set field="titleProperty" value="PageTitleListQuoteRoles"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="ListQuoteRoles"/>
+    
+                <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+                <entity-and entity-name="QuoteRole" list-name="quoteRoles">
+                    <field-map env-name="quote.quoteId" field-name="quoteId"/>
+                </entity-and>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonQuoteDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="EditQuoteRole?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteRole}]" style="buttontext"/>
+                        </container>
+                        <include-form name="ListQuoteRoles" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditQuoteRole">
+        <section>
+            <actions>
+                <set field="title" value="Edit Quote Role"/>
+                <set field="titleProperty" value="PageTitleEditQuoteRole"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="ListQuoteRoles"/>
+                
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <set field="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
+                
+                <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+                <entity-one entity-name="QuoteRole" value-name="quoteRole"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonQuoteDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="EditQuoteRole?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteRole}]" style="buttontext"/>
+                        </container>
+                        <include-form name="EditQuoteRole" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="ListQuoteItems">
         <section>
             <actions>

@@ -81,7 +81,7 @@
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
-	 <field name="description" title="${uiLabelMap.CommonDescription}"></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"></field>
         <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"></field>
         <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}"></field>
@@ -122,6 +122,38 @@
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListQuoteRoles" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="quoteRoles"
+            target="" paginate-target="ListQuoteRoles" title="" type="list">
+        <auto-fields-entity entity-name="QuoteRole" default-field-type="display"/>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
+            <display-entity also-hidden="false" entity-name="RoleType"/>
+        </field>
+        <field name="quoteId"><hidden/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeQuoteRole?partyId=${partyId}&amp;roleTypeId=${roleTypeId}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="EditQuoteRole" type="single"
+            target="createQuoteRole" title="" default-map-name="quoteRole"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="QuoteRole" default-field-type="edit"/>
+        <field name="quoteId"><hidden/></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
