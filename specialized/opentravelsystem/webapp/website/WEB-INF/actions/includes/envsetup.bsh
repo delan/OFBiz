@@ -65,7 +65,7 @@ request.setAttribute("availableLocales",availableLocales);
 
 locale = UtilHttp.getLocale(request);
 request.setAttribute("locale",locale);
-uiLabelMap = UtilProperties.getResourceBundleMap("ContentUILabels", locale);
+uiLabelMap = UtilProperties.getResourceBundleMap("ContentUiLabels", locale);
 uiLabelMap = UtilProperties.getResourceBundleMap("opentravelsystemUiLabels", locale);
 request.setAttribute("uiLabelMap", uiLabelMap);
 
