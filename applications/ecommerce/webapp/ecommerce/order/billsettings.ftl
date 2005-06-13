@@ -344,7 +344,7 @@ function shipBillAddr() {
                     <td width="74%">&nbsp;</td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign=middle><div class="tabletext">${uiLabelMap.Gift Card Number}</div></td>
+                    <td width="26%" align="right" valign=middle><div class="tabletext">${uiLabelMap.AccountingGiftCardNumber}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="20" maxlength="60" name="giftCardNumber" value="${giftCard.cardNumber?if_exists}">
