@@ -165,7 +165,9 @@
         <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}"></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
+        </field>
         <field name="workEffortId" title="${uiLabelMap.OrderOrderQuoteWorkEffortId}"></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"></field>
         <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}"></field>
@@ -281,7 +283,9 @@
         <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext">
             <hyperlink also-hidden="true" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
+        </field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="averageCost" title="${uiLabelMap.OrderOrderQuoteAverageCost}"><display/></field>
         <field name="costToPriceMult" title="${uiLabelMap.OrderOrderQuoteCostToPrice}"><display/></field>

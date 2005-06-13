@@ -106,6 +106,9 @@
         <field name="custRequestId" widget-style="buttontext">
             <hyperlink description="${custRequestItemSeqId}" target="requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
+        </field>
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="custRequestResolutionId"><hidden/></field>
         <field name="story"><hidden/></field>
@@ -120,6 +123,9 @@
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
         <field name="quoteId" widget-style="buttontext">
             <hyperlink description="${quoteItemSeqId}" target="EditQuoteItemForRequest?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
         <field name="quoteItemSeqId"><hidden/></field>
         <field name="productFeatureId"><hidden/></field>

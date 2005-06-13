@@ -260,14 +260,20 @@
         <field-to-result field-name="newQuoteItem.quoteItemSeqId" result-name="quoteItemSeqId"/>
         
         <field-to-field field-name="requester.partyId" to-field-name="newQuote.partyId"/>
-        <!-- finally create the records -->
         <create-value value-name="newQuote"/>
         <create-value value-name="newQuoteItem"/>
-        <!-- TODO add the roles -->
-        <!--
-        <call-service service-name="createQuoteRole" in-map-name="context">
-        </service>
-        -->
+        <!-- copy the roles from the request to the quote-->
+        <clear-field field-name="lookupRequestRole"/>
+        <clear-field field-name="roles"/>
+        <field-to-field field-name="parameters.custRequestId" to-field-name="lookupRequestRole.custRequestId"/>
+        <find-by-and entity-name="CustRequestRole" map-name="lookupRequestRole" list-name="roles"/>
+        <iterate entry-name="role" list-name="roles">
+            <clear-field field-name="cqrContext"/>
+            <field-to-field field-name="quoteId" to-field-name="cqrContext.quoteId"/>
+            <field-to-field field-name="role.partyId" to-field-name="cqrContext.partyId"/>
+            <field-to-field field-name="role.roleTypeId" to-field-name="cqrContext.roleTypeId"/>
+            <call-service service-name="createQuoteRole" in-map-name="cqrContext"></call-service>
+        </iterate>
         <!-- set the attribute -->
         <if-not-empty field-name="parameters.attrName">
             <make-value value-name="newQuoteAttribute" entity-name="QuoteAttribute"/>
