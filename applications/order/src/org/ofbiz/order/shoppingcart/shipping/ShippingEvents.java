@@ -156,7 +156,7 @@ public class ShippingEvents {
                 shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId);
 
         if (storeShipMethod == null) {
-            errorMessageList.add("System error");
+            errorMessageList.add("No applicable shipment method found.");
             return ServiceUtil.returnError(errorMessageList);
         }
 
