@@ -62,7 +62,7 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
-    <simple-method method-name="findCustomTimePeriod" short-description="Find a CustomTimePeriod">
+    <simple-method method-name="findCustomTimePeriods" short-description="Find a CustomTimePeriod">
         <if-not-empty field-name="parameters.organizationPartyId">
             <!-- walk up the tree and find all party groups that this is a member of, and include the periods for all of them -->
             <env-to-env env-name="parameters.organizationPartyId" to-env-name="getParentOrganizationsCallMap.organizationPartyId"/>
