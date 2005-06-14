@@ -88,7 +88,7 @@
         <auto-fields-entity entity-name="Quote" default-field-type="display"/>
 
         <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${quoteId}" target="EditQuote?quoteId=${quoteId}"/>
+            <hyperlink also-hidden="false" description="${quoteId}" target="addQuoteToCart?quoteId=${quoteId}"/>
         </field>
         <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
             <display-entity entity-name="QuoteType"/>
