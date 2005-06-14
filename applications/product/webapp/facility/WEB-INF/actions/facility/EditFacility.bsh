@@ -37,8 +37,8 @@ if (UtilValidate.isEmpty(facilityId) && UtilValidate.isNotEmpty((String) request
 GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
 GenericValue facilityType = null;
 if(facility == null) {
-  context.put("facility", delegator.makeValue( "Facility", null ) );
-  context.put("facilityType", delegator.makeValue( "FacilityType", null ) );
+  facility = delegator.makeValue("Facility", null);
+  facilityType = delegator.makeValue("FacilityType", null);
 } else {
   facilityType = facility.getRelatedOne("FacilityType");
 }
