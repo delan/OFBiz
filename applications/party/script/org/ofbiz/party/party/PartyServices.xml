@@ -355,6 +355,8 @@
         <call-simple-method method-name="followPartyRelationshipsInlineRecurse"/>
     </simple-method>
     <simple-method method-name="followPartyRelationshipsInlineRecurse" short-description="followPartyRelationshipsInlineRecurse">
+        <clear-field field-name="_inline_NewRelatedPartyIdList"/>
+        
         <iterate entry-name="relatedPartyId" list-name="relatedPartyIdList">
             <if>
                 <condition><not><if-compare-field field-name="_inline_relatedPartyIdAlreadySearchedList" operator="contains" to-field-name="relatedPartyId"/></not></condition>
@@ -434,6 +436,7 @@
         <if-not-empty field-name="_inline_NewRelatedPartyIdList">
             <list-to-list list-name="_inline_NewRelatedPartyIdList" to-list-name="relatedPartyIdList"/>
             <if-compare field-name="recurse" operator="equals" value="Y">
+                <log level="verbose" message="Recursively calling followPartyRelationshipsInlineRecurse _inline_NewRelatedPartyIdList=${_inline_NewRelatedPartyIdList}"/>
                 <call-simple-method method-name="followPartyRelationshipsInlineRecurse"/>
             </if-compare>
         </if-not-empty>
@@ -454,20 +457,20 @@
                 <then>
                     <field-to-list field-name="roleTypeId" list-name="_inline_roleTypeIdAlreadySearchedList"/>
                     
-                    <clear-field field-name="_inline_RoleTypeIdList"/>
-                    <entity-condition entity-name="RoleType" list-name="_inline_RoleTypeIdList" use-cache="true">
+                    <clear-field field-name="_inline_RoleTypeList"/>
+                    <entity-condition entity-name="RoleType" list-name="_inline_RoleTypeList" use-cache="true">
                         <condition-expr field-name="parentTypeId" operator="equals" env-name="roleTypeId"/>
                     </entity-condition>
-                    <iterate entry-name="newRoleTypeId" list-name="_inline_RoleTypeIdList">
+                    <iterate entry-name="newRoleType" list-name="_inline_RoleTypeList">
                         <if>
                             <condition>
                                 <and>
-                                    <not><if-compare-field field-name="${roleTypeIdListName}" operator="contains" to-field-name="newRoleTypeId"/></not>
-                                    <not><if-compare-field field-name="_inline_NewRoleTypeIdList" operator="contains" to-field-name="newRoleTypeId"/></not>
+                                    <not><if-compare-field field-name="${roleTypeIdListName}" operator="contains" to-field-name="newRoleType.roleTypeId"/></not>
+                                    <not><if-compare-field field-name="_inline_NewRoleTypeIdList" operator="contains" to-field-name="newRoleType.roleTypeId"/></not>
                                 </and>
                             </condition>
                             <then>
-                                <field-to-list field-name="newRoleTypeId" list-name="_inline_NewRoleTypeIdList"/>
+                                <field-to-list field-name="newRoleType.roleTypeId" list-name="_inline_NewRoleTypeIdList"/>
                             </then>
                         </if>
                     </iterate>
@@ -478,6 +481,7 @@
         <!-- if we found some new types, add them to the main list -->
         <if-not-empty field-name="_inline_NewRoleTypeIdList">
             <list-to-list list-name="_inline_NewRoleTypeIdList" to-list-name="${roleTypeIdListName}"/>
+            <log level="verbose" message="Recursively calling getChildRoleTypesInline roleTypeIdListName=${roleTypeIdListName}, _inline_NewRoleTypeIdList=${_inline_NewRoleTypeIdList}"/>
             <call-simple-method method-name="getChildRoleTypesInline"/>
         </if-not-empty>
     </simple-method>    
