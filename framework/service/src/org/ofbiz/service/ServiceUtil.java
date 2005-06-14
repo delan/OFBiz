@@ -166,7 +166,7 @@ public class ServiceUtil {
         // partyId might be null, so check it
         if (partyId == null || partyId.length() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-           String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.party_id_missing", locale) + ".";
+            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.party_id_missing", locale) + ".";
             result.put(ModelService.ERROR_MESSAGE, errMsg);
             return partyId;
         }
