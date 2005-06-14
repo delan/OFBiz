@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -40,131 +40,66 @@
 <br/>
 -->
 
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceContentInformation}</div>
-          </td>
-          <td valign="middle" align="right">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
             <a href="<@ofbizUrl>/editforuminfo?contentId=${contentId?if_exists}&nodeTrailCsv=${nodeTrailCsv?if_exists}&contentIdTo=${contentIdTo?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
+        </div>
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceContentInformation}</div>
+    </div>
+    <div class="screenlet-body">
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.ProductContentId}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${contentId?if_exists}</div></td></tr>
     <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.EcommerceContentName}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${contentName?if_exists}</div></td></tr>
     <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.CommonDescription}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${description?if_exists}<div></td></tr>
   </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+    </div>
+</div>
 
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceImageInformation}</div>
-          </td>
-          <td valign="middle" align="right">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
             <a href="<@ofbizUrl>/editaddimage?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=IMAGE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
+        </div>
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceImageInformation}</div>
+    </div>
+    <div class="screenlet-body">
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.EcommerceImage}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
         <img src="<@ofbizUrl>/img?imgId=${imgDataResourceId?if_exists}</@ofbizUrl>" />
 <div></td></tr>
   </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+    </div>
+</div>
 
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSummaryInformation}</div>
-          </td>
-          <td valign="middle" align="right">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
             <a href="<@ofbizUrl>/editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=SUMMARY&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
+        </div>
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSummaryInformation}</div>
+    </div>
+    <div class="screenlet-body">
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.EcommerceSummary}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
 ${summaryData?if_exists}
 <div></td></tr>
   </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+    </div>
+</div>
 
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.EcommerceArticleInformation}</div>
-          </td>
-          <td valign="middle" align="right">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
             <a href="<@ofbizUrl>/editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=ARTICLE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
+        </div>
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceArticleInformation}</div>
+    </div>
+    <div class="screenlet-body">
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr><td align="right" nowrap><div class='tabletext'><b>Article</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
 ${textData?if_exists}
 <div></td></tr>
   </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
-
+    </div>
+</div>

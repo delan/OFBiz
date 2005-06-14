@@ -1,7 +1,7 @@
 
 <#import "/includes/bloglib.ftl" as blog/>
 
-<div class="boxoutside" >
+<div class="screenlet" >
 <div class="head1">&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.EcommerceFromSite}:</div><br/>
 <div style="margin:10px;" >
 <@renderSiteAncestryPath trail=siteAncestorList?default([])/>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,42 +24,18 @@
  *@since      3.0
 -->
 
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${survey.surveyName}</div>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <table width="100%" border="0" cellpadding="1">
-              <tr>
-                <td width="9%">&nbsp;</td>
-                <td width="90%">
-                  <#-- Render the survey -->
-                  <#if surveyWrapper?has_content>
-                    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/profilesurvey/profilesurvey</@ofbizUrl>" style="margin: 0;">
-                      ${surveyWrapper.render().toString()}
-                    </form>
-                  <#else>
-                    <div class="head1">${uiLabelMap.EcommerceNothingToDoHere}</div>
-                  </#if>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
-
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${survey.surveyName}</div>
+    </div>
+    <div class="screenlet-body">
+        <#-- Render the survey -->
+        <#if surveyWrapper?has_content>
+            <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/profilesurvey/profilesurvey</@ofbizUrl>" style="margin: 0;">
+              ${surveyWrapper.render().toString()}
+            </form>
+        <#else>
+            <div class="head1">${uiLabelMap.EcommerceNothingToDoHere}</div>
+        </#if>
+    </div>
+</div>

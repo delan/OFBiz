@@ -24,77 +24,64 @@
  *@since      2.1
 -->
 
-<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td align='left'><div class="boxhead">${uiLabelMap.OrderHistory}</div></td>
-          <#--<td align='right'>
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
-          </td>-->
-        </tr>
-      </table>      
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <table width="100%" cellpadding="1" cellspacing="0" border="0">
-              <tr>
-                <td width="30%">
-                  <div class="tabletext"><b>${uiLabelMap.CommonDate}</b></div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="15%">
-                  <div class="tabletext"><b><nobr>${uiLabelMap.OrderOrder} ${uiLabelMap.OrderNbr}</nobr></b></div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="15%">
-                  <div class="tabletext"><b>${uiLabelMap.CommonAmount}</b></div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="15%">
-                  <div class="tabletext"><b>${uiLabelMap.CommonStatus}</b></div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="15%"><b></b></td>                
-              </tr>
-              <#list orderHeaderList as orderHeader>
-                <#assign status = orderHeader.getRelatedOneCache("StatusItem")>                               
-                <tr><td colspan="7"><hr class='sepbar'></td></tr>
-                <tr>
-                  <td>
-                    <div class="tabletext"><nobr>${orderHeader.orderDate.toString()}</nobr></div>
-                  </td>
-                  <td width="10">&nbsp;</td>
-                  <td>
-                    <div class="tabletext">${orderHeader.orderId}</div>
-                  </td>
-                  <td width="10">&nbsp;</td>
-                  <td>
-                    <div class="tabletext"><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></div>
-                  </td>
-                  <td width="10">&nbsp;</td>
-                  <td>
-                    <div class="tabletext">${status.description}</div>
-                  </td>
-                  <td width="10">&nbsp;</td>
-                  <td align="right">
-                    <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${uiLabelMap.CommonView}]</a>
-                  </td>
-                </tr>
-              </#list>
-              <#if !orderHeaderList?has_content>
-                <tr><td colspan="8"><div class='head3'>${uiLabelMap.OrderNoOrderFound}</div></td></tr>
-              </#if>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-
+<div class="screenlet">
+    <div class="screenlet-header">
+        <#--
+        <div style="float: right;">
+            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.OrderBackHome}]</a>
+        </div>
+        -->
+        <div class="boxhead">${uiLabelMap.OrderHistory}</div>
+    </div>
+    <div class="screenlet-body">
+        <table width="100%" cellpadding="1" cellspacing="0" border="0">
+          <tr>
+            <td width="30%">
+              <div class="tabletext"><b>${uiLabelMap.CommonDate}</b></div>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="15%">
+              <div class="tabletext"><b><nobr>${uiLabelMap.OrderOrder} ${uiLabelMap.OrderNbr}</nobr></b></div>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="15%">
+              <div class="tabletext"><b>${uiLabelMap.CommonAmount}</b></div>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="15%">
+              <div class="tabletext"><b>${uiLabelMap.CommonStatus}</b></div>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="15%"><b></b></td>                
+          </tr>
+          <#list orderHeaderList as orderHeader>
+            <#assign status = orderHeader.getRelatedOneCache("StatusItem")>                               
+            <tr><td colspan="9"><hr class="sepbar"/></td></tr>
+            <tr>
+              <td>
+                <div class="tabletext"><nobr>${orderHeader.orderDate.toString()}</nobr></div>
+              </td>
+              <td width="10">&nbsp;</td>
+              <td>
+                <div class="tabletext">${orderHeader.orderId}</div>
+              </td>
+              <td width="10">&nbsp;</td>
+              <td>
+                <div class="tabletext"><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></div>
+              </td>
+              <td width="10">&nbsp;</td>
+              <td>
+                <div class="tabletext">${status.description}</div>
+              </td>
+              <td width="10">&nbsp;</td>
+              <td align="right">
+                <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a>
+              </td>
+            </tr>
+          </#list>
+          <#if !orderHeaderList?has_content>
+            <tr><td colspan="9"><div class="head3">${uiLabelMap.OrderNoOrderFound}</div></td></tr>
+          </#if>
+        </table>
+    </div>
+</div>

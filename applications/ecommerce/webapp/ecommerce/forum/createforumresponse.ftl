@@ -1,5 +1,5 @@
 <#import "bloglib.ftl" as blog/>
-<div class="boxoutside" >
+<div class="screenlet" >
 <div style="margin:10px;" >
 <#--
 <@blog.renderSiteAncestryPath trail=siteAncestorList?default([])/>
