@@ -77,9 +77,9 @@
                         <condition-list combine="or">
                             <condition-expr field-name="organizationPartyId" operator="equals" env-name="curOrganizationPartyId"/>
                         </condition-list>
-                        <condition-expr field-name="fromDate" operator="less-equals" env-name="findDate"/>
+                        <condition-expr field-name="fromDate" operator="less-equals" env-name="parameters.findDate"/>
                         <condition-list combine="or">
-                            <condition-expr field-name="thruDate" operator="greater" env-name="findDate"/>
+                            <condition-expr field-name="thruDate" operator="greater" env-name="parameters.findDate"/>
                             <condition-expr field-name="thruDate" operator="equals" env-name="nullField"/>
                         </condition-list>
                         <condition-expr field-name="periodTypeId" operator="in" env-name="parameters.onlyIncludePeriodTypeIdList" ignore-if-empty="true"/>
@@ -96,9 +96,9 @@
                         <condition-expr field-name="organizationPartyId" operator="equals" env-name="nullField"/>
                         <condition-expr field-name="organizationPartyId" operator="equals" value="_NA_"/>
                     </condition-list>
-                    <condition-expr field-name="fromDate" operator="less-equals" env-name="findDate"/>
+                    <condition-expr field-name="fromDate" operator="less-equals" env-name="parameters.findDate"/>
                     <condition-list combine="or">
-                        <condition-expr field-name="thruDate" operator="greater" env-name="findDate"/>
+                        <condition-expr field-name="thruDate" operator="greater" env-name="parameters.findDate"/>
                         <condition-expr field-name="thruDate" operator="equals" env-name="nullField"/>
                     </condition-list>
                     <condition-expr field-name="periodTypeId" operator="in" env-name="parameters.onlyIncludePeriodTypeIdList" ignore-if-empty="true"/>
