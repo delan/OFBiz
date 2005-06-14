@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,8 +24,8 @@
  *@since      3.1
 -->
 
-<div class="boxoutside" >
-<div style="margin:10px;" >
+<div class="screenlet">
+<div style="margin:10px;">
 <#-- Do this so that we don't have to find the content twice (again in renderSubContent) -->
 <#assign subContentId=requestParameters.contentId?if_exists/>
 <#assign nodeTrailCsv=requestParameters.nodeTrailCsv?if_exists/>

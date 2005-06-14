@@ -105,7 +105,6 @@ function setAlternateGwp(field) {
 </script>
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems()/> <#-- change display format when rental items exist in the shoppingcart -->
 
-
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
