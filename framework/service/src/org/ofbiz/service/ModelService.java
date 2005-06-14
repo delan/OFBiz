@@ -44,6 +44,7 @@ import com.ibm.wsdl.extensions.soap.SOAPAddressImpl;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.collections.OrderedSet;
@@ -82,7 +83,9 @@ public class ModelService implements Serializable {
     public static final String ERROR_MESSAGE_MAP = "errorMessageMap";
     public static final String SUCCESS_MESSAGE = "successMessage";
     public static final String SUCCESS_MESSAGE_LIST = "successMessageList";
-       
+    
+    public static final String resource = "ServiceErrorUiLabels";
+          
     /** The name of this service */
     public String name;
 
@@ -365,8 +368,9 @@ public class ModelService implements Serializable {
             while (rbni.hasNext()) {
                 String missingKey = (String) rbni.next();
                 String message = this.getParam(missingKey).getPrimaryFailMessage(locale);
-                if (message == null) {
-                    message = "The following required parameter is missing: " + missingKey;
+                if (message == null) {                    
+                    String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale) + " ";
+                    message = errMsg + missingKey + "\n";
                 }
                 missingMsg.add(message);
             }
@@ -428,7 +432,8 @@ public class ModelService implements Serializable {
                 String key = (String) iter.next();
                 String msg = model.getParam(key).getPrimaryFailMessage(locale);
                 if (msg == null) {
-                    msg = "The following required parameter is missing: " + key;
+                    String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale) + " ";
+                    msg = errMsg  + key + "\n";;
                 }
                 missingMsgs.add(msg);
             }

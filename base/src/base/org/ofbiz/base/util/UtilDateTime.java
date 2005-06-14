@@ -49,7 +49,7 @@ public class UtilDateTime {
     };
 
     public static final String[] days = {// to be translated over CommonDayName, see example in accounting
-        "Monday", "Tuesday", "Wendesday",
+        "Monday", "Tuesday", "Wednesday",
         "Thursday", "Friday", "Saturday", "Sunday"
     };
 

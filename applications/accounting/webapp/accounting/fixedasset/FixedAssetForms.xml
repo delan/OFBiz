@@ -141,8 +141,8 @@
         <field name="MondayData" title="${uiLabelMap.CommonMonday}"><display/></field>
         <field name="Tuesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
         <field name="TuesdayData" title="${uiLabelMap.CommonTuesday}"> <display/></field>
-        <field name="Wendesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="WendesdayData" title="${uiLabelMap.CommonWendesday}"> <display/></field>
+        <field name="Wednesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
+        <field name="WednesdayData" title="${uiLabelMap.CommonWednesday}"> <display/></field>
         <field name="Thursday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
         <field name="ThursdayData" title="${uiLabelMap.CommonThursday}"> <display/></field>
         <field name="Friday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>

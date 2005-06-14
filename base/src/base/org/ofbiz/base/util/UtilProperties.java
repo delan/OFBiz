@@ -157,7 +157,7 @@ public class UtilProperties implements java.io.Serializable {
             Debug.log(e.getMessage(), module);
         }
         return value == null ? "" : value.trim();
-    }
+    }   
 
     /** Returns the specified resource/properties file
      * @param resource The name of the resource - can be a file, class, or URL
@@ -344,7 +344,11 @@ public class UtilProperties implements java.io.Serializable {
         }
         return value == null ? "" : value.trim();
     }
-
+    
+    /** Sets the specified value of the specified property name to the specified resource/properties file
+    * @param resource The name of the resource - must be a file
+    * @param name The name of the property in the properties file
+    * @param value The value of the property in the properties file */ 
     public static void setPropertyValue(String resource, String name, String value) {
         if (resource == null || resource.length() <= 0) return;
         if (name == null || name.length() <= 0) return;
@@ -370,7 +374,7 @@ public class UtilProperties implements java.io.Serializable {
         try {
             properties.setProperty(name, value);
             FileOutputStream propFile = new FileOutputStream(resource);
-            properties.store(propFile, "Dynamically modified by OFBiz Framework (UtilProperties)");
+            properties.store(propFile, "Dynamically modified by OFBiz Framework (org.ofbiz.base.util : UtilProperties.setPropertyValue) ");
             propFile.close();
         } catch (FileNotFoundException e) {
             Debug.log(e, "Unable to located the resource file.", module);
