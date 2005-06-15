@@ -87,6 +87,7 @@
     <entity-group group="org.ofbiz" entity="AcctgTrans" />
     <entity-group group="org.ofbiz" entity="AcctgTransAttribute" />
     <entity-group group="org.ofbiz" entity="AcctgTransEntry" />
+    <entity-group group="org.ofbiz" entity="AcctgTransAndEntries" />
     <entity-group group="org.ofbiz" entity="AcctgTransEntryProdSums" />
     <entity-group group="org.ofbiz" entity="AcctgTransEntryType" />
     <entity-group group="org.ofbiz" entity="AcctgTransType" />
