@@ -92,14 +92,42 @@
                 </#if>
                 <tr><td colspan="10"><hr class="sepbar"/></td></tr>
                 <tr>
-                  <#if orderItem.productId == "_?_">
+                  <#if !orderItem.productId?exists || orderItem.productId == "_?_">
                     <td colspan="1" valign="top">
                       <b><div class="tabletext"> &gt;&gt; ${orderItem.itemDescription}</div></b>
                     </td>
                   <#else>
+                    <#assign product = orderItem.getRelatedOneCache("Product")?if_exists/> <#-- should always exist because of FK constraint, but just in case -->
                     <td valign="top">
                       <div class="tabletext">
                         <a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
+                      </div>
+                      <div class="tabletext" style="font-size: xx-small;">
+                        <#if product?has_content>
+                          <#if product.piecesIncluded?exists && product.piecesIncluded?long != 0>
+                              [${uiLabelMap.EcommercePieces}: ${product.piecesIncluded}]
+                          </#if>
+                          <#if (product.quantityIncluded?exists && product.quantityIncluded?double != 0) || product.quantityUomId?has_content>
+                            <#assign quantityUom = product.getRelatedOneCache("QuantityUom")?if_exists/>
+                              [${uiLabelMap.CommonQuantity}: ${product.quantityIncluded?if_exists} ${((quantityUom.abbreviation)?default(product.quantityUomId))?if_exists}]
+                          </#if>
+                          <#if (product.weight?exists && product.weight?double != 0) || product.weightUomId?has_content>
+                            <#assign weightUom = product.getRelatedOneCache("WeightUom")?if_exists/>
+                              [${uiLabelMap.CommonWeight}: ${product.weight?if_exists} ${((weightUom.abbreviation)?default(product.weightUomId))?if_exists}]
+                          </#if>
+                          <#if (product.productHeight?exists && product.productHeight?double != 0) || product.heightUomId?has_content>
+                            <#assign heightUom = product.getRelatedOneCache("HeightUom")?if_exists/>
+                              [${uiLabelMap.CommonHeight}: ${product.productHeight?if_exists} ${((heightUom.abbreviation)?default(product.heightUomId))?if_exists}]
+                          </#if>
+                          <#if (product.productWidth?exists && product.productWidth?double != 0) || product.widthUomId?has_content>
+                            <#assign widthUom = product.getRelatedOneCache("WidthUom")?if_exists/>
+                              [${uiLabelMap.CommonWidth}: ${product.productWidth?if_exists} ${((widthUom.abbreviation)?default(product.widthUomId))?if_exists}]
+                          </#if>
+                          <#if (product.productDepth?exists && product.productDepth?double != 0) || product.depthUomId?has_content>
+                            <#assign depthUom = product.getRelatedOneCache("DepthUom")?if_exists/>
+                              [${uiLabelMap.CommonDepth}: ${product.productDepth?if_exists} ${((depthUom.abbreviation)?default(product.depthUomId))?if_exists}]
+                          </#if>
+                        </#if>
                       </div>
                       <#if maySelectItems?default("N") == "Y">
                         <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
