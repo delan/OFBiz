@@ -459,6 +459,11 @@ public class UtilDateTime {
         }
     }
 
+    public static java.sql.Timestamp toTimestamp(Date date) {
+        if (date == null) return null;
+        return new Timestamp(date.getTime());
+    }
+    
     /**
      * Converts a date and time String into a Date
      *
