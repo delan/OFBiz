@@ -141,10 +141,10 @@
     <Uom abbreviation="gal" description="Gallon (US)" uomId="VLIQ_galUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="L" description="Liter" uomId="VLIQ_L" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="ml" description="Milliliter" uomId="VLIQ_ml" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="oz" description="Ounce, fluid (UK)" uomId="VLIQ_ozUK" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="oz" description="Ounce, fluid (US)" uomId="VLIQ_ozUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="pt" description="Pint (UK)" uomId="VLIQ_ptUK" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="pt" description="Pint (US)" uomId="VLIQ_ptUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
+    <Uom abbreviation="fl. oz (UK)" description="Ounce, fluid (UK)" uomId="VLIQ_ozUK" uomTypeId="VOLUME_LIQ_MEASURE"/>
+    <Uom abbreviation="fl. oz (US)" description="Ounce, fluid (US)" uomId="VLIQ_ozUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
+    <Uom abbreviation="pt (UK)" description="Pint (UK)" uomId="VLIQ_ptUK" uomTypeId="VOLUME_LIQ_MEASURE"/>
+    <Uom abbreviation="pt (US)" description="Pint (US)" uomId="VLIQ_ptUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="qt" description="Quart" uomId="VLIQ_qt" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="Tbs" description="Tablespoon" uomId="VLIQ_Tbs" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="tsp" description="Teaspoon" uomId="VLIQ_tsp" uomTypeId="VOLUME_LIQ_MEASURE"/>
