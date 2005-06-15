@@ -29,6 +29,7 @@
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="script"/>
     <classpath type="dir" location="config"/>
+    <classpath type="jar" location="lib/*"/>
     <classpath type="jar" location="lib/cybersource/*"/>
     <classpath type="jar" location="lib/worldpay/*"/>
     <classpath type="dir" location="lib/worldpay"/>

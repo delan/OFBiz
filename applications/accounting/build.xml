@@ -30,19 +30,18 @@
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <target name="init">                
+    <target name="init">
         <property environment="env"/>
         <property name="desc" value="Accounting Component"/>
         <property name="name" value="ofbiz-accounting"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
-        <property name="lib.dir" value="lib"/>        
-        <property name="build.dir" value="build"/>        
+        <property name="lib.dir" value="lib"/>
+        <property name="build.dir" value="build"/>
     </target>
-    
-    <target name="classpath">		        
+
+    <target name="classpath">
         <path id="local.class.path">
-            <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/lib/commons" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
@@ -62,9 +61,10 @@
             <fileset dir="../order/build/lib" includes="*.jar"/>
             <fileset dir="lib/worldpay" includes="*.jar"/>
             <fileset dir="lib/cybersource" includes="*.jar"/>
+            <fileset dir="lib" includes="*.jar"/>
         </path>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
@@ -74,58 +74,58 @@
     </target>
 
     <target name="clean-lib" depends="init">
-        <delete dir="${build.dir}/lib"/>        
+        <delete dir="${build.dir}/lib"/>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Makes sure the needed directory structure is in place              -->
     <!-- ================================================================== -->
 
     <target name="prepare" depends="clean-lib">
-        <mkdir dir="${build.dir}/classes"/>         
+        <mkdir dir="${build.dir}/classes"/>
         <mkdir dir="${build.dir}/lib"/>
     </target>
-    
+
     <target name="prepare-docs" depends="init">
-        <mkdir dir="${build.dir}/javadocs"/>        
+        <mkdir dir="${build.dir}/javadocs"/>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Compilation of the source files                                                                                                                         -->
-    <!-- ================================================================== -->               
+    <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,classpath">
     	<javac debug="on" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
-                <path refid="local.class.path"/>                
+                <path refid="local.class.path"/>
             </classpath>
             <src path="${src.dir}"/>
             <!-- exclude the payment processor packages; comment if you have libs -->
-            <exclude name="org/ofbiz/accounting/thirdparty/verisign/**"/>            
+            <exclude name="org/ofbiz/accounting/thirdparty/verisign/**"/>
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
             <!--<fileset dir="${dtd.dir}" includes="*.dtd"/>-->
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
-        </copy>                	
+        </copy>
     </target>
-    
+
     <target name="jar" depends="classes">
-        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>         
-    </target>    
-    
+        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Build JavaDoc                                                      -->
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs,classpath">
-        <javadoc packagenames="org.ofbiz.accounting.*" 
+        <javadoc packagenames="org.ofbiz.accounting.*"
                  classpathref="local.class.path"
-                 destdir="${build.dir}/javadocs" 
+                 destdir="${build.dir}/javadocs"
                  Windowtitle="Open for Business - ${desc}">
             <sourcepath path="${src.dir}"/>
         </javadoc>
     </target>
-    
-    <target name="all" depends="jar,docs"/>   
+
+    <target name="all" depends="jar,docs"/>
 </project>
