@@ -30,6 +30,7 @@
 <#assign ofbizServerName = application.getAttribute("_serverId")?if_exists>
 <#assign contextPath = request.getContextPath()>
 <#assign displayApps = Static["org.ofbiz.base.component.ComponentConfig"].getAppBarWebInfos(ofbizServerName)>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <#if requestAttributes.userLogin?has_content><#assign userLogin = requestAttributes.userLogin></#if>
 
