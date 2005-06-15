@@ -983,6 +983,39 @@
         <key-map field-name="settlementTermId"/>
       </relation>
     </entity>
+    <view-entity entity-name="AcctgTransAndEntries"
+            package-name="org.ofbiz.accounting.ledger"
+            title="View of AcctgTrans and Entries, for easier lookup and calculation">
+      <member-entity entity-alias="ATR" entity-name="AcctgTrans"/>
+      <member-entity entity-alias="ATE" entity-name="AcctgTransEntry"/>
+      <member-entity entity-alias="GLA" entity-name="GlAccount"/>
+      <member-entity entity-alias="GLAC" entity-name="GlAccountClass"/>
+      <alias entity-alias="ATR" name="isPosted"/>
+      <alias entity-alias="ATR" name="glFiscalTypeId"/>
+      <alias entity-alias="ATR" name="transactionDate"/>
+      <alias entity-alias="ATE" name="acctgTransId"/>
+      <alias entity-alias="ATE" name="acctgTransEntrySeqId"/>
+      <alias entity-alias="ATE" name="glAccountId"/>
+      <alias entity-alias="ATE" name="debitCreditFlag"/>
+      <alias entity-alias="ATE" name="amount"/>
+      <alias entity-alias="ATE" name="organizationPartyId"/>
+      <alias entity-alias="GLAC" name="glAccountClassId"/>
+      <view-link entity-alias="ATR" rel-entity-alias="ATE">
+      	  <key-map field-name="acctgTransId"/>
+      </view-link>
+      <view-link entity-alias="ATE" rel-entity-alias="GLA">
+      	  <key-map field-name="glAccountId"/>
+      </view-link>
+      <view-link entity-alias="GLA" rel-entity-alias="GLAC">
+      	  <key-map field-name="glAccountClassId"/>
+      </view-link>
+      <relation type="one" fk-name="ATAE_GLACT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="ATAE_GLACTCLS" rel-entity-name="GlAccountClass">
+        <key-map field-name="glAccountClassId"/>
+      </relation>
+    </view-entity>
     <view-entity entity-name="AcctgTransEntryProdSums"
             package-name="org.ofbiz.accounting.ledger"
             title="Sum of AcctgTransEntry entity amounts, grouped by glAccountId, productId, debitCreditFlag">
