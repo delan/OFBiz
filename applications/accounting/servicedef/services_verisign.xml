@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
     <description>Accounting Services</description>
     <vendor>OFBiz</vendor>
@@ -32,5 +32,23 @@
              location="org.ofbiz.accounting.thirdparty.verisign.PayflowPro" invoke="ccProcessor">
         <description>Credit Card Processing</description>
         <implements service="ccAuthInterface"/>
+    </service>
+
+    <service name="payflowCCCapture" engine="java"
+             location="org.ofbiz.accounting.thirdparty.verisign.PayflowPro" invoke="ccCapture">
+        <description>Credit Card Capture</description>
+        <implements service="ccCaptureInterface"/>
+    </service>
+
+    <service name="payflowCCVoid" engine="java"
+             location="org.ofbiz.accounting.thirdparty.verisign.PayflowPro" invoke="ccVoid">
+        <description>Credit Card Void</description>
+        <implements service="paymentReleaseInterface"/>
+    </service>
+
+    <service name="payflowCCRefund" engine="java"
+             location="org.ofbiz.accounting.thirdparty.verisign.PayflowPro" invoke="ccRefund">
+        <description>Credit Card Refund</description>
+        <implements service="paymentRefundInterface"/>
     </service>
 </services>
