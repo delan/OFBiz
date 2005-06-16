@@ -98,6 +98,7 @@
     <entity-group group="org.ofbiz" entity="GlAccountGroupMember" />
     <entity-group group="org.ofbiz" entity="GlAccountGroupType" />
     <entity-group group="org.ofbiz" entity="GlAccountHistory" />
+    <entity-group group="org.ofbiz" entity="GlAccountAndHistory" />
     <entity-group group="org.ofbiz" entity="GlAccountOrganization" />
     <entity-group group="org.ofbiz" entity="GlAccountRole" />
     <entity-group group="org.ofbiz" entity="GlAccountType" />
