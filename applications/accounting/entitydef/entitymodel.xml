@@ -1171,6 +1171,28 @@
         <key-map field-name="customTimePeriodId"/>
       </relation>
     </entity>
+    <view-entity entity-name="GlAccountAndHistory"
+            package-name="org.ofbiz.accounting.ledger"
+            title="View of GL Account and its History, for lookup and calculation">
+      <member-entity entity-alias="GLA" entity-name="GlAccount"/>
+      <member-entity entity-alias="GLAH" entity-name="GlAccountHistory"/>
+      <member-entity entity-alias="GLAC" entity-name="GlAccountClass"/>
+      <alias-all entity-alias="GLA"/>
+      <alias-all entity-alias="GLAH"/>
+      <alias entity-alias="GLAC" name="glAccountClassId"/>
+      <view-link entity-alias="GLA" rel-entity-alias="GLAH">
+      	  <key-map field-name="glAccountId"/>
+      </view-link>
+      <view-link entity-alias="GLA" rel-entity-alias="GLAC">
+      	  <key-map field-name="glAccountClassId"/>
+      </view-link>
+      <relation type="one" fk-name="GLAAH_GLACT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="GLAAH_GLACTCLS" rel-entity-name="GlAccountClass">
+        <key-map field-name="glAccountClassId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="GlAccountOrganization"
             package-name="org.ofbiz.accounting.ledger"
             title="GL Account Organization Entity">
