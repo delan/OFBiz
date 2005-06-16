@@ -24,54 +24,38 @@
  *@since      3.0
 -->
 
-<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td align='left'>
-            <div class='boxhead'>&nbsp;${uiLabelMap.OrderShippingInformation}</div>
-          </td>
-          <td nowrap align="right">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
             <div class="tabletext">
               ${screens.render("component://ecommerce/widget/OrderScreens.xml#anonymoustrail")}
             </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <#if useEntityFields?default("N") == "Y">
-              <form method="post" action="<@ofbizUrl>/changeShippingAddress</@ofbizUrl>" name="shipsetupform">
-                <input type="hidden" name="contactMechId" value="${(postalFields.contactMechId)?if_exists}">
-            <#else>
-              <form method="post" action="<@ofbizUrl>/enterShippingAddress</@ofbizUrl>" name="shipsetupform">
-                <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
-                <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION">
-            </#if>
-            <input type="hidden" name="partyId" value="${cart.getPartyId()?default("_NA_")}">
-            <input type="hidden" name="finalizeMode" value="ship">
+        </div>
+        <div class='boxhead'>&nbsp;${uiLabelMap.OrderShippingInformation}</div>
+    </div>
+    <div class="screenlet-body">
+        <#if useEntityFields?default("N") == "Y">
+          <form method="post" action="<@ofbizUrl>/changeShippingAddress</@ofbizUrl>" name="shipsetupform">
+            <input type="hidden" name="contactMechId" value="${(postalFields.contactMechId)?if_exists}"/>
+        <#else>
+          <form method="post" action="<@ofbizUrl>/enterShippingAddress</@ofbizUrl>" name="shipsetupform">
+            <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS"/>
+            <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
+        </#if>
+        <input type="hidden" name="partyId" value="${cart.getPartyId()?default("_NA_")}"/>
+        <input type="hidden" name="finalizeMode" value="ship"/>
 
-            <table width="100%" border="0" cellpadding="1" cellspacing="0">
-              <tr>
-                <td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderShippingAddress}</div></td>
-                <td width="5">&nbsp;</td>
-                <td width="74%">&nbsp;</td>
-              </tr>
-              ${screens.render("component://ecommerce/widget/OrderScreens.xml#genericaddress")}
-              <tr>
-                <td colspan="3" align="center"><input type="submit" class="smallsubmit" value="${uiLabelMap.CommonContinue}"></td>
-              </tr>
-            </table>
-            </form>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+        <table width="100%" border="0" cellpadding="1" cellspacing="0">
+          <tr>
+            <td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderShippingAddress}</div></td>
+            <td width="5">&nbsp;</td>
+            <td width="74%">&nbsp;</td>
+          </tr>
+          ${screens.render("component://ecommerce/widget/OrderScreens.xml#genericaddress")}
+          <tr>
+            <td colspan="3" align="center"><input type="submit" class="smallsubmit" value="${uiLabelMap.CommonContinue}"/></td>
+          </tr>
+        </table>
+        </form>
+    </div>
+</div>

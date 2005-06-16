@@ -25,52 +25,22 @@
 -->
 
 <#if productPromo?has_content>
-  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;${uiLabelMap.EcommercePromotionDetails}:</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
-          <tr>
-            <td>
-                <div class="tabletext">${productPromo.promoText?if_exists}</div>
-                <div class="tabletext">Generated Description: ${promoAutoDescription?if_exists}</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommercePromotionDetails}:</div>
+    </div>
+    <div class="screenlet-body">
+        <div class="tabletext">${productPromo.promoText?if_exists}</div>
+        <div class="tabletext">Generated Description: ${promoAutoDescription?if_exists}</div>
+    </div>
+</div>
 
 <#if productPromoCategoryIncludeList?has_content || productPromoCategoryExcludeList?has_content || productPromoCategoryAlwaysList?has_content>
-  <br/>
-
-  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Categories For Promotion:</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
-          <tr>
-            <td>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;Categories For Promotion:</div>
+    </div>
+    <div class="screenlet-body">
         <#if productPromoCategoryIncludeList?has_content>
           <div class="tabletext">This promotion includes all products in these categories:</div>
           <#list productPromoCategoryIncludeList as productPromoCategory>
@@ -101,31 +71,16 @@
             </div>
           </#list>
         </#if>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+    </div>
+</div>
 </#if>
 
-  <br/>
-
 <#if productIds?has_content>
-  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;${uiLabelMap.EcommerceProductsForPromotion}:</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceProductsForPromotion}:</div>
+    </div>
+    <div class="screenlet-body">
         <#if (listSize > 0)>
             <table border="0" width="100%" cellpadding="2">
                 <tr>
@@ -166,9 +121,8 @@
           </#list>
         </#if>
         </table>
-      </td>
-    </tr>
-  </table>
+    </div>
+</div>
 </#if>
 <#else>
     <div class="head2">${uiLabelMap.EcommerceErrorNoPromotionFoundWithID} [${productPromoId?if_exists}]</div>

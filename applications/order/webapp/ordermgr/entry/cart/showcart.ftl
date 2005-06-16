@@ -100,10 +100,9 @@ function gwAll(e) {
 }
 </script>
 
-<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-  <tr>
-    <td>
-      <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+<div class="screenlet">
+    <div class="screenlet-body">
+      <table border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td>           
             <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
@@ -176,34 +175,18 @@ function gwAll(e) {
         </tr>  
         </#if>      
       </table>
-    </td>
-  </tr>
-</table>
+    </div>
+</div>
 
 <script language="JavaScript" type="text/javascript">
   document.quickaddform.add_product_id.focus();
 </script>
-<br/>
 
-<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-  <tr>
-    <td>
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxtop">
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderItems}</div>
-          </td>
-          <td valign="middle" align="right">         
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-        <tr>
-          <td>          
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderItems}</div>
+    </div>
+    <div class="screenlet-body">
   <#if (shoppingCartSize > 0)>
     <form method="post" action="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
       <input type="hidden" name="removeSelected" value="false"/>
@@ -401,11 +384,7 @@ function gwAll(e) {
   <#else>
     <div class="tabletext">${uiLabelMap.OrderNoOrderItemsToDisplay}</div>
   </#if>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+    </div>
+</div>
 
 <!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()?if_exists} locale=${shoppingCart.getLocale()?if_exists} currencyUom=${shoppingCart.getCurrency()?if_exists} userLoginId=${(shoppingCart.getUserLogin().getString("userLoginId"))?if_exists} autoUserLogin=${(shoppingCart.getAutoUserLogin().getString("userLoginId"))?if_exists} -->

@@ -28,42 +28,24 @@
 -->
 
 <#if shoppingCart.getOrderType() == "SALES_ORDER">
-  <br/>
-  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td>
-        <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;${uiLabelMap.OrderPromotionCouponCodes}</div>
-            </td>
-            <#--<td valign="middle" align="right">&nbsp;</td>-->
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-          <tr>
-            <td>
-              <div class="tabletext">
-	            <form method="post" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
-	              <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
-	              <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddCode}">
-	              <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>
-	              <#if productPromoCodeIds?has_content>
-	                Entered Codes:
-	                <#list productPromoCodeIds as productPromoCodeId>
-	                  ${productPromoCodeId}
-	                </#list>
-	              </#if>
-	            </form>
-	          </div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.OrderPromotionCouponCodes}</div>
+    </div>
+    <div class="screenlet-body">
+      <div class="tabletext">
+        <form method="post" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
+          <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
+          <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddCode}">
+          <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>
+          <#if productPromoCodeIds?has_content>
+            Entered Codes:
+            <#list productPromoCodeIds as productPromoCodeId>
+              ${productPromoCodeId}
+            </#list>
+          </#if>
+        </form>
+      </div>
+    </div>
+</div>
 </#if>

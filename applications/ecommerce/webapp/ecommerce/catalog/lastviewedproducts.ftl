@@ -39,7 +39,7 @@
 <center>
   <table width='100%' border='0' cellpadding='0' cellspacing='0'>        
     <#list sessionAttributes.lastViewedProducts as productId>              
-      <tr><td><hr class='sepbar'></td></tr>
+      <tr><td><hr class="sepbar"/></td></tr>
       <tr>
         <td>
           ${setRequestAttribute("optProductId", productId)}
@@ -48,13 +48,13 @@
         </td>
       </tr>
     </#list>
-    <tr><td colspan="2"><hr class='sepbar'></td></tr>
+    <tr><td colspan="2"><hr class="sepbar"/></td></tr>
   </table>
 </center>
 <#else>
 <table border="0" width="100%" cellpadding="2">
   <tr>
-    <td colspan="2"><hr class='sepbar'></td>
+    <td colspan="2"><hr class="sepbar"/></td>
   </tr>
   <tr>
     <td>
