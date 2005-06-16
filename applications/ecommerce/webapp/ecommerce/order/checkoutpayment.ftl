@@ -92,7 +92,7 @@ function toggleBillingAccount(box) {
                 <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.AccountingCreditCard}]</a>
                 <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
               </td></tr>
-              <tr><td colspan="3"><hr class='sepbar'></td></tr>
+              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td width="1" nowrap>
                   <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked</#if>>
@@ -129,7 +129,7 @@ function toggleBillingAccount(box) {
                 </td>
                 <td width="1" nowrap>&nbsp;</td>
               </tr>
-              <tr><td colspan="3"><hr class='sepbar'></td></tr>
+              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
             <#if !paymentMethodList?has_content>
               <tr>
                 <td colspan="3">
@@ -205,14 +205,14 @@ function toggleBillingAccount(box) {
                     </td>
                     <td>&nbsp;</td>
                   </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                 </#if>
               </#list>
             </#if>
 
               <#-- special billing account functionality to allow use w/ a payment method -->
               <#if billingAccountList?has_content>
-                <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                 <tr>
                   <td width="1%" nowrap>
                     <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT" <#if "EXT_BILLACT" == checkOutPaymentId>checked</#if>></hr>
@@ -222,7 +222,7 @@ function toggleBillingAccount(box) {
                   </td>
                   <td>&nbsp;</td>
                 </tr>
-                <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                 <#list billingAccountList as billingAccount>
                   <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>
                   <tr>
@@ -251,7 +251,7 @@ function toggleBillingAccount(box) {
               </#if>
               <#-- end of special billing account functionality -->
 
-              <tr><td colspan="3"><hr class='sepbar'></td></tr>
+              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td width="1%" nowrap>
                   <input type="checkbox" name="addGiftCard" value="Y">
@@ -289,7 +289,7 @@ function toggleBillingAccount(box) {
                 </td>
               </tr>
 
-              <tr><td colspan="3"><hr class='sepbar'></td></tr>
+              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="3">
                   <div class='tabletext' valign='middle'>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,7 +26,9 @@
 -->
 
 <#-- ==================== Party Selection dialog box ========================= -->
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<div class="screenlet">
+    <div class="screenlet-body">
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
   <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
   </form>
@@ -132,4 +134,5 @@
   </form>
   </#if> <#-- additionalPartyType?has_content -->
 </table>
-<br/>
+    </div>
+</div>

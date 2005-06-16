@@ -132,7 +132,7 @@
         <#assign contactMech = partyContactMechValueMap.contactMech?if_exists>
         <#assign contactMechType = partyContactMechValueMap.contactMechType?if_exists>
         <#assign partyContactMech = partyContactMechValueMap.partyContactMech?if_exists>
-          <tr><td colspan="7"><hr class='sepbar'></td></tr>
+          <tr><td colspan="7"><hr class="sepbar"/></td></tr>
           <tr>
             <td align="right" valign="top" width="10%">
               <div class="tabletext">&nbsp;<b>${contactMechType.description}</b></div>

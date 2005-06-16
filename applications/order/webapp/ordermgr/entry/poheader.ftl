@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -30,62 +30,29 @@
     <td width="50%" valign="top" align="left">
 
       <#-- header box -->
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-              <tr>
-                <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;PO For ${partyId?if_exists}</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-              <tr>
-                <td>
-                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
-                    <tr><td><div class="tabletext">Supplier Information Here>div></td></tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+        <div class="screenlet">
+            <div class="screenlet-header">
+                <div class="boxhead">&nbsp;PO For ${partyId?if_exists}</div>
+            </div>
+            <div class="screenlet-body">
+                <table width="100%" border="0" cellpadding="1" cellspacing="0">
+                    <tr><td><div class="tabletext">Supplier Information Here</div></td></tr>
+                </table>
+            </div>
+        </div>
       <#-- end of header box -->
-      <br/>
 
       <#-- payment box -->
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-              <tr>
-                <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Place Holder</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-              <tr>
-                <td>
+        <div class="screenlet">
+            <div class="screenlet-header">
+                <div class="boxhead">&nbsp;Place Holder</div>
+            </div>
+            <div class="screenlet-body">
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
 
                   </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+            </div>
+        </div>
       <#-- end of payment box -->
 
     </td>
@@ -99,62 +66,29 @@
     <td width="50%" valign="top" align="left">
 
       <#-- contact box -->
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-              <tr>
-                <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Place Holder</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-              <tr>
-                <td>
+        <div class="screenlet">
+            <div class="screenlet-header">
+                <div class="boxhead">&nbsp;Place Holder</div>
+            </div>
+            <div class="screenlet-body">
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
 
                   </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-      <br/>
+            </div>
+        </div>
       <#-- end of contact box -->
 
       <#-- shipping info box -->
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-              <tr>
-                <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Place Holder</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-              <tr>
-                <td>
+        <div class="screenlet">
+            <div class="screenlet-header">
+                <div class="boxhead">&nbsp;Place Holder</div>
+            </div>
+            <div class="screenlet-body">
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
 
                   </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+            </div>
+        </div>
       <#-- end of shipping info box -->
 
     </td>

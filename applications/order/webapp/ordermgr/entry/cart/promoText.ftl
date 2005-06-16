@@ -32,48 +32,30 @@
 </#if>
 
 <#if showPromoText?exists && showPromoText>
-  <br/>
-  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td>
-        <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSpecialOffers}</div>
-            </td>
-            <#--<td valign="middle" align="right">&nbsp;</td>-->
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSpecialOffers}</div>
+    </div>
+    <div class="screenlet-body">
+        <table cellspacing="0" cellpadding="1" border="0">
+          <#-- show promotions text -->
+          <#list productPromos as productPromo>
+            <tr>
+              <td>
+                <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText?if_exists}</div>
+              </td>
+            </tr>
+            <#if productPromo_has_next>
+              <tr><td><hr class="sepbar"/></td></tr>
+            </#if>
+          </#list>
+          <tr><td><hr class="sepbar"/></td></tr>
           <tr>
             <td>
-                <table cellspacing="0" cellpadding="1" border="0">
-                  <#-- show promotions text -->
-                  <#list productPromos as productPromo>
-                    <tr>
-                      <td>
-                        <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText?if_exists}</div>
-                      </td>
-                    </tr>
-                    <#if productPromo_has_next>
-                      <tr><td><hr class="sepbar"></td></tr>
-                    </#if>
-                  </#list>
-                  <tr><td><hr class="sepbar"></td></tr>
-                  <tr>
-                    <td>
-                      <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewAllPromotions}]</a></div>
-                    </td>
-                  </tr>
-                </table>
+              <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewAllPromotions}]</a></div>
             </td>
           </tr>
         </table>
-      </td>
-    </tr>
-  </table>
+    </div>
+</div>
 </#if>

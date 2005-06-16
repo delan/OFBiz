@@ -81,7 +81,7 @@ function toggleBillingAccount(box) {
                 </td>
               </tr>
                <#if shippingContactMechList?has_content>
-                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                 <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                  <#list shippingContactMechList as shippingContactMech>
                    <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                    <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
@@ -103,7 +103,7 @@ function toggleBillingAccount(box) {
                        </div>
                      </td>
                    </tr>
-                   <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                  </#list>
                </#if>
              </table>

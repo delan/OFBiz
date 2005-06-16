@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,39 +25,23 @@
 -->
 
 <#if hasPermission>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-  <tr>
-    <td width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-        <tr>
-          <td width="50%"><div class="boxhead">Delivery Schedule Info</div></td>
-          <td width="50%"><div class="boxhead" align="right">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
             <#if orderId?exists>
                 <a href="<@ofbizUrl>/orderview?order_id=${orderId}</@ofbizUrl>" class="submenutext">[View&nbsp;Order]</a>
             </#if>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-        <tr>
-          <td>      
-            <#if orderId?has_content>
-              ${updatePODeliveryInfoWrapper.renderFormString()}
-            <#else>
-              <div class="tabletext">No Purchase Order was specified</div>
-            </#if>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br/>
-
+        </div>
+        <div class="boxhead">Delivery Schedule Info</div>
+    </div>
+    <div class="screenlet-body">
+        <#if orderId?has_content>
+          ${updatePODeliveryInfoWrapper.renderFormString()}
+        <#else>
+          <div class="tabletext">No Purchase Order was specified</div>
+        </#if>
+    </div>
+</div>
 <#else>
  <h3>You do not have permission to view this page. ("ORDERMGR_VIEW", "ORDERMGR_ADMIN" or associated in the "Supplier Agent" role needed)</h3>
 </#if>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -32,25 +32,11 @@
 </#if>
 
 <#if associatedProducts?has_content>
-  <BR>
-  <TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
-    <TR>
-      <TD>
-        <table border="0" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;${uiLabelMap.help_also_interested_in}</div>
-            </td>
-            <#--<td valign="middle" align="right">&nbsp;</td>-->
-          </tr>
-        </table>
-      </TD>
-    </TR>
-    <TR>
-      <TD>
-        <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-          <tr>
-            <td>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.help_also_interested_in}</div>
+    </div>
+    <div class="screenlet-body">
     <table cellspacing="0" cellpadding="1" border="0">
       <#-- random complementary products -->
       <#list associatedProducts as assocProduct> 
@@ -66,10 +52,6 @@
         </#if>
       </#list>
     </table>
-            </td>
-          </tr>
-        </table>
-      </TD>
-    </TR>
-  </TABLE>
+    </div>
+</div>
 </#if>

@@ -26,65 +26,46 @@
 
 <#-- ==================== Party Listing dialog box ========================= -->
 <#if additionalPartyRoleMap?has_content>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.PartyAdditionalPartyListing}</div>
+    </div>
+    <div class="screenlet-body">
+      <table border="0" width="100%" cellpadding="0">
+        <#list roleList as role>
           <tr>
-	        <td valign="middle" align="left">
-	          <div class="boxhead">&nbsp;${uiLabelMap.PartyAdditionalPartyListing}</div>
-	        </td>
-	      </tr>
-        </table>
-      </td>
-    </tr>
-
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="2" cellpadding="0">
+            <td align="left" valign="bottom"><div class="tableheadtext">${roleData[role].description}</div></td>
+          </tr>
           <tr>
-	        <td>
-	          <table border="0" width="100%" cellpadding="0">
-                <#list roleList as role>
-                  <tr>
-	                <td align="left" valign="bottom"><div class="tableheadtext">${roleData[role].description}</div></td>
-	              </tr>
-	              <tr>
-	                <td colspan="4"><hr class="sepbar"></td>
-	              </tr>
-	              <#list additionalPartyRoleMap[role] as party>
-	                <tr>
-	                  <td><div class="tabletext">${party}</div></td>
-	                  <td>
-	                    <div class="tabletext">
-	                      <#if partyData[party].type == "person">
-	                        ${partyData[party].firstName?if_exists}
-	                      <#else>
-	                        ${partyData[party].groupName?if_exists}
-	                      </#if>
-	                    </div>
-	                  </td>
-	                  <td>
-	                    <div class="tabletext">
-	                      <#if partyData[party].type == "person">
-	                        ${partyData[party].lastName?if_exists}
-	                      </#if>
-	                    </div>
-	                  </td>
-	                  <td align="right">
-                            <a href="<@ofbizUrl>/removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
-	                  </td>
-	                </tr>
-	              </#list>
-	              <tr><td>&nbsp;</td></tr>
-                </#list>
-	          </table>
-	        </td>
-	      </tr>
-        </table>
-      </td>
-    </tr>
-
-  </table>
+            <td colspan="4"><hr class="sepbar"/></td>
+          </tr>
+          <#list additionalPartyRoleMap[role] as party>
+            <tr>
+              <td><div class="tabletext">${party}</div></td>
+              <td>
+                <div class="tabletext">
+                  <#if partyData[party].type == "person">
+                    ${partyData[party].firstName?if_exists}
+                  <#else>
+                    ${partyData[party].groupName?if_exists}
+                  </#if>
+                </div>
+              </td>
+              <td>
+                <div class="tabletext">
+                  <#if partyData[party].type == "person">
+                    ${partyData[party].lastName?if_exists}
+                  </#if>
+                </div>
+              </td>
+              <td align="right">
+                <a href="<@ofbizUrl>/removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
+              </td>
+            </tr>
+          </#list>
+          <tr><td>&nbsp;</td></tr>
+        </#list>
+      </table>
+    </div>
+</div>
 </#if>
-

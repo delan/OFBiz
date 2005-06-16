@@ -115,7 +115,7 @@ function toggleBillingAccount(box) {
                   </td>
                 </tr>
               </#if>
-              <tr><td colspan='2'><hr class='sepbar'></td></tr>
+              <tr><td colspan='2'><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan='2'>
                   <div class="head2"><b>${uiLabelMap.OrderShipAllAtOnce}?</b></div>
@@ -137,7 +137,7 @@ function toggleBillingAccount(box) {
                   <div class="tabletext">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</div>
                 </td>
               </tr>
-              <tr><td colspan="2"><hr class='sepbar'></td></tr>
+              <tr><td colspan="2"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="2">
                   <div class="head2"><b>${uiLabelMap.OrderSpecialInstructions}</b></div>
@@ -148,7 +148,7 @@ function toggleBillingAccount(box) {
                   <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
                 </td>
               </tr>
-              <tr><td colspan="2"><hr class='sepbar'></td></tr>
+              <tr><td colspan="2"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="2">
                   <span class="head2"><b>${uiLabelMap.OrderPoNumber}</b></span>&nbsp;
@@ -158,7 +158,7 @@ function toggleBillingAccount(box) {
                   <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${currentPoNumber?if_exists}'>
                 </td>
               </tr>
-              <tr><td colspan="2"><hr class='sepbar'></td></tr>
+              <tr><td colspan="2"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="2">
                   <div>
@@ -168,7 +168,7 @@ function toggleBillingAccount(box) {
                   </div>
                 </td>
               </tr>
-              <tr><td colspan="2"><hr class='sepbar'></td></tr>
+              <tr><td colspan="2"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="2">
                   <div class="head2"><b>${uiLabelMap.OrderGiftMessage}</b></div>
@@ -179,7 +179,7 @@ function toggleBillingAccount(box) {
                   <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="gift_message">${cart.getGiftMessage()?if_exists}</textarea>
                 </td>
               </tr>
-              <tr><td colspan="2"><hr class='sepbar'></td></tr>
+              <tr><td colspan="2"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="2">
                   <div class="head2"><b>${uiLabelMap.PartyEmailAddresses}</b></div>

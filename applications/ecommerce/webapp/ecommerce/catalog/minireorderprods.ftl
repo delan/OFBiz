@@ -38,7 +38,7 @@
               ${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}
           </div>
           <#if miniProduct_has_next>
-              <div><hr class='sepbar'></div>
+              <div><hr class="sepbar"/></div>
           </#if>
         </#list>
     </div>
