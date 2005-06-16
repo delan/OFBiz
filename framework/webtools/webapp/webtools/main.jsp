@@ -108,6 +108,7 @@
                   <li><a href="<ofbiz:url>/threadList</ofbiz:url>" class="buttontext">Thread List</a>
                   <li><a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">Job List</a>
                   <li><a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">Schedule Job</a>
+                  <li><a href="<ofbiz:url>/availableServices</ofbiz:url>" class="buttontext">Available Services</a>
                 </ul>
               <%}%>
               <%if(security.hasPermission("WORKFLOW_MAINT", session)){%>

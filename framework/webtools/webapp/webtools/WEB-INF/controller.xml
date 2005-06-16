@@ -337,6 +337,10 @@
         <response name="success" type="view" value="jobList"/>
         <response name="error" type="view" value="scheduleJob"/>
     </request-map>    
+    <request-map uri="availableServices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="availableServices"/>
+    </request-map>
 
     <!-- CustomTimePeriod requests -->
     <request-map uri="EditCustomTimePeriod">
@@ -453,6 +457,7 @@
     <view-map name="threadList" type="region"/>
     <view-map name="jobList" type="region"/>
     <view-map name="scheduleJob" type="region"/>
+    <view-map name="availableServices" type="screen" page="component://webtools/widget/AvailableServicesScreens.xml#AvailableServicesList"/>
 
     <view-map name="UomReport" page="/UomReport.xml" type="datavision" info="Uom"/>
     <view-map name="JasperDemoPdf" page="/JasperDemo.xml" type="jasperreportspdf" info="Uom"/>
