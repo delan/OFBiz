@@ -342,6 +342,7 @@
         <if-compare value="N" operator="equals" field-name="productStore.reserveInventory">
             <!-- note: if not set, defaults to yes, reserve inventory -->
             <log level="verbose" message="ProductStore with id ${productStore.productStoreId}, is set to NOT reserve inventory, not reserving inventory"/>
+            <field-to-result field-name="parameters.quantity" result-name="quantityNotReserved"/>            
             <return response-code="success"/>
         </if-compare>
 
