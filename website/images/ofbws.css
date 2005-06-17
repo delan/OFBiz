@@ -278,7 +278,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 
-#intro, #users, #announcements, #testimonials, #projects-standards {
+#intro, #users, #announcements, #inthenews, #testimonials, #projects-standards {
 margin: 0px 0px 10px 0px;
 padding: 5px;
 border: #999999 dotted 1px;
@@ -292,11 +292,14 @@ background: #EEDDEE;
 #announcements {
 background: #EEEEDD;
 }
-#testimonials {
+#inthenews {
 background: #EEDDEE;
 }
-#projects-standards {
+#testimonials {
 background: #E6EEE7;
+}
+#projects-standards {
+background: #EEEEDD;
 }
 
 
