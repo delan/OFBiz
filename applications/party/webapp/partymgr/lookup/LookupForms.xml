@@ -31,7 +31,7 @@
         <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPerson" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" target="" paginate-target="LookupPerson" title="" type="list">
       	<actions>
           <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
@@ -51,7 +51,7 @@
         <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" target="" paginate-target="LookupPartyAndUserLoginAndPerson" title="" type="list">
       	<actions>
           <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
@@ -71,7 +71,7 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="listLookupPartyGroup" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+    <form name="listLookupPartyGroup" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" paginate-target="LookupPartyGroup" title="" type="list">
       	<actions>
           <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
@@ -98,7 +98,7 @@
         <field name="suffix"><hidden/></field>
         <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="listLookupPartyName" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+    <form name="listLookupPartyName" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" paginate-target="LookupPartyName" title="" type="list">
       	<actions>
           <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
