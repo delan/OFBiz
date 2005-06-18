@@ -63,7 +63,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyChangeParty}]</a>
+                    <a href="<@ofbizUrl>/checkinits</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyChangeParty}]</a>
                   </td>
                 </tr>
                 <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>

@@ -263,6 +263,10 @@
         <response name="success" type="request" value="orderentry"/>
         <response name="error" type="view" value="checkinits"/>
     </request-map>
+    <request-map uri="checkinits">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="checkinits"/>
+    </request-map>
     <request-map uri="orderagreements">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderagreements"/>

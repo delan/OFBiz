@@ -25,15 +25,17 @@
  *@since      2.2
 -->
 
-<#if requestParameters.updateParty?exists>
-    <#assign updateParty = requestParameters.updateParty>
-</#if>
-
+<#assign shoppingCartOrderType = "">
+<#assign shoppingCartProductStore = "NA">
+<#assign shoppingCartChannelType = "">
 <#if shoppingCart?exists>
-
+  <#assign shoppingCartOrderType = shoppingCart.getOrderType()>
+  <#assign shoppingCartProductStore = shoppingCart.getProductStoreId()?default("NA")>
+  <#assign shoppingCartChannelType = shoppingCart.getChannelType()?default("")>
+</#if>
 <!-- Sales Order Entry -->
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-<#if !(updateParty?exists) || shoppingCart.getOrderType() = "SALES_ORDER">
+<#if shoppingCartOrderType != "PURCHASE_ORDER">
 <table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td>
@@ -41,7 +43,7 @@
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">
-              ${uiLabelMap.OrderSalesOrder}<#if updateParty?exists>&nbsp;${uiLabelMap.OrderInProgress}</#if>
+              ${uiLabelMap.OrderSalesOrder}<#if shoppingCart?exists>&nbsp;${uiLabelMap.OrderInProgress}</#if>
             </div>
           </td>
           <td valign="middle" align="right"> 
@@ -69,7 +71,7 @@
           <td valign='middle'>
             <div class='tabletext' valign='top'>
               <select class="selectBox" name="productStoreId"<#if sessionAttributes.orderMode?exists> disabled</#if>>
-                <#assign currentStore = shoppingCart.getProductStoreId()?default("NA")>
+                <#assign currentStore = shoppingCartProductStore>
                 <#list productStores as productStore>
                   <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected</#if>>${productStore.storeName}</option>
                 </#list>
@@ -86,7 +88,7 @@
           <td valign='middle'>
             <div class='tabletext' valign='top'>
               <select class="selectBox" name="salesChannelEnumId">
-                <#assign currentChannel = shoppingCart.getChannelType()?default("")>               
+                <#assign currentChannel = shoppingCartChannelType>
                 <option value="">${uiLabelMap.OrderNoChannel}</option>
                 <#list salesChannels as salesChannel>
                   <option value="${salesChannel.enumId}" <#if (salesChannel.enumId == currentChannel)>selected</#if>>${salesChannel.description}</option>
@@ -134,7 +136,7 @@
 <br/>
 <!-- Purchase Order Entry -->
 <#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
-  <#if !(updateParty?exists) || shoppingCart.getOrderType() = "PURCHASE_ORDER">
+  <#if shoppingCartOrderType != "SALES_ORDER">
 <table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td>
@@ -142,7 +144,7 @@
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">
-              ${uiLabelMap.OrderPurchaseOrder}<#if updateParty?exists>&nbsp;${uiLabelMap.OrderInProgress}</#if>
+              ${uiLabelMap.OrderPurchaseOrder}<#if shoppingCart?exists>&nbsp;${uiLabelMap.OrderInProgress}</#if>
             </div>
           </td>
           <td valign="middle" align="right"> 
@@ -199,5 +201,4 @@
   </tr>
 </table>
   </#if>
-</#if>
 </#if>

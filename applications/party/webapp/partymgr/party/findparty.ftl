@@ -324,7 +324,7 @@ function refreshInfo() {
                         <a href='/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyRow.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
                       </#if>
                       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-                        <a href='/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyRow.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>&nbsp;
+                        <a href='/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>&nbsp;
                       </#if>
                     </nobr></div>
                   </td>

@@ -72,7 +72,7 @@
         <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderOrders}]</a>
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-        <a href="/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>
+        <a href="/ordermgr/control/checkinits?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>
       </#if>
     </td>
   </tr>
