@@ -869,7 +869,6 @@ public class ShoppingCartEvents {
       Security security = (Security) request.getAttribute("security");
       GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
       String finalizeMode = (String)session.getAttribute("finalizeMode");
-      String updateParty = request.getParameter("updateParty");
 
       ShoppingCart cart = getCartObject(request);
 
@@ -987,13 +986,10 @@ public class ShoppingCartEvents {
   public static String routeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
       HttpSession session = request.getSession();
 
-      ShoppingCart cart = getCartObject(request);
-
       String orderMode = (String)session.getAttribute("orderMode");
-      String updateParty = request.getParameter("updateParty");
       String orderModePar = request.getParameter("orderMode"); // orderModePar != null when this request is coming from the init page
 
-      if (orderMode == null || updateParty != null) {
+      if (orderMode == null) {
           return "init";
       }
       if (orderMode.equals("PURCHASE_ORDER") && orderModePar != null) {
