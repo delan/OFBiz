@@ -35,8 +35,8 @@
                 <set field="title" value="Lookup Person"/>
                 <set field="entityName" value="Person"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
 	    </actions>
             <widgets>
                 <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
@@ -60,8 +60,8 @@
                 <set field="title" value="Lookup PartyAndUserLoginAndPerson"/>
                 <set field="entityName" value="PartyAndUserLoginAndPerson"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
 	    </actions>
             <widgets>
                 <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
@@ -85,8 +85,8 @@
                 <set field="title" value="Lookup Party Group"/>
                 <set field="entityName" value="PartyGroup"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
 	    </actions>
             <widgets>
                 <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
@@ -110,8 +110,8 @@
                 <set field="title" value="Lookup Party Name View"/>
                 <set field="entityName" value="PartyNameView"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
 	    </actions>
             <widgets>
                 <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
