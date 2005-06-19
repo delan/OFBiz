@@ -96,7 +96,7 @@
     <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="PAY_INFO_CREATE"/>
     <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="CATALOG_VIEW"/>
     
-    <UserLogin userLoginId="supplier" partyId="externaluser" currentPassword="ofbiz" passwordHint=""/>
+    <UserLogin userLoginId="supplier" partyId="externaluser" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
     <UserLoginSecurityGroup groupId="ORDERSUPPLIER_LTD" userLoginId="supplier" fromDate="2001-01-01 12:00:00.0"/>
 
     <!-- Tax Rate security -->
@@ -110,5 +110,4 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_DELETE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TAXRATE_VIEW"/>
-
 </entity-engine-xml>

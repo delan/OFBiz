@@ -31,11 +31,11 @@
     <PartyContactMech partyId="externaluser" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
     <UserLogin userLoginId="anonymous" currentPassword="anonymous" passwordHint=""/>
-    <UserLogin userLoginId="admin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
-    <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
-    <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
-    <UserLogin userLoginId="ltdadmin" partyId="ltdadmin" currentPassword="ofbiz" passwordHint=""/>
-    <UserLogin userLoginId="system" partyId="admin" currentPassword="ofbiz" passwordHint="Do Not Enable This Account" enabled="N" isSystem="Y"/>
+    <UserLogin userLoginId="admin" partyId="admin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
+    <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
+    <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
+    <UserLogin userLoginId="ltdadmin" partyId="ltdadmin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
+    <UserLogin userLoginId="system" partyId="admin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint="Do Not Enable This Account" enabled="N" isSystem="Y"/>
 
     <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>    
     <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>

@@ -1,45 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 
-    <Party partyId="BLOGUSER_ADMIN" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"   />
+    <Party partyId="BLOGUSER_ADMIN" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="BLOGUSER_ADMIN" lastName="Blog" firstName="Admin"/>
-    <UserLogin userLoginId="blog_admin" partyId="BLOGUSER_ADMIN" currentPassword="ofbiz"  />
-    <PartyRole partyId="BLOGUSER_ADMIN" roleTypeId="BLOG_ADMIN" />
+    <UserLogin userLoginId="blog_admin" partyId="BLOGUSER_ADMIN" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a"/>
+    <PartyRole partyId="BLOGUSER_ADMIN" roleTypeId="BLOG_ADMIN"/>
     <ContentRole partyId="BLOGUSER_ADMIN" roleTypeId="BLOG_ADMIN" contentId="UNDERSUNROOT" fromDate="2004-03-27 09:37:40.989"/>
     <UserLoginSecurityGroup userLoginId="blog_admin" groupId="FULLADMIN" fromDate="2004-09-15 00:00:00.000"/>
 
-    <Party partyId="BLOGUSER_EDITOR" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"   />
+    <Party partyId="BLOGUSER_EDITOR" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="BLOGUSER_EDITOR" lastName="Blog" firstName="Editor"/>
-    <UserLogin userLoginId="blog_editor" partyId="BLOGUSER_EDITOR" currentPassword="ofbiz"  />
-    <PartyRole partyId="BLOGUSER_EDITOR" roleTypeId="BLOG_ADMIN" />
+    <UserLogin userLoginId="blog_editor" partyId="BLOGUSER_EDITOR" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a"/>
+    <PartyRole partyId="BLOGUSER_EDITOR" roleTypeId="BLOG_ADMIN"/>
     <ContentRole partyId="BLOGUSER_EDITOR" roleTypeId="BLOG_ADMIN" contentId="UNDERSUNROOT" fromDate="2004-03-27 09:37:40.989"/>
     <UserLoginSecurityGroup userLoginId="blog_editor" groupId="FULLADMIN"  fromDate="2004-09-15 00:00:00.000"/>
 
-    <Party partyId="BLOGUSER_USER" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"   />
+    <Party partyId="BLOGUSER_USER" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="BLOGUSER_USER" lastName="Blog" firstName="User"/>
-    <UserLogin userLoginId="blog_user" partyId="BLOGUSER_USER" currentPassword="ofbiz"   fromDate="2004-09-15 00:00:00.000"/>
-    <PartyRole partyId="BLOGUSER_USER" roleTypeId="BLOG_ADMIN" />
-    <PartyRole partyId="BLOGUSER_USER" roleTypeId="BLOG_AUTHOR" />
+    <UserLogin userLoginId="blog_user" partyId="BLOGUSER_USER" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" fromDate="2004-09-15 00:00:00.000"/>
+    <PartyRole partyId="BLOGUSER_USER" roleTypeId="BLOG_ADMIN"/>
+    <PartyRole partyId="BLOGUSER_USER" roleTypeId="BLOG_AUTHOR"/>
 
-
-    <Party partyId="BLOGUSER_GUEST" partyTypeId="PERSON" createdDate="2004-10-20 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-10-20 09:37:40.989" lastModifiedByUserLogin="admin"   />
+    <Party partyId="BLOGUSER_GUEST" partyTypeId="PERSON" createdDate="2004-10-20 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-10-20 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="BLOGUSER_GUEST" lastName="Blog" firstName="Guest"/>
-    <UserLogin userLoginId="blog_guest" partyId="BLOGUSER_GUEST" currentPassword="ofbiz"   fromDate="2004-09-15 00:00:00.000"/>
+    <UserLogin userLoginId="blog_guest" partyId="BLOGUSER_GUEST" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" fromDate="2004-09-15 00:00:00.000"/>
 
-    <Party partyId="AUTHOR_JONES" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"   />
+    <Party partyId="AUTHOR_JONES" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="AUTHOR_JONES" lastName="Blog" firstName="David"/>
-    <UserLogin userLoginId="blog_author_david" partyId="AUTHOR_JONES" currentPassword="ofbiz"  />
-    <PartyRole partyId="AUTHOR_JONES" roleTypeId="BLOG_AUTHOR" />
+    <UserLogin userLoginId="blog_author_david" partyId="AUTHOR_JONES" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a"/>
+    <PartyRole partyId="AUTHOR_JONES" roleTypeId="BLOG_AUTHOR"/>
     <ContentRole partyId="AUTHOR_JONES" roleTypeId="BLOG_AUTHOR" contentId="BLOGROOTJONES" fromDate="2004-03-27 09:37:40.989"/>
     <UserLoginSecurityGroup userLoginId="blog_author_david" groupId="FULLADMIN"  fromDate="2004-09-15 00:00:00.000"/>
-    <ContentPurpose contentId="BLOGROOTJONES" contentPurposeTypeId="ARTICLE" />
+    <ContentPurpose contentId="BLOGROOTJONES" contentPurposeTypeId="ARTICLE"/>
 
-    <Party partyId="AUTHOR_JAZ" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"   />
+    <Party partyId="AUTHOR_JAZ" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="AUTHOR_JAZ" lastName="Blog" firstName="Andy"/>
-    <UserLogin userLoginId="blog_author_andy" partyId="AUTHOR_JAZ" currentPassword="ofbiz"  />
-    <PartyRole partyId="AUTHOR_JAZ" roleTypeId="BLOG_AUTHOR" />
+    <UserLogin userLoginId="blog_author_andy" partyId="AUTHOR_JAZ" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a"/>
+    <PartyRole partyId="AUTHOR_JAZ" roleTypeId="BLOG_AUTHOR"/>
     <ContentRole partyId="AUTHOR_JAZ" roleTypeId="BLOG_AUTHOR" contentId="BLOGROOTJAZ" fromDate="2004-03-27 09:37:40.989"/>
-    <ContentPurpose contentId="BLOGROOTJAZ" contentPurposeTypeId="ARTICLE" />
-
-
+    <ContentPurpose contentId="BLOGROOTJAZ" contentPurposeTypeId="ARTICLE"/>
 </entity-engine-xml>
