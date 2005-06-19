@@ -53,6 +53,7 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description"><hidden/></field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
@@ -81,6 +82,7 @@
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
+        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
         <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"></field>
@@ -120,6 +122,7 @@
         </field>
         <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
+        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
             <submit button-type="button"/>

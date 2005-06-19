@@ -1262,6 +1262,7 @@
       <field name="currencyUomId" type="id"></field>
       <field name="validFromDate" type="date-time"></field>
       <field name="validThruDate" type="date-time"></field>
+      <field name="quoteName" type="name"></field>
       <field name="description" type="description"></field>
       <prim-key field="quoteId"/>
       <relation type="one" fk-name="QUOTE_QTTYP" rel-entity-name="QuoteType">

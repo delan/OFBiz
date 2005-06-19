@@ -260,6 +260,7 @@
         <field-to-result field-name="newQuoteItem.quoteItemSeqId" result-name="quoteItemSeqId"/>
         
         <field-to-field field-name="requester.partyId" to-field-name="newQuote.partyId"/>
+        <field-to-field field-name="custRequest.custRequestName" to-field-name="newQuote.quoteName"/>
         <create-value value-name="newQuote"/>
         <create-value value-name="newQuoteItem"/>
         <!-- copy the roles from the request to the quote-->
