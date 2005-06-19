@@ -769,6 +769,12 @@
       <relation type="one" fk-name="PARTY_CMPRP_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
     </entity>
     <entity entity-name="PostalAddress"
             package-name="org.ofbiz.party.contact"
