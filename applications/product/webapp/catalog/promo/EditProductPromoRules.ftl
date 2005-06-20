@@ -126,7 +126,7 @@
                                     <input type="hidden" name="productPromoCondSeqId" value="${productPromoCond.productPromoCondSeqId}">
                                     <select name="productCategoryId" class="selectBox">
                                         <#list productCategories as productCategory>
-                                            <option value="${productCategory.productCategoryId}">${productCategory.description}</option>
+                                            <option value="${productCategory.productCategoryId}">${productCategory.description?if_exists}</option>
                                         </#list>
                                     </select>
                                     <select name="productPromoApplEnumId" class="selectBox">
@@ -279,7 +279,7 @@
                                     <input type="hidden" name="productPromoCondSeqId" value="_NA_">
                                     <select name="productCategoryId" class="selectBox">
                                         <#list productCategories as productCategory>
-                                            <option value="${productCategory.productCategoryId}">${productCategory.description}</option>
+                                            <option value="${productCategory.productCategoryId}">${productCategory.description?if_exists}</option>
                                         </#list>
                                     </select>
                                     <select name="productPromoApplEnumId" class="selectBox">
@@ -401,7 +401,7 @@
                 <input type="hidden" name="productPromoCondSeqId" value="_NA_">
                 <select name="productCategoryId" class="selectBox">
                     <#list productCategories as productCategory>
-                        <option value="${productCategory.productCategoryId}">${productCategory.description}</option>
+                        <option value="${productCategory.productCategoryId}">${productCategory.description?if_exists}</option>
                     </#list>
                 </select>
                 <select name="productPromoApplEnumId" class="selectBox">
@@ -431,12 +431,12 @@
             </div>
         </#list>
         <div class="tabletext">
-            <form method="post" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
+            <form method="post" name="createpromoproductform" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
                 <input type="hidden" name="productPromoId" value="${productPromoId}">
                 <input type="hidden" name="productPromoRuleId" value="_NA_">
                 <input type="hidden" name="productPromoActionSeqId" value="_NA_">
                 <input type="hidden" name="productPromoCondSeqId" value="_NA_">
-                Product ID: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>*
+                Product ID: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>*<a href="javascript:call_fieldlookup2(document.createpromoproductform.productId,'LookupProduct');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a>
                 <select name="productPromoApplEnumId" class="selectBox">
                     <#list productPromoApplEnums as productPromoApplEnum>
                         <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>

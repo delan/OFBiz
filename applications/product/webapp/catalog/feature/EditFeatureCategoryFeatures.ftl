@@ -80,11 +80,11 @@
       <td><input type="text" class='inputBox' size='15' name="description_o_${rowCount}" value="${productFeature.description}"></td>
       <td><select name='productFeatureTypeId_o_${rowCount}' size="1" class='selectBox'>
         <#if productFeature.productFeatureTypeId?has_content>
-          <option value='${productFeature.productFeatureTypeId}'><#if curProductFeatureType?exists>${curProductFeatureType.description}<#else> [${productFeature.productFeatureTypeId}]</#if></option>
+          <option value='${productFeature.productFeatureTypeId}'><#if curProductFeatureType?exists>${curProductFeatureType.description?if_exists}<#else> [${productFeature.productFeatureTypeId}]</#if></option>
           <option value='${productFeature.productFeatureTypeId}'>---</option>
         </#if>
         <#list productFeatureTypes as productFeatureType>
-          <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.description}</option>
+          <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.description?if_exists}</option>
         </#list>
       </select></td>
       <td><select name='productFeatureCategoryId_o_${rowCount}' size="1" class='selectBox'>
