@@ -41,6 +41,7 @@ import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -570,7 +571,11 @@ public class CheckOutEvents {
 
         String mode = request.getParameter("finalizeMode");
         Debug.logInfo("FinalizeMode: " + mode, module);
-
+        // necessary to avoid infinite looping when in a funny state, and will go right back to beginning
+        if (mode == null) {
+            return "customer";
+        }
+        
         // check the userLogin object
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
@@ -775,6 +780,12 @@ public class CheckOutEvents {
 
         if (isSingleUsePayment) {
             return "paysplit";
+        }
+
+        // this is used to go back to a previous page in checkout after processing all of the changes, just to make sure we get everything...
+        String checkoutGoTo = request.getParameter("checkoutGoTo");
+        if (UtilValidate.isNotEmpty(checkoutGoTo)) {
+            return checkoutGoTo;
         }
 
         if ("SALES_ORDER".equals(cart.getOrderType())) {

@@ -1128,23 +1128,35 @@ public class ShoppingCart implements Serializable {
 
     /** Clears out the cart. */
     public void clear() {
-        this.firstAttemptOrderId = null;
         this.poNumber = null;
         this.orderId = null;
+        this.firstAttemptOrderId = null;
+        this.billingAccountId = null;
+        this.billingAccountAmt = 0.00;
 
-        this.orderAdditionalEmails = null;
         this.agreementId = null;
         this.quoteId = null;
-        this.freeShippingProductPromoActions.clear();
-        this.desiredAlternateGiftByAction.clear();
-        this.productPromoUseInfoList.clear();
-        this.productPromoCodes.clear();
-        this.shipInfo.clear();
-        this.clearPayments();
-        
+
+        this.defaultItemDeliveryDate = null;
+        this.defaultItemComment = null;
+        this.orderAdditionalEmails = null;
+
+        //this.viewCartOnAdd = false;
+
+        this.lastListRestore = null;
+        this.autoSaveListId = null;
+
+        this.orderTermSet = false;
+        this.orderTerms.clear();
+
         this.adjustments.clear();
+        
         this.expireSingleUsePayments();
         this.cartLines.clear();
+        this.clearPayments();
+        this.shipInfo.clear();
+        this.contactMechIdsMap.clear();
+        
         // clear the additionalPartyRole Map
         Iterator it = this.additionalPartyRole.entrySet().iterator();
         while (it.hasNext()) {
@@ -1152,7 +1164,12 @@ public class ShoppingCart implements Serializable {
             ((LinkedList) me.getValue()).clear();
         }
         this.additionalPartyRole.clear();        
-        
+
+        this.freeShippingProductPromoActions.clear();
+        this.desiredAlternateGiftByAction.clear();
+        this.productPromoUseInfoList.clear();
+        this.productPromoCodes.clear();
+
         // clear the auto-save info
         if (ProductStoreWorker.autoSaveCart(this.getDelegator(), this.getProductStoreId())) {
             GenericValue ul = this.getUserLogin();
