@@ -43,7 +43,7 @@
     <target name="classpath">
         <path id="local.class.path">
             <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
-            <fileset dir="../../base/lib" includes="*.jar"/>           
+            <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
             <fileset dir="../../framework/minerva/lib" includes="*.jar"/>
             <fileset dir="../../framework/entity/lib" includes="*.jar"/>
@@ -94,6 +94,8 @@
                 <path refid="local.class.path"/>
             </classpath>
             <src path="${src.dir}"/>
+            <!-- exclude the Truition; comment if you have libs -->
+            <exclude name="org/ofbiz/securityext/thirdparty/truition/**"/>            
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
