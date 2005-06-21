@@ -31,10 +31,10 @@
  href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
 <div class="contenttext">Minor corrections by: <a
  href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
-<div class="contenttext">Edited by: Les Austin<br>
+<div class="contenttext">Edited by: Les Austin<br/>
 Last Updated: August 5, 2004</div>
 <!-- $Id$ -->
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a> </li>
@@ -46,18 +46,18 @@ Last Updated: August 5, 2004</div>
   <li><a href="#Core_Web_Tools">Core Web Tools</a>
   </li>
 </ul>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <ul>
   <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
   <li><a href="coreconfig.html">Core Configuration Guide</a></li>
   <li><a href="../documents.html#JavaDocs">JavaDoc List (Documents Page)</a></li>
   <li><a href="../documents.html#XMLDefs">XML File Definitions (Documents Page)</a></li>
 </ul>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Introduction">Introduction</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p>The Open For Business Entity Engine is a set of tools and patterns
 used to
 model and manage entity specific data. In this context an entity is a
@@ -184,9 +184,9 @@ custom
 data sources like legacy systems over HTTP or messaging services
 through a bit of custom coding within the same
 framework.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Entity_Modeling">Entity Modeling</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p><b>Entity Modeling Files &amp; Locations</b></p>
 <p>The first thing to do when starting work with a new entity is to
 define or
@@ -255,7 +255,7 @@ data about the entity such as the author, a copyright notice, a
 description, and
 so forth. Here is an example of an XML entity definition:</p>
 <pre
- style="border: 1px solid black; background-color: rgb(238, 238, 255); color: black;">    &lt;entity title="Sample Entity"<br>            copyright="Copyright (c) 2001 John Doe Enterprises"<br>            author="John Doe" version="1.0"<br>            package-name="org.ofbiz.commonapp.sample"<br>            entity-name="SampleEntity"<br>            table-name="SAMPLE_ENTITY"&gt;<br>      &lt;field name="primaryKeyFieldOne" col-name="PRIMARY_KEY_FIELD_ONE" type="id-ne"&gt;&lt;/field&gt;<br>      &lt;field name="primaryKeyFieldTwo" type="id-ne"&gt;&lt;/field&gt;<br>      &lt;field name="fieldOne" type="long-varchar"&gt;&lt;/field&gt;<br>      &lt;field name="fieldTwo" type="long-varchar"&gt;&lt;/field&gt;<br>      &lt;field name="foreignKeyOne" type="id"&gt;&lt;/field&gt;<br>      &lt;prim-key field="primaryKeyFieldOne" /&gt;<br>      &lt;prim-key field="primaryKeyFieldTwo" /&gt;<br>      &lt;relation type="one" rel-entity-name="OtherSampleEntity"&gt;<br>        &lt;key-map field-name="foreignKeyOne" rel-field-name="primaryKeyOne" /&gt;<br>      &lt;/relation&gt;<br>      &lt;relation type="one" title="Self" rel-entity-name="SampleEntity"&gt;<br>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br>        &lt;key-map field-name="primaryKeyFieldTwo" /&gt;<br>      &lt;/relation&gt;<br>      &lt;relation type="many" title="AllOne" rel-entity-name="SampleEntity"&gt;<br>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br>      &lt;/relation&gt;<br>    &lt;/entity&gt;<br></pre>
+ style="border: 1px solid black; background-color: rgb(238, 238, 255); color: black;">    &lt;entity title="Sample Entity"<br/>            copyright="Copyright (c) 2001 John Doe Enterprises"<br/>            author="John Doe" version="1.0"<br/>            package-name="org.ofbiz.commonapp.sample"<br/>            entity-name="SampleEntity"<br/>            table-name="SAMPLE_ENTITY"&gt;<br/>      &lt;field name="primaryKeyFieldOne" col-name="PRIMARY_KEY_FIELD_ONE" type="id-ne"&gt;&lt;/field&gt;<br/>      &lt;field name="primaryKeyFieldTwo" type="id-ne"&gt;&lt;/field&gt;<br/>      &lt;field name="fieldOne" type="long-varchar"&gt;&lt;/field&gt;<br/>      &lt;field name="fieldTwo" type="long-varchar"&gt;&lt;/field&gt;<br/>      &lt;field name="foreignKeyOne" type="id"&gt;&lt;/field&gt;<br/>      &lt;prim-key field="primaryKeyFieldOne" /&gt;<br/>      &lt;prim-key field="primaryKeyFieldTwo" /&gt;<br/>      &lt;relation type="one" rel-entity-name="OtherSampleEntity"&gt;<br/>        &lt;key-map field-name="foreignKeyOne" rel-field-name="primaryKeyOne" /&gt;<br/>      &lt;/relation&gt;<br/>      &lt;relation type="one" title="Self" rel-entity-name="SampleEntity"&gt;<br/>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br/>        &lt;key-map field-name="primaryKeyFieldTwo" /&gt;<br/>      &lt;/relation&gt;<br/>      &lt;relation type="many" title="AllOne" rel-entity-name="SampleEntity"&gt;<br/>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br/>      &lt;/relation&gt;<br/>    &lt;/entity&gt;<br/></pre>
 <p>This is a pretty simple entity that demonstrates a few small points.
 The meta
 data at the top is all optional, and if left unspecified will default
@@ -424,7 +424,7 @@ global setting for the file the entity is in.</td>
     </tr>
   </tbody>
 </table>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
     <tr>
@@ -485,7 +485,7 @@ SQL types for the field and database column.</td>
     </tr>
   </tbody>
 </table>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
     <tr>
@@ -562,7 +562,7 @@ FK is coming from.</td>
     </tr>
   </tbody>
 </table>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
     <tr>
@@ -581,9 +581,9 @@ corresponding name of the field on the related entity.</td>
     </tr>
   </tbody>
 </table>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="View_Entity_Modeling">View Entity Modeling</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p>In addition to entities that map directly to a single relational
 table you can create "virtual" or "view" entities that map to a set of
 other entities.
@@ -607,7 +607,7 @@ view-entity must be in the same database, but not necessarily in the
 same entity
 group.</p>
 <pre
- style="border: 1px solid black; background-color: rgb(238, 238, 255); color: black;">    &lt;view-entity title="Sample View Entity"<br>            copyright="Copyright (c) 2001 John Doe Enterprises"<br>            author="John Doe" version="1.0"<br>            package-name="org.ofbiz.commonapp.sample"<br>            entity-name="SampleViewEntity"&gt;<br>      &lt;member-entity entity-alias="SE" entity-name="SampleEntity" /&gt;<br>      &lt;member-entity entity-alias="OSE" entity-name="OtherSampleEntity" /&gt;<br>      &lt;alias entity-alias="SE" name="primaryKeyFieldOne" /&gt;<br>      &lt;alias entity-alias="SE" name="primaryKeyFieldTwo" /&gt;<br>      &lt;alias entity-alias="SE" name="fieldOne" /&gt;<br>      &lt;alias entity-alias="SE" name="fieldTwo" /&gt;<br>      &lt;alias entity-alias="OSE" name="primaryKeyOne" /&gt;<br>      &lt;alias entity-alias="OSE" name="otherFieldOne" field="fieldOne" /&gt;<br>      &lt;view-link entity-alias="SE" rel-entity-alias="OSE"&gt;<br>        &lt;key-map field-name="foreignKeyOne" rel-field-name="primaryKeyOne" /&gt;<br>      &lt;/view-link&gt;<br>      &lt;relation type="one" rel-entity-name="OtherSampleEntity"&gt;<br>        &lt;key-map field-name="primaryKeyOne" /&gt;<br>      &lt;/relation&gt;<br>      &lt;relation type="many" title="AllOne" rel-entity-name="SampleEntity"&gt;<br>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br>      &lt;/relation&gt;<br>    &lt;/view-entity&gt;<br></pre>
+ style="border: 1px solid black; background-color: rgb(238, 238, 255); color: black;">    &lt;view-entity title="Sample View Entity"<br/>            copyright="Copyright (c) 2001 John Doe Enterprises"<br/>            author="John Doe" version="1.0"<br/>            package-name="org.ofbiz.commonapp.sample"<br/>            entity-name="SampleViewEntity"&gt;<br/>      &lt;member-entity entity-alias="SE" entity-name="SampleEntity" /&gt;<br/>      &lt;member-entity entity-alias="OSE" entity-name="OtherSampleEntity" /&gt;<br/>      &lt;alias entity-alias="SE" name="primaryKeyFieldOne" /&gt;<br/>      &lt;alias entity-alias="SE" name="primaryKeyFieldTwo" /&gt;<br/>      &lt;alias entity-alias="SE" name="fieldOne" /&gt;<br/>      &lt;alias entity-alias="SE" name="fieldTwo" /&gt;<br/>      &lt;alias entity-alias="OSE" name="primaryKeyOne" /&gt;<br/>      &lt;alias entity-alias="OSE" name="otherFieldOne" field="fieldOne" /&gt;<br/>      &lt;view-link entity-alias="SE" rel-entity-alias="OSE"&gt;<br/>        &lt;key-map field-name="foreignKeyOne" rel-field-name="primaryKeyOne" /&gt;<br/>      &lt;/view-link&gt;<br/>      &lt;relation type="one" rel-entity-name="OtherSampleEntity"&gt;<br/>        &lt;key-map field-name="primaryKeyOne" /&gt;<br/>      &lt;/relation&gt;<br/>      &lt;relation type="many" title="AllOne" rel-entity-name="SampleEntity"&gt;<br/>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br/>      &lt;/relation&gt;<br/>    &lt;/view-entity&gt;<br/></pre>
 <p><b>Member Entities</b></p>
 <p>Normal entities that will become part of the view entity are
 referred to as member entities. Each member entity is given an alias
@@ -780,7 +780,7 @@ global setting for the file the entity is in.</td>
     </tr>
   </tbody>
 </table>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
     <tr>
@@ -927,7 +927,7 @@ entity. Must be either true or false. Defaults to false.</td>
     </tr>
   </tbody>
 </table>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
     <tr>
@@ -989,7 +989,7 @@ FK is coming from.</td>
     </tr>
   </tbody>
 </table>
-<br>
+<br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
     <tr>
@@ -1008,9 +1008,9 @@ the field on the related entity.</td>
     </tr>
   </tbody>
 </table>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="The_Entity_Engine_API">The Entity Engine API</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p>The Entity Engine classes in the package <b>org.ofbiz.entity</b>
 define the
 API used to interact with Entity Engine entity data. From a users point
@@ -1198,19 +1198,9 @@ value.
 Distributed cache clearing is also implemented and can be configured in
 a number
 of ways using the flexibility of the Service Engine.</p>
-<p>There are some cases where cache entries cannot be automatically
-cleared. The
-most major issue is with view-entities: when an entity that is
-part of a view-entity is updated, it may have only some of the data in
-the primary <span style="font-style: italic;">key </span>or
-<span style="font-style: italic;">and </span>set that was used to find
-and index the cache for that data. There may be a
-way to do this automatically, but for now manually clearing view-entity
-caches
-is still necessary.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="JTA_Support">JTA Support</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p>The Entity Engine JTA Support is simple to use, but has a few
 complications in configuration.
 The support runs through an API and a Factory class so that no direct
@@ -1238,9 +1228,9 @@ or rolled back. This is normally done by committing at the end of a try
 block and rolling back in each catch block. You can also use the
 standard UserTransaction object by getting one from the
 TransactionFactory.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Core_Web_Tools">Core Web Tools</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p>The WebTools web application contains a number of useful tools for
 working
 with the entity engine. These include a cross linked reference to the
