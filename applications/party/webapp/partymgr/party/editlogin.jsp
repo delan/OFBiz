@@ -78,7 +78,7 @@
   </table>
   </form>
   <div>
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%>?partyId=<%=partyId%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Change&nbsp;Password]</a>
   </div>
 <br/>
@@ -110,7 +110,7 @@
   </form>
 
   <div>
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%>?partyId=<%=partyId%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.updatesecurityform.submit()" class="buttontext">[Update&nbsp;Security&nbsp;Settings]</a>
   </div>
 
