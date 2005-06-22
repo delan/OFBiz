@@ -42,6 +42,7 @@ import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.DebugXaResource;
 import org.ofbiz.entity.transaction.GenericTransactionException;
@@ -721,11 +722,25 @@ public class ServiceDispatcher {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
 
             if (userLogin != null) {
-                GenericValue newUserLogin = getLoginObject(service, localName, userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), (Locale) context.get("locale"));
+                // Because of encrypted passwords we can't just pass in the encrypted version of the password from the data, so we'll do something different and not run the userLogin service...
+                
+                //The old way: GenericValue newUserLogin = getLoginObject(service, localName, userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), (Locale) context.get("locale"));
+                GenericValue newUserLogin = null;
+                try {
+                    newUserLogin = this.getDelegator().findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", userLogin.get("userLoginId")));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Error looking up service authentication UserLogin: " + e.toString(), module);
+                    // leave newUserLogin null, will be handled below
+                }
 
                 if (newUserLogin == null) {
                     // uh oh, couldn't validate that one...
                     // we'll have to remove it from the incoming context which will cause an auth error later if auth is required
+                    Debug.logInfo("Service auth failed for userLoginId [" + userLogin.get("userLoginId") + "] because UserLogin record not found.", module);
+                    context.remove("userLogin");
+                } else if (newUserLogin.getString("currentPassword") != null && !newUserLogin.getString("currentPassword").equals(userLogin.getString("currentPassword"))) {
+                    // passwords didn't match, remove the userLogin for failed auth
+                    Debug.logInfo("Service auth failed for userLoginId [" + userLogin.get("userLoginId") + "] because UserLogin record currentPassword fields did not match; note that the UserLogin object passed into a service may need to have the currentPassword encrypted.", module);
                     context.remove("userLogin");
                 }
             }
