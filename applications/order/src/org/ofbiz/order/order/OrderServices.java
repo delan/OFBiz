@@ -2798,10 +2798,10 @@ public class OrderServices {
             // it is of type "Other (Non-posting)"
             String paymentId = delegator.getNextSeqId("Payment").toString();
             GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId));
-            payment.set("paymentTypeId", "OTHER_NO_POST");
+            payment.set("paymentTypeId", "CUSTOMER_REFUND");
             payment.set("paymentMethodTypeId", "EXT_BILLACT");
-            payment.set("partyIdFrom", fromPartyId);
-            payment.set("partyIdTo", "Company"); // TODO: need to fix this and find a partyId to use
+            payment.set("partyIdFrom", "Company"); // TODO: still need to fix this and find a partyId to use
+            payment.set("partyIdTo", fromPartyId);
             payment.set("effectiveDate", now);
             payment.set("amount", creditAmount);
             payment.set("comments", "Return Credit");
