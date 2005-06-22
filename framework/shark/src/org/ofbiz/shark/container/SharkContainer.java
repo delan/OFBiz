@@ -66,6 +66,7 @@ public class SharkContainer implements Container, Runnable {
     private static GenericDelegator delegator = null;
     private static LocalDispatcher dispatcher = null;
     private static GenericValue adminUser = null;
+    private static String adminPass = null;
     private static Shark shark = null;
 
     protected String configFile = null;
@@ -84,6 +85,7 @@ public class SharkContainer implements Container, Runnable {
         ContainerConfig.Container.Property dispatcherProp = cfg.getProperty("dispatcher-name");
         ContainerConfig.Container.Property delegatorProp = cfg.getProperty("delegator-name");
         ContainerConfig.Container.Property adminProp = cfg.getProperty("admin-user");
+        ContainerConfig.Container.Property adminPassProp = cfg.getProperty("admin-pass");
         ContainerConfig.Container.Property engineName = cfg.getProperty("engine-name");
         ContainerConfig.Container.Property iiopHost = cfg.getProperty("iiop-host");
         ContainerConfig.Container.Property iiopPort = cfg.getProperty("iiop-port");
@@ -103,7 +105,10 @@ public class SharkContainer implements Container, Runnable {
             throw new ContainerException("Invalid admin-user defined in container configuration");
         }
 
-        // check the required admin-user property
+        if (adminPassProp == null || adminPassProp.value == null || adminPassProp.value.length() == 0) {
+            throw new ContainerException("Invalid admin-pass defined in container configuration");
+        }
+
         if (engineName == null || engineName.value == null || engineName.value.length() == 0) {
             throw new ContainerException("Invalid engine-name defined in container configuration");
         }
@@ -128,6 +133,8 @@ public class SharkContainer implements Container, Runnable {
             Debug.logWarning("Invalid admin-user; UserLogin not found not starting Shark!", module);
             return false;
         }
+        
+        SharkContainer.adminPass = adminPassProp.value;
 
         // set the Shark configuration
         Properties props = UtilProperties.getProperties("shark.properties");
@@ -157,11 +164,13 @@ public class SharkContainer implements Container, Runnable {
         // re-eval current assignments
         ExecutionAdministration exAdmin = SharkContainer.getAdminInterface().getExecutionAdministration();
         try {
-            exAdmin.connect(adminUser.getString("userLoginId"), adminUser.getString("currentPassword"), null, null);
+            exAdmin.connect(adminUser.getString("userLoginId"), SharkContainer.adminPass, null, null);
+            // this won't work with encrypted passwords: exAdmin.connect(adminUser.getString("userLoginId"), adminUser.getString("currentPassword"), null, null);
             exAdmin.reevaluateAssignments();
             exAdmin.disconnect();
         } catch (ConnectFailed e) {
-            throw new ContainerException(e);
+            String errMsg = "Shark Connection error (if it is a password wrong error, check the admin-pass property in the container config file, probably ofbiz-containers.xml): " + e.toString();
+            throw new ContainerException(errMsg, e);
         } catch (NotConnected e) {
             throw new ContainerException(e);
         } catch (BaseException e) {
