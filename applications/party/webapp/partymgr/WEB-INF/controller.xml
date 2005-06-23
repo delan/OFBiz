@@ -107,9 +107,9 @@
         <response name="success" type="view" value="viewprofile"/>
     </request-map>
 
-    <request-map uri="viewrelationships">
+    <request-map uri="EditPartyRelationships">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewrelationships"/>
+        <response name="success" type="view" value="EditPartyRelationships"/>
     </request-map>
 
     <request-map uri="viewroles">
@@ -595,30 +595,30 @@
         <response name="error" type="view" value="createnewrole"/>
     </request-map>
 
-    <request-map uri="addrelationshiptype">
+    <request-map uri="createPartyRelationshipType">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyRelationshipType"/>
-        <response name="success" type="view" value="viewrelationships"/>
-        <response name="error" type="view" value="viewrelationships"/>
+        <response name="success" type="view" value="EditPartyRelationships"/>
+        <response name="error" type="view" value="EditPartyRelationships"/>
     </request-map>
 
     <request-map uri="createPartyRelationship">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyRelationship"/>
-        <response name="success" type="view" value="viewrelationships"/>
-        <response name="error" type="view" value="viewrelationships"/>
+        <response name="success" type="view" value="EditPartyRelationships"/>
+        <response name="error" type="view" value="EditPartyRelationships"/>
     </request-map>
     <request-map uri="updatePartyRelationship">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updatePartyRelationship"/>
-        <response name="success" type="view" value="viewrelationships"/>
-        <response name="error" type="view" value="viewrelationships"/>
+        <response name="success" type="view" value="EditPartyRelationships"/>
+        <response name="error" type="view" value="EditPartyRelationships"/>
     </request-map>
     <request-map uri="deletePartyRelationship">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="deletePartyRelationship"/>
-        <response name="success" type="view" value="viewrelationships"/>
-        <response name="error" type="view" value="viewrelationships"/>
+        <response name="success" type="view" value="EditPartyRelationships"/>
+        <response name="error" type="view" value="EditPartyRelationships"/>
     </request-map>
 
     <request-map uri="showvisits">
@@ -691,6 +691,10 @@
         <response name="success" type="view" value="communicationEvent"/>
     </request-map>
     <!-- Lookup request mappings -->
+    <request-map uri="LookupPartyName">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPartyName"/>
+    </request-map>
     <request-map uri="LookupPerson">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupPerson"/>
@@ -714,7 +718,7 @@
 
     <view-map name="viewprofile" type="jpublish" page="/party/viewprofile.ftl"/>
     <view-map name="viewroles" type="jpublish" page="/party/viewroles.ftl"/>
-    <view-map name="viewrelationships" type="region"/>
+    <view-map name="EditPartyRelationships" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyRelationships"/>
     <view-map name="viewvendor" type="jpublish" page="/party/viewvendor.ftl"/>
     <view-map name="EditPartyTaxInfos" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyTaxInfos"/>
     <view-map name="editcontactmech" type="jpublish" page="/party/editcontactmech.ftl"/>
@@ -747,6 +751,7 @@
     <view-map name="listCommunications" type="jpublish" page="/communication/listCommunications.ftl"/>
     <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>
     
+    <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
     <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
     <view-map name="LookupPartyAndUserLoginAndPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson"/>
     <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -38,6 +38,37 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+    <!-- PartyRelationship -->
+    <form name="AddPartyRelationshipType" type="single"
+        target="createPartyRelationshipType" title="" 
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createPartyRelationshipType"/>
+        <field name="partyId"><hidden/></field>
+        <field name="hasTable"><hidden/></field>
+        <field name="parentTypeId" title="Parent Type">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyRelationshipType" key-field-name="partyRelationshipTypeId" description="${partyRelationshipName}">
+                    <entity-order-by field-name="partyRelationshipName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeIdValidFrom" title="Valid From RoleType">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeIdValidTo" title="Valid To RoleType">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    
     <!-- PartyTaxInfo -->
     <form name="AddPartyTaxInfo" type="single"
         target="createPartyTaxInfo" title="" 
