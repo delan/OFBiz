@@ -190,18 +190,14 @@
         <implements service="interfacePartyRelationshipPK"/>
     </service>
 
-    <service name="createPartyRelationshipType" engine="java"
+    <service name="createPartyRelationshipType" engine="java" default-entity-name="PartyRelationshipType"
             location="org.ofbiz.party.party.PartyRelationshipServices" invoke="createPartyRelationshipType" auth="true">
         <description>Create a new Party Relationship type</description>
-        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="parentTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="hasTable" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeIdValidFrom" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeIdValidTo" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="partyRelationshipName" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="partyRelationshipName" optional="false"/>
     </service>
-
+    
     <!-- PartyTaxInfo services -->
     <service name="createPartyTaxInfo" default-entity-name="PartyTaxInfo" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyTaxInfo" auth="true">

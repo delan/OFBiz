@@ -63,13 +63,66 @@
         </section>
     </screen>
     
+    <screen name="EditPartyRelationships">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPartyRelationships"/>
+                <set field="tabButtonItem" value="EditPartyRelationships"/>
+                <set field="labelTitleProperty" value="PartyRelationships"/>
+    
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-name="party"/>
+
+                <entity-condition entity-name="RoleType" list-name="roleTypes">
+                    <order-by field-name="description"/>
+                    <order-by field-name="roleTypeId"/>
+                </entity-condition>
+                <entity-condition entity-name="PartyRelationshipType" list-name="relateTypes">
+                    <order-by field-name="description"/>
+                    <order-by field-name="partyRelationshipTypeId"/>
+                </entity-condition>
+                <entity-condition entity-name="PartyRelationship" list-name="partyRelationships">
+                    <condition-list combine="or">
+                        <condition-expr field-name="partyIdTo" env-name="partyId"/>
+                        <condition-expr field-name="partyIdFrom" env-name="partyId"/>
+                    </condition-list>
+                    <order-by field-name="partyRelationshipTypeId"/>
+                    <order-by field-name="-fromDate"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/EditPartyRelationships.ftl"/></html>
+                        </platform-specific>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <container style="screenlet">
+                                    <container style="screenlet-header">
+                                        <label style="boxhead" text="New Relationship Type"/>
+                                    </container>
+                                    <container style="screenlet-body">
+                                        <include-form name="AddPartyRelationshipType" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                                    </container>
+                                </container>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditPartyTaxInfos">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyTaxInfos"/>
                 <set field="tabButtonItem" value="EditPartyTaxInfos"/>
                 <set field="labelTitleProperty" value="PartyTaxInfos"/>
-    
+                
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
                 <entity-and entity-name="PartyTaxInfo" list-name="partyTaxInfos">

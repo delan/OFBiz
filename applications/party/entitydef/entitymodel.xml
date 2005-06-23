@@ -1358,10 +1358,10 @@
       <field name="partyRelationshipTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
+      <field name="partyRelationshipName" type="name"></field>
+      <field name="description" type="description"></field>
       <field name="roleTypeIdValidFrom" type="id"></field>
       <field name="roleTypeIdValidTo" type="id"></field>
-      <field name="description" type="description"></field>
-      <field name="partyRelationshipName" type="name"></field>
       <prim-key field="partyRelationshipTypeId"/>
       <relation type="one" fk-name="PARTY_RELTYP_PAR" title="Parent" rel-entity-name="PartyRelationshipType">
         <key-map field-name="parentTypeId" rel-field-name="partyRelationshipTypeId"/>
