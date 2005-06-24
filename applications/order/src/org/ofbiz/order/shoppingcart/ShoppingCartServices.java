@@ -30,6 +30,8 @@ import java.util.Locale;
 import java.util.Iterator;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.service.DispatchContext;
@@ -50,6 +52,7 @@ public class ShoppingCartServices {
 
     public static final String module = ShoppingCartServices.class.getName();
     public static final String resource = "OrderUiLabels";
+    public static final String resource_error = "OrderErrorUiLabels";
 
     public static Map assignItemShipGroup(DispatchContext dctx, Map context) {
         ShoppingCart cart = (ShoppingCart) context.get("shoppingCart");
@@ -57,6 +60,7 @@ public class ShoppingCartServices {
         Integer toGroupIndex = (Integer) context.get("toGroupIndex");
         Integer itemIndex = (Integer) context.get("itemIndex");
         Double quantity = (Double) context.get("quantity");
+        Locale locale = (Locale) context.get("locale");
 
         Debug.log("From Group - " + fromGroupIndex + " To Group - " + toGroupIndex + "Item - " + itemIndex + "(" + quantity + ")", module);
         if (fromGroupIndex.equals(toGroupIndex)) {
@@ -80,6 +84,7 @@ public class ShoppingCartServices {
         String giftMessage = (String) context.get("giftMessage");
         Boolean maySplit = (Boolean) context.get("maySplit");
         Boolean isGift = (Boolean) context.get("isGift");
+        Locale locale = (Locale) context.get("locale");
 
         ShoppingCart.CartShipInfo csi = cart.getShipInfo(groupIndex.intValue());
         if (csi != null) {
@@ -110,19 +115,22 @@ public class ShoppingCartServices {
                 cart.setIsGift(idx, isGift);
             }
         } else {
-            return ServiceUtil.returnError("Cart ship group not found [" + groupIndex + "]");
+        	return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderCartShipGroupNotFound", UtilMisc.toMap("groupIndex",groupIndex), locale));
         }
         return ServiceUtil.returnSuccess();
     }
 
     public static Map setPaymentOptions(DispatchContext dctx, Map context) {
-        return ServiceUtil.returnError("Service not yet implemented");
+    	Locale locale = (Locale) context.get("locale");
+    	
+    	return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderServiceNotYetImplemented",locale));
     }
 
     public static Map setOtherOptions(DispatchContext dctx, Map context) {
         ShoppingCart cart = (ShoppingCart) context.get("shoppingCart");
         String orderAdditionalEmails = (String) context.get("orderAdditionalEmails");
         String correspondingPoId = (String) context.get("correspondingPoId");
+        Locale locale = (Locale) context.get("locale");
 
         cart.setOrderAdditionalEmails(orderAdditionalEmails);
         if (UtilValidate.isNotEmpty(correspondingPoId)) {

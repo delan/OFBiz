@@ -68,6 +68,7 @@ public class CheckOutEvents {
 
     public static final String module = CheckOutEvents.class.getName();
     public static final String resource = "OrderUiLabels";
+    public static final String resource_error = "OrderErrorUiLabels";
 
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
@@ -642,6 +643,7 @@ public class CheckOutEvents {
         isGift = request.getParameter("is_gift");
         shipBeforeDate = request.getParameter("shipBeforeDate");
         shipAfterDate = request.getParameter("shipAfterDate");
+        Locale locale = UtilHttp.getLocale(request);
 
         // payment option; if offline we skip the payment screen
         methodType = request.getParameter("paymentMethodType");
@@ -679,7 +681,7 @@ public class CheckOutEvents {
                 billingAccountAmt = new Double(formatter.parse(billingAcctAmtStr).doubleValue());
             } catch (ParseException e) {
                 Debug.logError(e, module);
-                request.setAttribute("_ERROR_MESSAGE_", "Invalid amount set for Billing Account #" + billingAccountId);
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderInvalidAmountSetForBillingAccount", UtilMisc.toMap("billingAccountId",billingAccountId), locale));
                 return "error";
             }
         }

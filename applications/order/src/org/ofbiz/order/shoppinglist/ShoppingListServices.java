@@ -57,6 +57,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
@@ -69,6 +70,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 public class ShoppingListServices {
 
     public static final String module = ShoppingListServices.class.getName();
+    public static final String resource_error = "OrderErrorUiLabels";
 
     public static Map setShoppingListRecurrence(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -76,9 +78,10 @@ public class ShoppingListServices {
         Timestamp endDate = (Timestamp) context.get("endDateTime");
         Integer frequency = (Integer) context.get("frequency");
         Integer interval = (Integer) context.get("intervalNumber");
+        Locale locale = (Locale) context.get("locale");
 
         if (frequency == null || interval == null) {
-            Debug.logWarning("Frequency or interval was not specified", module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderFrequencyOrIntervalWasNotSpecified", locale), module);
             return ServiceUtil.returnSuccess();
         }
 
@@ -94,7 +97,7 @@ public class ShoppingListServices {
                     startDate = UtilDateTime.getYearStart(UtilDateTime.nowTimestamp(), 0, interval.intValue());
                     break;
                 default:
-                    return ServiceUtil.returnError("Invalid frequency for shopping list recurrence");
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderInvalidFrequencyForShoppingListRecurrence",locale));
             }
         }
 
@@ -109,7 +112,7 @@ public class ShoppingListServices {
             recInfo = RecurrenceInfo.makeInfo(delegator, startTime, frequency.intValue(), interval.intValue(), -1, endTime);
         } catch (RecurrenceInfoException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Unable to create shopping list recurrence information");
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderUnableToCreateShoppingListRecurrenceInformation",locale));
         }
 
         Debug.log("Next Recurrence - " + UtilDateTime.getTimestamp(recInfo.next()), module);
@@ -264,6 +267,7 @@ public class ShoppingListServices {
         Integer interval = (Integer) context.get("intervalNumber");
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
 
         boolean beganTransaction = false;
         try {
@@ -273,7 +277,7 @@ public class ShoppingListServices {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
     
             if (orderHeader == null) {
-                return ServiceUtil.returnError("Unable to locate order - " + orderId);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderUnableToLocateOrder", UtilMisc.toMap("orderId",orderId), locale));
             }
             String productStoreId = orderHeader.getString("productStoreId");
     
@@ -296,7 +300,7 @@ public class ShoppingListServices {
                     newListResult = dispatcher.runSync("createShoppingList", serviceCtx);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problems creating new ShoppingList", module);
-                    return ServiceUtil.returnError("Unable to create new shopping list");
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderUnableToCreateNewShoppingList",locale));
                 }
     
                 // check for errors
@@ -314,13 +318,13 @@ public class ShoppingListServices {
             shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
     
             if (shoppingList == null) {
-                return ServiceUtil.returnError("No shopping list available");
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderNoShoppingListAvailable",locale));
             }
             shoppingListTypeId = shoppingList.getString("shoppingListTypeId");
     
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
             if (orh == null) {
-                return ServiceUtil.returnError("Unable to load order read helper - " + orderId);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderUnableToLoadOrderReadHelper", UtilMisc.toMap("orderId",orderId), locale));
             }
     
             List orderItems = orh.getOrderItems();
@@ -337,7 +341,7 @@ public class ShoppingListServices {
                         Debug.logError(e, module);
                     }
                     if (serviceResult == null || ServiceUtil.isError(serviceResult)) {
-                        return ServiceUtil.returnError("Unable to add item to shopping list - " + shoppingListId);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderUnableToAddItemToShoppingList",UtilMisc.toMap("shoppingListId",shoppingListId), locale));
                     }
                 }
             }
@@ -369,7 +373,7 @@ public class ShoppingListServices {
                 }
     
                 if (slUpResp == null || ServiceUtil.isError(slUpResp)) {
-                    return ServiceUtil.returnError("Unable to update shopping list information - " + shoppingListId);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderUnableToUpdateShoppingListInformation",UtilMisc.toMap("shoppingListId",shoppingListId), locale));
                 }
             }
     

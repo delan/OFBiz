@@ -68,6 +68,7 @@ public class ShoppingCartEvents {
 
     public static String module = ShoppingCartEvents.class.getName();
     public static final String resource = "OrderUiLabels";
+    public static final String resource_error = "OrderErrorUiLabels";
 
     private static final String NO_ERROR = "noerror";
     private static final String NON_CRITICAL_ERROR = "noncritical";
@@ -193,8 +194,7 @@ public class ShoppingCartEvents {
                     Debug.logWarning(e,"Problems parsing Reservation start string: "
                                 + reservStartStr, module);
                     reservStart = null;
-                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties
-                        .getMessage(resource,"cart.addToCart.rental.startDate", locale));
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource,"cart.addToCart.rental.startDate", locale));
                     return "error";
                 }
             }
@@ -210,7 +210,7 @@ public class ShoppingCartEvents {
                     Debug.logWarning(e,"Problems parsing reservation length string: "
                                     + reservLengthStr, module);
                     reservLength = 1;
-                    request.setAttribute("_ERROR_MESSAGE_", "Reservation length should be a positive number");
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderReservationLengthShouldBeAPositiveNumber", locale));
                     return "error";
                 }
             }
@@ -222,11 +222,9 @@ public class ShoppingCartEvents {
                     reservPersons = NumberFormat.getNumberInstance().parse(
                             reservPersonsStr).doubleValue();
                 } catch (Exception e) {
-                    Debug.logWarning(e,
-                            "Problems parsing reservation number of persons string: "
-                                    + reservPersonsStr, module);
+                    Debug.logWarning(e,"Problems parsing reservation number of persons string: " + reservPersonsStr, module);
                     reservPersons = 1;
-                    request.setAttribute("_ERROR_MESSAGE_", "Number of persons should be 'one' or larger");
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderNumberOfPersonsShouldBeOneOrLarger", locale));
                     return "error";
                 }
             }
@@ -616,13 +614,14 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String alternateGwpProductId = request.getParameter("alternateGwpProductId");
         String alternateGwpLineStr = request.getParameter("alternateGwpLine");
+        Locale locale = UtilHttp.getLocale(request);
 
         if (UtilValidate.isEmpty(alternateGwpProductId)) {
-            request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no alternateGwpProductId passed.");
+        	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderCouldNotSelectAlternateGiftNoAlternateGwpProductIdPassed", locale));
             return "error";
         }
         if (UtilValidate.isEmpty(alternateGwpLineStr)) {
-            request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no alternateGwpLine passed.");
+        	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderCouldNotSelectAlternateGiftNoAlternateGwpLinePassed", locale));
             return "error";
         }
 
@@ -630,13 +629,13 @@ public class ShoppingCartEvents {
         try {
             alternateGwpLine = Integer.parseInt(alternateGwpLineStr);
         } catch (Exception e) {
-            request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, alternateGwpLine is not a valid number.");
+        	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderCouldNotSelectAlternateGiftAlternateGwpLineIsNotAValidNumber", locale));
             return "error";
         }
 
         ShoppingCartItem cartLine = cart.findCartItem(alternateGwpLine);
         if (cartLine == null) {
-            request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no cart line item found for #" + alternateGwpLine + ".");
+        	request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, no cart line item found for #" + alternateGwpLine + ".");
             return "error";
         }
 
@@ -668,10 +667,11 @@ public class ShoppingCartEvents {
         String partyId = request.getParameter("additionalPartyId");
         String roleTypeId[] = request.getParameterValues("additionalRoleTypeId");
         List eventList = new LinkedList();
+        Locale locale = UtilHttp.getLocale(request);
         int i;
 
         if (UtilValidate.isEmpty(partyId) || roleTypeId.length < 1) {
-            request.setAttribute("_ERROR_MESSAGE_", "partyId and/or roleTypeId not defined.");
+        	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderPartyIdAndOrRoleTypeIdNotDefined", locale));
             return "error";
         }
 
@@ -698,10 +698,11 @@ public class ShoppingCartEvents {
         String partyId = request.getParameter("additionalPartyId");
         String roleTypeId[] = request.getParameterValues("additionalRoleTypeId");
         List eventList = new LinkedList();
+        Locale locale = UtilHttp.getLocale(request);
         int i;
 
         if (UtilValidate.isEmpty(partyId) || roleTypeId.length < 1) {
-            request.setAttribute("_ERROR_MESSAGE_", "partyId and/or roleTypeId not defined.");
+        	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderPartyIdAndOrRoleTypeIdNotDefined", locale));
             return "error";
         }
 
@@ -807,6 +808,7 @@ public class ShoppingCartEvents {
        String termValue = request.getParameter("termValue");
        String termDays = request.getParameter("termDays");
        String termIndex = request.getParameter("termIndex");
+       Locale locale = UtilHttp.getLocale(request);
 
        Double dTermValue = null;
        Long lTermDays = null;
@@ -818,18 +820,18 @@ public class ShoppingCartEvents {
            termDays = null;
        }
        if (UtilValidate.isEmpty(termTypeId)) {
-           request.setAttribute("_ERROR_MESSAGE_", "Order Term Type is required.");
+       	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderOrderTermTypeIsRequired", locale));
            return "error";
        }
        if (!UtilValidate.isSignedDouble(termValue)) {
-          request.setAttribute("_ERROR_MESSAGE_", "Order Term Value: "+UtilValidate.isSignedFloatMsg);
+       	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderOrderTermValue", UtilMisc.toMap("orderTermValue",UtilValidate.isSignedFloatMsg), locale));
           return "error";
        }
        if (termValue != null) {
           dTermValue =new Double(termValue);
        }
        if (!UtilValidate.isInteger(termDays)) {
-          request.setAttribute("_ERROR_MESSAGE_", "Order Term Days: "+UtilValidate.isLongMsg);
+       	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderOrderTermDays", UtilMisc.toMap("orderTermDays",UtilValidate.isLongMsg), locale));
           return "error";
        }
        if (termDays != null) {
@@ -869,6 +871,7 @@ public class ShoppingCartEvents {
       Security security = (Security) request.getAttribute("security");
       GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
       String finalizeMode = (String)session.getAttribute("finalizeMode");
+      Locale locale = UtilHttp.getLocale(request);
 
       ShoppingCart cart = getCartObject(request);
 
@@ -877,7 +880,7 @@ public class ShoppingCartEvents {
           cart.setOrderType(orderMode);
           session.setAttribute("orderMode", orderMode);
       } else {
-          request.setAttribute("_ERROR_MESSAGE_", "Please select either sale or purchase order.");
+      	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderPleaseSelectEitherSaleOrPurchaseOrder", locale));
           return "error";
       }
 
@@ -914,7 +917,7 @@ public class ShoppingCartEvents {
               if (hasPermission) {
                   cart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
               } else {
-                  request.setAttribute("_ERROR_MESSAGE_", "You do not have permission to take orders for this store.");
+              	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderYouDoNotHavePermissionToTakeOrdersForThisStore", locale));
                   cart.clear();
                   session.removeAttribute("orderMode");
                   return "error";
@@ -926,7 +929,7 @@ public class ShoppingCartEvents {
       }
 
       if ("SALES_ORDER".equals(cart.getOrderType()) && UtilValidate.isEmpty(cart.getProductStoreId())) {
-          request.setAttribute("_ERROR_MESSAGE_", "A Product Store MUST be selected for a Sales Order.");
+      	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderAProductStoreMustBeSelectedForASalesOrder", locale));
           cart.clear();
           session.removeAttribute("orderMode");
           return "error";
@@ -965,7 +968,7 @@ public class ShoppingCartEvents {
                   //
               }
               if (thisParty == null) {
-                  request.setAttribute("_ERROR_MESSAGE_", "Could not locate the selected party.");
+              	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderCouldNotLocateTheSelectedParty", locale));
                   return "error";
               } else {
                   cart.setOrderPartyId(partyId);

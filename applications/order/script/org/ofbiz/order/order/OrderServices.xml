@@ -95,7 +95,7 @@
     </simple-method>
     <simple-method method-name="createOrderShipment" short-description="Create OrderShipment">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run createOrderShipment you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateOrderShipment"/>
         </check-permission>
         <string-to-field string="Create OrderShipment" field-name="operationName"/>
         <check-errors/>
@@ -108,7 +108,7 @@
     </simple-method>
     <simple-method method-name="deleteOrderShipment" short-description="Delete OrderShipment">
         <check-permission permission="ORDERMGR" action="_DELETE">
-            <fail-message message="Security Error: to run deleteOrderShipment you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunDeleteOrderShipment"/>
         </check-permission>
         <string-to-field string="Delete OrderShipment" field-name="operationName"/>
         <check-errors/>
@@ -121,7 +121,7 @@
     
     <simple-method method-name="checkCreateOrderRequirement" short-description="Create OrderRequirementCommitment and Requirement">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run checkCreateOrderRequirement you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCheckCreateOrderRequirement"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="OrderHeader" auto-field-map="true" value-name="order"/>
@@ -154,7 +154,7 @@
 
     <simple-method method-name="checkCreateStockRequirement" short-description="Create a Requirement if QOA goes under the minimum stock level">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run checkCreateStockRequirement you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCheckCreateStockRequirement"/>
         </check-permission>
         <check-errors/>
         

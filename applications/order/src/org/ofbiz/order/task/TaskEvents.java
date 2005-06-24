@@ -28,12 +28,14 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -52,6 +54,7 @@ import org.ofbiz.service.ModelService;
 public class TaskEvents {
     
     public static final String module = TaskEvents.class.getName();
+    public static final String resource_error = "OrderErrorUiLabels";
     
     /** Complete assignment event */
     public static String completeAssignment(HttpServletRequest request, HttpServletResponse response) {
@@ -64,10 +67,12 @@ public class TaskEvents {
         String roleTypeId = (String) parameterMap.remove("roleTypeId");
         String fromDateStr = (String) parameterMap.remove("fromDate");
         java.sql.Timestamp fromDate = null;
+        Locale locale = UtilHttp.getLocale(request);
+        
         try {       
             fromDate = (java.sql.Timestamp) ObjectType.simpleTypeConvert(fromDateStr, "java.sql.Timestamp", null, null);
         } catch (GeneralException e) {
-            request.setAttribute("_ERROR_MESSAGE_", "Invalid date format for fromDate");
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderInvalidDateFormatForFromDate", locale));
             return "error";        
         }
         
@@ -81,7 +86,7 @@ public class TaskEvents {
                 return "error";
             }
         } catch (GenericServiceException e) {
-            request.setAttribute("_ERROR_MESSAGE_", "Problems invoking the complete assignment service");
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderProblemsInvokingTheCompleteAssignmentService", locale));
             return "error";
         }
 
@@ -92,6 +97,7 @@ public class TaskEvents {
     public static String acceptRoleAssignment(HttpServletRequest request, HttpServletResponse response) { 
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+        Locale locale = UtilHttp.getLocale(request);
         
         if (addToOrderRole(request)) {
             try {                
@@ -99,7 +105,7 @@ public class TaskEvents {
                 eh.invoke("", "wfAcceptRoleAssignment", request, response); 
             } catch (EventHandlerException e) {
                 Debug.logError(e, "Invocation error", module);
-                request.setAttribute("_ERROR_MESSAGE_", "Failed to invoke the wfAcceptRoleAssignment service.");
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderFailedToInvokeTheWfAcceptRoleAssignmentService", locale));
                 return "error";
             } 
             return "success";                         
@@ -111,6 +117,7 @@ public class TaskEvents {
     public static String delegateAndAcceptAssignment(HttpServletRequest request, HttpServletResponse response) {        
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+        Locale locale = UtilHttp.getLocale(request);
         
         if (addToOrderRole(request)) {
             try {
@@ -118,7 +125,7 @@ public class TaskEvents {
                 eh.invoke("", "wfDelegateAndAcceptAssignmet", request, response); 
             } catch (EventHandlerException e) {
                 Debug.logError(e, "Invocation error", module);
-                request.setAttribute("_ERROR_MESSAGE_", "Failed to invoke the wfDelegateAndAcceptAssignmet service.");
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderFailedToInvokeTheWfDelegateAndAcceptAssignmentService", locale));
                 return "error";
             }    
             return "success";                       

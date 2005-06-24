@@ -76,6 +76,7 @@ public class CheckOutHelper {
 
     public static final String module = CheckOutHelper.class.getName();
     public static final String resource = "OrderUiLabels";
+    public static final String resource_error = "OrderErrorUiLabels";
 
     protected LocalDispatcher dispatcher = null;
     protected GenericDelegator delegator = null;
@@ -618,7 +619,7 @@ public class CheckOutHelper {
         try {
             party = this.delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Problems getting Party record", module);
+        	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingPartyRecord", cart.getLocale()), module);
             party = null;
         }
 
@@ -656,7 +657,7 @@ public class CheckOutHelper {
                 this.delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 // not a fatal error; so just print a message
-                Debug.logWarning(e, "Problems storing order email contact information", module);
+            	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsStoringOrderEmailContactInformation", cart.getLocale()), module);
             }
         }
 
@@ -924,7 +925,7 @@ public class CheckOutHelper {
                     }
                 } else {
                     // should never happen
-                    return ServiceUtil.returnError("Please contact customer service; payment return code unknown.");
+                	return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderPleaseContactCustomerService;PaymentReturnCodeUnknown.", (cart != null ? cart.getLocale() : Locale.getDefault())));
                 }
             } else {
                 // result returned null == service failed
@@ -1108,7 +1109,7 @@ public class CheckOutHelper {
         }
 
         if (blacklistFound != null && blacklistFound.size() > 0) {
-            return ServiceUtil.returnError("failed");
+        	return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderFailed", (cart != null ? cart.getLocale() : Locale.getDefault())));
         } else {
             return ServiceUtil.returnSuccess("success");
         }

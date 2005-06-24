@@ -27,6 +27,7 @@ import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -36,7 +37,9 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -57,6 +60,7 @@ import org.ofbiz.service.LocalDispatcher;
 public class OrderManagerEvents {
 
     public static final String module = OrderManagerEvents.class.getName();
+    public static final String resource_error = "OrderErrorUiLabels";
 
     public static String processOfflinePayments(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
@@ -64,6 +68,7 @@ public class OrderManagerEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        Locale locale = UtilHttp.getLocale(request);
 
         if (session.getAttribute("OFFLINE_PAYMENTS") != null) {
             String orderId = (String) request.getAttribute("order_id");
@@ -77,7 +82,7 @@ public class OrderManagerEvents {
                     placingCustomer = EntityUtil.getFirst(pRoles);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problems looking up order payment preferences", module);
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Error processing offline payments.");
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderErrorProcessingOfflinePayments", locale));
                 return "error";
             }
             if (paymentPrefs != null) {
@@ -98,7 +103,7 @@ public class OrderManagerEvents {
                     delegator.storeAll(toBeStored);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems storing payment information", module);
-                    request.setAttribute("_ERROR_MESSAGE_", "<li>Problem storing received payment information.");
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderProblemStoringReceivedPaymentInformation", locale));
                     return "error";
                 }
 
@@ -114,6 +119,7 @@ public class OrderManagerEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        Locale locale = UtilHttp.getLocale(request);
 
         String orderId = request.getParameter("orderId");
 
@@ -123,7 +129,7 @@ public class OrderManagerEvents {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems reading order header from datasource.", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems reading order header information.");
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderProblemsReadingOrderHeaderInformation", locale));
             return "error";
         }
 
@@ -140,12 +146,12 @@ public class OrderManagerEvents {
             paymentMethodTypes = delegator.findByAnd("PaymentMethodType", pmtFields);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting payment types", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems with PaymentType lookup.");
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderProblemsWithPaymentTypeLookup", locale));
             return "error";
         }
 
         if (paymentMethodTypes == null) {
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems with PaymentType lookup.");
+        	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderProblemsWithPaymentTypeLookup", locale));
             return "error";
         }
 
@@ -157,7 +163,7 @@ public class OrderManagerEvents {
                 placingCustomer = EntityUtil.getFirst(pRoles);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up order payment preferences", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Error processing offline payments.");
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderErrorProcessingOfflinePayments", locale));
             return "error";
         }
 
@@ -173,7 +179,7 @@ public class OrderManagerEvents {
                 try {
                     paymentTypeAmount = NumberFormat.getNumberInstance().parse(amountStr).doubleValue();
                 } catch (java.text.ParseException pe) {
-                    request.setAttribute("_ERROR_MESSAGE_", "<li>Problems payment parsing amount.");
+                	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderProblemsPaymentParsingAmount", locale));
                     return "error";
                 }
                 if (paymentTypeAmount > 0.00) {
@@ -240,7 +246,7 @@ public class OrderManagerEvents {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems storing payment information", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problem storing received payment information.");
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderProblemStoringReceivedPaymentInformation", locale));
             return "error";
         }
 

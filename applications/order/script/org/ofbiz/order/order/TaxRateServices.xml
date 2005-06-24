@@ -28,7 +28,7 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-method method-name="createTaxRate" short-description="Create a Tax Rate">
-        <check-permission permission="TAXRATE" action="_CREATE"><fail-message message="Security Error: to run createTaxRate you must have the TAXRATE_CREATE or TAXRATE_ADMIN permission"/></check-permission>
+        <check-permission permission="TAXRATE" action="_CREATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateTaxRate"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="SimpleSalesTaxLookup"/>
@@ -47,7 +47,7 @@
     </simple-method>
 
     <simple-method method-name="removeTaxRate" short-description="Remove a Tax Rate">
-        <check-permission permission="TAXRATE" action="_DELETE"><fail-message message="Security Error: to run removeTaxRate you must have the TAXRATE_DELETE or TAXRATE_ADMIN permission"/></check-permission>
+        <check-permission permission="TAXRATE" action="_DELETE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveTaxRate"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="SimpleSalesTaxLookup" value-name="lookupPKMap"/>

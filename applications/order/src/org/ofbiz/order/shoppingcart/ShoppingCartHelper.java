@@ -65,6 +65,7 @@ public class ShoppingCartHelper {
 
     public static final String resource = "OrderUiLabels";
     public static String module = ShoppingCartHelper.class.getName();
+    public static final String resource_error = "OrderErrorUiLabels";
 
     // The shopping cart to manipulate
     private ShoppingCart cart = null;
@@ -129,7 +130,7 @@ public class ShoppingCartHelper {
             try {
                 java.sql.Timestamp.valueOf((String) context.get("itemDesiredDeliveryDate"));
             } catch (IllegalArgumentException e) {
-                return ServiceUtil.returnError("Invalid Desired Delivery Date: Syntax Error");
+            	return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderInvalidDesiredDeliveryDateSyntaxError",this.cart.getLocale()));
             }
         } else {
             context.remove("itemDesiredDeliveryDate");
@@ -306,7 +307,7 @@ public class ShoppingCartHelper {
 
         if (noItems) {
             result = ServiceUtil.returnSuccess();
-            result.put("_ERROR_MESSAGE_", "No items found to add.");
+            result.put("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderNoItemsFoundToAdd", this.cart.getLocale()));
             return result; // don't return error because this is a non-critical error and should go back to the same page
         }
 
@@ -423,7 +424,7 @@ public class ShoppingCartHelper {
                             }
                         }
                         if (requirementAlreadyInCart) {
-                            if (Debug.warningOn()) Debug.logWarning("The requirement [" + requirementId + "] is already in the cart, not adding.", module);
+                        	if (Debug.warningOn()) Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderTheRequirementIsAlreadyInTheCartNotAdding", UtilMisc.toMap("requirementId",requirementId), cart.getLocale()), module);
                             continue;
                         }
                         try {
@@ -492,7 +493,7 @@ public class ShoppingCartHelper {
                         }
                     }
                     if (quoteAlreadyInCart) {
-                        if (Debug.warningOn()) Debug.logWarning("The quote [" + quoteId + "] is already in the cart, not adding.", module);
+                    	if (Debug.warningOn()) Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderTheQuoteIsAlreadyInTheCartNotAdding", UtilMisc.toMap("quoteId",quoteId), cart.getLocale()), module);
                         continue;
                     }
 
@@ -534,7 +535,7 @@ public class ShoppingCartHelper {
         
         if (noItems) {
             result = ServiceUtil.returnSuccess();
-            result.put("_ERROR_MESSAGE_", "No items found to add.");
+            result.put("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderNoItemsFoundToAdd", this.cart.getLocale()));
             return result; // don't return error because this is a non-critical error and should go back to the same page
         } else {
             this.cart.setQuoteId(quoteId);
@@ -555,9 +556,9 @@ public class ShoppingCartHelper {
         String errMsg = null;
 
         if (categoryId == null || categoryId.length() <= 0) {
-            errMsg = UtilProperties.getMessage(resource,"cart.category_not_specified_to_add_from", this.cart.getLocale());
+        	errMsg = UtilProperties.getMessage(resource,"cart.category_not_specified_to_add_from", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
-//          result = ServiceUtil.returnError("No category specified to add from.");
+//          result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderNoCategorySpecifiedToAddFrom.",this.cart.getLocale()));
             return result;
         }
 
@@ -776,11 +777,11 @@ public class ShoppingCartHelper {
                         deleteList.add(this.cart.findCartItem(index));
                     }
                 } catch (NumberFormatException nfe) {
-                    Debug.logWarning(nfe, "Caught number format exception on cart update.", module);
+                	Debug.logWarning(nfe, UtilProperties.getMessage(resource_error,"OrderCaughtNumberFormatExceptionOnCartUpdate", cart.getLocale()));
                 } catch (ParseException pe) {
-                    Debug.logWarning(pe, "Caught parse exception on cart update.", module);
+                	Debug.logWarning(pe, UtilProperties.getMessage(resource_error,"OrderCaughtParseExceptionOnCartUpdate", cart.getLocale()));
                 } catch (Exception e) {
-                    Debug.logWarning(e, "Caught exception on cart update.", module);
+                	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderCaughtExceptionOnCartUpdate", cart.getLocale()));
                 }
             } // else not a parameter we need
         }
@@ -794,7 +795,7 @@ public class ShoppingCartHelper {
                     int index = Integer.parseInt(indexStr);
                     item = this.cart.findCartItem(index);
                 } catch (Exception e) {
-                    Debug.logWarning(e, "Problems getting the cart item by index", module);
+                	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingTheCartItemByIndex", cart.getLocale()));
                 }
                 if (item != null) {
                     deleteList.add(item);
@@ -898,12 +899,12 @@ public class ShoppingCartHelper {
         GenericValue agreement = null;
 
         if ((this.delegator == null) || (this.dispatcher == null) || (this.cart == null)) {
-            result = ServiceUtil.returnError("Dispatcher or Delegator or Cart argument is null");
+        	result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderDispatcherOrDelegatorOrCartArgumentIsNull",this.cart.getLocale()));
             return result;
         }
 
         if ((agreementId == null) || (agreementId.length() <= 0)) {
-            result = ServiceUtil.returnError("No agreement specified");
+        	result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderNoAgreementSpecified",this.cart.getLocale()));
             return result;
         }
 
@@ -911,12 +912,12 @@ public class ShoppingCartHelper {
             agreement = this.delegator.findByPrimaryKeyCache("Agreement",UtilMisc.toMap("agreementId", agreementId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.toString(), module);
-            result = ServiceUtil.returnError("Could not get agreement " + agreementId + "error:" + e.getMessage());
+            result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderCouldNotGetAgreement",UtilMisc.toMap("agreementId",agreementId),this.cart.getLocale()) + UtilProperties.getMessage(resource_error,"OrderError",this.cart.getLocale()) + e.getMessage());
             return result;
         }
 
         if (agreement == null) {
-            result = ServiceUtil.returnError("Could not get agreement " + agreementId);
+        	result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderCouldNotGetAgreement",UtilMisc.toMap("agreementId",agreementId),this.cart.getLocale()));
         } else {
             // set the agreement id in the cart
             cart.setAgreementId(agreementId);
@@ -929,13 +930,13 @@ public class ShoppingCartHelper {
                        try {
                             cart.setCurrency(dispatcher,currencyUomId);
                        } catch (CartItemModifyException ex) {
-                            result = ServiceUtil.returnError("Set currency error:" + ex.getMessage());
+                       	result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderSetCurrencyError",this.cart.getLocale()) + ex.getMessage());
                             return result;
                        }
                  }
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString(), module);
-                result = ServiceUtil.returnError("Could not get agreementItems through " + agreementId + "error: " + e.getMessage());
+                result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderCouldNotGetAgreementItemsThrough",UtilMisc.toMap("agreementId",agreementId),this.cart.getLocale()) + UtilProperties.getMessage(resource_error,"OrderError",this.cart.getLocale()) + e.getMessage());
                 return result;
             }
 
@@ -955,7 +956,7 @@ public class ShoppingCartHelper {
                   }
             } catch (GenericEntityException e) {
                   Debug.logWarning(e.toString(), module);
-                  result = ServiceUtil.returnError("Could not get agreementTerms through " + agreementId + "error:" + e.getMessage());
+                  result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderCouldNotGetAgreementTermsThrough",UtilMisc.toMap("agreementId",agreementId),this.cart.getLocale())  + UtilProperties.getMessage(resource_error,"OrderError",this.cart.getLocale()) + e.getMessage());
                   return result;
             }
         }
@@ -969,7 +970,7 @@ public class ShoppingCartHelper {
             this.cart.setCurrency(this.dispatcher,currencyUomId);
             result = ServiceUtil.returnSuccess();
          } catch (CartItemModifyException ex) {
-             result = ServiceUtil.returnError("Set currency error:" + ex.getMessage());
+         	result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"Set currency error",this.cart.getLocale()) + ex.getMessage());
              return result;
          }
         return result;
@@ -1007,7 +1008,7 @@ public class ShoppingCartHelper {
                 productSupplier=(GenericValue) productSuppliers.get(0);
             }
         } catch (GenericServiceException e) {
-           Debug.logWarning("Run service [getSuppliersForProduct] error:" + e.getMessage(), module);
+        	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", cart.getLocale()) + e.getMessage(), module);
         }
         return productSupplier;
     }
