@@ -33,9 +33,9 @@
     <!-- create a new Quote -->
     <simple-method method-name="createQuote" short-description="Create a Quote">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run createQuote you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuote"/>
         </check-permission>
-        <check-errors/>
+		<check-errors/>
         <!-- create new entity and create all the fields -->
         <make-value value-name="newEntity" entity-name="Quote"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
@@ -56,7 +56,7 @@
     <!-- update an existing Quote -->
     <simple-method method-name="updateQuote" short-description="Update an existing Quote">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run updateQuote you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateQuote"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
@@ -102,7 +102,7 @@
     <!-- create a new QuoteItem -->
     <simple-method method-name="createQuoteItem" short-description="Create a QuoteItem">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run createQuoteItem you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteItem"/>
         </check-permission>
         <check-errors/>
         <!-- create new entity and create all the fields -->
@@ -124,7 +124,7 @@
     <!-- update an existing QuoteItem -->
     <simple-method method-name="updateQuoteItem" short-description="Update an existing QuoteItem">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run updateQuoteItem you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateQuoteItem"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="QuoteItem" value-name="quoteItem" auto-field-map="true"/>
@@ -137,7 +137,7 @@
     <!-- remove an quoteItem -->
     <simple-method method-name="removeQuoteItem" short-description="Remove a QuoteItem">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run removeQuoteItem you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveQuoteItem"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="QuoteItem" value-name="quoteItem" auto-field-map="true"/>
@@ -148,7 +148,7 @@
     <!-- create a new QuoteAttribute -->
     <simple-method method-name="createQuoteAttribute" short-description="Create a QuoteAttribute">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run createQuoteAttribute you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteAttribute"/>
         </check-permission>
         <check-errors/>
         <!-- create new entity and create all the fields -->
@@ -162,7 +162,7 @@
     <!-- update an existing QuoteAttribute -->
     <simple-method method-name="updateQuoteAttribute" short-description="Update an existing QuoteAttribute">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run updateQuoteAttribute you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateQuoteAttribute"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="QuoteAttribute" value-name="quoteAttribute" auto-field-map="true"/>
@@ -175,7 +175,7 @@
     <!-- remove an existing QuoteAttribute -->
     <simple-method method-name="removeQuoteAttribute" short-description="Remove an existing QuoteAttribute">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run removeQuoteAttribute you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveQuoteAttribute"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="QuoteAttribute" value-name="quoteAttribute" auto-field-map="true"/>
@@ -187,7 +187,7 @@
     <!-- create a new QuoteCoefficient -->
     <simple-method method-name="createQuoteCoefficient" short-description="Create a QuoteCoefficient">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run createQuoteCoefficient you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteCoefficient"/>
         </check-permission>
         <check-errors/>
         <!-- create new entity and create all the fields -->
@@ -201,7 +201,7 @@
     <!-- update an existing QuoteCoefficient -->
     <simple-method method-name="updateQuoteCoefficient" short-description="Update an existing QuoteCoefficient">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run updateQuoteCoefficient you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateQuoteCoefficient"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="QuoteCoefficient" value-name="quoteCoefficient" auto-field-map="true"/>
@@ -214,7 +214,7 @@
     <!-- remove an existing QuoteCoefficient -->
     <simple-method method-name="removeQuoteCoefficient" short-description="Remove an existing QuoteCoefficient">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run removeQuoteCoefficient you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveQuoteCoefficient"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="QuoteCoefficient" value-name="quoteCoefficient" auto-field-map="true"/>
@@ -226,8 +226,8 @@
     <!-- create a new Quote and QuoteItem for a given CustRequest -->
     <simple-method method-name="createQuoteAndQuoteItemForRequest" short-description="Create a Quote">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run createQuoteAndQuoteItemForRequest you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
-        </check-permission>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteAndQuoteItemForRequest"/>        
+		</check-permission>
         <check-errors/>
         <entity-one entity-name="CustRequest" value-name="custRequest" auto-field-map="true"/>
         <entity-one entity-name="CustRequestItem" value-name="custRequestItem" auto-field-map="true"/>
@@ -239,7 +239,7 @@
         
         <if-empty field-name="custRequest">
             <add-error>
-                <fail-message message="Error: CustRequest with id [${custRequestId}] doesn't exist."/>
+                <fail-property resource="OrderErrorUiLabels" property="OrderErrorCustRequestWithIdDoesntExist"/>
             </add-error>
         </if-empty>
         <check-errors/>
@@ -291,7 +291,7 @@
     </simple-method>
     <simple-method method-name="autoUpdateQuotePrice" short-description="Auto update a QuoteItem price">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-message message="Security Error: to run autoUpdateQuotePrice you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunAutoUpdateQuotePrice"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="QuoteItem" value-name="quoteItem" auto-field-map="true"/>

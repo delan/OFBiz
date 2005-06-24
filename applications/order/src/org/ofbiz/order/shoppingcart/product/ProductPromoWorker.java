@@ -72,6 +72,7 @@ import org.ofbiz.service.ServiceUtil;
 public class ProductPromoWorker {
 
     public static final String module = ProductPromoWorker.class.getName();
+    public static final String resource_error = "OrderErrorUiLabels";
 
     public static List getStoreProductPromos(GenericDelegator delegator, LocalDispatcher dispatcher, ServletRequest request) {
         List productPromos = new LinkedList();
@@ -102,7 +103,7 @@ public class ProductPromoWorker {
                 Debug.logError(e, "Error looking up store with id " + productStoreId, module);
             }
             if (productStore == null) {
-                Debug.logWarning("No store found with id " + productStoreId + ", not doing promotions", module);
+            	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
                 return productPromos;
             }
 
@@ -168,7 +169,7 @@ public class ProductPromoWorker {
             Debug.logError(e, "Error looking up store with id " + productStoreId, module);
         }
         if (productStore == null) {
-            Debug.logWarning("No store found with id " + productStoreId + ", not doing promotions", module);
+        	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
             return;
         }
 
@@ -908,7 +909,7 @@ public class ProductPromoWorker {
                 return false;
             }
         } else {
-            Debug.logWarning("An un-supported productPromoCond input parameter (lhs) was used: " + productPromoCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
+        	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondInputParameterLhs", UtilMisc.toMap("inputParamEnumId",productPromoCond.getString("inputParamEnumId")), cart.getLocale()), module);
             return false;
         }
 
@@ -929,7 +930,7 @@ public class ProductPromoWorker {
             } else if ("PPC_GTE".equals(operatorEnumId)) {
                 if (compare >= 0) return true;
             } else {
-                Debug.logWarning("An un-supported productPromoCond condition was used: " + operatorEnumId + ", returning false, ie check failed", module);
+            	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondCondition", UtilMisc.toMap("operatorEnumId",operatorEnumId) , cart.getLocale()), module);
                 return false;
             }
         }
@@ -996,7 +997,7 @@ public class ProductPromoWorker {
                             } else if (!"Y".equals((String) invReqResult.get("available"))) {
                                 productId = null;
                                 product = null;
-                                Debug.logWarning("Not applying GWP because productId [" + productId + "] is out of stock for productPromoAction: " + productPromoAction, module);
+                                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNotApplyingGwpBecauseProductIdIsOutOfStockForProductPromoAction", cart.getLocale()), module);
                             }
                         } catch (GenericServiceException e) {
                             String errMsg = "Fatal error calling inventory checking services: " + e.toString();
@@ -1044,7 +1045,7 @@ public class ProductPromoWorker {
                         productId = alternateGwpProductId;
                         product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
                     } else {
-                        Debug.logWarning("An alternateGwpProductId was in place, but was either not valid or is no longer in stock for ID: " + alternateGwpProductId, module);
+                    	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnAlternateGwpProductIdWasInPlaceButWasEitherNotValidOrIsNoLongerInStockForId", UtilMisc.toMap("alternateGwpProductId",alternateGwpProductId), cart.getLocale()), module);
                     }
                 }
                 

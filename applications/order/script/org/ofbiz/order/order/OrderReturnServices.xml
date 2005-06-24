@@ -36,7 +36,7 @@
     	    </and>
     	  </condition>
     	  <then>
-    	    <add-error><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateReturnHeader"/></add-error>
     	  </then>
     	</if>
         <check-errors/>
@@ -74,7 +74,7 @@
         <field-to-result field-name="responseMessage" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
         <check-errors/>
 
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -97,13 +97,13 @@
     	    </and>
     	  </condition>
     	  <then>
-    	    <add-error><fail-message message="Security Error: to run createReturnItem you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateReturnItem"/></add-error>
     	  </then>
     	</if>
         <check-errors/>
 
         <if-compare field-name="returnQuantity" map-name="parameters" operator="equals" value="0" type="Double">
-            <add-error><fail-message message="No return quantity available; previous returns may exist."/></add-error>
+            <add-error><fail-property resource="OrderErrorUiLabels" property="OrderNoReturnQuantityAvailablePreviousReturnsMayExist"/></add-error>
         	<check-errors/>
         </if-compare>
 
@@ -130,21 +130,21 @@
             </if>
 
             <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="returnableQuantity" type="Double">
-                <add-error><fail-message message="Requested return quantity [${parameters.returnQuantity}] not available; previous returns may exist [${returnableQuantity}]."/></add-error>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderRequestedReturnQuantityNotAvailablePreviousReturnsMayExist"/></add-error>
             </if-compare-field>
 
             <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
-                <add-error><fail-message message="Return quantity [${parameters.returnQuantity}] cannot exceed the ordered quantity [${orderItem.quantity}]."/></add-error>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnQuantityCannotExceedTheOrderedQuantity"/></add-error>
             </if-compare-field>
 
             <if-compare-field field-name="returnPrice" map-name="parameters" operator="greater" to-field-name="returnablePrice" type="Double">
-                <add-error><fail-message message="Return price [${parameters.returnPrice}] cannot exceed the purchase price [${returnablePrice}]."/></add-error>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedThePurchasePrice"/></add-error>
             </if-compare-field>
             <check-errors/>
 
             <else>
                 <if-compare field-name="returnItemType" map-name="parameters" operator="not-equals" type="String" value="ADJUSTMENT">
-                    <add-error><fail-message message="Illegal returnItemType passed."/></add-error>
+                    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderIllegalReturnItemTypePassed"/></add-error>
                     <check-errors/>
                 </if-compare>
             </else>
@@ -175,7 +175,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateReturnItem" short-description="Update Return Item">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
         <check-errors/>
 
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -187,13 +187,13 @@
         <store-value value-name="returnItem"/>
     </simple-method>
     <simple-method method-name="removeReturnItem" short-description="Remove Return Item">
-        <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Security Error: to run removeReturnItem you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-permission permission="ORDERMGR" action="_DELETE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveQuoteItem"/></check-permission>
         <check-errors/>
 
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="headerPKMap"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="headerPKMap" value-name="returnHeader"/>
         <if-compare field-name="statusId" map-name="returnHeader" operator="not-equals" type="String" value="RETURN_REQUESTED">
-            <add-error><fail-message message="Cannot remove items once return is approved"/></add-error>
+            <add-error><fail-property resource="OrderErrorUiLabels" property="OrderCannotRemoveItemsOnceReturnIsApproved"/></add-error>
             <check-errors/>
         </if-compare>
 
@@ -205,7 +205,7 @@
     </simple-method>
 
     <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
         <check-errors/>
 
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -288,7 +288,7 @@
     	    </and>
     	  </condition>
     	  <then>
-    	    <add-error><fail-message message="Security Error: to run quickReturnFromOrder you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunQuickReturnFromOrder"/></add-error>
     	  </then>
     	</if>
         <check-errors/>

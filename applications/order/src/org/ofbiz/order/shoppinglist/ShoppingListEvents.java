@@ -71,6 +71,7 @@ public class ShoppingListEvents {
     public static final String module = ShoppingListEvents.class.getName();
     public static final String resource = "OrderUiLabels";
     public static final String err_resource = "OrderErrorUiLabel";
+    public static final String resource_error = "OrderErrorUiLabels";
     public static final String PERSISTANT_LIST_NAME = "auto-save";
 
     public static String addBulkFromCart(HttpServletRequest request, HttpServletResponse response) {
@@ -78,6 +79,7 @@ public class ShoppingListEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        Locale locale = UtilHttp.getLocale(request);
 
         String shoppingListId = request.getParameter("shoppingListId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
@@ -141,7 +143,7 @@ public class ShoppingListEvents {
             try {            
                 cartIdInt = new Integer(items[i]);
             } catch (Exception e) {
-                Debug.logWarning(e, "Illegal character in selectedItem field", module);
+            	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderIllegalCharacterInSelectedItemField", cart.getLocale()), module);
             }
             if (cartIdInt != null) {            
                 ShoppingCartItem item = cart.findCartItem(cartIdInt.intValue());
@@ -176,6 +178,7 @@ public class ShoppingListEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        Locale locale = UtilHttp.getLocale(request);
 
         String shoppingListId = request.getParameter("shoppingListId");
         String includeChild = request.getParameter("includeChild");
@@ -288,12 +291,12 @@ public class ShoppingListEvents {
                 errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.added_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg + "\n");
             } catch (CartItemModifyException e) {
-                Debug.logWarning(e, "Problems adding item from list to cart", module);
+            	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsAddingItemFromListToCart", cart.getLocale()));
                 Map messageMap = UtilMisc.toMap("productId", productId);
                 errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.problem_adding_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg + "\n");
             } catch (ItemNotFoundException e) {
-                Debug.logWarning(e, "Product not found!", module);
+            	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProductNotFound", cart.getLocale()));
                 Map messageMap = UtilMisc.toMap("productId", productId);
                 errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.problem_adding_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg + "\n");
@@ -333,8 +336,7 @@ public class ShoppingListEvents {
         try {
             result = dispatcher.runSync("updateShoppingListItem", serviceInMap);
         } catch (GenericServiceException e) {
-            String errMsg = UtilProperties.getMessage(ShoppingListEvents.err_resource,
-                    "shoppingListEvents.error_calling_update", locale) + ": "  + e.toString();            
+        	String errMsg = UtilProperties.getMessage(ShoppingListEvents.err_resource,"shoppingListEvents.error_calling_update", locale) + ": "  + e.toString();            
             request.setAttribute("_ERROR_MESSAGE_", errMsg);            
             String errorMsg = "Error calling the updateShoppingListItem in handleShoppingListItemVariant: " + e.toString();
             Debug.logError(e, errorMsg, module);

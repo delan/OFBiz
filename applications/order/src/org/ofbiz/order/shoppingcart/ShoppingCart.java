@@ -44,6 +44,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -68,6 +69,7 @@ import org.ofbiz.service.LocalDispatcher;
 public class ShoppingCart implements Serializable {
 
     public static final String module = ShoppingCart.class.getName();
+    public static final String resource_error = "OrderErrorUiLabels";
 
     private String orderType = "SALES_ORDER"; // default orderType
     private String channel = "UNKNWN_SALES_CHANNEL"; // default channel enum
@@ -675,7 +677,7 @@ public class ShoppingCart implements Serializable {
             }
             //} catch (GenericServiceException e) {
         } catch (Exception e) {
-            Debug.logWarning("Run service [getSuppliersForProduct] error:" + e.getMessage(), module);
+        	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", locale) + e.getMessage(), module);
         }
         return supplierProduct;
     }
@@ -943,7 +945,7 @@ public class ShoppingCart implements Serializable {
                 String checkResult = ProductPromoWorker.checkCanUsePromoCode(promoCode, partyId, this.getDelegator());
                 if (checkResult != null) {
                     promoCodeIter.remove();
-                    Debug.logWarning("On user change promo code was removed because: " + checkResult, module);
+                    Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderOnUserChangePromoCodeWasRemovedBecause", UtilMisc.toMap("checkResult",checkResult), locale), module);
                 }
             }
             

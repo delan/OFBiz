@@ -103,7 +103,9 @@ highIndex = 0;
 if (lookupFlag != null) {
     showAll = request.getParameter("showAll") != null ? request.getParameter("showAll") : "N";
     paramList = paramList + "&lookupFlag=" + lookupFlag + "&showAll=" + showAll;
-
+    locale = UtilHttp.getLocale(request);
+    uiLabelMap = UtilProperties.getResourceBundleMap("OrderErrorUiLabels", locale);
+    
     // the lookup entity name
     entityName = "ReturnHeader";
     lookupErrorMessage = null;
@@ -127,7 +129,7 @@ if (lookupFlag != null) {
         if (requestedUserLogin != null) {
             partyId = requestedUserLogin.getString("partyId");
         } else {
-            lookupErrorMessage = "No userLogin found for userLoginId: " + userLoginId;
+            lookupErrorMessage = uiLabelMap.get("OrderNoUserLoginFoundForUserLoginId") + userLoginId;
         }
     }
 

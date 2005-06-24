@@ -76,6 +76,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public static String module = ShoppingCartItem.class.getName();
     public static final String resource = "OrderUiLabels";
+    public static final String resource_error = "OrderErrorUiLabels";
     public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId", "surveyResponses",
                                               "itemDesiredDeliveryDate", "itemComment"};
 
@@ -806,7 +807,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             try {
                 ShoppingListEvents.fillAutoSaveList(cart, dispatcher);
             } catch (GeneralException e) {
-                Debug.logWarning(e, "Unable to store auto-save cart", module);
+            	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderUnableToStoreAutoSaveCart", locale));
             }
         }
 
@@ -1057,8 +1058,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             try {
                 return Timestamp.valueOf(ddDate);
             } catch (IllegalArgumentException e) {
-                Debug.logWarning(e, "Problem getting itemDesiredDeliveryDate for "
-                        + this.getProductId(), module);
+            	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemGettingItemDesiredDeliveryDateFor", UtilMisc.toMap("productId",this.getProductId()), locale));
                 return null;
             }
         }
@@ -1081,7 +1081,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         try {
             orderItemType = this.getDelegator().findByPrimaryKeyCache("OrderItemType", UtilMisc.toMap("orderItemTypeId", this.getItemType()));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Problems getting OrderItemType for: " + this.getItemType(), module);
+        	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingOrderItemTypeFor", UtilMisc.toMap("orderItemTypeId",this.getItemType()), locale));
         }
         if (itemType != null) {
             return orderItemType.getString("description");

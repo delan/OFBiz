@@ -38,7 +38,7 @@
                 </and>
             </condition>
             <then>
-                <add-error><fail-message message="Security Error: to run createShoppingList for another party you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/></add-error>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateShoppingListForAnotherParty"/></add-error>
             </then>
         </if>
         <check-errors/>
@@ -270,7 +270,7 @@
                 </and>
             </condition>
             <then>
-                <add-error><fail-message message="Security Error: to run ${parentMethodName} for another party you must have the PARTYMGR_${permissionAction} or PARTYMGR_ADMIN permission"/></add-error>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunForAnotherParty"/></add-error>
             </then>
         </if>                
     </simple-method>    
@@ -285,7 +285,7 @@
                 </and>
             </condition>
             <then>
-                <add-error><fail-message message="Security Error: to run ${parentMethodName} for another party you must have the PARTYMGR_${permissionAction} or PARTYMGR_ADMIN permission"/></add-error>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunForAnotherParty"/></add-error>
             </then>
         </if>        
     </simple-method>

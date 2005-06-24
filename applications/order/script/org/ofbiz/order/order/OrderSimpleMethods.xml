@@ -28,7 +28,7 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-method method-name="createOrderAdjustment" short-description="Create a ShipmentReceipt">
-        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createOrderAdjustment you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-permission permission="ORDERMGR" action="_CREATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateOrderAdjustement"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="OrderAdjustment"/>
@@ -65,7 +65,7 @@
     </simple-method>
 
     <simple-method method-name="updateOrderStatusFromReceipt" short-description="Update Order Status From ShipmentReceipt">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateOrderStatusFromReceipt you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateOrderStatusFromReceipt"/></check-permission>
         <check-errors/>
 
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="lookupPKMap"/>
