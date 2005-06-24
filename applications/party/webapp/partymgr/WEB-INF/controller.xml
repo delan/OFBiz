@@ -716,7 +716,7 @@
     <view-map name="login" type="screen" page="component://party/widget/partymgr/CommonScreens.xml#login"/>
     <view-map name="createNew" type="jpublish" page="/party/createnew.ftl"/>
 
-    <view-map name="viewprofile" type="jpublish" page="/party/viewprofile.ftl"/>
+    <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
     <view-map name="viewroles" type="jpublish" page="/party/viewroles.ftl"/>
     <view-map name="EditPartyRelationships" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyRelationships"/>
     <view-map name="viewvendor" type="jpublish" page="/party/viewvendor.ftl"/>

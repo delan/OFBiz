@@ -27,16 +27,10 @@
  * @version    1.0
  */
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#assign delegator = requestAttributes.delegator>
-<#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 
 <script language='JavaScript'>
     function setNowFromDate(formName) { eval('document.' + formName + '.fromDate.value="${nowStr}"'); }
 </script>
-
-<#-- Main Heading -->
-<#include "ProfileTabBar.ftl"/>
 
 <#if party?has_content>
 <div style="text-align: right;">
@@ -48,7 +42,7 @@
 </div>
 <br/>
 
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -147,11 +141,11 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 <#-- ============================================================= -->
 <#if monthsToInclude?exists && totalSubRemainingAmount?exists && totalOrders?exists>
 <br/>
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -174,11 +168,11 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 </#if>
 <#-- ============================================================= -->
 <br/>
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -308,10 +302,10 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 <#-- ============================================================= -->
 <br/>
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -456,11 +450,11 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 
 <#-- AVS Strings -->
 <br/>
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -493,11 +487,11 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 
 <#-- UserLogins -->
 <br/>
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -559,11 +553,11 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 
 <#-- Visits -->
 <br/>
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -618,12 +612,12 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 
 <#-- Current Cart -->
 <#if isCustomer?exists>
 <br/>
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -680,12 +674,12 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 </#if>
 
 <#-- Party Notes -->
 <br/>
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -732,11 +726,8 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</table>
 
 <#else>
     ${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${partyId?if_exists}
-</#if>
-<#else>
-  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
 </#if>

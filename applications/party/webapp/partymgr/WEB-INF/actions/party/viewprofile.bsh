@@ -38,15 +38,6 @@ import org.ofbiz.party.party.*;
 import org.ofbiz.accounting.payment.*;
 import org.ofbiz.securityext.login.*;
 
-userLogin = session.getAttribute("userLogin");
-
-externalLoginKey = request.getAttribute("externalLoginKey");
-externalKeyParam = (externalLoginKey == null) ? "" : ("&externalLoginKey=" + externalLoginKey);
-context.put("externalKeyParam", externalKeyParam);
-
-dispatcher = request.getAttribute("dispatcher");
-delegator = request.getAttribute("delegator");
-
 partyId = request.getParameter("party_id");
 userLoginId = request.getParameter("userlogin_id");
 if (partyId == null && userLoginId != null) {
