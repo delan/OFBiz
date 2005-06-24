@@ -38,6 +38,8 @@
 </#if>
 
 <#if (listSize > 0)>
+<#assign selectedFeatureApplTypeId = selFeatureApplTypeId?if_exists>
+
     <#if productId?has_content>
       <#assign productString = "&productId=" + productId>
     </#if>
@@ -47,11 +49,11 @@
             <span class="tabletext">
             <b>
             <#if (viewIndex > 0)>
-            <a href="<@ofbizUrl>/ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+            <a href="<@ofbizUrl>/ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&productFeatureApplTypeId=${selectedFeatureApplTypeId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             ${lowIndex+1} - ${highIndex} of ${listSize}
             <#if (listSize > highIndex)>
-            | <a href="<@ofbizUrl>/ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+            | <a href="<@ofbizUrl>/ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&productFeatureApplTypeId=${selectedFeatureApplTypeId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
             </b>
             </span>
@@ -78,7 +80,6 @@
   </tr>
 <#assign rowCount = 0>
 <#if (listSize > 0)>
-<#assign selectedFeatureApplTypeId = selFeatureApplTypeId>
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType")>
     <tr valign="middle" class="viewOneTR1">

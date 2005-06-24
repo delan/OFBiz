@@ -63,24 +63,13 @@ if (productId != null && productId.length() > 0) {
 
 productFeaturesSize = delegator.findCountByAnd("ProductFeature", UtilMisc.toMap("productFeatureCategoryId", productFeatureCategoryId));
 
-int viewIndex = 0;
-int viewSize = 10;
 int highIndex = 0;
 int lowIndex = 0;
 int listSize = (int) productFeaturesSize;
 
-try {
-    viewIndex = Integer.valueOf((String) parameters.get("VIEW_INDEX")).intValue();
-} catch (Exception e) {
+if (viewIndex == null) {
     viewIndex = 0;
 }
-
-try {
-    viewSize = Integer.valueOf((String) parameters.get("VIEW_SIZE")).intValue();
-} catch (Exception e) {
-    viewSize = 10;
-}
-
 lowIndex = viewIndex * viewSize;
 highIndex = (viewIndex + 1) * viewSize;
 if (listSize < highIndex) {
