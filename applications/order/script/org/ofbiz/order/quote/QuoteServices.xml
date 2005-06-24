@@ -230,6 +230,7 @@
         </check-permission>
         <check-errors/>
         <entity-one entity-name="CustRequest" value-name="custRequest" auto-field-map="true"/>
+        <entity-one entity-name="CustRequestItem" value-name="custRequestItem" auto-field-map="true"/>
         <make-value value-name="lookupRequestRole" entity-name="CustRequestRole"/>
         <field-to-field field-name="parameters.custRequestId" to-field-name="lookupRequestRole.custRequestId"/>
         <string-to-field string="REQ_REQUESTER" field-name="lookupRequestRole.roleTypeId"/>
@@ -261,6 +262,9 @@
         
         <field-to-field field-name="requester.partyId" to-field-name="newQuote.partyId"/>
         <field-to-field field-name="custRequest.custRequestName" to-field-name="newQuote.quoteName"/>
+        <field-to-field field-name="custRequest.description" to-field-name="newQuote.description"/>
+        <field-to-field field-name="custRequest.maximumAmountUomId" to-field-name="newQuote.currencyUomId"/>
+        <field-to-field field-name="custRequestItem.story" to-field-name="newQuoteItem.comments"/>
         <create-value value-name="newQuote"/>
         <create-value value-name="newQuoteItem"/>
         <!-- copy the roles from the request to the quote-->

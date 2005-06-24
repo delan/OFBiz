@@ -185,6 +185,13 @@
                 <option key="1"/>
             </drop-down>
         </field>
+        <field name="maximumAmountUomId" title="${uiLabelMap.AccountingCurrency}">
+            <drop-down allow-empty="true">
+                <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="custRequestDate" title="Request Date"><date-time type="timestamp"/></field>
         <field name="responseRequiredDate" title="Response Required Date"><date-time type="timestamp"/></field>
         
@@ -266,7 +273,7 @@
                 </entity-options>
             </drop-down>
         </field>
-
+        <field name="quantity" map-name="parameters" use-when="quoteItem==null"><text/></field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -274,18 +281,6 @@
     <form name="CreateQuoteAndQuoteItemForRequest" type="single" extends="EditQuoteItemForRequest"
             target="createQuoteAndQuoteItemForRequest" title="" default-map-name="quoteItem"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <!--
-        <auto-fields-entity entity-name="QuoteItem" default-field-type="edit"/>
-        <field name="custRequestId"><hidden/></field>
-        <field name="custRequestItemSeqId"><hidden/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
-        -->
-        <field name="quoteId"><hidden/></field>
-        <field name="quoteItemSeqId"><hidden/></field>
-        <field name="attrName"><text/></field>
-        <field name="attrValue"><text/></field>
     </form>
 
     <form name="ListRequestItemNotes" type="list" use-row-submit="true" 
@@ -346,6 +341,7 @@
                 <option key="REQ_TAKER" description="${uiLabelMap.WorkEffortRequestTaker}"/>
                 <option key="REQ_REQUESTER" description="${uiLabelMap.WorkEffortRequestingParty}"/>
                 <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
+                <option key="AGENT" description="${uiLabelMap.OrderAgent}"/>
             </drop-down>
         </field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">

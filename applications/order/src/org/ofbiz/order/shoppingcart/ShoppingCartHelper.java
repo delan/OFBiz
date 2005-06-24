@@ -511,7 +511,9 @@ public class ShoppingCartHelper {
                         }
                         // FIXME: in this way the promotions created in the setQuantity method (called inside the makeItem method)
                         //        are not cleaned up.
-                        sci.setBasePrice(quoteUnitPrice);
+                        if (quoteUnitPrice > 0) {
+                            sci.setBasePrice(quoteUnitPrice);
+                        }
                         this.cart.addItem(0, sci);
                         noItems = false;
                     } catch (CartItemModifyException e) {
