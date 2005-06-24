@@ -58,14 +58,14 @@ function refreshInfo() {
         <td width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
-              <td><div class='boxhead'>Find Party</div></td>
+              <td><div class='boxhead'>${uiLabelMap.PartyFindParty}</div></td>
               <td align='right'>
                 <div class="tabletext">
                   <#if requestParameters.hideFields?default("N") == "Y">
-                    <a href="<@ofbizUrl>/findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                    <a href="<@ofbizUrl>/findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
                   <#else>
-                    <#if partyList?exists><a href="<@ofbizUrl>/findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                    <a href="javascript:lookupParty(true);" class="submenutextright">Lookup Party(s)</a>
+                    <#if partyList?exists><a href="<@ofbizUrl>/findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
+                    <a href="javascript:lookupParty(true);" class="submenutextright">${uiLabelMap.PartyLookupParty}</a>
                   </#if>
                 </div>
               </td>
@@ -78,43 +78,43 @@ function refreshInfo() {
                 <td align='center' width='100%'>
                   <table border='0' cellspacing='0' cellpadding='2'>
                     <tr>
-                      <td width='25%' align='right' nowrap><div class='tableheadtext'>Contact Info:</div></td>
+                      <td width='25%' align='right' nowrap><div class='tableheadtext'>${uiLabelMap.PartyContactInfo} :</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td nowrap>
                         <div class="tabletext">
-                          <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked</#if>>None&nbsp;
-                          <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked</#if>>Postal&nbsp;
-                          <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked</#if>>Telecom&nbsp;
-                          <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked</#if>>Other&nbsp;
+                          <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked</#if>>${uiLabelMap.PartyNone}&nbsp;
+                          <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked</#if>>${uiLabelMap.PartyPostal}&nbsp;
+                          <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked</#if>>${uiLabelMap.PartyTelecom}&nbsp;
+                          <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked</#if>>${uiLabelMap.PartyOther}&nbsp;
                       </td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyId}:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyId} :</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='partyId'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyUserLogin}:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyUserLogin} :</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='userlogin_id' value='${requestParameters.userLoginId?if_exists}'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyLastName}:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyLastName} :</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='lastName' value='${requestParameters.lastName?if_exists}'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyFirstName}:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyFirstName} :</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='firstName' value='${requestParameters.firstName?if_exists}'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyGroupName}:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyGroupName} :</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='groupName' value='${requestParameters.groupName?if_exists}'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>Role Type:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyRoleType} :</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td>
                         <select name='roleTypeId' class='selectBox'>
@@ -122,7 +122,7 @@ function refreshInfo() {
                             <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
                             <option value="${currentRole.roleTypeId}">---</option>
                           </#if>
-                          <option value="ANY">Any Role Type</option>
+                          <option value="ANY">${uiLabelMap.CommonAnyRoleType}</option>
                           <#list roleTypes as roleType>
                             <option value="${roleType.roleTypeId}">${roleType.description}</option>
                           </#list>
@@ -132,22 +132,22 @@ function refreshInfo() {
                     <#if extInfo == 'P'>
                       <tr><td colspan="3"><hr class="sepbar"></td></tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>Address 1:</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonAddress1} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td><input type='text' class='inputBox' name='address1' value='${requestParameters.address1?if_exists}'></td>
                       </tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>Address 2:</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonAddress2} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td><input type='text' class='inputBox' name='address2' value='${requestParameters.address2?if_exists}'></td>
                       </tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>City:</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonCity} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td><input type='text' class='inputBox' name='city' value='${requestParameters.city?if_exists}'></td>
                       </tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>State/Province:</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonStateProvince} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td>
                           <select name='stateProvinceGeoId' class='selectBox'>
@@ -155,13 +155,13 @@ function refreshInfo() {
                               <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
                               <option value="${currentStateGeo.geoId}">---</option>
                             </#if>
-                            <option value="ANY">Any State/Province</option>
+                            <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
                             ${pages.get("/includes/states.ftl")}
                           </select>
                         </td>
                       </tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>Postal Code:</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPostalCode} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td><input type='text' class='inputBox' name='postalCode' value='${requestParameters.postalCode?if_exists}'></td>
                       </tr>
@@ -169,17 +169,17 @@ function refreshInfo() {
                     <#if extInfo == 'T'>
                       <tr><td colspan="3"><hr class="sepbar"></td></tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>Country Code:</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyCountryCode} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td><input type='text' class='inputBox' name='countryCode' value='${requestParameters.countryCode?if_exists}'></td>
                       </tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>Area Code:</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyAreaCode} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td><input type='text' class='inputBox' name='areaCode' value='${requestParameters.areaCode?if_exists}'></td>
                       </tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>Contact Number:</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyContactNumber} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td><input type='text' class='inputBox' name='contactNumber' value='${requestParameters.contactNumber?if_exists}'></td>
                       </tr>
@@ -187,7 +187,7 @@ function refreshInfo() {
                     <#if extInfo == 'O'>
                       <tr><td colspan="3"><hr class="sepbar"></td></tr>
                       <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>Contact Info (Email, URL, etc):</div></td>
+                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyContactInfoList} :</div></td>
                         <td width='5%'>&nbsp;</td>
                         <td><input type='text' class='inputBox' name='infoString' value='${requestParameters.infoString?if_exists}'></td>
                       </tr>
@@ -198,7 +198,7 @@ function refreshInfo() {
                       <td width='5%'>&nbsp;</td>
                       <td>
                         <div class="tabletext">
-                          <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupParty(true);">&nbsp;Show All Records
+                          <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupParty(true);">&nbsp;${uiLabelMap.CommonShowAllRecords}
                         </div>
                       </td>
                     </tr>
@@ -226,22 +226,22 @@ function refreshInfo() {
         <td width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
-              <td width="50%"><div class="boxhead">Party(s) Found</div></td>
+              <td width="50%"><div class="boxhead">${uiLabelMap.PartyPartiesFound}</div></td>
               <td width="50%">
                  <div class="boxhead" align="right">
                   <#if (partyListSize > 0)>
                     <#if (viewIndex > 1)>
-                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                     <#else>
-                      <span class="submenutextdisabled">Previous</span>
+                      <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                     </#if>
                     <#if (partyListSize > 0)>
                       <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${partyListSize}</span>
                     </#if>
                     <#if (partyListSize > highIndex)>
-                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                     <#else>
-                      <span class="submenutextrightdisabled">Next</span>
+                      <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                     </#if>
                   </#if>
                   &nbsp;
@@ -252,16 +252,16 @@ function refreshInfo() {
 
           <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr>
-              <td><div class="tableheadtext">Party #</div></td>
-              <td><div class="tableheadtext">User Login</div></td>
-              <td><div class="tableheadtext">Name</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.PartyPartyId}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.PartyUserLogin}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.PartyName}</div></td>
               <#if extInfo?default("") == "P">
-                <td><div class="tableheadtext">Postal Code</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.PartyPostalCode}</div></td>
               </#if>
               <#if extInfo?default("") == "T">
-                <td><div class="tableheadtext">Area Code</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.PartyAreaCode}</div></td>
               </#if>
-              <td><div class="tableheadtext">Type</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.PartyType}</div></td>
               <td>&nbsp;</td>
             </tr>
             <tr><td colspan="6"><hr class="sepbar"></td></tr>
@@ -279,13 +279,13 @@ function refreshInfo() {
                         <#assign userLogins = partyRow.getRelated("UserLogin")>
                         <#if (userLogins.size() > 0)>
                           <#if (userLogins.size() > 1)>
-                            (Many)
+                            (${uiLabelMap.CommonMany})
                           <#else>
                             <#assign userLogin = userLogins.get(0)>
                             ${userLogin.userLoginId}
                           </#if>
                         <#else>
-                          (None)
+                          (${uiLabelMap.CommonNone})
                         </#if>
                       </#if>
                     </div>
@@ -296,13 +296,13 @@ function refreshInfo() {
                         <#if partyRow.lastName?has_content>
                           ${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if>
                         <#else>
-                          (No Name Found)
+                          (${uiLabelMap.PartyNoNameFound})
                         </#if>
                       <#elseif partyRow.containsKey("groupName")>
                         <#if partyRow.groupName?has_content>
                           ${partyRow.groupName}
                         <#else>
-                          (No Name Found)
+                          (${uiLabelMap.PartyNoNameFound})
                         </#if>
                       <#else>
                         ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(partyRow, true)}
@@ -339,7 +339,7 @@ function refreshInfo() {
             <#else>
               <tr>
                 <td colspan='5'>
-                  <span class='head3'>No party(s) found.</span>
+                  <span class='head3'>${uiLabelMap.PartyNoPartiesFound}</span>
                   &nbsp;&nbsp;<a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="buttontext">[Create New]</a>
                 </td>
               </tr>
