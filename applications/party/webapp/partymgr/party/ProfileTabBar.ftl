@@ -74,6 +74,10 @@
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
         <a href="/ordermgr/control/checkinits?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>
       </#if>
+      <#if security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+        <a href="/accounting/control/findPayment?lookupFlag=Y&hideFields=Y&toPartyId=${partyId}${externalKeyParam}>" class="buttontext">[${uiLabelMap.AccountingPaymentsSent}]</a>
+        <a href="/accounting/control/findPayment?lookupFlag=Y&hideFields=Y&fromPartyId=${partyId}${externalKeyParam}>" class="buttontext">[${uiLabelMap.AccountingPaymentsReceived}]</a>
+      </#if>
     </td>
   </tr>
 </table>

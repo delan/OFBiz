@@ -62,6 +62,29 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="viewprofile">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="headerItem" value="view"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+
+                <set field="labelTitleProperty" value="PartyTaxInfos"/>
+
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/viewprofile.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="EditPartyRelationships">
         <section>
