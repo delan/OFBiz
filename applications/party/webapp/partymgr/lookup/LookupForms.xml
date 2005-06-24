@@ -27,7 +27,10 @@
     <form name="lookupPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupPerson" title="" type="single">
-        <auto-fields-entity entity-name="Person" default-field-type="find" />
+        <!--<auto-fields-entity entity-name="Person" default-field-type="find" />-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find default-value="equals"/></field>
+      	 <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find default-value="equals"/></field>
+        <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find default-value="equals"/></field>
         <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPerson" default-title-style="tableheadtext"
@@ -39,15 +42,25 @@
             <field-map field-name="entityName" env-name="entityName"/>
           </service>
         </actions>
-        <auto-fields-entity entity-name="Person" default-field-type="display"/>
-        <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
+        <!--<auto-fields-entity entity-name="Person" default-field-type="display"/>-->
+        <field name="partyId"  widget-style="buttontext" title="${uiLabelMap.PartyPartyId}">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
         </field>
+      	<field name="firstName" title="${uiLabelMap.PartyFirstName}"><display/></field>
+       <field name="middleName" title="${uiLabelMap.PartyMiddleInitial}"><display/></field>
+       <field name="lastName"  title="${uiLabelMap.PartyLastName}"><display/></field>
+       <field name="personalTitle" title="${uiLabelMap.PartyPersonalTitle}"><display/></field>
+      	<field name="suffix" title="${uiLabelMap.PartySuffix}"><display/></field>
+     	<field name="nickname" title="${uiLabelMap.PartyNickname}"><display/></field>
     </form>
     <form name="lookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupPerson" title="" type="single">
-        <auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="find" />
+        <!--<auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="find" />-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find default-value="equals"/></field>
+        <field name="userLoginId" title="${uiLabelMap.PartyUserLoginId}"><text-find default-value="equals"/></field>
+        <field name="lastName" title="${uiLabelMap.PartyLastName}"><text-find default-value="equals"/></field>
+        <field name="createdDate" title="${uiLabelMap.PartyCreatedDate}"><date-find/></field>
         <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
@@ -59,14 +72,19 @@
             <field-map field-name="entityName" env-name="entityName"/>
           </service>
         </actions>
-        <auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="display"/>
+        <!--<auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="display"/>-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display/></field>
+        <field name="userLoginId" title="${uiLabelMap.PartyUserLoginId}"><display/></field>
+        <field name="lastName" title="${uiLabelMap.PartyLastName}"><display/></field>
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}', '${userLoginId}', '${parameters.webSitePublishPoint}')"/>
         </field>
     </form>
     <form name="lookupPartyGroup" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="LookupPartyGroup" 
         title="" type="single">
-        <auto-fields-entity entity-name="PartyGroup" default-field-type="find"/>
+        <!--<auto-fields-entity entity-name="PartyGroup" default-field-type="find"/>-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find default-value="equals"/></field>
+      	<field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find default-value="equals"/></field>
         <field name="submitButton" title="Find" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -79,7 +97,10 @@
             <field-map field-name="entityName" env-name="entityName"/>
           </service>
         </actions>
-        <auto-fields-entity entity-name="PartyGroup" default-field-type="display"/>
+        <!--<auto-fields-entity entity-name="PartyGroup" default-field-type="display"/>-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><display/></field>
+        <field name="comments" title="${uiLabelMap.PartyComments}"><display/></field>
         <field name="partyId" title="partyId" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
         </field>
@@ -87,15 +108,16 @@
     <form name="lookupPartyName" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupPartyName" title="" type="single">
-        <auto-fields-entity entity-name="PartyNameView" default-field-type="find" />
-        <field name="partyTypeId">
+        <!--<auto-fields-entity entity-name="PartyNameView" default-field-type="find" />-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find default-value="equals"/></field>
+        <field name="partyTypeId" title="${uiLabelMap.PartyTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="PartyType"/>
             </drop-down>
         </field>
-        <field name="middleName"><hidden/></field>
-        <field name="personalTitle"><hidden/></field>
-        <field name="suffix"><hidden/></field>
+      	 <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find default-value="equals"/></field>
+        <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find default-value="equals"/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find default-value="equals"/></field> 
         <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyName" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
@@ -106,16 +128,16 @@
             <field-map field-name="entityName" env-name="entityName"/>
           </service>
         </actions>
-        <auto-fields-entity entity-name="PartyNameView" default-field-type="display"/>
-        <field name="partyId" title="partyId" widget-style="buttontext">
+        <!--<auto-fields-entity entity-name="PartyNameView" default-field-type="display"/>-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"  widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
         </field>
-        <field name="partyTypeId">
+        <field name="partyTypeId" title="${uiLabelMap.PartyPartyTypeId}"> 
             <display-entity also-hidden="false" entity-name="PartyType" description="${description}"/>
         </field>
-        <field name="middleName"><hidden/></field>
-        <field name="personalTitle"><hidden/></field>
-        <field name="suffix"><hidden/></field>
+      	 <field name="firstName" title="${uiLabelMap.PartyFirstName}"><display/></field>
+        <field name="lastName"  title="${uiLabelMap.PartyLastName}"><display/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><display/></field>
     </form>
 
 </forms>
