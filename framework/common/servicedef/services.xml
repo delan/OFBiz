@@ -123,6 +123,19 @@
         <attribute name="onlyIncludePeriodTypeIdList" type="List" mode="IN" optional="true"/>
         <attribute name="customTimePeriodList" type="List" mode="OUT" optional="true"/>
     </service>
+    <service name="findLastClosedDate" engine="java"
+            location="org.ofbiz.common.period.PeriodServices" invoke="findLastClosedDate" auth="true">
+        <description>Find the last date before findDate whose TimePeriod is marked isClosed="Y" for organizationPartyId and periodTypeId combination.
+            If none are found, ie, no closed CustomTimePeriod exists, then return the earliest date available for any
+            CustomTimePeriod of the organizationPartyId and periodTypeId.
+            If no findDate is given, then use the current moment (nowTimestamp).
+        </description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="findDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="lastClosedDate" type="Timestamp" mode="OUT" optional="true"/>
+        <attribute name="lastClosedTimePeriod" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
+    </service>
 
     <!-- Status services -->
     <service name="getStatusItems" engine="java"
