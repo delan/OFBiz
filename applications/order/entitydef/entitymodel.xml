@@ -1465,6 +1465,7 @@
       <field name="responseRequiredDate" type="date-time"></field>
       <field name="custRequestName" type="name"></field>
       <field name="description" type="description"></field>
+      <field name="maximumAmountUomId" type="id"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -1478,6 +1479,9 @@
       </relation>
       <relation type="one" fk-name="CUST_REQ_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQ_CUOM" rel-entity-name="Uom">
+        <key-map field-name="maximumAmountUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="CustRequestTypeAttr">
         <key-map field-name="custRequestTypeId"/>

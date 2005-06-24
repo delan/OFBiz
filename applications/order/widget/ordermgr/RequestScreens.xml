@@ -319,6 +319,7 @@
                 <entity-one entity-name="CustRequest" value-name="custRequest"/>
                 <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
                 <entity-one entity-name="QuoteItem" value-name="quoteItem"/>
+                <set field="parameters.quantity" from-field="custRequestItem.quantity"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
@@ -345,6 +346,8 @@
                 <set field="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
                 <entity-one entity-name="CustRequest" value-name="custRequest"/>
                 <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+                <entity-one entity-name="QuoteItem" value-name="quoteItem"/>
+                <set field="parameters.quantity" from-field="custRequestItem.quantity"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
