@@ -30,10 +30,10 @@ visibility: hidden;
 #ecom-header {
 position: relative;
 background: #ffffff;
-height: 75px;
+height: 80px;
 voice-family: "\"}\"";
 voice-family: inherit;
-height: 75px;
+height: 80px;
 /* border:1px solid #000; */
 }
 #ecom-header #left {
@@ -132,6 +132,8 @@ background: transparent;
 vertical-align: middle;
 margin: 0px;
 padding: 0px;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 12px;
 }
 
 #ecom-header-bar ul li { 
