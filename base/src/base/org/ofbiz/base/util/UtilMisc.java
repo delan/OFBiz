@@ -314,6 +314,11 @@ public class UtilMisc {
         return 0;
     }
 
+    /**
+     * Returns a double from value, where value could either be a Double or a String
+     * @param value
+     * @return
+     */
     public static double toDouble(Object value) {
         if (value != null) {
             if (value instanceof Double) {
@@ -325,6 +330,21 @@ public class UtilMisc {
         return 0.0;
     }
 
+    /**
+     * Adds value to the key entry in theMap, or creates a new one if not already there
+     * @param theMap
+     * @param key
+     * @param value
+     */
+    public static void addToDoubleInMap(Map theMap, Object key, Double value) {
+        Double curValue = (Double) theMap.get(key);
+        if (curValue != null) {
+            theMap.put(key, new Double(curValue.doubleValue() + value.doubleValue()));
+        } else {
+            theMap.put(key, value);
+        }
+    }
+    
     /**
      * Parse a locale string Locale object
      * @param localeString The locale string (en_US)
