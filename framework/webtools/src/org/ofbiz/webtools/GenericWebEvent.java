@@ -55,7 +55,7 @@ import org.ofbiz.security.Security;
 public class GenericWebEvent {
     
     public static final String module = GenericWebEvent.class.getName();
-    public static final String err_resource = "WebtoolsErrorUiLabel";
+    public static final String err_resource = "WebtoolsErrorUiLabels";
 
     /** An HTTP WebEvent handler that updates a Generic entity
      *
