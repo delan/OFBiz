@@ -27,11 +27,7 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 
-delegator = request.getAttribute("delegator");
-userLogin = session.getAttribute("userLogin");
-partyId = request.getParameter("party_id");
-if (partyId == null) partyId = request.getParameter("partyId");
-if (partyId == null) partyId = (String) request.getAttribute("partyId");
+partyId = parameters.get("partyId");
 if (UtilValidate.isEmpty(partyId)) partyId = userLogin.getString("partyId");
 context.put("partyId", partyId);
 
@@ -45,8 +41,6 @@ context.put("partyIdFrom", partyIdFrom);
 
 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
 context.put("party", party);
-context.put("lookupPerson", party.getRelatedOne("Person"));
-context.put("lookupGroup", party.getRelatedOne("PartyGroup"));
 
 eventId = request.getParameter("communicationEventId");
 if (eventId != null) {
@@ -79,4 +73,3 @@ context.put("contactMechTypes", contactMechTypes);
 // get role types
 roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
 context.put("roleTypes", roleTypes);
-

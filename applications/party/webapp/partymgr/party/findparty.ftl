@@ -24,9 +24,7 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <script language="JavaScript" type="text/javascript">
-<!-- //
 function lookupParty(click) {
     partyIdValue = document.lookupparty.partyId.value;
     userLoginIdValue = document.lookupparty.userlogin_id.value;
@@ -46,10 +44,8 @@ function refreshInfo() {
     document.lookupparty.hideFields.value = "N";
     document.lookupparty.submit();
 }
-// -->
 </script>
 
-<#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
   <form method='post' name="lookupparty" action="<@ofbizUrl>/findparty</@ofbizUrl>" onsubmit="javascript:lookupParty();">
     <input type='hidden' name='lookupFlag' value='Y'>
     <input type='hidden' name='hideFields' value='Y'>
@@ -212,7 +208,7 @@ function refreshInfo() {
     </table>
     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.lookupparty.submit();">
   </form>
-<#if requestParameters.hideFields?default("N") != "Y">
+<#if parameters.hideFields?default("N") != "Y">
   <script language="JavaScript" type="text/javascript">
     <!--//
       document.lookupparty.partyId.focus();
@@ -354,6 +350,3 @@ function refreshInfo() {
       </tr>
     </table>
   </#if>
-<#else>
-  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
-</#if>

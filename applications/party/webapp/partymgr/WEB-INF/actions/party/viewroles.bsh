@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -36,34 +36,6 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.party.party.*;
 import org.ofbiz.accounting.payment.*;
 import org.ofbiz.securityext.login.*;
-
-externalLoginKey = request.getAttribute("externalLoginKey");
-externalKeyParam = (externalLoginKey == null) ? "" : ("&externalLoginKey=" + externalLoginKey);
-context.put("externalKeyParam", externalKeyParam);
-
-delegator = request.getAttribute("delegator");
-security = request.getAttribute("security");
-
-if (security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {
-    context.put("hasViewPermission", true);
-} else {
-    context.put("hasViewPermission", false);
-}
-if (security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {
-    context.put("hasCreatePermission", true);
-} else {
-    context.put("hasCreatePermission", false);
-}
-if (security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {
-    context.put("hasUpdatePermission", true);
-} else {
-    context.put("hasUpdatePermission", false);
-}
-if (security.hasEntityPermission("PARTYMGR", "_DELETE", session)) {
-    context.put("hasDeletePermission", true);
-} else {
-    context.put("hasDeletePermission", false);
-}
 
 partyId = request.getParameter("party_id");
 if (partyId == null) partyId = request.getParameter("partyId");

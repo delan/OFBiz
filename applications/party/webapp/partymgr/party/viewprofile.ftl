@@ -333,10 +333,10 @@
                   <td align="left">
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
                         <#list paymentMethodValueMaps as paymentMethodValueMap>
-                            <#assign paymentMethod = paymentMethodValueMap.paymentMethod>
+                            <#assign paymentMethod = paymentMethodValueMap.paymentMethod/>
                             <tr>
                               <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
-                                  <#assign creditCard = paymentMethodValueMap.creditCard>
+                                  <#assign creditCard = paymentMethodValueMap.creditCard/>
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
@@ -356,7 +356,8 @@
                                             ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                         </#if>
                                       </b>
-                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.glAccountId?has_content>(for GL Account ${paymentMethod.glAccountId})</#if>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate?if_exists})
                                       <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate})</b></#if>
                                     </div>
                                   </td>
@@ -399,7 +400,8 @@
                                             ${giftCardNumber?default("N/A")}
                                         </#if>
                                       </b>
-                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.glAccountId?has_content>(for GL Account ${paymentMethod.glAccountId})</#if>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate?if_exists})
                                       <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</b></#if>
                                     </div>
                                   </td>
@@ -417,7 +419,8 @@
                                       <b>
                                         ${uiLabelMap.PartyEftAccount}: ${eftAccount.nameOnAccount} - <#if eftAccount.bankName?has_content>${uiLabelMap.PartyBank}: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.PartyAccount} #: ${eftAccount.accountNumber}</#if>
                                       </b>
-                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.glAccountId?has_content>(for GL Account ${paymentMethod.glAccountId})</#if>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate?if_exists})
                                       <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</b></#if>
                                     </div>
                                   </td>
@@ -428,6 +431,16 @@
                                         [${uiLabelMap.CommonUpdate}]</a></div>
                                     </#if>
                                   </td>
+                              <#elseif "COMPANY_CHECK" == paymentMethod.paymentMethodTypeId>
+                                  <td width="90%" valign="top">
+                                    <div class="tabletext">
+                                      <b>Company Check</b> <#if paymentMethod.glAccountId?has_content>(for GL Account ${paymentMethod.glAccountId})</#if>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate?if_exists})
+                                      <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</b></#if>
+                                    </div>
+                                  </td>
+                                  <td width="5">&nbsp;</td>
+                                  <td align="right" valign="top" width='1%' nowrap>&nbsp;</td>
                               </#if>
                               <td align="right" valign="top" width='1%'>
                                 <#if security.hasEntityPermission("PAY_INFO", "_DELETE", session)>

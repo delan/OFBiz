@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">View Party Roles</property>
-    <property name="title-property">PageTitleViewPartyRole</property>
-    <property name="headerItem">view</property>
-    <property name="tabButtonItem">viewroles</property>
-    <content-action name="/party/viewroles.bsh"/>
-</page>
