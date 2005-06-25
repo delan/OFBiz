@@ -1,8 +1,5 @@
 <#--
-/**
- *  Title: Edit Contact Mechanism Page
- *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -23,17 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Aug 22 2001
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    1.0
- * 
+ *@since      1.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && !mechMap.partyContactMech?exists && mechMap.contactMech?exists)>
-  <p><h3>${uiLabelMap.PartyMsgContactNotBelongToYou}</h3></p>
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
-<#else>
   <#if !mechMap.contactMech?exists>
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
@@ -174,7 +164,7 @@
         <select name="stateProvinceGeoId" class="selectBox">
           <option>${(mechMap.postalAddress.stateProvinceGeoId)?if_exists}</option>
           <option></option>
-          ${pages.get("/includes/states.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#states")}
         </select>
       *</td>
     </tr>
@@ -192,7 +182,7 @@
         <select name="countryGeoId" class="selectBox">
           <option>${(mechMap.postalAddress.countryGeoId)?if_exists}</option>
           <option></option>
-          ${pages.get("/includes/countries.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
         </select>
       *</td>
     </tr>
@@ -247,4 +237,3 @@
   <#else>
     &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
   </#if>
-</#if>

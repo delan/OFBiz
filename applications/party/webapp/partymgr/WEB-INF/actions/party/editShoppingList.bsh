@@ -31,16 +31,6 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.product.catalog.*;
 
-externalLoginKey = request.getAttribute("externalLoginKey");
-externalKeyParam = (externalLoginKey == null) ? "" : ("&externalLoginKey=" + externalLoginKey);
-context.put("externalKeyParam", externalKeyParam);
-
-delegator = request.getAttribute("delegator");
-dispatcher = request.getAttribute("dispatcher");
-userLogin = session.getAttribute("userLogin");
-
-parameterMap = UtilHttp.getParameterMap(request);
-
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
 webSiteId = CatalogWorker.getWebSiteId(request);
 
@@ -60,7 +50,7 @@ if (party != null) {
     context.put("lookupGroup", party.getRelatedOne("PartyGroup"));
 }
 
-shoppingListId = parameterMap.get("shoppingListId");
+shoppingListId = parameters.get("shoppingListId");
 if (shoppingListId == null || shoppingListId.equals("")) 
     shoppingListId = request.getAttribute("shoppingListId");
 

@@ -32,8 +32,6 @@ import org.ofbiz.entity.transaction.*;
 
 module = "pendingCommunications.bsh";
 
-delegator = request.getAttribute("delegator");
-userLogin = session.getAttribute("userLogin");
 partyId = userLogin.getString("partyId");
 
 // indicator to display messages FROM this user

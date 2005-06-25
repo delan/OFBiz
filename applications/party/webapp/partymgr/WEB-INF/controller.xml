@@ -351,7 +351,7 @@
 
     <request-map uri="createnew">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="createNew"/>
+        <response name="success" type="view" value="CreateNewParty"/>
     </request-map>
 
     <request-map uri="newcustomer">
@@ -652,43 +652,43 @@
     </request-map>
     <request-map uri="viewCommunicationEvent">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="editCommunication"/>
     </request-map>
     <request-map uri="createCommunicationEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEvent"/>
-        <response name="success" type="view" value="communicationEvent"/>
-        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="editCommunication"/>
     </request-map>
     <request-map uri="updateCommunicationEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateCommunicationEvent"/>
-        <response name="success" type="view" value="communicationEvent"/>
-        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="editCommunication"/>
     </request-map>
     <request-map uri="createCommunicationEventPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventPurpose"/>
-        <response name="success" type="view" value="communicationEvent"/>
-        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="editCommunication"/>
     </request-map>
     <request-map uri="removeCommunicationEventPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeCommunicationEventPurpose"/>
-        <response name="success" type="view" value="communicationEvent"/>
-        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="editCommunication"/>
     </request-map>
     <request-map uri="createCommunicationEventRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventRole"/>
-        <response name="success" type="view" value="communicationEvent"/>
-        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="editCommunication"/>
     </request-map>
     <request-map uri="removeCommunicationEventRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeCommunicationEventRole"/>
-        <response name="success" type="view" value="communicationEvent"/>
-        <response name="success" type="view" value="communicationEvent"/>
+        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="editCommunication"/>
     </request-map>
     <!-- Lookup request mappings -->
     <request-map uri="LookupPartyName">
@@ -712,33 +712,38 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/party/findparty.ftl"/>
+    <view-map name="main" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#findparty"/>
     <view-map name="login" type="screen" page="component://party/widget/partymgr/CommonScreens.xml#login"/>
-    <view-map name="createNew" type="jpublish" page="/party/createnew.ftl"/>
 
+    <view-map name="findparty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#findparty"/>
+    
     <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
-    <view-map name="viewroles" type="jpublish" page="/party/viewroles.ftl"/>
+    <view-map name="viewroles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewroles"/>
     <view-map name="EditPartyRelationships" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyRelationships"/>
-    <view-map name="viewvendor" type="jpublish" page="/party/viewvendor.ftl"/>
+    <view-map name="viewvendor" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewvendor"/>
     <view-map name="EditPartyTaxInfos" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyTaxInfos"/>
-    <view-map name="editcontactmech" type="jpublish" page="/party/editcontactmech.ftl"/>
-
+    <view-map name="editShoppingList" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editShoppingList"/>
+    
+    <view-map name="editcontactmech" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editcontactmech"/>
     <view-map name="editcreditcard" type="region"/>
-    <view-map name="editgiftcard" type="jpublish" page="/party/editgiftcard.ftl"/>
-    <view-map name="editShoppingList" type="jpublish" page="/party/editShoppingList.ftl"/>
+    <view-map name="editgiftcard" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editgiftcard"/>
     <view-map name="editeftaccount" type="region"/>
     <view-map name="editavsoverride" type="region"/>
     <view-map name="editlogin" type="region"/>
 
-    <view-map name="EditUserLoginSecurityGroups" type="region"/>
+    <view-map name="pendingCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#pendingCommunications"/>
+    <view-map name="listCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listCommunications"/>
+    <view-map name="editCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#editCommunication"/>
+    
+    <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateNewParty"/>
     <view-map name="newcustomer" type="region"/>
     <view-map name="editperson" type="region"/>
     <view-map name="editpartygroup" type="region"/>
-    <view-map name="findparty" type="jpublish" page="/party/findparty.ftl"/>
     <view-map name="createnewlogin" type="region"/>
     <view-map name="createnewnote" type="region"/>
     <view-map name="createnewrole" type="region"/>
-
+    <view-map name="EditUserLoginSecurityGroups" type="region"/>
+    
     <view-map name="FindSecurityGroup" type="jpublish" page="/security/FindSecurityGroup.ftl"/>
     <view-map name="EditSecurityGroup" type="jpublish" page="/security/EditSecurityGroup.ftl"/>
     <view-map name="EditSecurityGroupPermissions" type="jpublish" page="/security/EditSecurityGroupPermissions.ftl"/>
@@ -747,14 +752,9 @@
     <view-map name="showvisits" type="jpublish" page="/visit/showvisits.ftl"/>
     <view-map name="visitdetail" type="jpublish" page="/visit/visitdetail.ftl"/>
 
-    <view-map name="pendingCommunications" type="jpublish" page="/communication/pendingCommunications.ftl"/>
-    <view-map name="listCommunications" type="jpublish" page="/communication/listCommunications.ftl"/>
-    <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>
-    
-    <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
     <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
     <view-map name="LookupPartyAndUserLoginAndPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson"/>
     <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
-
     <!-- end of view mappings -->
 </site-conf>

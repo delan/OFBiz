@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,28 +25,20 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if fall?exists>
-  <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
-&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
-<#else>
     <#if !giftCard?exists>
       <p class="head1">${uiLabelMap.AccountingCreateNewGiftCard}</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
-      &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
-      <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#else>
       <p class="head1">${uiLabelMap.AccountingEditGiftCard}</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
-      &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
-      <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type='hidden' name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
 
     <input type='hidden' name='partyId' value='${partyId}'/>
+    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}?partyId=${partyId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
+    <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td width="5">&nbsp;</td>
@@ -83,7 +75,7 @@
           <#if ccExprMonth?has_content>
             <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
           </#if>
-          ${pages.get("/includes/ccmonths.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
         </select>
         <select name="expYear" class='selectBox' onchange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
@@ -94,13 +86,12 @@
           <#if ccExprYear?has_content>
             <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
           </#if>
-          ${pages.get("/includes/ccyears.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
         </select>
       </td>
     </tr>
   </table>
   </form>
 
-  &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}?partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
   &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-</#if>

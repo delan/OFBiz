@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,15 +24,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
-<#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
-
-<#-- Main Heading; only include this if we have a party, may be using this outside the profile area -->
-<#if party?has_content>
-<#include "../party/ProfileTabBar.ftl"/>
-</#if>
 
 <#if partyId?exists>
 <div style="text-align: right;">
@@ -122,7 +113,3 @@
     </tr>
   </#if>
 </table>
-<#else>
-  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
-</#if>
-

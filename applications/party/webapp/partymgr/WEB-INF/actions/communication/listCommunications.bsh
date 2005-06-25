@@ -28,20 +28,11 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 
-externalLoginKey = request.getAttribute("externalLoginKey");
-externalKeyParam = (externalLoginKey == null) ? "" : ("&externalLoginKey=" + externalLoginKey);
-context.put("externalKeyParam", externalKeyParam);
-
-delegator = request.getAttribute("delegator");
-partyId = request.getParameter("party_id");
-if (partyId == null) partyId = request.getParameter("partyId");
-if (partyId == null) partyId = (String) request.getAttribute("partyId");
+partyId = parameters.get("partyId");
 context.put("partyId", partyId);
 
 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
 context.put("party", party);
-context.put("lookupPerson", party.getRelatedOne("Person"));
-context.put("lookupGroup", party.getRelatedOne("PartyGroup"));
 
 // get the sort field
 sortField = request.getParameter("sort");

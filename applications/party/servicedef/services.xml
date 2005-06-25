@@ -419,7 +419,7 @@
 
     <!-- Vendor -->
     <service name="createVendor" engine="simple"
-            location="org/ofbiz/party/party/PartyServices.xml" invoke="createVendor" auth="false">
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="createVendor" auth="true">
         <description>Create Vendor Information</description>
         <auto-attributes entity-name="Vendor" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="Vendor" include="nonpk" mode="IN" optional="true"/>
@@ -430,8 +430,8 @@
         <auto-attributes entity-name="Vendor" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="Vendor" include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeVendor" engine="simple"
-            location="org/ofbiz/party/party/PartyServices.xml" invoke="removeVendor" auth="true">
+    <service name="deleteVendor" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="deleteVendor" auth="true">
         <description>Remove Vendor Information</description>
         <auto-attributes entity-name="Vendor" include="pk" mode="IN" optional="false"/>
     </service>

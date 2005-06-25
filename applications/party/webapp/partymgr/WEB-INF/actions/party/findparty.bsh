@@ -38,13 +38,7 @@ import org.ofbiz.common.*;
 import org.ofbiz.webapp.control.*;
 
 module = "findparty.bsh";
-
-delegator = request.getAttribute("delegator");
 extraInfo = request.getParameter("extInfo");
-
-externalLoginKey = LoginWorker.getExternalLoginKey(request);
-externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
-context.put("externalKeyParam",externalKeyParam);
 
 // get the role types
 roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));

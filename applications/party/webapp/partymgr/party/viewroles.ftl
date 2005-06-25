@@ -25,11 +25,6 @@
  * @version    1.0
  */ 
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if hasViewPermission>
-
-<#-- Main Heading -->
-<#include "ProfileTabBar.ftl"/>
 
 <#-- Party Roles -->
 <br/>
@@ -141,8 +136,4 @@
     </TD>
   </TR>
 </TABLE>
-</#if>
-
-<#else>
-  <h3>${uiLabelMap.PartyMgrViewPermissionError})</h3>
 </#if>

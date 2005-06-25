@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -34,19 +34,12 @@ import org.ofbiz.common.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.webapp.control.*;
 
-String externalLoginKey = LoginWorker.getExternalLoginKey(request);
-String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
-context.put("externalKeyParam",externalKeyParam);
-
-delegator = request.getAttribute("delegator");
-
 String partyId = request.getParameter("party_id");
 if (partyId == null) partyId = request.getParameter("partyId");
 context.put("partyId", partyId);
 
 Map mechMap = new HashMap();
 ContactMechWorker.getContactMechAndRelated(request, partyId, mechMap);
-
 context.put("mechMap", mechMap);
 
 String contactMechId = (String) mechMap.get("contactMechId");
@@ -76,4 +69,3 @@ String donePage = request.getParameter("DONE_PAGE");
 if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
 if (donePage == null || donePage.length() <= 0) donePage = "viewprofile?party_id=" + partyId;
 context.put("donePage", donePage);
-

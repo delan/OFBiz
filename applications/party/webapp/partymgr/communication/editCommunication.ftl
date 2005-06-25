@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,49 +25,15 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 <#-- Main Heading -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="left">
-      <div class="head1">${uiLabelMap.PartyCommunicationsWith}
-        <#if lookupPerson?exists>
-          ${lookupPerson.personalTitle?if_exists}
-          ${lookupPerson.firstName?if_exists}
-          ${lookupPerson.middleName?if_exists}
-          ${lookupPerson.lastName?if_exists}
-          ${lookupPerson.suffix?if_exists}
-        <#else>
-          <#if lookupGroup?exists>
-            ${lookupGroup.groupName?default(uiLabelMap.PartyNoNameGroup)}
-          <#else>
-          "${uiLabelMap.PartyNewUser}"
-          </#if>
-        </#if>
-      </div>
-    </td>
-    <td align="right">
-	  <div class="tabContainer">
-        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyProfile}</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyVendor}</a>
-        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRoles}</a>
-        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyCommunications}</a>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="right" nowrap>
+<div>
       <#if communicationEvent?has_content>
-        <a href="/workeffort/control/task?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewTask}]</a>
-        <a href="/workeffort/control/event?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewEvent}]</a>
+        <a href="/workeffort/control/task?communicationEventId=${communicationEvent.communicationEventId}${externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewTask}]</a>
+        <a href="/workeffort/control/event?communicationEventId=${communicationEvent.communicationEventId}${externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewEvent}]</a>
         <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}&partyIdFrom=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
         <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}&partyIdTo=${partyId}&parentCommEventId=${communicationEvent.communicationEventId}&origCommEventId=${communicationEvent.origCommEventId?default("")}</@ofbizUrl>" class="buttontext">[Reply]</a>
       </#if>
-    </td>
-  </tr>
-</table>
+</div>
 
 <br/>
 <#if communicationEvent?has_content>
@@ -322,9 +288,9 @@
         <div class="tabletext">${(communicationEvent.custRequestId)?default("[none]")}</div>
         </#if>
         <#if (!(communicationEvent.custRequestId)?has_content && (communicationEvent.communicationEventId)?has_content)>
-          &nbsp;<a href="/workeffort/control/request?partyId=${partyId}&communicationEventId=${communicationEvent.communicationEventId}&subject=${communicationEvent.subject?default("")}${requestAttributes.externalKeyParam}" class="buttontext">Create New Request</a>
+          &nbsp;<a href="/workeffort/control/request?partyId=${partyId}&communicationEventId=${communicationEvent.communicationEventId}&subject=${communicationEvent.subject?default("")}${externalKeyParam}" class="buttontext">Create New Request</a>
         <#elseif ((communicationEvent.custRequestId)?has_content)>
-          &nbsp;<a href="/workeffort/control/request?custRequestId=${communicationEvent.custRequestId}${requestAttributes.externalKeyParam}" class="buttontext">View Request</a>
+          &nbsp;<a href="/workeffort/control/request?custRequestId=${communicationEvent.custRequestId}${externalKeyParam}" class="buttontext">View Request</a>
         </#if>
       </td>
     </tr>
@@ -408,8 +374,3 @@
     </#if>
   </form>
 </table>
-
-
-<#else>
-  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
-</#if>
