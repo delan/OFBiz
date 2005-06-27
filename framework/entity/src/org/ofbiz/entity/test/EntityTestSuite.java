@@ -26,6 +26,7 @@ package org.ofbiz.entity.test;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -372,7 +373,7 @@ public class EntityTestSuite extends TestCase {
         try {
             List newValues = new LinkedList();
             for (int i = 0; i < TEST_COUNT; i++) {
-                newValues.add(delegator.makeValue("Testing", UtilMisc.toMap("testingId", getTestId(i))));
+                newValues.add(delegator.makeValue("Testing", UtilMisc.toMap("testingId", getTestId("T1-", i))));
             }
             delegator.storeAll(newValues);
             List newlyCreatedValues = delegator.findAll("Testing", UtilMisc.toList("testingId"));
@@ -381,8 +382,7 @@ public class EntityTestSuite extends TestCase {
             assertTrue("GenericEntityException:" + e.toString(), false);
             return;
         } finally {
-            List values = delegator.findAll("Testing");
-            delegator.removeAll(values);
+            delegator.removeByAnd("Testing", new HashMap());  // empty HashMap for conditions means remove everything
         }
     }
 
@@ -392,7 +392,7 @@ public class EntityTestSuite extends TestCase {
     public void testCreateManyAndStoreOneAtATime() throws Exception {
         try {
             for (int i = 0; i < TEST_COUNT; i++){
-                delegator.create(delegator.makeValue("Testing", UtilMisc.toMap("testingId", getTestId(i))));
+                delegator.create(delegator.makeValue("Testing", UtilMisc.toMap("testingId", getTestId("T2-", i))));
             }
             List newlyCreatedValues = delegator.findAll("Testing", UtilMisc.toList("testingId"));
             TestCase.assertEquals("Test to create " + TEST_COUNT + " and store one at a time: ", TEST_COUNT, newlyCreatedValues.size());
@@ -400,19 +400,14 @@ public class EntityTestSuite extends TestCase {
             assertTrue("GenericEntityException:" + e.toString(), false);
             return;
         } finally {
-            List values = delegator.findAll("Testing");
-            for (Iterator vit = values.iterator(); vit.hasNext(); ) {
-                GenericValue nextValue = (GenericValue) vit.next();
-                delegator.removeValue(nextValue);
-            }
+            delegator.removeByAnd("Testing", new HashMap());  
         }
     }
 
   /*
    * This creates an string id from a number 
    */
-  private String getTestId(int iNum) {
-      String strTestBase = "TEST-";
+  private String getTestId(String strTestBase, int iNum) {
       StringBuffer strBufTemp = new StringBuffer(strTestBase);
       if (iNum < 10000) {
          strBufTemp.append("0");
