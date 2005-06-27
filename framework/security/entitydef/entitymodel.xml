@@ -143,6 +143,18 @@
       <field name="description" type="description"></field>
       <prim-key field="permissionId"/>
     </entity>
+    <view-entity entity-name="UserLoginAndSecurityGroup"
+          package-name="org.ofbiz.security.securitygroup"
+          never-cache="true"
+          title="Order Item Inventory Reservation and Inventory Item View Entity">
+      <member-entity entity-alias="ULSG" entity-name="UserLoginSecurityGroup"/>
+      <member-entity entity-alias="UL" entity-name="UserLogin"/>
+      <alias-all entity-alias="ULSG"/>
+      <alias-all entity-alias="UL"/>
+      <view-link entity-alias="ULSG" rel-entity-alias="UL">
+        <key-map field-name="userLoginId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="UserLoginSecurityGroup"
             package-name="org.ofbiz.security.securitygroup"
             title="Security Component - User Login Security Group Entity">

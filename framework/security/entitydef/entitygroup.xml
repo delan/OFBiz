@@ -39,6 +39,6 @@
     <entity-group group="org.ofbiz" entity="SecurityGroup" />
     <entity-group group="org.ofbiz" entity="SecurityGroupPermission" />
     <entity-group group="org.ofbiz" entity="SecurityPermission" />
+    <entity-group group="org.ofbiz" entity="UserLoginAndSecurityGroup" />
     <entity-group group="org.ofbiz" entity="UserLoginSecurityGroup" />
 </entitygroup>
-
