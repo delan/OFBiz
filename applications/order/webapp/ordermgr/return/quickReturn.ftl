@@ -29,7 +29,7 @@
         <div class="boxhead">&nbsp;Return Items</div>
     </div>
     <div class="screenlet-body">
-        <form name="returnItems" method="post" action="<@ofbizUrl>/makeQuickReturn</@ofbizUrl>">
+        <form name="selectAllForm" method="post" action="<@ofbizUrl>/makeQuickReturn</@ofbizUrl>">
           <input type="hidden" name="_checkGlobalScope" value="Y"/>
           <input type="hidden" name="_useRowSubmit" value="Y"/>
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
@@ -50,7 +50,7 @@
               <td><div class="tableheadtext">Return Price*</div></td>
               <td><div class="tableheadtext">Return Reason</div></td>
               <td><div class="tableheadtext">Return Type</div></td>
-              <td>&nbsp;</td>
+              <td align="right"><div class="tableheadtext">Include?</div></td>
             </tr>
             <tr><td colspan="8"><hr class="sepbar"></td></tr>
             <#if returnableItems?has_content>
