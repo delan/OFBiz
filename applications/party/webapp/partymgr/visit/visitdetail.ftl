@@ -25,9 +25,7 @@
  *@since      2.2
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
-  <div class='head1'>${uiLabelMap.PartyVisitDetail}</div>
+  <div class="head1">${uiLabelMap.PartyVisitDetail}</div>
   <br/>
 
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -52,7 +50,7 @@
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">
-          <a href="<@ofbizUrl>/viewprofile?partyId=${visit.partyId?if_exists}</@ofbizUrl>" class="buttontext">${visit.partyId?if_exists}</a> / <a href="<@ofbizUrl>/viewprofile?partyId=${visit.partyId?if_exists}</@ofbizUrl>" class="buttontext">${visit.userLoginId?if_exists}</a>
+          <a href="<@ofbizUrl>viewprofile?partyId=${visit.partyId?if_exists}</@ofbizUrl>" class="buttontext">${visit.partyId?if_exists}</a> / <a href="<@ofbizUrl>viewprofile?partyId=${visit.partyId?if_exists}</@ofbizUrl>" class="buttontext">${visit.userLoginId?if_exists}</a>
         </div>
       </td>
     </tr>
@@ -146,16 +144,16 @@
   <#if serverHits?has_content>
     <table border="0" width="100%" cellpadding="2">
       <tr>
-        <td align='right'>
+        <td align="right">
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+              <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+              | <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -207,16 +205,16 @@
   <#if serverHits?has_content>
     <table border="0" width="100%" cellpadding="2">
       <tr>
-        <td align='right'>
+        <td align="right">
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+              <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+              | <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -230,7 +228,7 @@
     <br/>
 
     <table border="0" cellpadding="5" cellspacing="5">
-      <form name="pushPage" method="get" action="<@ofbizUrl>/pushPage</@ofbizUrl>">
+      <form name="pushPage" method="get" action="<@ofbizUrl>pushPage</@ofbizUrl>">
         <tr>
           <td><div class="tableheadtext">${uiLabelMap.PartyPushURL}</div></td>
           <td>
@@ -244,7 +242,7 @@
           <td colspan="3"><hr class="sepbar"></td>
         </tr>
       </form>
-      <form name="setFollower" method="get" action="<@ofbizUrl>/setAppletFollower</@ofbizUrl>">
+      <form name="setFollower" method="get" action="<@ofbizUrl>setAppletFollower</@ofbizUrl>">
         <tr>
           <td><div class="tableheadtext">${uiLabelMap.PartyFollowSession}</div></td>
           <td>
@@ -257,6 +255,3 @@
       </form>
     </table>
   </#if>
-<#else>
-  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
-</#if>

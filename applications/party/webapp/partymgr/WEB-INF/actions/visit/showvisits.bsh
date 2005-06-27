@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -32,17 +32,14 @@ import org.ofbiz.entity.transaction.*;
 
 module = "showvisits.bsh";
 
-delegator = request.getAttribute("delegator");
-partyId = request.getParameter("party_id");
-if (partyId == null) partyId = request.getParameter("partyId");
-if (partyId == null) partyId = request.getAttribute("partyId");
+partyId = parameters.get("partyId");
 context.put("partyId", partyId);
 
-showAll = request.getParameter("showAll");
+showAll = parameters.get("showAll");
 if (showAll == null) showAll = "false";
 context.put("showAll", showAll);
 
-sort = request.getParameter("sort");
+sort = parameters.get("sort");
 context.put("sort", sort);
 
 visitListIt = null;          
@@ -65,14 +62,14 @@ try {
     viewIndex = 0;
     viewSize = 20;    
     try {
-        viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+        viewIndex = Integer.valueOf((String) parameters.get("VIEW_INDEX")).intValue();
     } catch (Exception e) {
         viewIndex = 0;
     }
     context.put("viewIndex", viewIndex);
     
     try {
-        viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+        viewSize = Integer.valueOf((String) parameters.get("VIEW_SIZE")).intValue();
     } catch (Exception e) {
         viewSize = 20;
     }
@@ -120,4 +117,3 @@ if (listSize < highIndex) {
 context.put("lowIndex", lowIndex);
 context.put("highIndex", highIndex);
 context.put("listSize", listSize);
-

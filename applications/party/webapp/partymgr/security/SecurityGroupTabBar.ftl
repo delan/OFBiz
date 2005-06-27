@@ -25,14 +25,12 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
   <#assign unselectedClassName = "tabButton">
   <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
   <#if groupId?has_content>
     <div class='tabContainer'>        
-      <a href="<@ofbizUrl>/EditSecurityGroup?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroup?default(unselectedClassName)}">${uiLabelMap.PartySecurityGroups}</a>
-	  <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroupPermissions?default(unselectedClassName)}">${uiLabelMap.PartyPermissions}</a>
-	  <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroupUserLogins?default(unselectedClassName)}">${uiLabelMap.PartyUserLogins}</a>  
+      <a href="<@ofbizUrl>EditSecurityGroup?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroup?default(unselectedClassName)}">${uiLabelMap.PartySecurityGroups}</a>
+	  <a href="<@ofbizUrl>EditSecurityGroupPermissions?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroupPermissions?default(unselectedClassName)}">${uiLabelMap.PartyPermissions}</a>
+	  <a href="<@ofbizUrl>EditSecurityGroupUserLogins?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroupUserLogins?default(unselectedClassName)}">${uiLabelMap.PartyUserLogins}</a>  
     </div>
   </#if>
-  
