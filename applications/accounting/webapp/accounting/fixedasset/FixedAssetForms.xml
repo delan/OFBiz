@@ -27,7 +27,7 @@
     <form name="ListFixedAssets" type="list"  list-name="fixedAssets" 
          default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
-        <field name="fixedAssetID" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="buttontext">
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset?fixedAssetId=${fixedAssetId}"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}">
@@ -45,12 +45,8 @@
     <form name="EditFixedAsset" type="single" 
             target="updateFixedAsset" title="" default-map-name="fixedAsset"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <actions>
-            <set field="partyId1" from-field="partyId"></set>
-            </actions>
         <alt-target use-when="fixedAsset==null" target="createFixedAsset"/>
-
-         <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
+        <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
  
         <field use-when="fixedAsset!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text size="20" maxlength="20"/></field>
