@@ -71,6 +71,17 @@
         <section>
             <actions>
                 <set field="headerItem" value="main"/>
+                <entity-condition entity-name="PaymentMethodType" list-name="paymentMethodTypes">
+                	<order-by field-name="paymentMethodTypeId"/>
+                </entity-condition>
+                <entity-condition entity-name="StatusItem" list-name="invoiceStatus">
+                    <condition-expr field-name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
+                	<order-by field-name="statusId"/>
+                </entity-condition>
+                <entity-condition entity-name="StatusItem" list-name="paymentStatus">
+                    <condition-expr field-name="statusTypeId" operator="equals" value="PAYMENT_PREF_STATUS"/>
+                	<order-by field-name="statusId"/>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -79,9 +90,7 @@
                             <container style="screenlet-header">
                                 <label style="boxhead" text="${uiLabelMap.AccountingMainPage}"/>
                             </container>
-                            <container style="screenlet-body">
-                                <container><label style="tabletext" text="${uiLabelMap.AccountingMainPageNote}"/></container>
-                            </container>
+                            <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific>
                         </container>
                     </decorator-section>
                 </decorator-screen>
