@@ -60,7 +60,7 @@ public class EntityTestSuite extends TestCase {
     public static final String module = EntityTestSuite.class.getName();
     public static final String DELEGATOR_NAME = "test";
     public GenericDelegator delegator = null;
-    public static final long TEST_COUNT = 1000; // defines how many values to add for tests which add a large number of values
+    public static final long TEST_COUNT = 10000; // defines how many values to add for tests which add a large number of values
 
     public EntityTestSuite(String name) {
         super(name);
@@ -369,13 +369,13 @@ public class EntityTestSuite extends TestCase {
      * This test will create a large number of unique items and add them to the delegator at once
      */
     public void testCreateManyAndStoreAtOnce() throws Exception {
-        try{
+        try {
             List newValues = new LinkedList();
             for (int i = 0; i < TEST_COUNT; i++) {
                 newValues.add(delegator.makeValue("Testing", UtilMisc.toMap("testingId", getTestId(i))));
             }
             delegator.storeAll(newValues);
-            List newlyCreatedValues = delegator.findAll("Testing", UtilMisc.toList("testingTypeId"));
+            List newlyCreatedValues = delegator.findAll("Testing", UtilMisc.toList("testingId"));
             TestCase.assertEquals("Test to create " + TEST_COUNT + " and store all at once", TEST_COUNT, newlyCreatedValues.size());
         } catch (GenericEntityException e) {
             assertTrue("GenericEntityException:" + e.toString(), false);
@@ -390,25 +390,28 @@ public class EntityTestSuite extends TestCase {
      * This test will create a large number of unique items and add them to the delegator at once
      */
     public void testCreateManyAndStoreOneAtATime() throws Exception {
-        try{
+        try {
             for (int i = 0; i < TEST_COUNT; i++){
                 delegator.create(delegator.makeValue("Testing", UtilMisc.toMap("testingId", getTestId(i))));
             }
             List newlyCreatedValues = delegator.findAll("Testing", UtilMisc.toList("testingId"));
             TestCase.assertEquals("Test to create " + TEST_COUNT + " and store one at a time: ", TEST_COUNT, newlyCreatedValues.size());
         } catch (GenericEntityException e){
-            assertTrue("GenericEntityException:"+e.toString(),false);
+            assertTrue("GenericEntityException:" + e.toString(), false);
             return;
         } finally {
-            List values = delegator.findAll("TestingType");
-            delegator.removeAll(values);
+            List values = delegator.findAll("Testing");
+            for (Iterator vit = values.iterator(); vit.hasNext(); ) {
+                GenericValue nextValue = (GenericValue) vit.next();
+                delegator.removeValue(nextValue);
+            }
         }
     }
 
   /*
    * This creates an string id from a number 
    */
-  private String getTestId(int iNum){
+  private String getTestId(int iNum) {
       String strTestBase = "TEST-";
       StringBuffer strBufTemp = new StringBuffer(strTestBase);
       if (iNum < 10000) {
