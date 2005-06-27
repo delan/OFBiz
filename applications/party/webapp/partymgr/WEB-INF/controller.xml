@@ -32,11 +32,9 @@
     <handler name="service" type="request" class="org.ofbiz.webapp.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
 
-    <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>    
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
 
-    <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>    
     <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
@@ -744,13 +742,13 @@
     <view-map name="createnewrole" type="region"/>
     <view-map name="EditUserLoginSecurityGroups" type="region"/>
     
-    <view-map name="FindSecurityGroup" type="jpublish" page="/security/FindSecurityGroup.ftl"/>
-    <view-map name="EditSecurityGroup" type="jpublish" page="/security/EditSecurityGroup.ftl"/>
-    <view-map name="EditSecurityGroupPermissions" type="jpublish" page="/security/EditSecurityGroupPermissions.ftl"/>
-    <view-map name="EditSecurityGroupUserLogins" type="jpublish" page="security/EditSecurityGroupUserLogins.ftl"/>
+    <view-map name="FindSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#FindSecurityGroup"/>
+    <view-map name="EditSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#EditSecurityGroup"/>
+    <view-map name="EditSecurityGroupPermissions" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#EditSecurityGroupPermissions"/>
+    <view-map name="EditSecurityGroupUserLogins" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#EditSecurityGroupUserLogins"/>
 
-    <view-map name="showvisits" type="jpublish" page="/visit/showvisits.ftl"/>
-    <view-map name="visitdetail" type="jpublish" page="/visit/visitdetail.ftl"/>
+    <view-map name="showvisits" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#showvisits"/>
+    <view-map name="visitdetail" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#visitdetail"/>
 
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
     <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
