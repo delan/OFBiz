@@ -1,0 +1,82 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Mario Cappellato (mario.cappellato@sastau.it)
+ *
+ */
+
+// PackageContentsAndOrder
+// ReportB
+
+import java.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.order.OrderContentWrapper;
+import org.ofbiz.product.category.CategoryWorker;
+
+if (!UtilValidate.isEmpty(productCategoryIdPar)) {
+    category = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryIdPar));
+    context.put("category", category);
+}
+if (!UtilValidate.isEmpty(productFeatureTypeIdPar)) {
+    featureType = delegator.findByPrimaryKey("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeIdPar));
+    context.put("featureType", featureType);
+}
+packageContents = delegator.findByAnd("ShipmentPackageContent", UtilMisc.toMap("shipmentId", shipmentId));
+
+Map packagesMap = new HashMap();
+if (packageContents != null) {
+    packageContentsIt = packageContents.iterator();
+    while (packageContentsIt.hasNext()) {
+        packageContent = packageContentsIt.next();
+
+        orderShipments = delegator.findByAnd("OrderShipment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", packageContent.getString("shipmentItemSeqId")));
+        orderShipment = EntityUtil.getFirst(orderShipments);
+        orderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderShipment.getString("orderId"), "orderItemSeqId", orderShipment.getString("orderItemSeqId")));
+        product = orderItem.getRelatedOne("Product");
+        // verify if the product is a member of the given category (based on the report's parameter)
+        if (!UtilValidate.isEmpty(productCategoryIdPar)) {
+            if (!isProductInCategory(delegator, product.getString("productId"), productCategoryIdPar)) {
+                // the production run's product is not a member of the given category, skip it
+                continue;
+            }
+        }
+
+        if (!packagesMap.containsKey(packageContent.getString("shipmentPackageSeqId"))) {
+            OrderReadHelper orh = new OrderReadHelper(delegator, orderItem.getString("orderId"));
+            packagesMap.put(packageContent.getString("shipmentPackageSeqId"),
+                            UtilMisc.toMap("packageId", packageContent.getString("shipmentPackageSeqId"),
+                                           "party", orh.getPlacingParty(),
+                                           "address", orh.getShippingAddress(),
+                                           "orderHeader", orh.getOrderHeader(),
+                                           "orderShipment", orderShipment,
+                                           "components", new ArrayList()));
+        }
+        OrderContentWrapper orderContentWrapper = OrderContentWrapper.makeOrderContentWrapper(orderItem, request);
+        String imageUrl = orderContentWrapper.get("IMAGE_URL");
+        packageMap = (Map)packagesMap.get(packageContent.getString("shipmentPackageSeqId"));
+        components = (List)packageMap.get("components");
+        components.add(UtilMisc.toMap("product", product, "orderItem", orderItem, "imageUrl", imageUrl));
+    }
+}
+context.put("packages", packagesMap.values());

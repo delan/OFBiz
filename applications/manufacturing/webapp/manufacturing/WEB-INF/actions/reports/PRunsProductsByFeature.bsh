@@ -1,0 +1,94 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Jacopo Cappellato (tiz@sastau.it)
+ *
+ */
+
+// PRunsProductsByFeature
+// ReportE
+
+import java.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.product.category.CategoryWorker;
+
+if (!UtilValidate.isEmpty(productCategoryIdPar)) {
+    category = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryIdPar));
+    context.put("category", category);
+}
+if (!UtilValidate.isEmpty(productFeatureTypeIdPar)) {
+    featureType = delegator.findByPrimaryKey("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeIdPar));
+    context.put("featureType", featureType);
+}
+
+allProductionRuns = delegator.findByAnd("WorkEffortAndGoods", UtilMisc.toMap("workEffortName", planName), UtilMisc.toList("productId"));
+productionRuns = new ArrayList();
+features = new HashMap();
+if (UtilValidate.isEmpty(productFeatureTypeIdPar)) {
+    features.put(null, UtilMisc.toMap("productFeature", null, "productionRuns", productionRuns));
+}
+
+if (allProductionRuns != null) {
+    allProductionRunsIt = allProductionRuns.iterator();
+    while (allProductionRunsIt.hasNext()) {
+        productionRun = allProductionRunsIt.next();
+        // verify if the product is a member of the given category (based on the report's parameter)
+        if (!UtilValidate.isEmpty(productCategoryIdPar)) {
+            if (!isProductInCategory(delegator, productionRun.getString("productId"), productCategoryIdPar)) {
+                // the production run's product is not a member of the given category, skip it
+                continue;
+            }
+        }
+        productionRunProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productionRun.getString("productId")));
+
+        // group by standard feature of type productFeatureTypeIdPar
+        if (productFeatureTypeIdPar != null) {
+            standardFeatures = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeIdPar, "productId", productionRun.getString("productId"), "productFeatureApplTypeId", "STANDARD_FEATURE"));
+            standardFeatures = EntityUtil.filterByDate(standardFeatures);
+            standardFeature = EntityUtil.getFirst(standardFeatures);
+            standardFeatureId = null;
+            if (standardFeature != null) {
+                standardFeatureId = standardFeature.getString("productFeatureId");
+            }
+            if (!features.containsKey(standardFeatureId)) {
+                features.put(standardFeatureId, UtilMisc.toMap("productFeature", standardFeature, "productionRuns", new ArrayList()));
+            }
+            feature = (Map)features.get(standardFeatureId);
+            productionRuns = (List)feature.get("productionRuns");
+        }
+
+        // select the production run's task of a given name (i.e. type) if any (based on the report's parameter)
+        productionRunTasks = delegator.findByAnd("WorkEffort", UtilMisc.toMap("workEffortParentId", productionRun.getString("workEffortId"), "workEffortName", taskNamePar));
+        productionRunTask = EntityUtil.getFirst(productionRunTasks);
+        if (productionRunTask == null) {
+            // the production run doesn't include the given task, skip it
+            continue;
+        }
+
+        productionRunMap = UtilMisc.toMap("productionRun", productionRun,
+                                          "product", productionRunProduct,
+                                          "productionRunTask", productionRunTask);
+        productionRuns.add(productionRunMap);
+    }
+    context.put("features", features.values());
+}
