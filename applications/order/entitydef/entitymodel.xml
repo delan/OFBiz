@@ -1044,6 +1044,7 @@
       <field name="statusId" type="id"></field>
       <field name="createdBy" type="id-vlong"></field>
       <field name="fromPartyId" type="id"></field>
+      <field name="toPartyId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="entryDate" type="date-time"></field>
       <field name="originContactMechId" type="id"></field>
@@ -1052,6 +1053,9 @@
       <prim-key field="returnId"/>
       <relation type="one" fk-name="RTN_FROM_PARTY" rel-entity-name="Party">
         <key-map field-name="fromPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_TO_PARTY" title="To" rel-entity-name="Party">
+        <key-map field-name="toPartyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="RTN_TO_BACT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>

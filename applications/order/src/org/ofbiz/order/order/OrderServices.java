@@ -2749,6 +2749,7 @@ public class OrderServices {
         if (returnHeader != null && returnItems != null && returnItems.size() > 0) {
             String billingAccountId = returnHeader.getString("billingAccountId");
             String fromPartyId = returnHeader.getString("fromPartyId");
+            String toPartyId = returnHeader.getString("toPartyId");
             if (billingAccountId == null) {
                 // create new BillingAccount w/ 0 balance
                 try {
@@ -2823,7 +2824,7 @@ public class OrderServices {
             GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId));
             payment.set("paymentTypeId", "CUSTOMER_REFUND");
             payment.set("paymentMethodTypeId", "EXT_BILLACT");
-            payment.set("partyIdFrom", "Company"); // TODO: still need to fix this and find a partyId to use
+            payment.set("partyIdFrom", toPartyId);  // if you receive a return FROM someone, then you'd have to give a return TO that person
             payment.set("partyIdTo", fromPartyId);
             payment.set("effectiveDate", now);
             payment.set("amount", creditAmount);
