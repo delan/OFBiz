@@ -152,7 +152,7 @@ function refreshInfo() {
                               <option value="${currentStateGeo.geoId}">---</option>
                             </#if>
                             <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
-                            ${pages.get("/includes/states.ftl")}
+                            ${screens.render("component://common/widget/CommonScreens.xml#states")}
                           </select>
                         </td>
                       </tr>
