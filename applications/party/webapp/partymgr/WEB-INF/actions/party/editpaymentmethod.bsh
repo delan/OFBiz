@@ -32,8 +32,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.webapp.control.*;
 
-String partyId = request.getParameter("party_id");
-if (partyId == null) partyId = request.getParameter("partyId");
+partyId = parameters.get("partyId");
 context.put("partyId", partyId);
 
 // payment info
@@ -41,11 +40,11 @@ paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, partyId);
 //returns the following: "paymentMethod", "creditCard", "giftCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
 context.putAll(paymentResults);
 
-curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId")); 
+curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(request, partyId, paymentResults.get("curContactMechId")); 
 //returns the following: "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes"
 context.putAll(curPostalAddressResults);
 
-postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId"));
+postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(request, partyId, paymentResults.get("curContactMechId"));
 context.put("postalAddressInfos", postalAddressInfos);
 
 //prepare "Data" maps for filling form input boxes
@@ -66,8 +65,6 @@ if (!tryEntity.booleanValue()) eftAccountData = parameters;
 if (eftAccountData == null) eftAccountData = new HashMap();
 if (eftAccountData != null) context.put("eftAccountData", eftAccountData);
 
-String donePage = request.getParameter("DONE_PAGE");
-if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
+donePage = parameters.get("DONE_PAGE");
 if (donePage == null || donePage.length() <= 0) donePage = "viewprofile";
 context.put("donePage", donePage);
-

@@ -723,11 +723,10 @@
     <view-map name="editShoppingList" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editShoppingList"/>
     
     <view-map name="editcontactmech" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editcontactmech"/>
-    <view-map name="editcreditcard" type="region"/>
-    <view-map name="editgiftcard" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editgiftcard"/>
-    <view-map name="editeftaccount" type="region"/>
-    <view-map name="editavsoverride" type="region"/>
-    <view-map name="editlogin" type="region"/>
+    <view-map name="editcreditcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editcreditcard"/>
+    <view-map name="editgiftcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editgiftcard"/>
+    <view-map name="editeftaccount" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editeftaccount"/>
+    <view-map name="editavsoverride" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editavsoverride"/>
 
     <view-map name="pendingCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#pendingCommunications"/>
     <view-map name="listCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listCommunications"/>
@@ -737,6 +736,7 @@
     <view-map name="newcustomer" type="region"/>
     <view-map name="editperson" type="region"/>
     <view-map name="editpartygroup" type="region"/>
+    <view-map name="editlogin" type="region"/>
     <view-map name="createnewlogin" type="region"/>
     <view-map name="createnewnote" type="region"/>
     <view-map name="createnewrole" type="region"/>

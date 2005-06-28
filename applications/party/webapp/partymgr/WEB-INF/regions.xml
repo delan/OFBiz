@@ -17,26 +17,6 @@
         <put section='content' content='/party/newcustomer.jsp'/>
     </define>
 
-    <define id='editcontactmech' region='MAIN_REGION'>
-        <put section='title'>Edit Contact Mechanism (Phone, Address, etc)</put>
-        <put section='content' content='/party/editcontactmech.jsp'/>
-    </define>
-
-    <define id='editcreditcard' region='MAIN_REGION'>
-        <put section='title'>Edit Credit Card</put>
-        <put section='content' content='/party/editcreditcard.jsp'/>
-    </define>
-
-    <define id='editeftaccount' region='MAIN_REGION'>
-        <put section='title'>Edit EFT Account</put>
-        <put section='content' content='/party/editeftaccount.jsp'/>
-    </define>
-
-    <define id='editavsoverride' region='MAIN_REGION'>
-        <put section='title'>Edit AVC Override String</put>
-        <put section='content' content='/party/editAvsString.jsp'/>
-    </define>
-
     <define id='editlogin' region='MAIN_REGION'>
         <put section='title'>Edit User Login Info</put>
         <put section='content' content='/party/editlogin.jsp'/>
@@ -59,11 +39,6 @@
     <define id='editpartygroup' region='MAIN_REGION'>
         <put section='title'>Edit Party Group Information</put>
         <put section='content' content='/party/editpartygroup.jsp'/>
-    </define>
-
-    <define id='findparty' region='MAIN_REGION'>
-        <put section='title'>Find Party</put>
-        <put section='content' content='/party/findparty.jsp'/>
     </define>
 
     <define id='createnewlogin' region='MAIN_REGION'>
