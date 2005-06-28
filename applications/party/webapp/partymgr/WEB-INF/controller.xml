@@ -732,7 +732,7 @@
     <view-map name="listCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listCommunications"/>
     <view-map name="editCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#editCommunication"/>
     
-    <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateNewParty"/>
+    <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyNewScreens.xml#CreateNewParty"/>
     <view-map name="newcustomer" type="region"/>
     <view-map name="editperson" type="region"/>
     <view-map name="editpartygroup" type="region"/>
