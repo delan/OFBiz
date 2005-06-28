@@ -33,8 +33,8 @@
 <div class="apptitle">&nbsp;Content Manager Application&nbsp;</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
-  <div class="col"><a href="<@ofbizUrl>/FindSurvey</@ofbizUrl>" class="${selectedLeftClassMap.Survey?default(unselectedLeftClassName)}">Surveys</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindWebSite</@ofbizUrl>" class="${selectedLeftClassMap.WebSite?default(unselectedLeftClassName)}">WebSites</a></div>
+  <div class="col"><a href="<@ofbizUrl>/FindSurvey</@ofbizUrl>" class="${selectedLeftClassMap.Survey?default(unselectedLeftClassName)}">Surveys</a></div>
   <div class="col"><a href="<@ofbizUrl>/ContentMenu</@ofbizUrl>" class="${selectedLeftClassMap.Content?default(unselectedLeftClassName)}">Content</a></div>
   <div class="col"><a href="<@ofbizUrl>/DataMenu</@ofbizUrl>" class="${selectedLeftClassMap.Data?default(unselectedLeftClassName)}">DataResource</a></div>
 
