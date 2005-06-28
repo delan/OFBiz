@@ -26,11 +26,10 @@
 <#if mrpName?exists>
   <div class="head1">${uiLabelMap.ManufacturingMrpName}: ${mrpName?if_exists}</div>
   <!--
-  <div><a href="<@ofbizUrl>ReportE0.pdf?mrpName=${mrpName}&taskNamePar=O-LAV_01b&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportE0}]</a></div>
-  <div><a href="<@ofbizUrl>ReportF0.pdf?showLocation=Y&mrpName=${mrpName}&taskNamePar=O-PREL_L&productCategoryIdPar=PANNELLI</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportF0}]</a></div>
-  <div><a href="<@ofbizUrl>ReportF0.pdf?showLocation=N&mrpName=${mrpName}&taskNamePar=O-PREL_L&productCategoryIdPar=PEZZI</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportF1}]</a></div>
-  <div><a href="<@ofbizUrl>ReportC.pdf?mrpName=${mrpName}&taskNamePar=O-LAV_01b&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportC}]</a></div>
-  <div><a href="<@ofbizUrl>test.pdf?mrpName=${mrpName}</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingTest}]</a></div>
+  <div><a href="<@ofbizUrl>MRPPRunsProductsByFeature.pdf?mrpName=${mrpName}&taskNamePar=O-LAV_01b&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingMRPPRunsProductsByFeature}]</a></div>
+  <div><a href="<@ofbizUrl>PRunsComponentsByFeature.pdf?showLocation=Y&mrpName=${mrpName}&taskNamePar=O-PREL_L&productCategoryIdPar=PANNELLI</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPRunsComponentsByFeature}]</a></div>
+  <div><a href="<@ofbizUrl>PRunsComponentsByFeature.pdf?showLocation=N&mrpName=${mrpName}&taskNamePar=O-PREL_L&productCategoryIdPar=PEZZI</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPRunsComponentsByFeature1}]</a></div>
+  <div><a href="<@ofbizUrl>PRunsProductsStacks.pdf?mrpName=${mrpName}&taskNamePar=O-LAV_01b&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPRunsProductsStacks}]</a></div>
   -->
 </#if>
 

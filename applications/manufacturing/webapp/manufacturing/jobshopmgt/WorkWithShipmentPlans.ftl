@@ -35,15 +35,16 @@
     <br/>
     <div><a href="<@ofbizUrl>ShipmentPlanStockReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_report" class="buttontext">[${uiLabelMap.ManufacturingShipmentPlanStockReport}]</a></div>
   </#if>
+
   <div><a href="<@ofbizUrl>ShipmentLabel.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPackageLabelsReport}]</a></div>
+  <!-- new reports -->
   <!--
-  <div><a href="<@ofbizUrl>ReportE1.pdf?shipmentId=${shipmentId}&taskNamePar=O-LAV_01b&productFeatureTypeIdPar=Strutt&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportE1}]</a></div>
-  <div><a href="<@ofbizUrl>ReportF2.pdf?showLocation=Y&shipmentId=${shipmentId}&taskNamePar=O-PREL_L&productFeatureTypeIdPar=Strutt&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportF2}]</a></div>
-  <div><a href="<@ofbizUrl>ReportF2.pdf?showLocation=N&shipmentId=${shipmentId}&taskNamePar=O-PREL_L&productFeatureTypeIdPar=Strutt&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportF3}]</a></div>
-  <div><a href="<@ofbizUrl>ReportA.pdf?shipmentId=${shipmentId}&taskNamePar=O-LAV_01b&productFeatureTypeIdPar=Strutt&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportA}]</a></div>
-  <div><a href="<@ofbizUrl>ReportB.pdf?shipmentId=${shipmentId}&taskNamePar=O-LAV_01b&productFeatureTypeIdPar=Strutt&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportB}]</a></div>
-  <div><a href="<@ofbizUrl>ReportD.pdf?shipmentId=${shipmentId}&taskNamePar=O-LAV_01b&productFeatureTypeIdPar=Strutt&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportD}]</a></div>
-  <div><a href="<@ofbizUrl>ReportG.pdf?shipmentId=${shipmentId}&taskNamePar=O-LAV_01b&productFeatureTypeIdPar=Strutt&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingReportG}]</a></div>
+  <div><a href="<@ofbizUrl>SPPRunsProductsByFeature.pdf?shipmentId=${shipmentId}&taskNamePar=O-LAV_01b&productFeatureTypeIdPar=Strutt&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingSPPRunsProductsByFeature}]</a></div>
+  <div><a href="<@ofbizUrl>SPPRunsComponentsByFeature.pdf?showLocation=Y&shipmentId=${shipmentId}&taskNamePar=O-PREL_L&productFeatureTypeIdPar=Strutt&productCategoryIdPar=PANNELLI</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingSPPRunsComponentsByFeature2}]</a></div>
+  <div><a href="<@ofbizUrl>SPPRunsComponentsByFeature.pdf?showLocation=N&shipmentId=${shipmentId}&taskNamePar=O-PREL_L&productFeatureTypeIdPar=Strutt&productCategoryIdPar=PEZZI</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingSPPRunsComponentsByFeature3}]</a></div>
+  <div><a href="<@ofbizUrl>PackageContentsAndOrder.pdf?shipmentId=${shipmentId}&taskNamePar=&productFeatureTypeIdPar=&productCategoryIdPar=</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPackageContentsAndOrder}]</a></div>
+  <div><a href="<@ofbizUrl>PRunsProductsAndOrder.pdf?shipmentId=${shipmentId}&taskNamePar=&productFeatureTypeIdPar=&productCategoryIdPar=ANTA</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPRunsProductsAndOrder}]</a></div>
+  <div><a href="<@ofbizUrl>PRunsInfoAndOrder.pdf?shipmentId=${shipmentId}&taskNamePar=O-PREL_L&productFeatureTypeIdPar=&productCategoryIdPar=HARDWARE</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPRunsInfoAndOrder}]</a></div>
   -->
 <#else>
 <div class="head1">Shipment Plans</div>

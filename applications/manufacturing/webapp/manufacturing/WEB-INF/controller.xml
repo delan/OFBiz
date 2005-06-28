@@ -525,29 +525,39 @@
         <event type="bsf" path="/jobshopmgt/" invoke="ShipmentWorkEffortTasksPrepare.bsh"/>
         <response name="success" type="view" value="ShipmentWorkEffortTasks"/>
     </request-map>
-    <request-map uri="ReportE0.pdf">
+    <request-map uri="MRPPRunsProductsByFeature.pdf">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReportE0"/>
+        <response name="success" type="view" value="MRPPRunsProductsByFeature"/>
     </request-map>
-    <request-map uri="ReportE1.pdf">
+    <request-map uri="SPPRunsProductsByFeature.pdf">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReportE1"/>
+        <response name="success" type="view" value="SPPRunsProductsByFeature"/>
     </request-map>
-    <request-map uri="ReportF0.pdf">
+    <request-map uri="MRPPRunsComponentsByFeature.pdf">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReportF0"/>
+        <response name="success" type="view" value="MRPPRunsComponentsByFeature"/>
     </request-map>
-    <request-map uri="ReportF2.pdf">
+    <request-map uri="SPPRunsComponentsByFeature.pdf">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReportF2"/>
+        <response name="success" type="view" value="SPPRunsComponentsByFeature"/>
     </request-map>
-    <request-map uri="ReportC.pdf">
+    <request-map uri="PackageContentsAndOrder.pdf">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReportC"/>
+        <response name="success" type="view" value="PackageContentsAndOrder"/>
     </request-map>
-    <request-map uri="test.pdf">
+    <request-map uri="PRunsProductsStacks.pdf">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="test"/>
+        <response name="success" type="view" value="PRunsProductsStacks"/>
+    </request-map>
+
+    <request-map uri="PRunsProductsAndOrder.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PRunsProductsAndOrder"/>
+    </request-map>
+    
+    <request-map uri="PRunsInfoAndOrder.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PRunsInfoAndOrder"/>
     </request-map>
 
     <!-- end of request mappings -->
@@ -606,11 +616,13 @@
     <view-map name="ShipmentLabel" type="jasperpdf" page="/jobshopmgt/ShipmentLabel.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="ShipmentWorkEffortTasks" type="jasperpdf" page="/jobshopmgt/ShipmentWorkEffortTasks.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="CuttingListReport" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#CuttingListReport" content-type="application/pdf" encoding="none"/>
-    <view-map name="ReportE0" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportE0" content-type="application/pdf" encoding="none"/>
-    <view-map name="ReportE1" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportE1" content-type="application/pdf" encoding="none"/>
-    <view-map name="ReportF0" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportF0" content-type="application/pdf" encoding="none"/>
-    <view-map name="ReportF2" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportF2" content-type="application/pdf" encoding="none"/>
-    <view-map name="ReportC" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#ReportC" content-type="application/pdf" encoding="none"/>
-    <view-map name="test" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#test" content-type="application/pdf" encoding="none"/>
+    <view-map name="PackageContentsAndOrder" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#PackageContentsAndOrder" content-type="application/pdf" encoding="none"/>
+    <view-map name="PRunsProductsStacks" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#PRunsProductsStacks" content-type="application/pdf" encoding="none"/>
+    <view-map name="PRunsProductsAndOrder" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#PRunsProductsAndOrder" content-type="application/pdf" encoding="none"/>
+    <view-map name="MRPPRunsProductsByFeature" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#MRPPRunsProductsByFeature" content-type="application/pdf" encoding="none"/>
+    <view-map name="SPPRunsProductsByFeature" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#SPPRunsProductsByFeature" content-type="application/pdf" encoding="none"/>
+    <view-map name="MRPPRunsComponentsByFeature" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#MRPPRunsComponentsByFeature" content-type="application/pdf" encoding="none"/>
+    <view-map name="SPPRunsComponentsByFeature" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#SPPRunsComponentsByFeature" content-type="application/pdf" encoding="none"/>
+    <view-map name="PRunsInfoAndOrder" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#PRunsInfoAndOrder" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>
