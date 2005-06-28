@@ -41,6 +41,13 @@ if (partyId != null) {
     context.put("party", party);
 }
 
+// put in the return to party information from the order header
+if (orderId != null) {
+    order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+    productStore = order.getRelatedOne("ProductStore");
+    context.put("toPartyId", productStore.getString("payToPartyId"));
+}
+
 returnTypes = delegator.findAll("ReturnType", UtilMisc.toList("sequenceId"));
 context.put("returnTypes", returnTypes);
 

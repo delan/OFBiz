@@ -39,6 +39,26 @@
     	    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateReturnHeader"/></add-error>
     	  </then>
     	</if>
+
+        <if-empty field-name="parameters.toPartyId">
+            <!-- no toPartyId was specified.  use destination facility to determine the party of the return -->
+            <if-not-empty field-name="parameters.destinationFacilityId">
+                 <field-to-field field-name="parameters.destinationFacilityId" to-field-name="facilityId" to-map-name="lookupParams"/>
+                 <find-by-primary-key entity-name="Facility" map-name="lookupParams" value-name="destinationFacility"/>
+                 <field-to-field field-name="ownerPartyId" map-name="destinationFacilityId" to-field-name="toPartyId" to-map-name="parameters"/>
+            </if-not-empty>
+            <else>
+        <!-- make sure that the party to return to is an INTERNAL_ORGANIZATIO or stop 
+            TODO: if we want to implement returns to vendor later, simply change this to make sure that EITHER fromPartyId or toPartyId
+            is an internal organization, and possibly also do a security check on the user -->
+                 <field-to-field field-name="parameters.toPartyId" to-field-name="partyId" to-map-name="lookupParams"/>
+                 <string-to-field string="INTERNAL_ORGANIZATIO" field-name="roleTypeId" map-name="lookupParams"/>
+                 <find-by-primary-key entity-name="PartyRole" value-name="partyRole" map-name="lookupParams" use-cache="true"/>
+                 <if-empty field-name="partyRole">
+                      <add-error><fail-message message="Error: a return must be to a party in the role of internal organization"/></add-error>
+                 </if-empty>
+             </else>
+        </if-empty>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ReturnHeader"/>
@@ -311,6 +331,10 @@
         <field-to-field field-name="originFacilityId" map-name="orderHeader" to-field-name="destinationFacilityId" to-map-name="createHeaderCtx"/>
         <field-to-field field-name="partyId" map-name="orderRole" to-field-name="fromPartyId" to-map-name="createHeaderCtx"/>
         <string-to-field string="Y" field-name="needsInventoryReceive" map-name="updateHeaderCtx"/>
+
+        <!-- get the return to party from the product store -->
+        <get-related-one relation-name="ProductStore" value-name="orderHeader" to-value-name="productStore"/>
+        <field-to-field field-name="productStore.payToPartyId" to-field-name="toPartyId" to-map-name="createHeaderCtx"/>
 
         <if-empty field-name="destinationFacilityId" map-name="createHeaderCtx">
             <get-related-one value-name="orderHeader" relation-name="ProductStore" to-value-name="productStore"/>

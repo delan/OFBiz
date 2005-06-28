@@ -29,10 +29,11 @@
         <div class="boxhead">&nbsp;Return Items</div>
     </div>
     <div class="screenlet-body">
-        <form name="selectAllForm" method="post" action="<@ofbizUrl>/makeQuickReturn</@ofbizUrl>">
+        <form name="returnItems" method="post" action="<@ofbizUrl>/makeQuickReturn</@ofbizUrl>">
           <input type="hidden" name="_checkGlobalScope" value="Y"/>
           <input type="hidden" name="_useRowSubmit" value="Y"/>
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
+          <input type="hidden" name="toPartyId" value="${toPartyId?if_exists}"/>
           <input type="hidden" name="order_id" value="${orderId}"/>
           <table border="0" width="100%" cellpadding="2" cellspacing="0">
             <tr>
