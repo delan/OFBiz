@@ -490,6 +490,7 @@
         <attribute name="responseRequiredDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="custRequestName" type="String" mode="IN" optional="false"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="maximumAmountUomId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createCustRequest" engine="simple"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">
