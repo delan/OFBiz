@@ -50,7 +50,8 @@
 		<attribute name="userLoginId" type="String" mode="IN" optional="false"/>
 		<attribute name="newUserLogin" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="false"/>
 	</service>
-	<service name="updatePassword" engine="java" location="org.ofbiz.securityext.login.LoginServices" invoke="updatePassword" auth="true">
+	<service name="updatePassword" engine="java" default-entity-name="UserLogin" 
+			location="org.ofbiz.securityext.login.LoginServices" invoke="updatePassword" auth="true">
 		<description>Update a UserLogin Password</description>
 		<attribute name="userLoginId" type="String" mode="IN" optional="true"/>
 		<attribute name="currentPassword" type="String" mode="IN" optional="true"/>
@@ -59,7 +60,8 @@
 		<attribute name="passwordHint" type="String" mode="IN" optional="true"/>
 		<attribute name="updatedUserLogin" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="false"/>
 	</service>
-	<service name="updateUserLoginSecurity" engine="java" location="org.ofbiz.securityext.login.LoginServices" invoke="updateUserLoginSecurity" auth="true">
+	<service name="updateUserLoginSecurity" engine="java" default-entity-name="UserLogin" 
+			location="org.ofbiz.securityext.login.LoginServices" invoke="updateUserLoginSecurity" auth="true">
 		<description>Update UserLogin Security Settings</description>
 		<attribute name="userLoginId" type="String" mode="IN" optional="false"/>
 		<attribute name="enabled" type="String" mode="IN" optional="false"/>

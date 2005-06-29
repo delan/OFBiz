@@ -1214,7 +1214,7 @@
             title="Party Group Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="groupName" type="name"></field>
-      <field name="federalTaxId" type="long-varchar" encrypt="true"></field>
+      <!-- DEJ20050628 getting rid of this, deprecated by PartyTaxInfo <field name="federalTaxId" type="long-varchar" encrypt="true"></field> -->
       <field name="comments" type="comment"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PARTY_GRP_PARTY" rel-entity-name="Party">

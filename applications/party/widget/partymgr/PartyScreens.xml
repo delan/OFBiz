@@ -318,5 +318,70 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="EditPerson">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPersonalInformation"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="PageTitleEditPersonalInformation"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Person" value-name="person"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <include-form name="EditPerson" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPartyGroup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
+                
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="PartyGroup" value-name="partyGroup"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <include-form name="EditPartyGroup" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditUserLogin">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditGroupInformation"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
+                
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="userLoginId" from-field="parameters.userLoginId"/>
+                <entity-one entity-name="UserLogin" value-name="editUserLogin"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container><label text="Change UserLogin Password" style="head2"/></container>
+                        <include-form name="updatePassword" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                        <container><label text="Update UserLogin Security Settings" style="head2"/></container>
+                        <include-form name="updateUserLoginSecurity" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
     

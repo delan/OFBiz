@@ -549,7 +549,7 @@
                 </td>
                 <td align="right" valign="top" width="20%">
                   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-                      <a href="<@ofbizUrl>/editlogin?partyId=${party.partyId}&userlogin_id=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>&nbsp;
+                      <a href="<@ofbizUrl>/editlogin?partyId=${party.partyId}&userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>&nbsp;
                   </#if>
                   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
                       <a href="<@ofbizUrl>/EditUserLoginSecurityGroups?partyId=${party.partyId}&userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartySecurityGroups}]</a>&nbsp;
@@ -579,7 +579,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.PartyLastVisit}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/showvisits?party_id=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonListAll}</a>
+            <a href="<@ofbizUrl>/showvisits?partyId=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonListAll}</a>
           </td>
         </tr>
       </table>
