@@ -98,6 +98,7 @@
     <GlAccountType description="Operating Expense" glAccountTypeId="OPERATING_EXPENSE" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Other Expense" glAccountTypeId="OTHER_EXPENSE" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Owner's Equity" glAccountTypeId="OWNERS_EQUITY" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Retained Earnings" glAccountTypeId="RETAINED_EARNINGS" hasTable="N" parentTypeId=""/>
 
     <GlAccountType description="Customer Deposits" glAccountTypeId="CUSTOMER_DEPOSIT" hasTable="N" parentTypeId="CURRENT_LIABILITY"/>
     <GlAccountType description="Customer Credits" glAccountTypeId="CUSTOMER_CREDIT" hasTable="N" parentTypeId="CURRENT_LIABILITY"/>
