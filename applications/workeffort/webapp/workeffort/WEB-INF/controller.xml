@@ -106,7 +106,7 @@
 
     <request-map uri="main">
     	<security https="false" auth="true"/>
-    	<response name="success" type="view" value="main"/>
+    	<response name="success" type="view" value="mytasks"/>
     </request-map>
 
     <!-- Lookup request mappings -->
