@@ -6,6 +6,7 @@
     <AcctgTransType acctgTransTypeId="CAPITALIZATION" description="Capitalization" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
     <AcctgTransType acctgTransTypeId="ITEM_VARIANCE_ACCTG_" description="Item Variance" hasTable="Y" parentTypeId="INTERNAL_ACCTG_TRANS"/>
     <AcctgTransType acctgTransTypeId="OTHER_INTERNAL_ACCTG" description="Other Internal" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+    <AcctgTransType acctgTransTypeId="PERIOD_CLOSING" description="Period Closing" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
 
     <AcctgTransType acctgTransTypeId="EXTERNAL_ACCTG_TRANS" description="External" hasTable="Y" parentTypeId=""/>
 
@@ -70,9 +71,9 @@
     <GlAccountClass description="Liability" glAccountClassId="LIABILITY" parentClassId="CREDIT"/>
     <GlAccountClass description="Equity" glAccountClassId="EQUITY" parentClassId="CREDIT"/>
     <GlAccountClass description="Distributed Equity" glAccountClassId="DISTRIBUTION" parentClassId="DEBIT"/>
-    <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId="CREDIT"/>
+    <GlAccountClass description="Revenue" glAccountClassId="REVENUE" parentClassId="CREDIT"/>
+    <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId="DEBIT"/>
     <GlAccountClass description="Expense" glAccountClassId="EXPENSE" parentClassId="DEBIT"/>
-    <GlAccountClass description="Non-Posting" glAccountClassId="NON_POSTING" parentClassId=""/>
 
     <GlAccountType description="Accounts Receivable" glAccountTypeId="ACCOUNTS_RECEIVABLE" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Accounts Payable" glAccountTypeId="ACCOUNTS_PAYABLE" hasTable="N" parentTypeId=""/>
