@@ -157,9 +157,14 @@
         <description>Process a sale using FinAccount Gift Certificate</description>
         <implements service="giftCardProcessInterface"/>
     </service>
+    <service name="ofbGcRelease" engine="java"
+             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateRelease" auth="true">
+        <description>Return funds back to a Gift Certificate (Same as Refund)</description>
+        <implements service="paymentReleaseInterface"/>
+    </service>
     <service name="ofbGcRefund" engine="java"
              location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateRefund" auth="true">
-        <description>Return funds back to a Gift Certificate</description>
+        <description>Return funds back to a Gift Certificate (Same as Release)</description>
         <implements service="paymentRefundInterface"/>
     </service>
 
