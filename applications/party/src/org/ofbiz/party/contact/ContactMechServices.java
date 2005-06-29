@@ -913,7 +913,7 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map getPartyContactMechValueMaps(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
+        Map result = ServiceUtil.returnSuccess();
         GenericDelegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String partyId = (String)context.get("partyId");

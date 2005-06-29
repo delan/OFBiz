@@ -34,48 +34,43 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
 
-    <service name="interfacePerson" default-entity-name="Person"  engine="interface" location="" invoke="">
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
-    <service name="createPerson" engine="java"
+    <service name="createPerson" engine="java" default-entity-name="Person"
             location="org.ofbiz.party.party.PartyServices" invoke="createPerson" auth="false">
         <description>Create a Person</description>
-        <implements service="interfacePerson"/>
-        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes mode="INOUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="firstName" optional="false"/>
         <override name="lastName" optional="false"/>
     </service>
     <service name="createPersonAndUserLogin" engine="simple" require-new-transaction="true"
             location="org/ofbiz/party/party/PartySimpleMethods.xml" invoke="createPersonAndUserLogin" auth="false">
         <description>Create a Person and UserLogin</description>
-        <implements service="interfacePerson"/>
         <implements service="createUserLogin"/>
-        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="Person" mode="IN" include="nonpk" optional="true"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true" entity-name="Person"/>
         <attribute name="newUserLogin" type="Map" mode="OUT" optional="false"/>
     </service>
-    <service name="updatePerson" engine="java"
+    <service name="updatePerson" engine="java" default-entity-name="Person"
             location="org.ofbiz.party.party.PartyServices" invoke="updatePerson" auth="true">
         <description>Update a Person</description>
-        <implements service="interfacePerson"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-    <service name="interfacePartyGroup" default-entity-name="PartyGroup"  engine="interface" location="" invoke="">
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="createPartyGroup" engine="java"
+    <service name="createPartyGroup" engine="java" default-entity-name="PartyGroup"
             location="org.ofbiz.party.party.PartyServices" invoke="createPartyGroup" auth="false">
         <description>Create a PartyGroup</description>
-        <implements service="interfacePartyGroup"/>
-        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
         <override name="groupName" optional="false"/>
     </service>
-    <service name="updatePartyGroup" engine="java"
+    <service name="updatePartyGroup" engine="java" default-entity-name="PartyGroup"
             location="org.ofbiz.party.party.PartyServices" invoke="updatePartyGroup" auth="true">
         <description>Update a PartyGroup</description>
-        <implements service="interfacePartyGroup"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createAffiliate" engine="java"

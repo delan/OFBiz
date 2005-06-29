@@ -17,28 +17,9 @@
         <put section='content' content='/party/newcustomer.jsp'/>
     </define>
 
-    <define id='editlogin' region='MAIN_REGION'>
-        <put section='title'>Edit User Login Info</put>
-        <put section='content' content='/party/editlogin.jsp'/>
-    </define>
     <define id='EditUserLoginSecurityGroups' region='MAIN_REGION'>
         <put section='title'>Edit User Login Info</put>
         <put section='content' content='/party/EditUserLoginSecurityGroups.jsp'/>
-    </define>
-
-    <define id='newcustomer' region='MAIN_REGION'>
-        <put section='title'>New Customer</put>
-        <put section='content' content='/party/newcustomer.jsp'/>
-    </define>
-    
-    <define id='editperson' region='MAIN_REGION'>
-        <put section='title'>Edit Personal Information</put>
-        <put section='content' content='/party/editperson.jsp'/>
-    </define>
-
-    <define id='editpartygroup' region='MAIN_REGION'>
-        <put section='title'>Edit Party Group Information</put>
-        <put section='content' content='/party/editpartygroup.jsp'/>
     </define>
 
     <define id='createnewlogin' region='MAIN_REGION'>

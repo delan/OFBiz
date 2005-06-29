@@ -365,36 +365,36 @@
 
     <request-map uri="editperson">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editperson"/>
+        <response name="success" type="view" value="EditPerson"/>
     </request-map>
     <request-map uri="createPerson">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/party/PartySimpleEvents.xml" invoke="createPerson"/>
-        <response name="success" type="view" value="editperson"/>
-        <response name="error" type="view" value="editperson"/>
+        <event type="service" path="" invoke="createPerson"/>
+        <response name="success" type="view" value="EditPerson"/>
+        <response name="error" type="view" value="EditPerson"/>
     </request-map>
     <request-map uri="updatePerson">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/party/PartySimpleEvents.xml" invoke="updatePerson"/>
-        <response name="success" type="view" value="editperson"/>
-        <response name="error" type="view" value="editperson"/>
+        <event type="service" path="" invoke="updatePerson"/>
+        <response name="success" type="view" value="EditPerson"/>
+        <response name="error" type="view" value="EditPerson"/>
     </request-map>
 
     <request-map uri="editpartygroup">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editpartygroup"/>
+        <response name="success" type="view" value="EditPartyGroup"/>
     </request-map>
     <request-map uri="createPartyGroup">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/party/PartySimpleEvents.xml" invoke="createPartyGroup"/>
-        <response name="success" type="view" value="editpartygroup"/>
-        <response name="error" type="view" value="editpartygroup"/>
+        <event type="service" path="" invoke="createPartyGroup"/>
+        <response name="success" type="view" value="EditPartyGroup"/>
+        <response name="error" type="view" value="EditPartyGroup"/>
     </request-map>
     <request-map uri="updatePartyGroup">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/party/PartySimpleEvents.xml" invoke="updatePartyGroup"/>
-        <response name="success" type="view" value="editpartygroup"/>
-        <response name="error" type="view" value="editpartygroup"/>
+        <event type="service" path="" invoke="updatePartyGroup"/>
+        <response name="success" type="view" value="EditPartyGroup"/>
+        <response name="error" type="view" value="EditPartyGroup"/>
     </request-map>
 
     <request-map uri="viewvendor">
@@ -439,19 +439,19 @@
     
     <request-map uri="editlogin">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editlogin"/>
+        <response name="success" type="view" value="EditUserLogin"/>
     </request-map>
     <request-map uri="updatePassword">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updatePassword"/>
-        <response name="success" type="view" value="editlogin"/>
-        <response name="error" type="view" value="editlogin"/>
+        <response name="success" type="view" value="EditUserLogin"/>
+        <response name="error" type="view" value="EditUserLogin"/>
     </request-map>
     <request-map uri="updateUserLoginSecurity">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateUserLoginSecurity"/>
-        <response name="success" type="view" value="editlogin"/>
-        <response name="error" type="view" value="editlogin"/>
+        <response name="success" type="view" value="EditUserLogin"/>
+        <response name="error" type="view" value="EditUserLogin"/>
     </request-map>
 
     <request-map uri="EditUserLoginSecurityGroups">
@@ -721,6 +721,10 @@
     <view-map name="viewvendor" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewvendor"/>
     <view-map name="EditPartyTaxInfos" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyTaxInfos"/>
     <view-map name="editShoppingList" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editShoppingList"/>
+
+    <view-map name="EditPerson" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPerson"/>
+    <view-map name="EditPartyGroup" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup"/>
+    <view-map name="EditUserLogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLogin"/>
     
     <view-map name="editcontactmech" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editcontactmech"/>
     <view-map name="editcreditcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editcreditcard"/>
@@ -734,9 +738,6 @@
     
     <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyNewScreens.xml#CreateNewParty"/>
     <view-map name="newcustomer" type="region"/>
-    <view-map name="editperson" type="region"/>
-    <view-map name="editpartygroup" type="region"/>
-    <view-map name="editlogin" type="region"/>
     <view-map name="createnewlogin" type="region"/>
     <view-map name="createnewnote" type="region"/>
     <view-map name="createnewrole" type="region"/>
