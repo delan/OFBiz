@@ -28,6 +28,7 @@
     <screen name="FindFacility">
         <section>
             <actions>
+                <set field="headerItem" value="facility"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacility.bsh"/>
             </actions>
             <widgets>
