@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-eca.xsd">
     <!-- order item status changes -->
     <eca service="storeOrder" event="return">
@@ -77,6 +77,20 @@
         <action service="resetGrandTotal" mode="sync"/>
     </eca>
 
+    <!-- edit/add order items -->
+    <eca service="updateOrderItems" event="commit">
+        <action service="resetGrandTotal" mode="sync"/>
+    </eca>
+    <eca service="updateOrderItems" event="return">
+        <action service="processOrderPayments" mode="sync"/>
+    </eca>
+    <eca service="appendOrderItem" event="commit">
+        <action service="resetGrandTotal" mode="sync"/>
+    </eca>
+    <eca service="appendOrderItem" event="return">
+        <action service="processOrderPayments" mode="sync"/>
+    </eca>
+
     <!-- order confirmation/notification email ECAs -->
     <eca service="sendOrderConfirmation" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
@@ -89,7 +103,7 @@
     </eca>
     <eca service="sendOrderBackorderNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
-    </eca>    
+    </eca>
     <eca service="sendOrderPayRetryNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>
@@ -188,14 +202,14 @@
         <condition field-name="custRequestId" operator="is-not-empty"/>
         <action service="updateCommunicationEvent" mode="sync"/>
     </eca>
-    
+
     <!-- Requirement / CustRequestItem association event -->
     <eca service="createRequirement" event="commit">
     	<condition field-name="custRequestId" operator="is-not-empty"/>
     	<condition field-name="custRequestItemSeqId" operator="is-not-empty"/>
     	<action service="associatedRequirementWithRequestItem" mode="sync"/>
     </eca>
-    
+
     <!-- Requirement / stock level -->
     <eca service="createItemIssuance" event="invoke">
     	<condition field-name="quantity" value="0" operator="greater" type="Double"/>

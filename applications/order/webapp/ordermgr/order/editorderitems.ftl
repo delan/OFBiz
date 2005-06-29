@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
- *@version    $Rev: 3227 $
+ *@version    $Rev$
  *@since      2.2
 -->
 
@@ -32,12 +32,7 @@
         <div style="float: right;">
             <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-                    <div class="tabletext">
-                      <#--
-                      <a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a>
-                      -->
-                      <a href="<@ofbizUrl>/editOrderItems?orderId=${orderId}&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderEditItems}</a>
-                    </div>
+                    <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a><a href="<@ofbizUrl>/orderview?orderId=${orderId}&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderViewOrder}</a></div>
                 </#if>
             </#if>
         </div>
@@ -49,7 +44,7 @@
             <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
             <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
             <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>
-            <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderUnitList}</div></td>
+            <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderUnitPrice}</div></td>
             <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderAdjustments}</div></td>
             <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderSubTotal}</div></td>
             <td width="5%">&nbsp;</td>
@@ -57,6 +52,8 @@
           <#if !orderItemList?has_content>
             <tr><td><font color="red">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</font></td></tr>
           <#else>
+            <form name="updateItemInfo" method="post" action="<@ofbizUrl>/updateOrderItems?${paramString}</@ofbizUrl>"/>
+            <input type="hidden" name="orderId" value="${orderId}"/>
             <#list orderItemList as orderItem>
               <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
               <tr><td colspan="8"><hr class="sepbar"></td></tr>
@@ -119,7 +116,10 @@
                     <div class="tabletext">${uiLabelMap.OrderRemaining}:&nbsp;${remainingQuantity}&nbsp;&nbsp;</div>
                   </td>
                   <td align="right" valign="top" nowrap>
-                    <div class="tabletext" nowrap><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/> / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/></div>
+                    <div class="tabletext" nowrap>
+                      <input style="textBox" type="text" size="8" name="ipm_${orderItem.orderItemSeqId}" value="${orderItem.unitPrice?string("##0.00")}"/>
+                      &nbsp;<input type="checkbox" name="opm_${orderItem.orderItemSeqId}" value="Y"/>
+                    </div>
                   </td>
                   <td align="right" valign="top" nowrap>
                     <div class="tabletext" nowrap><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></div>
@@ -133,88 +133,14 @@
                   </td>
                   <td>&nbsp;</td>
                   <td align="right" valign="top" nowrap>
-                    &nbsp;
+                    <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED") || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && orderHeader.statusId != "ORDER_SENT")>
+                      <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancelAll}]</a></div>
+                    <#else>
+                      &nbsp;
+                    </#if>
                   </td>
                 </#if>
               </tr>
-              <#-- show info from workeffort -->
-              <#assign workOrderItemFulfillments = orderItem.getRelatedCache("WorkOrderItemFulfillment")?if_exists>
-              <#if workOrderItemFulfillments?has_content>
-                  <#list workOrderItemFulfillments as workOrderItemFulfillment>
-                      <#assign workEffort = workOrderItemFulfillment.getRelatedOneCache("WorkEffort")>
-                      <tr>
-                        <td>&nbsp;</td>
-                        <td colspan="9">
-                          <div class="tabletext">
-                            <#if orderItem.orderItemTypeId != "RENTAL_ORDER_ITEM">
-                              <b><i>Production Run</i>:</b>
-                              <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>&nbsp;
-                            </#if>
-                            From: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} to: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} Number of persons: ${workEffort.reservPersons?default("")}
-                          </div>
-                        </td>
-                      </tr>
-                      <#break><#-- need only the first one -->
-                  </#list>
-              </#if>
-              <#-- show linked order lines -->
-              <#if orderHeader?has_content && orderHeader.orderTypeId = "SALES_ORDER">
-                <#assign linkedOrderItems = orderItem.getRelatedCache("SalesOrderItemAssociation")?if_exists>
-              <#else>
-                <#assign linkedOrderItems = orderItem.getRelatedCache("PurchaseOrderItemAssociation")?if_exists>
-              </#if>
-
-              <#if linkedOrderItems?has_content>
-                <#list linkedOrderItems as linkedOrderItem>
-                  <#if orderHeader?has_content && orderHeader.orderTypeId = "SALES_ORDER">
-                    <#assign linkedOrderId = linkedOrderItem.purchaseOrderId>
-                    <#assign linkedOrderItemSeqId = linkedOrderItem.poItemSeqId>
-                  <#else>
-                    <#assign linkedOrderId = linkedOrderItem.salesOrderId>
-                    <#assign linkedOrderItemSeqId = linkedOrderItem.soItemSeqId>
-                  </#if>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td colspan="9">
-                      <div class="tabletext">
-                        <b><i>Linked to order item</i>:</b>
-                        <a href="/ordermgr/control/orderview?orderId=${linkedOrderId}" class="buttontext" style="font-size: xx-small;">${linkedOrderId}/${linkedOrderItemSeqId}</a>&nbsp;
-                      </div>
-                    </td>
-                  </tr>
-                </#list>
-              </#if>
-              <#-- show linked requirements -->
-              <#assign linkedRequirements = orderItem.getRelatedCache("OrderRequirementCommitment")?if_exists>
-
-              <#if linkedRequirements?has_content>
-                <#list linkedRequirements as linkedRequirement>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td colspan="9">
-                      <div class="tabletext">
-                        <b><i>Linked to requirement</i>:</b>
-                        <a href="/manufacturing/control/EditRequirement?requirementId=${linkedRequirement.requirementId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${linkedRequirement.requirementId}</a>&nbsp;
-                      </div>
-                    </td>
-                  </tr>
-                </#list>
-              </#if>
-
-              <#-- show linked quote -->
-              <#assign linkedQuote = orderItem.getRelatedOneCache("QuoteItem")?if_exists>
-
-              <#if linkedQuote?has_content>
-                <tr>
-                  <td>&nbsp;</td>
-                  <td colspan="9">
-                    <div class="tabletext">
-                      <b><i>Linked to quote</i>:</b>
-                      <a href="<@ofbizUrl>EditQuoteItem?quoteId=${linkedQuote.quoteId}&quoteItemSeqId=${linkedQuote.quoteItemSeqId}</@ofbizUrl>" class="buttontext" style="font-size: xx-small;">${linkedQuote.quoteId}-${linkedQuote.quoteItemSeqId}</a>&nbsp;
-                    </div>
-                  </td>
-                </tr>
-              </#if>
 
               <#-- now show adjustment details per line item -->
               <#assign orderItemAdjustments = Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentList(orderItem, orderAdjustments)>
@@ -254,46 +180,6 @@
                 </#list>
               </#if>
 
-              <#-- now show price info per line item -->
-              <#assign orderItemPriceInfos = orderReadHelper.getOrderItemPriceInfos(orderItem)>
-              <#if orderItemPriceInfos?exists && orderItemPriceInfos?has_content>
-                <tr><td>&nbsp;</td></tr>
-                <#list orderItemPriceInfos as orderItemPriceInfo>
-                  <tr>
-                    <td align="right" colspan="2">
-                      <div class="tabletext" style="font-size: xx-small;"><b><i>Price Rule</i>:</b> [${orderItemPriceInfo.productPriceRuleId}:${orderItemPriceInfo.productPriceActionSeqId}] ${orderItemPriceInfo.description?if_exists}</div>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td align="right">
-                      <div class="tabletext" style="font-size: xx-small;">
-                        <@ofbizCurrency amount=orderItemPriceInfo.modifyAmount isoCode=currencyUomId/>
-                      </div>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                </#list>
-              </#if>
-
-              <#-- now show survey information per line item -->
-              <#assign orderItemSurveyResponses = Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemSurveyResponse(orderItem)>
-              <#if orderItemSurveyResponses?exists && orderItemSurveyResponses?has_content>
-                <#list orderItemSurveyResponses as survey>
-                  <tr>
-                    <td align="right" colspan="2">
-                      <div class="tabletext" style="font-size: xx-small;">
-                        <b><i>Survey</i>:</b>
-                          <a href="/content/control/ViewSurveyResponse?surveyResponseId=${survey.surveyResponseId}&surveyId=${survey.surveyId}<#if survey.partyId?exists>&partyId=${survey.partyId}</#if>&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
-                      </div>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                </#list>
-              </#if>
-
               <#-- now show ship group info per line item -->
               <#assign orderItemShipGroupAssocs = orderItem.getRelated("OrderItemShipGroupAssoc")?if_exists>
               <#if orderItemShipGroupAssocs?has_content>
@@ -306,86 +192,31 @@
                       <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.OrderShipGroup}</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}</div>
                     </td>
                     <td align="center">
-                      <div class="tabletext" style="font-size: xx-small;">${shipGroupAssoc.quantity?string.number}&nbsp;</div>
+                      <div class="tabletext" style="font-size: xx-small;"><input type="text" style="textBox" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shipGroupAssoc.quantity?string.number}"/></div>
                     </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right" valign="top" nowrap>
-                      &nbsp;
+                      <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)))>
+                      <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
+                        <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancel}]</a></div>
+                      <#else>
+                        &nbsp;
+                      </#if>
                     </td>
-                  </tr>
-                </#list>
-              </#if>
-
-              <#-- now show inventory reservation info per line item -->
-              <#assign orderItemShipGrpInvResList = orderReadHelper.getOrderItemShipGrpInvResList(orderItem)>
-              <#if orderItemShipGrpInvResList?exists && orderItemShipGrpInvResList?has_content>
-                <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
-                  <tr>
-                    <td align="right" colspan="2">
-                      <div class="tabletext" style="font-size: xx-small;">
-                        <b><i>${uiLabelMap.FacilityInventory}</i>:</b>
-                          <a href="/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderItemShipGrpInvRes.inventoryItemId}</a>
-                        <b><i>${uiLabelMap.OrderShipGroup}</i>:</b> ${orderItemShipGrpInvRes.shipGroupSeqId}
-                      </div>
-                    </td>
-                    <td align="center">
-                      <div class="tabletext" style="font-size: xx-small;">${orderItemShipGrpInvRes.quantity?string.number}&nbsp;</div>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                </#list>
-              </#if>
-
-              <#-- now show planned shipment info per line item -->
-              <#assign orderShipments = orderItem.getRelated("OrderShipment")?if_exists>
-              <#if orderShipments?has_content>
-                <#list orderShipments as orderShipment>
-                  <tr>
-                    <td align="right" colspan="2">
-                      <div class="tabletext" style="font-size: xx-small;"><b><i>Planned in Shipment</i>: </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}</div>
-                    </td>
-                    <td align="center">
-                      <div class="tabletext" style="font-size: xx-small;">${orderShipment.quantity?string.number}&nbsp;</div>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                </#list>
-              </#if>
-
-              <#-- now show item issuances per line item -->
-              <#assign itemIssuances = itemIssuancesPerItem.get(orderItem.get("orderItemSeqId"))?if_exists>
-              <#if itemIssuances?has_content>
-                <#list itemIssuances as itemIssuance>
-                  <tr>
-                    <td align="right" colspan="2">
-                      <div class="tabletext" style="font-size: xx-small;">
-                        <#if itemIssuance.shipmentId?has_content>
-                          <b><i>${uiLabelMap.OrderIssuedToShipmentItem}</i>:</b>
-                          <a target="facility" href="/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId?if_exists}
-                        <#else>
-                          <b><i>Issued Without a Shipment (Immediate, Physical Store)</i></b>
-                        </#if>
-                      </div>
-                    </td>
-                    <td align="center">
-                      <div class="tabletext" style="font-size: xx-small;">${itemIssuance.quantity?string.number}&nbsp;</div>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
                   </tr>
                 </#list>
               </#if>
             </#list>
+
+            <tr>
+              <td align="right" colspan="8">
+                <input type="submit" value="${uiLabelMap.OrderUpdateItems}"/>
+              </td>
+            </tr>
+            </form>
           </#if>
           <tr><td colspan="8"><hr class="sepbar"></td></tr>
           <#list orderHeaderAdjustments as orderHeaderAdjustment>
@@ -403,7 +234,30 @@
               </tr>
             </#if>
           </#list>
-          
+
+          <#-- add new adjustment -->
+          <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">
+            <tr>
+              <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>/addOrderAdjustment?${paramString}</@ofbizUrl>">
+                <input type="hidden" name="orderId" value="${orderId}">
+                <input type="hidden" name="comments" value="Added manually by "${userLogin.userLoginId}"">
+                <td align="right" colspan="5">
+                  <select name="orderAdjustmentTypeId" class="selectBox">
+                    <#list orderAdjustmentTypes as type>
+                      <option value="${type.orderAdjustmentTypeId}">${type.description?default(type.orderAdjustmentTypeId)}</option>
+                    </#list>
+                  </select>
+                </td>
+                <td align="right">
+                  <input type="text" name="amount" size="6" value="0.00" class="inputBox">
+                </td>
+                <td align="right" colspan="2">
+                  <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">[${uiLabelMap.CommonAdd}]</a>
+                </td>
+              </form>
+            </tr>
+          </#if>
+
           <#-- subtotal -->
           <tr><td colspan=1></td><td colspan="8"><hr class="sepbar"></td></tr>
           <tr>

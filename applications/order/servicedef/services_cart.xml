@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
     <description>Order (ShoppingCart) Services</description>
     <vendor>OFBiz</vendor>
@@ -93,5 +93,12 @@
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="orderAdditionalEmails" type="String" mode="IN" optional="true"/>
         <attribute name="correspondingPoId" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="loadCartFromOrder" engine="java" auth="true"
+            location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="loadCartFromOrder">
+        <description>Create a ShoppingCart Object based on an existing order</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="OUT" optional="false"/>
     </service>
 </services>

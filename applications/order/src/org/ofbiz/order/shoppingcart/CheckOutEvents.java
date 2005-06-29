@@ -236,7 +236,7 @@ public class CheckOutEvents {
         return "success";
     }
 
-    public static String checkPaymentMethods(HttpServletRequest request, HttpServletResponse response) {                
+    public static String checkPaymentMethods(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -576,7 +576,7 @@ public class CheckOutEvents {
         if (mode == null) {
             return "customer";
         }
-        
+
         // check the userLogin object
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
@@ -610,7 +610,7 @@ public class CheckOutEvents {
                     }
                     request.getSession().setAttribute("userLogin", userLogin);
                     try {
-                        cart.setUserLogin(userLogin, dispatcher);                        
+                        cart.setUserLogin(userLogin, dispatcher);
                     } catch (CartItemModifyException e) {
                         Debug.logError(e, module);
                     }
@@ -714,7 +714,7 @@ public class CheckOutEvents {
         String requirePayment = null;
         String requireTerm = null;
         String requireAdditionalParty = null;
-	
+
         // these options are not available to anonymous shoppers (security)
         if (userLogin != null && !"anonymous".equals(userLogin.getString("userLoginId"))) {
             requireCustomer = request.getParameter("finalizeReqCustInfo");
@@ -749,7 +749,7 @@ public class CheckOutEvents {
         List paymentMethodIds = cart.getPaymentMethodIds();
         List paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 
-        if (requireCustomer.equalsIgnoreCase("true") && (customerPartyId == null || customerPartyId.equals("_NA_"))) {
+        if (requireCustomer.equalsIgnoreCase("true") && (customerPartyId == null || customerPartyId.equals("_NA_"))) {            
             return "customer";
         }
 

@@ -65,6 +65,30 @@
             </widgets>
         </section>
     </screen>
+    <screen name="OrderItemEdit">
+        <section>
+            <actions>
+                <set field="title" value="Edit Order Item"/>
+                <set field="headerItem" value="findorders"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderViewDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/orderheader.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/editorderitems.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/appendorderitem.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="OrderFindOrder">
         <section>
             <actions>

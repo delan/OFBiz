@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
     <description>Order Manager Module Site Configuration File</description>
     <owner>The Open For Business Project (c) 2001 </owner>
@@ -230,6 +230,22 @@
         <event type="service" invoke="quickShipEntireOrder"/>
         <response name="success" type="request-redirect" value="orderview"/>
         <response name="error" type="request-redirect" value="orderview"/>
+    </request-map>
+    <request-map uri="editOrderItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editorderitems"/>
+    </request-map>
+    <request-map uri="updateOrderItems">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateOrderItems"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="editorderitems"/>
+    </request-map>
+    <request-map uri="appendItemToOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="appendOrderItem"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="editorderitems"/>
     </request-map>
     <request-map uri="viewimage">
         <security https="true" auth="true"/>
@@ -746,7 +762,7 @@
     <request-map uri="requestitem">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditRequestItem"/>
-    </request-map>    
+    </request-map>
     <request-map uri="createrequestitem">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItem"/>
@@ -759,10 +775,10 @@
         <response name="success" type="view" value="RequestItems"/>
         <response name="error" type="view" value="RequestItems"/>
     </request-map>
-    
+
     <request-map uri="requestitemnotes">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="RequestItemNotes"/>        
+        <response name="success" type="view" value="RequestItemNotes"/>
     </request-map>
     <request-map uri="createrequestitemnote">
         <security https="true" auth="true"/>
@@ -851,7 +867,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ManageQuotePrices"/>
     </request-map>
-    
+
     <request-map uri="createQuote">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createQuote"/>
@@ -955,9 +971,9 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="OrderPDF"/>
     </request-map>
-    
+
     <!-- end of request mappings -->
-    
+
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
@@ -967,11 +983,12 @@
     <view-map name="findorders" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
     <view-map name="OrderDeliveryScheduleInfo" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderDeliveryScheduleInfo"/>
     <view-map name="orderview" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderView"/>
+    <view-map name="editorderitems" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderItemEdit"/>
     <view-map name="createnewnote" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderNewNote"/>
     <view-map name="receivepayment" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderReceivePayment"/>
     <view-map name="ordertasklist" type="screen" page="component://order/widget/ordermgr/OrderTaskScreens.xml#OrderTaskList"/>
     <view-map name="viewimage" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#ViewImage"/>
-    
+
     <view-map name="showcart" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#ShowCart"/>
     <view-map name="checkinits" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#CheckInits"/>
     <view-map name="orderagreements" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#OrderAgreements"/>
@@ -1009,13 +1026,13 @@
     <view-map name="OrderPurchaseReportOptions" type="screen" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportOptions"/>
     <view-map name="OrderPurchaseReportPayment" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportPayment" content-type="application/pdf" encoding="none"/>
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
-    
+
     <view-map name="FindRequirements" type="screen" page="component://order/widget/ordermgr/RequirementScreens.xml#FindRequirements"/>
     <view-map name="EditRequirement" type="screen" page="component://order/widget/ordermgr/RequirementScreens.xml#EditRequirement"/>
     <view-map name="ListRequirementCustRequests" type="screen" page="component://order/widget/ordermgr/RequirementScreens.xml#ListRequirementCustRequests"/>
     <view-map name="RequirementsForSupplier" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#RequirementsForSupplier"/>
     <view-map name="FindQuoteForCart" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindQuoteForCart"/>
-    
+
     <view-map name="FindQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#FindQuote"/>
     <view-map name="EditQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuote"/>
     <view-map name="ListQuoteRoles" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteRoles"/>
@@ -1046,9 +1063,9 @@
     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
     <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
     <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
-    
+
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
-    
+
     <!-- end of view mappings -->
 </site-conf>

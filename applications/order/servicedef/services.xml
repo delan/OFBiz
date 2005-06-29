@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
     <description>Order Services</description>
     <vendor>OFBiz</vendor>
@@ -92,7 +92,7 @@
         <attribute name="billFromVendorPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="shipFromVendorPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="supplierAgentPartyId" type="String" mode="IN" optional="true"/>
-        
+
         <attribute name="visitId" type="String" mode="IN" optional="true"/>
         <attribute name="affiliateId" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
@@ -106,7 +106,7 @@
         <attribute name="orderItems" type="java.util.List" mode="IN" optional="false"/>
         <attribute name="orderTerms" type="java.util.List" mode="IN" optional="false"/>
         <!-- workeffort contains the rental start/enddate, nbr of persons. WorkEfforts is mandatory for ordertype = RENTAL_ORDER_ITEM-->
-        <attribute name="workEfforts" type="java.util.List" mode="IN" optional="true"/> 
+        <attribute name="workEfforts" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderAdjustments" type="java.util.List" mode="IN" optional="false"/>
         <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="shippingAmount" type="Double" mode="IN" optional="true"/>
@@ -224,6 +224,36 @@
     	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
     	<attribute name="cancelQuantity" type="Double" mode="IN" optional="true"/>
+    </service>
+
+    <service name="updateOrderItems" engine="java" auth="true"
+            location="org.ofbiz.order.order.OrderServices" invoke="updateApprovedOrderItems">
+        <description>Update the quantities/prices for an existing order</description>
+        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="itemQtyMap" type="Map" mode="IN" string-map-prefix="iqm_" optional="false"/>
+        <attribute name="itemPriceMap" type="Map" mode="IN" string-map-prefix="ipm_" optional="false"/>
+        <attribute name="overridePriceMap" type="Map" mode="IN" string-map-prefix="opm_" optional="false"/>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="appendOrderItem" engine="java" auth="true"
+            location="org.ofbiz.order.order.OrderServices" invoke="addItemToApprovedOrder">
+        <description>Append an itemto an existing order</description>
+        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="overridePrice" type="String" mode="IN" optional="true"/>
+        <attribute name="basePrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="IN" optional="true"/>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="processOrderPayments" engine="java" auth="true"
+            location="org.ofbiz.order.order.OrderServices" invoke="processOrderPayments">
+        <description>Process payments for an order</description>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="checkOrderItemStatus" engine="java"
@@ -522,7 +552,7 @@
         <attribute name="attrName" type="String" mode="IN" optional="false"/>
         <attribute name="attrValue" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="createCustRequestItem" engine="simple" default-entity-name="CustRequestItem"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
         <description>Create a CustRequestItem record</description>
@@ -638,7 +668,7 @@
         </auto-attributes>
         <attribute name="requirementId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
     <!-- Shopping List Services -->
     <service name="shoppingListInterface" engine="interface" location="" invoke="">
         <description>Shopping List Interface</description>
@@ -754,7 +784,7 @@
         <attribute name="totalGrandAmount" type="Double" mode="OUT" optional="false"/>
         <attribute name="totalSubRemainingAmount" type="Double" mode="OUT" optional="false"/>
     </service>
-    
+
     <service name="getOrderHeaderInformation" engine="java" validate="false"
             location="org.ofbiz.order.order.OrderServices" invoke="getOrderHeaderInformation">
         <description>Get basic order header information.</description>
@@ -798,16 +828,16 @@
         <attribute name="callingMethodName" type="String" mode="IN" optional="true"/>
         <attribute name="hasSupplierRelatedPermission" type="String" mode="OUT" optional="false"/>
     </service>
-    
+
     <!-- serialization test -->
     <service name="shoppingCartRemoteTest" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="shoppingCartRemoteTest">
         <attribute name="cart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
     </service>
     <service name="shoppingCartTest" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="shoppingCartTest">        
+            location="org.ofbiz.order.order.OrderServices" invoke="shoppingCartTest">
     </service>
-    
+
     <!-- OrderShipment Services -->
     <service name="createOrderShipment" default-entity-name="OrderShipment" engine="simple"
             location="org/ofbiz/order/order/OrderServices.xml" invoke="createOrderShipment" auth="true">

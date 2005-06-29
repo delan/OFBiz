@@ -498,22 +498,19 @@ public class OrderReadHelper {
     }
 
     public GenericValue getBillToParty() {
-        GenericDelegator delegator = orderHeader.getDelegator();
-        try {
-            GenericEntity billToRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER")));
-            if (billToRole != null) {
-                return delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", billToRole.getString("partyId")));
-            } else {
-                return null;
-            }
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Error getting Order bill-to Party", module);
-        }
-        return null;
+        return this.getPartyFromRole("BILL_TO_CUSTOMER");
+    }
+
+    public GenericValue getShipToParty() {
+        return this.getPartyFromRole("SHIP_TO_CUSTOMER");
     }
 
     public GenericValue getPlacingParty() {
         return this.getPartyFromRole("PLACING_CUSTOMER");
+    }
+
+    public GenericValue getEndUserParty() {
+        return this.getPartyFromRole("END_USER_CUSTOMER");
     }
 
     public GenericValue getSupplierAgent() {
@@ -1030,7 +1027,7 @@ public class OrderReadHelper {
     public List getOrderItems() {
         if (orderItems == null) {
             try {
-                orderItems = orderHeader.getRelated("OrderItem");
+                orderItems = orderHeader.getRelated("OrderItem", UtilMisc.toList("orderItemSeqId"));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
             }
@@ -1203,6 +1200,17 @@ public class OrderReadHelper {
         String orderItemSeqId = (String) orderItem.get("orderItemSeqId");
 
         return EntityUtil.filterByAnd(this.orderItemPriceInfos, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
+    }
+
+    public List getOrderItemShipGroupAssocs(GenericValue orderItem) {
+        if (orderItem == null) return null;
+        try {
+            return orderHeader.getDelegator().findByAnd("OrderItemShipGroupAssoc",
+                    UtilMisc.toMap("orderId", orderItem.getString("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")), UtilMisc.toList("shipGroupSeqId"));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return null;
     }
 
     public List getOrderItemShipGrpInvResList(GenericValue orderItem) {
@@ -1567,6 +1575,16 @@ public class OrderReadHelper {
 
         Double cancelQty = orderItem.getDouble(cancelQtyField);
         Double orderQty = orderItem.getDouble(quantityField);
+
+        if (cancelQty == null) cancelQty = new Double(0.0);
+        if (orderQty == null) orderQty = new Double(0.0);
+
+        return new Double(orderQty.doubleValue() - cancelQty.doubleValue());
+    }
+
+    public static Double getOrderItemShipGroupQuantity(GenericValue shipGroupAssoc) {
+        Double cancelQty = shipGroupAssoc.getDouble("cancelQuantity");
+        Double orderQty = shipGroupAssoc.getDouble("quantity");
 
         if (cancelQty == null) cancelQty = new Double(0.0);
         if (orderQty == null) orderQty = new Double(0.0);
