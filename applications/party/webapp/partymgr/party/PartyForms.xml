@@ -66,9 +66,20 @@
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>
-    <form name="updatePassword" type="single" 
-            target="updatePassword" title=""
+    <form name="createUserLogin" type="single" 
+            target="createUserLogin" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createUserLogin"/>
+        
+        <field name="partyId"><hidden/></field>
+        <field name="currentPassword"><password/></field>
+        <field name="currentPasswordVerify"><password/></field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
+    </form>
+    <form name="updatePassword" type="single" 
+        target="updatePassword" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
             <set field="passwordHint" from-field="editUserLogin.passwordHint"/>
         </actions>

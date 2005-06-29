@@ -52,7 +52,6 @@
   <simple-map-processor name="partyGroup">
     <process field="groupName"><copy/><not-empty><fail-property resource="PartyUiLabels" property="PartyGroupNameMissing"/></not-empty></process>
     <process field="partyTypeId"><copy/></process>
-    <process field="federalTaxId"><copy/></process>
     <process field="comments"><copy/></process>
   </simple-map-processor>
 </simple-map-processors>

@@ -482,7 +482,7 @@
         <response name="success" type="view" value="createnewlogin"/>
     </request-map>
 
-    <request-map uri="createuserlogin">
+    <request-map uri="createUserLogin">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createUserLogin"/>
         <response name="success" type="view" value="viewprofile"/>
@@ -725,6 +725,8 @@
     <view-map name="EditPerson" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPerson"/>
     <view-map name="EditPartyGroup" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup"/>
     <view-map name="EditUserLogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLogin"/>
+    <view-map name="createnewlogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateUserLogin"/>
+    <view-map name="EditUserLoginSecurityGroups" type="region"/>
     
     <view-map name="editcontactmech" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editcontactmech"/>
     <view-map name="editcreditcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editcreditcard"/>
@@ -738,10 +740,8 @@
     
     <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyNewScreens.xml#CreateNewParty"/>
     <view-map name="newcustomer" type="region"/>
-    <view-map name="createnewlogin" type="region"/>
     <view-map name="createnewnote" type="region"/>
     <view-map name="createnewrole" type="region"/>
-    <view-map name="EditUserLoginSecurityGroups" type="region"/>
     
     <view-map name="FindSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#FindSecurityGroup"/>
     <view-map name="EditSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#EditSecurityGroup"/>
