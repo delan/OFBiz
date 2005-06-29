@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class GiftCertificateServices {
@@ -329,13 +329,24 @@ public class GiftCertificateServices {
     }
 
     public static Map giftCertificateRefund(DispatchContext dctx, Map context) {
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericDelegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
+        String currency = (String) context.get("currency");
+        Double amount = (Double) context.get("refundAmount");
+        return giftCertificateRestore(dctx, userLogin, paymentPref, amount, currency, "refund");
+    }
 
+    public static Map giftCertificateRelease(DispatchContext dctx, Map context) {
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
         String currency = (String) context.get("currency");
         Double amount = (Double) context.get("releaseAmount");
+        return giftCertificateRestore(dctx, userLogin, paymentPref, amount, currency, "release");
+    }
+
+    private static Map giftCertificateRestore(DispatchContext dctx, GenericValue userLogin, GenericValue paymentPref, Double amount, String currency, String resultPrefix) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
 
         // get the orderId for tracking
         String orderId = paymentPref.getString("orderId");
@@ -377,25 +388,25 @@ public class GiftCertificateServices {
         refundCtx.put("amount", amount);
         refundCtx.put("userLogin", userLogin);
 
-        Map refundGcResult = null;
+        Map restoreGcResult = null;
         try {
-            refundGcResult = dispatcher.runSync("addFundsToGiftCertificate", refundCtx);
+            restoreGcResult = dispatcher.runSync("addFundsToGiftCertificate", refundCtx);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Unable to call refund service!");
         }
-        if (ServiceUtil.isError(refundGcResult)) {
-            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(refundGcResult));
+        if (ServiceUtil.isError(restoreGcResult)) {
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(restoreGcResult));
         }
 
         Map result = ServiceUtil.returnSuccess();
-        if (refundGcResult != null) {
-            Boolean processResult = (Boolean) refundGcResult.get("processResult");
-            result.put("refundAmount", amount);
-            result.put("refundResult", processResult);
-            result.put("refundCode", "R");
-            result.put("refundFlag", refundGcResult.get("responseCode"));
-            result.put("refundRefNum", refundGcResult.get("referenceNum"));
+        if (restoreGcResult != null) {
+            Boolean processResult = (Boolean) restoreGcResult.get("processResult");
+            result.put(resultPrefix + "Amount", amount);
+            result.put(resultPrefix + "Result", processResult);
+            result.put(resultPrefix + "Code", "R");
+            result.put(resultPrefix + "Flag", restoreGcResult.get("responseCode"));
+            result.put(resultPrefix + "RefNum", restoreGcResult.get("referenceNum"));
         }
 
         return result;
