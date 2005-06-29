@@ -81,6 +81,7 @@ public class ShoppingCart implements Serializable {
     private double billingAccountAmt = 0.00;
     private String agreementId = null;
     private String quoteId = null;
+    private long nextItemSeq = 1;
 
     private String defaultItemDeliveryDate = null;
     private String defaultItemComment = null;
@@ -101,7 +102,7 @@ public class ShoppingCart implements Serializable {
     private List paymentInfo = new LinkedList();
     private List shipInfo = new LinkedList();
     private Map contactMechIdsMap = new HashMap();
-    
+
     /** contains a list of partyId for each roleTypeId (key) */
     private Map additionalPartyRole = new HashMap();
 
@@ -195,7 +196,7 @@ public class ShoppingCart implements Serializable {
                 assoc.set("quantity", new Double(itemInfo.quantity));
                 values.add(assoc);
 
-                // create the item tax adjustment                
+                // create the item tax adjustment
                 Iterator iti = itemInfo.itemTaxAdj.iterator();
                 while (iti.hasNext()) {
                     GenericValue taxAdj = (GenericValue) iti.next();
@@ -298,6 +299,7 @@ public class ShoppingCart implements Serializable {
         public Double amount = null;
         public boolean singleUse = false;
         public boolean isPresent = false;
+        public boolean overflow = false;
 
         public GenericValue getValueObject(GenericDelegator delegator) {
             String entityName = null;
@@ -370,7 +372,7 @@ public class ShoppingCart implements Serializable {
                     if (billingAddress != null) {
                         billingAddressId = billingAddress.getString("contactMechId");
                     }
-                                        
+
                     if (UtilValidate.isNotEmpty(billingAddressId)) {
                         GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
                         orderCm.set("contactMechPurposeTypeId", "BILLING_LOCATION");
@@ -383,6 +385,7 @@ public class ShoppingCart implements Serializable {
                 GenericValue opp = delegator.makeValue("OrderPaymentPreference", new HashMap());
                 opp.set("paymentMethodTypeId", valueObj.getString("paymentMethodTypeId"));
                 opp.set("presentFlag", isPresent ? "Y" : "N");
+                opp.set("overflowFlag", overflow ? "Y" : "N");
                 opp.set("paymentMethodId", paymentMethodId);
                 opp.set("billingPostalCode", postalCode);
                 opp.set("maxAmount", amount);
@@ -495,7 +498,7 @@ public class ShoppingCart implements Serializable {
     protected String billFromVendorPartyId = null;
     protected String shipFromVendorPartyId = null;
     protected String supplierAgentPartyId = null;
-    
+
     protected GenericValue userLogin = null;
     protected GenericValue autoUserLogin = null;
 
@@ -526,7 +529,7 @@ public class ShoppingCart implements Serializable {
         this.locale = cart.getLocale();
         this.currencyUom = cart.getCurrency();
         this.viewCartOnAdd = cart.viewCartOnAdd();
-        
+
         // clone the additionalPartyRoleMap
         this.additionalPartyRole = new HashMap();
         Iterator it = cart.additionalPartyRole.entrySet().iterator();
@@ -583,20 +586,20 @@ public class ShoppingCart implements Serializable {
         return this.productStoreId;
     }
 
-    /** 
+    /**
      * This is somewhat of a dangerous method, changing the productStoreId changes a lot of stuff including:
      * - some items in the cart may not be valid in any catalog in the new store
      * - promotions need to be recalculated for the products that remain
      * - what else? lots of settings on the ProductStore...
-     * 
-     * So for now this can only be called if the cart is empty... otherwise it wil throw an exception 
-     * 
+     *
+     * So for now this can only be called if the cart is empty... otherwise it wil throw an exception
+     *
      */
     public void setProductStoreId(String productStoreId) {
         if ((productStoreId == null && this.productStoreId == null) || (productStoreId != null && productStoreId.equals(this.productStoreId))) {
             return;
         }
-        
+
         if (this.size() == 0) {
             this.productStoreId = productStoreId;
         } else {
@@ -619,11 +622,11 @@ public class ShoppingCart implements Serializable {
     public void setTerminalId(String terminalId) {
         this.terminalId = terminalId;
     }
-    
+
     public String getFacilityId() {
         return this.facilityId;
     }
-    
+
     public void setFacilityId(String facilityId) {
         this.facilityId = facilityId;
     }
@@ -857,6 +860,19 @@ public class ShoppingCart implements Serializable {
         return (ShoppingCartItem) cartLines.get(index);
     }
 
+    public ShoppingCartItem findCartItem(String orderItemSeqId) {
+        if (orderItemSeqId != null) {
+            for (int i = 0; i < this.cartLines.size(); i++) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+                String itemSeqId = cartItem.getOrderItemSeqId();
+                if (itemSeqId != null && orderItemSeqId.equals(itemSeqId)) {
+                    return cartItem;
+                }
+            }
+        }
+        return null;
+    }
+
     /** Remove an item from the cart object. */
     public void removeCartItem(int index, LocalDispatcher dispatcher) throws CartItemModifyException {
         if (index < 0) return;
@@ -937,7 +953,7 @@ public class ShoppingCart implements Serializable {
                 ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
                 cartItem.updatePrice(dispatcher, this);
             }
-            
+
             // check all promo codes, remove on failed check
             Iterator promoCodeIter = this.productPromoCodes.iterator();
             while (promoCodeIter.hasNext()) {
@@ -948,7 +964,7 @@ public class ShoppingCart implements Serializable {
                     Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderOnUserChangePromoCodeWasRemovedBecause", UtilMisc.toMap("checkResult",checkResult), locale), module);
                 }
             }
-            
+
             // rerun promotions
             ProductPromoWorker.doPromotions(this, dispatcher);
         }
@@ -1005,7 +1021,7 @@ public class ShoppingCart implements Serializable {
     public void setOrderPartyId(String orderPartyId) {
         this.orderPartyId = orderPartyId;
     }
-    
+
     public String getPlacingCustomerPartyId() {
         return this.placingCustomerPartyId != null ? this.placingCustomerPartyId : this.getPartyId();
     }
@@ -1014,7 +1030,7 @@ public class ShoppingCart implements Serializable {
         this.placingCustomerPartyId = placingCustomerPartyId;
         if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = placingCustomerPartyId;
     }
-    
+
     public String getBillToCustomerPartyId() {
         return this.billToCustomerPartyId != null ? this.billToCustomerPartyId : this.getPartyId();
     }
@@ -1023,7 +1039,7 @@ public class ShoppingCart implements Serializable {
         this.billToCustomerPartyId = billToCustomerPartyId;
         if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = billToCustomerPartyId;
     }
-    
+
     public String getShipToCustomerPartyId() {
         return this.shipToCustomerPartyId != null ? this.shipToCustomerPartyId : this.getPartyId();
     }
@@ -1032,7 +1048,7 @@ public class ShoppingCart implements Serializable {
         this.shipToCustomerPartyId = shipToCustomerPartyId;
         if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = shipToCustomerPartyId;
     }
-    
+
     public String getEndUserCustomerPartyId() {
         return this.endUserCustomerPartyId != null ? this.endUserCustomerPartyId : this.getPartyId();
     }
@@ -1045,7 +1061,7 @@ public class ShoppingCart implements Serializable {
 //    protected String billFromVendorPartyId = null;
   //  protected String shipFromVendorPartyId = null;
     //protected String supplierAgentPartyId = null;
-    
+
     public String getBillFromVendorPartyId() {
         return this.billFromVendorPartyId != null ? this.billFromVendorPartyId : this.getPartyId();
     }
@@ -1054,7 +1070,7 @@ public class ShoppingCart implements Serializable {
         this.billFromVendorPartyId = billFromVendorPartyId;
         if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = billFromVendorPartyId;
     }
-    
+
     public String getShipFromVendorPartyId() {
         return this.shipFromVendorPartyId != null ? this.shipFromVendorPartyId : this.getPartyId();
     }
@@ -1063,7 +1079,7 @@ public class ShoppingCart implements Serializable {
         this.shipFromVendorPartyId = shipFromVendorPartyId;
         if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = shipFromVendorPartyId;
     }
-    
+
     public String getSupplierAgentPartyId() {
         return this.supplierAgentPartyId != null ? this.supplierAgentPartyId : this.getPartyId();
     }
@@ -1072,7 +1088,7 @@ public class ShoppingCart implements Serializable {
         this.supplierAgentPartyId = supplierAgentPartyId;
         if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = supplierAgentPartyId;
     }
-    
+
     public String getPartyId() {
         String partyId = this.orderPartyId;
 
@@ -1152,20 +1168,20 @@ public class ShoppingCart implements Serializable {
         this.orderTerms.clear();
 
         this.adjustments.clear();
-        
+
         this.expireSingleUsePayments();
         this.cartLines.clear();
         this.clearPayments();
         this.shipInfo.clear();
         this.contactMechIdsMap.clear();
-        
+
         // clear the additionalPartyRole Map
         Iterator it = this.additionalPartyRole.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry me = (Map.Entry) it.next();
             ((LinkedList) me.getValue()).clear();
         }
-        this.additionalPartyRole.clear();        
+        this.additionalPartyRole.clear();
 
         this.freeShippingProductPromoActions.clear();
         this.desiredAlternateGiftByAction.clear();
@@ -1268,7 +1284,7 @@ public class ShoppingCart implements Serializable {
     public String getQuoteId() {
         return this.quoteId;
     }
-    
+
     // =======================================================================
     // Payment Method
     // =======================================================================
@@ -2006,7 +2022,7 @@ public class ShoppingCart implements Serializable {
             tempShipping += csi.shipEstimate;
 
         }
-                
+
         return tempShipping;
     }
 
@@ -2361,6 +2377,14 @@ public class ShoppingCart implements Serializable {
         this.orderId = orderId;
     }
 
+    public void setNextItemSeq(long seq) throws GeneralException {
+        if (this.nextItemSeq != 1) {
+            throw new GeneralException("Cannot set the item sequence once the sequence has been incremented!");
+        } else {
+            this.nextItemSeq = seq;
+        }
+    }
+
     /** TODO: Sets the first attempt orderId for this cart. */
     public void setFirstAttemptOrderId(String orderId) {
         this.firstAttemptOrderId = orderId;
@@ -2393,7 +2417,7 @@ public class ShoppingCart implements Serializable {
     public List getFreeShippingProductPromoActions() {
         return this.freeShippingProductPromoActions;
     }
-    
+
     public void removeAllDesiredAlternateGiftByActions() {
         this.desiredAlternateGiftByAction.clear();
     }
@@ -2419,7 +2443,7 @@ public class ShoppingCart implements Serializable {
         // clear out info for general promo use
         this.productPromoUseInfoList.clear();
     }
-    
+
     public void clearCartItemUseInPromoInfo() {
         // clear out info about which cart items have been used in promos
         Iterator cartLineIter = this.iterator();
@@ -2474,7 +2498,7 @@ public class ShoppingCart implements Serializable {
 
     public void clearAllPromotionInformation() {
         this.clearAllPromotionAdjustments();
-        
+
         // remove all free shipping promo actions
         this.removeAllFreeShippingProductPromoActions();
 
@@ -2482,7 +2506,7 @@ public class ShoppingCart implements Serializable {
         this.clearProductPromoUseInfo();
         this.clearCartItemUseInPromoInfo();
     }
-    
+
     public void clearAllPromotionAdjustments() {
         // remove cart adjustments from promo actions
         List cartAdjustments = this.getAdjustments();
@@ -2519,10 +2543,10 @@ public class ShoppingCart implements Serializable {
             }
         }
     }
-    
-    /** Adds a promotion code to the cart, checking if it is valid. If it is valid this will return null, otherwise it will return a message stating why it was not valid 
+
+    /** Adds a promotion code to the cart, checking if it is valid. If it is valid this will return null, otherwise it will return a message stating why it was not valid
      * @param productPromoCodeId The promotion code to check and add
-     * @return String that is null if valid, and added to cart, or an error message of the code was not valid and not added to the cart. 
+     * @return String that is null if valid, and added to cart, or an error message of the code was not valid and not added to the cart.
      */
     public String addProductPromoCode(String productPromoCodeId, LocalDispatcher dispatcher) {
         if (this.productPromoCodes.contains(productPromoCodeId)) {
@@ -2582,12 +2606,12 @@ public class ShoppingCart implements Serializable {
 
         parties.add(0, partyId);
     }
-    
+
     /**
      * Removes a previously associated party to the order.
      * @param partyId identifier of the party to associate to order
      * @param roleTypeId identifier of the role used in party-order association
-     */    
+     */
     public void removeAdditionalPartyRole(String partyId, String roleTypeId) {
         List parties = (List) additionalPartyRole.get(roleTypeId);
 
@@ -2605,7 +2629,7 @@ public class ShoppingCart implements Serializable {
             }
         }
     }
-    
+
     public Map getAdditionalPartyRoleMap() {
         return additionalPartyRole;
     }
@@ -2646,22 +2670,36 @@ public class ShoppingCart implements Serializable {
         // now build the lines
         synchronized (cartLines) {
             List result = new LinkedList();
-            
+
             Iterator itemIter = cartLines.iterator();
-            long seqId = 1;
 
             while (itemIter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
 
-                String orderItemSeqId = UtilFormatOut.formatPaddedNumber(seqId, 5);
-                item.setOrderItemSeqId(orderItemSeqId);
-                seqId++;
+                if (UtilValidate.isEmpty(item.getOrderItemSeqId())) {
+                    String orderItemSeqId = UtilFormatOut.formatPaddedNumber(nextItemSeq, 5);
+                    item.setOrderItemSeqId(orderItemSeqId);
+                } else {
+                    try {
+                        int thisSeqId = Integer.parseInt(item.getOrderItemSeqId());
+                        if (thisSeqId > nextItemSeq) {
+                            nextItemSeq = thisSeqId;
+                        }
+                    } catch (NumberFormatException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+                nextItemSeq++;
 
                 // the initial status for all item types
                 String initialStatus = "ITEM_CREATED";
+                String status = item.getStatusId();
+                if (status == null) {
+                    status = initialStatus;
+                }
 
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
-                orderItem.set("orderItemSeqId", orderItemSeqId);
+                orderItem.set("orderItemSeqId", item.getOrderItemSeqId());
                 orderItem.set("orderItemTypeId", item.getItemType());
                 orderItem.set("productId", item.getProductId());
                 orderItem.set("prodCatalogId", item.getProdCatalogId());
@@ -2670,6 +2708,7 @@ public class ShoppingCart implements Serializable {
                 orderItem.set("selectedAmount", new Double(item.getSelectedAmount()));
                 orderItem.set("unitPrice", new Double(item.getBasePrice()));
                 orderItem.set("unitListPrice", new Double(item.getListPrice()));
+                orderItem.set("isPromo", item.getIsPromo() ? "Y" : "N");
 
                 orderItem.set("shoppingListId", item.getShoppingListId());
                 orderItem.set("shoppingListItemSeqId", item.getShoppingListItemSeqId());
@@ -2680,7 +2719,7 @@ public class ShoppingCart implements Serializable {
                 orderItem.set("correspondingPoId", this.getPoNumber());
                 orderItem.set("quoteId", item.getQuoteId());
                 orderItem.set("quoteItemSeqId", item.getQuoteItemSeqId());
-                orderItem.set("statusId", initialStatus);
+                orderItem.set("statusId", status);
 
                 result.add(orderItem);
                 // don't do anything with adjustments here, those will be added below in makeAllAdjustments
@@ -2693,7 +2732,7 @@ public class ShoppingCart implements Serializable {
     public List makeWorkEfforts() {
         List allWorkEfforts = new LinkedList();
         Iterator itemIter = cartLines.iterator();
-        
+
         while (itemIter.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
             if ("RENTAL_ORDER_ITEM".equals(item.getItemType())) {         // prepare workeffort when the order item is a rental item
@@ -2707,7 +2746,7 @@ public class ShoppingCart implements Serializable {
 
                 allWorkEfforts.add(workEffort);
             }
-        } 
+        }
         return allWorkEfforts;
     }
 
@@ -2813,7 +2852,7 @@ public class ShoppingCart implements Serializable {
             allOpPrefs.addAll(inf.makeOrderPaymentInfos(this.getDelegator()));
 
         }
-        
+
         return allOpPrefs;
     }
 
@@ -2862,7 +2901,7 @@ public class ShoppingCart implements Serializable {
         }
         return productPromoUses;
     }
-        
+
     /** make a list of SurveyResponse object to update with order information set */
     public List makeAllOrderItemSurveyResponses() {
         List allInfos = new LinkedList();
@@ -3003,7 +3042,7 @@ public class ShoppingCart implements Serializable {
         result.put("orderItemSurveyResponses", this.makeAllOrderItemSurveyResponses());
         result.put("orderAdditionalPartyRoleMap", this.getAdditionalPartyRoleMap());
         result.put("orderItemAssociations", this.makeAllOrderItemAssociations());
-        
+
         result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
         result.put("currencyUom", this.getCurrency());
         result.put("billingAccountId", this.getBillingAccountId());

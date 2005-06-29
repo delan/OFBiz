@@ -29,7 +29,7 @@
  */
 -->
 
-<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
@@ -352,6 +352,7 @@
       <field name="productFeatureId" type="id"></field>
       <field name="prodCatalogId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
+      <field name="isPromo" type="indicator"></field>
       <field name="quoteId" type="id"></field>
       <field name="quoteItemSeqId" type="id"></field>
       <field name="shoppingListId" type="id"></field>
@@ -740,6 +741,7 @@
       <field name="paymentMethodId" type="id"></field>
       <field name="securityCode" type="long-varchar" encrypt="true"></field>
       <field name="presentFlag" type="indicator"></field>
+      <field name="overflowFlag" type="indicator"></field>
       <field name="maxAmount" type="currency-amount"></field>
       <field name="processAttempt" type="numeric"></field>
       <field name="billingPostalCode" type="short-varchar"></field>
@@ -1927,9 +1929,9 @@
       <field name="productId" type="id-ne"></field>
       <field name="prodCatalogId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
-      <field name="reservStart" type="date-time"></field>       
+      <field name="reservStart" type="date-time"></field>
       <field name="reservLength" type="floating-point"></field>
-      <field name="reservPersons" type="floating-point"></field>     
+      <field name="reservPersons" type="floating-point"></field>
       <field name="unitPrice" type="currency-amount"></field>
       <field name="reserv2ndPPPerc" type="floating-point"/>
       <field name="reservNthPPPerc" type="floating-point"/>
@@ -1965,7 +1967,7 @@
       <field name="description" type="description"></field>
       <field name="isPublic" type="indicator"></field>
       <field name="isActive" type="indicator"></field>
-      <field name="currencyUom" type="id"></field>      
+      <field name="currencyUom" type="id"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
       <field name="carrierPartyId" type="id"></field>
       <field name="carrierRoleTypeId" type="id"></field>
@@ -2002,7 +2004,7 @@
       <relation type="one" fk-name="SHLIST_CSSM" rel-entity-name="CarrierShipmentMethod">
         <key-map field-name="shipmentMethodTypeId"/>
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
-        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>                
+        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="SHLIST_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
@@ -2026,7 +2028,7 @@
       <field name="quantity" type="floating-point"></field>
       <field name="reservStart" type="date-time"></field>
       <field name="reservLength" type="floating-point"></field>
-      <field name="reservPersons" type="floating-point"></field>      
+      <field name="reservPersons" type="floating-point"></field>
       <field name="quantityPurchased" type="floating-point"></field>
       <prim-key field="shoppingListId"/>
       <prim-key field="shoppingListItemSeqId"/>

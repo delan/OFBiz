@@ -23,6 +23,7 @@
  */
 package org.ofbiz.order.shoppingcart;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -37,7 +38,9 @@ import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -57,9 +60,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import java.sql.Timestamp;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.ObjectType;
 
 /**
  * A facade over the ShoppingCart to simplify the relatively complex
@@ -289,7 +289,7 @@ public class CheckOutHelper {
                 }
 
                 boolean singleUse = singleUsePayments.contains(checkOutPaymentId);
-                cart.addPaymentAmount(checkOutPaymentId, paymentAmount, singleUse);                
+                cart.addPaymentAmount(checkOutPaymentId, paymentAmount, singleUse);
             }
         } else if (cart.getGrandTotal() != 0.00) {
             // only return an error if the order total is not 0.00
@@ -691,7 +691,7 @@ public class CheckOutHelper {
                     csi.setItemInfo(item, adjs);
                     Debug.log("Added item adjustments to ship group [" + i + " / " + x + "] - " + adjs, module);
                 }
-            }            
+            }
 
             // need to manually clear the order adjustments
             csi.shipTaxAdj.clear();
@@ -712,7 +712,7 @@ public class CheckOutHelper {
 
         Iterator iter = csi.shipItemInfo.keySet().iterator();
         for (int i = 0; i < totalItems; i++) {
-            ShoppingCartItem cartItem = (ShoppingCartItem) csi.shipItemInfo.get(i);                                
+            ShoppingCartItem cartItem = (ShoppingCartItem) csi.shipItemInfo.get(i);
             ShoppingCart.CartShipInfo.CartShipItemInfo itemInfo =
                     (ShoppingCart.CartShipInfo.CartShipItemInfo) csi.shipItemInfo.get(cartItem);
 
@@ -748,7 +748,7 @@ public class CheckOutHelper {
         serviceContext.put("itemShippingList", shipAmt);
         serviceContext.put("orderShippingAmount", shipAmount);
         serviceContext.put("shippingAddress", shipAddress);
-        
+
         return serviceContext;
 
     }
@@ -834,7 +834,7 @@ public class CheckOutHelper {
                     captCtx.put("orderPaymentPreference", opp);
                     if (opp.get("paymentMethodId") == null) {
                         captCtx.put("serviceTypeEnum", "PRDS_PAY_EXTERNAL");
-                    }                    
+                    }
                     captCtx.put("captureResult", new Boolean(true));
                     captCtx.put("captureAmount", opp.getDouble("maxAmount"));
                     captCtx.put("captureRefNum", opp.getString("manualRefNum"));
@@ -872,7 +872,7 @@ public class CheckOutHelper {
             if (paymentResult != null && ServiceUtil.isError(paymentResult)) {
                 throw new GeneralException(ServiceUtil.getErrorMessage(paymentResult));
             }
-            
+
             // grab the customer messages -- only passed back in the case of an error or failure
             List messages = (List) paymentResult.get("authResultMsgs");
 
@@ -903,7 +903,7 @@ public class CheckOutHelper {
                     boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
                     if (!ok) {
                         throw new GeneralException("Problem with order change; see above error");
-                    }                    
+                    }
                 } else if (authResp.equals("ERROR")) {
                     // service failed
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);
@@ -1608,6 +1608,9 @@ public class CheckOutHelper {
         // validate any gift card balances
         this.validateGiftCardAmounts();
 
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+
         // update the selected payment methods amount with valid numbers
         if (paymentMethods != null) {
             List nullPaymentIds = new ArrayList();
@@ -1626,16 +1629,34 @@ public class CheckOutHelper {
                 double selectedPaymentTotal = cart.getPaymentTotal();
                 double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
                 double nullAmount = requiredAmount - selectedPaymentTotal;
-                if (nullAmount > 0) {
-                    Debug.log("Reset null paymentMethodId - " + paymentMethodId + " / " + nullAmount, module);
-                    cart.addPaymentAmount(paymentMethodId, nullAmount);
+                
+                String amountString = formatter.format(nullAmount);
+                double newAmount = 0;
+                try {
+                    newAmount = formatter.parse(amountString).doubleValue();
+                } catch (ParseException e) {
+                    Debug.logError(e, "Problem getting parsed new amount; unable to update payment info!", module);
+                }
+                if (newAmount > 0) {
+                    Debug.log("Reset null paymentMethodId - " + paymentMethodId + " / " + newAmount, module);
+                    cart.addPaymentAmount(paymentMethodId, newAmount);
+                    cart.getPaymentInfo(paymentMethodId, null, null, new Double(newAmount)).overflow = true;
                 }
             }
         }
 
         // verify the selected payment method amounts will cover the total
+        double reqAmtPreParse = cart.getGrandTotal() - cart.getBillingAccountAmount();
         double selectedPaymentTotal = cart.getPaymentTotal();
-        double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
+
+        String preParseString = formatter.format(reqAmtPreParse);
+        double requiredAmount = 0;
+        try {
+            requiredAmount = formatter.parse(preParseString).doubleValue();
+        } catch (ParseException e) {
+            requiredAmount = reqAmtPreParse;
+            Debug.logError(e, "Problem getting parsed required amount; unable to update payment info!", module);
+        }
         if (paymentMethods != null && paymentMethods.size() > 0 && requiredAmount > selectedPaymentTotal) {
             Debug.logError("Required Amount : " + requiredAmount + " / Selected Amount : " + selectedPaymentTotal, module);
             errMsg = UtilProperties.getMessage(resource, "checkevents.payment_not_cover_this_order", (cart != null ? cart.getLocale() : Locale.getDefault()));
