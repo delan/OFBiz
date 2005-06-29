@@ -42,7 +42,7 @@
     <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
     <link rel="stylesheet" href="<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>" type="text/css"/>
-    <link rel="stylesheet" href="<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>" type="text/css"/>    
+    <link rel="stylesheet" href="<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>" type="text/css"/>
     <#if layoutSettings.extraStyleSheet?exists>
       <#-- Component-specified style sheet -->
       <link rel="stylesheet" href="${layoutSettings.extraStyleSheet}" type="text/css"/>
@@ -69,10 +69,10 @@
             </#if>
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
-                <form method="post" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>" style="margin: 0;">
                   <select name="locale" class="selectBox">
-                    <option value="${locale.toString()}">${locale.getDisplayName(locale)}</option>
-                    <option value="${locale.toString()}">----</option>
+                    <option value="${locale}">${locale.getDisplayName(locale)}</option>
+                    <option value="${locale}">----</option>
                     <#list availableLocales as availableLocale>
                         <option value="${availableLocale.toString()}">${availableLocale.getDisplayName(locale)}</option>
                     </#list>
