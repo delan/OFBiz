@@ -102,6 +102,7 @@ public class ShoppingCart implements Serializable {
     private List paymentInfo = new LinkedList();
     private List shipInfo = new LinkedList();
     private Map contactMechIdsMap = new HashMap();
+    private Map attributes = new HashMap(); // user defined attributes
 
     /** contains a list of partyId for each roleTypeId (key) */
     private Map additionalPartyRole = new HashMap();
@@ -639,6 +640,14 @@ public class ShoppingCart implements Serializable {
         this.locale = locale;
     }
 
+    public void setAttribute(String name, Object value) {
+        this.attributes.put(name, value);
+    }
+
+    public Object getAttribute(String name) {
+        return this.attributes.get(name);
+    }
+    
     /** Sets the currency for the cart. */
     public void setCurrency(LocalDispatcher dispatcher, String currencyUom) throws CartItemModifyException {
         String previousCurrency = this.currencyUom;
