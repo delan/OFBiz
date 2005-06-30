@@ -16,7 +16,7 @@ margin: 0px;
 }
 
 UL {
-margin-top: 0; 
+margin-top: 0;
 margin-bottom: 0;
 }
 
@@ -24,11 +24,11 @@ margin-bottom: 0;
 clear: both;
 height: 0px;
 visibility: hidden;
-}  
+}
 
 .head1 {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-margin: 0px; 
+margin: 0px;
 font-size: 12pt;
 font-weight: bold;
 color: #000099;
@@ -123,6 +123,47 @@ border-width: 0px 1px 1px 1px;
 .boxhead {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 margin: 0px;
+font-size: 8pt;
+font-weight: bold;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+DIV.boxtop {
+margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
+padding: 0; text-align: center;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+background: #000099;
+padding-top: 1px;
+padding-bottom: 1px;
+padding-right: 4px;
+padding-left: 4px;
+border-color: #999999;
+border-style: solid;
+border-width: 0px 0px 0px 0px;
+}
+
+DIV.boxhead-left {
+border: none; float: left; margin: 0; padding: 0; width: auto;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 8pt;
+font-weight: bold;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+DIV.boxhead-fill {
+margin: 0; padding: 0; border: none; text-align: center; width: 0;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 8pt;
+font-weight: bold;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+DIV.boxhead-right {
+border: none; float: right; margin: 0; padding: 0; width: auto;
+font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 8pt;
 font-weight: bold;
 text-decoration: none;
@@ -606,16 +647,16 @@ color: #666666;
 }
 
 .headersmalltext {
-font-size: 8pt; 
-font-family: Verdana, Arial, Helvetica, sans-serif; 
-font-weight: bold; 
+font-size: 8pt;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-weight: bold;
 color: black;
 }
 a.headersmalllink {
-font-size: 8pt; 
+font-size: 8pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
-font-weight: bold; 
-color: #000099; 
+font-weight: bold;
+color: #000099;
 text-decoration: none;
 }
 a.headersmalllink:hover {
@@ -831,7 +872,7 @@ padding-top: 5px;
 float: left;
 margin-left: 10px;
 text-align: left;
-} 
+}
 
 /* ===== Product Summary Styles ===== */
 .product-prevnext {
