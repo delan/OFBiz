@@ -57,6 +57,14 @@
             <div class="tabletext">${uiLabelMap.CommonGroup}</div>
           </td>
         </tr>
+        <tr>
+          <td align="right">
+            <input type="radio" name="additionalPartyType" value="None" onclick="<#if additionalPartyType?exists>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if !additionalPartyType?exists> checked="checked"</#if>>
+          </td>
+          <td>
+            <div class="tabletext">I do not wish to add additional parties.</div>
+          </td>
+        </tr>
       </table>
     </td>
   </tr>
@@ -65,7 +73,7 @@
     <td>&nbsp;</td>
   </tr>
 
-  <#if additionalPartyType?exists && additionalPartyType != "">
+  <#if additionalPartyType?exists && additionalPartyType != "" && additionalPartyType != "None">
     <#if additionalPartyType == "Person">
       <#assign lookupPartyView="LookupPerson">
     <#else>

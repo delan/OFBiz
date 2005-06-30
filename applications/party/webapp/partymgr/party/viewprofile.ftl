@@ -315,7 +315,9 @@
           </td>
           <td valign="middle" align="right">
               <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session)>
-                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a><a href="<@ofbizUrl>/editgiftcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewGiftCard}</a><a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a>
+                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="<@ofbizUrl>/editgiftcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewGiftCard}</a>
+                <a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a>
               </#if>
           </td>
         </tr>
@@ -347,7 +349,7 @@
                                         <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp</#if>
                                         ${creditCard.lastNameOnCard}
                                         <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
-                                        &nbsp;-&nbsp;                                      
+                                        &nbsp;-&nbsp;
                                         <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                             ${creditCard.cardType}
                                             ${creditCard.cardNumber}

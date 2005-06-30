@@ -28,30 +28,28 @@
 
 
 <div class="boxtop">
-  <div class="boxhead-right" align="right">
-    <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderClearOrder}</a>
-    <#if (shoppingCart.size() > 0)>
-      <a href="javascript:document.cartform.submit()" class="submenutext">${uiLabelMap.OrderRecalculateOrder}</a>
-      <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-        <a href="<@ofbizUrl>/finalizeOrder?finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
-      <#else>
-        <a href="<@ofbizUrl>/finalizeOrder?finalizeMode=init</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
-      </#if>
-    <#else>
-      <span class="submenutextdisabled">${uiLabelMap.OrderRecalculateOrder}</span>
-      <span class="submenutextrightdisabled">${uiLabelMap.OrderFinalizeOrder}</span>
-    </#if>
-  </div>
-
-  <div class="boxhead-left">
-    &nbsp;${uiLabelMap.CommonCreate}
-    <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-      ${uiLabelMap.OrderPurchaseOrder}
-    <#else>
-      ${uiLabelMap.OrderSalesOrder}
-    </#if>
-  </div>
-
-  <div class="boxhead-fill">&nbsp;</div>
+    <div class="boxhead-right" align="right">
+        <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderClearOrder}</a>
+        <#if (shoppingCart.size() > 0)>
+            <a href="javascript:document.cartform.submit()" class="submenutext">${uiLabelMap.OrderRecalculateOrder}</a>
+            <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+                <a href="<@ofbizUrl>/finalizeOrder?finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
+            <#else>
+                <a href="<@ofbizUrl>/finalizeOrder?finalizeMode=init</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
+            </#if>
+        <#else>
+            <span class="submenutextdisabled">${uiLabelMap.OrderRecalculateOrder}</span>
+            <span class="submenutextrightdisabled">${uiLabelMap.OrderFinalizeOrder}</span>
+        </#if>
+    </div>
+    <div class="boxhead-left">
+        &nbsp;${uiLabelMap.CommonCreate}
+        <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+            ${uiLabelMap.OrderPurchaseOrder}
+        <#else>
+            ${uiLabelMap.OrderSalesOrder}
+        </#if>
+    </div>
+    <div class="boxhead-fill">&nbsp;</div>
 </div>
 
