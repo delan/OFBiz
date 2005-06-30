@@ -41,9 +41,7 @@
         <check-permission permission="MARKETING" action="_UPDATE"><fail-message message="Security Error: to run updateContactList you must have the MARKETING_UPDATE or MARKETING_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="ContactList" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="ContactList" value-name="lookedUpValue" auto-field-map="true"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -51,9 +49,7 @@
         <check-permission permission="MARKETING" action="_DELETE"><fail-message message="Security Error: to run deleteContactList you must have the MARKETING_DELETE or MARKETING_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="ContactList" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="ContactList" value-name="lookedUpValue" auto-field-map="true"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
