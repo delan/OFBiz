@@ -1,22 +1,22 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
@@ -46,13 +46,9 @@
               ${uiLabelMap.OrderSalesOrder}<#if shoppingCart?exists>&nbsp;${uiLabelMap.OrderInProgress}</#if>
             </div>
           </td>
-          <td valign="middle" align="right"> 
-            <a href="/partymgr/control/findparty?externalLoginKey=${externalLoginKey}" class="submenutext">
-              ${uiLabelMap.PartyFindParty}
-            </a>
-            <a href="javascript:document.salesentryform.submit();" class="submenutextright">
-              ${uiLabelMap.CommonContinue}
-            </a>
+          <td valign="middle" align="right">
+            <a href="/partymgr/control/findparty?externalLoginKey=${externalLoginKey}" class="submenutext">${uiLabelMap.PartyFindParty}</a>
+            <a href="javascript:document.salesentryform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
           </td>
         </tr>
       </table>
@@ -112,7 +108,7 @@
               <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'>
             </div>
           </td>
-        </tr>                 
+        </tr>
         <tr>
           <td>&nbsp;</td>
           <td align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
@@ -125,7 +121,7 @@
               </a>
             </div>
           </td>
-        </tr>         
+        </tr>
       </table>
       </form>
     </td>
@@ -147,13 +143,9 @@
               ${uiLabelMap.OrderPurchaseOrder}<#if shoppingCart?exists>&nbsp;${uiLabelMap.OrderInProgress}</#if>
             </div>
           </td>
-          <td valign="middle" align="right"> 
-            <a href="/partymgr/control/findparty?externalLoginKey=${externalLoginKey}" class="submenutext">
-              ${uiLabelMap.PartyFindParty}
-            </a>
-            <a href="javascript:document.poentryform.submit();" class="submenutextright">
-              ${uiLabelMap.CommonContinue}
-            </a>
+          <td valign="middle" align="right">
+            <a href="/partymgr/control/findparty?externalLoginKey=${externalLoginKey}" class="submenutext">${uiLabelMap.PartyFindParty}</a>
+            <a href="javascript:document.poentryform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
           </td>
         </tr>
       </table>
@@ -194,7 +186,7 @@
               <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'>
             </div>
           </td>
-        </tr>         
+        </tr>
       </table>
       </form>
     </td>
