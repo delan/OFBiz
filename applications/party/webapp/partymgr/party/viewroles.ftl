@@ -117,7 +117,7 @@
   <TR>
     <TD width="100%">
       <table width="100%" border="0" cellspacing="1" cellpadding="1" class="boxbottom">
-        <form method="post" action="<@ofbizUrl>/createroletype/viewroles</@ofbizUrl>" name="createroleform">
+        <form method="post" action="<@ofbizUrl>createroletype</@ofbizUrl>" name="createroleform">
         <input type='hidden' name='party_id' value='${partyId}'>
         <tr>
           <td width="16%"><div class="tabletext">${uiLabelMap.PartyRoleTypeId}</div></td>
