@@ -619,6 +619,10 @@ public class CheckOutEvents {
             }
         }
 
+        if (mode != null && mode.equals("addpty")) {
+            cart.setAttribute("addpty", "Y");
+        }
+
         if (mode != null && mode.equals("term")) {
            cart.setOrderTermSet(true);
         }
@@ -749,7 +753,7 @@ public class CheckOutEvents {
         List paymentMethodIds = cart.getPaymentMethodIds();
         List paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 
-        if (requireCustomer.equalsIgnoreCase("true") && (customerPartyId == null || customerPartyId.equals("_NA_"))) {            
+        if (requireCustomer.equalsIgnoreCase("true") && (customerPartyId == null || customerPartyId.equals("_NA_"))) {
             return "customer";
         }
 
@@ -776,7 +780,7 @@ public class CheckOutEvents {
           }
         }
 
-        if (requireAdditionalParty.equalsIgnoreCase("true") && cart.getAdditionalPartyRoleMap().size() == 0) {
+        if (requireAdditionalParty.equalsIgnoreCase("true") && cart.getAttribute("addpty") == null) {
             return "addparty";
         }
 
