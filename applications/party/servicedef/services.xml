@@ -37,7 +37,7 @@
     <service name="createPerson" engine="java" default-entity-name="Person"
             location="org.ofbiz.party.party.PartyServices" invoke="createPerson" auth="false">
         <description>Create a Person</description>
-        <auto-attributes mode="INOUT" include="pk" optional="false"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="firstName" optional="false"/>
         <override name="lastName" optional="false"/>
