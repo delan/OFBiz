@@ -1224,6 +1224,21 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="GlAccountOrganizationAndClass"
+            package-name="org.ofbiz.accounting.ledger"
+            title="View of GL Account Organization and the GlAccount and class, for lookup and calculation">
+      <member-entity entity-alias="GLAO" entity-name="GlAccountOrganization"/>
+      <member-entity entity-alias="GLA" entity-name="GlAccount"/>
+      <alias-all entity-alias="GLAO"/>
+      <alias-all entity-alias="GLA"/>
+      <view-link entity-alias="GLAO" rel-entity-alias="GLA">
+      	  <key-map field-name="glAccountId"/>
+      </view-link>
+      <relation type="one" fk-name="GLAOC_GLAO" rel-entity-name="GlAccountOrganization">
+        <key-map field-name="glAccountId"/>
+        <key-map field-name="organizationPartyId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="GlAccountRole"
             package-name="org.ofbiz.accounting.ledger"
             title="GL Account Role Entity">

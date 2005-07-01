@@ -100,6 +100,7 @@
     <entity-group group="org.ofbiz" entity="GlAccountHistory" />
     <entity-group group="org.ofbiz" entity="GlAccountAndHistory" />
     <entity-group group="org.ofbiz" entity="GlAccountOrganization" />
+    <entity-group group="org.ofbiz" entity="GlAccountOrganizationAndClass" />
     <entity-group group="org.ofbiz" entity="GlAccountRole" />
     <entity-group group="org.ofbiz" entity="GlAccountType" />
     <entity-group group="org.ofbiz" entity="GlAccountTypeDefault" />
