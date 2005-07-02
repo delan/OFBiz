@@ -74,6 +74,7 @@
     <GlAccountClass description="Revenue" glAccountClassId="REVENUE" parentClassId="CREDIT"/>
     <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId="DEBIT"/>
     <GlAccountClass description="Expense" glAccountClassId="EXPENSE" parentClassId="DEBIT"/>
+    <GlAccountClass description="Non-Posting" glAccountClassId="NON_POSTING" parentClassId="DEBIT"/>
 
     <GlAccountType description="Accounts Receivable" glAccountTypeId="ACCOUNTS_RECEIVABLE" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Accounts Payable" glAccountTypeId="ACCOUNTS_PAYABLE" hasTable="N" parentTypeId=""/>
