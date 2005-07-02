@@ -722,7 +722,7 @@
     <view-map name="EditPartyGroup" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup"/>
     <view-map name="EditUserLogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLogin"/>
     <view-map name="createnewlogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateUserLogin"/>
-    <view-map name="EditUserLoginSecurityGroups" type="region"/>
+    <view-map name="EditUserLoginSecurityGroups" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLoginSecurityGroups"/>
     <view-map name="createnewnote" type="region"/>
     
     <view-map name="editcontactmech" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editcontactmech"/>
