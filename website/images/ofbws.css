@@ -278,10 +278,13 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 
-#intro, #users, #announcements, #inthenews, #testimonials, #projects-standards {
+#special, #intro, #users, #announcements, #inthenews, #testimonials, #projects-standards {
 margin: 0px 0px 10px 0px;
 padding: 5px;
 border: #999999 dotted 1px;
+}
+#special {
+background: #EE9999;
 }
 #intro {
 background: #E6EEE7;
