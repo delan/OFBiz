@@ -403,5 +403,29 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="EditUserLoginSecurityGroups">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditUserLoginSecurityGroups"/>
+                <set field="tabButtonItem" value="EditSecurityGroupUserLogins"/>
+                <set field="labelTitleProperty" value="PageTitleEditUserLoginSecurityGroups"/>
+                
+                <set field="userLoginId" from-field="parameters.userLoginId"/>
+                <entity-one entity-name="UserLogin" value-name="editUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId" default-value="${editUserLogin.partyId}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container><label style="head2" text="${uiLabelMap.PageTitleEditUserLoginSecurityGroups}"/></container>
+                        <include-form name="ListUserLoginSecurityGroups" location="component://party/widget/partymgr/SecurityForms.xml"/>
+                        <container><label style="head2" text="${uiLabelMap.PartyAddUserLoginToSecurityGroup}"/></container>
+                        <include-form name="AddUserLoginSecurityGroup" location="component://party/widget/partymgr/SecurityForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
     
