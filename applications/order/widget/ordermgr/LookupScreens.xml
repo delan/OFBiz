@@ -40,7 +40,7 @@
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="lookupOrderHeaderAndShipInfo" location="component://order/webapp/ordermgr/lookup/FieldLookupForms.xml" />
                         <include-form name="listLookupOrderHeaderAndShipInfo" location="component://order/webapp/ordermgr/lookup/FieldLookupForms.xml" />
@@ -66,7 +66,7 @@
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="lookupPurchaseOrderHeaderAndShipInfo" location="component://order/webapp/ordermgr/lookup/FieldLookupForms.xml" />
                         <include-form name="listLookupOrderHeaderAndShipInfo" location="component://order/webapp/ordermgr/lookup/FieldLookupForms.xml" />

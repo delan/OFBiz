@@ -29,11 +29,11 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${page.title}</title>
-    <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
+    <title>${title}</title>
+    <script language="javascript" src="<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>" type="text/javascript"></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
+    <link rel="stylesheet" href="<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>" type="text/css"/>
+    <link rel="stylesheet" href="<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>" type="text/css"/>
 
     <script language="JavaScript" type="text/javascript">
         // This code inserts the value lookedup by a popup window back into the associated form element
@@ -58,13 +58,9 @@
                 if (obj_caller.target2 == null) return;
                 obj_caller.target2.value = value2;
         }
-
     </script>
-
-
 </head>
-
-<body  >
-            ${sections.render("body")}
+<body>
+${sections.render("body")}
 </body>
 </html>

@@ -211,4 +211,81 @@
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>
+    
+    <form name="NewCustomer" type="single" 
+            target="createCustomer${previousParams}" title=""
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="USER_TITLE" title="Title"><text size="10" maxlength="30"/></field>
+        <field name="USER_FIRST_NAME" title="First Name" tooltip="*"><text size="30" maxlength="60"/></field>
+        <field name="USER_MIDDLE_NAME" title="Middle Initial"><text size="4" maxlength="4"/></field>
+        <field name="USER_LAST_NAME" title="Last Name" tooltip="*"><text size="30" maxlength="60"/></field>
+        <field name="USER_SUFFIX" title="Suffix"><text size="10" maxlength="30"/></field>
+
+        <field name="ShippingAddressTitle" title="Shipping Address"><display description=" " also-hidden="false"/></field>
+        <field name="CUSTOMER_ADDRESS1" title="Address Line 1" tooltip="*" title-style="tabletext"><text size="30" maxlength="60"/></field>
+        <field name="CUSTOMER_ADDRESS2" title="Address Line 2" title-style="tabletext"><text size="30" maxlength="60"/></field>
+        <field name="CUSTOMER_CITY" title="City" tooltip="*" title-style="tabletext"><text size="30" maxlength="60"/></field>
+        <field name="CUSTOMER_STATE" title="State" tooltip="*" title-style="tabletext">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonState}: [${geoId}] ${geoName}">
+                    <entity-constraint name="geoTypeId" value="STATE"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonProvince}: [${geoId}] ${geoName}">
+                    <entity-constraint name="geoTypeId" value="PROVINCE"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="CUSTOMER_POSTAL_CODE" title="Zip/Postal Code" tooltip="*" title-style="tabletext"><text size="10" maxlength="30"/></field>
+        <field name="CUSTOMER_COUNTRY" title="Country" tooltip="*" title-style="tabletext">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoId}: ${geoName}">
+                    <entity-constraint name="geoTypeId" value="COUNTRY"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="CUSTOMER_ADDRESS_ALLOW_SOL" title="Allow Address Solicitation?" title-style="tabletext">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        
+        <field name="HomePhoneTitle" title="Home Phone Number"><display description=" " also-hidden="false"/></field>
+        <field name="CUSTOMER_HOME_COUNTRY" title="Country Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="CUSTOMER_HOME_AREA" title="Area Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="CUSTOMER_HOME_CONTACT" title="Phone Number" title-style="tabletext"><text size="15" maxlength="15"/></field>
+        <field name="CUSTOMER_HOME_EXT" title="Extension" title-style="tabletext"><text size="6" maxlength="10"/></field>
+        <field name="CUSTOMER_HOME_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+
+        <field name="WorkPhoneTitle" title="Work Phone Number"><display description=" " also-hidden="false"/></field>
+        <field name="CUSTOMER_WORK_COUNTRY" title="Country Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="CUSTOMER_WORK_AREA" title="Area Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="CUSTOMER_WORK_CONTACT" title="Phone Number" title-style="tabletext"><text size="15" maxlength="15"/></field>
+        <field name="CUSTOMER_WORK_EXT" title="Extension" title-style="tabletext"><text size="6" maxlength="10"/></field>
+        <field name="CUSTOMER_WORK_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        
+        <field name="FaxPhoneTitle" title="Fax Number"><display description=" " also-hidden="false"/></field>
+        <field name="CUSTOMER_FAX_COUNTRY" title="Country Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="CUSTOMER_FAX_AREA" title="Area Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="CUSTOMER_FAX_CONTACT" title="Phone Number" title-style="tabletext"><text size="15" maxlength="15"/></field>
+        <field name="CUSTOMER_FAX_EXT" title="Extension" title-style="tabletext"><text size="6" maxlength="10"/></field>
+        <field name="CUSTOMER_FAX_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        
+        <field name="MobilePhoneTitle" title="Mobile Phone Number"><display description=" " also-hidden="false"/></field>
+        <field name="CUSTOMER_MOBILE_COUNTRY" title="Country Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="CUSTOMER_MOBILE_AREA" title="Area Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="CUSTOMER_MOBILE_CONTACT" title="Phone Number" title-style="tabletext"><text size="15" maxlength="15"/></field>
+        <field name="CUSTOMER_MOBILE_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        
+        <field name="EmailAddressTitle" title="Email Address"><display description=" " also-hidden="false"/></field>
+        <field name="CUSTOMER_EMAIL" title="Email" title-style="tabletext" tooltip="*"><text size="60" maxlength="250"/></field>
+        <field name="CUSTOMER_EMAIL_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <!-- <field name="CUSTOMER_ORDER_EMAIL" title="Order Emails (comma separated)" title-style="tabletext"><text size="60" maxlength="250"/></field> -->
+
+        <field name="USERNAME" title="Username" tooltip="Customer will receive a temporary password by email."><text size="30" maxlength="250"/></field>
+
+        <field name="RequiredNote" title=" "><display description="Fields marked with (*) are required." also-hidden="false"/></field>
+        
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
 </forms>

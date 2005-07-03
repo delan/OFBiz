@@ -319,7 +319,7 @@
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-              <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">
+              <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                 <decorator-section name="body">
                   <include-form name="lookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
                   <include-form name="listLookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>

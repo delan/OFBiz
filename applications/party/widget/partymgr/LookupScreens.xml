@@ -24,81 +24,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="LookupPerson">
-        <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="PARTYMGR" action="_VIEW"/>
-                </or>
-            </condition>
-            <actions>
-                <set field="title" value="Lookup Person"/>
-                <set field="entityName" value="Person"/>
-                <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-	    </actions>
-            <widgets>
-                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
-                    <decorator-section name="body">
-                        <include-form name="lookupPerson" location="component://party/webapp/partymgr/lookup/LookupForms.xml" />
-                        <include-form name="listLookupPerson" location="component://party/webapp/partymgr/lookup/LookupForms.xml" />
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="LookupPartyAndUserLoginAndPerson">
-        <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="PARTYMGR" action="_VIEW"/>
-                </or>
-            </condition>
-	    <actions>
-                <set field="title" value="Lookup PartyAndUserLoginAndPerson"/>
-                <set field="entityName" value="PartyAndUserLoginAndPerson"/>
-                <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-	    </actions>
-            <widgets>
-                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
-                    <decorator-section name="body">
-                        <include-form name="lookupPartyAndUserLoginAndPerson" location="component://party/webapp/partymgr/lookup/LookupForms.xml" />
-                        <include-form name="listLookupPartyAndUserLoginAndPerson" location="component://party/webapp/partymgr/lookup/LookupForms.xml" />
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="LookupPartyGroup">
-        <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="PARTYMGR" action="_VIEW"/>
-                </or>
-            </condition>
-            <actions>
-                <set field="title" value="Lookup Party Group"/>
-                <set field="entityName" value="PartyGroup"/>
-                <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-	    </actions>
-            <widgets>
-                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
-                    <decorator-section name="body">
-                        <include-form name="lookupPartyGroup" location="component://party/webapp/partymgr/lookup/LookupForms.xml" />
-                        <include-form name="listLookupPartyGroup" location="component://party/webapp/partymgr/lookup/LookupForms.xml" />
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
     <screen name="LookupPartyName">
         <section>
             <condition>
@@ -107,21 +32,101 @@
                 </or>
             </condition>
             <actions>
-                <set field="title" value="Lookup Party Name View"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <set field="title" value="Lookup Party by Name"/>
                 <set field="entityName" value="PartyNameView"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-	    </actions>
+            </actions>
             <widgets>
-                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="lookupPartyName" location="component://party/webapp/partymgr/lookup/LookupForms.xml" />
-                        <include-form name="listLookupPartyName" location="component://party/webapp/partymgr/lookup/LookupForms.xml" />
+                        <include-form name="lookupPartyName" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                        <include-form name="listLookupPartyName" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
 
+    <screen name="LookupPerson">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="PARTYMGR" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="title" value="Lookup Person"/>
+                <set field="entityName" value="Person"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupPerson" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                        <include-form name="listLookupPerson" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LookupPartyAndUserLoginAndPerson">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="PARTYMGR" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="title" value="Lookup PartyAndUserLoginAndPerson"/>
+                <set field="entityName" value="PartyAndUserLoginAndPerson"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupPartyAndUserLoginAndPerson" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                        <include-form name="listLookupPartyAndUserLoginAndPerson" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LookupPartyGroup">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="PARTYMGR" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="title" value="Lookup Party Group"/>
+                <set field="entityName" value="PartyGroup"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupPartyGroup" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                        <include-form name="listLookupPartyGroup" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
