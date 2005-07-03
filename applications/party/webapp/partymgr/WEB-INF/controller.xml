@@ -32,9 +32,7 @@
     <handler name="service" type="request" class="org.ofbiz.webapp.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
 
-    <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>    
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
-
     <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
@@ -352,15 +350,15 @@
         <response name="success" type="view" value="CreateNewParty"/>
     </request-map>
 
-    <request-map uri="newcustomer">
+    <request-map uri="NewCustomer">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="newcustomer"/>
+        <response name="success" type="view" value="NewCustomer"/>
     </request-map>
-    <request-map uri="createcustomer">
+    <request-map uri="createCustomer">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/party/customer/CustomerEvents.xml" invoke="createCustomer"/>
         <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="newcustomer"/>
+        <response name="error" type="view" value="NewCustomer"/>
     </request-map>
 
     <request-map uri="editperson">
@@ -701,7 +699,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupPartyGroup"/>
     </request-map>
-
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -735,8 +732,8 @@
     <view-map name="listCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listCommunications"/>
     <view-map name="editCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#editCommunication"/>
     
-    <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyNewScreens.xml#CreateNewParty"/>
-    <view-map name="newcustomer" type="region"/>
+    <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateNewParty"/>
+    <view-map name="NewCustomer" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewCustomer"/>
     
     <view-map name="FindSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#FindSecurityGroup"/>
     <view-map name="EditSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#EditSecurityGroup"/>

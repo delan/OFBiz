@@ -32,8 +32,9 @@
                 <set field="titleProperty" value="PageTitleFindSecurityGroup"/>
                 <set field="headerItem" value="security"/>
                 <set field="tabButtonItem" value="FindSecurityGroup"/>
-                
-                <!-- <script location="component://party/webapp/partymgr/WEB-INF/actions/security/FindSecurityGroup.bsh"/> -->                
+
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
