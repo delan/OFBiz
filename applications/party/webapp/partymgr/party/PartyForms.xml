@@ -66,7 +66,7 @@
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>
-    <form name="createUserLogin" type="single" 
+    <form name="AddUserLogin" type="single" 
             target="createUserLogin" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createUserLogin"/>
@@ -187,8 +187,8 @@
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdatePartyTaxInfo" type="list" 
-        target="updatePartyTaxInfo" title="" list-name="partyTaxInfos"
-        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            target="updatePartyTaxInfo" title="" list-name="partyTaxInfos"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updatePartyTaxInfo"/>
         <field name="partyId"><hidden/></field>
         <field name="geoId" title="Geo (jurisdiction)" widget-style="tabletext"><display-entity entity-name="Geo" description="[${geoId}] ${geoName}" also-hidden="true"/></field>
@@ -199,5 +199,16 @@
             <hyperlink target="deletePartyTaxInfo?partyId=${partyId}&amp;geoId=${geoId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
+    </form>
+
+    <form name="AddPartyNote" type="single" 
+            target="createPartyNote" title=""
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createPartyNote"/>
+        
+        <field name="partyId"><hidden/></field>
+        <field name="note" widget-style="textAreaBox"><textarea cols="70" rows="10"/></field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>
 </forms>

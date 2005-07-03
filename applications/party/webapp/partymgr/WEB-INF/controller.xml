@@ -558,15 +558,15 @@
         <response name="error" type="view" value="EditSecurityGroupUserLogins"/>
     </request-map>
 
-    <request-map uri="createnewnote">
+    <request-map uri="AddPartyNote">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="createnewnote"/>
+        <response name="success" type="view" value="AddPartyNote"/>
     </request-map>
-    <request-map uri="createpartynote">
+    <request-map uri="createPartyNote">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyNote"/>
         <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="createnewnote"/>
+        <response name="error" type="view" value="AddPartyNote"/>
     </request-map>
 
     <request-map uri="addrole">
@@ -723,7 +723,7 @@
     <view-map name="EditUserLogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLogin"/>
     <view-map name="createnewlogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateUserLogin"/>
     <view-map name="EditUserLoginSecurityGroups" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLoginSecurityGroups"/>
-    <view-map name="createnewnote" type="region"/>
+    <view-map name="AddPartyNote" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#AddPartyNote"/>
     
     <view-map name="editcontactmech" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editcontactmech"/>
     <view-map name="editcreditcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editcreditcard"/>
