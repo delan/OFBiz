@@ -397,18 +397,17 @@
                 <decorator-screen name="CommonPartyDecorator">
                     <decorator-section name="body">
                         <container><label text="${uiLabelMap.PartyCreateUserLogin}" style="head2"/></container>
-                        <include-form name="createUserLogin" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                        <include-form name="AddUserLogin" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-
     <screen name="EditUserLoginSecurityGroups">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditUserLoginSecurityGroups"/>
-                <set field="tabButtonItem" value="EditSecurityGroupUserLogins"/>
+                <set field="tabButtonItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PageTitleEditUserLoginSecurityGroups"/>
                 
                 <set field="userLoginId" from-field="parameters.userLoginId"/>
@@ -422,6 +421,27 @@
                         <include-form name="ListUserLoginSecurityGroups" location="component://party/widget/partymgr/SecurityForms.xml"/>
                         <container><label style="head2" text="${uiLabelMap.PartyAddUserLoginToSecurityGroup}"/></container>
                         <include-form name="AddUserLoginSecurityGroup" location="component://party/widget/partymgr/SecurityForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="AddPartyNote">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleNewPartyNote"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="PageTitleNewPartyNote"/>
+                
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container><label text="${uiLabelMap.PageTitleNewPartyNote}" style="head2"/></container>
+                        <include-form name="AddPartyNote" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
