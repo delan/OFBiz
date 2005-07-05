@@ -86,8 +86,36 @@ public class PriceServices {
         String prodCatalogId = (String) context.get("prodCatalogId");
         String webSiteId = (String) context.get("webSiteId");
 
+        String productStoreId = (String) context.get("productStoreId");
         String productStoreGroupId = (String) context.get("productStoreGroupId");
-        if (UtilValidate.isEmpty(productStoreGroupId)) productStoreGroupId = "_NA_";
+        if (UtilValidate.isEmpty(productStoreGroupId)) {
+            if (UtilValidate.isNotEmpty(productStoreId)) {
+                try {
+                    // we have a productStoreId, if the corresponding ProductStore.primaryStoreGroupId is not empty, use that
+                    GenericValue productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+                    if (productStore != null && UtilValidate.isNotEmpty(productStore.getString("primaryStoreGroupId"))) {
+                        productStoreGroupId = productStore.getString("primaryStoreGroupId");
+                    } else {
+                        // no ProductStore.primaryStoreGroupId, try ProductStoreGroupMember
+                        List productStoreGroupMemberList = delegator.findByAndCache("ProductStoreGroupMember", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum", "-fromDate"));
+                        productStoreGroupMemberList = EntityUtil.filterByDate(productStoreGroupMemberList, true);
+                        if (productStoreGroupMemberList.size() > 0) {
+                            GenericValue productStoreGroupMember = EntityUtil.getFirst(productStoreGroupMemberList);
+                            productStoreGroupId = productStoreGroupMember.getString("productStoreGroupId");
+                        }
+                    }
+                } catch (GenericEntityException e) {
+                    String errMsg = "Error getting product store info from the database while calculating price" + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            }
+            
+            // still empty, default to _NA_
+            if (UtilValidate.isEmpty(productStoreGroupId)) {
+                productStoreGroupId = "_NA_";
+            }
+        }
 
         // if currency uom is null get from properties file, if still null assume USD (USD: American Dollar) for now
         String currencyUomId = (String) context.get("currencyUomId");
@@ -101,8 +129,9 @@ public class PriceServices {
             try {
                 virtualProductId = ProductWorker.getVariantVirtualId(product);
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error getting virtual product id from the database while calculating price", module);
-                return ServiceUtil.returnError("Error getting virtual product id from the database while calculating price: " + e.toString());
+                String errMsg = "Error getting virtual product id from the database while calculating price" + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
             }
         }
 
@@ -367,18 +396,18 @@ public class PriceServices {
             	}
         }
 
-        boolean validPromoPriceFound = false;
+        //boolean validPromoPriceFound = false;
         double promoPrice = 0;
         if (promoPriceValue != null && promoPriceValue.get("price") != null) {
             promoPrice = promoPriceValue.getDouble("price").doubleValue();
-            validPromoPriceFound = true;
+            //validPromoPriceFound = true;
         }
 
-        boolean validWholesalePriceFound = false;
+        //boolean validWholesalePriceFound = false;
         double wholesalePrice = 0;
         if (wholesalePriceValue != null && wholesalePriceValue.get("price") != null) {
             wholesalePrice = wholesalePriceValue.getDouble("price").doubleValue();
-            validWholesalePriceFound = true;
+            //validWholesalePriceFound = true;
         }
 
         boolean validPriceFound = false;
