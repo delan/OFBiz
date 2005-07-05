@@ -38,6 +38,7 @@
   boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
   boolean keepStamps = request.getParameter("maintainTimeStamps") != null;
   boolean createDummyFks = request.getParameter("createDummyFks") != null;
+  boolean deleteFiles = request.getParameter("deleteFiles") != null;
 
   String txTimeoutStr = UtilFormatOut.checkEmpty(request.getParameter("txTimeout"), "7200");
   String filePauseStr = UtilFormatOut.checkEmpty(request.getParameter("filePause"), "0");
@@ -71,6 +72,7 @@
     Mostly Inserts?:<INPUT type="checkbox" name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
     Maintain Timestamps?:<INPUT type="checkbox" name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
     Create "Dummy" FKs?:<INPUT type="checkbox" name='createDummyFks' <%=createDummyFks?"checked":""%>>
+    Delete Files Afterwards?:<INPUT type="checkbox" name='deleteFiles' <%=deleteFiles?"checked":""%>>
     </div>
     <div>TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
     Pause (secs) between files:<INPUT type="text" size="6" value="<%=filePauseStr%>" name="filePause"></div>
@@ -127,7 +129,9 @@
 		        long numberRead = reader.parse(url);
 		        %><div>Got <%=numberRead%> entities from <%=curFile%></div><%
                 importedOne = true;
-                curFile.delete();
+                if (deleteFiles) {
+                    curFile.delete();    
+                }
 	        } catch (Exception ex){
                 %> <div>Error trying to read from <%=curFile%>: <%=ex%> <%
                 if (ex.toString().indexOf("referential integrity violation") > -1 ||
