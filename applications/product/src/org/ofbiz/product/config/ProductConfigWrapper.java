@@ -58,8 +58,8 @@ public class ProductConfigWrapper implements Serializable {
     public ProductConfigWrapper() {
     }
     
-    public ProductConfigWrapper(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
-        init(delegator, dispatcher, productId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
+    public ProductConfigWrapper(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
+        init(delegator, dispatcher, productId, productStoreId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
     }
 
     public ProductConfigWrapper(ProductConfigWrapper pcw) {
@@ -71,15 +71,15 @@ public class ProductConfigWrapper implements Serializable {
         }
     }
 
-    private void init(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
+    private void init(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
         product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
         if (product == null || !product.getString("productTypeId").equals("AGGREGATED")) {
             throw new ProductConfigWrapperException("Product " + productId + " is not an AGGREGATED product.");
         }
         // get the base price
-        Map fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId,
+        Map priceContext = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId, "productStoreId", productStoreId,
                                       "currencyUomId", currencyUomId, "autoUserLogin", autoUserLogin);
-        Map priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
+        Map priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
         Double price = (Double)priceMap.get("price");
         if (price != null) {
             basePrice = price.doubleValue();
