@@ -134,7 +134,7 @@
     <%ModelField field = modelEntity.getField(fnum);%>
     <%ModelFieldType type = delegator.getEntityFieldType(modelEntity, field.getType());%>
     <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
-      <td valign="top"><%=field.getName()%>(<%=type.getJavaType()%>,<%=type.getSqlType()%>):</td>
+      <td valign="top"><%=field.getName()%>(<%=type.getJavaType()%>,<%=type.getSqlType()%>) <%if (field.getIsPk()) {%>*<%}%>:</td>
       <td valign="top">
         <input type="text" name="<%=field.getName()%>" value="" size="40">
       </td>
@@ -145,6 +145,7 @@
   </tr>
 </table>
 </form>
+<i>* - Primary Key field</i><br/>
 <b><%=modelEntity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br/>
 <b><%=modelEntity.getEntityName()%>s curFindString: <%=curFindString%></b><br/>
 <%if (hasCreatePermission) {%>
