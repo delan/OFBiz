@@ -229,5 +229,26 @@
             </widgets>
         </section>
     </screen>
-</screens>
 
+    <screen name="QuickShipOrder">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductQuickShipOrder"/>
+                <set field="headerItem" value="shipment"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/QuickShipOrder.bsh"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentItems.bsh"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentPackages.bsh"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentRouteSegments.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/facility/shipment/QuickShipOrder.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

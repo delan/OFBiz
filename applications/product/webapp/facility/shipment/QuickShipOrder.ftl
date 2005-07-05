@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,14 +24,11 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <script language="JavaScript" type="text/javascript">
-<!-- //
 // function called from ShipmentScaleApplet when a weight is read
 function setWeight(weight) {
   document.weightForm.weight.value = weight;
 }
-// -->
 </script>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
@@ -61,8 +58,8 @@ function setWeight(weight) {
               <#assign carrierPerson = (shipmentRoute.getRelatedOne("CarrierPerson"))?if_exists>
               <#assign carrierPartyGroup = (shipmentRoute.getRelatedOne("CarrierPartyGroup"))?if_exists>
               <#assign shipmentMethodType = (shipmentRoute.getRelatedOne("ShipmentMethodType"))?if_exists>
-              <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
-              <input type="hidden" name="shipmentId" value="${shipmentRoute.shipmentId}">
+              <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
+              <input type="hidden" name="shipmentId" value="${shipmentRoute.shipmentId}"/>
               <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRoute.shipmentRouteSegmentId}"/>
               <table border="0" cellpadding="2" cellspacing="0">
                 <tr>
@@ -136,9 +133,9 @@ function setWeight(weight) {
         <#else>
           <form name="weightForm" method="post" action="<@ofbizUrl>/setQuickPackageWeight</@ofbizUrl>" style='margin: 0;'>
             <#assign weightUom = shipmentPackage.getRelatedOne("WeightUom")?if_exists>
-            <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
-            <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}">
-            <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}">
+            <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
+            <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}"/>
+            <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
             <table border="0" cellpadding="2" cellspacing="0">
               <tr>
                 <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductPackage} ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}</span></td>
@@ -159,7 +156,7 @@ function setWeight(weight) {
               <tr>
                 <td colspan="2">&nbsp;</td>
                 <td width="80%" align="left">
-                  <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.weightForm.submit();">
+                  <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.weightForm.submit();"/>
                   <a href="javascript:document.weightForm.submit();" class="buttontext">${uiLabelMap.ProductSetWeight}</a>
                 </td>
               </tr>
@@ -212,9 +209,7 @@ function setWeight(weight) {
       </table>
     </form>
     <script language="JavaScript" type="text/javascript">
-    <!-- //
         document.selectOrderForm.orderId.focus();
-    // -->
     </script>
   </#if>  
 </#if>

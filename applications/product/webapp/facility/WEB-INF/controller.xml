@@ -34,12 +34,8 @@
     <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
 
-    <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>        
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
-
-    <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
-    <handler name="fop" type="view" class="org.ofbiz.webapp.view.FopPdfViewHandler"/>
     <handler name="screenfop" type="view" class="org.ofbiz.widget.screen.ScreenFopPdfViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
@@ -870,7 +866,7 @@
     <view-map name="EditShipmentPackages" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#EditShipmentPackages"/>
     <view-map name="EditShipmentRouteSegments" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#EditShipmentRouteSegments"/>
     <view-map name="AddItemsFromOrder" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#AddItemsFromOrder"/>
-    <view-map name="QuickShipOrder" type="jpublish" page="/shipment/QuickShipOrder.ftl"/>
+    <view-map name="QuickShipOrder" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#QuickShipOrder"/>
 
     <view-map name="ShipmentManifestReport" type="jasperreportspdf" page="/shipmentreports/ShipmentManifestReport.xml" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
