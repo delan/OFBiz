@@ -46,8 +46,8 @@
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 
-<h3>XML Export from DataSource(s)</h3>
-<div>
+<div class="head1">XML Export from DataSource(s)</div>
+<div class="tabletext">
 	This page can be used to export data from the database. 
 	The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".
 	There will be one file for each Entity in the configured delegator for this webapp.
@@ -55,7 +55,7 @@
 <hr>
     
 <%if (security.hasPermission("ENTITY_MAINT", session)) {%>
-<h3>Results:</h3>
+<div class="head2">Results:</div>
 <%
   String outpath = request.getParameter("outpath");
 
@@ -146,18 +146,18 @@
 %>    
     <%Iterator re = results.iterator();%>
     <%while (re.hasNext()){%>
-        <div><%=(String)re.next()%> </div>
+        <div class="tabletext"><%=(String)re.next()%> </div>
     <%}%>
       <hr>
     
-      <h3>Export:</h3>
+      <div class="head2">Export:</div>
       <FORM method="post" action='<ofbiz:url>/xmldsdumpall</ofbiz:url>'>
-        <div>Output Directory: <INPUT type="text" class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'></div>
+        <div class="tabletext">Output Directory: <INPUT type="text" class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'></div>
         <br/>
         <INPUT type="submit" value='Export'>
       </FORM>
     <%} else {%>
-      <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+      <div class="tabletext">You do not have permission to use this page (ENTITY_MAINT needed)</div>
     <%}%>
 
 
