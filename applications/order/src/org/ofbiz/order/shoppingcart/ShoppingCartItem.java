@@ -262,7 +262,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new CartItemModifyException(excMsg);
         }
 
-        java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        // Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         // check to see if the product is fully configured
         if ("AGGREGATED".equals(product.getString("productTypeId"))) {
@@ -834,6 +834,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 priceContext.put("product", this.getProduct());
                 priceContext.put("prodCatalogId", this.getProdCatalogId());
                 priceContext.put("webSiteId", cart.getWebSiteId());
+                priceContext.put("productStoreId", cart.getProductStoreId());
 
                 String partyId = cart.getPartyId();
                 if (partyId != null) {

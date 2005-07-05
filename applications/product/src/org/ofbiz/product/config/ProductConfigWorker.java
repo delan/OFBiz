@@ -30,6 +30,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.base.util.cache.UtilCache;
 
@@ -56,16 +57,17 @@ public class ProductConfigWorker {
         ProductConfigWrapper configWrapper = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         String webSiteId = CatalogWorker.getWebSiteId(request);
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
         GenericValue autoUserLogin = (GenericValue)request.getSession().getAttribute("autoUserLogin");
         try {
             /* caching: there is one cache created, "product.config"  Each product's config wrapper is cached with a key of
              * productId::catalogId::webSiteId::currencyUomId, or whatever the SEPARATOR is defined above to be.
              */
-            String cacheKey = productId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId;
+            String cacheKey = productId + SEPARATOR + productStoreId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId;
             if (!productConfigCache.containsKey(cacheKey)) {
                 configWrapper = new ProductConfigWrapper((GenericDelegator)request.getAttribute("delegator"),
                                                          (LocalDispatcher)request.getAttribute("dispatcher"),
-                                                         productId, catalogId, webSiteId,
+                                                         productId, productStoreId, catalogId, webSiteId,
                                                          currencyUomId, UtilHttp.getLocale(request),
                                                          autoUserLogin);
                 productConfigCache.put(cacheKey, new ProductConfigWrapper(configWrapper));

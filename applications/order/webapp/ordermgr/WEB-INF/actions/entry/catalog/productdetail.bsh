@@ -174,9 +174,11 @@ if (product != null) {
     currentCatalogId = catalogId;
     webSiteId = CatalogWorker.getWebSiteId(request);
     autoUserLogin = request.getSession().getAttribute("autoUserLogin");
-    fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId,
+    priceContext = UtilMisc.toMap("product", product, "prodCatalogId", catalogId,
         "currencyUomId", cart.getCurrency(), "autoUserLogin", autoUserLogin);
-    priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
+    priceContext.put("webSiteId", webSiteId);
+    priceContext.put("productStoreId", productStoreId);
+    priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
     context.put("priceMap", priceMap);
 
     // get the product review(s)

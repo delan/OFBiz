@@ -96,7 +96,8 @@ if (shoppingListId != null) {
                 shoppingListItemData = new HashMap();
                 product = shoppingListItem.getRelatedOneCache("Product");
 
-                calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "currencyUomId", currencyUomId, "userLogin", userLogin);
+                // DEJ20050704 not sure about calculating price here, will have some bogus data when not in a store webapp
+                calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "currencyUomId", currencyUomId, "userLogin", userLogin, "productStoreId", shoppingList.get("productStoreId"));
                 calcPriceOutMap = dispatcher.runSync("calculateProductPrice", calcPriceInMap);
                 price = calcPriceOutMap.get("price");
                 totalPrice = price * shoppingListItem.getDouble("quantity");

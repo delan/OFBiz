@@ -51,6 +51,7 @@ if (miniProduct != null && productStoreId != null && prodCatalogId != null) {
         "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, 
         "currencyUomId", UtilHttp.getCurrencyUom(session),
         "autoUserLogin", session.getAttribute("autoUserLogin"));
+    priceParams.put("productStoreId", productStoreId);
     if (userLogin != null) priceParams.put("partyId", userLogin.get("partyId"));
     priceResult = dispatcher.runSync("calculateProductPrice", priceParams);
     // returns: isSale, price, orderItemPriceInfos

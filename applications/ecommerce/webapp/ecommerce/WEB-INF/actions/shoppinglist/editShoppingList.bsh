@@ -99,7 +99,10 @@ if (shoppingListId != null) {
 
                 product = shoppingListItem.getRelatedOneCache("Product");
 
-                calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "currencyUomId", currencyUomId, "userLogin", userLogin);
+                calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "currencyUomId", currencyUomId, "userLogin", userLogin);
+                calcPriceInMap.put("webSiteId", webSiteId);
+                calcPriceInMap.put("prodCatalogId", prodCatalogId);
+                calcPriceInMap.put("productStoreId", productStoreId);
                 calcPriceOutMap = dispatcher.runSync("calculateProductPrice", calcPriceInMap);
                 price = calcPriceOutMap.get("price");
                 totalPrice = price * shoppingListItem.getDouble("quantity");

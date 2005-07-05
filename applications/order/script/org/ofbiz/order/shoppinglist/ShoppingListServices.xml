@@ -212,6 +212,7 @@
         <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
         <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
         <field-to-field field-name="partyId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
+        <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
         <field-to-field field-name="productStoreGroupId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
         <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
         <field-to-field field-name="autoUserLogin" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
