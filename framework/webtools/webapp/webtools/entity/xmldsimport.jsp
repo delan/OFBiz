@@ -1,5 +1,5 @@
 <%--
- *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *  Copyright (c) 2001-2005 The Open For Business Project and respected authors.
  
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -54,29 +54,29 @@
   String fulltext = request.getParameter("fulltext");
 %>
 
-<h3>XML Import to DataSource(s)</h3>
+<div class="head1">XML Import to DataSource(s)</div>
 <div>This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</div>
 <hr>
 <%if(security.hasPermission("ENTITY_MAINT", session)){%>
-  <h3>Import:</h3>
+  <div class="head2">Import:</div>
 
-  <FORM method="post" action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
-    <div>Absolute Filename of FreeMarker template file to filter data by (optional):</div>
-    <INPUT type="text" class='inputBox' size='60' name='fmfilename' value='<%=UtilFormatOut.checkNull(fmfilename)%>'> 
-    <div>Absolute Filename or URL:</div>
-    <INPUT type="text" class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> 
-    Is URL?:<INPUT type="checkbox" name='IS_URL' <%=isUrl?"checked":""%>> 
-    Mostly Inserts?:<INPUT type="checkbox" name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
-    Maintain Timestamps?:<INPUT type="checkbox" name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
-    Create "Dummy" FKs?:<INPUT type="checkbox" name='createDummyFks' <%=createDummyFks?"checked":""%>>
-    TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
-    <INPUT type="submit" value='Import File'>
-  </FORM>
-  <FORM method="post" action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
-    <div>Complete XML document (root tag: entity-engine-xml):</div>
-    <TEXTAREA class='textAreaBox' rows="8" cols="85" name='fulltext'><%=UtilFormatOut.checkNull(fulltext)%></TEXTAREA>
-    <BR><INPUT type="submit" value='Import Text'>
-  </FORM>
+  <form method="post" action="<ofbiz:url>/xmldsimport</ofbiz:url>">
+    <div class="tabletext">Absolute Filename of FreeMarker template file to filter data by (optional):</div>
+    <div><input type="text" class="inputBox" size="60" name="fmfilename" value="<%=UtilFormatOut.checkNull(fmfilename)%>"/></div>
+    <div class="tabletext">Absolute Filename or URL:</div>
+    <div><input type="text" class="inputBox" size="60" name="filename" value="<%=UtilFormatOut.checkNull(filename)%>"/></div>
+    <div class="tabletext"><input type="checkbox" name="IS_URL" <%=isUrl?"checked":""%>/>Is URL?</div>
+    <div class="tabletext"><input type="checkbox" name="mostlyInserts" <%=mostlyInserts?"checked":""%>/>Mostly Inserts?</div>
+    <div class="tabletext"><input type="checkbox" name="maintainTimeStamps" <%=keepStamps?"checked":""%>/>Maintain Timestamps?</div>
+    <div class="tabletext"><input type="checkbox" name="createDummyFks" <%=createDummyFks?"checked":""%>/>Create "Dummy" FKs?</div>
+    <div class="tabletext">TX Timeout Seconds:<input type="text" size="6" value="<%=txTimeoutStr%>" name="txTimeout"/></div>
+    <div><input type="submit" value="Import File"/></div>
+  </form>
+  <form method="post" action="<ofbiz:url>/xmldsimport</ofbiz:url>">
+    <div class="tabletext">Complete XML document (root tag: entity-engine-xml):</div>
+    <textarea class="textAreaBox" rows="20" cols="85" name="fulltext"><%=UtilFormatOut.checkNull(fulltext)%></textarea>
+    <br/><input type="submit" value="Import Text"/>
+  </form>
   <hr>
     <h3>Results:</h3>
 
@@ -102,7 +102,7 @@
       try {
           url = isUrl?new URL(filename):UtilURL.fromFilename(filename);
       } catch(java.net.MalformedURLException e) {
-          %><div>ERROR: <%=e.toString()%></div><%
+          %><div class="tabletext">ERROR: <%=e.toString()%></div><%
       }
         Debug.logInfo("url:" + url, "JSP");
 
@@ -111,7 +111,7 @@
         try {
             templateReader = new FileReader(fmfilename);
         } catch(java.io.FileNotFoundException e) {
-            %><div>ERROR: <%=e.toString()%></div><%
+            %><div class="tabletext">ERROR: <%=e.toString()%></div><%
         }
         
         StringWriter outWriter = new StringWriter();
@@ -121,7 +121,7 @@
         try {
             template = new Template("FMImportFilter", templateReader, conf);
         } catch(IOException e) {
-            %><div>ERROR: <%=e.toString()%></div><%
+            %><div class="tabletext">ERROR: <%=e.toString()%></div><%
         }
 
         Map context = new HashMap();
@@ -129,7 +129,7 @@
         try {
             is = url.openStream();
         } catch(IOException e) {
-            %><div>ERROR: <%=e.toString()%></div><%
+            %><div class="tabletext">ERROR: <%=e.toString()%></div><%
         }
 
         NodeModel nodeModel = NodeModel.parse(new InputSource(is));
@@ -149,7 +149,7 @@
         Debug.logInfo("numberRead(url):" + numberRead, "JSP");
       }
   %>
-      <div>Got <%=numberRead%> entities to write to the datasource.</div>
+      <div class="tabletext">Got <%=numberRead%> entities to write to the datasource.</div>
 
 <%-- The OLD way:
   <%
@@ -183,7 +183,7 @@
         try {
             templateReader = new FileReader(fmfilename);
         } catch(java.io.FileNotFoundException e) {
-            %><div>ERROR: <%=e.toString()%></div><%
+            %><div class="tabletext">ERROR: <%=e.toString()%></div><%
         }
         
         StringWriter outWriter = new StringWriter();
@@ -193,7 +193,7 @@
         try {
             template = new Template("FMImportFilter", templateReader, conf);
         } catch(IOException e) {
-            %><div>ERROR: <%=e.toString()%></div><%
+            %><div class="tabletext">ERROR: <%=e.toString()%></div><%
         }
 
         Map context = new HashMap();
@@ -216,7 +216,7 @@
         Debug.logInfo("numberRead(fulltext):" + numberRead, "JSP");
       }
   %>
-      <div>Got <%=numberRead%> entities to write to the datasource.</div>
+      <div class="tabletext">Got <%=numberRead%> entities to write to the datasource.</div>
 
 <%-- The OLD way:
   <%
@@ -238,8 +238,8 @@
 --%>
 
   <%} else {%>
-    <div>No filename/URL or complete XML document specified, doing nothing.</div>
+    <div class="tabletext">No filename/URL or complete XML document specified, doing nothing.</div>
   <%}%>
 <%}else{%>
-  <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+  <div class="tabletext">You do not have permission to use this page (ENTITY_MAINT needed)</div>
 <%}%>

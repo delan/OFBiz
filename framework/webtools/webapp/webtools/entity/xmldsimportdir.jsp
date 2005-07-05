@@ -1,5 +1,5 @@
 <%--
- *  Copyright (c) 2004 The Open For Business Project and respected authors.
+ *  Copyright (c) 2004-2005 The Open For Business Project and respected authors.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -47,7 +47,7 @@
       txTimeout = Integer.valueOf(txTimeoutStr);
   } catch (Exception e) {
       txTimeout = new Integer(7200);
-      %><div>ERROR: TX Timeout not a valid number, setting to 7200 seconds (2 hours): <%=e%><%
+      %><div class="tabletext">ERROR: TX Timeout not a valid number, setting to 7200 seconds (2 hours): <%=e%><%
   }
 
   Long filePause = null;
@@ -55,42 +55,39 @@
       filePause = Long.valueOf(filePauseStr);
   } catch (Exception e) {
       filePause = new Long(0);
-      %><div>ERROR: File Pause not a valid number, setting to 0 seconds (no pause): <%=e%><%
+      %><div class="tabletext">ERROR: File Pause not a valid number, setting to 0 seconds (no pause): <%=e%><%
   }
 %>
 
-<h3>XML Import to DataSource(s)</h3>
-<div>This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</div>
+<div class="head1">XML Import to DataSource(s)</div>
+<div class="tabletext">This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</div>
 <hr>
 <%if(security.hasPermission("ENTITY_MAINT", session)){%>
-  <h3>Import:</h3>
+  <div class="head2">Import:</div>
 
-  <FORM method="post" action='<ofbiz:url>/xmldsimportdir</ofbiz:url>'>
-    <div>Absolute directory path:</div>
-    <div>
-    <INPUT type="text" class='inputBox' size='60' name='path' value="<%=UtilFormatOut.checkNull(path)%>">
-    Mostly Inserts?:<INPUT type="checkbox" name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
-    Maintain Timestamps?:<INPUT type="checkbox" name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
-    Create "Dummy" FKs?:<INPUT type="checkbox" name='createDummyFks' <%=createDummyFks?"checked":""%>>
-    Delete Files Afterwards?:<INPUT type="checkbox" name='deleteFiles' <%=deleteFiles?"checked":""%>>
-    </div>
-    <div>TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
-    Pause (secs) between files:<INPUT type="text" size="6" value="<%=filePauseStr%>" name="filePause"></div>
-    <INPUT type="submit" value='Import Files'>
-  </FORM>
+  <form method="post" action="<ofbiz:url>/xmldsimportdir</ofbiz:url>">
+    <div class="tabletext">Absolute directory path:</div>
+    <div><input type="text" class="inputBox" size="60" name="path" value="<%=UtilFormatOut.checkNull(path)%>"/></div>
+    <div class="tabletext"><input type="checkbox" name="mostlyInserts" <%=mostlyInserts?"checked":""%>/>Mostly Inserts?</div>
+    <div class="tabletext"><input type="checkbox" name="maintainTimeStamps" <%=keepStamps?"checked":""%>/>Maintain Timestamps?</div>
+    <div class="tabletext"><input type="checkbox" name="createDummyFks" <%=createDummyFks?"checked=\"checked\"":""%>/>Create "Dummy" FKs?</div>
+    <div class="tabletext"><input type="checkbox" name="deleteFiles" <%=(deleteFiles || path == null || path.length() == 0)?"checked":""%>/>Delete Files Afterwards?</div>
+    <div class="tabletext">TX Timeout Seconds:<input type="text" size="6" value="<%=txTimeoutStr%>" name="txTimeout"/></div>
+    <div class="tabletext">Pause (secs) between files:<input type="text" size="6" value="<%=filePauseStr%>" name="filePause"/></div>
+    <div><input type="submit" value="Import Files"/></div>
+  </form>
   <hr>
-    <h3>Results:</h3>
+    <div class="head1">Results:</div>
 
   <%if (path != null && path.length() > 0) {%>
   <%
-
     long pauseLong = filePause != null ? filePause.longValue() : 0;
     File baseDir = new File(path);
 
     if (baseDir.isDirectory() && baseDir.canRead()) {
-	    File[] fileArray = baseDir.listFiles();
+        File[] fileArray = baseDir.listFiles();
         ArrayList files = new ArrayList(fileArray.length);
-	    for (int a=0; a<fileArray.length; a++){
+        for (int a=0; a<fileArray.length; a++){
             if (fileArray[a].getName().toUpperCase().endsWith("XML")) {
                 files.add(fileArray[a]);
             }
@@ -103,20 +100,20 @@
             if (a == fileListMarkedSize) {
                 passes++;
                 fileListMarkedSize = files.size();
-                %> <div>Pass <%=passes%> complete</div> <%
+                %> <div class="tabletext">Pass <%=passes%> complete</div> <%
                 // This means we've done a pass
                 if ( false == importedOne ) {
                     // We've failed to make any imports
-                    %> <div>Dropping out as we failed to make any imports on the last pass</div> <%
+                    %> <div class="tabletext">Dropping out as we failed to make any imports on the last pass</div> <%
                     a = files.size();
                     continue;
                 }
                 importedOne = false;
             }
             File curFile = (File)files.get(a);
-	        try{
-		        URL url = curFile.toURL();
-		        EntitySaxReader reader = new EntitySaxReader(delegator);
+            try{
+                URL url = curFile.toURL();
+                EntitySaxReader reader = new EntitySaxReader(delegator);
                 if (mostlyInserts) {
                     reader.setUseTryInsertMethod(true);
                 }
@@ -126,14 +123,14 @@
                 if (createDummyFks) {
                     reader.setCreateDummyFks(true);
                 }
-		        long numberRead = reader.parse(url);
-		        %><div>Got <%=numberRead%> entities from <%=curFile%></div><%
+                long numberRead = reader.parse(url);
+                %><div class="tabletext">Got <%=numberRead%> entities from <%=curFile%></div><%
                 importedOne = true;
                 if (deleteFiles) {
                     curFile.delete();    
                 }
-	        } catch (Exception ex){
-                %> <div>Error trying to read from <%=curFile%>: <%=ex%> <%
+            } catch (Exception ex){
+                %> <div class="tabletext">Error trying to read from <%=curFile%>: <%=ex%> <%
                 if (ex.toString().indexOf("referential integrity violation") > -1 ||
                         ex.toString().indexOf("Integrity constraint violation") > -1){
                     //It didn't work because object it depends on are still
@@ -141,7 +138,7 @@
                     //
                     //FIXME: Of course this is a potential infinite loop.
 
-                    %> <div>Looks like referential integrity violation, will retry</div> <%
+                    %> <div class="tabletext">Looks like referential integrity violation, will retry</div> <%
                     files.add(curFile);
                 }
             }
@@ -152,15 +149,15 @@
                 Thread.sleep((pauseLong * 1000));
                 Debug.log("Pause finished - " + UtilDateTime.nowTimestamp());
             }
-	    }
+        }
     } else {
-        %><div> path not found or can't be read </div> <%
+        %><div class="tabletext"> path not found or can't be read </div> <%
     }
   %>
   <%} else {%>
-    <div>No path specified, doing nothing.</div>
+    <div class="tabletext">No path specified, doing nothing.</div>
   <%}%>
 <%}else{%>
-  <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+  <div class="tabletext">You do not have permission to use this page (ENTITY_MAINT needed)</div>
 <%}%>
 

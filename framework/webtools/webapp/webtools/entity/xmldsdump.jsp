@@ -171,13 +171,13 @@
 <%
     session.setAttribute("xmlrawdump_entitylist", entityName);
 %>   
-    <h3>XML Export from DataSource(s)</h3>
-    <div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
+    <div class="head1">XML Export from DataSource(s)</div>
+    <div class="tabletext">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
     <hr>
     <%if(security.hasPermission("ENTITY_MAINT", session)) {%>
-        <a href='<ofbiz:url>/xmldsrawdump</ofbiz:url>' class='buttontext' target='_blank'>Click Here to Get Data (or save to file)</a>
+        <a href="<ofbiz:url>/xmldsrawdump</ofbiz:url>" class="buttontext" target="_blank">Click Here to Get Data (or save to file)</a>
     <%} else {%>
-      <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+      <div class="tabletext">You do not have permission to use this page (ENTITY_MAINT needed)</div>
     <%}%>
 <%} else {%>
 <%
@@ -317,41 +317,40 @@
   }
 
 %>
-    <h3>XML Export from DataSource(s)</h3>
-    <div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
-    <hr>
+    <div class="head1">XML Export from DataSource(s)</div>
+    <div class="tabletext">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
+    <hr/>
     <%if(security.hasPermission("ENTITY_MAINT", session)) {%>
-      <h3>Results:</h3>
-    
+      <div class="head2">Results:</div>
     
       <%if(filename != null && filename.length() > 0 && numberOfEntities > 0) {%>
-        <div>Wrote XML for all data in <%=numberOfEntities%> entities.</div>
-        <div>Wrote <%=numberWritten%> records to XML file <%=filename%></div>
+        <div class="tabletext">Wrote XML for all data in <%=numberOfEntities%> entities.</div>
+        <div class="tabletext">Wrote <%=numberWritten%> records to XML file <%=filename%></div>
       <%} else if (outpath != null && numberOfEntities > 0) {%>
         <%Iterator re = results.iterator();%>
         <%while (re.hasNext()){%>
-            <div><%=(String)re.next()%> </div>
+            <div class="tabletext"><%=(String)re.next()%> </div>
         <%}%>
       <%} else {%>
-        <div>No filename specified or no entity names specified, doing nothing.</div>
+        <div class="tabletext">No filename specified or no entity names specified, doing nothing.</div>
       <%}%>
     
-      <hr>
+      <hr/>
     
-      <h3>Export:</h3>
-      <FORM method="post" action='<ofbiz:url>/xmldsdump</ofbiz:url>'>
-        <div>Output Directory&nbsp;: <INPUT type="text" class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'>&nbsp;&nbsp;Max Records Per File&nbsp;: <INPUT type="text" class='inputBox' size='10' name='maxrecords'></div>
-        <div>Single Filename&nbsp;&nbsp;: <INPUT type="text" class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
-        <div>OR Out to Browser: <INPUT type="checkbox" name='tobrowser' <%=tobrowser?"checked":""%>></div>
+      <div class="head2">Export:</div>
+      <form method="post" action="<ofbiz:url>/xmldsdump</ofbiz:url>">
+        <div class="tabletext">Output Directory&nbsp;: <input type="text" class="inputBox" size="60" name="outpath" value="<%=UtilFormatOut.checkNull(outpath)%>"/></div>
+        <div class="tabletext">Max Records Per File&nbsp;: <input type="text" class="inputBox" size="10" name="maxrecords"/></div>
+        <div class="tabletext">Single Filename&nbsp;&nbsp;: <input type="text" class="inputBox" size="60" name="filename" value="<%=UtilFormatOut.checkNull(filename)%>"/></div>
+        <div class="tabletext">OR Out to Browser: <input type="checkbox" name="tobrowser" <%=tobrowser?"checked":""%>></div>
         <br/>
-        <div>Entity Names:</div>
-        <INPUT type="submit" value='Export'>
-        <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
-        <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
-        <br/>
-        Entity Sync Dump:
-        <input name="entitySyncId" class="inputBox" size="30" value="<%=UtilFormatOut.checkNull(entitySyncId)%>">
-        <br/>
+        <div class="tabletext">Entity Names:</div>
+        <input type="submit" value="Export"/>
+        <a href="<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>" class="buttontext">Check All</a>
+        <a href="<ofbiz:url>/xmldsdump</ofbiz:url>" class="buttontext">Un-Check All</a>
+        <div class="tabletext">Entity Sync Dump:
+        <input name="entitySyncId" class="inputBox" size="30" value="<%=UtilFormatOut.checkNull(entitySyncId)%>"/>
+        </div>
         Pre-configured set:
         <select name="preConfiguredSetName">
             <option value="">None</option>
@@ -363,8 +362,8 @@
         </select>
         <br/>
 
-        <TABLE>
-          <TR>
+        <table>
+          <tr>
             <%Iterator iter = entityNames.iterator();%>
             <%int entCount = 0;%>
             <%while(iter.hasNext()) {%>
@@ -377,16 +376,16 @@
                 <%ModelEntity curModelEntity = delegator.getModelEntity(curEntityName);%>
                 <%if (curModelEntity instanceof ModelViewEntity) check = false;%>
               <%}%>
-              <TD><INPUT type="checkbox" name='entityName' value='<%=curEntityName%>' <%=check?"checked":""%>><%=curEntityName%></TD>
+              <td><div class="tabletext"><input type="checkbox" name="entityName" value="<%=curEntityName%>" <%=check?"checked":""%>/><%=curEntityName%></div></td>
             <%}%>
-          </TR>
-        </TABLE>
+          </tr>
+        </table>
     
-        <INPUT type="submit" value='Export'>
-        <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
-        <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
-      </FORM>
+        <input type="submit" value="Export">
+        <A href="<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>" class="buttontext">Check All</A>
+        <A href="<ofbiz:url>/xmldsdump</ofbiz:url>" class="buttontext">Un-Check All</A>
+      </form>
     <%} else {%>
-      <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+      <div class="tabletext">You do not have permission to use this page (ENTITY_MAINT needed)</div>
     <%}%>
 <%}%>
