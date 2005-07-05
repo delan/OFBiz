@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -28,24 +28,14 @@ import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.order.order.*;
 
-delegator = request.getAttribute("delegator");
-facilityId = request.getParameter("facilityId");
-
-if (UtilValidate.isEmpty(facilityId)) {
-    facilityId = request.getAttribute("facilityId");
-}
-
+facilityId = parameters.get("facilityId");
 if (UtilValidate.isNotEmpty(facilityId)) {
     facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
     context.put("facilityId", facilityId);
     context.put("facility", facility);
 }
 
-orderId = request.getParameter("orderId");
-if (UtilValidate.isEmpty("orderId")) {
-    orderId = request.getAttribute("orderId");
-}
-
+orderId = parameters.get("orderId");
 if (UtilValidate.isNotEmpty(orderId)) {
     orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
     if (orderHeader != null) {
@@ -58,11 +48,7 @@ if (UtilValidate.isNotEmpty(orderId)) {
     }
 }
 
-shipmentId = request.getParameter("shipmentId");
-if (UtilValidate.isEmpty(shipmentId)) {
-    shipmentId = request.getAttribute("shipmentId");
-}
-
+shipmentId = parameters.get("shipmentId");
 if (UtilValidate.isNotEmpty(shipmentId)) {
     shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
     if (shipment != null) {
@@ -70,7 +56,7 @@ if (UtilValidate.isNotEmpty(shipmentId)) {
         request.setAttribute("_EVENT_MESSAGE_", null);
         
         // set the shipment context info
-        context.put("shipmentType", shipment.getRelatedOne("ShipmentType"));
+        context.put("shipmentType", shipment.getRelatedOneCache("ShipmentType"));
         context.put("statusItem", shipment.getRelatedOne("StatusItem"));
         context.put("primaryOrderHeader", shipment.getRelatedOne("PrimaryOrderHeader"));
         context.put("toPerson", shipment.getRelatedOne("ToPerson"));
@@ -97,5 +83,3 @@ if (UtilValidate.isNotEmpty(shipmentId)) {
         context.put("weightUomList", weightUoms);
     }    
 }
-
-

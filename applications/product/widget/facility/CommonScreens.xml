@@ -47,7 +47,7 @@
                 
                 <container style="centerarea">
                     <!-- render appheader -->
-                    <platform-specific><html><html-template location="component://product/webapp/facility/includes/header.ftl"/></html></platform-specific>
+                    <platform-specific><html><html-template location="component://product/webapp/facility/includes/appheader.ftl"/></html></platform-specific>
                     
                     <container style="contentarea">
                         <!-- by default will render left-bar only if leftbarScreen value not empty -->
