@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -37,9 +37,6 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.*;
 
-dispatcher = request.getAttribute("dispatcher");
-delegator = request.getAttribute("delegator");
-
 //either optProduct, optProductId or productId must be specified
 product = request.getAttribute("optProduct");
 optProductId = request.getAttribute("optProductId");
@@ -49,6 +46,7 @@ webSiteId = CatalogWorker.getWebSiteId(request);
 catalogId = CatalogWorker.getCurrentCatalogId(request);
 productStore = ProductStoreWorker.getProductStore(request);
 facilityId = productStore.getString("inventoryFacilityId");
+productStoreId = productStore.getString("productStoreId");
 autoUserLogin = session.getAttribute("autoUserLogin");
 userLogin = session.getAttribute("userLogin");
 cart = ShoppingCartEvents.getCartObject(request);
@@ -70,8 +68,6 @@ if (product == null && productId != null) {
     product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
 }
 if (product != null) {
-    context.put("product", product);
-    
     productFacility = delegator.findByPrimaryKeyCache("ProductFacility", UtilMisc.toMap("productId", product.get("productId"), "facilityId", facilityId));
     if (productFacility != null && productFacility.get("daysToShip") != null) {
         context.put("daysToShip", productFacility.get("daysToShip"));
@@ -88,20 +84,21 @@ if (product != null) {
     if (categoryId == null) {
         categoryId = request.getAttribute("productCategoryId");
     }
-    context.put("categoryId", categoryId);
 
     // get the product price
-    priceMap = dispatcher.runSync("calculateProductPrice", 
-            UtilMisc.toMap("product", product, "prodCatalogId", catalogId, 
-            "webSiteId", webSiteId, "currencyUomId", cart.getCurrency(), 
-            "autoUserLogin", autoUserLogin, "userLogin", userLogin));
+    priceContext = UtilMisc.toMap("product", product, "currencyUomId", cart.getCurrency(), 
+            "autoUserLogin", autoUserLogin, "userLogin", userLogin);
+    priceContext.put("webSiteId", webSiteId);
+    priceContext.put("prodCatalogId", catalogId);
+    priceContext.put("productStoreId", productStoreId);
+    priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
             
     context.put("price", priceMap);
 }
 
 // get the product review(s)
 reviews = product.getRelatedCache("ProductReview", null, UtilMisc.toList("-postedDateTime"));
-context.put("productReviews", reviews);
+
 // get the average rating
 if (reviews != null && reviews.size() > 0) {
     reviewIter = reviews.iterator();
@@ -123,6 +120,10 @@ if (reviews != null && reviews.size() > 0) {
 
 // an example of getting features of a certain type to show
 sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", "SIZE"), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
-context.put("sizeProductFeatureAndAppls", sizeProductFeatureAndAppls);
 
+context.put("product", product);
+context.put("productStoreId", productStoreId);
+context.put("categoryId", categoryId);
+context.put("productReviews", reviews);
+context.put("sizeProductFeatureAndAppls", sizeProductFeatureAndAppls);
     
