@@ -48,10 +48,10 @@
           <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
             <div class="tabletext" style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
           <#-- check to see if it is a rental item; will enter parameters on the detail screen-->
-          <#elseif product.productTypeId == "ASSET_USAGE">
+          <#elseif product.productTypeId?if_exists == "ASSET_USAGE">
             <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceMakeBooking}...]</a>
           <#-- check to see if it is an aggregated or configurable product; will enter parameters on the detail screen-->
-          <#elseif product.productTypeId == "AGGREGATED">
+          <#elseif product.productTypeId?if_exists == "AGGREGATED">
             <a href="<@ofbizUrl>product/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceConfigure}...]</a>
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">

@@ -164,7 +164,7 @@ ${virtualJavaScript?if_exists}
     }    
 
     function additemSubmit(){
-        <#if product.productTypeId == "ASSET_USAGE">
+        <#if product.productTypeId?if_exists == "ASSET_USAGE">
         newdatevalue = validate(document.addform.reservStart.value);
         if (newdatevalue == false) {
             document.addform.reservStart.focus();
@@ -178,7 +178,7 @@ ${virtualJavaScript?if_exists}
     }
 
     function addShoplistSubmit(){
-        <#if product.productTypeId == "ASSET_USAGE">
+        <#if product.productTypeId?if_exists == "ASSET_USAGE">
         if (document.addToShoppingList.reservStartStr.value == "") {
             document.addToShoppingList.submit();
         } else {
@@ -273,7 +273,7 @@ ${virtualJavaScript?if_exists}
             <#assign priceStyle = "regularPrice">
           </#if>
             ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
-             <#if product.productTypeId == "ASSET_USAGE">
+             <#if product.productTypeId?if_exists == "ASSET_USAGE">
             <#if product.reserv2ndPPPerc?exists && product.reserv2ndPPPerc != 0><br/><span class="${priceStyle}">Price for the 2nd <#if !product.reservNthPPPerc?exists || product.reservNthPPPerc == 0>until the ${product.reservMaxPersons}</#if>  person: <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
             <#if product.reservNthPPPerc?exists &&product.reservNthPPPerc != 0><br/><span class="${priceStyle}">Price for the <#if !product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0>second <#else> 3rd </#if> until the ${product.reservMaxPersons}th person, each: <@ofbizCurrency amount=product.reservNthPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
             <#if (!product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0) && (!product.reservNthPPPerc?exists || product.reservNthPPPerc == 0)><br/>Maximum ${product.reservMaxPersons} persons.</#if>
@@ -398,7 +398,7 @@ ${virtualJavaScript?if_exists}
               <nobr><b>Amount:</b></nobr>&nbsp;
               <input type="text" class="inputBox" size="5" name="add_amount" value=""/>
             </div>
-            <#if product.productTypeId == "ASSET_USAGE">
+            <#if product.productTypeId?if_exists == "ASSET_USAGE">
                 <table width="100%"><tr><td  width="80%">&nbsp;</td><td class="tabletext" nowrap align="right">Start Date<br/>(yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStart"/></td><td class="tabletext" nowrap align="right">Number<br/>of days</td><td><input type="text" class="inputBox" size="4" name="reservLength"/></td></tr><tr><td>&nbsp;</td><td class="tabletext" align="right" nowrap>Number of<br/>persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"/></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"/></td></tr></table>
             <#else/>
                 <input type="text" class="inputBox" size="5" name="quantity" value="1"<#if product.isVirtual?if_exists?upper_case == "Y"> disabled="disabled"</#if>/>
@@ -429,7 +429,7 @@ ${virtualJavaScript?if_exists}
             <option value="">${uiLabelMap.EcommerceNewShoppingList}</option>
           </select>
           &nbsp;&nbsp;
-          <#if product.productTypeId == "ASSET_USAGE">
+          <#if product.productTypeId?if_exists == "ASSET_USAGE">
               <table><tr><td>&nbsp;</td><td class="tabletext" align="right">Start Date (yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStartStr" ></td><td class="tabletext">Number of&nbsp;days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td><td>&nbsp;</td><td class="tabletext" align="right">Number of&nbsp;persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table>
           <#else>
               <input type="text" class="inputBox" size="5" name="quantity" value="1"/>
