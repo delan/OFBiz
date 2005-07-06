@@ -547,8 +547,12 @@ public class InvoiceServices {
             // TODO BIG TIME: need to get rid of the storeAll/toStore stuff and call all services for these things rather than direct entity ops
             delegator.storeAll(toStore);
 
-            // should all be in place now, so set status to INVOICE_READY
-            Map setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.toMap("invoiceId", invoiceId, "statusId", "INVOICE_READY", "userLogin", userLogin));
+            // should all be in place now, so set status to INVOICE_READY (unless it's a purchase invoice, which we sets to INVOICE_IN_PROCESS) 
+            String nextStatusId = "INVOICE_READY";
+            if (invoiceType.equals("PURCHASE_INVOICE")) {
+                nextStatusId = "INVOICE_IN_PROCESS";
+            }
+            Map setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.toMap("invoiceId", invoiceId, "statusId", nextStatusId, "userLogin", userLogin));
             if (ServiceUtil.isError(setInvoiceStatusResult)) {
                 return ServiceUtil.returnError("Error creating invoice from order", null, null, setInvoiceStatusResult);
             }
