@@ -147,6 +147,7 @@ public class InvoiceServices {
             // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
             createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
             createInvoiceContext.put("currencyUomId", orderHeader.getString("currencyUom"));
+            createInvoiceContext.put("userLogin", userLogin);
 
             // store the invoice first
             Map createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
@@ -547,7 +548,7 @@ public class InvoiceServices {
             delegator.storeAll(toStore);
 
             // should all be in place now, so set status to INVOICE_READY
-            Map setInvoiceStatusResult = dispatcher.runSync("checkInvoicePaymentApplications", UtilMisc.toMap("invoiceId", invoiceId, "statusId", "INVOICE_READY"));
+            Map setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.toMap("invoiceId", invoiceId, "statusId", "INVOICE_READY", "userLogin", userLogin));
             if (ServiceUtil.isError(setInvoiceStatusResult)) {
                 return ServiceUtil.returnError("Error creating invoice from order", null, null, setInvoiceStatusResult);
             }
