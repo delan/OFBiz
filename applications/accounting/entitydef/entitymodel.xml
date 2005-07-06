@@ -1424,7 +1424,25 @@
       <field name="uomId" type="id"></field>
       <prim-key field="settlementTermId"/>
     </entity>
-
+    <entity entity-name="VarianceReasonGlAccount"
+            package-name="org.ofbiz.accounting.ledger"
+            title="Defines GL Accounts for Inventory Variance Reasons">
+      <field name="varianceReasonId" type="id-ne"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
+      <field name="glAccountId" type="id-ne"></field>
+      <prim-key field="varianceReasonId"/>
+      <prim-key field="organizationPartyId"/>
+      <relation type="one" fk-name="VRGL_VREAS" rel-entity-name="VarianceReason">
+        <key-map field-name="varianceReasonId"/>
+      </relation>
+      <relation type="one" fk-name="VRGL_PARTY" title="Organization" rel-entity-name="Party">
+        <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="VRGL_GLACCT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+    </entity>
+    
   <!-- ========================================================= -->
   <!-- org.ofbiz.accounting.payment -->
   <!-- ========================================================= -->
