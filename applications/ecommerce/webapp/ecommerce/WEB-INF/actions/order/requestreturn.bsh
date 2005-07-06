@@ -48,6 +48,13 @@ if (orderId != null) {
     context.put("returnableItems", returnRes.get("returnableItems"));
 }
 
+//put in the return to party information from the order header
+if (orderId != null) {
+    order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+    productStore = order.getRelatedOne("ProductStore");
+    context.put("toPartyId", productStore.getString("payToPartyId"));
+}
+
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));   
 
 
