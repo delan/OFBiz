@@ -464,7 +464,7 @@ public class InvoiceServices {
                 } else {
                     // these will effect the shipping pro-rate (unless commented)
                     // other adjustment type
-                    // double adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, itemSeqId, toStore, orderSubTotal, invoiceSubTotal, invoiceQuantity);
+                    double adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, itemSeqId, toStore, orderSubTotal, invoiceSubTotal, invoiceQuantity);
                     // invoiceShipProRateAmount += adjAmount;
                     // do adjustments compound or are they based off subtotal? Here we will (unless commented)
                     // invoiceSubTotal += adjAmount;
