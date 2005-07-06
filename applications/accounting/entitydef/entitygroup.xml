@@ -114,6 +114,7 @@
     <entity-group group="org.ofbiz" entity="PartyAcctgPreference" />
     <entity-group group="org.ofbiz" entity="ProductAverageCost" />
     <entity-group group="org.ofbiz" entity="SettlementTerm" />
+    <entity-group group="org.ofbiz" entity="VarianceReasonGlAccount" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.accounting.payment -->
