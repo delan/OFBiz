@@ -723,6 +723,12 @@
       <relation type="one" fk-name="PARTY_CMECH_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId"/>
+      </relation>
       <relation type="one" fk-name="PARTY_CMECH_PROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
@@ -764,6 +770,12 @@
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
       <relation type="one" fk-name="PARTY_CMPRP_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="PARTY_CMPRP_CMECH" rel-entity-name="ContactMech">
