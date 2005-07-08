@@ -78,7 +78,7 @@ public class ModelEntityChecker {
             }
             entities.add(eName);
         }
-        int numberOfEntities = ec.size();
+        //int numberOfEntities = ec.size();
         int numberShowed = 0;
 
         TreeSet fkNames = new TreeSet();
