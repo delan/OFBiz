@@ -45,6 +45,7 @@
   <!-- The modules in this file are as follows:                  -->
   <!--  - org.ofbiz.marketing.campaign -->
   <!--  - org.ofbiz.marketing.contact -->
+  <!--  - org.ofbiz.marketing.segment -->
   <!--  - org.ofbiz.marketing.tracking -->
   <!-- ========================================================= -->
 
