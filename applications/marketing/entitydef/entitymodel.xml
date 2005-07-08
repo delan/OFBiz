@@ -181,10 +181,84 @@
       <prim-key field="contactListTypeId"/>
     </entity>
 
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.marketing.tracking -->
-  <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.marketing.segment -->
+    <!-- ========================================================= -->
 
+    <entity entity-name="SegmentGroup"
+            package-name="org.ofbiz.marketing.segment"
+            title="Segment Group Entity">
+        <field name="segmentGroupId" type="id-ne"></field>
+        <field name="segmentGroupTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="segmentGroupId"/>
+        <relation type="one" fk-name="SGMTGRP_TYPE" rel-entity-name="SegmentGroupType">
+            <key-map field-name="segmentGroupTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SegmentGroupClassification"
+            package-name="org.ofbiz.marketing.segment"
+            title="Segment Group Classification Entity">
+        <field name="segmentGroupId" type="id-ne"></field>
+        <field name="partyClassificationGroupId" type="id-ne"></field>
+        <prim-key field="segmentGroupId"/>
+        <prim-key field="partyClassificationGroupId"/>
+        <relation type="one" fk-name="SGMTGRPCLS_SGGP" rel-entity-name="SegmentGroup">
+            <key-map field-name="segmentGroupId"/>
+        </relation>
+        <relation type="one" fk-name="SGMTGRPCLS_PCGP" rel-entity-name="PartyClassificationGroup">
+            <key-map field-name="partyClassificationGroupId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SegmentGroupGeo"
+            package-name="org.ofbiz.marketing.segment"
+            title="Segment Group Geo Entity">
+        <field name="segmentGroupId" type="id-ne"></field>
+        <field name="geoId" type="id-ne"></field>
+        <prim-key field="segmentGroupId"/>
+        <prim-key field="geoId"/>
+        <relation type="one" fk-name="SGMTGRPGEO_SGGP" rel-entity-name="SegmentGroup">
+            <key-map field-name="segmentGroupId"/>
+        </relation>
+        <relation type="one" fk-name="SGMTGRPGEO_GEO" rel-entity-name="Geo">
+            <key-map field-name="geoId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SegmentGroupRole"
+            package-name="org.ofbiz.marketing.segment"
+            title="Segment Group Role Entity">
+        <field name="segmentGroupId" type="id-ne"></field>
+        <field name="partyId" type="id-ne"></field>
+        <field name="roleTypeId" type="id-ne"></field>
+        <prim-key field="segmentGroupId"/>
+        <prim-key field="partyId"/>
+        <prim-key field="roleTypeId"/>
+        <relation type="one" fk-name="SGMTGRPRL_SGGP" rel-entity-name="SegmentGroup">
+            <key-map field-name="segmentGroupId"/>
+        </relation>
+        <relation type="one" fk-name="SGMTGRPRL_PRLE" rel-entity-name="PartyRole">
+            <key-map field-name="partyId"/>
+            <key-map field-name="roleTypeId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="RoleType">
+            <key-map field-name="roleTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SegmentGroupType"
+            package-name="org.ofbiz.marketing.segment"
+            title="Segment Group Type Entity">
+        <field name="segmentGroupTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="segmentGroupTypeId"/>
+    </entity>
+    
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.marketing.tracking -->
+    <!-- ========================================================= -->
+    
     <entity entity-name="TrackingCode"
             package-name="org.ofbiz.marketing.tracking"
             title="Tracking Code Entity">
@@ -262,4 +336,3 @@
       </relation>
     </entity>
 </entitymodel>
-

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+    <SegmentGroupType segmentGroupTypeId="MARKET_SEGMENT" description="Market Segment"/>
+    <SegmentGroupType segmentGroupTypeId="SALES_SEGMENT" description="Sales Segment"/>
+    
     <TrackingCodeType trackingCodeTypeId="INTERNAL" description="Internal"/>
     <TrackingCodeType trackingCodeTypeId="EXTERNAL" description="External"/>
     <TrackingCodeType trackingCodeTypeId="PARTNER_MGD" description="Partner Managed"/>
