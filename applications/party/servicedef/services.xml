@@ -397,21 +397,42 @@
     </service>
 
     <!-- PartyClassification -->
-    <service name="createPartyClassification" engine="simple"
+    <service name="createPartyClassification" engine="simple" default-entity-name="PartyClassification"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyClassification">
-        <description>delete party classifications</description>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyClassificationGroupId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyClassificationTypeId" type="String" mode="IN" optional="false"/>
+        <description>create PartyClassification</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="fromDate" optional="true"/>
     </service>
-    <service name="deletePartyClassification" engine="simple"
+    <service name="updatePartyClassification" engine="simple" default-entity-name="PartyClassification"
+        location="org/ofbiz/party/party/PartyServices.xml" invoke="updatePartyClassification">
+        <description>update PartyClassification</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deletePartyClassification" engine="simple" default-entity-name="PartyClassification"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="deletePartyClassification">
-        <description>delete party classifications</description>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyClassificationGroupId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <description>delete PartyClassification</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-
+    <service name="createPartyClassificationGroup" engine="simple" default-entity-name="PartyClassificationGroup"
+        location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyClassificationGroup">
+        <description>create PartyClassificationGroup</description>
+        <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updatePartyClassificationGroup" engine="simple" default-entity-name="PartyClassificationGroup"
+        location="org/ofbiz/party/party/PartyServices.xml" invoke="updatePartyClassificationGroup">
+        <description>update PartyClassificationGroup</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deletePartyClassificationGroup" engine="simple" default-entity-name="PartyClassificationGroup"
+        location="org/ofbiz/party/party/PartyServices.xml" invoke="deletePartyClassificationGroup">
+        <description>delete PartyClassificationGroup</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
     <!-- Vendor -->
     <service name="createVendor" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="createVendor" auth="true">

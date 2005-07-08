@@ -85,24 +85,47 @@
     <simple-method method-name="createPartyClassification" short-description="create a PartyClassification">
         <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePartyClassificationPermissionError"/></check-permission>
         <check-errors/>
-        
-        <make-value entity-name="PartyClassification" value-name="PartyClassificationValue"/>
-        <now-timestamp-to-env env-name="now"/>
-        <env-to-field map-name="parameters" field-name="fromDate" env-name="now"/> 
-        
-        <set-pk-fields map-name="parameters" value-name="PartyClassificationValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="PartyClassificationValue" />        
-        <create-value value-name="PartyClassificationValue" />  
+        <make-value entity-name="PartyClassification" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="newEntity.fromDate"><now-timestamp-to-env env-name="newEntity.fromDate"/></if-empty>        
+        <create-value value-name="newEntity"/>  
     </simple-method>   
+    <simple-method method-name="updatePartyClassification" short-description="update a PartyClassification">
+        <check-permission permission="PARTYMGR" action="_UPDATE"><fail-property resource="PartyUiLabels" property="PartyUpdatePartyClassificationPermissionError"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="PartyClassification" value-name="lookedUpValue"/>
+        <set-pk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
     <simple-method method-name="deletePartyClassification" short-description="delete a PartyClassification">
         <check-permission permission="PARTYMGR" action="_DELETE"><fail-property resource="PartyUiLabels" property="PartyRemovePartyClassificationPermissionError"/></check-permission>
         <check-errors/>
-        <make-value entity-name="PartyClassification" value-name="PartyClassificationMap"/>
-        <set-pk-fields value-name="PartyClassificationMap" map-name="parameters"/>
-        <find-by-primary-key entity-name="PartyClassification" map-name="PartyClassificationMap" value-name="PartyClassificationValue" />
-        <now-timestamp-to-env env-name="now"/>
-        <env-to-field map-name="PartyClassificationValue" field-name="thruDate" env-name="now"/> 
-        <store-value value-name="PartyClassificationValue"/>        
+        <entity-one entity-name="PartyClassification" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="createPartyClassificationGroup" short-description="create a PartyClassificationGroup">
+        <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePartyClassificationGroupPermissionError"/></check-permission>
+        <check-errors/>
+        <make-value entity-name="PartyClassificationGroup" value-name="newEntity"/>
+        <sequenced-id-to-env sequence-name="PartyClassificationGroup" env-name="newEntity.partyClassificationGroupId"/>
+        <field-to-result field-name="newEntity.partyClassificationGroupId" result-name="partyClassificationGroupId"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="newEntity.fromDate"><now-timestamp-to-env env-name="newEntity.fromDate"/></if-empty>        
+        <create-value value-name="newEntity"/>  
+    </simple-method>   
+    <simple-method method-name="updatePartyClassificationGroup" short-description="update a PartyClassificationGroup">
+        <check-permission permission="PARTYMGR" action="_UPDATE"><fail-property resource="PartyUiLabels" property="PartyUpdatePartyClassificationGroupPermissionError"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="PartyClassificationGroup" value-name="lookedUpValue"/>
+        <set-pk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deletePartyClassificationGroup" short-description="delete a PartyClassificationGroup">
+        <check-permission permission="PARTYMGR" action="_DELETE"><fail-property resource="PartyUiLabels" property="PartyRemovePartyClassificationGroupPermissionError"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="PartyClassificationGroup" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
     <!-- PartyRelationship methods -->
