@@ -43,7 +43,7 @@ import org.ofbiz.party.contact.ContactHelper;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class TruitionCoReg {
@@ -54,21 +54,26 @@ public class TruitionCoReg {
     public static String truitionReg(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession session = req.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        StringBuffer cookieName = new StringBuffer();
+        StringBuffer cookieNameB = new StringBuffer();
         StringBuffer cookieValue = new StringBuffer();
         if (userLogin != null) {
-            TruitionCoReg.makeTruitionCookie(userLogin, cookieName, cookieValue);
+            TruitionCoReg.makeTruitionCookie(userLogin, cookieNameB, cookieValue);
         }
 
-        // locate the domain name setting
+        // locate the domain/cookie name setting
         String domainName = UtilProperties.getPropertyValue("truition.properties", "truition.domain.name");
+        String cookieName = UtilProperties.getPropertyValue("truition.properties", "truition.cookie.name");
         if (UtilValidate.isEmpty(domainName)) {
             Debug.logError("Truition is not properly configured; domainName missing; see truition.properties", module);
             return "error";
         }
+        if (UtilValidate.isEmpty(cookieName)) {
+            Debug.logError("Truition is not properly configured; cookieName missing; see truition.properties", module);
+            return "error";
+        }
 
         // create the cookie
-        Cookie tru = new Cookie(cookieName.toString(), cookieValue.toString());
+        Cookie tru = new Cookie(cookieName, cookieValue.toString());
         tru.setDomain(domainName);
         tru.setPath("/");
         tru.setMaxAge(-1); // session cookie (not persisted)
@@ -77,16 +82,44 @@ public class TruitionCoReg {
         return "success";
     }
 
+    public static String truitionLogoff(HttpServletRequest req, HttpServletResponse resp) {
+        // locate the domain/cookie name setting
+        String domainName = UtilProperties.getPropertyValue("truition.properties", "truition.domain.name");
+        String cookieName = UtilProperties.getPropertyValue("truition.properties", "truition.cookie.name");
+        if (UtilValidate.isEmpty(domainName)) {
+            Debug.logError("Truition is not properly configured; domainName missing; see truition.properties", module);
+            return "error";
+        }
+        if (UtilValidate.isEmpty(cookieName)) {
+            Debug.logError("Truition is not properly configured; cookieName missing; see truition.properties", module);
+            return "error";
+        }
+
+        Cookie[] cookies = req.getCookies();
+        for (int i = 0; i < cookies.length; i++) {
+            if (cookieName.equals(cookies[i].getName())) {
+                cookies[i].setMaxAge(0);
+                resp.addCookie(cookies[i]);
+            }
+        }
+
+        return "success";
+    }
+
     public static String truitionRedirect(HttpServletRequest req, HttpServletResponse resp) {
         // redirect URL form field
         String redirectUrlName = UtilProperties.getPropertyValue("truition.properties", "truition.redirect.urlName");
         String redirectUrl = req.getParameter(redirectUrlName);
-        try {
-            resp.sendRedirect(redirectUrl);
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            req.setAttribute("_ERROR_MESSAGE_", e.getMessage());
-            return "error";
+        Debug.log("Redirect to : " + redirectUrl, module);
+        if (redirectUrl != null) {
+            try {
+                resp.sendRedirect(redirectUrl);
+            } catch (IOException e) {
+                Debug.logError(e, module);
+                req.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                return "error";
+            }
+            return "redirect";
         }
         return "success";
     }
@@ -183,6 +216,9 @@ public class TruitionCoReg {
                             state = addr.getString("stateProvinceGeoId");
                             zipCode = addr.getString("postalCode");
                             country = addr.getString("countryGeoId");
+                            if (address2 == null) {
+                                address2 = "";
+                            }
                         }
                     }
                 }
