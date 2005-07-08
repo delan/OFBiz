@@ -42,6 +42,16 @@
     <entity-group group="org.ofbiz" entity="ContactListParty" />
     <entity-group group="org.ofbiz" entity="ContactListType" />
 
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.marketing.segment -->
+    <!-- ========================================================= -->
+    
+    <entity-group group="org.ofbiz" entity="SegmentGroup"/>
+    <entity-group group="org.ofbiz" entity="SegmentGroupClassification"/>
+    <entity-group group="org.ofbiz" entity="SegmentGroupGeo"/>
+    <entity-group group="org.ofbiz" entity="SegmentGroupRole"/>
+    <entity-group group="org.ofbiz" entity="SegmentGroupType"/>
+    
   <!-- ========================================================= -->
   <!-- org.ofbiz.marketing.tracking -->
   <!-- ========================================================= -->
