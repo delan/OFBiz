@@ -191,9 +191,13 @@
         <field name="segmentGroupId" type="id-ne"></field>
         <field name="segmentGroupTypeId" type="id-ne"></field>
         <field name="description" type="description"></field>
+        <field name="productStoreId" type="id"></field>
         <prim-key field="segmentGroupId"/>
         <relation type="one" fk-name="SGMTGRP_TYPE" rel-entity-name="SegmentGroupType">
             <key-map field-name="segmentGroupTypeId"/>
+        </relation>
+        <relation type="one" fk-name="SGMTGRP_PRST" rel-entity-name="ProductStore">
+            <key-map field-name="productStoreId"/>
         </relation>
     </entity>
     <entity entity-name="SegmentGroupClassification"
