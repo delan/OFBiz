@@ -57,11 +57,21 @@
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
             <drop-down allow-empty="true">
+                <option key="REQ_REQUESTER" description="${uiLabelMap.WorkEffortRequestingParty}"/>
+                <option key="AGENT" description="${uiLabelMap.OrderAgent}"/>
+                <option key="REQ_TAKER" description="${uiLabelMap.WorkEffortRequestTaker}"/>
+                <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
+            </drop-down>
+        </field>
+        <!--
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
+        -->
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="custRequestCategoryId"><hidden/></field>
         <field name="priority"><hidden/></field>
@@ -76,7 +86,7 @@
     </form>
 
     <form name="ListRequests" type="list" use-row-submit="true" 
-            title="" list-name="custRequestAndRoles" paginate-target="requestlist"
+            title="" list-name="custRequestAndRoles" paginate-target="FindRequest"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
       	<actions>
           <set field="entityName" value="CustRequestAndRole"/>
@@ -100,18 +110,18 @@
         </field>
     </form>
     <form name="ListRequestItems" type="list" use-row-submit="true" 
-            title="" list-name="custRequestItems" paginate-target="requestitems"
+            title="" list-name="custRequestItems" paginate-target="RequestItems"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
         <field name="custRequestId" widget-style="buttontext">
             <hyperlink description="${custRequestItemSeqId}" target="requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>
+        <field name="story"></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="custRequestResolutionId"><hidden/></field>
-        <field name="story"><hidden/></field>
         <field name="statusId">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
@@ -284,7 +294,7 @@
     </form>
 
     <form name="ListRequestItemNotes" type="list" use-row-submit="true" 
-            title="" list-name="notes" paginate-target="requestitemnotes"
+            title="" list-name="notes" paginate-target="RequestItemNotes"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="CustRequestItemNoteView" default-field-type="display"/>
         <field name="noteId"><hidden/></field>
@@ -295,7 +305,7 @@
         <field name="lastName"><hidden/></field>
     </form>
     <form name="ListRequestItemWorkEffortReq" type="list" use-row-submit="true" 
-            title="" list-name="requirements" paginate-target="requestitemrequirements"
+            title="" list-name="requirements" paginate-target="RequestItemRequirements"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="Requirement" default-field-type="display"/>
         <field name="requirementId"><hidden/></field>
@@ -313,7 +323,7 @@
     </form>
 
     <form name="ListRequestRoles" type="list" use-row-submit="true" 
-            title="" list-name="custRequestRoles" paginate-target="requestroles"
+            title="" list-name="custRequestRoles" paginate-target="RequestRoles"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="CustRequestRole" default-field-type="display"/>
         <field name="custRequestId"><hidden/></field>
@@ -323,7 +333,7 @@
         <field name="name" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/>
         </field>
-        <field name="roleTypeId" >
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
         <field name="remove" widget-style="buttontext">
@@ -336,12 +346,12 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="custRequestId"><hidden/></field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
             <drop-down allow-empty="false">
-                <option key="REQ_TAKER" description="${uiLabelMap.WorkEffortRequestTaker}"/>
                 <option key="REQ_REQUESTER" description="${uiLabelMap.WorkEffortRequestingParty}"/>
-                <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
                 <option key="AGENT" description="${uiLabelMap.OrderAgent}"/>
+                <option key="REQ_TAKER" description="${uiLabelMap.WorkEffortRequestTaker}"/>
+                <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
             </drop-down>
         </field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
@@ -349,7 +359,7 @@
         </field>
     </form>
     <form name="ListRequestItemRequirements" type="list"
-            title="" list-name="custRequestRequirements" paginate-target="requestitemrequirements"
+            title="" list-name="custRequestRequirements" paginate-target="RequestItemRequirements"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="Requirement" default-field-type="display"/>
         <field name="requirementId" widget-style="buttontext">
