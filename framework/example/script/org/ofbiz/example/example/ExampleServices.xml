@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <!-- Example methods -->
+    <simple-method method-name="createExample" short-description="create a Example">
+        <check-permission permission="EXAMPLE" action="_CREATE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorCreateExample"/></check-permission>
+        <check-errors/>
+        <make-value entity-name="Example" value-name="newEntity"/>
+        <sequenced-id-to-env sequence-name="Example" env-name="newEntity.exampleId"/> <!-- get the next sequenced ID -->
+        <field-to-result field-name="newEntity.exampleId" result-name="exampleId"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>  
+    </simple-method>   
+    <simple-method method-name="updateExample" short-description="update a Example">
+        <check-permission permission="EXAMPLE" action="_UPDATE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorUpdateExample"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="Example" value-name="lookedUpValue"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteExample" short-description="delete a Example">
+        <check-permission permission="EXAMPLE" action="_DELETE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorDeleteExample"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="Example" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- ExampleItem methods -->
+    <simple-method method-name="createExampleItem" short-description="create a ExampleItem">
+        <check-permission permission="EXAMPLE" action="_CREATE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorCreateExampleItem"/></check-permission>
+        <check-errors/>
+        <make-value entity-name="ExampleItem" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="exampleItemSeqId"/> <!-- this fins the next sub-sequence ID -->
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>  
+    </simple-method>   
+    <simple-method method-name="updateExampleItem" short-description="update a ExampleItem">
+        <check-permission permission="EXAMPLE" action="_UPDATE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorUpdateExampleItem"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="ExampleItem" value-name="lookedUpValue"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteExampleItem" short-description="delete a ExampleItem">
+        <check-permission permission="EXAMPLE" action="_DELETE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorDeleteExampleItem"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="ExampleItem" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+</simple-methods>

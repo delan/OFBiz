@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-/**
- *  Title: Entity Generator Definitions for the General Data Model
- *  Description: None
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,58 +21,111 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @author     Andy Zeneski (jaz@ofbiz.org)
  * @version    $Rev$
- */
 -->
 
 <entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
-  <!-- ========================================================= -->
-  <!-- ======================== Defaults ======================= -->
-  <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
     <title>Entity of an Open For Business Project Component</title>
     <description>None</description>
     <copyright>Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org</copyright>
     <author>None</author>
     <version>1.0</version>
-
-  <!-- ========================================================= -->
-  <!-- ======================== Data Model ===================== -->
-  <!-- The modules in this file are as follows:                  -->
-  <!--  - org.ofbiz.example -->
-  <!-- ========================================================= -->
-
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.example -->
-  <!-- ========================================================= -->
-
+    
+    <!-- ========================================================= -->
+    <!-- ======================== Data Model ===================== -->
+    <!-- The modules in this file are as follows:                  -->
+    <!--  - org.ofbiz.example.example -->
+    <!--  - org.ofbiz.example.feature -->
+    <!-- ========================================================= -->
+    
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.example.example -->
+    <!-- ========================================================= -->
+    
     <entity entity-name="Example"
-            package-name="org.ofbiz.example"
-            title="Example Entity">
-      <field name="exampleId" type="id-ne"></field>
-      <field name="exampleTypeId" type="id-ne"></field>
-      <field name="partyId" type="id"></field>
-      <field name="exampleName" type="name"></field>
-      <field name="description" type="description"></field>
-      <field name="comments" type="comment"></field>
-      <field name="exampleSize" type="numeric"></field>
-      <field name="exampleDate" type="date-time"></field>
-      <prim-key field="exampleId"/>
-      <relation type="one" fk-name="EXMPL_TYP" rel-entity-name="ExampleType">
-        <key-map field-name="exampleTypeId"/>
-      </relation>
-      <relation type="one" fk-name="EXMPL_PTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
+        package-name="org.ofbiz.example.example"
+        title="Example Entity">
+        <field name="exampleId" type="id-ne"><!-- primary sequenced ID --></field>
+        <field name="exampleTypeId" type="id-ne"></field>
+        <field name="exampleName" type="name"></field>
+        <field name="description" type="description"></field>
+        <field name="longDescription" type="very-long"></field>
+        <field name="comments" type="comment"></field>
+        <field name="exampleSize" type="numeric"></field>
+        <field name="exampleDate" type="date-time"></field>
+        <prim-key field="exampleId"/>
+        <relation type="one" fk-name="EXMPL_TYP" rel-entity-name="ExampleType">
+            <key-map field-name="exampleTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="ExampleItem"
+        package-name="org.ofbiz.example.example"
+        title="Example Item Entity">
+        <field name="exampleId" type="id-ne"></field>
+        <field name="exampleItemSeqId" type="id-ne"><!-- secondary sequenced ID --></field>
+        <field name="description" type="description"></field>
+        <field name="amount" type="floating-point"></field>
+        <field name="amountUomId" type="id"></field>
+        <prim-key field="exampleId"/>
+        <prim-key field="exampleItemSeqId"/>
+        <relation type="one" fk-name="EXMPLIT_UOM" rel-entity-name="Uom">
+            <key-map field-name="amountUomId" rel-field-name="uomId"/>
+        </relation>
     </entity>
     <entity entity-name="ExampleType"
-            package-name="org.ofbiz.example"
-            title="Example Type Entity">
-      <field name="exampleTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="exampleTypeId"/>
+        package-name="org.ofbiz.example.example"
+        title="Example Type Entity">
+        <field name="exampleTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="exampleTypeId"/>
+    </entity>
+
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.example.feature -->
+    <!-- ========================================================= -->
+    
+    <entity entity-name="ExampleFeature"
+        package-name="org.ofbiz.example.feature"
+        title="Example Feature Entity">
+        <field name="exampleFeatureId" type="id-ne"><!-- primary sequenced ID --></field>
+        <field name="description" type="description"></field>
+        <prim-key field="exampleFeatureId"/>
+    </entity>
+    <entity entity-name="ExampleFeatureAppl"
+        package-name="org.ofbiz.example.feature"
+        title="Example Feature Application Entity">
+        <field name="exampleId" type="id-ne"></field>
+        <field name="exampleFeatureId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="exampleFeatureApplTypeId" type="id-ne"></field>
+        <field name="sequenceNum" type="numeric"></field>
+        <prim-key field="exampleId"/>
+        <prim-key field="exampleFeatureId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="EXFTAP_EXPL" rel-entity-name="Example">
+            <key-map field-name="exampleId"/>
+        </relation>
+        <relation type="one" fk-name="EXFTAP_EXFT" rel-entity-name="ExampleFeature">
+            <key-map field-name="exampleFeatureId"/>
+        </relation>
+        <relation type="one" fk-name="EXFTAP_TYP" rel-entity-name="ExampleFeatureApplType">
+            <key-map field-name="exampleFeatureApplTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="ExampleFeatureApplType"
+        package-name="org.ofbiz.example.feature"
+        title="Example Feature Application Type Entity">
+        <field name="exampleFeatureApplTypeId" type="id-ne"></field>
+        <field name="parentTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="exampleFeatureApplTypeId"/>
+        <relation type="one" fk-name="EXFTAPTP_PAR" rel-entity-name="ExampleFeatureApplType">
+            <key-map field-name="parentTypeId" rel-field-name="exampleFeatureApplTypeId"/>
+        </relation>
     </entity>
 </entitymodel>
-

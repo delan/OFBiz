@@ -23,13 +23,19 @@
 
 <entitygroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitygroup.xsd">
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.example.example -->
+    <!-- ========================================================= -->
+    
+    <entity-group group="org.ofbiz" entity="Example"/>
+    <entity-group group="org.ofbiz" entity="ExampleItem"/>
+    <entity-group group="org.ofbiz" entity="ExampleType"/>
 
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.example -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz" entity="Example" />
-    <entity-group group="org.ofbiz" entity="ExampleType" />
-
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.example.feature -->
+    <!-- ========================================================= -->
+    
+    <entity-group group="org.ofbiz" entity="ExampleFeature"/>
+    <entity-group group="org.ofbiz" entity="ExampleFeatureAppl"/>
+    <entity-group group="org.ofbiz" entity="ExampleFeatureApplType"/>
 </entitygroup>
-
