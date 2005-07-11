@@ -408,7 +408,7 @@
 
         <!-- send off the registration email -->
         <if-not-empty field-name="emailAddress" map-name="emailContext">
-            <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="storeEmailLookup"/>
+            <env-to-env env-name="parameters.emailProductStoreId" to-env-name="storeEmailLookup.productStoreId"/>
             <string-to-field string="PRDS_CUST_REGISTER" field-name="emailType" map-name="storeEmailLookup"/>
             <find-by-primary-key map-name="storeEmailLookup" entity-name="ProductStoreEmailSetting"  value-name="storeEmail"/>
             <if-not-empty field-name="templatePath" map-name="storeEmail">

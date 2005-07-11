@@ -82,7 +82,7 @@
 </#macro>
 
 <form method="post" action="<@ofbizUrl>createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style="margin: 0;">
-<input type="hidden" name="productStoreId" value="${productStoreId}">
+<input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>
 
 <div class="screenlet">
     <div class="screenlet-header">
