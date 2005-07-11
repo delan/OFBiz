@@ -141,11 +141,18 @@
         template.process(context, outWriter);
         String s = outWriter.toString();
         //Debug.logInfo("filtered xml:" + s, "JSP");
-
-        numberRead = reader.parse(s);
+        try {
+            numberRead = reader.parse(s);
+        } catch(Exception exc) {
+            %><div class="tabletext">ERROR: <%=exc.toString()%></div><%
+        }
         Debug.logInfo("numberRead(s):" + numberRead, "JSP");
       } else {
+        try {
         numberRead = reader.parse(url);
+        } catch(Exception exc) {
+            %><div class="tabletext">ERROR: <%=exc.toString()%></div><%
+        }
         Debug.logInfo("numberRead(url):" + numberRead, "JSP");
       }
   %>
@@ -208,11 +215,18 @@
         template.process(context, outWriter);
         String s = outWriter.toString();
         //Debug.logInfo("filtered xml:" + s, "JSP");
-
-        numberRead = reader.parse(s);
+        try {
+            numberRead = reader.parse(s);
+        } catch(Exception exc) {
+            %><div class="tabletext">ERROR: <%=exc.toString()%></div><%
+        }
         Debug.logInfo("numberRead(s):" + numberRead, "JSP");
       } else {
-        numberRead = reader.parse(fulltext);
+        try {
+            numberRead = reader.parse(fulltext);
+        } catch(Exception exc) {
+            %><div class="tabletext">ERROR: <%=exc.toString()%></div><%
+        }
         Debug.logInfo("numberRead(fulltext):" + numberRead, "JSP");
       }
   %>
