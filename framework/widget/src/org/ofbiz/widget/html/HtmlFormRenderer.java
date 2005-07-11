@@ -1185,6 +1185,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         String opBeginsWith = UtilProperties.getMessage("conditional", "begins_with", locale);
         String opContains = UtilProperties.getMessage("conditional", "contains", locale);
         String opIsEmpty = UtilProperties.getMessage("conditional", "is_empty", locale);
+        String ignoreCase = UtilProperties.getMessage("conditional", "ignore_case", locale);
 
         buffer.append("<input type=\"text\"");
 
@@ -1246,6 +1247,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(" " + opIsEmpty + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"empty\"/>");
+        
+        buffer.append(" " + ignoreCase + " <input type=\"checkbox\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append("_ic\" value=\"Y\"/>");
+        
         buffer.append("</span>");
 
         this.appendTooltip(buffer, context, modelFormField);

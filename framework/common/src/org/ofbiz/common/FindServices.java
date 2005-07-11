@@ -44,6 +44,8 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityFunction;
+import org.ofbiz.entity.condition.EntityFieldValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -160,7 +162,7 @@ public class FindServices {
                         fieldPair = suffix;
                         fieldMode = "value";
                     } else {
-                        // if it does not start with fld, assume it is an op
+                        // if it does not start with fld, assume it is an op or the 'ignore case' (ic) field
                         fieldPair = "fld0";
                         fieldMode = suffix;
                     }
@@ -220,6 +222,7 @@ public class FindServices {
         EntityExpr cond = null;
         ArrayList tmpList = new ArrayList();
         String opString = null;
+        String ignoreCase = null;
         int count = 0;
         while (iter.hasNext()) {
             fieldName = (String) iter.next();
@@ -230,11 +233,11 @@ public class FindServices {
 
             subMap2 = (HashMap) subMap.get("fld0");
             opString = (String) subMap2.get("op");
+            ignoreCase = (String) subMap2.get("ic");
 
             if (opString != null) {
                 if (opString.equals("contains")) {
                     fieldOp = (EntityOperator) entityOperators.get("like");
-
                 } else if (opString.equals("empty")) {
                     fieldOp = (EntityOperator) entityOperators.get("equals");
                 } else {
@@ -256,17 +259,19 @@ public class FindServices {
                 } else if (opString.equals("empty")) {
                     fieldOp = (EntityOperator) entityOperators.get("equals");
                     fieldValue = null;
+                    ignoreCase = null;
                 } else if (opString.equals("like")) {
                     fieldOp = (EntityOperator) entityOperators.get("like");
                     fieldValue += "%";
                 } else if (opString.equals("greaterThanFromDayStart")) {
                     fieldValue = dayStart(fieldValue, 0);
                     fieldOp = (EntityOperator) entityOperators.get("greaterThan");
+                    ignoreCase = null;
                 } else if (opString.equals("sameDay")) {
                     String timeStampString = fieldValue;
                     fieldValue = dayStart(timeStampString, 0);
                     fieldOp = (EntityOperator) entityOperators.get("greaterThan");
-    
+                    ignoreCase = null;
                     // Set up so next part finds ending conditions for same day
                     subMap2 = (HashMap) subMap.get("fld1");
                     if (subMap2 == null) {
@@ -283,7 +288,11 @@ public class FindServices {
                 fieldOp = (EntityOperator) entityOperators.get("equals");
             }
 
-            cond = new EntityExpr(fieldName, (EntityComparisonOperator) fieldOp, fieldValue);
+            if (ignoreCase != null && ignoreCase.equals("Y")) {
+                cond = new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue(fieldName)), (EntityComparisonOperator) fieldOp, new EntityFunction.UPPER(fieldValue.toUpperCase()));
+            } else {
+                cond = new EntityExpr(fieldName, (EntityComparisonOperator) fieldOp, fieldValue);
+            }
             tmpList.add(cond);
             count++;
 
