@@ -133,12 +133,8 @@
                 <set field="titleProperty" value="List GlAccountOrganization"/>
                 <set field="tabButtonItem" value="EditProduct"/>
                 <set field="labelTitleProperty" value="ListGlAccountOrganization"/>
-                <entity-condition entity-name="GlAccountOrganization" list-name="entityList" use-cache="true" >
-                    <condition-expr field-name="glAccountId" operator="greater" value="0" />
-                </entity-condition>
-                <!-- entity-condition entity-name="GlAccount" list-name="entityList" use-cache="true" >
-                    <condition-expr field-name="glAccountId" operator="greater" value="0" />
-                </entity-condition -->
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
             </actions>
             <widgets>
                 <decorator-screen name="GenericDecorator">
@@ -235,11 +231,8 @@
                 <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list-name="entityList" use-cache="true" >
                     <limit-range start="0" size="20" />
                 </entity-and -->
-                <entity-condition entity-name="GlAccount" list-name="entityList" use-cache="true" >
-                    <condition-expr field-name="glAccountId" operator="greater" value="0" />
-                    <!--limit-range start="0" size="25" / -->
-                </entity-condition>
-
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
             </actions>
             <widgets>
                 <decorator-screen name="GenericDecorator">

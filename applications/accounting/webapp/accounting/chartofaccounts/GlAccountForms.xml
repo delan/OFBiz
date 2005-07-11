@@ -183,7 +183,14 @@
 
     <form name="ListGlAccountOrganization" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" target="" paginate-target="/EditGlobalAccount" title="" type="list">
+        list-iterator-name="list" target="" paginate-target="/ListGlAccountOrganization" title="" type="list">
+        <actions>
+            <set field="entityName" value="GlAccountOrganization"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         <auto-fields-entity entity-name="GlAccountOrganization" default-field-type="display"/>
         <field name="glAccountId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountNavigate?glAccountId=${glAccountId}"/>
@@ -221,7 +228,15 @@
 
     <form name="ListGlAccount" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" target="" paginate-target="/EditGlobalAccount" title="" type="list">
+        list-iterator-name="listIt" target="" paginate-target="/FindGlobalGlAccount" title="" type="list">
+        <actions>
+            <set field="entityName" value="GlAccount"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+
         <auto-fields-entity entity-name="GlAccount" default-field-type="display"/>
         <field name="glAccountId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountNavigate?glAccountId=${glAccountId}"/>
