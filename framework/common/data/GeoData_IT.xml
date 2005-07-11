@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <Geo abbreviation="AG" geoCode="AG" geoId="AG" geoName="Agrigento" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="AL" geoCode="AL" geoId="AL" geoName="Alessandria" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="AN" geoCode="AN" geoId="AN" geoName="Ancona" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="AO" geoCode="AO" geoId="AO" geoName="Valle d'Aosta" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="AQ" geoCode="AQ" geoId="AQ" geoName="L'Aquila" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="AR" geoCode="AR" geoId="AR" geoName="Arezzo" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="AP" geoCode="AP" geoId="AP" geoName="Ascoli Piceno" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="AT" geoCode="AT" geoId="AT" geoName="Asti" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="AV" geoCode="AV" geoId="AV" geoName="Avellino" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BA" geoCode="BA" geoId="BA" geoName="Bari" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BT" geoCode="BT" geoId="BT" geoName="Barletta-Andria-Trani" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BL" geoCode="BL" geoId="BL" geoName="Belluno" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BN" geoCode="BN" geoId="BN" geoName="Benevento" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BG" geoCode="BG" geoId="BG" geoName="Bergamo" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BI" geoCode="BI" geoId="BI" geoName="Biella" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BO" geoCode="BO" geoId="BO" geoName="Bologna" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BZ" geoCode="BZ" geoId="BZ" geoName="Bolzano" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BS" geoCode="BS" geoId="BS" geoName="Brescia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="BR" geoCode="BR" geoId="BR" geoName="Brindisi" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CA" geoCode="CA" geoId="CA" geoName="Cagliari" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CL" geoCode="CL" geoId="CL" geoName="Caltanissetta" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CB" geoCode="CB" geoId="CB" geoName="Campobasso" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CI" geoCode="CI" geoId="CI" geoName="Carbonia-Iglesias" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CE" geoCode="CE" geoId="CE" geoName="Caserta" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CT" geoCode="CT" geoId="CT" geoName="Catania" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CZ" geoCode="CZ" geoId="CZ" geoName="Catanzaro" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CH" geoCode="CH" geoId="CH" geoName="Chieti" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CO" geoCode="CO" geoId="CO" geoName="Como" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CS" geoCode="CS" geoId="CS" geoName="Cosenza" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CR" geoCode="CR" geoId="CR" geoName="Cremona" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="KR" geoCode="KR" geoId="KR" geoName="Crotone" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="CN" geoCode="CN" geoId="CN" geoName="Cuneo" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="EN" geoCode="EN" geoId="EN" geoName="Enna" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="FM" geoCode="FM" geoId="FM" geoName="Fermo" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="FE" geoCode="FE" geoId="FE" geoName="Ferrara" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="FI" geoCode="FI" geoId="FI" geoName="Firenze" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="FG" geoCode="FG" geoId="FG" geoName="Foggia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="FC" geoCode="FC" geoId="FC" geoName="Forli'-Cesena" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="FR" geoCode="FR" geoId="FR" geoName="Frosinone" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="GE" geoCode="GE" geoId="GE" geoName="Genova" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="GO" geoCode="GO" geoId="GO" geoName="Gorizia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="GR" geoCode="GR" geoId="GR" geoName="Grosseto" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="IM" geoCode="IM" geoId="IM" geoName="Imperia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="IS" geoCode="IS" geoId="IS" geoName="Isernia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="LT" geoCode="LT" geoId="LT" geoName="Latina" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="LE" geoCode="LE" geoId="LE" geoName="Lecce" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="LC" geoCode="LC" geoId="LC" geoName="Lecco" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="LI" geoCode="LI" geoId="LI" geoName="Livorno" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="LO" geoCode="LO" geoId="LO" geoName="Lodi" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="LU" geoCode="LU" geoId="LU" geoName="Lucca" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MC" geoCode="MC" geoId="MC" geoName="Macerata" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MN" geoCode="MN" geoId="MN" geoName="Mantova" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MS" geoCode="MS" geoId="MS" geoName="Massa-Carrara" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MT" geoCode="MT" geoId="MT" geoName="Matera" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MD" geoCode="MD" geoId="MD" geoName="Medio Campidano" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="ME" geoCode="ME" geoId="ME" geoName="Messina" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MI" geoCode="MI" geoId="MI" geoName="Milano" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MO" geoCode="MO" geoId="MO" geoName="Modena" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="MZ" geoCode="MZ" geoId="MZ" geoName="Monza" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NA" geoCode="NA" geoId="NA" geoName="Napoli" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NO" geoCode="NO" geoId="NO" geoName="Novara" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NU" geoCode="NU" geoId="NU" geoName="Nuoro" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="OG" geoCode="OG" geoId="OG" geoName="Ogliastra" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="OT" geoCode="OT" geoId="OT" geoName="Olbia-Tempio" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="OR" geoCode="OR" geoId="OR" geoName="Oristano" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PD" geoCode="PD" geoId="PD" geoName="Padova" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PA" geoCode="PA" geoId="PA" geoName="Palermo" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PR" geoCode="PR" geoId="PR" geoName="Parma" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PV" geoCode="PV" geoId="PV" geoName="Pavia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PG" geoCode="PG" geoId="PG" geoName="Perugia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PU" geoCode="PU" geoId="PU" geoName="Pesaro e Urbino" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PE" geoCode="PE" geoId="PE" geoName="Pescara" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PC" geoCode="PC" geoId="PC" geoName="Piacenza" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PI" geoCode="PI" geoId="PI" geoName="Pisa" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PT" geoCode="PT" geoId="PT" geoName="Pistoia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PN" geoCode="PN" geoId="PN" geoName="Pordenone" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PZ" geoCode="PZ" geoId="PZ" geoName="Potenza" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="PO" geoCode="PO" geoId="PO" geoName="Prato" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="RG" geoCode="RG" geoId="RG" geoName="Ragusa" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="RA" geoCode="RA" geoId="RA" geoName="Ravenna" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="RC" geoCode="RC" geoId="RC" geoName="Reggio Calabria" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="RE" geoCode="RE" geoId="RE" geoName="Reggio Emilia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="RI" geoCode="RI" geoId="RI" geoName="Rieti" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="RN" geoCode="RN" geoId="RN" geoName="Rimini" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="RM" geoCode="RM" geoId="RM" geoName="Roma" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="RO" geoCode="RO" geoId="RO" geoName="Rovigo" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="SA" geoCode="SA" geoId="SA" geoName="Salerno" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="SS" geoCode="SS" geoId="SS" geoName="Sassari" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="SV" geoCode="SV" geoId="SV" geoName="Savona" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="SI" geoCode="SI" geoId="SI" geoName="Siena" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="SO" geoCode="SO" geoId="SO" geoName="Sondrio" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="SP" geoCode="SP" geoId="SP" geoName="La Spezia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="SR" geoCode="SR" geoId="SR" geoName="Siracusa" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="TA" geoCode="TA" geoId="TA" geoName="Taranto" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="TE" geoCode="TE" geoId="TE" geoName="Teramo" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="TR" geoCode="TR" geoId="TR" geoName="Terni" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="TP" geoCode="TP" geoId="TP" geoName="Trapani" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="TN" geoCode="TN" geoId="TN" geoName="Trento" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="TV" geoCode="TV" geoId="TV" geoName="Treviso" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="TS" geoCode="TS" geoId="TS" geoName="Trieste" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="TO" geoCode="TO" geoId="TO" geoName="Torino" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="UD" geoCode="UD" geoId="UD" geoName="Udine" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="VA" geoCode="VA" geoId="VA" geoName="Varese" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="VE" geoCode="VE" geoId="VE" geoName="Venezia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="VB" geoCode="VB" geoId="VB" geoName="Verbano Cusio Ossola" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="VC" geoCode="VC" geoId="VC" geoName="Vercelli" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="VR" geoCode="VR" geoId="VR" geoName="Verona" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="VV" geoCode="VV" geoId="VV" geoName="Vibo Valentia" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="VI" geoCode="VI" geoId="VI" geoName="Vicenza" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="VT" geoCode="VT" geoId="VT" geoName="Viterbo" geoTypeId="PROVINCE"/>
+
+    <!-- Associations -->
+    <GeoAssoc geoId="ITA" geoIdTo="AG" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="AL" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="AN" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="AO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="AQ" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="AR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="AP" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="AT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="AV" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BA" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BL" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BN" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BG" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BZ" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BS" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="BR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CA" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CL" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CB" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CZ" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CH" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CS" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="KR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CN" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="EN" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="FM" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="FE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="FI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="FG" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="FC" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="FR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="GE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="GO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="GR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="IM" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="IS" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="LT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="LE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="LC" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="LI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="LO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="LU" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="MC" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="MN" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="MS" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="MT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="MD" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="ME" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="MI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="MO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="MZ" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="NA" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="NO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="NU" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="OG" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="OT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="OR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PD" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PA" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PV" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PG" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PU" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PC" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PT" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PN" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PZ" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="PO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="RG" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="RA" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="RC" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="RE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="RI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="RN" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="RM" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="RO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="SA" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="SS" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="SV" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="SI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="SO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="SP" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="SR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="TA" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="TE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="TR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="TP" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="TN" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="TV" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="TS" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="TO" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="UD" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="VA" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="VE" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="CB" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="VC" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="VR" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="VV" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="VI" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="ITA" geoIdTo="VT" geoAssocTypeId="REGIONS"/>
+</entity-engine-xml>
