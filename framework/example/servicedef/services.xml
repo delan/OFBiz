@@ -34,6 +34,7 @@
         <auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="exampleTypeId" optional="false"/>
+        <override name="statusId" optional="false"/>
         <override name="exampleName" optional="false"/>
     </service>
     <service name="updateExample" default-entity-name="Example" engine="simple"
@@ -41,13 +42,21 @@
         <description>Update a Example</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="deleteExample" default-entity-name="Example" engine="simple"
         location="org/ofbiz/example/example/ExampleServices.xml" invoke="deleteExample" auth="true">
         <description>Delete a Example</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-
+    <service name="createExampleStatus" default-entity-name="ExampleStatus" engine="simple"
+        location="org/ofbiz/example/example/ExampleServices.xml" invoke="createExampleStatus" auth="true">
+        <description>Create a ExampleStatus</description>
+        <auto-attributes include="all" mode="IN" optional="false">
+            <exclude field-name="statusDate"/>
+        </auto-attributes>
+    </service>
+    
     <service name="createExampleItem" default-entity-name="ExampleItem" engine="simple"
         location="org/ofbiz/example/example/ExampleServices.xml" invoke="createExampleItem" auth="true">
         <description>Create a ExampleItem</description>
