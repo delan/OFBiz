@@ -58,7 +58,7 @@ if (sqlCommand != null && sqlCommand.length() > 0 && selGroup != null && selGrou
                 }
                 boolean rowLimitReached = false;
                 while (rs.next()) {
-                    if (records.size() > rowLimit) {
+                    if (records.size() >= rowLimit) {
                         resultMessage = "Returned top " + rowLimit + " rows.";
                         rowLimitReached = true;
                         break;

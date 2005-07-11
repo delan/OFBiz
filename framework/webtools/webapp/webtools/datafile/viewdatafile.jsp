@@ -100,7 +100,7 @@
     </UL>
   <%}%>
 
-  <%if (dataFile != null && modelDataFile != null && entityXmlFileSave == null && dataFileSave == null) {%>
+  <%if (dataFile != null && modelDataFile != null && (entityXmlFileSave == null || entityXmlFileSave.length() == 0) && (dataFileSave == null || dataFileSave.length() == 0)) {%>
 
     <TABLE cellpadding="2" cellspacing="0" border="1">
       <TR>
