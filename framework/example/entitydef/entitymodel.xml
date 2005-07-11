@@ -51,6 +51,7 @@
         title="Example Entity">
         <field name="exampleId" type="id-ne"><!-- primary sequenced ID --></field>
         <field name="exampleTypeId" type="id-ne"></field>
+        <field name="statusId" type="id-ne"></field>
         <field name="exampleName" type="name"></field>
         <field name="description" type="description"></field>
         <field name="longDescription" type="very-long"></field>
@@ -60,6 +61,9 @@
         <prim-key field="exampleId"/>
         <relation type="one" fk-name="EXMPL_TYP" rel-entity-name="ExampleType">
             <key-map field-name="exampleTypeId"/>
+        </relation>
+        <relation type="one" fk-name="EXMPL_STTS" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
         </relation>
     </entity>
     <entity entity-name="ExampleItem"
@@ -76,12 +80,31 @@
             <key-map field-name="amountUomId" rel-field-name="uomId"/>
         </relation>
     </entity>
+    <entity entity-name="ExampleStatus"
+        package-name="org.ofbiz.example.example"
+        title="Example Status Entity">
+        <field name="exampleId" type="id-ne"></field>
+        <field name="statusDate" type="date-time"></field>
+        <field name="statusId" type="id-ne"></field>
+        <prim-key field="exampleId"/>
+        <prim-key field="statusDate"/>
+        <relation type="one" fk-name="EXMPLST_EXMPL" rel-entity-name="Example">
+            <key-map field-name="exampleId"/>
+        </relation>
+        <relation type="one" fk-name="EXMPLST_STTS" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+    </entity>
     <entity entity-name="ExampleType"
         package-name="org.ofbiz.example.example"
         title="Example Type Entity">
         <field name="exampleTypeId" type="id-ne"></field>
+        <field name="parentTypeId" type="id-ne"></field>
         <field name="description" type="description"></field>
         <prim-key field="exampleTypeId"/>
+        <relation type="one" fk-name="EXMPLTP_PAR" rel-entity-name="ExampleType">
+            <key-map field-name="parentTypeId" rel-field-name="exampleTypeId"/>
+        </relation>
     </entity>
 
     <!-- ========================================================= -->
@@ -92,8 +115,12 @@
         package-name="org.ofbiz.example.feature"
         title="Example Feature Entity">
         <field name="exampleFeatureId" type="id-ne"><!-- primary sequenced ID --></field>
+        <field name="featureSourceEnumId" type="id-ne"></field>
         <field name="description" type="description"></field>
         <prim-key field="exampleFeatureId"/>
+        <relation type="one" fk-name="EXFT_ENUM" rel-entity-name="Enumeration">
+            <key-map field-name="featureSourceEnumId" rel-field-name="enumId"/>
+        </relation>
     </entity>
     <entity entity-name="ExampleFeatureAppl"
         package-name="org.ofbiz.example.feature"
