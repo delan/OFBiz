@@ -27,24 +27,84 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <!-- Example & Related -->
+    <!-- Example & Related Services -->
     <service name="createExample" default-entity-name="Example" engine="simple"
-            location="org/ofbiz/example/ExampleServices.xml" invoke="createExample" auth="true">
-        <description>Create a Example record</description>
+        location="org/ofbiz/example/example/ExampleServices.xml" invoke="createExample" auth="true">
+        <description>Create a Example</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="exampleTypeId" optional="false"/>
         <override name="exampleName" optional="false"/>
     </service>
     <service name="updateExample" default-entity-name="Example" engine="simple"
-            location="org/ofbiz/example/ExampleServices.xml" invoke="updateExample" auth="true">
-        <description>Update a Example record</description>
+        location="org/ofbiz/example/example/ExampleServices.xml" invoke="updateExample" auth="true">
+        <description>Update a Example</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteExample" default-entity-name="Example" engine="simple"
-            location="org/ofbiz/example/ExampleServices.xml" invoke="deleteExample" auth="true">
-        <description>Delete a Example record</description>
+        location="org/ofbiz/example/example/ExampleServices.xml" invoke="deleteExample" auth="true">
+        <description>Delete a Example</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createExampleItem" default-entity-name="ExampleItem" engine="simple"
+        location="org/ofbiz/example/example/ExampleServices.xml" invoke="createExampleItem" auth="true">
+        <description>Create a ExampleItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="exampleItemSeqId" mode="OUT"/> <!-- make this OUT rather than IN, we will automatically generate the next sub-sequence ID -->
+        <override name="description" optional="false"/>
+    </service>
+    <service name="updateExampleItem" default-entity-name="ExampleItem" engine="simple"
+        location="org/ofbiz/example/example/ExampleServices.xml" invoke="updateExampleItem" auth="true">
+        <description>Update a ExampleItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteExampleItem" default-entity-name="ExampleItem" engine="simple"
+        location="org/ofbiz/example/example/ExampleServices.xml" invoke="deleteExampleItem" auth="true">
+        <description>Delete a ExampleItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ExampleFeature Services -->
+    <service name="createExampleFeature" default-entity-name="ExampleFeature" engine="simple"
+        location="org/ofbiz/example/feature/ExampleFeatureServices.xml" invoke="createExampleFeature" auth="true">
+        <description>Create a ExampleFeature</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="description" optional="false"/>
+    </service>
+    <service name="updateExampleFeature" default-entity-name="ExampleFeature" engine="simple"
+        location="org/ofbiz/example/feature/ExampleFeatureServices.xml" invoke="updateExampleFeature" auth="true">
+        <description>Update a ExampleFeature</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteExampleFeature" default-entity-name="ExampleFeature" engine="simple"
+        location="org/ofbiz/example/feature/ExampleFeatureServices.xml" invoke="deleteExampleFeature" auth="true">
+        <description>Delete a ExampleFeature</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createExampleFeatureAppl" default-entity-name="ExampleFeatureAppl" engine="simple"
+        location="org/ofbiz/example/feature/ExampleFeatureServices.xml" invoke="createExampleFeatureAppl" auth="true">
+        <description>Create a ExampleFeatureAppl</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+        <override name="description" optional="false"/>
+    </service>
+    <service name="updateExampleFeatureAppl" default-entity-name="ExampleFeatureAppl" engine="simple"
+        location="org/ofbiz/example/feature/ExampleFeatureServices.xml" invoke="updateExampleFeatureAppl" auth="true">
+        <description>Update a ExampleFeatureAppl</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteExampleFeatureAppl" default-entity-name="ExampleFeatureAppl" engine="simple"
+        location="org/ofbiz/example/feature/ExampleFeatureServices.xml" invoke="deleteExampleFeatureAppl" auth="true">
+        <description>Delete a ExampleFeatureAppl</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

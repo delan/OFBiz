@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <!-- ExampleFeature methods -->
+    <simple-method method-name="createExampleFeature" short-description="create a ExampleFeature">
+        <check-permission permission="EXAMPLE" action="_CREATE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorCreateExampleFeature"/></check-permission>
+        <check-errors/>
+        <make-value entity-name="ExampleFeature" value-name="newEntity"/>
+        <sequenced-id-to-env sequence-name="ExampleFeature" env-name="newEntity.exampleFeatureId"/> <!-- get the next sequenced ID -->
+        <field-to-result field-name="newEntity.exampleFeatureId" result-name="exampleFeatureId"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>  
+    </simple-method>   
+    <simple-method method-name="updateExampleFeature" short-description="update a ExampleFeature">
+        <check-permission permission="EXAMPLE" action="_UPDATE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorUpdateExampleFeature"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="ExampleFeature" value-name="lookedUpValue"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteExampleFeature" short-description="delete a ExampleFeature">
+        <check-permission permission="EXAMPLE" action="_DELETE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorDeleteExampleFeature"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="ExampleFeature" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- ExampleFeatureAppl methods -->
+    <simple-method method-name="createExampleFeatureAppl" short-description="create a ExampleFeatureAppl">
+        <check-permission permission="EXAMPLE" action="_CREATE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorCreateExampleFeatureAppl"/></check-permission>
+        <check-errors/>
+        <make-value entity-name="ExampleFeatureAppl" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <!-- fromDate is part of the PK, but optional in the service def, so make sure something is there -->
+        <if-empty field-name="newEntity.fromDate"><now-timestamp-to-env env-name="newEntity.fromDate"/></if-empty>        
+        <create-value value-name="newEntity"/>  
+    </simple-method>   
+    <simple-method method-name="updateExampleFeatureAppl" short-description="update a ExampleFeatureAppl">
+        <check-permission permission="EXAMPLE" action="_UPDATE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorUpdateExampleFeatureAppl"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="ExampleFeatureAppl" value-name="lookedUpValue"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteExampleFeatureAppl" short-description="delete a ExampleFeatureAppl">
+        <check-permission permission="EXAMPLE" action="_DELETE"><fail-property resource="ExampleUiLabels" property="ExamplePermissionErrorDeleteExampleFeatureAppl"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="ExampleFeatureAppl" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+</simple-methods>
