@@ -205,6 +205,11 @@
         <response name="error" type="view" value="ViewGeneric"/>
     </request-map>
 
+    <request-map uri="ViewRelations">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewRelations"/>
+    </request-map>
+
     <request-map uri="FindUtilCache">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindUtilCache"/>
@@ -425,7 +430,8 @@
     <view-map name="entitymaint" type="region"/>
     <view-map name="FindGeneric" type="region"/>
     <view-map name="ViewGeneric" type="region"/>
-
+    <view-map name="ViewRelations" type="region"/>
+    
     <!-- these are NOT regions because they generate text output that should never be decorated -->
     <view-map name="tablesMySql" page="/entity/tablesMySql.jsp"/>
     <view-map name="droptablesMySql" page="/entity/droptablesMySql.jsp"/>
