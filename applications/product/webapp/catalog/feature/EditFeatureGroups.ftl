@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 
-<div class="head1">Product Feature Groups</div>
+<div class="head1">${uiLabelMap.ProductFeatureGroup}</div>
 
 <br/>
 <table border="1" cellpadding='2' cellspacing='0'>
@@ -50,7 +50,7 @@
 <br/>
 
 <form method="post" action="<@ofbizUrl>/CreateProductFeatureGroup</@ofbizUrl>" style='margin: 0;'>
-  <div class='head2'>Create a Product Feature Group:</div>
+  <div class='head2'>${uiLabelMap.ProductCreateProductFeatureGroup}:</div>
   <br/>
   <table>
     <tr>

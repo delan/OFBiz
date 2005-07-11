@@ -82,7 +82,8 @@
             <tr>
             <td align="right"><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
             <td>&nbsp;</td>
-            <td><input type="text" class="inputBox" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo?if_exists}"></td>
+            <td><input type="text" class="inputBox" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo?if_exists}">
+            <a href="javascript:call_fieldlookup2(document.editProductAssocForm.PRODUCT_ID_TO,'LookupProduct');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a></td>
             </tr>
             <tr>
             <td align="right"><div class="tabletext">${uiLabelMap.ProductAssociationTypeId}</div></td>

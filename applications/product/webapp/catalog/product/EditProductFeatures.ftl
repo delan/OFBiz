@@ -39,7 +39,7 @@
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductThruDateAmountSequenceApplicationType}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);"></div></td>
-            <td><div class="tabletext">&nbsp;</div></td>
+           <!--<td><div class="tabletext">&nbsp;</div></td>-->
         </tr>
         <#assign rowCount = 0>
         <#list productFeatureAndAppls as productFeatureAndAppl>
@@ -88,7 +88,7 @@
             <#assign rowCount = rowCount + 1>
         </#list>
         <input type="hidden" name="_rowCount" value="${rowCount}">
-        <tr><td colspan="8" align="center"><input type="submit" value='Update' style='font-size: x-small;'/></td></tr>
+        <tr><td colspan="8" align="center"><input type="submit" value='${uiLabelMap.CommonUpdate}' style='font-size: x-small;'/></td></tr>
         </form>
         </table>
 
@@ -114,7 +114,7 @@
             <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.description)?if_exists} </option>
             </#list>
         </select>
-        <input type="submit" value="Add" style='font-size: x-small;'>
+        <input type="submit" value='${uiLabelMap.CommonAdd}' style='font-size: x-small;'>
         </form>
 
         <br/>
@@ -141,14 +141,14 @@
         <span class='tabletext'>${uiLabelMap.CommonThru} : </span><input type="text" size='25' name='thruDate' class='inputBox'>
         <a href="javascript:call_cal(document.addFeatureByTypeIdCode.thruDate, '${nowTimestamp?string}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         <span class='tabletext'>${uiLabelMap.CommonSequence} : </span><input type="text" size='5' name='sequenceNum' class='inputBox'>
-        <input type="submit" value="Add" style='font-size: x-small;'>
+        <input type="submit" value="${uiLabelMap.CommonAdd}" style='font-size: x-small;'>
         </form>
 
         <br/>
 
         <form method="post" action="<@ofbizUrl>/ApplyFeatureToProduct</@ofbizUrl>" style="margin: 0;" name="addFeatureById">
         <input type="hidden" name="productId" value="${productId}">
-        <div class="head2">Add Product Feature with ID:</div>
+        <div class="head2">${uiLabelMap.ProductAddProductFeatureID}:</div>
         <br/>
         <span class="tabletext">${uiLabelMap.CommonId}: </span>
         <input type="text" size="10" name="productFeatureId" value="" class="inputBox">
@@ -168,7 +168,7 @@
         <span class="tabletext">${uiLabelMap.CommonThru} : </span><input type="text" size="25" name="thruDate" class="inputBox">
         <a href="javascript:call_cal(document.addFeatureById.thruDate, '${nowTimestamp?string}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
         <span class="tabletext">${uiLabelMap.CommonSequence} : </span><input type="text" size="5" name="sequenceNum" class="inputBox">
-        <input type="submit" value="Add" style="font-size: x-small;">
+        <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
         </form>
     </#if>
     <br/>
