@@ -59,14 +59,14 @@
   ModelDataFile modelDataFile = null;
   if (dataFile != null) modelDataFile = dataFile.getModelDataFile();
 
-  if (dataFile != null && dataFileSave != null) {
+  if (dataFile != null && dataFileSave != null && dataFileSave.length() > 0) {
     try {
       dataFile.writeDataFile(dataFileSave);
       messages.add("Data File saved to: " + dataFileSave);
     } catch (Exception e) { messages.add(e.getMessage()); }
   }
 
-  if (dataFile != null && entityXmlFileSave != null) {
+  if (dataFile != null && entityXmlFileSave != null && entityXmlFileSave.length() > 0) {
     try {
       //dataFile.writeDataFile(entityXmlFileSave);
       DataFile2EntityXml.writeToEntityXml(entityXmlFileSave, dataFile);
@@ -75,15 +75,17 @@
   }
 
 %>
-<h3>View Data File</h3>
-<div>This page is used to view data from data files parsed by the configurable data file parser.</div>
+<h3>Work With Data Files</h3>
+<div>This page is used to view and export data from data files parsed by the configurable data file parser.</div>
 
 <%if(security.hasPermission("DATAFILE_MAINT", session)) {%>
-  <FORM method="post" action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
-    Data Filename or URL: <INPUT name='DATAFILE_LOCATION' type="text" class='inputBox' size='60' value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'> Is URL?:<INPUT type="checkbox" name='DATAFILE_IS_URL' <%=dataFileIsUrl?"checked":""%>><BR>
-    Definition Filename or URL: <INPUT name='DEFINITION_LOCATION' class='inputBox' type="text" size='60' value='<%=UtilFormatOut.checkNull(definitionLoc)%>'> Is URL?:<INPUT type="checkbox" name='DEFINITION_IS_URL' <%=definitionIsUrl?"checked":""%>><BR>
-    Data File Definition Name: <INPUT name='DEFINITION_NAME' type="text" class='inputBox' size='30' value='<%=UtilFormatOut.checkNull(definitionName)%>'><BR>
-    <INPUT type="submit" value='View'>
+  <FORM method="post" action="<ofbiz:url>/viewdatafile</ofbiz:url>">
+    Data Filename or URL: <INPUT name="DATAFILE_LOCATION" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileLoc)%>"> Is URL?:<INPUT type="checkbox" name="DATAFILE_IS_URL" <%=dataFileIsUrl?"checked":""%>><BR>
+    Definition Filename or URL: <INPUT name="DEFINITION_LOCATION" class="inputBox" type="text" size="60" value="<%=UtilFormatOut.checkNull(definitionLoc)%>"> Is URL?:<INPUT type="checkbox" name="DEFINITION_IS_URL" <%=definitionIsUrl?"checked":""%>><BR>
+    Data File Definition Name: <INPUT name="DEFINITION_NAME" type="text" class="inputBox" size="30" value="<%=UtilFormatOut.checkNull(definitionName)%>"><BR>
+    Save to file: <INPUT name="DATAFILE_SAVE" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileSave)%>"/><br/>
+    Save to entity xml file: <INPUT name="ENTITYXML_FILE_SAVE" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(entityXmlFileSave)%>"><br/>
+    <INPUT type="submit" value="Run">
   </FORM>
 
   <hr>
@@ -98,20 +100,9 @@
     </UL>
   <%}%>
 
-  <%if (dataFile != null && modelDataFile != null) {%>
-    <FORM method="post" action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
-      <INPUT name="DATAFILE_LOCATION" type="hidden" value="<%=UtilFormatOut.checkNull(dataFileLoc)%>">
-      <%=dataFileIsUrl?"<INPUT type=\"hidden\" name=\"DATAFILE_IS_URL\" value=\"true\">":""%>
-      <INPUT name="DEFINITION_LOCATION" type="hidden" value='<%=UtilFormatOut.checkNull(definitionLoc)%>'>
-      <%=definitionIsUrl?"<INPUT type=\"hidden\" name=\"DEFINITION_IS_URL\" value=\"true\">":""%>
-      <INPUT name="DEFINITION_NAME" type="hidden" value="<%=UtilFormatOut.checkNull(definitionName)%>">
-      Save to file: <INPUT name="DATAFILE_SAVE" type="text" size="60" value="<%=UtilFormatOut.checkNull(dataFileSave)%>"/>
-      Save to entity xml file: <INPUT name="ENTITYXML_FILE_SAVE" type="text" size="60" value="<%=UtilFormatOut.checkNull(entityXmlFileSave)%>">
-      <INPUT type="submit" value="Save"/>
-    </FORM>
-    <BR>
+  <%if (dataFile != null && modelDataFile != null && entityXmlFileSave == null && dataFileSave == null) {%>
 
-    <TABLE cellpadding='2' cellspacing='0' border='1'>
+    <TABLE cellpadding="2" cellspacing="0" border="1">
       <TR>
         <TD><B>Name</B></TD>
         <TD><B>Type-Code</B></TD>
@@ -129,7 +120,7 @@
         <TD><%=modelDataFile.separatorStyle%></TD>
       </TR>
       <TR>
-        <TD colspan='6'>Description: <%=modelDataFile.description%></TD>
+        <TD colspan="6">Description: <%=modelDataFile.description%></TD>
       </TR>
     </TABLE>
     <BR>
