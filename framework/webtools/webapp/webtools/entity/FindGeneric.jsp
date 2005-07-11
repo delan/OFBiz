@@ -146,6 +146,8 @@
 </table>
 </form>
 <i>* - Primary Key field</i><br/>
+<p>View <a href='<ofbiz:url>/ViewRelations?entityName=<%=entityName%></ofbiz:url>' class="buttonext">relations</a></p>
+
 <b><%=modelEntity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br/>
 <b><%=modelEntity.getEntityName()%>s curFindString: <%=curFindString%></b><br/>
 <%if (hasCreatePermission) {%>

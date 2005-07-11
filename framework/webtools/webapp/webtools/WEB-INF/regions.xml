@@ -39,7 +39,11 @@
         <put section="title">View/Edit Entity</put>
         <put section="content" content="/entity/ViewGeneric.jsp"/>
     </define>
-
+    <define id="ViewRelations" region="MAIN_REGION">
+        <put section="title">View Relations for an Entity</put>
+        <put section="content" content="/entity/ViewRelations.jsp"/>
+    </define>
+    
     <define id="EditEntity" region="MAIN_REGION">
         <put section="title">Edit Entity Definition</put>
         <put section="content" content="/entity/EditEntity.jsp"/>
