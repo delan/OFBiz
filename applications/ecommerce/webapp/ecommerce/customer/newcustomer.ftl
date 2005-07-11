@@ -61,8 +61,8 @@
 <p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
 
 <#macro fieldErrors fieldName>
-  <#if requestAttributes.errorMsgListReq?has_content>
-    <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName, true, requestAttributes.errorMsgListReq)>
+  <#if errorMessageList?has_content>
+    <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName, true, errorMessageList)>
     <ul>
       <#list fieldMessages as errorMsg>
         <li class="errorMessage">${errorMsg}</li>
@@ -71,8 +71,8 @@
   </#if>
 </#macro>
 <#macro fieldErrorsMulti fieldName1 fieldName2 fieldName3 fieldName4>
-  <#if requestAttributes.errorMsgListReq?has_content>
-    <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName1, fieldName2, fieldName3, fieldName4, true, requestAttributes.errorMsgListReq)>
+  <#if errorMessageList?has_content>
+    <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName1, fieldName2, fieldName3, fieldName4, true, errorMessageList)>
     <ul>
       <#list fieldMessages as errorMsg>
         <li class="errorMessage">${errorMsg}</li>
