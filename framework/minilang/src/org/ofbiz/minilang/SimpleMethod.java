@@ -504,6 +504,10 @@ public class SimpleMethod {
             methodContext.putEnv(eventRequestName, methodContext.getRequest());
             methodContext.putEnv(eventResponseName, methodContext.getResponse());
         }
+        
+        methodContext.putEnv("methodName", this.getMethodName());
+        methodContext.putEnv("methodShortDescription", this.getShortDescription());
+
 
         GenericValue userLogin = methodContext.getUserLogin();
         Locale locale = methodContext.getLocale();
