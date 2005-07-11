@@ -996,9 +996,9 @@ public class DataResourceWorker {
         // descending comparator
         Comparator desc = new Comparator() {
             public int compare(Object o1, Object o2) {
-                if (((Integer) o1).intValue() > ((Integer) o2).intValue()) {
+                if (((Long) o1).longValue() > ((Long) o2).longValue()) {
                     return -1;
-                } else if (((Integer) o1).intValue() < ((Integer) o2).intValue()) {
+                } else if (((Long) o1).longValue() < ((Long) o2).longValue()) {
                     return 1;
                 }
                 return 0;
