@@ -372,6 +372,13 @@
         <response name="success" type="view" value="EntityPerformanceTest"/>
     </request-map>
 
+    <!-- EntitySQL requests -->
+    <request-map uri="EntitySQLProcessor">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EntitySQLProcessor"/>
+        <response name="error" type="view" value="EntitySQLProcessor"/>
+    </request-map>
+
     <!-- EntitySync requests -->
     <request-map uri="EntitySyncStatus">
         <security https="true" auth="true"/>
@@ -464,5 +471,6 @@
     <view-map name="JasperDemoXml" page="/JasperDemo.xml" type="jasperreportsxml" info="Uom"/>
 
     <view-map name="EntitySyncStatus" page="component://webtools/widget/EntitySyncScreens.xml#EntitySyncStatus" type="screen"/>
+    <view-map name="EntitySQLProcessor" page="component://webtools/widget/EntityScreens.xml#EntitySQLProcessor" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>

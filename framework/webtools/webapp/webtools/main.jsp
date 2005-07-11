@@ -75,6 +75,7 @@
                 <li><div class="tabletext">Entity Engine Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/entitymaint</ofbiz:url>" class="buttontext">Entity Data Maintenance</a>
+                  <li><a href="<ofbiz:url>/EntitySQLProcessor</ofbiz:url>" class="buttontext">Entity SQL Processor</a>
                   <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class="buttontext" target="_blank">Entity Reference &amp; Editing Tools</a>&nbsp;<a href="<ofbiz:url>/view/entityref?forstatic=true</ofbiz:url>" class="buttontext" target="_blank">[Static Version]</a>
                   <ul>
                     <li><a href="<ofbiz:url>/view/checkdb</ofbiz:url>" class="buttontext">Check/Update Database</a>
