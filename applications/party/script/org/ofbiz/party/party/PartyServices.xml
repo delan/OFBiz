@@ -20,7 +20,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author <a href="mailto:">Oswin Ondarza</a>
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Oswin Ondarza
  * @author     Olivier.Heintz@nereide.biz (migration to UiLabel) 
  * @version 1.0
  -->
@@ -95,7 +96,7 @@
         <check-permission permission="PARTYMGR" action="_UPDATE"><fail-property resource="PartyUiLabels" property="PartyUpdatePartyClassificationPermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="PartyClassification" value-name="lookedUpValue"/>
-        <set-pk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deletePartyClassification" short-description="delete a PartyClassification">
@@ -118,7 +119,7 @@
         <check-permission permission="PARTYMGR" action="_UPDATE"><fail-property resource="PartyUiLabels" property="PartyUpdatePartyClassificationGroupPermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="PartyClassificationGroup" value-name="lookedUpValue"/>
-        <set-pk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deletePartyClassificationGroup" short-description="delete a PartyClassificationGroup">
