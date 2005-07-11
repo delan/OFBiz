@@ -58,6 +58,7 @@ import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.LocalDispatcher;
 
 import org.apache.commons.collections.map.LinkedMap;
@@ -307,7 +308,7 @@ public class PayPalEvents {
 
             if (okay) {
                 // set the payment preference
-                okay = setPaymentPreferences(delegator, orderId, request);
+                okay = setPaymentPreferences(delegator, dispatcher, userLogin, orderId, request);
             }
         } catch (Exception e) {
             String errMsg = "Error handling PayPal notification";
@@ -393,7 +394,7 @@ public class PayPalEvents {
         return "success";        
     }    
     
-    private static boolean setPaymentPreferences(GenericDelegator delegator, String orderId, ServletRequest request) {
+    private static boolean setPaymentPreferences(GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, String orderId, ServletRequest request) {
         Debug.logVerbose("Setting payment prefrences..", module);
         List paymentPrefs = null;
         try {
@@ -407,7 +408,7 @@ public class PayPalEvents {
             Iterator i = paymentPrefs.iterator();
             while (i.hasNext()) {
                 GenericValue pref = (GenericValue) i.next();
-                boolean okay = setPaymentPreference(pref, request);
+                boolean okay = setPaymentPreference(dispatcher, userLogin, pref, request);
                 if (!okay)
                     return false;
             }
@@ -415,7 +416,7 @@ public class PayPalEvents {
         return true;
     }  
         
-    private static boolean setPaymentPreference(GenericValue paymentPreference, ServletRequest request) {
+    private static boolean setPaymentPreference(LocalDispatcher dispatcher, GenericValue userLogin, GenericValue paymentPreference, ServletRequest request) {
         String paymentDate = request.getParameter("payment_date");  
         String paymentType = request.getParameter("payment_type");      
         String paymentAmount = request.getParameter("mc_gross");    
@@ -468,8 +469,21 @@ public class PayPalEvents {
         toStore.add(response);
 
         // create a payment record too
-        GenericValue payment = OrderChangeHelper.createPaymentFromPreference(paymentPreference, null, null, "Payment receive via PayPal");
-        toStore.add(payment);
+        Map results = null;
+        try {
+            results = dispatcher.runSync("createPaymentFromPreference", UtilMisc.toMap("userLogin", userLogin, 
+                    "orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"), "comments", "Payment receive via PayPal"));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Failed to execute service createPaymentFromPreference", module);
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return false;
+        }
+
+        if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
+            Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module); 
+            request.setAttribute("_ERROR_MESSAGE_", (String) results.get(ModelService.ERROR_MESSAGE));
+            return false;
+        }
 
         try {
             delegator.storeAll(toStore);

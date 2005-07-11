@@ -4204,4 +4204,76 @@ public class OrderServices {
         Debug.log("Product ID : " + cart.findCartItem(0).getProductId(), module);
         return ServiceUtil.returnSuccess();
     }
+    
+    /** 
+     * Service to create a payment using an order payment preference. 
+     * @return
+     * @author  Leon Torres
+     */
+    public static Map createPaymentFromPreference(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String orderPaymentPreferenceId = (String) context.get("orderPaymentPreferenceId");
+        String paymentRefNum = (String) context.get("paymentRefNum");
+        String paymentFromId = (String) context.get("paymentFromId");
+        String comments = (String) context.get("comments");
+        try {
+            // get the order payment preference
+            GenericValue orderPaymentPreference = delegator.findByPrimaryKey("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId));
+            if (orderPaymentPreference == null) {
+                return ServiceUtil.returnError("Failed to create Payment: Cannot find OrderPaymentPreference with orderPaymentPreferenceId " + orderPaymentPreferenceId);
+            }
+
+            // get the order header
+            GenericValue orderHeader = orderPaymentPreference.getRelatedOne("OrderHeader");
+            if (orderHeader == null) {
+                return ServiceUtil.returnError("Failed to create Payment: Cannot get related OrderHeader from payment preference");
+            }
+
+            // get the store for the order
+            GenericValue productStore = orderHeader.getRelatedOne("ProductStore");
+            if (productStore == null) {
+                return ServiceUtil.returnError("Failed to create Payment: Cannot get the ProductStore for the order header");
+            }
+
+            // set the payToPartyId
+            String payToPartyId = productStore.getString("payToPartyId");
+            if (payToPartyId == null) {
+                return ServiceUtil.returnError("Failed to create Payment: Cannot get the ProductStore for the order header");
+            }
+
+            // create the payment
+            Map paymentParams = new HashMap();
+            paymentParams.put("paymentTypeId", "CUSTOMER_PAYMENT");
+            paymentParams.put("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
+            paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
+            paymentParams.put("amount", orderPaymentPreference.getDouble("maxAmount"));
+            paymentParams.put("statusId", "PMNT_RECEIVED");
+            paymentParams.put("effectiveDate", UtilDateTime.nowTimestamp());
+            paymentParams.put("partyIdTo", payToPartyId);
+            if (paymentRefNum != null) {
+                paymentParams.put("paymentRefNum", paymentRefNum);
+            }
+            if (paymentFromId != null) {
+                paymentParams.put("partyIdFrom", paymentFromId);
+            } else {
+                paymentParams.put("partyIdFrom", "_NA_");
+            }
+            if (comments != null) {
+                paymentParams.put("comments", comments);
+            }
+            paymentParams.put("userLogin", userLogin);
+
+            return dispatcher.runSync("createPayment", paymentParams);
+
+        } catch (GenericEntityException ex) {
+            Debug.logError(ex, "Unable to create payment using payment preference.", module);
+            return(ServiceUtil.returnError(ex.getMessage()));
+        } catch (GenericServiceException ex) {
+            Debug.logError(ex, "Unable to create payment using payment preference.", module);
+            return(ServiceUtil.returnError(ex.getMessage()));
+        }
+    }    
 }

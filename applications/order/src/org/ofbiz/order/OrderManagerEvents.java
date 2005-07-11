@@ -48,7 +48,9 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderChangeHelper;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 
 /**
  * Order Manager Events
@@ -89,16 +91,31 @@ public class OrderManagerEvents {
                 Iterator i = paymentPrefs.iterator();
                 while (i.hasNext()) {
                     // update the preference to received
+                    // TODO: updating payment preferences should be done as a service 
                     GenericValue ppref = (GenericValue) i.next();
                     ppref.set("statusId", "PAYMENT_RECEIVED");
                     ppref.set("authDate", UtilDateTime.nowTimestamp());
                     toBeStored.add(ppref);
 
                     // create a payment record
-                    toBeStored.add(OrderChangeHelper.createPaymentFromPreference(ppref, null, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));
+                    Map results = null;
+                    try {
+                        results = dispatcher.runSync("createPaymentFromPreference", UtilMisc.toMap("orderPaymentPreferenceId", ppref.get("orderPaymentPreferenceId"), 
+                                "paymentFromId", placingCustomer.getString("partyId"), "comments", "Payment received offline and manually entered."));
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Failed to execute service createPaymentFromPreference", module);
+                        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                        return "error";
+                    }
+ 
+                    if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
+                        Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module); 
+                        request.setAttribute("_ERROR_MESSAGE_", (String) results.get(ModelService.ERROR_MESSAGE));
+                        return "error";
+                    }
                 }
 
-                // store the updated preferences and newly created payments
+                // store the updated preferences
                 try {
                     delegator.storeAll(toBeStored);
                 } catch (GenericEntityException e) {
@@ -186,6 +203,7 @@ public class OrderManagerEvents {
                     paymentTally += paymentTypeAmount;
 
                     // create the OrderPaymentPreference
+                    // TODO: this should be done with a service
                     Map prefFields = UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString());
                     GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference", prefFields);
                     paymentPreference.set("paymentMethodTypeId", paymentMethodType.getString("paymentMethodTypeId"));
@@ -196,10 +214,32 @@ public class OrderManagerEvents {
                     if (userLogin != null) {
                         paymentPreference.set("createdByUserLogin", userLogin.getString("userLoginId"));
                     }
-                    toBeStored.add(paymentPreference);
+                    
+                    try {
+                        delegator.create(paymentPreference);
+                    } catch (GenericEntityException ex) {
+                        Debug.logError(ex, "Cannot create a new OrderPaymentPreference", module);
+                        request.setAttribute("_ERROR_MESSAGE_", ex.getMessage());
+                        return "error";
+                    }
 
                     // create a payment record
-                    toBeStored.add(OrderChangeHelper.createPaymentFromPreference(paymentPreference, paymentReference, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));
+                    Map results = null;
+                    try {
+                        results = dispatcher.runSync("createPaymentFromPreference", UtilMisc.toMap("userLogin", userLogin, 
+                                "orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"), "paymentRefNum", paymentReference, 
+                                "paymentFromId", placingCustomer.getString("partyId"), "comments", "Payment received offline and manually entered."));
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Failed to execute service createPaymentFromPreference", module);
+                        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                        return "error";
+                    }
+                     
+                    if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
+                        Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module);
+                        request.setAttribute("_ERROR_MESSAGE_", (String) results.get(ModelService.ERROR_MESSAGE));
+                        return "error";
+                    }
                 }
             }
         }
@@ -242,6 +282,7 @@ public class OrderManagerEvents {
         }
 
         // store the status changes and the newly created payment preferences and payments
+        // TODO: updating order payment preference should be done with a service
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {

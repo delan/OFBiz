@@ -165,6 +165,16 @@
         <attribute name="orderAdjustmentId" type="String" mode="OUT" optional="false"/>
     </service>
 
+    <service name="createPaymentFromPreference" engine="java"
+            location="org.ofbiz.order.order.OrderServices" invoke="createPaymentFromPreference">
+        <description>Creates a payment using the order payment preference</description>
+        <attribute name="orderPaymentPreferenceId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentFromId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="false"/>
+    </service>
+
     <service name="updateTrackingNumber" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="updateTrackingNumber">
         <description>Sets the tracking number on a shipment preference</description>

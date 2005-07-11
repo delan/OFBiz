@@ -48,6 +48,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.order.order.OrderChangeHelper;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -178,7 +179,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         
         if (okay) {        
             // set the payment preference
-            okay = setPaymentPreferences(delegator, orderId, request);
+            okay = setPaymentPreferences(delegator, userLogin, orderId, request);
         }
         
         if (okay) {                
@@ -222,7 +223,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         out.flush();                                                  
     }
                
-    private boolean setPaymentPreferences(GenericDelegator delegator, String orderId, ServletRequest request) {
+    private boolean setPaymentPreferences(GenericDelegator delegator, GenericValue userLogin, String orderId, ServletRequest request) {
         List paymentPrefs = null;
         boolean okay = true;
         try {
@@ -235,13 +236,13 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             Iterator i = paymentPrefs.iterator();            
             while (okay && i.hasNext()) {
                 GenericValue pref = (GenericValue) i.next();
-                okay = setPaymentPreference(pref, request);
+                okay = setPaymentPreference(pref, userLogin, request);
             }
         }
         return okay;
     }
         
-    private boolean setPaymentPreference(GenericValue paymentPreference, ServletRequest request) {
+    private boolean setPaymentPreference(GenericValue paymentPreference, GenericValue userLogin, ServletRequest request) {
         String transId = request.getParameter(SelectDefs.SEL_transId);       
         String transTime = request.getParameter(SelectDefs.SEL_transTime);
         String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
@@ -249,6 +250,9 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         String authCode = request.getParameter(SelectDefs.SEL_authCode);
         String authAmount = request.getParameter(SelectDefs.SEL_authAmount); 
         String rawAuthMessage = request.getParameter(SelectDefs.SEL_rawAuthMessage);
+        
+        // Need these for create payment service
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
         if (transStatus.equalsIgnoreCase("Y")) {
             paymentPreference.set("authCode", authCode);
@@ -267,11 +271,25 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         paymentPreference.set("maxAmount", new Double(authAmount));
         
         // create a payment record too -- this method does not store the object so we must here
-        GenericValue payment = OrderChangeHelper.createPaymentFromPreference(paymentPreference, null, null, "Payment received via WorldPay");
+        Map results = null;
+        try {
+            results = dispatcher.runSync("createPaymentFromPreference", UtilMisc.toMap("userLogin", userLogin, 
+                    "orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"), "comments", "Payment received via WorldPay"));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Failed to execute service createPaymentFromPreference", module);
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return false;
+        }
+
+        if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
+            Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module);
+            request.setAttribute("_ERROR_MESSAGE_", (String) results.get(ModelService.ERROR_MESSAGE));
+            return false;
+        }
         
         try {
             paymentPreference.store();
-            paymentPreference.getDelegator().create(payment);
+            paymentPreference.getDelegator().create(paymentPreference);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot set payment preference/payment info", module);
             return false;
