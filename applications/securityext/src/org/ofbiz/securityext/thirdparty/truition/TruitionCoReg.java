@@ -79,6 +79,7 @@ public class TruitionCoReg {
         tru.setMaxAge(-1); // session cookie (not persisted)
         resp.addCookie(tru);
 
+        Debug.log("Set Truition Cookie [" + cookieName + "] - " + cookieValue.toString(), module);
         return "success";
     }
 
@@ -103,6 +104,7 @@ public class TruitionCoReg {
             }
         }
 
+        Debug.log("Set truition cookie [" + cookieName + " to expire now.", module);
         return "success";
     }
 
@@ -119,6 +121,8 @@ public class TruitionCoReg {
                 req.setAttribute("_ERROR_MESSAGE_", e.getMessage());
                 return "error";
             }
+
+            Debug.log("Sending truition redirect - " + redirectUrl, module);
             return "redirect";
         }
         return "success";
@@ -271,8 +275,6 @@ public class TruitionCoReg {
                 return;
             }
         }
-
-        Debug.log("Truition Cookie - " + cookieValue.toString(), module);
     }
 
     public static boolean truitionEnabled() {
