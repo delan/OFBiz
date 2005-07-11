@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2005 The Open For Business Project and repected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:">Oswin Ondarza</a>
+ * @author     Olivier.Heintz@nereide.biz (migration to UiLabel) 
+ * @version 1.0
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+        
+    <!-- SegmentGroup Party services -->
+    <simple-method method-name="createSegmentGroup" short-description="createSegmentGroup">
+        <check-permission permission="MARKETING" action="_CREATE">
+            <fail-property resource="MarketingUiLabels" property="SegmentCreateSegmentGroupPermissionError"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="SegmentGroup"/>
+        <sequenced-id-to-env sequence-name="SegmentGroup" env-name="segmentGroupId"/>
+        <to-string field-name="segmentGroupId"/>
+        <env-to-field env-name="segmentGroupId" map-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+        <field-to-result field-name="segmentGroupId"/>
+    </simple-method>
+    <simple-method method-name="updateSegmentGroup" short-description="updateSegmentGroup">
+        <check-permission permission="MARKETING" action="_UPDATE">
+            <fail-property resource="PartyUiLabels" property="SegmentUpdateSegmentGroupPermissionError"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="SegmentGroup"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="SegmentGroup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteSegmentGroup" short-description="deleteSegmentGroup">
+        <check-permission permission="MARKETING" action="_DELETE">
+            <fail-property resource="PartyUiLabels" property="SegmentDeleteSegmentGroupPermissionError"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="SegmentGroup"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="SegmentGroup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+        
+    <!-- SegmentGroupClassification methods -->
+    <simple-method method-name="createSegmentGroupClassification" short-description="create a SegmentGroupClassification">
+        <check-permission permission="MARKETING" action="_CREATE"><fail-property resource="SegmentGroupUiLabels" property="SegmentGroupCreateSegmentGroupClassificationPermissionError"/></check-permission>
+        <check-errors/>
+        <make-value entity-name="SegmentGroupClassification" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="newEntity.fromDate"><now-timestamp-to-env env-name="newEntity.fromDate"/></if-empty>        
+        <create-value value-name="newEntity"/>  
+    </simple-method>   
+    <simple-method method-name="updateSegmentGroupClassification" short-description="update a SegmentGroupClassification">
+        <check-permission permission="MARKETING" action="_UPDATE"><fail-property resource="SegmentGroupUiLabels" property="SegmentGroupUpdateSegmentGroupClassificationPermissionError"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="SegmentGroupClassification" value-name="lookedUpValue"/>
+        <set-pk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteSegmentGroupClassification" short-description="delete a SegmentGroupClassification">
+        <check-permission permission="MARKETING" action="_DELETE"><fail-property resource="SegmentGroupUiLabels" property="SegmentGroupRemoveSegmentGroupClassificationPermissionError"/></check-permission>
+        <check-errors/>
+        <entity-one entity-name="SegmentGroupClassification" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+</simple-methods>
+

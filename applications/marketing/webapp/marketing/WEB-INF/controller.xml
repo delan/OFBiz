@@ -181,7 +181,136 @@
     	<response name="error" type="view" value="EditMarketingCampaignRoles"/>
     </request-map>
     
-    <!-- end of request mappings -->
+    <!--  SegmentGroup requests -->
+    <request-map uri="viewSegmentGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewSegmentGroup"/>
+    </request-map>
+    <request-map uri="LookupSegmentGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="lookupSegmentGroup"/>
+    </request-map>
+    <request-map uri="createSegmentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSegmentGroup"/>
+        <response name="success" type="view" value="viewSegmentGroup"/>
+        <response name="error" type="view" value="viewSegmentGroup"/>
+    </request-map>
+    <request-map uri="updateSegmentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSegmentGroup"/>
+        <response name="success" type="view" value="viewSegmentGroup"/>
+        <response name="error" type="view" value="viewSegmentGroup"/>
+    </request-map>
+   <request-map uri="deleteSegmentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSegmentGroup"/>
+        <response name="success" type="view" value="listSegmentGroup"/>
+        <response name="error" type="view" value="listSegmentGroup"/>
+    </request-map>
+    
+    <!--  SegmentGroupClassification requests -->
+    <request-map uri="viewSegmentGroupClass">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewSegmentGroupClass"/>
+    </request-map>
+    <request-map uri="listSegmentGroupClass">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listSegmentGroupClass"/>
+    </request-map>
+    <request-map uri="createSegmentGroupClass">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSegmentGroupClass"/>
+        <response name="success" type="view" value="viewSegmentGroupClass"/>
+        <response name="error" type="view" value="viewSegmentGroupClass"/>
+    </request-map>
+    <request-map uri="updateSegmentGroupClass">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSegmentGroupClass"/>
+        <response name="success" type="view" value="viewSegmentGroupClass"/>
+        <response name="error" type="view" value="viewSegmentGroupClass"/>
+    </request-map>
+   <request-map uri="deleteSegmentGroupClass">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSegmentGroupClass"/>
+        <response name="success" type="view" value="listSegmentGroupClass"/>
+        <response name="error" type="view" value="listSegmentGroupClass"/>
+    </request-map>
+    
+    
+    <!--  SegmentGroupGeo requests -->
+    <request-map uri="viewSegmentGroupGeo">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewSegmentGroupGeo"/>
+    </request-map>
+    <request-map uri="listSegmentGroupGeo">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listSegmentGroupGeo"/>
+    </request-map>
+    <request-map uri="createSegmentGroupGeo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSegmentGroupGeo"/>
+        <response name="success" type="view" value="viewSegmentGroupGeo"/>
+        <response name="error" type="view" value="viewSegmentGroupGeo"/>
+    </request-map>
+    <request-map uri="updateSegmentGroupGeo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSegmentGroupGeo"/>
+        <response name="success" type="view" value="viewSegmentGroupGeo"/>
+        <response name="error" type="view" value="viewSegmentGroupGeo"/>
+    </request-map>
+   <request-map uri="deleteSegmentGroupGeo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSegmentGroupGeo"/>
+        <response name="success" type="view" value="viewSegmentGroupGeo"/>
+        <response name="error" type="view" value="viewSegmentGroupGeo"/>
+    </request-map>
+    
+    <!--  SegmentGroupRole requests -->
+    <request-map uri="viewSegmentGroupRole">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewSegmentGroupRole"/>
+    </request-map>
+    <request-map uri="listSegmentGroupRole">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listSegmentGroupRole"/>
+    </request-map>
+    <request-map uri="createSegmentGroupRole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSegmentGroupRole"/>
+        <response name="success" type="view" value="viewSegmentGroupRole"/>
+        <response name="error" type="view" value="viewSegmentGroupRole"/>
+    </request-map>
+    <request-map uri="updateSegmentGroupRole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSegmentGroupRole"/>
+        <response name="success" type="view" value="viewSegmentGroupRole"/>
+        <response name="error" type="view" value="viewSegmentGroupRole"/>
+    </request-map>
+   <request-map uri="deleteSegmentGroupRole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSegmentGroupRole"/>
+        <response name="success" type="view" value="viewSegmentGroupRole"/>
+        <response name="error" type="view" value="viewSegmentGroupRole"/>
+    </request-map>
+    
+   <!-- Lookup request mappings -->
+    <request-map uri="LookupSegmentGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="lookupSegmentGroup"/>
+    </request-map>
+     
+    <request-map uri="LookupProductStore">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="lookupProductStore"/>
+    </request-map>
+     
+    <request-map uri="LookupPartyClassificationGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="lookupPartyClassificationGroup"/>
+    </request-map>
+     
+     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
@@ -198,5 +327,16 @@
     <view-map name="FindMarketingCampaign" type="region"/>
     <view-map name="EditMarketingCampaign" type="region"/>
     <view-map name="EditMarketingCampaignRoles" type="region"/>
+    <view-map name="viewSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroup"/>
+    <view-map name="viewSegmentGroupClass" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroupClass"/>
+    <view-map name="listSegmentGroupClass" type="screen" page="component://marketing/widget/SegmentScreens.xml#listSegmentGroupClass"/>
+    <view-map name="viewSegmentGroupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroupGeo"/>
+    <view-map name="listSegmentGroupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#listSegmentGroupGeo"/>
+    <view-map name="viewSegmentGroupRole" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroupRole"/>
+    <view-map name="listSegmentGroupRole" type="screen" page="component://marketing/widget/SegmentScreens.xml#listSegmentGroupRole"/>
+
+    <view-map name="lookupSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupSegmentGroup"/>
+    <view-map name="lookupProductStore" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupProductStore"/>
+    <view-map name="lookupPartyClassificationGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupPartyClassificationGroup"/>
     <!-- end of view mappings -->
 </site-conf>

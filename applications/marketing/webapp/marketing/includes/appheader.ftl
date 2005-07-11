@@ -31,6 +31,7 @@
   <div class="col"><a href="<@ofbizUrl>/EditDataSources</@ofbizUrl>" class="headerButtonLeft">DataSource</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindMarketingCampaign</@ofbizUrl>" class="headerButtonLeft">Campaign</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindTrackingCode</@ofbizUrl>" class="headerButtonLeft">Tracking</a></div>
+  <div class="col"><a href="<@ofbizUrl>/LookupSegmentGroup</@ofbizUrl>" class="headerButtonLeft">Segment</a></div>
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
   <#else>
