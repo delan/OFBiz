@@ -56,6 +56,10 @@ public class TruitionCoReg {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         StringBuffer cookieNameB = new StringBuffer();
         StringBuffer cookieValue = new StringBuffer();
+        if (!truitionEnabled()) {
+            return "success";
+        }
+        
         if (userLogin != null) {
             TruitionCoReg.makeTruitionCookie(userLogin, cookieNameB, cookieValue);
         }
@@ -96,15 +100,17 @@ public class TruitionCoReg {
             return "error";
         }
 
+        if (truitionEnabled()) {
         Cookie[] cookies = req.getCookies();
-        for (int i = 0; i < cookies.length; i++) {
-            if (cookieName.equals(cookies[i].getName())) {
-                cookies[i].setMaxAge(0);
-                resp.addCookie(cookies[i]);
+            for (int i = 0; i < cookies.length; i++) {
+                if (cookieName.equals(cookies[i].getName())) {
+                    cookies[i].setMaxAge(0);
+                    resp.addCookie(cookies[i]);
+                    Debug.log("Set truition cookie [" + cookieName + " to expire now.", module);
+                }
             }
         }
 
-        Debug.log("Set truition cookie [" + cookieName + " to expire now.", module);
         return "success";
     }
 
@@ -113,7 +119,7 @@ public class TruitionCoReg {
         String redirectUrlName = UtilProperties.getPropertyValue("truition.properties", "truition.redirect.urlName");
         String redirectUrl = req.getParameter(redirectUrlName);
         Debug.log("Redirect to : " + redirectUrl, module);
-        if (redirectUrl != null) {
+        if (truitionEnabled() && redirectUrl != null) {
             try {
                 resp.sendRedirect(redirectUrl);
             } catch (IOException e) {
