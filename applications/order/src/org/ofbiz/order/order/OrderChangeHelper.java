@@ -27,6 +27,7 @@ package org.ofbiz.order.order;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -37,6 +38,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -240,7 +242,7 @@ public class OrderChangeHelper {
         }
     }
 
-    public static void createReceivedPayments(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericEntityException {
+    public static void createReceivedPayments(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericEntityException, GenericServiceException {
         GenericValue orderHeader = null;
         try {
             orderHeader = dispatcher.getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -263,9 +265,12 @@ public class OrderChangeHelper {
                     List payments = orh.getOrderPayments(opp);
                     if (payments == null || payments.size() == 0) {
                         // only do this one time; if we have payment already for this pref ignore.
-                        GenericValue payment = createPaymentFromPreference(opp, UtilDateTime.nowTimestamp().toString(), partyId, "");
-                        // value is not stored by this method
-                        dispatcher.getDelegator().create(payment);
+                        Map results = dispatcher.runSync("createPaymentFromPreference", 
+                                UtilMisc.toMap("orderPaymentPreferenceId", opp.getString("orderPaymentPreferenceId"), 
+                                "paymentRefNumber",  UtilDateTime.nowTimestamp().toString(), "paymentFromId", partyId));
+                        if (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+                            Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module);
+                        }
                     }
                 }
             }
@@ -291,65 +296,6 @@ public class OrderChangeHelper {
         }
     }
 
-    public static GenericValue createPaymentFromPreference(GenericValue orderPaymentPreference, String paymentRefNumber, String paymentFromId, String comments) {
-        GenericDelegator delegator = orderPaymentPreference.getDelegator();
-
-        // get the order header
-        GenericValue orderHeader = null;
-        try {
-            orderHeader = orderPaymentPreference.getRelatedOne("OrderHeader");
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot get OrderHeader from payment preference", module);
-        }
-
-        // get the store for the order
-        GenericValue productStore = null;
-        if (orderHeader != null) {
-            try {
-                productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId")));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot get the ProductStore for the order header", module);
-            }
-        } else {
-            Debug.logWarning("No order header, cannot create payment", module);
-            return null;
-        }
-
-        if (productStore == null) {
-            Debug.logWarning("No product store, cannot create payment", module);
-            return null;
-        }
-
-        // set the payToPartyId
-        String payToPartyId = productStore.getString("payToPartyId");
-        if (payToPartyId == null) {
-            Debug.logWarning("No payToPartyId set on ProductStore : " + productStore.getString("productStoreId"), module);
-            return null;
-        }
-
-        // create the payment
-        GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", delegator.getNextSeqId("Payment")));
-        payment.set("paymentTypeId", "CUSTOMER_PAYMENT");
-        payment.set("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
-        payment.set("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
-        payment.set("amount", orderPaymentPreference.getDouble("maxAmount"));
-        payment.set("statusId", "PMNT_RECEIVED");
-        payment.set("effectiveDate", UtilDateTime.nowTimestamp());
-        payment.set("partyIdTo", payToPartyId);
-        if (paymentRefNumber != null) {
-            payment.set("paymentRefNum", paymentRefNumber);
-        }
-        if (paymentFromId != null) {
-            payment.set("partyIdFrom", paymentFromId);
-        } else {
-            payment.set("partyIdFrom", "_NA_");
-        }
-        if (comments != null) {
-            payment.set("comments", comments);
-        }
-
-        return payment;
-    }
 
     public static boolean releaseInitialOrderHold(LocalDispatcher dispatcher, String orderId) {
         // get the delegator from the dispatcher
