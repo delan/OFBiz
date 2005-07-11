@@ -122,7 +122,7 @@
               <%if(security.hasPermission("DATAFILE_MAINT", session)){%>
                 <li><div class="tabletext">Data File Tools</div>
                 <ul>
-                  <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class="buttontext">View Data File</a>
+                  <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class="buttontext">Work With Data Files</a>
                 </ul>
               <%}%>
               <% if (session.getAttribute("userLogin") != null) { %>
