@@ -34,7 +34,7 @@
                 <a href="<@ofbizUrl>/main?CategoryProductsState=open</@ofbizUrl>" class="lightbuttontext">&nbsp;[]&nbsp;</a>
             </#if>
         </div>
-        <div class="boxhead">Category&nbsp;Products</div>
+        <div class="boxhead">${uiLabelMap.ProductCategoryProducts}</div>
     </div>
 <#if isOpen>
     <div class="screenlet-body">

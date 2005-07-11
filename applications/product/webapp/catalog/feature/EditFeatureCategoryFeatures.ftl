@@ -108,7 +108,7 @@
 <#assign rowCount = rowCount + 1>
 </#list>
 <input type="hidden" name="_rowCount" value="${rowCount}">
-<tr><td colspan="11" align="center"><input type="submit" value='Update'/></td></tr>
+<tr><td colspan="11" align="center"><input type="submit" value='${uiLabelMap.CommonUpdate}'/></td></tr>
 </form>
 </#if>
 </table>

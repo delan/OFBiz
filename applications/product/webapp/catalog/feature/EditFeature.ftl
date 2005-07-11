@@ -26,12 +26,12 @@
 -->
 
 <hr>
-<div class="head1">Supplier Specific Feature Information</div>
+<div class="head1">${uiLabelMap.ProductSupplierSpecificFeatureInformation}</div>
 <#if editSupplierFeaturesForm?has_content>
 ${editSupplierFeaturesForm.renderFormString()}
 </#if>
 <br/>
-<div class="head2">Create information for new supplier</div>
+<div class="head2">${uiLabelMap.ProductCreateInformationNewSupplier}</div>
 <#if createSupplierFeatureForm?has_content>
 ${createSupplierFeatureForm.renderFormString()}
 </#if>
