@@ -64,7 +64,6 @@
     -->
     
     <after-login>
-        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="checkStoreCustomerRole"/>
         <event type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="updateAssociatedDistributor"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="keepCartUpdated"/>
         <!-- after login, get everything from the auto-save list -->
@@ -77,13 +76,13 @@
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>
         <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
-        <response name="success" type="request" value="checkStoreCustomerRole"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="storeCheckLogin"/>
+        <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
     <request-map uri="login">
         <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="storeLogin"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
@@ -109,13 +108,6 @@
         <response name="error" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="checkStoreCustomerRole">
-        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="checkStoreCustomerRole"/>
-        <response name="success" type="view" value="main"/>
-        <!-- if there is an error the user will be logged out, and error will be returned -->
-        <response name="error" type="view" value="login"/>
-    </request-map>
-    
     <request-map uri="view">
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
