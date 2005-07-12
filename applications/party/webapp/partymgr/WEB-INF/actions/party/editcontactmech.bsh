@@ -67,5 +67,5 @@ if (cmNewPurposeTypeId != null) {
 
 String donePage = request.getParameter("DONE_PAGE");
 if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
-if (donePage == null || donePage.length() <= 0) donePage = "viewprofile?party_id=" + partyId;
+if (donePage == null || donePage.length() <= 0) donePage = "viewprofile?party_id=" + partyId + "&partyId=" + partyId;
 context.put("donePage", donePage);

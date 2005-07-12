@@ -39,6 +39,7 @@ import org.ofbiz.accounting.payment.*;
 import org.ofbiz.securityext.login.*;
 
 partyId = request.getParameter("party_id");
+if (partyId == null) partyId = request.getParameter("partyId");
 userLoginId = request.getParameter("userlogin_id");
 if (partyId == null && userLoginId != null) {
     thisUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
