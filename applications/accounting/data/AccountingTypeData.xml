@@ -22,6 +22,8 @@
     <AcctgTransType acctgTransTypeId="DISBURSEMENT_ACCTG_T" description="Disbursement" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
     <AcctgTransType acctgTransTypeId="RECEIPT_ACCTG_TRANS" description="Receipt" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
 
+    <AcctgTransType acctgTransTypeId="INVENTORY_RETURN" description="Inventory from Return" hasTable="N" parentTypeId="EXTERNAL_ACCTG_TRANS"/>
+
     <AcctgTransEntryType acctgTransEntryTypeId="_NA_" description="Not Applicable" hasTable="N" parentTypeId=""/>
 
     <StatusType description="Acctg Entry Reconcile" hasTable="N" parentTypeId="" statusTypeId="ACCTG_ENREC_STATUS"/>
@@ -93,6 +95,7 @@
     <GlAccountType description="Tax" glAccountTypeId="TAX_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Profit Loss" glAccountTypeId="PROFIT_LOSS_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Sales" glAccountTypeId="SALES_ACCOUNT" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Customer Returns" glAccountTypeId="SALES_RETURNS" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Discounts" glAccountTypeId="DISCOUNTS_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Cost of Goods Sold" glAccountTypeId="COGS_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Purchase" glAccountTypeId="PURCHASE_ACCOUNT" hasTable="N" parentTypeId=""/>
