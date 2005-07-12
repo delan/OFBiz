@@ -492,10 +492,13 @@ according to which type of entity.
     glAccountClassId="REVENUE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="SALES TAX COLLECTED" description="" postedBalance="0.0"/>
   
-  
   <GlAccount parentGlAccountId="400000" glAccountId="410000" accountCode="410000" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="DISCOUNTS ON SALES" description="" postedBalance="0.0"/>
+
+  <GlAccount parentGlAccountId="400000" glAccountId="420000" accountCode="420000" 
+    glAccountClassId="REVENUE" glAccountTypeId="" glResourceTypeId="MONEY"  
+    accountName="CUSTOMER RETURNS" description="" postedBalance="0.0"/>
 
 <!-- COST OF GOODS SOLD -->
   <GlAccount parentGlAccountId="" glAccountId="500000" accountCode="500000" 
