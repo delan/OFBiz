@@ -129,12 +129,15 @@ public class ThirdPartyEvents {
 
         String store = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "distributor.store.customer");
 
-        if (store == null || store.toUpperCase().startsWith("N"))
+        if (store == null || store.toUpperCase().startsWith("N")) {
             return "success";
+        }
+
         String storeOnClick = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "distributor.store.onclick");
 
-        if (storeOnClick == null || storeOnClick.toUpperCase().startsWith("N"))
+        if (storeOnClick == null || storeOnClick.toUpperCase().startsWith("N")) {
             return "success";
+        }
 
         try {
             party = userLogin == null ? null : userLogin.getRelatedOne("Party");
@@ -171,7 +174,7 @@ public class ThirdPartyEvents {
                     }
                 } else {
                     // no distributorId is available
-                    Debug.log("No distributor in session or already associated with user " + userLogin.getString("partyId"));
+                    Debug.logInfo("No distributor in session or already associated with user " + userLogin.getString("partyId"), module);
                     return "success";
                 }
             } else {
@@ -181,7 +184,7 @@ public class ThirdPartyEvents {
             return "success";
         } else {
             // not logged in
-            Debug.log("Cannot associate distributor since not logged in yet");
+            Debug.logWarning("Cannot associate distributor since not logged in yet", module);
             return "success";
         }
     }
@@ -240,7 +243,7 @@ public class ThirdPartyEvents {
                     }
                 } else {
                     // no distributorId is available
-                    Debug.log("No affiliate in session or already associated with user " + userLogin.getString("partyId"));
+                    Debug.logInfo("No affiliate in session or already associated with user " + userLogin.getString("partyId"), module);
                     return "success";
                 }
             } else {
@@ -250,7 +253,7 @@ public class ThirdPartyEvents {
             return "success";
         } else {
             // not logged in
-            Debug.log("Cannot associate affiliate since not logged in yet");
+            Debug.logWarning("Cannot associate affiliate since not logged in yet", module);
             return "success";
         }
     }

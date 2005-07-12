@@ -64,6 +64,8 @@
     -->
     
     <after-login>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="checkStoreCustomerRole"/>
+        <event type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="updateAssociatedDistributor"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="keepCartUpdated"/>
         <!-- after login, get everything from the auto-save list -->
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
@@ -76,24 +78,21 @@
         <description>Verify a user is logged in.</description>
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
-        <response name="success" type="view" value="main" />
-        <response name="error" type="view" value="login" />
+        <response name="success" type="request" value="checkStoreCustomerRole"/>
+        <response name="error" type="view" value="login"/>
     </request-map>
-
     <request-map uri="login">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
-        <response name="success" type="request" value="updatedistributor"/>
+        <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
-
     <request-map uri="logout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="logout"/>
         <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-
     <request-map uri="autoLogout">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="autoLoginRemove"/>
@@ -110,18 +109,17 @@
         <response name="error" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="updatedistributor">
-        <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="updateAssociatedDistributor"/>
+    <request-map uri="checkStoreCustomerRole">
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="checkStoreCustomerRole"/>
         <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="main"/>
+        <!-- if there is an error the user will be logged out, and error will be returned -->
+        <response name="error" type="view" value="login"/>
     </request-map>
-
+    
     <request-map uri="view">
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
-
     <request-map uri="authview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
@@ -699,7 +697,7 @@
     <request-map uri="createcustomer">
         <security https="true" auth="false"/>
         <event type="simple" path="org/ofbiz/ecommerce/customer/CustomerEvents.xml" invoke="createCustomer"/>
-        <response name="success" type="request" value="updatedistributor"/>
+        <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
 
