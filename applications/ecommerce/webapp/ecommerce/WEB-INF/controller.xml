@@ -109,6 +109,7 @@
     </request-map>
 
     <request-map uri="view">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -119,106 +120,113 @@
     </request-map>
 
     <request-map uri="main">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="main"/>
     </request-map>
 
     <request-map uri="passwordemail">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="passwordemail"/>
     </request-map>
 
     <request-map uri="setSessionLocale">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     
     <request-map uri="setSessionCurrencyUom">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionCurrencyUom"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     
     <request-map uri="setSessionProductStore">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.product.ProductStoreCartAwareEvents" invoke="setSessionProductStore"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     
     <request-map uri="editShoppingList">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <response name="success" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="createEmptyShoppingList">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="service" path="" invoke="createShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="createShoppingListFromOrder">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="service" path="" invoke="makeShoppingListFromOrder"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="orderstatus"/>
     </request-map>
 
     <request-map uri="updateShoppingList">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="service" path="" invoke="updateShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="addItemToShoppingList">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="service" path="" invoke="createShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="addBulkToShoppingList">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addBulkFromCart"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="addListToCart">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addListToCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="updateShoppingListItem">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="service" path="" invoke="updateShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="removeFromShoppingList">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="service" path="" invoke="removeShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="replaceShoppingListItem">
-        <security auth="true"/>
+        <security auth="true" https="false"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="replaceShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="addpromocode">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addProductPromoCode"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="additem">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="survey" type="view" value="survey"/>
@@ -227,6 +235,7 @@
     </request-map>
 
     <request-map uri="additemsurvey">
+        <security https="false" auth="false"/>
         <event type="service" invoke="createSurveyResponse"/>
         <response name="success" type="request" value="additem"/>
         <response name="error" type="view" value="main"/>
@@ -240,46 +249,55 @@
     </request-map>
 
     <request-map uri="addtocartbulk">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartBulk"/>
         <response name="success" type="view" value="quickadd"/>
         <response name="error" type="view" value="quickadd"/>
     </request-map>
     <request-map uri="addCategoryDefaults">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addCategoryDefaults"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="addseperator">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="showcart">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="showcart"/>
     </request-map>
     <request-map uri="modifycart">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
     <request-map uri="emptycart">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="setDesiredAlternateGwpProductId">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setDesiredAlternateGwpProductId"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="showAllPromotions">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="showAllPromotions"/>
     </request-map>
     <request-map uri="showPromotionDetails">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="showPromotionDetails"/>
     </request-map>
 
@@ -388,7 +406,6 @@
       <response name="success" type="view" value="checkoutshippingaddress"/>
       <response name="error" type="request" value="checkouterror"/>
     </request-map>
-
     <request-map uri="checkouterror">
       <security https="true" auth="true"/>
       <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutError"/>
@@ -400,7 +417,6 @@
       <response name="error" type="view" value="checkoutshippingaddress"/>
       <response name="success" type="view" value="checkoutshippingaddress"/>
     </request-map>
-
     <request-map uri="quickcheckout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
@@ -433,7 +449,6 @@
         <response name="success" type="view" value="checkoutshippingaddress"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
-
     <request-map uri="setOptions">
         <security https="true" auth="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>
@@ -461,7 +476,6 @@
         <response name="success" type="request" value="calcTax"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
-
     <request-map uri="calcTax">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
@@ -483,7 +497,6 @@
         <response name="failed" type="request" value="failedBlacklist"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
-
     <request-map uri="failedBlacklist">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="failedBlacklistCheck"/>
@@ -492,13 +505,12 @@
     </request-map>
 
     <request-map uri="processorder">
-        <security https="true"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
         <response name="sales_order" type="request" value="checkBlacklist"/>
         <response name="work_order" type="request" value="checkBlacklist"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
-
     <request-map uri="processpayment">
         <security https="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
@@ -506,7 +518,6 @@
         <response name="fail" type="request" value="checkouterror"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
-
     <request-map uri="clearcartfororder">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
@@ -546,13 +557,12 @@
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
-
     <request-map uri="payPalNotify">
+        <security https="false"/>
         <event type="java" path="org.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="payPalIPN"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
-
     <request-map uri="payPalCancel">
         <security https="true"/>
         <event type="java" path="org.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="cancelPayPalOrder"/>
@@ -567,41 +577,47 @@
     </request-map>
 
     <request-map uri="confirmorder">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="confirmorder"/>
     </request-map>
 
     <request-map uri="catalog">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="catalog"/>
     </request-map>
-
     <request-map uri="quickadd">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="quickadd"/>
     </request-map>
-
     <request-map uri="category">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="category"/>
     </request-map>
-
     <request-map uri="product">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="product"/>
     </request-map>
     <request-map uri="detailImage">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="detailImage"/>
     </request-map>
     <request-map uri="crosssell">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="product"/>
     </request-map>
     <request-map uri="upsell">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="product"/>
     </request-map>
 
     <request-map uri="clearLastViewed">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="clearAllLastViewed"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-
     <request-map uri="lastviewedproducts">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="lastviewedproducts"/>
     </request-map>
 
@@ -617,24 +633,29 @@
     </request-map>
 
     <request-map uri="advancedsearch">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="keywordsearch">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="checkDoKeywordOverride"/>
         <response name="success" type="view" value="keywordsearch"/>
         <response name="none" type="none" value=""/>
     </request-map>
     <request-map uri="clearSearchOptionsHistoryList">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="clearSearchOptionsHistoryList"/>
         <response name="success" type="view" value="advancedsearch"/>
         <response name="error" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="setCurrentSearchFromHistory">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="setCurrentSearchFromHistory"/>
         <response name="success" type="view" value="advancedsearch"/>
         <response name="error" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="setCurrentSearchFromHistoryAndSearch">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="setCurrentSearchFromHistory"/>
         <response name="success" type="request" value="keywordsearch"/>
         <response name="error" type="view" value="advancedsearch"/>
@@ -644,19 +665,16 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderhistory"/>
     </request-map>
-
     <request-map uri="orderstatus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderstatus"/>
     </request-map>
-
     <request-map uri="allowordersplit">
         <security https="true" auth="true"/>
         <event type="service" invoke="setAllowOrderSplit"/>
         <response name="success" type="view" value="orderstatus"/>
         <response name="error" type="view" value="orderstatus"/>
     </request-map>
-
     <request-map uri="cancelOrderItem">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cancelOrderItem"/>
@@ -685,7 +703,6 @@
         <security https="true" auth="false"/>
         <response name="success" type="view" value="newcustomer"/>
     </request-map>
-
     <request-map uri="createcustomer">
         <security https="true" auth="false"/>
         <event type="simple" path="org/ofbiz/ecommerce/customer/CustomerEvents.xml" invoke="createCustomer"/>
@@ -883,15 +900,18 @@
     </request-map>
 
     <request-map uri="changeDelegator">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
 
     <request-map uri="tellafriend">
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="tellafriend"/>
     </request-map>
     <request-map uri="emailFriend">
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="tellAFriend"/>
         <response name="success" type="view" value="tellafriend"/>
         <response name="error" type="view" value="tellafriend"/>
