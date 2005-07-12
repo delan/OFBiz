@@ -27,7 +27,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
 		
-	<form name="lookupFixedAsset" 
+    <form name="lookupFixedAsset" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupFixedAsset" title="" type="single">
         <actions>
@@ -49,7 +49,7 @@
     </form>
 
     <form name="listLookupFixedAsset" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="display"
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-name="entityList" paginate-target="LookupFixedAsset" 
         title="" type="list">
         <actions>
