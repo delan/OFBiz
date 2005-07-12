@@ -1052,6 +1052,7 @@
       <field name="originContactMechId" type="id"></field>
       <field name="destinationFacilityId" type="id"></field>
       <field name="needsInventoryReceive" type="indicator"></field>
+      <field name="currencyUomId" type="id-ne"></field>
       <prim-key field="returnId"/>
       <relation type="one" fk-name="RTN_FROM_PARTY" rel-entity-name="Party">
         <key-map field-name="fromPartyId" rel-field-name="partyId"/>
@@ -1073,6 +1074,9 @@
       </relation>
       <relation type="one" fk-name="RTN_STTS_ITEM" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_HDR_CUOM" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="UserLogin">
         <key-map field-name="createdBy" rel-field-name="userLoginId"/>
