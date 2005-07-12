@@ -46,6 +46,13 @@
         <field name="productTypeId_op">
             <hidden value="equals"/>
         </field>
+        <field name="primaryProductCategoryId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductCategory" key-field-name="productCategoryId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
