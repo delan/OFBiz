@@ -2641,6 +2641,7 @@
       <field name="headerMiddleBackground" type="url"></field>
       <field name="headerRightBackground" type="url"></field>
       <field name="usePrimaryEmailUsername" type="indicator"></field>
+      <field name="requireCustomerRole" type="indicator"></field>
       <prim-key field="productStoreId"/>
       <relation type="one" fk-name="PROD_STR_PRSTRGP" title="Primary" rel-entity-name="ProductStoreGroup">
         <key-map field-name="primaryStoreGroupId" rel-field-name="productStoreGroupId"/>

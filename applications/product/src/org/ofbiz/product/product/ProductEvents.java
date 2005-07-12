@@ -850,7 +850,7 @@ public class ProductEvents {
     public static String updateProductQuickAdminSelFeat(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        //GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String productId = request.getParameter("productId");
         String variantProductId = request.getParameter("productId0");
         String useImagesProdId = request.getParameter("useImages");
@@ -1023,8 +1023,8 @@ public class ProductEvents {
 
     public static String removeFeatureApplsByFeatureTypeId(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        //Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        //GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String productId = request.getParameter("productId");
         String productFeatureTypeId = request.getParameter("productFeatureTypeId");
 
@@ -1064,8 +1064,8 @@ public class ProductEvents {
 
     public static String removeProductFeatureAppl(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        //Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        //GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String productId = request.getParameter("productId");
         String productFeatureId = request.getParameter("productFeatureId");
         
@@ -1101,10 +1101,8 @@ public class ProductEvents {
                             "productId", productId));
                     catMembs = EntityUtil.filterByDate(catMembs);
                     if (catMembs.size() == 0) {
-                        GenericValue categoryMember = delegator.create("ProductCategoryMember",
-                                UtilMisc.toMap("productCategoryId", categoryId[i],
-                                        "productId", productId,
-                                        "fromDate", fromDate));
+                        delegator.create("ProductCategoryMember",
+                                UtilMisc.toMap("productCategoryId", categoryId[i], "productId", productId, "fromDate", fromDate));
                     }
                 } catch (GenericEntityException e) {
                     String errMsg = "Error adding to category: " + e.toString();
@@ -1209,6 +1207,44 @@ public class ProductEvents {
             UtilHttp.setCurrencyUom(session, currencyStr);
             UtilHttp.setLocale(request, localeStr);
 
+        }
+        return "success";
+    }
+
+    /** 
+     * If ProductStore.requireCustomerRole == Y then the loggedin user must be associated with the store in the customer role.
+     * This event method should be included in a chained request following the "login" request-map of the controller.xml file for this to work in customer facing ecommerce sites.
+     * 
+     * @param request
+     * @param response
+     * @return String with response, maybe "success" or "error" if logged in user is not associated with the ProductStore in the CUSTOMER role.
+     */
+    public static String checkStoreCustomerRole(HttpServletRequest request, HttpServletResponse response) {
+        Debug.logInfo("Running checkStoreCustomerRole", module);
+        HttpSession session = request.getSession();
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);
+        if (productStore != null && userLogin != null) {
+            if ("Y".equals(productStore.getString("requireCustomerRole"))) {
+                List productStoreRoleList = null;
+                try {
+                    productStoreRoleList = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStore.get("productStoreId"), 
+                            "partyId", userLogin.get("partyId"), "roleTypeId", "CUSTOMER"));
+                    productStoreRoleList = EntityUtil.filterByDate(productStoreRoleList, true);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Database error finding CUSTOMER ProductStoreRole records, required by the ProductStore with ID [" + productStore.getString("productStoreId") + "]", module);
+                }
+                if (productStoreRoleList == null || productStoreRoleList.size() == 0) {
+                    // uh-oh, this user isn't associated...
+                    String errorMsg = "The " + productStore.getString("storeName") + " [" + productStore.getString("productStoreId") + "] ProductStore requires that customers be associated with it, and the logged in user is NOT associated with it in the CUSTOMER role; userLoginId=[" + userLogin.getString("userLoginId") + "], partyId=[" + userLogin.getString("partyId") + "]";
+                    Debug.logWarning(errorMsg, module);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                    session.removeAttribute("userLogin");
+                    session.removeAttribute("autoUserLogin");
+                    return "error";
+                }
+            }
         }
         return "success";
     }
