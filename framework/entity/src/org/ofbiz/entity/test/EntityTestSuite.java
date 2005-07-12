@@ -47,6 +47,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 
 /**
  *
@@ -397,6 +398,29 @@ public class EntityTestSuite extends TestCase {
             List newlyCreatedValues = delegator.findAll("Testing", UtilMisc.toList("testingId"));
             TestCase.assertEquals("Test to create " + TEST_COUNT + " and store one at a time: ", TEST_COUNT, newlyCreatedValues.size());
         } catch (GenericEntityException e){
+            assertTrue("GenericEntityException:" + e.toString(), false);
+            return;
+        }
+    }
+
+    /*
+     * This test will use the large number of unique items from above and test the EntityListIterator looping through the list
+     */
+    public void testEntityListIterator() throws Exception {
+        try {
+            EntityListIterator iterator = delegator.findListIteratorByCondition("Testing", new EntityExpr("testingId", EntityOperator.LIKE, "T2-%"), null, null);
+            assertTrue("Test if EntityListIterator was created: ", iterator != null);
+            
+            int i = 0;
+            GenericValue item = (GenericValue) iterator.next();
+            while (item != null) {
+                assertTrue("Testing if iterated data matches test data (row " + i + "): ", item.getString("testingId").equals(getTestId("T2-", i)));
+                item = (GenericValue) iterator.next();
+                i++;
+            }
+            assertTrue("Test if EntitlyListIterator iterates exactly " + TEST_COUNT + " times: " , i == TEST_COUNT);
+            iterator.close();
+        } catch (GenericEntityException e) {
             assertTrue("GenericEntityException:" + e.toString(), false);
             return;
         } finally {
