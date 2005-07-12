@@ -41,8 +41,8 @@
   <div class="col"><a href="<@ofbizUrl>/FindProductPromo</@ofbizUrl>" class="${selectedLeftClassMap.promos?default(unselectedLeftClassName)}">${uiLabelMap.ProductPromos}</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="${selectedLeftClassMap.pricerules?default(unselectedLeftClassName)}">${uiLabelMap.ProductPriceRules}</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindProductStore</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}">${uiLabelMap.ProductStores}</a></div>
-  <div class="col"><a href="<@ofbizUrl>/editKeywordThesaurus</@ofbizUrl>" class="${selectedLeftClassMap.thesaurus?default(unselectedLeftClassName)}">Thesaurus</a></div>
-  <div class="col"><a href="<@ofbizUrl>/pendingReviews</@ofbizUrl>" class="${selectedLeftClassMap.reviews?default(unselectedLeftClassName)}">Reviews</a></div>
+  <div class="col"><a href="<@ofbizUrl>/editKeywordThesaurus</@ofbizUrl>" class="${selectedLeftClassMap.thesaurus?default(unselectedLeftClassName)}">${uiLabelMap.ProductThesaurus}</a></div>
+  <div class="col"><a href="<@ofbizUrl>/pendingReviews</@ofbizUrl>" class="${selectedLeftClassMap.reviews?default(unselectedLeftClassName)}">${uiLabelMap.ProductReviews}</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindProductConfigItems</@ofbizUrl>" class="${selectedLeftClassMap.configs?default(unselectedLeftClassName)}">${uiLabelMap.ProductConfigItems}</a></div>
 
   <#if userLogin?has_content>
