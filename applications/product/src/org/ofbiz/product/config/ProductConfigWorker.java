@@ -71,7 +71,6 @@ public class ProductConfigWorker {
                                                          currencyUomId, UtilHttp.getLocale(request),
                                                          autoUserLogin);
                 productConfigCache.put(cacheKey, new ProductConfigWrapper(configWrapper));
-                //return ((ProductConfigWrapper) productConfigCache.get(cacheKey)).copy();
             } else {
                 configWrapper = new ProductConfigWrapper((ProductConfigWrapper)productConfigCache.get(cacheKey));
             }
