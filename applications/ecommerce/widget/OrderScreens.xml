@@ -70,6 +70,7 @@
 
                 <set field="title-property" value="PageTitleBillingInformation"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/billsettings.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
@@ -159,6 +160,7 @@
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutpayment.bsh"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutoptions.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
@@ -213,6 +215,7 @@
 
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutpayment.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">

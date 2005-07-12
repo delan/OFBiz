@@ -31,8 +31,6 @@ import org.ofbiz.accounting.payment.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
 
-delegator = request.getAttribute("delegator");
-dispatcher = request.getAttribute("dispatcher");
 cart = session.getAttribute("shoppingCart");
 currencyUomId = cart.getCurrency();
 userLogin = session.getAttribute("userLogin");

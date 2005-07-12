@@ -31,13 +31,11 @@ import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 
-delegator = request.getAttribute("delegator");
-dispatcher = request.getAttribute("dispatcher");
 cart = session.getAttribute("shoppingCart");
 partyId = cart.getPartyId();
 currencyUomId = cart.getCurrency();
-payType = request.getParameter("paymentMethodType");
-if (payType == null && request.getParameter("useGc") != null) {
+payType = parameters.get("paymentMethodType");
+if (payType == null && parameters.get("useGc") != null) {
     payType = "GC";
 }
 context.put("cart", cart);
@@ -68,7 +66,7 @@ if (partyId != null && !partyId.equals("_NA_")) {
     }
 }
 
-if (request.getParameter("useShipAddr") != null && cart.getShippingContactMechId() != null) {
+if (parameters.get("useShipAddr") != null && cart.getShippingContactMechId() != null) {
     shippingContactMech = cart.getShippingContactMechId();
     postalAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMech));
     context.put("useEntityFields", "Y");
@@ -84,7 +82,7 @@ if (request.getParameter("useShipAddr") != null && cart.getShippingContactMechId
     context.put("postalFields", UtilHttp.getParameterMap(request));
 }
 
-if (cart != null && request.getParameter("singleUsePayment") == null) {
+if (cart != null && parameters.get("singleUsePayment") == null) {
     if (cart.getPaymentMethodIds() != null && cart.getPaymentMethodIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodIds().get(0);
         context.put("checkOutPaymentId", checkOutPaymentId);
@@ -106,7 +104,7 @@ if (cart != null && request.getParameter("singleUsePayment") == null) {
         } else {
             context.put("paymentMethodType", "offline");
         }
-        if (account != null && request.getParameter("useShipAddr") == null) {
+        if (account != null && parameters.get("useShipAddr") == null) {
             address = account.getRelatedOne("PostalAddress");
             context.put("postalAddress", address);
             context.put("postalFields", address);
@@ -117,7 +115,7 @@ if (cart != null && request.getParameter("singleUsePayment") == null) {
     }
 }
 
-requestPaymentMethodType = request.getParameter("paymentMethodType");
+requestPaymentMethodType = parameters.get("paymentMethodType");
 if (requestPaymentMethodType != null && requestPaymentMethodType.length() > 0) {
     context.put("paymentMethodType", requestPaymentMethodType);
 }

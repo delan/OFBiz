@@ -368,25 +368,33 @@ function shipBillAddr() {
             <input type="hidden" name="finalizeMode" value="payoption">
             <input type="hidden" name="createNew" value="Y">
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
+              <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists>
               <tr>
                 <td width='5%' nowrap><input type="checkbox" name="useGc" value="GC" <#if paymentMethodType?exists && paymentMethodType == "GC">checked</#if></td>
                 <td width='95%' nowrap><div class="tabletext">${uiLabelMap.AccountingCheckGiftCard}</div></td>
               </tr>
               <tr><td colspan="2"><hr class="sepbar"/></td></tr>
+              </#if>
+              <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE?exists>
               <tr>
                 <td width='5%' nowrap><input type="radio" name="paymentMethodType" value="offline" <#if paymentMethodType?exists && paymentMethodType == "offline">checked</#if></td>
                 <td width='95%'nowrap><div class="tabletext">${uiLabelMap.OrderPaymentOfflineCheckMoney}</div></td>
               </tr>
               <tr><td colspan="2"><hr class="sepbar"/></td></tr>
+              </#if>
+              <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists>
               <tr>
                 <td width='5%' nowrap><input type="radio" name="paymentMethodType" value="CC" <#if paymentMethodType?exists && paymentMethodType == "CC">checked</#if></td>
                 <td width='95%' nowrap><div class="tabletext">${uiLabelMap.AccountingVisaMastercardAmexDiscover}</div></td>
               </tr>
               <tr><td colspan="2"><hr class="sepbar"/></td></tr>
+              </#if>
+              <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists>
               <tr>
                 <td width='5%' nowrap><input type="radio" name="paymentMethodType" value="EFT" <#if paymentMethodType?exists && paymentMethodType == "EFT">checked</#if></td>
                 <td width='95%' nowrap><div class="tabletext">${uiLabelMap.AccountingAHCElectronicCheck}</div></td>
               </tr>
+              </#if>
               <tr>
                 <td align="center" colspan="2">
                   <input type="submit" class="smallsubmit" value="Continue">

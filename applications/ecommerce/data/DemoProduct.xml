@@ -38,9 +38,13 @@
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor"/>
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveGCProcessor"/>
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease"/>
+
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService=""/>
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EXT_WORLDPAY" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService=""/>
-
+    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EXT_OFFLINE" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService=""/>
+    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EXT_COD" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService=""/>
+    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EXT_BILLACT" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService=""/>
+    
     <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CONFIRM" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#OrderConfirmNotice" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
     <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_COMPLETE" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#OrderCompleteNotice" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
     <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#BackorderNotice" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>

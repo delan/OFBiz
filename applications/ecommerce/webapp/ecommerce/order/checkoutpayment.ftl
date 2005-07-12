@@ -93,6 +93,7 @@ function toggleBillingAccount(box) {
                 <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
               </td></tr>
               <tr><td colspan="3"><hr class="sepbar"/></td></tr>
+              <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE?exists>
               <tr>
                 <td width="1" nowrap>
                   <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked</#if>>
@@ -102,6 +103,8 @@ function toggleBillingAccount(box) {
                 </td>
                 <td width="1" nowrap>&nbsp;</td>
               </tr>
+              </#if>
+              <#if productStorePaymentMethodTypeIdMap.EXT_COD?exists>
               <tr>
                 <td width="1" nowrap>
                   <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked</#if>>
@@ -111,6 +114,8 @@ function toggleBillingAccount(box) {
                 </td>
                 <td width="1" nowrap>&nbsp;</td>
               </tr>
+              </#if>
+              <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY?exists>
               <tr>
                 <td width="1" nowrap>
                   <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked</#if>>
@@ -120,6 +125,8 @@ function toggleBillingAccount(box) {
                 </td>
                 <td width="1" nowrap>&nbsp;</td>
               </tr>
+              </#if>
+              <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL?exists>
               <tr>
                 <td width="1" nowrap>
                   <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked</#if>>
@@ -129,6 +136,7 @@ function toggleBillingAccount(box) {
                 </td>
                 <td width="1" nowrap>&nbsp;</td>
               </tr>
+              </#if>
               <tr><td colspan="3"><hr class="sepbar"/></td></tr>
             <#if !paymentMethodList?has_content>
               <tr>
@@ -139,6 +147,7 @@ function toggleBillingAccount(box) {
             <#else/>
               <#list paymentMethodList as paymentMethod>
                 <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
+                 <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists>
                   <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
 
                   <#if giftCard?has_content && giftCard.cardNumber?has_content>
@@ -174,7 +183,9 @@ function toggleBillingAccount(box) {
                       </span>
                     </td>
                   </tr>
+                 </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
+                 <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists>
                   <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                   <tr>
                     <td width="1%" nowrap>
@@ -193,7 +204,9 @@ function toggleBillingAccount(box) {
                       </span>
                     </td>
                   </tr>
+                 </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
+                 <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists>
                   <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                   <tr>
                     <td width="1%" nowrap>
@@ -206,11 +219,13 @@ function toggleBillingAccount(box) {
                     <td>&nbsp;</td>
                   </tr>
                   <tr><td colspan="3"><hr class="sepbar"/></td></tr>
+                 </#if>
                 </#if>
               </#list>
             </#if>
 
-              <#-- special billing account functionality to allow use w/ a payment method -->
+            <#-- special billing account functionality to allow use w/ a payment method -->
+            <#if productStorePaymentMethodTypeIdMap.EXT_BILLACT?exists>
               <#if billingAccountList?has_content>
                 <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                 <tr>
@@ -249,8 +264,10 @@ function toggleBillingAccount(box) {
                    <td>&nbsp;</td>
                 </tr>
               </#if>
-              <#-- end of special billing account functionality -->
+            </#if>
+            <#-- end of special billing account functionality -->
 
+            <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists>
               <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td width="1%" nowrap>
@@ -288,14 +305,15 @@ function toggleBillingAccount(box) {
                   <input type="text" size="6" class="inputBox" name="giftCardAmount" value="${(requestParameters.giftCardAmount)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
                 </td>
               </tr>
+            </#if>
 
               <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="3">
                   <div class='tabletext' valign='middle'>
-                    <a href="<@ofbizUrl>/setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseCreditCard}]</a>&nbsp;
-                    <a href="<@ofbizUrl>/setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseGiftCard}]</a>&nbsp;
-                    <a href="<@ofbizUrl>/setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseEFTAccount}]</a>&nbsp;
+                    <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseCreditCard}]</a>&nbsp;</#if>
+                    <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseGiftCard}]</a>&nbsp;</#if>
+                    <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseEFTAccount}]</a>&nbsp;</#if>
                   </div>
                 </td>
               </tr>

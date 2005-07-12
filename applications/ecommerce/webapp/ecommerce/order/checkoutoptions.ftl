@@ -320,6 +320,7 @@ function toggleBillingAccount(box) {
                     </td>
                   </tr>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
+                  <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE?exists>
                   <tr>
                     <td width="1%">
                       <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked="checked"</#if>>
@@ -328,6 +329,8 @@ function toggleBillingAccount(box) {
                       <span class="tabletext">${uiLabelMap.OrderMoneyOrder}</span>
                     </td>
                   </tr>
+                  </#if>
+                  <#if productStorePaymentMethodTypeIdMap.EXT_COD?exists>
                   <tr>
                     <td width="1%">
                       <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked="checked"</#if>>
@@ -336,6 +339,8 @@ function toggleBillingAccount(box) {
                       <span class="tabletext">${uiLabelMap.OrderCOD}</span>
                     </td>
                   </tr>
+                  </#if>
+                  <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY?exists>
                   <tr>
                     <td width="1%">
                       <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked="checked"</#if>>
@@ -344,6 +349,8 @@ function toggleBillingAccount(box) {
                       <span class="tabletext">${uiLabelMap.AccountingPayWithWorldPay}</span>
                     </td>
                   </tr>
+                  </#if>
+                  <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL?exists>
                   <tr>
                     <td width="1%">
                       <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked="checked"</#if>>
@@ -352,6 +359,7 @@ function toggleBillingAccount(box) {
                       <span class="tabletext">${uiLabelMap.AccountingPayWithPayPal}</span>
                     </td>
                   </tr>
+                  </#if>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
 
                   <#if !paymentMethodList?has_content>
@@ -363,6 +371,7 @@ function toggleBillingAccount(box) {
                   <#else>
                   <#list paymentMethodList as paymentMethod>
                     <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
+                     <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists>
                       <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                       <tr>
                         <td width="1%">
@@ -373,7 +382,9 @@ function toggleBillingAccount(box) {
                           <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                         </td>
                       </tr>
+                     </#if>
                     <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
+                     <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists>
                       <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                       <tr>
                         <td width="1%">
@@ -384,7 +395,9 @@ function toggleBillingAccount(box) {
                           <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                         </td>
                       </tr>
+                     </#if>
                     <#elseif paymentMethod.paymentMethodTypeId == "GIFT_CARD">
+                     <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists>
                       <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
 
                       <#if giftCard?has_content && giftCard.cardNumber?has_content>
@@ -412,11 +425,13 @@ function toggleBillingAccount(box) {
                           <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                         </td>
                       </tr>
+                     </#if>
                     </#if>
                   </#list>
                   </#if>
 
-                  <#-- special billing account functionality to allow use w/ a payment method -->
+                <#-- special billing account functionality to allow use w/ a payment method -->
+                <#if productStorePaymentMethodTypeIdMap.EXT_BILLACT?exists>
                   <#if billingAccountList?has_content>
                     <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                     <tr>
@@ -452,8 +467,10 @@ function toggleBillingAccount(box) {
                        </td>
                     </tr>
                   </#if>
-                  <#-- end of special billing account functionality -->
+                </#if>
+                <#-- end of special billing account functionality -->
 
+                <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td width="1%">
@@ -487,6 +504,7 @@ function toggleBillingAccount(box) {
                       <input type="text" size="6" class="inputBox" name="giftCardAmount" value="${(requestParameters.giftCardAmount)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
                     </td>
                   </tr>
+                </#if>
                 </table>
             </div>
         </div>
