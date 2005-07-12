@@ -68,7 +68,7 @@ import org.ofbiz.entity.GenericValue;
 public class RequestHandler implements Serializable {
 
     public static final String module = RequestHandler.class.getName();
-    public static final String err_resource = "ContentErrorUiLabels";
+    public static final String err_resource = "WebappUiLabels";
 
     public static RequestHandler getRequestHandler(ServletContext servletContext) {
         RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
@@ -262,8 +262,8 @@ public class RequestHandler implements Serializable {
                     if (tryErrorMsg != null) {
                         eventReturnString = "error";
                         Locale locale = UtilHttp.getLocale(request);
-                        String errMsg = UtilProperties.getMessage(RequestHandler.err_resource, "layoutEvents.error_call_event", locale);
-                        request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
+                        String errMsg = UtilProperties.getMessage(RequestHandler.err_resource, "requestHandler.error_call_event", locale);
+                        request.setAttribute("_ERROR_MESSAGE_", errMsg + ": " + e.toString());
                     } else {
                         throw new RequestHandlerException("Error calling event and no error repsonse was specified", e);
                     }
