@@ -57,6 +57,8 @@ context.put("returnReasons", returnReasons);
 if (orderId != null) {
     Map returnRes = dispatcher.runSync("getReturnableItems", UtilMisc.toMap("orderId", orderId));   
     context.put("returnableItems", returnRes.get("returnableItems"));
+    orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
+    context.put("orderHeader", orderHeader);
 }
 
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));   

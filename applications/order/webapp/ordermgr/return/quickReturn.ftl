@@ -35,6 +35,9 @@
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
           <input type="hidden" name="toPartyId" value="${toPartyId?if_exists}"/>
           <input type="hidden" name="order_id" value="${orderId}"/>
+          <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
+          <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}">
+          </#if>
           <table border="0" width="100%" cellpadding="2" cellspacing="0">
             <tr>
               <td colspan="7"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>/orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>

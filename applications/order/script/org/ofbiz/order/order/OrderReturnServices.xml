@@ -340,6 +340,9 @@
             <get-related-one value-name="orderHeader" relation-name="ProductStore" to-value-name="productStore"/>
             <field-to-field field-name="inventoryFacilityId" map-name="productStore" to-field-name="destinationFacilityId" to-map-name="createHeaderCtx"/>
         </if-empty>
+ 
+        <!-- copy over the currency of the order to the currency of the return -->
+        <field-to-field field-name="currencyUom" map-name="orderHeader" to-field-name="currencyUomId" to-map-name="createHeaderCtx"/>
 
         <call-service service-name="createReturnHeader" in-map-name="createHeaderCtx" include-user-login="true">
             <result-to-field result-name="returnId"/>

@@ -62,6 +62,27 @@
   </#if>
   <tr>
     <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingCurrency}</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%' class="tabletext">
+  <#if returnHeader?exists>
+      ${returnHeader.currencyUomId?if_exists}
+  <#else>
+     <select class="selectBox" name="currencyUomId">
+        <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
+          <option value="${orderHeader.currencyUom}" selected>${orderHeader.getRelatedOne("Uom").getString("description")}</option>
+        </#if>
+        <#if currencies?has_content>
+          <#list currencies as currency>
+            <option value="${currency.uomId}">${currency.description}</option>
+          </#list>
+        </#if>
+     </select>
+  </#if>
+    </td>                
+  </tr>
+  <tr>
+    <td width='14%'>&nbsp;</td>
     <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.OrderEntryDate}</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
