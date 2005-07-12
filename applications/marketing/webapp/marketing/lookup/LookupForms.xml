@@ -121,5 +121,126 @@
             <display/>
         </field>
     </form>
+
+   <form name="lookupParty" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupParty" title="" type="single">
+        <field name="partyId" >
+            <find/>
+        </field>
+        <field name="partyTypeId" >
+            <find/>
+        </field>
+        <field name="externalId" >
+            <find/>
+        </field>
+        <field name="createdDate" >
+            <date-find/>
+        </field>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listLookupParty" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-iterator-name="listIt" target="" paginate-target="/LookupParty" 
+        title="" type="list">
+        
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+
+        <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
+        </field>
+        <field name="partyTypeId">
+            <display/>
+        </field>
+        <field name="externalId">
+            <display/>
+        </field>
+        <field name="createdDate">
+            <display/>
+        </field>
+    </form>
+
+   <form name="listLookupRoleType" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-iterator-name="listIt" target="" paginate-target="/LookupRoleType" 
+        title="" type="list">
+        <entity-and entity-name="RoleType">
+        </entity-and>
+        
+        <field name="roleTypeId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${roleTypeId}" target="javascript:set_value('${roleTypeId}')"/>
+        </field>
+        <field name="parentTypeId">
+            <display/>
+        </field>
+        <field name="description">
+            <display/>
+        </field>
+    </form>
+ 
+
+   <form name="lookupGeo" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupGeo" title="" type="single">
+        <field name="geoId" >
+            <find/>
+        </field>
+       <field name="geoTypeId">
+            <drop-down>
+                <entity-options description="${description}" entity-name="GeoType" key-field-name="geoTypeId">
+                </entity-options>
+            </drop-down>
+        </field>
+ 
+        <field name="geoName" >
+            <find/>
+        </field>
+        <field name="geoCode" >
+            <find/>
+        </field>
+        <field name="geoSecCode" >
+            <find/>
+        </field>
+        <field name="abbreviation" >
+            <find/>
+        </field>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listLookupGeo" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-iterator-name="listIt" target="" paginate-target="/LookupGeo" 
+        title="" type="list">
+        
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+
+        <field name="geoId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="javascript:set_value('${geoId}')"/>
+        </field>
+        <field name="geoName" >
+            <display/>
+        </field>
+        <field name="geoCode" >
+            <display/>
+        </field>
+        <field name="geoSecCode" >
+            <display/>
+        </field>
+        <field name="abbreviation" >
+            <display/>
+        </field>
+    </form>
+
     
 </forms>
