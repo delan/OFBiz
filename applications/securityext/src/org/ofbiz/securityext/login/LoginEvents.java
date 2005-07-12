@@ -607,11 +607,15 @@ public class LoginEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
-        autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
-        autoLoginCookie.setPath("/");
-        response.addCookie(autoLoginCookie);
-        return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
+        if (userLogin != null) {
+            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
+            autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
+            autoLoginCookie.setPath("/");
+            response.addCookie(autoLoginCookie);
+            return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
+        } else {
+            return "success";
+        }
     }
 
     public static String autoLoginRemove(HttpServletRequest request, HttpServletResponse response) {
