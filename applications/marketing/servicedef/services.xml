@@ -165,4 +165,46 @@
         <description>delete SegmentGroupClassification</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+   <!-- SegmentGroupGeo -->
+    <service name="createSegmentGroupGeo" engine="simple" default-entity-name="SegmentGroupGeo"
+            location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="createSegmentGroupGeo">
+        <description>create SegmentGroupGeo</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateSegmentGroupGeo" engine="simple" default-entity-name="SegmentGroupGeo"
+        location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="updateSegmentGroupGeo">
+        <description>update SegmentGroupGeo</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deleteSegmentGroupGeo" engine="simple" default-entity-name="SegmentGroupGeo"
+            location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="deleteSegmentGroupGeo">
+        <description>delete SegmentGroupGeo</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
+   <!-- SegmentGroupRole -->
+    <service name="createSegmentGroupRole" engine="simple" default-entity-name="SegmentGroupRole"
+            location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="createSegmentGroupRole">
+        <description>create SegmentGroupRole</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateSegmentGroupRole" engine="simple" default-entity-name="SegmentGroupRole"
+        location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="updateSegmentGroupRole">
+        <description>update SegmentGroupRole</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deleteSegmentGroupRole" engine="simple" default-entity-name="SegmentGroupRole"
+            location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="deleteSegmentGroupRole">
+        <description>delete SegmentGroupRole</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
+    
 </services>

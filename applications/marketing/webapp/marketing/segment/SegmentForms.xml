@@ -64,4 +64,41 @@
         <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>
 
+   <form name="listSegmentGroupGeo" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
+        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupGeo" title="" type="list">
+        <actions>
+        <entity-and entity-name="SegmentGroupGeo">
+            <field-map env-name="segmentGroupId" />
+        </entity-and>
+        </actions>
+        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
+            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroupGeo?segmentGroupId=${segmentGroupId}"/>
+        </field>
+        <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><display/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteSegmentGroupGeo?segmentGroupId=${segmentGroupId}&amp;geoId=${geoId}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+
+   <form name="listSegmentGroupRole" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
+        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupRole" title="" type="list">
+        <actions>
+        <entity-and entity-name="SegmentGroupRole">
+            <field-map env-name="segmentGroupId" />
+        </entity-and>
+        </actions>
+        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
+            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroupRole?segmentGroupId=${segmentGroupId}"/>
+        </field>
+        <field name="partyId" title="${uiLabelMap.SegmentGroupPartyId}"><display/></field>
+        <field name="roleTypeId" title="${uiLabelMap.SegmentGroupRoleTypeId}"><display/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteSegmentGroupRole?segmentGroupId=${segmentGroupId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+
 </forms>

@@ -310,6 +310,20 @@
         <response name="success" type="view" value="lookupPartyClassificationGroup"/>
     </request-map>
      
+    <request-map uri="LookupGeo">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="lookupGeo"/>
+    </request-map>
+
+    <request-map uri="LookupParty">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="lookupParty"/>
+    </request-map>
+
+    <request-map uri="LookupRoleType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="lookupRoleType"/>
+    </request-map>
      <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -338,5 +352,9 @@
     <view-map name="lookupSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupSegmentGroup"/>
     <view-map name="lookupProductStore" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupProductStore"/>
     <view-map name="lookupPartyClassificationGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupPartyClassificationGroup"/>
+
+    <view-map name="lookupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupGeo"/>
+    <view-map name="lookupParty" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupParty"/>
+    <view-map name="lookupRoleType" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupRoleType"/>
     <!-- end of view mappings -->
 </site-conf>
