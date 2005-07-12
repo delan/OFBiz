@@ -46,6 +46,8 @@ context.put("returnReasons", returnReasons);
 if (orderId != null) {
     Map returnRes = dispatcher.runSync("getReturnableItems", UtilMisc.toMap("orderId", orderId));   
     context.put("returnableItems", returnRes.get("returnableItems"));
+    orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
+    context.put("orderHeader", orderHeader);
 }
 
 //put in the return to party information from the order header
