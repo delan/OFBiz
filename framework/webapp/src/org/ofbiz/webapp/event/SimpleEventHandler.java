@@ -46,19 +46,8 @@ import org.ofbiz.minilang.SimpleMethod;
 public class SimpleEventHandler implements EventHandler {
 
     public static final String module = SimpleEventHandler.class.getName();
-    /**
-     * Contains the property file name for translation of error
-     * messages.
-     */
-    public static final String RESOURCE = "ContentErrorUiLabel";
-    /**
-     * Contains an error message.
-     */
-    private static String errMsg = "";
-    /**
-     * Language setting.
-     */
-    private static Locale locale;
+    /** Contains the property file name for translation of error messages. */
+    public static final String err_resource = "WebappUiLabels";
 
     /**
      * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
@@ -78,28 +67,25 @@ public class SimpleEventHandler implements EventHandler {
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         String xmlResource = eventPath;
         String eventName = eventMethod;
-        SimpleEventHandler.locale = UtilHttp.getLocale(request); 
+        Locale locale = UtilHttp.getLocale(request); 
         
         if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + xmlResource + " / " + eventName, module);
 
-        if (xmlResource == null)
+        if (xmlResource == null) {
             throw new EventHandlerException("XML Resource (eventPath) cannot be null");
-        if (eventName == null)
+        }
+        if (eventName == null) {
             throw new EventHandlerException("Event Name (eventMethod) cannot be null");
+        }
 
         Debug.logVerbose("[Processing]: SIMPLE Event", module);
         try {
             String eventReturn = SimpleMethod.runSimpleEvent(xmlResource, eventName, request, response);
-
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             return eventReturn;
         } catch (MiniLangException e) {
             Debug.logError(e, module);
-            SimpleEventHandler.errMsg = UtilProperties.getMessage(
-            SimpleEventHandler.RESOURCE,
-                    "simpleEventHandler.event_not_completed", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ": ";            
+            String errMsg = UtilProperties.getMessage(SimpleEventHandler.err_resource, "simpleEventHandler.event_not_completed", (locale != null ? locale : Locale.getDefault())) + ": ";            
             request.setAttribute("_ERROR_MESSAGE_", errMsg + e.getMessage());
             return "error";
         }

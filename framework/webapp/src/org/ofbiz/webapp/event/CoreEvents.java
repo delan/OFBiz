@@ -63,7 +63,7 @@ import org.ofbiz.service.calendar.RecurrenceRule;
 public class CoreEvents {
     
     public static final String module = CoreEvents.class.getName();
-    public static final String err_resource = "ContentErrorUiLabels";
+    public static final String err_resource = "WebappUiLabels";
 
     /**
      * Return success event. Used as a place holder for events.
@@ -207,7 +207,7 @@ public class CoreEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         Security security = (Security) request.getAttribute("security");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        //GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Locale locale = UtilHttp.getLocale(request);
         
         Map params = UtilHttp.getParameterMap(request);
@@ -489,9 +489,9 @@ public class CoreEvents {
     }
     
     public static String streamFile(HttpServletRequest request, HttpServletResponse response) {
-        RequestHandler rh = (RequestHandler) request.getAttribute("_REQUEST_HANDLER_");
+        //RequestHandler rh = (RequestHandler) request.getAttribute("_REQUEST_HANDLER_");
         String filePath = RequestHandler.getNextPageUri(request.getPathInfo());
-        String fileName = filePath.substring(filePath.lastIndexOf("/")+1);
+        //String fileName = filePath.substring(filePath.lastIndexOf("/")+1);
         
         // load the file
         File file = new File(filePath);
