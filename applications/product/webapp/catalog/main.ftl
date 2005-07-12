@@ -55,7 +55,7 @@
             <input type="submit" value=" ${uiLabelMap.ProductEditProduct}" class="smallSubmit"/>
           </form>
           <div class="tabletext"> ${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewProduct}</a></div>
-          <div class="tabletext"> ${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>/CreateVirtualWithVariantsForm</@ofbizUrl>" class="buttontext">Quick Create Virtual from Variants</a></div>
+          <div class="tabletext"> ${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>/CreateVirtualWithVariantsForm</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductQuickCreateVirtualFromVariants}</a></div>
         <br/>
           <div class="tabletext"> ${uiLabelMap.ProductFindProductWithIdValue}:</div>
           <form method="post" action="<@ofbizUrl>/FindProductById</@ofbizUrl>" style="margin: 0;">
