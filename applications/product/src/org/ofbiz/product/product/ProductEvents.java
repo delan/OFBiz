@@ -1213,14 +1213,13 @@ public class ProductEvents {
 
     /** 
      * If ProductStore.requireCustomerRole == Y then the loggedin user must be associated with the store in the customer role.
-     * This event method should be included in a chained request following the "login" request-map of the controller.xml file for this to work in customer facing ecommerce sites.
+     * This event method is called from the ProductEvents.storeCheckLogin and ProductEvents.storeLogin
      * 
      * @param request
      * @param response
      * @return String with response, maybe "success" or "error" if logged in user is not associated with the ProductStore in the CUSTOMER role.
      */
     public static String checkStoreCustomerRole(HttpServletRequest request, HttpServletResponse response) {
-        Debug.logInfo("Running checkStoreCustomerRole", module);
         HttpSession session = request.getSession();
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");

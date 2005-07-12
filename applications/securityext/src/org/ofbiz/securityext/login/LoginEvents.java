@@ -48,6 +48,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.party.contact.ContactHelper;
+import org.ofbiz.product.product.ProductEvents;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
@@ -108,7 +109,7 @@ public class LoginEvents {
 
     /**
      * An HTTP WebEvent handler that checks to see is a userLogin is logged in.
-     * If not, the user is forwarded to the /login.jsp page.
+     * If not, the user is forwarded to the login page.
      *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
@@ -269,10 +270,10 @@ public class LoginEvents {
     /**
      * An HTTP WebEvent handler that logs out a userLogin by clearing the session.
      *
-     * @param request The HTTP request object for the current JSP or Servlet request.
-     * @param response The HTTP response object for the current JSP or Servlet request.
-     * @return Return a boolean which specifies whether or not the calling Servlet or
-     *        JSP should generate its own content. This allows an event to override the default content.
+     * @param request The HTTP request object for the current request.
+     * @param response The HTTP response object for the current request.
+     * @return Return a boolean which specifies whether or not the calling request
+     *        should generate its own content. This allows an event to override the default content.
      */
     public static String logout(HttpServletRequest request, HttpServletResponse response) {
         // run the before-logout events
@@ -710,5 +711,23 @@ public class LoginEvents {
         }
 
         return true;
+    }
+
+    public static String storeCheckLogin(HttpServletRequest request, HttpServletResponse response) {
+        String responseString = LoginEvents.checkLogin(request, response);
+        if ("error".equals(responseString)) {
+            return responseString;
+        }
+        // if we are logged in okay, do the check store customer role
+        return ProductEvents.checkStoreCustomerRole(request, response);
+    }
+    
+    public static String storeLogin(HttpServletRequest request, HttpServletResponse response) {
+        String responseString = LoginEvents.login(request, response);
+        if ("error".equals(responseString)) {
+            return responseString;
+        }
+        // if we logged in okay, do the check store customer role
+        return ProductEvents.checkStoreCustomerRole(request, response);
     }
 }
