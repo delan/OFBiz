@@ -39,8 +39,13 @@
         <td width="54%">
           <textarea name="note" class="textAreaBox" rows="5" cols="70"></textarea>
         </td>
-        <td>*</td>
+      </tr> 
+      <tr> 
+         <td/><td class="tabletext">${uiLabelMap.OrderInternalNote} : 
+	 <select class="selectBox" name="internalNote" size="1"><option value=""></option><option value="Y" selected>${uiLabelMap.CommonYes}</option><option value="N">${uiLabelMap.CommonNo}</option></select></td>
       </tr>
+      <tr>
+	 <td/><td class="tabletext"><i>${uiLabelMap.OrderInternalNoteMessage}</i></td>
     </table>
   </form>
 

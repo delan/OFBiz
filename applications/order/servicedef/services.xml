@@ -324,6 +324,7 @@
         <description>Create a note item and associate with a order header</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="note" type="String" mode="IN"/>
+        <attribute name="internalNote" type="String" mode="IN"/>
     </service>
 
     <!-- Order (digital) Fulfillment Services -->

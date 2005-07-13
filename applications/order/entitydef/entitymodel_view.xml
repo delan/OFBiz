@@ -342,6 +342,7 @@
       <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
       <alias entity-alias="OD" name="orderId"/>
+      <alias entity-alias="OD" name="internalNote"/>
       <alias entity-alias="ND" name="noteId"/>
       <alias entity-alias="ND" name="noteName"/>
       <alias entity-alias="ND" name="noteInfo"/>

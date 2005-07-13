@@ -2214,6 +2214,7 @@ public class OrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String noteString = (String) context.get("note");
         String orderId = (String) context.get("orderId");
+        String internalNote = (String) context.get("internalNote");
         Map noteCtx = UtilMisc.toMap("note", noteString, "userLogin", userLogin);
         Locale locale = (Locale) context.get("locale");
 
@@ -2231,7 +2232,7 @@ public class OrderServices {
 
         // Set the order info
         try {
-            Map fields = UtilMisc.toMap("orderId", orderId, "noteId", noteId);
+            Map fields = UtilMisc.toMap("orderId", orderId, "noteId", noteId, "internalNote", internalNote);
             GenericValue v = delegator.makeValue("OrderHeaderNote", fields);
 
             delegator.create(v);

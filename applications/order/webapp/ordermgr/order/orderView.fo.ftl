@@ -236,8 +236,9 @@ Here is a good place to put boilerplate terms and conditions for a purchase orde
                     </fo:table-row>
                     </#if>
            </#list>
+
            <#-- summary of order amounts --> 
-                       <fo:table-row>
+                    <fo:table-row>
                         <fo:table-cell></fo:table-cell>
                         <fo:table-cell number-columns-spanned="2"><fo:block font-weight="bold">${uiLabelMap.OrderItemsSubTotal}</fo:block></fo:table-cell>
                         <fo:table-cell text-align="right"><fo:block><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></fo:block></fo:table-cell>
@@ -270,6 +271,35 @@ Here is a good place to put boilerplate terms and conditions for a purchase orde
                         <fo:table-cell text-align="right"><fo:block><@ofbizCurrency amount=grandTotal isoCode=currencyUomId/></fo:block></fo:table-cell>
                     </fo:table-row>
                   </#if>
+
+           <#-- notes -->
+           <#if orderNotes?has_content>
+                   <fo:table-row >
+                       <fo:table-cell number-columns-spanned="3">
+                           <fo:block font-weight="bold">${uiLabelMap.OrderNotes}</fo:block>
+                       </fo:table-cell>    
+                   </fo:table-row>    
+                <#list orderNotes as note>
+                 <#if (note.internalNote?has_content) && (note.internalNote != "Y")>
+                    <fo:table-row>
+                        <fo:table-cell number-columns-spanned="6">
+                            <fo:block><fo:leader leader-length="19cm" leader-pattern="rule" /></fo:block>    
+                        </fo:table-cell>
+                    </fo:table-row>
+                    <fo:table-row>
+                      <fo:table-cell number-columns-spanned="1">
+                        <fo:block>${note.noteInfo?if_exists}</fo:block>    
+                    </fo:table-cell>
+                       <fo:table-cell number-columns-spanned="2">
+                        <fo:block>${uiLabelMap.CommonBy}: ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</fo:block>    
+                    </fo:table-cell>
+                       <fo:table-cell number-columns-spanned="1">
+                        <fo:block>${uiLabelMap.CommonAt}: ${note.noteDateTime?string?if_exists}</fo:block>    
+                    </fo:table-cell>
+                  </fo:table-row>
+                  </#if>                  
+                  </#list>
+            </#if>
             </fo:table-body>
     </fo:table>    
     </#if>

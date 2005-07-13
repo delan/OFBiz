@@ -330,6 +330,7 @@
             title="Order Header Note Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="noteId" type="id-ne"></field>
+      <field name="internalNote" type="indicator"></field>
       <prim-key field="orderId"/>
       <prim-key field="noteId"/>
       <relation type="one" fk-name="ORDER_HDRNT_HDR" rel-entity-name="OrderHeader">
