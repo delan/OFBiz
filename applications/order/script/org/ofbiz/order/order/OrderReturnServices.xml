@@ -279,15 +279,16 @@
         </iterate>
         <if-compare field-name="allReceived" operator="equals" value="true">
           <!-- update the return header -->
-          <string-to-field field-name="statusId" map-name="returnHeader" string="RETURN_RECEIVED"/>
-          <store-value value-name="returnHeader"/>
+          <string-to-field field-name="statusId" map-name="returnHeaderCtx" string="RETURN_RECEIVED"/>
+          <field-to-field field-name="returnId" map-name="returnHeader" to-map-name="returnHeaderCtx"/>
+          <call-service service-name="updateReturnHeader" in-map-name="returnHeaderCtx"/>
           <!-- create the status history -->
           <make-value entity-name="ReturnStatus" value-name="newValue"/>
           <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
           <env-to-field env-name="returnStatusId" map-name="newValue"/>
 
           <field-to-field field-name="returnId" map-name="returnHeader" to-map-name="newValue"/>
-          <field-to-field field-name="statusId" map-name="returnHeader" to-map-name="newValue"/>
+          <string-to-field string="RETURN_RECEIVED" field-name="statusId" map-name="newValue"/>
 
           <now-timestamp-to-env env-name="nowTimestamp"/>
           <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
