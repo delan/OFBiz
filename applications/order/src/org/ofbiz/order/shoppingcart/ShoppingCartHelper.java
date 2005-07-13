@@ -515,7 +515,7 @@ public class ShoppingCartHelper {
                         if (quoteUnitPrice > 0) {
                             sci.setBasePrice(quoteUnitPrice);
                         }
-                        this.cart.addItem(0, sci);
+                        this.cart.addItemToEnd(sci);
                         noItems = false;
                     } catch (CartItemModifyException e) {
                         errorMsgs.add(e.getMessage());
