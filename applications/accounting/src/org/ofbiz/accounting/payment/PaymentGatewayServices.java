@@ -421,18 +421,19 @@ public class PaymentGatewayServices {
         }
 
         // get some contact info.
-        GenericValue billToParty = orh.getBillToParty();
+        GenericValue billToPersonOrGroup = orh.getBillToParty();
         GenericValue billToEmail = null;
-        Collection emails = emails = ContactHelper.getContactMech(billToParty, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
 
-        if (emails != null && emails.size() > 0) {
+        Collection emails = ContactHelper.getContactMech(billToPersonOrGroup.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
+
+        if (UtilValidate.isNotEmpty(emails)) {
             billToEmail = (GenericValue) emails.iterator().next();
         }
 
-        toContext.put("billToParty", billToParty);
+        toContext.put("billToParty", billToPersonOrGroup);
         toContext.put("billToEmail", billToEmail);
 
-        return billToParty.getString("partyId");
+        return billToPersonOrGroup.getString("partyId");
     }
 
     /**
@@ -1040,7 +1041,6 @@ public class PaymentGatewayServices {
         serviceContext.put("serviceResultMap", result);
         serviceContext.put("userLogin", userLogin);
 
-        Map serviceResult = null;
         try {
             dispatcher.runAsync("processPaymentServiceError", serviceContext);
         } catch (GenericServiceException e) {
@@ -1983,7 +1983,6 @@ public class PaymentGatewayServices {
      */
     public static Map alwaysApproveProcessor(DispatchContext dctx, Map context) {
         Map result = new HashMap();
-        Double processAmount = (Double) context.get("processAmount");
         long nowTime = new Date().getTime();
         Debug.logInfo("Test Processor Approving Credit Card", module);
 
