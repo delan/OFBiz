@@ -41,13 +41,31 @@
         </tr>
     </table>
 
+	<#if showWsdl?exists && showWsdl = true>
+	    <br>
+		<table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxtop'>
+            <tr>
+                <td><div class='boxhead'>WSDL Service definition</div></td>
+            </tr>
+        </table>
+        <table border=0 width='100%' cellspacing='0' cellpadding='5' class='boxoutside'>
+            <tr>
+               <td align="center"><form><textarea class="textAreaBox" rows="20" cols="85" name="wsdloutput">${selectedServiceMap.wsdl}</textarea></form></td>
+            </tr>
+            <tr>
+               <td align="center"><a href='<@ofbizUrl>/${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>' class='buttontext'>Back</a></td>
+            </tr>
+        </table>
+    <#else>
+
+	
     <table border=0 width='100%' cellspacing='5' cellpadding='5' class='tabletext'>
         <tr>
             <td width='10%'>&nbsp;</td>
             <td align='left' valign='top'><br>
                 <b>Service Name:</b>&nbsp;${selectedServiceMap.serviceName}<br>
                 <b>Description:</b>&nbsp;${selectedServiceMap.description}<br>
-                <b>Exportable:</b>&nbsp;${selectedServiceMap.export}<br>
+                <b>Exportable:</b>&nbsp;${selectedServiceMap.export}<#if selectedServiceMap.export = "True">&nbsp;(<a href='<@ofbizUrl>/${url}?sel_service_name=${selectedServiceMap.serviceName}&show_wsdl=true</@ofbizUrl>' class='buttontext'>Show wsdl</a>)</#if><br>
             <td width='10' align='left'>&nbsp;</td>
             <td align='left' valign='top'><br>
                 <b>Engine Name:</b>&nbsp;<a href='<@ofbizUrl>/${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>' class='buttontext'>${selectedServiceMap.engineName}</a><br>
@@ -276,7 +294,8 @@
         </table>
         <br>
     </#list>
-
+	</#if>
+	
 <#-- No Service selected , we list all-->
 <#elseif servicesList?exists && servicesList?has_content>
 

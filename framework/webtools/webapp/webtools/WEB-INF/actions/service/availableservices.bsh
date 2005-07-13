@@ -24,7 +24,10 @@
 */
 
 import java.util.*;
+import javax.wsdl.WSDLException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.service.eca.ServiceEcaUtil;
 import org.ofbiz.service.ModelPermGroup;
 import org.ofbiz.service.ModelPermission;
@@ -467,8 +470,22 @@ if(selectedService != null && selectedService.length() > 0){
         }
         curServiceMap.put("allParamsList", allParamsList);
     }
+    
+    showWsdl = request.getParameter("show_wsdl");
+    if(showWsdl == null || showWsdl.length() == 0){
+    	showWsdl = request.getAttribute("show_wsdl");
+    }
+    
+    if(showWsdl != null && showWsdl.equals("true")) {
+    	try {
+    		wsdl = curServiceModel.toWSDL("http://" + request.getServerName() + ":" + UtilProperties.getPropertyValue("url.properties", "port.http", "80") + (String) request.getAttribute("_CONTROL_PATH_") + "/SOAPService");
+    		curServiceMap.put("wsdl", UtilXml.writeXmlDocument(wsdl));
+    	} catch (WSDLException ex) {
+    		curServiceMap.put("wsdl", ex.getLocalizedMessage());
+    	}
+    	context.put("showWsdl", Boolean.TRUE);
+    }
     context.put("selectedServiceMap", curServiceMap);
-
 }
 
 
