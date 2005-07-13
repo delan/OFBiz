@@ -57,12 +57,20 @@
                     <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonBy}: </b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</div>
                     <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonAt}: </b>${note.noteDateTime?string?if_exists}</div>
                   </td>
-                  <td align="left" valign="top" width="65%">
+                  <td align="left" valign="top" width="55%">
                     <div class="tabletext">${note.noteInfo?if_exists}</div>
+                  </td>
+                  <td align="right" valign="top" width="10%">
+			<#if note.internalNote?if_exists == "N">
+	                    <div class="tabletext">${uiLabelMap.OrderPrintableNote}</div>
+	                </#if>    
+			<#if note.internalNote?if_exists == "Y">
+	                    <div class="tabletext">${uiLabelMap.OrderNotPrintableNote}</div>
+	                </#if>    
                   </td>
                 </tr>
                 <#if note_has_next>          
-                  <tr><td colspan="2"><hr class="sepbar"></td></tr>
+                  <tr><td colspan="3"><hr class="sepbar"></td></tr>
                 </#if>
               </#list>
             </table>
