@@ -303,7 +303,14 @@
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="request" value="orderentry"/>
+        <response name="survey" type="view" value="survey"/>
         <response name="error" type="request" value="orderentry"/>
+    </request-map>
+    <request-map uri="additemsurvey">
+        <security https="false" auth="false"/>
+        <event type="service" invoke="createSurveyResponse"/>
+        <response name="success" type="request" value="additem"/>
+        <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="addRequirementsToCart">
         <security https="true" auth="true"/>
@@ -989,6 +996,7 @@
     <view-map name="ordertasklist" type="screen" page="component://order/widget/ordermgr/OrderTaskScreens.xml#OrderTaskList"/>
     <view-map name="viewimage" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#ViewImage"/>
 
+    <view-map name="survey" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#survey"/>
     <view-map name="showcart" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#ShowCart"/>
     <view-map name="checkinits" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#CheckInits"/>
     <view-map name="orderagreements" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#OrderAgreements"/>
