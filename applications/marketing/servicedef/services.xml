@@ -152,7 +152,6 @@
         <description>create SegmentGroupClassification</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="fromDate" optional="true"/>
     </service>
     <service name="updateSegmentGroupClassification" engine="simple" default-entity-name="SegmentGroupClassification"
         location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="updateSegmentGroupClassification">
@@ -172,7 +171,6 @@
         <description>create SegmentGroupGeo</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="fromDate" optional="true"/>
     </service>
     <service name="updateSegmentGroupGeo" engine="simple" default-entity-name="SegmentGroupGeo"
         location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="updateSegmentGroupGeo">
@@ -192,7 +190,6 @@
         <description>create SegmentGroupRole</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="fromDate" optional="true"/>
     </service>
     <service name="updateSegmentGroupRole" engine="simple" default-entity-name="SegmentGroupRole"
         location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="updateSegmentGroupRole">
@@ -206,5 +203,17 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
-    
+    <!-- SegmentGroup Related Find Service -->
+    <service name="findPartiesInSegmentGroup" engine="simple"
+        location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="findPartiesInSegmentGroup">
+        <description>Find Parties In a SegmentGroup</description>
+        <attribute name="segmentGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyIdList" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="findSegmentGroupsOfParty" engine="simple"
+        location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="findSegmentGroupsOfParty">
+        <description>Find SegmentGroups Of a Party</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="segmentGroupIdList" type="List" mode="OUT" optional="true"/>
+    </service>
 </services>
