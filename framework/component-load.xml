@@ -26,14 +26,11 @@
 
 <component-loader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/component-loader.xsd">
-
     <load-component component-location="${ofbiz.home}/framework/minerva"/>
     <load-component component-location="${ofbiz.home}/framework/jotm"/>
     <load-component component-location="${ofbiz.home}/framework/entity"/>
     <load-component component-location="${ofbiz.home}/framework/catalina"/>
-    <!--
-    <load-component component-location="${ofbiz.home}/framework/jetty"/>
-    -->
+    <!-- <load-component component-location="${ofbiz.home}/framework/jetty"/> -->
     <load-component component-location="${ofbiz.home}/framework/security"/>
     <load-component component-location="${ofbiz.home}/framework/datafile"/>
     <load-component component-location="${ofbiz.home}/framework/minilang"/>
@@ -49,4 +46,5 @@
     <load-component component-location="${ofbiz.home}/framework/shark"/>
     <load-component component-location="${ofbiz.home}/framework/webtools"/>
     <load-component component-location="${ofbiz.home}/framework/images"/>
+    <!-- <load-component component-location="${ofbiz.home}/framework/example"/> -->
 </component-loader>
