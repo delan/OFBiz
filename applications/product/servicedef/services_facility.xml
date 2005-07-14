@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
     <description>Product Component Services</description>
     <vendor>OFBiz</vendor>
@@ -47,7 +47,7 @@
         <attribute name="availableToPromiseTotal" type="Double" mode="IN" optional="true"/>
         <attribute name="quantityOnHandTotal" type="Double" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="updateInventoryItem" default-entity-name="InventoryItem" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryItem" auth="true">
         <description>Update an InventoryItem</description>
@@ -120,6 +120,13 @@
         <description>Get Inventory Availability for a Product constrained by a containerId</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="containerId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
+    </service>
+    <service name="getInventoryAvailableByItem" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
+        <description>Get Inventory Availability for an InventoryItem</description>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
         <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
     </service>
@@ -577,7 +584,7 @@
             location="org/ofbiz/product/inventory/StockMoveServices.xml" invoke="findStockMovesNeeded">
         <description>
             Find all Stock Moves that need to be done.
-            This service differs from the inventory transfer services in that it does not require 
+            This service differs from the inventory transfer services in that it does not require
             sufficient availableToPromise to move the stock, in fact it is generally triggered because
             some promised inventory is in a bulk location and needs to be moved to a pick location.
         </description>
