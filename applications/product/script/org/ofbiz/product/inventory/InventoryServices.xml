@@ -25,7 +25,7 @@
  * Created on April 2, 2002
  -->
 
-<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- InventoryItem methods -->
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
@@ -61,7 +61,7 @@
             </then>
         </if>
     </simple-method>
-    
+
     <simple-method method-name="updateInventoryItem" short-description="Update an InventoryItem">
         <check-permission permission="CATALOG" action="_UPDATE">
             <alt-permission permission="FACILITY" action="_UPDATE"/>
@@ -89,7 +89,7 @@
     <simple-method method-name="updateInventoryItemFromDetail" short-description="Update an InventoryItem From the Associated Detail Records" login-required="false">
         <entity-one entity-name="InventoryItem" value-name="inventoryItem"/>
         <entity-one entity-name="InventoryItemDetailSummary" value-name="inventoryItemDetailSummary"/>
-        
+
         <env-to-env env-name="inventoryItemDetailSummary.availableToPromiseTotal" to-env-name="inventoryItem.availableToPromiseTotal"/>
         <env-to-env env-name="inventoryItemDetailSummary.quantityOnHandTotal" to-env-name="inventoryItem.quantityOnHandTotal"/>
         <store-value value-name="inventoryItem"/>
@@ -310,6 +310,7 @@
         <log level="info" message="foo foo: "><string value="Getting inventory available to promise count; productId is: "/><field field-name="productId" map-name="parameters"/></log>
         -->
 
+        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
@@ -409,7 +410,7 @@
                     <then>
                         <get-related value-name="item" relation-name="OrderItemShipGrpInvRes" list-name="relatedRes"/>
                         <!--<list-to-list list-name="relatedRes" to-list-name="reservations"/>-->
-                        
+
                         <iterate list-name="relatedRes" entry-name="oneRelatedRes">
                             <if>
                                 <condition>
@@ -435,7 +436,7 @@
 
             <list-to-list list-name="privilegedReservations" to-list-name="allReservations"/>
             <list-to-list list-name="reservations" to-list-name="allReservations"/>
-            
+
             <iterate list-name="allReservations" entry-name="oisgir">
                 <!-- cancel the reservation -->
                 <field-to-field field-name="orderId" map-name="oisgir" to-map-name="cancelOisgirMap"/>

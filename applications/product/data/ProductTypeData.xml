@@ -358,5 +358,6 @@
     <VarianceReason varianceReasonId="VAR_STOLEN" description="Stolen"/>
     <VarianceReason varianceReasonId="VAR_FOUND" description="Found"/>
     <VarianceReason varianceReasonId="VAR_DAMAGED" description="Damaged"/>
+    <VarianceReason varianceReasonId="VAR_INTEGR" description="Integration"/>  
     <VarianceReason varianceReasonId="VAR_SAMPLE" description="Sample (Giveaway)"/>
 </entity-engine-xml>
