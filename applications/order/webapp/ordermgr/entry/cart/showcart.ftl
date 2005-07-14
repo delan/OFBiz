@@ -199,7 +199,7 @@ function gwAll(e) {
       <table cellspacing="0" cellpadding="1" border="0">
         <tr>
           <td>&nbsp;</td>
-          <td>
+          <td colspan="2">
             <div class="tabletext">
               <b>${uiLabelMap.ProductProduct}</b>
               <#if showOrderGiftWrap?default("true") == "true">
@@ -226,7 +226,7 @@ function gwAll(e) {
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures()>
           <tr><td colspan="8"><hr class="sepbar"></td></tr>
-          <tr>
+          <tr valign="top">
             <td>&nbsp;</td>         
             <td>
           <table border="0">
@@ -250,6 +250,7 @@ function gwAll(e) {
                     <#-- this is a non-product item -->
                     <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
                   </#if>
+                    <#-- display the item's features -->
                    <#assign features = "">
                    <#if cartLine.getFeaturesForSupplier(dispatcher,shoppingCart.getPartyId())?has_content>
                        <#assign features = cartLine.getFeaturesForSupplier(dispatcher, shoppingCart.getPartyId())>
@@ -259,7 +260,13 @@ function gwAll(e) {
                    <#if features?has_content>
                      <br/><i>${uiLabelMap.ProductFeatures}: <#list features as feature>${feature.description?default("")} </#list></i>
                    </#if>
-                    
+                    <#-- show links to survey response for this item -->
+                    <#if cartLine.getAttribute("surveyResponses")?has_content>
+                        <br/>Surveys: 
+                       <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
+                        <a href="/content/control/ViewSurveyResponse?surveyResponseId=${surveyResponseId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${surveyResponseId}</a> 
+                       </#list>
+                    </#if>
                 </div>
             </td></tr>
             <#if cartLine.getRequirementId()?has_content>
