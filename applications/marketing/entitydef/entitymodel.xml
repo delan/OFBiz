@@ -259,6 +259,31 @@
         <field name="description" type="description"></field>
         <prim-key field="segmentGroupTypeId"/>
     </entity>
+    <view-entity entity-name="SegmentGroupViewRelatedParties" package-name="org.ofbiz.marketing.segment">
+        <member-entity entity-alias="SGR" entity-name="SegmentGroupRole"/>
+        <member-entity entity-alias="SGRTO" entity-name="SegmentGroupRole"/>
+        <alias-all entity-alias="SGR"/>
+        <alias-all entity-alias="SGRTO" prefix="to">
+            <exclude field="segmentGroupId"/>
+        </alias-all>
+        <view-link entity-alias="SGR" rel-entity-alias="SGRTO">
+            <key-map field-name="segmentGroupId"/>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="SegmentGroupViewRelatedPartiesClass" package-name="org.ofbiz.marketing.segment">
+        <member-entity entity-alias="SGR" entity-name="SegmentGroupRole"/>
+        <member-entity entity-alias="SGC" entity-name="SegmentGroupClassification"/>
+        <member-entity entity-alias="PC" entity-name="PartyClassification"/>
+        <alias-all entity-alias="SGR"/>
+        <alias-all entity-alias="SGC"/>
+        <alias-all entity-alias="PC" prefix="to"/>
+        <view-link entity-alias="SGR" rel-entity-alias="SGC">
+            <key-map field-name="segmentGroupId"/>
+        </view-link>
+        <view-link entity-alias="SGC" rel-entity-alias="PC">
+            <key-map field-name="partyClassificationGroupId"/>
+        </view-link>
+    </view-entity>
     
     <!-- ========================================================= -->
     <!-- org.ofbiz.marketing.tracking -->

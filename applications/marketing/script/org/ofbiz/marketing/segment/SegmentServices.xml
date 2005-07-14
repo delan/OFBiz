@@ -135,4 +135,74 @@
         <entity-one entity-name="SegmentGroupRole" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+
+    <!-- SegmentGroup Related Find Service -->
+    <simple-method method-name="findPartiesInSegmentGroup" short-description="Find Parties In a SegmentGroup">
+        <!--
+            Determined by: 
+            SegmentGroup -> SegmentGroupRole -> Party
+            OR
+            SegmentGroup -> SegmentGroupClassification -> PartyClassificationGroup -> PartyClassification -> Party
+         -->
+        <string-to-field string="_VIEW" field-name="securityAction"/>
+        <check-permission permission="MARKETING" action="${securityAction}"><fail-message message="Security Error\: to run ${methodShortDescription} you must have the MARKETING${securityAction} or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+    </simple-method>
+    <simple-method method-name="findSegmentGroupsOfParty" short-description="Find SegmentGroups Of a Party (that a Party is In)">
+        <!-- Follows same path as findPartiesInSegmentGroup, but in reverse... -->
+        <string-to-field string="_VIEW" field-name="securityAction"/>
+        <check-permission permission="MARKETING" action="${securityAction}"><fail-message message="Security Error\: to run ${methodShortDescription} you must have the MARKETING${securityAction} or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+    </simple-method>
+    <simple-method method-name="arePartiesRelatedThroughSegmentGroup" short-description="Determine: are Parties Related Through SegmentGroup?">
+        <!--
+            The parties can be related through:
+            Party -> SegmentGroupRole -> SegmentGroup -> SegmentGroupRole -> Party
+            OR
+            Party -> SegmentGroupRole -> SegmentGroup -> SegmentGroupClassification -> PartyClassificationGroup -> PartyClassification -> Party
+        -->
+        <string-to-field string="_VIEW" field-name="securityAction"/>
+        <check-permission permission="MARKETING" action="${securityAction}"><fail-message message="Security Error\: to run ${methodShortDescription} you must have the MARKETING${securityAction} or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <entity-condition entity-name="SegmentGroupViewRelatedParties" list-name="segmentGroupViewRelatedPartiesList">
+            <condition-list combine="and">
+                <condition-expr field-name="partyId" env-name="parameters.partyId"/>
+                <condition-expr field-name="roleTypeId" env-name="parameters.roleTypeId" ignore-if-empty="true"/>
+                <condition-expr field-name="toPartyId" env-name="parameters.toPartyId"/>
+                <condition-expr field-name="toRoleTypeId" env-name="parameters.toRoleTypeId" ignore-if-empty="true"/>
+            </condition-list>
+        </entity-condition>
+        <entity-condition entity-name="SegmentGroupViewRelatedPartiesClass" list-name="segmentGroupViewRelatedPartiesClassList">
+            <condition-list combine="and">
+                <condition-expr field-name="partyId" env-name="parameters.partyId"/>
+                <condition-expr field-name="roleTypeId" env-name="parameters.roleTypeId" ignore-if-empty="true"/>
+                <condition-expr field-name="toPartyId" env-name="parameters.toPartyId"/>
+                <condition-expr field-name="toFromDate" operator="less-equals" env-name="nowTimestamp"/>
+                <condition-list combine="or">
+                    <condition-expr field-name="toThruDate" operator="equals" env-name="nullField"/>
+                    <condition-expr field-name="toThruDate" operator="greater-equals" env-name="nowTimestamp"/>
+                </condition-list>
+            </condition-list>
+        </entity-condition>
+        <if>
+            <condition>
+                <and>
+                    <if-empty field-name="segmentGroupViewRelatedPartiesList"/>
+                    <if-empty field-name="segmentGroupViewRelatedPartiesClassList"/>
+                </and>
+            </condition>
+            <then>
+                <string-to-field string="N" field-name="areRelated"/>
+                <field-to-result field-name="areRelated"/>
+            </then>
+            <else>
+                <string-to-field string="Y" field-name="areRelated"/>
+                <field-to-result field-name="areRelated"/>
+            </else>
+        </if>
+    </simple-method>
 </simple-methods>
