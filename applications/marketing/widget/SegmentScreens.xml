@@ -144,13 +144,13 @@
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="listSegmentGroupClass"/>
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
                 <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId"/>
-                <entity-one entity-name="SegmentGroup" value-name="segmentGroup"/>
+                <entity-one entity-name="SegmentGroupClassification" value-name="segmentGroupClassification"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSegmentGroupDecorator">
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleEditSegmentGroup}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupCreate}]" target="/viewSegmentGroup" style="tabletext"/>
+                        <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupClassCreate}]" target="/viewSegmentGroupClass?segmentGroupId=${segmentGroupId}" style="tabletext"/>
                         <include-form name="EditSegmentGroupClass" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -158,6 +158,56 @@
         </section>
     </screen>
     
+    
+    <screen name="EditSegmentGroupGeo">
+        <section>
+            <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitleEditSegmentGroupGeo"/>
+                <set field="tabButtonItem" value="viewSegmentGroupGeo"/>
+                <set field="labelTitleProperty" value="PageTitleEditSegmentGroupGeo"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewSegmentGroupGeo"/>
+                <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
+                <set field="geoId" from-field="parameters.geoId"/>
+                <entity-one entity-name="SegmentGroupGeo" value-name="segmentGroupGeo"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSegmentGroupDecorator">
+                    <decorator-section name="body">
+                        <label style="head1">${uiLabelMap.PageTitleEditSegmentGroupGeo}</label>
+                        <include-form name="EditSegmentGroupGeo" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="EditSegmentGroupRole">
+        <section>
+            <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitleEditSegmentGroupRole"/>
+                <set field="tabButtonItem" value="viewSegmentGroupRole"/>
+                <set field="labelTitleProperty" value="PageTitleEditSegmentGroupRole"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewSegmentGroupRole"/>
+                <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="roleTypeId" from-field="parameters.roleTypeId"/>
+                <entity-one entity-name="SegmentGroupRole" value-name="segmentGroupRole"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSegmentGroupDecorator">
+                    <decorator-section name="body">
+                        <label style="head1">${uiLabelMap.PageTitleEditSegmentGroupRole}</label>
+                        <include-form name="EditSegmentGroupRole" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <!-- SegmentGroupClass list Screen -->
     <screen name="listSegmentGroupClass">
         <section>
@@ -172,11 +222,12 @@
                 <set field="title" value="Lookup Segment"/>
                 <set field="titleProperty" value="PageTitleFindSegmentGroup"/>
                 <set field="headerItem" value="find"/>
-                <set field="tabButtonItem" value="LookupSegmentGroup"/>
-                <set field="entityName" value="SegmentGroup"/>
+                <set field="tabButtonItem" value="LookupSegmentGroupClass"/>
+                <set field="entityName" value="SegmentGroupClassification"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://marketing/widget/CommonScreens.xml">
@@ -188,8 +239,8 @@
                             </condition>
                             <widgets>
                                 <label style="head1">${uiLabelMap.PageTitleListSegmentGroupClass}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupClassCreate}]" target="/viewSegmentGroupClass" style="tabletext"/>
-                                <include-form name="listSegmentGroupClass" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
+                                <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupClassCreate}]" target="/viewSegmentGroupClass?segmentGroupId=${segmentGroupId}" style="tabletext"/>
+                                <include-form name="listSegmentGroupClass" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.SegmentGroupMgrViewPermissionError}</label>
@@ -201,6 +252,93 @@
         </section>
     </screen>
     
+    <!-- SegmentGroupGeo list Screen -->
+    <screen name="listSegmentGroupGeo">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="title" value="Lookup Segment"/>
+                <set field="titleProperty" value="PageTitleFindSegmentGroup"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="LookupSegmentGroupGeo"/>
+                <set field="entityName" value="SegmentGroupGeo"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://marketing/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="MARKETING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <label style="head1">${uiLabelMap.PageTitleListSegmentGroupClass}</label>
+                                <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupGeoCreate}]" target="/viewSegmentGroupGeo?segmentGroupId=${segmentGroupId}" style="tabletext"/>
+                                <include-form name="listSegmentGroupGeo" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.SegmentGroupMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SegmentGroupRole list Screen -->
+    <screen name="listSegmentGroupRole">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="title" value="Lookup Segment"/>
+                <set field="titleProperty" value="PageTitleFindSegmentGroupRole"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="LookupSegmentGroupRole"/>
+                <set field="entityName" value="SegmentGroupRole"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://marketing/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="MARKETING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <label style="head1">${uiLabelMap.PageTitleListSegmentGroupClass}</label>
+                                <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupRoleCreate}]" target="/viewSegmentGroupRole?segmentGroupId=${segmentGroupId}" style="tabletext"/>
+                                <include-form name="listSegmentGroupRole" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.SegmentGroupMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <!-- ProductStore Lookup Screen -->
     <screen name="lookupProductStore">
         <section>
@@ -305,7 +443,7 @@
             <widgets>
                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                 <decorator-section name="body">
-                    <!-- <include-form name="lookupGeo" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>-->
+                    <include-form name="lookupGeo" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                     <include-form name="listLookupGeo" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                 </decorator-section>
               </decorator-screen>

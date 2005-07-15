@@ -55,24 +55,6 @@
         
     </form>
      
-   <form name="listSegmentGroupClass" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupClass" title="" type="list">
-        <actions>
-        <entity-and entity-name="SegmentGroupClassification">
-            <field-map env-name="segmentGroupId" />
-        </entity-and>
-        </actions>
-        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
-        </field>
-        <field name="partyClassificationGroupId" title="${uiLabelMap.SegmentGroupPartyClassificationGroupId}"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="deleteSegmentGroupClass?segmentGroupId=${segmentGroupId}&amp;partyClassificationGroupId=${partyClassificationGroupId}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
-        </field>
-    </form>
-    
     <form name="lookupProductStore" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProductStore" title="" type="single">
@@ -83,8 +65,12 @@
         default-tooltip-style="tabletext" default-widget-style="display"
         list-iterator-name="listIt" target="" paginate-target="/LookupProductStore" 
         title="" type="list">
-        <entity-and entity-name="ProductStore">
-        </entity-and>
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         
         <!-- <auto-fields-entity entity-name="ProductStore" default-field-type="display"/> -->
         
@@ -105,11 +91,15 @@
         default-tooltip-style="tabletext" default-widget-style="display"
         list-iterator-name="listIt" target="" paginate-target="/LookupPartyClassificationGroup" 
         title="" type="list">
-        <entity-and entity-name="PartyClassificationGroup">
-        </entity-and>
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         
         <field name="partyClassificationGroupId" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${partyClassificationGroupId}" target="javascript:set_value('${productStoreId}')"/>
+            <hyperlink also-hidden="false" target-type="plain" description="${partyClassificationGroupId}" target="javascript:set_value('${partyClassificationGroupId}')"/>
         </field>
         <field name="partyClassificationTypeId">
             <display/>
@@ -126,13 +116,13 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupParty" title="" type="single">
         <field name="partyId" >
-            <find/>
+            <text-find/>
         </field>
         <field name="partyTypeId" >
-            <find/>
+            <text-find/>
         </field>
         <field name="externalId" >
-            <find/>
+            <text-find/>
         </field>
         <field name="createdDate" >
             <date-find/>
@@ -170,8 +160,12 @@
         default-tooltip-style="tabletext" default-widget-style="display"
         list-iterator-name="listIt" target="" paginate-target="/LookupRoleType" 
         title="" type="list">
-        <entity-and entity-name="RoleType">
-        </entity-and>
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         
         <field name="roleTypeId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${roleTypeId}" target="javascript:set_value('${roleTypeId}')"/>
@@ -189,26 +183,26 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupGeo" title="" type="single">
         <field name="geoId" >
-            <find/>
+            <text-find/>
         </field>
        <field name="geoTypeId">
-            <drop-down>
+            <drop-down allow-empty="true" >
                 <entity-options description="${description}" entity-name="GeoType" key-field-name="geoTypeId">
                 </entity-options>
             </drop-down>
         </field>
  
         <field name="geoName" >
-            <find/>
+            <text-find/>
         </field>
         <field name="geoCode" >
-            <find/>
+            <text-find/>
         </field>
         <field name="geoSecCode" >
-            <find/>
+            <text-find/>
         </field>
         <field name="abbreviation" >
-            <find/>
+            <text-find/>
         </field>
         <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
