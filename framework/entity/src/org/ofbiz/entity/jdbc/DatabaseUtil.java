@@ -312,7 +312,7 @@ public class DatabaseUtil {
 
                 if (addMissing) {
                     // create the table
-                    String errMsg = createTable(entity, modelEntities, false, datasourceInfo.usePkConstraintNames, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, datasourceInfo.alwaysUseConstraintKeyword, datasourceInfo.tableType);
+                    String errMsg = createTable(entity, modelEntities, false);
                     if (errMsg != null && errMsg.length() > 0) {
                         message = "Could not create table \"" + entity.getTableName(datasourceInfo) + "\": " + errMsg;
                         Debug.logError(message, module);
@@ -1268,7 +1268,7 @@ public class DatabaseUtil {
 
     /* ====================================================================== */
 
-    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred, boolean alwaysUseConstraintKeyword, String tableType) {
+    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks) {
         if (entity == null) {
             return "ModelEntity was null and is required to create a table";
         }
@@ -1288,7 +1288,7 @@ public class DatabaseUtil {
         }
 
         StringBuffer sqlBuf = new StringBuffer("CREATE TABLE ");
-        sqlBuf.append(entity.getTableName(datasourceInfo));
+        sqlBuf.append(entity.getTableName(this.datasourceInfo));
         sqlBuf.append(" (");
         Iterator fieldIter = entity.getFieldsIterator();
         while (fieldIter.hasNext()) {
@@ -1301,8 +1301,22 @@ public class DatabaseUtil {
             sqlBuf.append(field.getColName());
             sqlBuf.append(" ");
             sqlBuf.append(type.getSqlType());
+
+            if("String".equals(type.getJavaType()) || "java.lang.String".equals(type.getJavaType())) {
+                // if there is a characterSet, add the CHARACTER SET arg here
+                if (UtilValidate.isNotEmpty(this.datasourceInfo.characterSet)) {
+                    sqlBuf.append(" CHARACTER SET ");
+                    sqlBuf.append(this.datasourceInfo.characterSet);
+                }
+                // if there is a collate, add the COLLATE arg here
+                if (UtilValidate.isNotEmpty(this.datasourceInfo.collate)) {
+                    sqlBuf.append(" COLLATE ");
+                    sqlBuf.append(this.datasourceInfo.collate);
+                }
+            }
+
             if (field.getIsPk()) {
-                if (alwaysUseConstraintKeyword) {
+                if (this.datasourceInfo.alwaysUseConstraintKeyword) {
                     sqlBuf.append(" CONSTRAINT NOT NULL, ");
                 } else {
                     sqlBuf.append(" NOT NULL, ");
@@ -1312,9 +1326,8 @@ public class DatabaseUtil {
             }
         }
 
-        String pkName = makePkConstraintName(entity, constraintNameClipLength);
-
-        if (usePkConstraintNames) {
+        String pkName = makePkConstraintName(entity, this.datasourceInfo.constraintNameClipLength);
+        if (this.datasourceInfo.usePkConstraintNames) {
             sqlBuf.append("CONSTRAINT ");
             sqlBuf.append(pkName);
         }
@@ -1340,7 +1353,7 @@ public class DatabaseUtil {
                         continue;
                     }
 
-                    String fkConstraintClause = makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle, useFkInitiallyDeferred);
+                    String fkConstraintClause = makeFkConstraintClause(entity, modelRelation, relModelEntity, this.datasourceInfo.constraintNameClipLength, this.datasourceInfo.fkStyle, this.datasourceInfo.useFkInitiallyDeferred);
                     if (UtilValidate.isNotEmpty(fkConstraintClause)) {
                         sqlBuf.append(", ");
                         sqlBuf.append(fkConstraintClause);
@@ -1354,9 +1367,21 @@ public class DatabaseUtil {
         sqlBuf.append(")");
         
         // if there is a tableType, add the TYPE arg here
-        if (UtilValidate.isNotEmpty(tableType)) {
+        if (UtilValidate.isNotEmpty(this.datasourceInfo.tableType)) {
             sqlBuf.append(" TYPE ");
-            sqlBuf.append(tableType);
+            sqlBuf.append(this.datasourceInfo.tableType);
+        }
+        
+        // if there is a characterSet, add the CHARACTER SET arg here
+        if (UtilValidate.isNotEmpty(this.datasourceInfo.characterSet)) {
+            sqlBuf.append(" CHARACTER SET ");
+            sqlBuf.append(this.datasourceInfo.characterSet);
+        }
+        
+        // if there is a collate, add the COLLATE arg here
+        if (UtilValidate.isNotEmpty(this.datasourceInfo.collate)) {
+            sqlBuf.append(" COLLATE ");
+            sqlBuf.append(this.datasourceInfo.collate);
         }
         
         if (Debug.verboseOn()) Debug.logVerbose("[createTable] sql=" + sqlBuf.toString(), module);
@@ -1473,6 +1498,20 @@ public class DatabaseUtil {
         sqlBuf.append(" ");
         sqlBuf.append(type.getSqlType());
 
+        if("String".equals(type.getJavaType()) || "java.lang.String".equals(type.getJavaType())) {
+            // if there is a characterSet, add the CHARACTER SET arg here
+            if (UtilValidate.isNotEmpty(this.datasourceInfo.characterSet)) {
+                sqlBuf.append(" CHARACTER SET ");
+                sqlBuf.append(this.datasourceInfo.characterSet);
+            }
+            
+            // if there is a collate, add the COLLATE arg here
+            if (UtilValidate.isNotEmpty(this.datasourceInfo.collate)) {
+                sqlBuf.append(" COLLATE ");
+                sqlBuf.append(this.datasourceInfo.collate);
+            }
+        }
+
         String sql = sqlBuf.toString();
         if (Debug.infoOn()) Debug.logInfo("[addColumn] sql=" + sql, module);
         try {
@@ -1480,7 +1519,28 @@ public class DatabaseUtil {
             stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
             // if that failed try the alternate syntax real quick
-            String sql2 = "ALTER TABLE " + entity.getTableName(datasourceInfo) + " ADD COLUMN " + field.getColName() + " " + type.getSqlType();
+            StringBuffer sql2Buf = new StringBuffer("ALTER TABLE ");
+            sql2Buf.append(entity.getTableName(datasourceInfo));
+            sql2Buf.append(" ADD COLUMN ");
+            sql2Buf.append(field.getColName());
+            sql2Buf.append(" ");
+            sql2Buf.append(type.getSqlType());
+            
+            if("String".equals(type.getJavaType()) || "java.lang.String".equals(type.getJavaType())) {
+                // if there is a characterSet, add the CHARACTER SET arg here
+                if (UtilValidate.isNotEmpty(this.datasourceInfo.characterSet)) {
+                    sql2Buf.append(" CHARACTER SET ");
+                    sql2Buf.append(this.datasourceInfo.characterSet);
+                }
+                
+                // if there is a collate, add the COLLATE arg here
+                if (UtilValidate.isNotEmpty(this.datasourceInfo.collate)) {
+                    sql2Buf.append(" COLLATE ");
+                    sql2Buf.append(this.datasourceInfo.collate);
+                }
+            }
+            
+            String sql2 = sql2Buf.toString();
             if (Debug.infoOn()) Debug.logInfo("[addColumn] sql failed, trying sql2=" + sql2, module);
             try {
                 stmt = connection.createStatement();
@@ -2387,7 +2447,6 @@ public class DatabaseUtil {
     }
 
     /* ====================================================================== */
-
     /* ====================================================================== */
     public int createForeignKeyIndices(ModelEntity entity, List messages) {
         return createForeignKeyIndices(entity, datasourceInfo.constraintNameClipLength, messages);
@@ -2615,7 +2674,132 @@ public class DatabaseUtil {
     }
 
     /* ====================================================================== */
+    /* ====================================================================== */
+    public void updateCharacterSetAndCollation(ModelEntity entity, List messages) {
+        if (entity instanceof ModelViewEntity) {
+            return;
+        }
+        if (UtilValidate.isEmpty(this.datasourceInfo.characterSet) && UtilValidate.isEmpty(this.datasourceInfo.collate)) {
+            messages.add("Not setting character-set and collate for entity [" + entity.getEntityName() + "], options not specified in the datasource definition in the entityengine.xml file.");
+            return;
+        }
 
+        Connection connection = null;
+        
+        try {
+            Statement stmt = null;
+    
+            try {
+                connection = getConnection();
+            } catch (SQLException sqle) {
+                messages.add("Unable to esablish a connection with the database... Error was: " + sqle.toString());
+            } catch (GenericEntityException e) {
+                messages.add("Unable to esablish a connection with the database... Error was: " + e.toString());
+            }
+            if (connection == null) {
+                return;
+            }
+    
+            StringBuffer sqlTableBuf = new StringBuffer("ALTER TABLE ");
+            sqlTableBuf.append(entity.getTableName(this.datasourceInfo));
+            //sqlTableBuf.append("");
+            
+            // if there is a characterSet, add the CHARACTER SET arg here
+            if (UtilValidate.isNotEmpty(this.datasourceInfo.characterSet)) {
+                sqlTableBuf.append(" DEFAULT CHARACTER SET ");
+                sqlTableBuf.append(this.datasourceInfo.characterSet);
+            }
+            // if there is a collate, add the COLLATE arg here
+            if (UtilValidate.isNotEmpty(this.datasourceInfo.collate)) {
+                sqlTableBuf.append(" COLLATE ");
+                sqlTableBuf.append(this.datasourceInfo.collate);
+            }
+
+            if (Debug.verboseOn()) Debug.logVerbose("[updateCharacterSetAndCollation] character-set and collate sql=" + sqlTableBuf, module);
+    
+            try {
+                stmt = connection.createStatement();
+                stmt.executeUpdate(sqlTableBuf.toString());
+            } catch (SQLException sqle) {
+                String errMsg = "SQL Exception while executing the following:\n" + sqlTableBuf + "\nError was: " + sqle.toString();
+                messages.add(errMsg);
+                Debug.logError(errMsg, module);
+            } finally {
+                try {
+                    if (stmt != null)
+                        stmt.close();
+                } catch (SQLException sqle) {
+                    Debug.logError(sqle, module);
+                }
+            }
+    
+            Iterator fieldIter = entity.getFieldsIterator();
+            while (fieldIter.hasNext()) {
+                ModelField field = (ModelField) fieldIter.next();
+                ModelFieldType type = modelFieldTypeReader.getModelFieldType(field.getType());
+                if (type == null) {
+                    messages.add("Field type [" + type + "] not found for field [" + field.getName() + "] of entity [" + entity.getEntityName() + "], not creating table.");
+                    continue;
+                }
+                if(!"String".equals(type.getJavaType()) && !"java.lang.String".equals(type.getJavaType())) {
+                    continue;
+                }
+    
+                StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
+                sqlBuf.append(entity.getTableName(this.datasourceInfo));
+                sqlBuf.append(" MODIFY COLUMN ");
+                sqlBuf.append(field.getColName());
+                sqlBuf.append(" ");
+                sqlBuf.append(type.getSqlType());
+    
+                // if there is a characterSet, add the CHARACTER SET arg here
+                if (UtilValidate.isNotEmpty(this.datasourceInfo.characterSet)) {
+                    sqlBuf.append(" CHARACTER SET ");
+                    sqlBuf.append(this.datasourceInfo.characterSet);
+                }
+                // if there is a collate, add the COLLATE arg here
+                if (UtilValidate.isNotEmpty(this.datasourceInfo.collate)) {
+                    sqlBuf.append(" COLLATE ");
+                    sqlBuf.append(this.datasourceInfo.collate);
+                }
+    
+                if (field.getIsPk()) {
+                    if (this.datasourceInfo.alwaysUseConstraintKeyword) {
+                        sqlBuf.append(" CONSTRAINT NOT NULL");
+                    } else {
+                        sqlBuf.append(" NOT NULL");
+                    }
+                }
+    
+                if (Debug.verboseOn()) Debug.logVerbose("[updateCharacterSetAndCollation] character-set and collate sql=" + sqlBuf, module);
+                try {
+                    stmt = connection.createStatement();
+                    stmt.executeUpdate(sqlBuf.toString());
+                } catch (SQLException sqle) {
+                    String errMsg = "SQL Exception while executing the following:\n" + sqlBuf + "\nError was: " + sqle.toString();
+                    messages.add(errMsg);
+                    Debug.logError(errMsg, module);
+                } finally {
+                    try {
+                        if (stmt != null)
+                            stmt.close();
+                    } catch (SQLException sqle) {
+                        Debug.logError(sqle, module);
+                    }
+                }
+            }
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException sqle) {
+                Debug.logError(sqle, module);
+            }
+        }
+    }
+    
+    /* ====================================================================== */
     /* ====================================================================== */
     public static class ColumnCheckInfo {
         public String tableName;

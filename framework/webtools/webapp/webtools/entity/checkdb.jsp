@@ -112,12 +112,19 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
             dbUtil.deleteDeclaredIndices(modelEntity, messages);
         }
+    } else if ("updateCharsetCollate".equals(option)) {
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+            String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.updateCharacterSetAndCollation(modelEntity, messages);
+        }
     }
     miter = messages.iterator();
   }
 %>
 
-<H3>Check/Update Database</H3>
+<h3>Check/Update Database</h3>
 
 <form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="checkupdatetables"/>
@@ -155,7 +162,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
  //-->
 </script>
 
-<H3>Remove All Tables</H3>
+<h3>Remove All Tables</h3>
 <form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>" name="TablesRemoveForm">
   <input type="hidden" name="option" value="removetables"/>
   Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
@@ -163,7 +170,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <input type="button" value="Enable" onClick="enableTablesRemove();"/>
 </form>
 
-<H3>Create/Remove All Primary Keys</H3>
+<h3>Create/Remove All Primary Keys</h3>
 <form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="createpks"/>
   Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
@@ -175,7 +182,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <input type="submit" value="Remove"/>
 </form>
 
-<H3>Create/Remove All Declared Indices</H3>
+<h3>Create/Remove All Declared Indices</h3>
 <form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="createidx"/>
   Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
@@ -187,7 +194,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <input type="submit" value="Remove"/>
 </form>
 
-<H3>Create/Remove All Foreign Keys</H3>
+<h3>Create/Remove All Foreign Keys</h3>
 <p>NOTE: Foreign keys may also be created in the Check/Update database operation if the check-fks-on-start and other options on the datasource element are setup to do so.</p>
 <form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="createfks"/>
@@ -200,6 +207,13 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <input type="submit" value="Remove"/>
 </form>
 
+<h3>Update character-set and collate (based on settings on datasource in entityengine.xml)</h3>
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="updateCharsetCollate"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Update"/>
+</form>
+
 <hr>
 <ul>
 <%while (miter != null && miter.hasNext()) {%>
@@ -208,6 +222,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <%}%>
 </ul>
 <%} else {%>
-<H3>Entity Editor</H3>
-ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
+<h3>Entity Editor</h3>
+<div>ERROR: You do not have permission to use this page (ENTITY_MAINT needed)</div>
 <%}%>
