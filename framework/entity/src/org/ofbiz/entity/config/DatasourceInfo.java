@@ -79,6 +79,8 @@ public class DatasourceInfo {
     public boolean aliasViews = true;
     public boolean alwaysUseConstraintKeyword = false;
     public String tableType = null;
+    public String characterSet = null;
+    public String collate = null;
 
     public DatasourceInfo(Element element) {
         this.name = element.getAttribute("name");
@@ -107,6 +109,8 @@ public class DatasourceInfo {
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for always-use-constraint-keyword (false)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for table-type (none)", module);
+            Debug.logWarning("datasource def not found with name " + this.name + ", using default for character-set (none)", module);
+            Debug.logWarning("datasource def not found with name " + this.name + ", using default for collate (none)", module);
         } else {
             schemaName = datasourceElement.getAttribute("schema-name");
             // anything but false is true
@@ -148,7 +152,9 @@ public class DatasourceInfo {
             aliasViews = !"false".equals(datasourceElement.getAttribute("alias-view-columns"));
             // anything but true is false
             alwaysUseConstraintKeyword = "true".equals(datasourceElement.getAttribute("always-use-constraint-keyword"));
-            tableType = datasourceElement.getAttribute("table-type");
+            this.tableType = datasourceElement.getAttribute("table-type");
+            this.characterSet = datasourceElement.getAttribute("character-set");
+            this.collate = datasourceElement.getAttribute("collate");
         }
         if (fkStyle == null || fkStyle.length() == 0) fkStyle = "name_constraint";
         if (joinStyle == null || joinStyle.length() == 0) joinStyle = "ansi";
