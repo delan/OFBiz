@@ -121,6 +121,7 @@
     <ProductAssocType description="Incompatable" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
     <ProductAssocType description="New Version, Replacement" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_OBSOLESCENCE"/>
     <ProductAssocType description="Marketing Package Component" hasTable="N" parentTypeId="" productAssocTypeId="MARKETING_PACKAGE"/>
+    <ProductAssocType description="Marketing Package Auto Explode Component" hasTable="N" parentTypeId="" productAssocTypeId="MARKETING_PKG_AUTO"/>
     <ProductAssocType description="Actual Product Component" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPONENT"/>
     <ProductAssocType description="Equivalent or Substitute" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
     <ProductAssocType description="Product Variant" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_VARIANT"/>
