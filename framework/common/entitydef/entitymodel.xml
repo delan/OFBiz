@@ -305,7 +305,7 @@
             package-name="org.ofbiz.common.status"
             title="Status Entity" default-resource-name="CommonEntityLabels">
       <field name="statusId" type="id-ne"></field>
-      <field name="statusTypeId" type="id"></field>
+      <field name="statusTypeId" type="id-ne"></field>
       <field name="statusCode" type="short-varchar"></field>
       <field name="sequenceId" type="id"></field>
       <field name="description" type="description"></field>
