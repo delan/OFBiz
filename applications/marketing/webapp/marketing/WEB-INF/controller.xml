@@ -218,21 +218,21 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="listSegmentGroupClass"/>
     </request-map>
-    <request-map uri="createSegmentGroupClass">
+    <request-map uri="createSegmentGroupClassification">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createSegmentGroupClass"/>
+        <event type="service" path="" invoke="createSegmentGroupClassification"/>
         <response name="success" type="view" value="viewSegmentGroupClass"/>
         <response name="error" type="view" value="viewSegmentGroupClass"/>
     </request-map>
-    <request-map uri="updateSegmentGroupClass">
+    <request-map uri="updateSegmentGroupClassification">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateSegmentGroupClass"/>
+        <event type="service" path="" invoke="updateSegmentGroupClassification"/>
         <response name="success" type="view" value="viewSegmentGroupClass"/>
         <response name="error" type="view" value="viewSegmentGroupClass"/>
     </request-map>
-   <request-map uri="deleteSegmentGroupClass">
+   <request-map uri="deleteSegmentGroupClassification">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteSegmentGroupClass"/>
+        <event type="service" path="" invoke="deleteSegmentGroupClassification"/>
         <response name="success" type="view" value="listSegmentGroupClass"/>
         <response name="error" type="view" value="listSegmentGroupClass"/>
     </request-map>
