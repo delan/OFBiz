@@ -442,6 +442,8 @@
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductInventoryItems.ftl"/></html>
                         </platform-specific>
+                        <container><label style="head1">${uiLabelMap.ProductOutstandingPurchaseOrders}</label></container>
+                        <include-form name="OutstandingPurchaseOrders" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

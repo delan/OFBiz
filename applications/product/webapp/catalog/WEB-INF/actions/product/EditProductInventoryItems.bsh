@@ -72,6 +72,7 @@ findIncomingShipmentsConds.add(new EntityConditionList(findIncomingShipmentsType
 findIncomingShipmentsStatusConds = new LinkedList();
 findIncomingShipmentsStatusConds.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_DELIVERED"));
 findIncomingShipmentsStatusConds.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+findIncomingShipmentsStatusConds.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PURCH_SHIP_RECEIVED"));
 findIncomingShipmentsConds.add(new EntityConditionList(findIncomingShipmentsStatusConds, EntityOperator.AND));
 
 findIncomingShipmentsStatusCondition = new EntityConditionList(findIncomingShipmentsConds, EntityOperator.AND);
@@ -207,12 +208,24 @@ while (outgoingProductionRunsIter.hasNext()) {
 		outgoingProductionRunList = new LinkedList();
 		quantitySummary.put("outgoingProductionRunList", outgoingProductionRunList);
 	}
-	
 	outgoingProductionRunList.add(outgoingProductionRun);
 }
 
 showEmpty = "true".equals(request.getParameter("showEmpty"));
 
+// Find oustanding purchase orders for this item.  The orders and the items cannot be completed, cancelled, or rejected
+purchaseOrderConditions = UtilMisc.toList(new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"),
+        new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"),
+        new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
+        new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED"),
+        new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"),
+        new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
+purchaseOrderConditions.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+purchaseOrderConditions.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+purchaseOrders = delegator.findByCondition("OrderHeaderAndItems", new EntityConditionList(purchaseOrderConditions, EntityOperator.AND), 
+        null, UtilMisc.toList("estimatedDeliveryDate DESC", "orderDate"));
+
 context.put("productInventoryItems", productInventoryItems);
 context.put("quantitySummaryByFacility", quantitySummaryByFacility);
 context.put("showEmpty", showEmpty);
+context.put("purchaseOrders", purchaseOrders);
