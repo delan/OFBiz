@@ -34,7 +34,7 @@
         </actions>
         <auto-fields-entity entity-name="Product" default-field-type="hidden" />
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find default-value="equals"/></field>
-        <field name="productName" title="${uiLabelMap.ProductProductName}"><text-find default-value="equals"/></field>
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find default-value="equals"/></field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down>
                 <option key="" description=""/>
