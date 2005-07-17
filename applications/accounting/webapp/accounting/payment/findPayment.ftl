@@ -25,6 +25,7 @@
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#assign locale = requestAttributes.locale>
 
 <script language="JavaScript" type="text/javascript">
 <!-- //
