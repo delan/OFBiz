@@ -84,7 +84,7 @@ function lookupPayment() {
                     </#if>                                     
                     <option value="ANY">${uiLabelMap.AccountingAnyPaymentMethod}</option>                   
                     <#list paymentMethodTypes as paymentMethodType>
-                      <option value="${paymentMethodType.paymentMethodTypeId}">${paymentMethodType.description}</option>
+                      <option value="${paymentMethodType.paymentMethodTypeId}">${paymentMethodType.get("description",locale)}</option>
                     </#list>
                   </select>
                 </td>
@@ -212,7 +212,7 @@ function lookupPayment() {
               <td><a href="<@ofbizUrl>/editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>${payment.paymentId}</a></td>            
               <td><div class='tabletext'>${paymentType.description?default(paymentType.paymentTypeId?default(""))}</div></td>
               <td><div class='tabletext'>${paymentMethodType.description?if_exists}</div></td>
-              <td><div class='tabletext'>${statusItem.description?default("Not Set")}</div></td>
+              <td><div class='tabletext'>${statusItem.get("description",locale)?default("Not Set")}</div></td>
               <td><div class='tabletext'>${payment.partyIdFrom}</div></td>
               <td><div class='tabletext'>${payment.partyIdTo}</div></td>
               <td><div class='tabletext'>${(payment.effectiveDate?string)?if_exists}</div></td>

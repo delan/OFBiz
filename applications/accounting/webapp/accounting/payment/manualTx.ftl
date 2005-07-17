@@ -40,7 +40,7 @@
         <td width="5">&nbsp;</td>
         <td width='74%'>
           <#if paymentMethodType?has_content>
-            <div class="tabletext">${paymentMethodType.description}</div>
+            <div class="tabletext">${paymentMethodType.get("description",locale)}</div>
             <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}">
           <#else>
             <select name="paymentMethodTypeId" class="selectBox">

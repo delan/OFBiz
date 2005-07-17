@@ -79,7 +79,7 @@
       <td width="74%">
         <select class="selectBox" name="termTypeId">
           <#list termTypes as termType>
-          <option value="${termType.termTypeId}" <#if termData?has_content && termData.termTypeId?default("") == termType.termTypeId>SELECTED</#if>>${(termType.get("description", locale))?if_exists}</option>
+          <option value="${termType.termTypeId}" <#if termData?has_content && termData.termTypeId?default("") == termType.termTypeId>SELECTED</#if>>${(termType.get("description",locale))?if_exists}</option>
           </#list>
         </select>
       *</td>

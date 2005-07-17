@@ -151,7 +151,7 @@
             </#if>
             <option value="${(inventoryTransfer.statusId)?if_exists}">${(curStatusItem.description)?if_exists}</option>
             <#list statusItems as statusItem>
-            <option value="${(statusItem.statusId)?if_exists}">${(statusItem.description)?if_exists}</option>
+            <option value="${(statusItem.statusId)?if_exists}">${(statusItem.get("description",locale))?if_exists}</option>
             </#list>
         </select>
         </td>

@@ -48,7 +48,7 @@
   <tr>
     <td><div class="tabletext">${payment.paymentId?if_exists}</div></td>
     <td><div class="tabletext">${paymentMethodType.description?default("N/A")}</div></td>
-    <td><div class="tabletext">${(statusItem.description)?if_exists}</div></td>
+    <td><div class="tabletext">${(statusItem.get("description",locale))?if_exists}</div></td>
     <td><div class="tabletext">${payment.invoiceId}</div></td>
     <td><div class="tabletext">${payment.invoiceItemSeqId?default("N/A")}</div></td>
     <td><div class="tabletext">${payment.billingAccountId?default("N/A")}</div></td>

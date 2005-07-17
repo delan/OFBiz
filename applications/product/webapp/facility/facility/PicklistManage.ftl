@@ -46,7 +46,7 @@
                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                         <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
                         <select name="statusId" class="smallSelect">
-                            <option value="${picklistInfo.statusItem.statusId}" selected>${picklistInfo.statusItem.description}</option>
+                            <option value="${picklistInfo.statusItem.statusId}" selected>${picklistInfo.statusItem.get("description",locale)}</option>
                             <option value="${picklistInfo.statusItem.statusId}">---</option>
                             <#list picklistInfo.statusValidChangeToDetailList as statusValidChangeToDetail>
                                 <option value="${statusValidChangeToDetail.statusIdTo}">${statusValidChangeToDetail.description} (${statusValidChangeToDetail.transitionName})</option>
@@ -90,7 +90,7 @@
                 <#-- PicklistStatusHistory -->
                 <#list picklistInfo.picklistStatusHistoryInfoList?if_exists as picklistStatusHistoryInfo>
                     <div class="tabletext" style="margin-left: 15px;">
-                        <b>Status</b> change from ${picklistStatusHistoryInfo.statusItem.description} 
+                        <b>Status</b> change from ${picklistStatusHistoryInfo.statusItem.get("description",locale)} 
                         to ${picklistStatusHistoryInfo.statusItemTo.description} 
                         on ${picklistStatusHistoryInfo.picklistStatusHistory.changeDate} 
                         by ${picklistStatusHistoryInfo.picklistStatusHistory.changeUserLoginId}

@@ -84,7 +84,7 @@
 
     <entity entity-name="Enumeration"
             package-name="org.ofbiz.common.enum"
-            title="Enumeration Entity">
+            title="Enumeration Entity" default-resource-name="CommonEntityLabels">
       <field name="enumId" type="id-ne"></field>
       <field name="enumTypeId" type="id-ne"></field>
       <field name="enumCode" type="short-varchar"></field>

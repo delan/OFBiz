@@ -342,7 +342,7 @@ document.lookuporder.order_id.focus();
               <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orh.getCurrency()/></div></td>
 
               <td>&nbsp;</td>
-              <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
+              <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>
               <td>
                 <#if partyId != "_NA_">

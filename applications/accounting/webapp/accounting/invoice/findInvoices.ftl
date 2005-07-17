@@ -183,7 +183,7 @@ document.lookupinvoice.invoiceId.focus();
               
               <td align="right"><div class="tabletext">${invoiceTotal?default(0.00)}</div></td>
               <td>&nbsp;</td>
-              <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
+              <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext"><nobr>${invoice.invoiceDate?default("N/A").toString()}</nobr></div></td>                            
               <td align='right'>
                 <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${uiLabelMap.CommonView}</a>

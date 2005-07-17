@@ -78,7 +78,7 @@
 <td>
 <ul>
 <#list paymentMethodTypes as paymentMethodType>
-<li><a href="<@ofbizUrl>/findPayment?lookupFlag=Y&paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">Show ${paymentMethodType.description} Payments</a></li>
+<li><a href="<@ofbizUrl>/findPayment?lookupFlag=Y&paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">Show ${paymentMethodType.get("description",locale)} Payments</a></li>
 </#list>
 </ul>
 </td>

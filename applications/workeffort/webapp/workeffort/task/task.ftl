@@ -90,7 +90,7 @@
                       <option value='${(currentStatusItem.statusId)?default("CAL_NEEDS_ACTION")}'>${(currentStatusItem.description)?if_exists}</option>
                       <option value=''></option>
                       <#list taskStatusItems as statusItem>
-                        <option value='${statusItem.statusId}'>${statusItem.description}</option>
+                        <option value='${statusItem.statusId}'>${statusItem.get("description",locale)}</option>
                       </#list>
                     </select>
                     <#if workEffort?has_content>

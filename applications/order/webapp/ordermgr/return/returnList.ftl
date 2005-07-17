@@ -53,7 +53,7 @@
       </#if>
     </td>
     <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>None</#if></div></td>
-    <td><div class="tabletext">${statusItem.description}</div></td>   
+    <td><div class="tabletext">${statusItem.get("description",locale)}</div></td>   
   </tr>
   </#list>
 </table>

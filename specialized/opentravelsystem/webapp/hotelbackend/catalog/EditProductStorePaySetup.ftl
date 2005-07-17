@@ -42,7 +42,7 @@
       <#assign enum = setting.getRelatedOne("Enumeration")>      
       <tr>                  
         <td><div class="tabletext">${payMeth.description}</div></td>
-        <td><div class="tabletext">${enum.description}</div></td>
+        <td><div class="tabletext">${enum.get("description",locale)}</div></td>
         <td><div class="tabletext">${setting.paymentService?default("N/A")}</div></td>
         <td><div class="tabletext">${setting.paymentPropertiesPath?default("[global]")}</div></td>
         <td align="center" nowrap>
@@ -70,11 +70,11 @@
             <select name="paymentMethodTypeId" class="selectBox"> 
               <#if editSetting?has_content>
                 <#assign paymentMethodType = editSetting.getRelatedOne("PaymentMethodType")>
-                <option value="${editSetting.paymentMethodTypeId}">${paymentMethodType.description}</option>
+                <option value="${editSetting.paymentMethodTypeId}">${paymentMethodType.get("description",locale)}</option>
                 <option value="${editSetting.paymentMethodTypeId}">---</option>
               </#if>
               <#list paymentMethodTypes as paymentMethodType>
-                <option value="${paymentMethodType.paymentMethodTypeId}">${paymentMethodType.description}</option>
+                <option value="${paymentMethodType.paymentMethodTypeId}">${paymentMethodType.get("description",locale)}</option>
               </#list>
             </select>
           </td>
@@ -85,7 +85,7 @@
             <select name="paymentServiceTypeEnumId" class="selectBox"> 
               <#if editSetting?has_content>
                 <#assign enum = editSetting.getRelatedOne("Enumeration")>
-                <option value="${editSetting.paymentServiceTypeEnumId}">${enum.description}</option>
+                <option value="${editSetting.paymentServiceTypeEnumId}">${enum.get("description",locale)}</option>
                 <option value="${editSetting.paymentServiceTypeEnumId}">---</option>
               </#if>          
               <#list serviceTypes as type>
