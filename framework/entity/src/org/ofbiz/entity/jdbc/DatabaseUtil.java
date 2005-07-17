@@ -2058,7 +2058,11 @@ public class DatabaseUtil {
         // now add constraint clause
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
         sqlBuf.append(entity.getTableName(datasourceInfo));
-        sqlBuf.append(" DROP CONSTRAINT ");
+        if (datasourceInfo.dropFkUseForeignKeyKeyword) {
+            sqlBuf.append(" DROP FOREIGN KEY ");
+        } else {
+            sqlBuf.append(" DROP CONSTRAINT ");
+        }
         sqlBuf.append(relConstraintName);
 
         if (Debug.verboseOn()) Debug.logVerbose("[deleteForeignKey] sql=" + sqlBuf.toString(), module);

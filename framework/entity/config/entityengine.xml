@@ -54,7 +54,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     -->
 
     <delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false">
-        <group-map group-name="org.ofbiz" datasource-name="localmysql"/>
+        <group-map group-name="org.ofbiz" datasource-name="localderby"/>
     </delegator>
     <delegator name="default-no-eca" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" entity-eca-enabled="false" distributed-cache-clear-enabled="false">
         <group-map group-name="org.ofbiz" datasource-name="localderby"/>
@@ -230,6 +230,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             use-foreign-keys="true"
             join-style="ansi-no-parenthesis"
             alias-view-columns="true"
+            drop-fk-use-foreign-key-keyword="true"
             table-type="InnoDB"
             character-set="latin1"
             collate="latin1_general_cs">

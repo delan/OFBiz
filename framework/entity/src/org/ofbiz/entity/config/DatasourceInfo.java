@@ -78,6 +78,7 @@ public class DatasourceInfo {
     public String joinStyle = null;
     public boolean aliasViews = true;
     public boolean alwaysUseConstraintKeyword = false;
+    public boolean dropFkUseForeignKeyKeyword = false;
     public String tableType = null;
     public String characterSet = null;
     public String collate = null;
@@ -108,6 +109,7 @@ public class DatasourceInfo {
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-indices-on-start (false)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for always-use-constraint-keyword (false)", module);
+            Debug.logWarning("datasource def not found with name " + this.name + ", using default for drop-fk-use-foreign-key-keyword (false)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for table-type (none)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for character-set (none)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for collate (none)", module);
@@ -152,6 +154,8 @@ public class DatasourceInfo {
             aliasViews = !"false".equals(datasourceElement.getAttribute("alias-view-columns"));
             // anything but true is false
             alwaysUseConstraintKeyword = "true".equals(datasourceElement.getAttribute("always-use-constraint-keyword"));
+            dropFkUseForeignKeyKeyword = "true".equals(datasourceElement.getAttribute("drop-fk-use-foreign-key-keyword"));
+            
             this.tableType = datasourceElement.getAttribute("table-type");
             this.characterSet = datasourceElement.getAttribute("character-set");
             this.collate = datasourceElement.getAttribute("collate");
