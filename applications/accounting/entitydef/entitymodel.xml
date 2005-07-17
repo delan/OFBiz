@@ -2050,7 +2050,7 @@
     </entity>
     <entity entity-name="PaymentMethodType"
             package-name="org.ofbiz.accounting.payment"
-            title="Payment Method Type Entity">
+            title="PaymentMethodType Entity" default-resource-name="AccountingEntityLabels"> <!-- /* @author     <a href="mailto:jlr@les7arts.com">Jacques Le Roux</a> */ -->
       <field name="paymentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="defaultGlAccountId" type="id"></field>
@@ -2187,4 +2187,3 @@
       <prim-key field="merchantId"/>
     </entity>
 </entitymodel>
-

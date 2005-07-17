@@ -2,7 +2,7 @@
 <XPage>
     <Components>
         <Panel name="errorPanel" x="0" y="0" w="400" h="200" style="errorpanel" border="0" alignment="Center">
-            <Button w="400" h="200" name="closeBtn" style="error" content="&lt;html&gt;&lt;center&gt;CASH DRAWER IS OPEN&lt;/center&gt;&lt;/html&gt;" alignment="Center"/>
+            <Button w="400" h="200" name="closeBtn" style="error" content="CASH_DRAWER_IS_OPEN" alignment="Center"/>
         </Panel>
     </Components>
 </XPage>

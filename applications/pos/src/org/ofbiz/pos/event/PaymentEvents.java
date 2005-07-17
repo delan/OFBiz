@@ -29,9 +29,12 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.component.Input;
-import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.base.util.UtilProperties;
+
+import java.util.Locale;
+
 
 /**
  * 
@@ -74,7 +77,7 @@ public class PaymentEvents {
         } else if (paymentCheck == PosTransaction.EXTERNAL_PAYMENT) {
             if (ckInfo == null) {
                 input.setFunction("CHECK");
-                pos.getOutput().print(Output.REFNUM);
+                pos.getOutput().print(UtilProperties.getMessage("pos","REFNUM",Locale.getDefault()));
                 return;
             } else {
                 processExternalPayment(pos, "PERSONAL_CHECK", ckInfo[1]);
@@ -99,7 +102,7 @@ public class PaymentEvents {
         } else if (paymentCheck == PosTransaction.EXTERNAL_PAYMENT) {
             if (gcInfo == null) {
                 input.setFunction("GIFTCARD");
-                pos.getOutput().print(Output.REFNUM);
+                pos.getOutput().print(UtilProperties.getMessage("pos","REFNUM",Locale.getDefault()));
                 return;
             } else {
                 processExternalPayment(pos, "GIFT_CARD", gcInfo[1]);
@@ -125,7 +128,7 @@ public class PaymentEvents {
         } else if (paymentCheck == PosTransaction.EXTERNAL_PAYMENT) {
             if (crtInfo == null) {
                 input.setFunction("CREDIT");
-                pos.getOutput().print(Output.REFNUM);
+                pos.getOutput().print(UtilProperties.getMessage("pos","REFNUM",Locale.getDefault()));
                 return;
             } else {
                 processExternalPayment(pos, "CREDIT_CARD", crtInfo[1]);
@@ -136,13 +139,13 @@ public class PaymentEvents {
         // now for internal payment processing
         if (crtInfo == null) {
             input.setFunction("CREDIT");
-            pos.getOutput().print(Output.CREDNO);
+            pos.getOutput().print(UtilProperties.getMessage("pos","CREDNO",Locale.getDefault()));
         } else {
             Debug.log("Credit Func Info : " + crtInfo[1], module);
             if (msrInfo == null) {
                 if (UtilValidate.isCreditCard(input.value())) {
                     input.setFunction("MSRINFO");
-                    pos.getOutput().print(Output.CREDEX);
+                    pos.getOutput().print(UtilProperties.getMessage("pos","CREDEX",Locale.getDefault()));
                 } else {
                     Debug.log("Invalid card number - " + input.value(), module);
                     input.clearFunction("MSRINFO");
@@ -185,12 +188,12 @@ public class PaymentEvents {
                         pos.refresh();
                         break;
                     case 1: // card number only found
-                        pos.getOutput().print(Output.CREDEX);
+                        pos.getOutput().print(UtilProperties.getMessage("pos","CREDEX",Locale.getDefault()));
                         break;
                     default:
                         Debug.log("Hit the default switch case [" + allInfo + "] refreshing.", module);
                         input.clearFunction("MSRINFO");
-                        pos.getOutput().print(Output.CREDNO);
+                        pos.getOutput().print(UtilProperties.getMessage("pos","CREDNO",Locale.getDefault()));
                         break;
                 }
             }
@@ -218,7 +221,7 @@ public class PaymentEvents {
         Input input = pos.getInput();
         String refNum = input.value();
         if (refNum == null) {
-            pos.getOutput().print(Output.REFNUM);
+            pos.getOutput().print(UtilProperties.getMessage("pos","REFNUM",Locale.getDefault()));
             return;
         }
         input.clearInput();
@@ -275,7 +278,7 @@ public class PaymentEvents {
         if (UtilValidate.isNotEmpty(idx) && UtilValidate.isEmpty(sku)) {
             String refNum = pos.getInput().value();
             if (UtilValidate.isEmpty(refNum)) {
-                pos.getOutput().print(Output.REFNUM);
+                pos.getOutput().print(UtilProperties.getMessage("pos","REFNUM",Locale.getDefault()));
                 pos.getInput().setFunction("REFNUM");
             } else {
                 int index = -1;
@@ -295,7 +298,7 @@ public class PaymentEvents {
 
     public static synchronized void processSale(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
-        PosScreen.currentScreen.getOutput().print("Processing sale...");
+        PosScreen.currentScreen.getOutput().print(UtilProperties.getMessage("pos","Processing",Locale.getDefault()));
 
         if (trans.isEmpty()) {
             PosScreen newPos = pos.showPage("pospanel");

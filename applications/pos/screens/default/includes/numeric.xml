@@ -10,36 +10,36 @@
             <Button name="numFour" x="0" y="69" w="75" h="68" style="numButton" content="4" alignment="Center"/>
             <Button name="numFive" x="76" y="69" w="75" h="68" style="numButton" content="5" alignment="Center"/>
             <Button name="numSix" x="152" y="69" w="75" h="68" style="numButton" content="6" alignment="Center"/>
-            <Button name="menuEnter" x="228" y="69" w="75" h="206" style="numButton" content="ENT" alignment="Center"/>
+            <Button name="menuEnter" x="228" y="69" w="75" h="206" style="posButton" content="ENT" alignment="Center"/> 
             <Button name="numOne" x="0" y="138" w="75" h="68" style="numButton" content="1" alignment="Center"/>
             <Button name="numTwo" x="76" y="138" w="75" h="68" style="numButton" content="2" alignment="Center"/>
             <Button name="numThree" x="152" y="138" w="75" h="68" style="numButton" content="3" alignment="Center"/>
-            <Button name="menuClear" x="0" y="207" w="75" h="68" style="numButton" content="CLR" alignment="Center"/>
+            <Button name="menuClear" x="0" y="207" w="75" h="68" style="posButton" content="CLR" alignment="Center"/> 
             <Button name="numZero" x="76" y="207" w="75" h="68" style="numButton" content="0" alignment="Center"/>
             <Button name="numDZero" x="152" y="207" w="75" h="68" style="numButton" content="00" alignment="Center"/>
         </Panel>
 
         <!-- right side options -->
-        <Panel x="308" y="0" w="306" h="282" style="posButton">
+        <Panel x="245" y="0" w="381" h="282" style="posButton">
             <!--<Button x="0" y="0" w="75" h="68" style="posButton" content="" alignment="Center"/>-->
-            <Button name="" x="76" y="0" w="75" h="68" style="posButton" content="" alignment="Center"/>
-            <Button name="menuLogout" x="152" y="0" w="75" h="68" style="posButton" content="SIGN OUT" alignment="Center"/>
-            <Button name="menuLock" x="228" y="0" w="75" h="68" style="posButton" content="LOCK" alignment="Center"/>
+            <Button name="" x="76" y="0" w="95" h="68" style="posButton" content="" alignment="Center"/>
+            <Button name="menuLogout" x="172" y="0" w="95" h="68" style="posButton" content="SIGN_OUT" alignment="Center"/>
+            <Button name="menuLock" x="268" y="0" w="95" h="68" style="posButton" content="LOCK" alignment="Center"/>
 
             <!--<Button name="menuChgQty" x="0" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>-->
-            <Button name="menuQty" x="76" y="69" w="75" h="68" style="posButton" content="QTY" alignment="Center"/>
-            <Button name="menuChgQty" x="152" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>
-            <Button name="menuItemDisc" x="228" y="69" w="75" h="68" style="posButton" content="ITEM DISC" alignment="Center"/>
+            <Button name="menuQty" x="76" y="69" w="95" h="68" style="posButton" content="QTY" alignment="Center"/>
+            <Button name="menuChgQty" x="172" y="69" w="95" h="68" style="posButton" content="MOD" alignment="Center"/>
+            <Button name="menuItemDisc" x="268" y="69" w="95" h="68" style="posButton" content="ITEM_DISC" alignment="Center"/>
 
             <!--<Button name="menuVoidItem" x="0" y="138" w="75" h="68" style="posButton" content="" alignment="Center"/>-->
-            <Button name="menuVoidItem" x="76" y="138" w="75" h="68" style="posButton" content="VOID ITEM" alignment="Center"/>
-            <Button name="menuVoidAll" x="152" y="138" w="75" h="68" style="posButton" content="VOID SALE" alignment="Center"/>
-            <Button name="menuSaleDisc" x="228" y="138" w="75" h="68" style="posButton" content="SALE DISC" alignment="Center"/>
+            <Button name="menuVoidItem" x="76" y="138" w="95" h="68" style="posButton" content="VOID_ITEM" alignment="Center"/>
+            <Button name="menuVoidAll" x="172" y="138" w="95" h="68" style="posButton" content="VOID_SALE" alignment="Center"/>
+            <Button name="menuSaleDisc" x="268" y="138" w="95" h="68" style="posButton" content="SALE_DISC" alignment="Center"/>
 
             <!--<Button name="" x="0" y="207" w="75" h="68" style="posButton" content="" alignment="Center"/>-->
-            <Button name="" x="76" y="207" w="75" h="68" style="posButton" content="TRANS SAVE" alignment="Center"/>
-            <Button name="" x="152" y="207" w="75" h="68" style="posButton" content="TRANS RET" alignment="Center"/>
-            <Button name="menuClrDisc" x="228" y="207" w="75" h="68" style="posButton" content="CLR DISC" alignment="Center"/>
+            <Button name="" x="76" y="207" w="95" h="68" style="posButton" content="TRANS_SAVE" alignment="Center"/>
+            <Button name="" x="172" y="207" w="95" h="68" style="posButton" content="TRANS_RET" alignment="Center"/>
+            <Button name="menuClrDisc" x="268" y="207" w="95" h="68" style="posButton" content="CLR_DISC" alignment="Center"/>
         </Panel>
     </Components>    
 </XPage>

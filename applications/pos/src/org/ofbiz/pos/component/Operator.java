@@ -32,6 +32,7 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import java.util.Locale;
 
 import net.xoetrope.xui.style.XStyle;
 import net.xoetrope.xui.XProjectManager;
@@ -41,6 +42,7 @@ import net.xoetrope.swing.XPanel;
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilProperties;
 
 /**
  * 
@@ -57,12 +59,15 @@ public class Operator {
     public static final String[] OPER_DATE = { "oper_date", "DATE" };
     public static final String[] OPER_EMPL = { "oper_empl", "EMPL" };
     public static final String[] OPER_TXID = { "oper_txid", "TXID" };
-    public static final String[] OPER_DRWR = { "oper_drwr", "DRAWER" };
-
-    public static SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd");
+    public static final String[] OPER_DRWR = { "oper_drwr", "DRAWER" };    
+    
+    public static SimpleDateFormat sdf = new SimpleDateFormat(UtilProperties.getMessage("pos","DateFormat",Locale.getDefault()));
     protected Component[] operatorField = null;
     protected XStyle titleStyle = null;
     protected XPanel operPanel = null;
+    
+    private Locale defaultLocale = Locale.getDefault();
+   
 
     public Operator(PosScreen page) {
         this.titleStyle = XProjectManager.getStyleManager().getStyle(style);
@@ -138,15 +143,15 @@ public class Operator {
 
     protected String getFieldTitle(String fieldName) {
         if (OPER_TOTAL[0].equals(fieldName)) {
-            return OPER_TOTAL[1];
+            return UtilProperties.getMessage("pos","TOTAL",defaultLocale);            
         } else if (OPER_DATE[0].equals(fieldName)) {
-            return OPER_DATE[1];
+        	return UtilProperties.getMessage("pos","DATE",defaultLocale);
         } else if (OPER_EMPL[0].equals(fieldName)) {
-            return OPER_EMPL[1];
+        	return UtilProperties.getMessage("pos","EMPL",defaultLocale);
         } else if (OPER_TXID[0].equals(fieldName)) {
-            return OPER_TXID[1];
+        	return UtilProperties.getMessage("pos","TXID",defaultLocale);
         } else if (OPER_DRWR[0].equals(fieldName)) {
-            return OPER_DRWR[1];
+        	return UtilProperties.getMessage("pos","DRWR",defaultLocale);
         }
         return "";
     }

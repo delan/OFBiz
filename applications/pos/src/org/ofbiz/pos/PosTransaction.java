@@ -43,7 +43,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.collections.LifoSet;
-import org.ofbiz.guiapp.xui.XuiSession;
+import org.ofbiz.guiapp.xui.XuiSession; 
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
@@ -61,6 +61,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
+import org.ofbiz.base.util.UtilProperties;
 
 /**
  * 
@@ -78,6 +79,7 @@ public class PosTransaction implements Serializable {
     private static PrintWriter defaultPrintWriter = new Log4jLoggerWriter(Debug.getLogger(module));
     private static PosTransaction currentTx = null;
     private static LifoSet savedTx = new LifoSet();
+    private Locale defaultLocale = Locale.getDefault();
 
     protected XuiSession session = null;
     protected ShoppingCart cart = null;
@@ -590,14 +592,14 @@ public class PosTransaction implements Serializable {
         cart.setOrderPartyId(partyId);
 
         // validate payment methods
-        output.print("Validating...");
+        output.print(UtilProperties.getMessage("pos","Validating",defaultLocale));
         Map valRes = ch.validatePaymentMethods();
         if (valRes != null && ServiceUtil.isError(valRes)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(valRes));
         }
 
         // store the "order"
-        output.print("Saving sale...");
+        output.print(UtilProperties.getMessage("pos","Saving",defaultLocale));
         Map orderRes = ch.createOrder(session.getUserLogin());
         Debug.log("Create Order Resp : " + orderRes, module);
 
@@ -608,7 +610,7 @@ public class PosTransaction implements Serializable {
         }
 
         // process the payment(s)
-        output.print("Processing payments...");
+        output.print(UtilProperties.getMessage("pos","Processing",defaultLocale));        
         Map payRes = null;
         try {
             payRes = ch.processPayment(ProductStoreWorker.getProductStore(productStoreId, session.getDelegator()), session.getUserLogin(), true);
@@ -624,8 +626,8 @@ public class PosTransaction implements Serializable {
         // get the change due
         double change = (grandTotal - paymentAmt);
 
-        // notify the change due
-        output.print(Output.CHANGE + UtilFormatOut.formatPrice(this.getTotalDue() * -1));
+        // notify the change due     
+        output.print(UtilProperties.getMessage("pos","CHANGE",defaultLocale) + " " + UtilFormatOut.formatPrice(this.getTotalDue() * -1));
 
         // threaded drawer/receipt printing
         final PosTransaction currentTrans = this;
@@ -728,13 +730,14 @@ public class PosTransaction implements Serializable {
 
             XModel taxLine = Journal.appendNode(model, "tr", "", "");
             Journal.appendNode(taxLine, "td", "sku", "");
-            Journal.appendNode(taxLine, "td", "desc", "Sales Tax");
+            
+            Journal.appendNode(taxLine, "td", "desc", UtilProperties.getMessage("pos","Sales_Tax",defaultLocale));
             Journal.appendNode(taxLine, "td", "qty", "-");
             Journal.appendNode(taxLine, "td", "price", UtilFormatOut.formatPrice(taxAmount));
 
             XModel totalLine = Journal.appendNode(model, "tr", "", "");
             Journal.appendNode(totalLine, "td", "sku", "");
-            Journal.appendNode(totalLine, "td", "desc", "Grand Total");
+            Journal.appendNode(totalLine, "td", "desc", UtilProperties.getMessage("pos","Grand_Total",defaultLocale));
             Journal.appendNode(totalLine, "td", "qty", "-");
             Journal.appendNode(totalLine, "td", "price", UtilFormatOut.formatPrice(total));
         }
@@ -760,7 +763,8 @@ public class PosTransaction implements Serializable {
                     paymentMethodType = paymentInfoObj;
                 }
 
-                String desc = paymentMethodType != null ? paymentMethodType.getString("description") : "??";
+                Object desc = paymentMethodType != null ? paymentMethodType.get("description",defaultLocale) : "??";
+                String descString = desc.toString();
                 double amount = 0;
                 if (inf.amount == null) {
                     amount = cart.getGrandTotal() - cart.getPaymentTotal();
@@ -770,7 +774,7 @@ public class PosTransaction implements Serializable {
 
                 XModel paymentLine = Journal.appendNode(model, "tr", "", "");
                 Journal.appendNode(paymentLine, "td", "sku", "");
-                Journal.appendNode(paymentLine, "td", "desc", desc);
+                Journal.appendNode(paymentLine, "td", "desc", descString);
                 Journal.appendNode(paymentLine, "td", "qty", "-");
                 Journal.appendNode(paymentLine, "td", "price", UtilFormatOut.formatPrice(-1 * amount));
                 Journal.appendNode(paymentLine, "td", "index", new Integer(i).toString());
