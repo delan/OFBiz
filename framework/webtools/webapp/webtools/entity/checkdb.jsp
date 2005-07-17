@@ -82,12 +82,25 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
             ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
             dbUtil.createPrimaryKey(modelEntity, messages);
         }
-    } else if ("createfks".equals(option)) {
+    } else if ("createfkidxs".equals(option)) {
         Iterator modelEntityNameIter = modelEntityNames.iterator();
         while (modelEntityNameIter.hasNext()) {
       	    String modelEntityName = (String) modelEntityNameIter.next();
       	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
             dbUtil.createForeignKeyIndices(modelEntity, messages);
+        }
+    } else if ("removefkidxs".equals(option)) {
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deleteForeignKeyIndices(modelEntity, messages);
+        }
+    } else if ("createfks".equals(option)) {
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
             dbUtil.createForeignKeys(modelEntity, modelEntities, messages);
         }
     } else if ("removefks".equals(option)) {
@@ -95,7 +108,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         while (modelEntityNameIter.hasNext()) {
       	    String modelEntityName = (String) modelEntityNameIter.next();
       	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
-            dbUtil.deleteForeignKeyIndices(modelEntity, messages);
             dbUtil.deleteForeignKeys(modelEntity, modelEntities, messages);
         }
     } else if ("createidx".equals(option)) {
@@ -190,6 +202,18 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 </form>
 <form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="removeidx"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Remove"/>
+</form>
+
+<h3>Create/Remove All Foreign Key Indices</h3>
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="createfkidxs"/>
+  Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Create"/>
+</form>
+<form method="post" action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="removefkidxs"/>
   Group Name: <input type="text" class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Remove"/>
 </form>
