@@ -216,7 +216,7 @@ function lookupReturn(click) {
                     </#if>
                   </td>
                   <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></div></td>
-                  <td><div class="tabletext">${statusItem.description}</div></td>
+                  <td><div class="tabletext">${statusItem.get("description",locale)}</div></td>
                   <td align="center"><a href="<@ofbizUrl>/returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
                 </tr>
                 <#-- toggle the row color -->

@@ -113,7 +113,7 @@
                             </div>
                           </td>
                           <td><div class="tabletext"><nobr>${orderHeaderAndRole.getString("orderDate")}</nobr></div></td>
-                          <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
+                          <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
                           <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
                           <td align="right"><div class="tabletext"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orderHeaderAndRole.currencyUom?if_exists/></div></td>
                           <td width="1">&nbsp;&nbsp;</td>

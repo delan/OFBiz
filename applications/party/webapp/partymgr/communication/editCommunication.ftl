@@ -189,7 +189,7 @@
         <select class="selectBox" name="statusId">
           <#if communicationEvent?has_content && communicationEvent.statusId?exists>
             <#assign statusItem = communicationEvent.getRelatedOne("StatusItem")>
-            <option value="${statusItem.statusId}">${statusItem.description}</option>
+            <option value="${statusItem.statusId}">${statusItem.get("description",locale)}</option>
             <option value="${statusItem.statusId}">----</option>
           </#if>
           <#list statuses as status>
@@ -199,7 +199,7 @@
         <#else>
           <#if communicationEvent?has_content && communicationEvent.communicationEventTypeId?exists>
             <#assign statusItem = communicationEvent.getRelatedOne("StatusItem")>
-            <div class="tabletext">${statusItem.description}</div>
+            <div class="tabletext">${statusItem.get("description",locale)}</div>
           </#if>
         </#if>
       </td>

@@ -202,7 +202,7 @@
                         <#else>
                           <#assign outputted = true>
                           <td colspan="3" valign="top">
-                            <div class="tabletext" align="center"><b>Payment Via ${paymentMethodType.description}</b></div>
+                            <div class="tabletext" align="center"><b>Payment Via ${paymentMethodType.get("description",locale)}</b></div>
                           </td>
                         </#if>
                       </tr>

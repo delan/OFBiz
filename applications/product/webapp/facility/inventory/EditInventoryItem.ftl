@@ -96,7 +96,7 @@
 		              <#assign selectedStatusId = requestParameters.statusId>
 		          </#if>
 	              <#list statusItems as statusItem>
-	                  <option value="${statusItem.statusId}"<#if selectedStatusId?if_exists == statusItem.statusId>${uiLabelMap.ProductSelected}</#if>>${statusItem.description}</option>
+	                  <option value="${statusItem.statusId}"<#if selectedStatusId?if_exists == statusItem.statusId>${uiLabelMap.ProductSelected}</#if>>${statusItem.get("description",locale)}</option>
 	              </#list>
 	          </select>
 	        </td>

@@ -91,7 +91,7 @@
         <td><div class="tabletext">${event.communicationEventId?if_exists}</div></td>
         <td><div class="tabletext">${(eventType.get("description",locale))?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${(contactMechType.get("description",locale))?default(uiLabelMap.CommonNA)}</div></td>
-        <td><div class="tabletext">${(statusItem.get("description", locale))?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${(statusItem.get("description",locale))?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${event.subject?if_exists}</div></td>
         <#if event.partyIdFrom?has_content>
           <td><a href="<@ofbizUrl>/viewprofile?partyId=${event.partyIdFrom}</@ofbizUrl>" class="buttontext">${event.partyIdFrom}</a></td>

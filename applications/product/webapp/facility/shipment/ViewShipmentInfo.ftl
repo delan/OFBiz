@@ -40,7 +40,7 @@
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductStatus}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
-        <td width="80%" align="left"><span class="tabletext">${(statusItem.description)?default(shipment.statusId?if_exists)}</span></td>
+        <td width="80%" align="left"><span class="tabletext">${(statusItem.get("description",locale))?default(shipment.statusId?if_exists)}</span></td>
       </tr>
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductPrimaryOrderId}</span></td>

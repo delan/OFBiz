@@ -25,7 +25,7 @@
 -->
 
 	<div class="head1">${uiLabelMap.ManufacturingEditCalendarExceptionDayFor}&nbsp; 
-			<span class='head2'> <#if (techDataCalendar.description)?has_content>"${(techDataCalendar.get("description", locale))}"</#if> 
+			<span class='head2'> <#if (techDataCalendar.description)?has_content>"${(techDataCalendar.get("description",locale))}"</#if> 
 						[${uiLabelMap.CommonId}:${techDataCalendar.calendarId?if_exists}]</span>
 	</div>
 	<br/>

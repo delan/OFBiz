@@ -232,7 +232,7 @@
                       <td>&nbsp;</td>
                       <td width='74%'>                                                
                         <select name='statusId' class='selectBox'>                                                   
-                          <option value='${statusItem.statusId}'>${statusItem.description}</option>
+                          <option value='${statusItem.statusId}'>${statusItem.get("description",locale)}</option>
                           <option value='${statusItem.statusId}'>--</option>
                           <#list statusChanges as statusChange>     
                             <#assign changeItem = statusChange.getRelatedOne("ToStatusItem")>                    
