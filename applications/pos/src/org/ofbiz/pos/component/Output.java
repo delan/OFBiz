@@ -25,10 +25,14 @@
 package org.ofbiz.pos.component;
 
 import net.xoetrope.swing.XEdit;
+import net.xoetrope.xui.XProjectManager;
 
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.guiapp.xui.XuiSession;
+
+import java.util.Locale;
 
 /**
  * 
@@ -41,7 +45,10 @@ public class Output {
     public static final String module = Output.class.getName();
 
     // login labels
-    public static final String ULOGIN = "Enter User ID:";
+
+    private Locale defaultLocale = Locale.getDefault();
+    /* Useless since i18n, see pos.properties
+    public static final String ULOGIN = "Enter User ID:"; 
     public static final String UPASSW = "Enter Password:";
 
     // open/close labels
@@ -67,7 +74,7 @@ public class Output {
 
     // standard messages
     public static final String ISCLOSED = "Register Is Closed";
-    public static final String ISOPEN = "Register Is Open";
+    public static final String ISOPEN = "Register Is Open";*/
 
     protected XuiSession session = null;
     protected XEdit output = null;
@@ -81,12 +88,12 @@ public class Output {
 
     public void setLock(boolean lock) {
         if (lock) {
-            this.print(ULOGIN);
+            this.print(UtilProperties.getMessage("pos","ULOGIN",defaultLocale));
         } else {
             if (PosTransaction.getCurrentTx(session).isOpen()) {
-                this.print(ISOPEN);
+                this.print(UtilProperties.getMessage("pos","ISOPEN",defaultLocale));
             } else {
-                this.print(ISCLOSED);
+            	this.print(UtilProperties.getMessage("pos","ISCLOSED",defaultLocale));
             }
         }
     }

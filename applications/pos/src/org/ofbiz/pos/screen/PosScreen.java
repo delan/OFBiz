@@ -24,10 +24,13 @@
  */
 package org.ofbiz.pos.screen;
 
+
 import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+
+import java.util.*;
 
 import net.xoetrope.builder.NavigationHelper;
 import net.xoetrope.xui.XPage;
@@ -80,6 +83,8 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     protected boolean isLocked = false;
     protected boolean inDialog = false;
 
+    private Locale defaultLocale = Locale.getDefault();
+    
     public PosScreen() {
         super();
         this.classLoader = Thread.currentThread().getContextClassLoader();
@@ -93,7 +98,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.setEnabled(false);
         this.setVisible(false);
 
-        // setup the shared 
+        // setup the shared components
         this.session = XuiContainer.getSession();
         this.output = new Output(this);
         this.input = new Input(this);
@@ -102,7 +107,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.setLastActivity(System.currentTimeMillis());
 
         if (!firstInit) {
-            firstInit = true;
+            firstInit = true;           
             
             // pre-load a few screens
             XProjectManager.getPageManager().loadPage(this.getScreenLocation() + "/paypanel");
@@ -130,12 +135,13 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         // buttons are different per screen
         this.buttons = new PosButton(this);
 
-        // make sure all have the keyboard set
+        // make sure all components have the keyboard set
         KeyboardAdaptor.attachComponents(this);
     }
 
     public void pageActivated() {
         super.pageActivated();
+
         this.setLastActivity(System.currentTimeMillis());
 
         if (session.getUserLogin() == null) {
@@ -215,24 +221,25 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             operator.refresh();
             if (updateOutput) {
                 if (input.isFunctionSet("PAID")) {
-                    output.print(Output.CHANGE + UtilFormatOut.formatPrice(trans.getTotalDue() * -1));
+                    output.print(UtilProperties.getMessage("pos","ULOGIN",defaultLocale)
+                    		+ UtilFormatOut.formatPrice(trans.getTotalDue() * -1));
                 } else if (input.isFunctionSet("TOTAL")) {
                     if (trans.getTotalDue() > 0) {
-                        output.print(Output.TOTALD + UtilFormatOut.formatPrice(trans.getTotalDue()));
+                        output.print(UtilProperties.getMessage("pos","TOTALD",defaultLocale) + " " + UtilFormatOut.formatPrice(trans.getTotalDue()));
                     } else {
-                        output.print(Output.PAYFIN);
+                        output.print(UtilProperties.getMessage("pos","PAYFIN",defaultLocale));
                     }
                 } else {
                     if (PosTransaction.getCurrentTx(session).isOpen()) {
-                        output.print(Output.ISOPEN);
+                        output.print(UtilProperties.getMessage("pos","ISOPEN",defaultLocale));
                     } else {
-                        output.print(Output.ISCLOSED);
+                        output.print(UtilProperties.getMessage("pos","ISCLOSED",defaultLocale));
                     }
                 }
             }
             //journal.focus();
         } else {
-            output.print(Output.ULOGIN);
+            output.print(UtilProperties.getMessage("pos","ULOGIN",defaultLocale));
             //input.focus();
         }
 
@@ -299,7 +306,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         if (pageName.startsWith("/")) {
             pageName = pageName.substring(1);
         }
-        XPage newPage = XProjectManager.getPageManager().showPage(this.getScreenLocation() + "/" + pageName);
+        XPage newPage = XProjectManager.getPageManager().showPage(this.getScreenLocation() + "/" + pageName);         
         if (newPage instanceof PosScreen) {
             if (refresh) ((PosScreen) newPage).refresh();
             return (PosScreen) newPage;

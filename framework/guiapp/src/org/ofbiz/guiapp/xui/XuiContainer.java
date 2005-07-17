@@ -24,6 +24,8 @@
  */
 package org.ofbiz.guiapp.xui;
 
+import java.util.Locale;
+
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
@@ -37,6 +39,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.base.util.UtilProperties;
 
 /**
  *
@@ -142,6 +145,8 @@ public abstract class XuiContainer implements Container {
     class XuiScreen extends XApplet {
 
         public void setup(String startupFile) {
+            String xuiProps = System.getProperty("ofbiz.home") + "/applications/pos/config/" + startupFile;
+            UtilProperties.setPropertyValue(xuiProps, "Language", Locale.getDefault().getLanguage());            
             JFrame frame = new JFrame();
             frame.setUndecorated(true);
             frame.setVisible(false);

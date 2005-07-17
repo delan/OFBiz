@@ -24,10 +24,13 @@
  */
 package org.ofbiz.pos.event;
 
+import java.util.Locale;
+
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.guiapp.xui.XuiSession;
@@ -89,10 +92,10 @@ public class SecurityEvents {
         String text = input.value();
         if (func != null && func[0].equals(loginFunc)) {
             if (UtilValidate.isEmpty(func[1]) && UtilValidate.isEmpty(text)) {
-                output.print(Output.ULOGIN);
+                output.print(UtilProperties.getMessage("pos","ULOGIN",Locale.getDefault()));
                 input.setFunction(loginFunc);
             } else if (UtilValidate.isEmpty(func[1])) {
-                output.print(Output.UPASSW);
+                output.print(UtilProperties.getMessage("pos","UPASSW",Locale.getDefault()));
                 input.setFunction(loginFunc);
             } else {
                 String username = func[1];
@@ -123,12 +126,11 @@ public class SecurityEvents {
                     if (mgrUl != null) {
                         boolean isMgr = session.hasRole(mgrUl, "MANAGER");
                         if (!isMgr) {
-                            output.print("User is not a valid manager!");
+                            output.print(UtilProperties.getMessage("pos","UserNotmanager",Locale.getDefault()));
                             input.clear();
                         } else {
                             ManagerEvents.mgrLoggedIn = true;
-                            pos.showPage("mgrpanel");
-                            PosScreen.currentScreen.getInput().clear();                            
+                            pos.showPage("mgrpanel");                            
                         }
                     }
                 }
