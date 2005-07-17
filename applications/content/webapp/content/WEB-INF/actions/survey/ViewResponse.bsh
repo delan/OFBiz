@@ -43,6 +43,11 @@ surveyResponseId = request.getParameter("surveyResponseId");
 surveyId = request.getParameter("surveyId");
 partyId = request.getParameter("partyId");
 
+if ((surveyId == null) && (surveyResponseId != null)) {
+   surveyResponse = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+   surveyId = surveyResponse.getString("surveyId");
+}
+
 surveyWrapper = new SurveyWrapper(delegator, surveyResponseId, partyId, surveyId, null);
 surveyWrapper.setEdit(true);
 
