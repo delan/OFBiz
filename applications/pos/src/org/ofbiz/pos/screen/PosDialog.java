@@ -139,6 +139,7 @@ public class PosDialog {
                 appWindow.getLocation().y + (appWindow.getSize().height / 2 - wSize.height / 2));
 
         // set the component listener
+        final PosDialog  thisPosDialog = this;
         dialog.addComponentListener(new ComponentListener() {
 
             public void componentResized(ComponentEvent event) {
@@ -159,6 +160,7 @@ public class PosDialog {
 
             public void reset() {
                 if (dialog.isEnabled()) {                    
+                    thisPosDialog.checkSize();
                     Dimension wSize = dialog.getSize();
                     dialog.setLocation(appWindow.getLocation().x + (appWindow.getSize().width / 2 - wSize.width / 2),
                     appWindow.getLocation().y + (appWindow.getSize().height / 2 - wSize.height / 2));
@@ -300,6 +302,18 @@ public class PosDialog {
             Container contentPane = dialog.getContentPane();
             Point size = this.getMaxCoordinates(contentPane);
             this.setSize(size.x + 2 * padding + 2, size.y + 2 * padding + 4);
+        }
+    }
+
+    private void checkSize() {
+        Dimension wSize = dialog.getSize();
+
+        Container contentPane = dialog.getContentPane();
+        Point size = this.getMaxCoordinates(contentPane);
+        size.x += 2 * padding + 2;
+        size.y += 2 * padding + 4 + 2;
+        if ( size.x != wSize.width || size.y != wSize.height ) {
+            this.pack();
         }
     }
 
