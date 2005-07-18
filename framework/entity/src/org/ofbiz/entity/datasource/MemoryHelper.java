@@ -416,6 +416,10 @@ public class MemoryHelper implements GenericHelper {
         return removeFromCache(modelEntity.getEntityName(), condition);
     }
 
+    public int storeByCondition(ModelEntity modelEntity, Map fieldsToSet, EntityCondition condition) throws GenericEntityException {
+        return 0;
+    }
+
     public int store(GenericValue value) throws GenericEntityException {
         if (addToCache(value)) {
             return 1;
