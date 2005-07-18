@@ -146,7 +146,7 @@ public abstract class XuiContainer implements Container {
 
         public void setup(String startupFile) {
             String xuiProps = System.getProperty("ofbiz.home") + "/applications/pos/config/" + startupFile;
-            UtilProperties.setPropertyValue(xuiProps, "Language", Locale.getDefault().getLanguage());            
+            UtilProperties.setPropertyValue(xuiProps, "Language", "XuiLabels_" + Locale.getDefault().getLanguage());            
             JFrame frame = new JFrame();
             frame.setUndecorated(true);
             frame.setVisible(false);
