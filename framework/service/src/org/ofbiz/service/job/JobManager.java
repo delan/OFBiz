@@ -66,6 +66,8 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  */
 public class JobManager {
 
+    public static final String instanceId = UtilProperties.getPropertyValue("general.properties", "unique.instanceId", "ofbiz0");
+    public static final Map updateFields = UtilMisc.toMap("runByInstanceId", instanceId, "statusId", "SERVICE_QUEUED");
     public static final String module = JobManager.class.getName();
     public static final String dispatcherName = "JobDispatcher";
 
@@ -110,7 +112,8 @@ public class JobManager {
         // basic query
         List expressions = UtilMisc.toList(new EntityExpr("runTime", EntityOperator.LESS_THAN_EQUAL_TO,
                 UtilDateTime.nowTimestamp()), new EntityExpr("startDateTime", EntityOperator.EQUALS, null),
-                new EntityExpr("cancelDateTime", EntityOperator.EQUALS, null));
+                new EntityExpr("cancelDateTime", EntityOperator.EQUALS, null),
+                new EntityExpr("runByInstanceId", EntityOperator.EQUALS, null));
 
         // limit to just defined pools
         List pools = ServiceConfigUtil.getRunPools();
@@ -145,7 +148,12 @@ public class JobManager {
             }
 
             try {
-                jobEnt = delegator.findByCondition("JobSandbox", mainCondition, null, order);
+                // first update the jobs w/ this instance running information
+                delegator.storeByCondition("JobSandbox", updateFields, mainCondition);
+
+                // now query all the 'queued' jobs for this instance
+                jobEnt = delegator.findByAnd("JobSandbox", updateFields, order);
+                //jobEnt = delegator.findByCondition("JobSandbox", mainCondition, null, order);
             } catch (GenericEntityException ee) {
                 Debug.logError(ee, "Cannot load jobs from datasource.", module);
             } catch (Exception e) {
@@ -164,7 +172,12 @@ public class JobManager {
                         continue;
                     }
                     Job job = new PersistedServiceJob(dctx, v, null); // todo fix the requester
-                    poll.add(job);
+                    try {
+                        job.queue();
+                        poll.add(job);
+                    } catch (InvalidJobException e) {
+                        Debug.logError(e, module);
+                    }
                 }
             } else {
                 pollDone = true;

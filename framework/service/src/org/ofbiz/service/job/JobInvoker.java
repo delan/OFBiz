@@ -74,7 +74,7 @@ public class JobInvoker implements Runnable {
 
         this.thread.setDaemon(false);
         this.thread.setName(this.name);
-        
+
         if (Debug.verboseOn()) Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
         this.thread.start();
     }
@@ -182,7 +182,11 @@ public class JobInvoker implements Runnable {
             if (this.currentJob != null) {
                 if (this.currentJob instanceof GenericServiceJob) {
                     GenericServiceJob gsj = (GenericServiceJob) this.currentJob;
-                    serviceName = gsj.getServiceName();
+                    try {
+                        serviceName = gsj.getServiceName();
+                    } catch (InvalidJobException e) {
+                        Debug.logError(e, module);
+                    }
                 }
             }
         }
@@ -218,7 +222,11 @@ public class JobInvoker implements Runnable {
 
                 // execute the job
                 if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " executing job -- " + job.getJobName(), module);
-                job.exec();
+                try {
+                    job.exec();
+                } catch (InvalidJobException e) {
+                    Debug.logWarning(e.getMessage(), module);
+                }
                 if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " finished executing job -- " + job.getJobName(), module);
 
                 // clear the current job settings
