@@ -48,7 +48,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * @since      2.0
  */
 public interface DelegatorInterface {
-    
+
     String getDelegatorName();
 
     ModelReader getModelReader();
@@ -205,6 +205,10 @@ public interface DelegatorInterface {
     int storeAll(List values) throws GenericEntityException;
 
     int storeAll(List values, boolean doCacheClear) throws GenericEntityException;
+
+    int storeByCondition(String entityName, Map fieldsToSet, EntityCondition condition) throws GenericEntityException;
+
+    int storeByCondition(String entityName, Map fieldsToSet, EntityCondition condition, boolean doCacheClear) throws GenericEntityException;
 
     int removeAll(List dummyPKs) throws GenericEntityException;
 

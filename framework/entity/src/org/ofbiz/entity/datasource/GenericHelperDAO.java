@@ -217,6 +217,20 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.update(value);
     }
 
+    /** Updates a group of values in a single pass.
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param fieldsToSet The fields of the named entity to set in the database
+     *@param condition The condition that restricts the list of removed values
+     *@return int representing number of rows effected by this operation
+     *@throws GenericEntityException
+     */
+    public int storeByCondition(ModelEntity modelEntity, Map fieldsToSet, EntityCondition condition) throws GenericEntityException {
+        if (modelEntity == null || condition == null) {
+            return 0;
+        }
+        return genericDAO.updateByCondition(modelEntity, fieldsToSet, condition);
+    }
+
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
      *@param modelEntities Map of entityName names and ModelEntity values
      *@param messages List to put any result messages in
