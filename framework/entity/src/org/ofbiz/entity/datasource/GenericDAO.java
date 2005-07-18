@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.LinkedList;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -110,7 +111,7 @@ public class GenericDAO {
         this.modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
         this.datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
     }
-    
+
     private void addFieldIfMissing(List fieldsToSave, String fieldName, ModelEntity modelEntity) {
         Iterator fieldsToSaveIter = fieldsToSave.iterator();
         while (fieldsToSaveIter.hasNext()) {
@@ -148,7 +149,7 @@ public class GenericDAO {
         }
 
         // if we have a STAMP_TX_FIELD or CREATE_STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
-        // NOTE: these fairly complicated if statements have a few objectives: 
+        // NOTE: these fairly complicated if statements have a few objectives:
         //   1. don't run the TransationUtil.getTransaction*Stamp() methods when we don't need to
         //   2. don't set the stamp values if it is from an EntitySync (ie maintain original values), unless the stamps are null then set it anyway, ie even if it was from an EntitySync (also used for imports and such)
         boolean stampTxIsField = modelEntity.isField(ModelEntity.STAMP_TX_FIELD);
@@ -179,7 +180,7 @@ public class GenericDAO {
                 addFieldIfMissing(fieldsToSave, ModelEntity.CREATE_STAMP_FIELD, modelEntity);
             }
         }
-        
+
         String sql = "INSERT INTO " + modelEntity.getTableName(datasourceInfo) + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
             modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
 
@@ -217,7 +218,7 @@ public class GenericDAO {
         // we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
         List partialFields = FastList.newInstance();
         Collection keys = entity.getAllKeys();
-        
+
         Iterator nopkIter = modelEntity.getNopksIterator();
         while (nopkIter.hasNext()) {
             ModelField curField = (ModelField) nopkIter.next();
@@ -267,7 +268,7 @@ public class GenericDAO {
         }
 
         // if we have a STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
-        // NOTE: these fairly complicated if statements have a few objectives: 
+        // NOTE: these fairly complicated if statements have a few objectives:
         //   1. don't run the TransationUtil.getTransaction*Stamp() methods when we don't need to
         //   2. don't set the stamp values if it is from an EntitySync (ie maintain original values), unless the stamps are null then set it anyway, ie even if it was from an EntitySync (also used for imports and such)
         if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD) && (!entity.getIsFromEntitySync() || entity.get(ModelEntity.STAMP_TX_FIELD) == null)) {
@@ -280,7 +281,7 @@ public class GenericDAO {
             entity.set(ModelEntity.STAMP_FIELD, TransactionUtil.getTransactionUniqueNowStamp());
             addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_FIELD, modelEntity);
         }
-        
+
         String sql = "UPDATE " + modelEntity.getTableName(datasourceInfo) + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?", false) + " WHERE " +
             SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
 
@@ -302,6 +303,61 @@ public class GenericDAO {
             throw new GenericEntityNotFoundException("Tried to update an entity that does not exist.");
         }
         return retVal;
+    }
+
+    public int updateByCondition(ModelEntity modelEntity, Map fieldsToSet, EntityCondition condition) throws GenericEntityException {
+        SQLProcessor sqlP = new SQLProcessor(helperName);
+
+        try {
+            return updateByCondition(modelEntity, fieldsToSet, condition, sqlP);
+        } catch (GenericDataSourceException e) {
+            sqlP.rollback();
+            throw new GenericDataSourceException("Generic Entity Exception occured in updateByCondition", e);
+        } finally {
+            sqlP.close();
+        }
+    }
+
+    public int updateByCondition(ModelEntity modelEntity, Map fieldsToSet, EntityCondition condition, SQLProcessor sqlP) throws GenericEntityException {
+        if (modelEntity == null || fieldsToSet == null || condition == null)
+            return 0;
+        if (modelEntity instanceof ModelViewEntity) {
+            throw new org.ofbiz.entity.GenericNotImplementedException("Operation updateByCondition not supported yet for view entities");
+        }
+
+        String sql = "UPDATE " + modelEntity.getTableName(datasourceInfo);
+        sql += " SET ";
+        Iterator i = fieldsToSet.keySet().iterator();
+        List fieldList = new LinkedList();
+        boolean firstField = true;
+        while (i.hasNext()) {
+            String name = (String) i.next();
+            ModelField field = modelEntity.getField(name);
+            if (field != null) {
+                if (!firstField) {
+                    sql += ", ";
+                } else {
+                    firstField = false;
+                }
+                sql += field.getColName() + " = ?";
+                fieldList.add(field);
+            }
+        }
+        sql += " WHERE " + condition.makeWhereString(modelEntity, null);
+
+        try {
+            sqlP.prepareStatement(sql);
+            Iterator fi = fieldList.iterator();
+            while (fi.hasNext()) {
+                ModelField field = (ModelField) fi.next();
+                Object value = fieldsToSet.get(field.getName());
+                SqlJdbcUtil.setValue(sqlP, field, modelEntity.getEntityName(), value, modelFieldTypeReader );
+            }
+
+            return sqlP.executeUpdate();
+        } finally {
+            sqlP.close();
+        }
     }
 
     /* ====================================================================== */
@@ -990,7 +1046,7 @@ public class GenericDAO {
             SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
         }
 
-        
+
         try {
             sqlP.executeQuery();
             long count = 0;

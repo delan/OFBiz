@@ -134,6 +134,15 @@ public interface GenericHelper {
      */
     public int removeByCondition(ModelEntity modelEntity, EntityCondition condition) throws GenericEntityException;
 
+    /** Stores a group of values in a single query
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param fieldsToSet The fields of the named entity to set in the database
+     *@param condition The condition that restricts the list of updated values
+     *@return int representing number of rows effected by this operation
+     *@throws GenericEntityException
+     */
+    public int storeByCondition(ModelEntity modelEntity, Map fieldsToSet, EntityCondition condition) throws GenericEntityException;
+
     /** Store the Entity from the GenericValue to the persistent store
      *@param value GenericValue instance containing the entity
      *@return int representing number of rows effected by this operation
