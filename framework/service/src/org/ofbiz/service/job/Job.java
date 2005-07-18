@@ -29,7 +29,7 @@ import java.io.Serializable;
 /**
  * Job Interface
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
  * @since      2.0
  */
@@ -38,7 +38,7 @@ public interface Job extends Serializable {
     /**
      *  Executes the Job.
      */
-    public void exec();
+    public void exec() throws InvalidJobException;
 
     /**
      * Returns the ID of this Job.
@@ -60,5 +60,9 @@ public interface Job extends Serializable {
      */
     public boolean isValid();
 
+    /**
+     * Flags this job as 'is-queued'
+     */
+    public void queue() throws InvalidJobException;
 }
 

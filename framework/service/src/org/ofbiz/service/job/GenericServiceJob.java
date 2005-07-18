@@ -70,7 +70,7 @@ public class GenericServiceJob extends AbstractJob {
     /**
      * Invokes the service.
      */
-    public void exec() {
+    public void exec() throws InvalidJobException {
         init();
 
         // no transaction is necessary since runSync handles this
@@ -107,23 +107,23 @@ public class GenericServiceJob extends AbstractJob {
     /**
      * Method is called prior to running the service.
      */
-    protected void init() {
+    protected void init() throws InvalidJobException {
         if (Debug.verboseOn()) Debug.logVerbose("Async-Service initializing.", module);
     }
 
     /**
      * Method is called after the service has finished.
      */
-    protected void finish() {
+    protected void finish() throws InvalidJobException {
         if (Debug.verboseOn()) Debug.logVerbose("Async-Service finished.", module);
         runtime = 0;
     }
-    
+
     /**
      * Method is called when the service fails.
      * @param t Throwable
      */
-    protected void failed(Throwable t) {
+    protected void failed(Throwable t) throws InvalidJobException {
         Debug.logError(t, "Async-Service failed.", module);
         runtime = 0;
     }
@@ -132,7 +132,7 @@ public class GenericServiceJob extends AbstractJob {
      * Gets the context for the service invocation.
      * @return Map of name value pairs making up the service context.
      */
-    protected Map getContext() {
+    protected Map getContext() throws InvalidJobException {
         return context;
     }
 
@@ -140,7 +140,7 @@ public class GenericServiceJob extends AbstractJob {
      * Gets the name of the service as defined in the definition file.
      * @return The name of the service to be invoked.
      */
-    protected String getServiceName() {
+    protected String getServiceName() throws InvalidJobException {
         return service;
-    }
+    }        
 }

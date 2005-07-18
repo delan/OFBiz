@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,46 +23,43 @@
  *
  */
 package org.ofbiz.service.job;
-
 /**
- * Job Scheduler Exception
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev$
- * @since      2.0
+ * @version    $Rev:$
+ * @since      Jul 12, 2005
  */
-public class JobManagerException extends org.ofbiz.base.util.GeneralException {
-    
+public class InvalidJobException extends JobManagerException {
+
     /**
-     * Creates new <code>JobManagerException</code> without detail message.
+     * Creates new <code>InvalidJobException</code> without detail message.
      */
-    public JobManagerException() {
+    public InvalidJobException() {
         super();
     }
 
     /**
-     * Constructs an <code>JobManagerException</code> with the specified detail message.
+     * Constructs an <code>InvalidJobException</code> with the specified detail message.
      * @param msg the detail message.
      */
-    public JobManagerException(String msg) {
+    public InvalidJobException(String msg) {
         super(msg);
     }
 
     /**
-     * Constructs an <code>JobManagerException</code> with the specified detail message and nested Exception.
+     * Constructs an <code>InvalidJobException</code> with the specified detail message and nested Exception.
      * @param nested the nested exception.
      */
-    public JobManagerException(Throwable nested) {
+    public InvalidJobException(Throwable nested) {
         super(nested);
     }
 
     /**
-     * Constructs an <code>JobManagerException</code> with the specified detail message and nested Exception.
+     * Constructs an <code>InvalidJobException</code> with the specified detail message and nested Exception.
      * @param msg the detail message.
      * @param nested the nested exception.
      */
-    public JobManagerException(String msg, Throwable nested) {
+    public InvalidJobException(String msg, Throwable nested) {
         super(msg, nested);
     }
 }
-

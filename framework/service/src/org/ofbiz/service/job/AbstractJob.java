@@ -39,6 +39,7 @@ public abstract class AbstractJob implements Job {
     protected long sequence = 0;
     private String jobId;
     private String jobName;
+    private boolean queued = false;
 
     protected AbstractJob(String jobId, String jobName) {
         this.jobId = jobId;
@@ -76,7 +77,14 @@ public abstract class AbstractJob implements Job {
     }
 
     /**
+     * Flags this job as 'is-queued'
+     */
+    public void queue() throws InvalidJobException {
+        this.queued = true;
+    }
+
+    /**
      *  Executes the Job.
      */
-    public abstract void exec();
+    public abstract void exec() throws InvalidJobException;
 }
