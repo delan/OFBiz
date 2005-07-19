@@ -119,7 +119,6 @@
             <form method="post" name="addeventrole" action="<@ofbizUrl>/createCommunicationEventRole</@ofbizUrl>">
               <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">
               <input type="hidden" name="party_id" value="${partyId}">
-              <input type="hidden" name="partyId" value="${partyId}">
               <td bgcolor='white'>
                 <select name="roleTypeId" class="selectBox">
                   <#list roleTypes as roleType>
