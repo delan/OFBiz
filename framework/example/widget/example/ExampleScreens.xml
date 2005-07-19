@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: CommonScreens.xml 3880 2004-11-07 05:19:34Z jonesde $
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="FindExample">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindExample"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://example/widget/example/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <condition>
+                            <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                        </condition>
+                        <widgets>
+                            <container><label style="head1">${uiLabelMap.${titleProperty}}</label></container>
+                            <include-form name="ListExamples" location="component://example/widget/example/ExampleForms.xml"/>
+                        </widgets>
+                        <fail-widgets>
+                            <label style="head3">${uiLabelMap.ExampleViewPermissionError}</label>
+                        </fail-widgets>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonExampleDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="example"/>
+
+                <set field="exampleId" from-field="parameters.exampleId"/>
+                <entity-one entity-name="Example" value-name="example"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://example/widget/example/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for EXAMPLE, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://example/webapp/example/example/ExampleTabBar.ftl"/></html>
+                                </platform-specific>
+                                <container>
+                                    <link target="EditExample" text="[${uiLabelMap.ProductNewExample}]" style="buttontext"/>
+                                </container>
+                                <container>
+                                    <label style="head1">${uiLabelMap.${titleProperty}}</label><label style="head2"> for "${example.exampleName}" [${exampleId}]</label>
+                                </container>
+
+                                <!-- add Create Product and View Product (in ecommerce) links -->
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.ExampleViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditExample">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditExample"/>
+                <set field="tabButtonItem" value="EditExample"/>
+                
+                <set field="exampleId" from-field="parameters.exampleId"/>
+                <entity-one entity-name="Example" value-name="example"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonExampleDecorator">
+                    <decorator-section name="body">
+                        <include-form name="EditExample" location="component://example/widget/example/ExampleForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditExampleItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditExampleItems"/>
+                <set field="tabButtonItem" value="EditExampleItems"/>
+
+                <set field="exampleId" from-field="parameters.exampleId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonExampleDecorator">
+                    <decorator-section name="body">
+                        <include-form name="ListExampleItems" location="component://example/widget/example/ExampleForms.xml"/>
+                        <include-form name="AddExampleItem" location="component://example/widget/example/ExampleForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>
