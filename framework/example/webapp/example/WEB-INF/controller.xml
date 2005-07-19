@@ -44,13 +44,13 @@
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.webapp.view.JasperReportsXmlViewHandler"/>
         
     <preprocessor>
-    	<!-- Events to run on every request before security (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
-    	<event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
+        <!-- Events to run on every request before security (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
-    	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <!-- Events to run on every request after all other processing (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
     <!-- Security Mappings -->
@@ -90,7 +90,52 @@
     
     <request-map uri="main">
         <security https="true" auth="true"/>
-    	<response name="success" type="view" value="main"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+
+    <request-map uri="FindExample">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindExample"/>
+    </request-map>
+
+    <request-map uri="EditExample">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditExample"/>
+    </request-map>
+    <request-map uri="createExample">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createExample"/>
+        <response name="success" type="view" value="EditExample"/>
+        <response name="error" type="view" value="EditExample"/>
+    </request-map>
+    <request-map uri="updateExample">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateExample"/>
+        <response name="success" type="view" value="EditExample"/>
+        <response name="error" type="view" value="EditExample"/>
+    </request-map>
+    
+    <request-map uri="EditExampleItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditExampleItems"/>
+    </request-map>
+    <request-map uri="createExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createExampleItem"/>
+        <response name="success" type="view" value="EditExampleItems"/>
+        <response name="error" type="view" value="EditExampleItems"/>
+    </request-map>
+    <request-map uri="updateExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateExampleItem"/>
+        <response name="success" type="view" value="EditExampleItems"/>
+        <response name="error" type="view" value="EditExampleItems"/>
+    </request-map>
+    <request-map uri="deleteExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteExampleItem"/>
+        <response name="success" type="view" value="EditExampleItems"/>
+        <response name="error" type="view" value="EditExampleItems"/>
     </request-map>
     <!-- end of request mappings -->
 
@@ -99,5 +144,9 @@
 
     <view-map name="main" type="screen" page="component://example/widget/example/CommonScreens.xml#main"/>
     <view-map name="login" type="screen" page="component://example/widget/example/CommonScreens.xml#login"/>
+
+    <view-map name="FindExample" type="screen" page="component://example/widget/example/ExampleScreens.xml#FindExample"/>
+    <view-map name="EditExample" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExample"/>
+    <view-map name="EditExampleItems" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExampleItems"/>
     <!-- end of view mappings -->
 </site-conf>
