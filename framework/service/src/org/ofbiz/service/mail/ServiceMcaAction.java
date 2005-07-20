@@ -36,9 +36,9 @@ import org.ofbiz.entity.GenericValue;
 import org.w3c.dom.Element;
 
 /**
- * 
+ *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class ServiceMcaAction implements java.io.Serializable {
@@ -47,6 +47,7 @@ public class ServiceMcaAction implements java.io.Serializable {
 
     protected String serviceName = null;
     protected String serviceMode = null;
+    protected String runAsUser = null;
     protected boolean persist = false;
 
     protected ServiceMcaAction() { }
@@ -54,12 +55,16 @@ public class ServiceMcaAction implements java.io.Serializable {
     protected ServiceMcaAction(Element action) {
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
+        this.runAsUser = action.getAttribute("runAsUser");
         this.persist = "true".equals(action.getAttribute("persist"));
     }
 
     public boolean runAction(LocalDispatcher dispatcher, MimeMessageWrapper messageWrapper, GenericValue userLogin) throws GenericServiceException {
+        Map serviceContext = UtilMisc.toMap("messageWrapper", messageWrapper, "userLogin", userLogin);
+        serviceContext.put("userLogin", ServiceUtil.getUserLogin(dispatcher.getDispatchContext(), serviceContext, runAsUser));
+
         if (serviceMode.equals("sync")) {
-            Map result = dispatcher.runSync(serviceName, UtilMisc.toMap("messageWrapper", messageWrapper, "userLogin", userLogin));
+            Map result = dispatcher.runSync(serviceName, serviceContext);
             if (ServiceUtil.isError(result)) {
                 Debug.logError(ServiceUtil.getErrorMessage(result), module);
                 return false;
@@ -67,7 +72,7 @@ public class ServiceMcaAction implements java.io.Serializable {
                 return true;
             }
         } else if (serviceMode.equals("async")) {
-            dispatcher.runAsync(serviceName, UtilMisc.toMap("messageWrapper", messageWrapper, "userLogin",userLogin), persist);
+            dispatcher.runAsync(serviceName, serviceContext, persist);
             return true;
         } else {
             Debug.logError("Invalid service mode [" + serviceMode + "] unable to invoke MCA action (" + serviceName + ").", module);

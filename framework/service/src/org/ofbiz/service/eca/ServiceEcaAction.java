@@ -28,12 +28,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.ofbiz.service.*;
-import org.ofbiz.base.util.UtilValidate;
-import org.w3c.dom.Element;
-
 import javax.transaction.xa.XAException;
+
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceXaWrapper;
+import org.ofbiz.service.ServiceUtil;
+import org.w3c.dom.Element;
 
 /**
  * ServiceEcaAction
@@ -44,10 +48,13 @@ import javax.transaction.xa.XAException;
  */
 public class ServiceEcaAction implements java.io.Serializable {
 
+    public static final String module = ServiceEcaAction.class.getName();
+
     protected String eventName = null;
     protected String serviceName = null;
     protected String serviceMode = null;
     protected String resultMapName = null;
+    protected String runAsUser = null;
 
     protected boolean resultToContext = true;
     protected boolean ignoreFailure = false;
@@ -60,6 +67,7 @@ public class ServiceEcaAction implements java.io.Serializable {
         this.eventName = event;
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
+        this.runAsUser = action.getAttribute("runAsUser");
         this.resultMapName = action.getAttribute("result-map-name");
         // default is true, so anything but false is true
         this.resultToContext = !"false".equals(action.getAttribute("result-to-context"));
@@ -75,6 +83,10 @@ public class ServiceEcaAction implements java.io.Serializable {
 
         // pull out context parameters needed for this service.
         Map actionContext = dctx.getModelService(serviceName).makeValid(context, ModelService.IN_PARAM);
+
+        // set the userLogin object in the context
+        actionContext.put("userLogin", ServiceUtil.getUserLogin(dctx, actionContext, runAsUser));
+        
         Map actionResult = null;
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -101,7 +113,7 @@ public class ServiceEcaAction implements java.io.Serializable {
         }
 
         // put the results in to the defined map
-        if (resultMapName != null && resultMapName.length() > 0) {            
+        if (resultMapName != null && resultMapName.length() > 0) {
             Map resultMap = (Map) context.get(resultMapName);
             if (resultMap == null) {
                 resultMap = new HashMap();
@@ -109,9 +121,9 @@ public class ServiceEcaAction implements java.io.Serializable {
             resultMap.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM, false, null));
             context.put(resultMapName, resultMap);
         }
-        
+
         // use the result to update the context fields.
-        if (resultToContext) {            
+        if (resultToContext) {
             context.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM, false, null));
         }
 

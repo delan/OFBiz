@@ -199,8 +199,7 @@ public class JobManager {
         List toStore = new ArrayList();
         List crashed = null;
 
-        List exprs = UtilMisc.toList(new EntityExpr("startDateTime", EntityOperator.NOT_EQUAL, null));
-        exprs.add(new EntityExpr("finishDateTime", EntityOperator.EQUALS, null));
+        List exprs = UtilMisc.toList(new EntityExpr("finishDateTime", EntityOperator.EQUALS, null));
         exprs.add(new EntityExpr("cancelDateTime", EntityOperator.EQUALS, null));
         exprs.add(new EntityExpr("runByInstanceId", EntityOperator.EQUALS, instanceId));
         try {
@@ -234,6 +233,7 @@ public class JobManager {
                         newJob.set("previousJobId", job.getString("jobId"));
                         newJob.set("parentJobId", pJobId);
                         newJob.set("startDateTime", null);
+                        newJob.set("runByInstanceId", null);
                         toStore.add(newJob);
 
                         // set the cancel time on the old job to the same as the re-schedule time
