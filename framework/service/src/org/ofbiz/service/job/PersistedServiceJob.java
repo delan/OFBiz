@@ -160,6 +160,7 @@ public class PersistedServiceJob extends GenericServiceJob {
             newJob.set("parentJobId", pJobId);
             newJob.set("statusId", "SERVICE_PENDING");
             newJob.set("startDateTime", null);
+            newJob.set("runByInstanceId", null);
             newJob.set("runTime", new java.sql.Timestamp(next));
             nextRecurrence = next;
             delegator.create(newJob);

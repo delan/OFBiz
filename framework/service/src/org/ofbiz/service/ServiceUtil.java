@@ -52,7 +52,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * @since      2.0
  */
 public class ServiceUtil {
-    
+
     public static final String module = ServiceUtil.class.getName();
     public static final String resource = "ServiceErrorUiLabels";
 
@@ -93,7 +93,7 @@ public class ServiceUtil {
     public static Map returnError(String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
         return returnProblem(ModelService.RESPOND_ERROR, errorMessage, errorMessageList, errorMessageMap, nestedResult);
     }
-    
+
     public static Map returnProblem(String returnType, String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
         Map result = new HashMap();
         result.put(ModelService.RESPONSE_MESSAGE, returnType);
@@ -105,12 +105,12 @@ public class ServiceUtil {
         if (errorMessageList != null) {
             errorList.addAll(errorMessageList);
         }
-        
+
         Map errorMap = new HashMap();
         if (errorMessageMap != null) {
             errorMap.putAll(errorMessageMap);
         }
-        
+
         if (nestedResult != null) {
             if (nestedResult.get(ModelService.ERROR_MESSAGE) != null) {
                 errorList.add(nestedResult.get(ModelService.ERROR_MESSAGE));
@@ -122,7 +122,7 @@ public class ServiceUtil {
                 errorMap.putAll((Map) nestedResult.get(ModelService.ERROR_MESSAGE_MAP));
             }
         }
-        
+
         if (errorList.size() > 0) {
             result.put(ModelService.ERROR_MESSAGE_LIST, errorList);
         }
@@ -196,7 +196,7 @@ public class ServiceUtil {
     }
 
     public static void getMessages(HttpServletRequest request, Map result, String defaultMessage) {
-        getMessages(request, result, defaultMessage, null, null, null, null, null, null);   
+        getMessages(request, result, defaultMessage, null, null, null, null, null, null);
     }
 
     public static void getMessages(HttpServletRequest request, Map result, String defaultMessage,
@@ -208,9 +208,9 @@ public class ServiceUtil {
 
     public static String getErrorMessage(Map result) {
         StringBuffer errorMessage = new StringBuffer();
-        
+
         if (result.get(ModelService.ERROR_MESSAGE) != null) errorMessage.append((String) result.get(ModelService.ERROR_MESSAGE));
-        
+
         if (result.get(ModelService.ERROR_MESSAGE_LIST) != null) {
             List errors = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
             Iterator errorIter = errors.iterator();
@@ -223,7 +223,7 @@ public class ServiceUtil {
                 errorMessage.append(curMessage);
             }
         }
-        
+
         return errorMessage.toString();
     }
 
@@ -311,12 +311,12 @@ public class ServiceUtil {
         }
         return outMsg.toString();
     }
-    
+
     public static Map purgeOldJobs(DispatchContext dctx, Map context) {
         String sendPool = ServiceConfigUtil.getSendPool();
         int daysToKeep = ServiceConfigUtil.getPurgeJobDays();
         GenericDelegator delegator = dctx.getDelegator();
-        
+
         Timestamp now = UtilDateTime.nowTimestamp();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(now.getTime());
@@ -346,7 +346,7 @@ public class ServiceUtil {
             Debug.logError(e, "Cannot get jobs to purge");
             return ServiceUtil.returnError(e.getMessage());
         }
-        
+
         if (foundJobs != null && foundJobs.size() > 0) {
             Iterator i = foundJobs.iterator();
             while (i.hasNext()) {
@@ -355,10 +355,10 @@ public class ServiceUtil {
                     job.remove();
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Unable to remove job : " + job, module);
-                }                  
+                }
             }
         }
-        
+
         return ServiceUtil.returnSuccess();
     }
 
@@ -418,7 +418,7 @@ public class ServiceUtil {
         try {
             job = delegator.findByPrimaryKey("JobSandbox", fields);
             if (job != null) {
-                job.set("maxRetry", new Long(0));                
+                job.set("maxRetry", new Long(0));
                 job.store();
             }
         } catch (GenericEntityException e) {
@@ -436,6 +436,22 @@ public class ServiceUtil {
         }
     }
 
+    public static GenericValue getUserLogin(DispatchContext dctx, Map context, String runAsUser) {
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericDelegator delegator = dctx.getDelegator();
+        if (runAsUser != null) {
+            try {
+                GenericValue runAs = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", runAsUser));
+                if (runAs != null) {
+                    userLogin = runAs;
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
+        return userLogin;
+    }
+    
     private static Locale getLocale(Map context) {
         Locale locale = (Locale) context.get("locale");
         if (locale == null) {

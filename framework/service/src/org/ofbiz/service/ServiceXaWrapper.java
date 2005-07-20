@@ -50,6 +50,7 @@ public class ServiceXaWrapper extends GenericXaResource {
     protected DispatchContext dctx = null;
     protected String rollbackService = null;
     protected String commitService = null;
+    protected String runAsUser = null;
     protected Map rollbackContext = null;
     protected Map commitContext = null;
     protected boolean rollbackAsync = true;
@@ -68,7 +69,7 @@ public class ServiceXaWrapper extends GenericXaResource {
      * @param context Context to use when running
      */
     public void setCommitService(String serviceName, Map context) {
-        this.setCommitService(serviceName, context, commitAsync, commitAsyncPersist);
+        this.setCommitService(serviceName, null, context, commitAsync, commitAsyncPersist);
     }
 
     /**
@@ -78,11 +79,24 @@ public class ServiceXaWrapper extends GenericXaResource {
      * @param async override default async behavior
      */
     public void setCommitService(String serviceName, Map context, boolean async, boolean persist) {
+        this.setCommitService(serviceName, null, context, async, persist);
+    }
+
+    /**
+     * Sets the service to run on rollback()
+     * @param serviceName Name of service to run
+     * @param runAsUser UserLoginID to run as
+     * @param context Context to use when running
+     * @param async override default async behavior
+     */
+    public void setCommitService(String serviceName, String runAsUser, Map context, boolean async, boolean persist) {
         this.commitService = serviceName;
+        this.runAsUser = runAsUser;
         this.commitContext = context;
         this.commitAsync = async;
         this.commitAsyncPersist = persist;
     }
+
 
     /**
      * @return The name of the service to run on rollback()
@@ -166,11 +180,16 @@ public class ServiceXaWrapper extends GenericXaResource {
             // invoke the service
             boolean serviceError = false;
             try {
+                // obtain the model and get the valid context
                 ModelService model = dctx.getModelService(this.commitService);
                 Map thisContext = this.commitContext;
                 if (model.validate) {
                     thisContext = model.makeValid(this.commitContext, ModelService.IN_PARAM);
                 }
+
+                // set the userLogin object
+                thisContext.put("userLogin", ServiceUtil.getUserLogin(dctx, thisContext, runAsUser));
+
                 if (this.commitAsync) {
                     Debug.log("[Commit] Invoking [" + this.commitService + "] via runAsync", module);
                     dctx.getDispatcher().runAsync(this.commitService, thisContext, this.commitAsyncPersist);
