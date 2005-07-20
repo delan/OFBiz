@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.lang.Thread;
 
 import junit.framework.TestCase;
 
@@ -48,6 +49,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  *
@@ -423,7 +425,7 @@ public class EntityTestSuite extends TestCase {
             return;
         }
     }
-
+ 
     /*
      * This test will use the large number of unique items from above and test the EntityListIterator looping through the list
      */
@@ -450,24 +452,42 @@ public class EntityTestSuite extends TestCase {
     }
 
     /*
-     * This creates an string id from a number
+     * This test will verify transaction rollbacks using TransactionUtil.
      */
-    private String getTestId(String strTestBase, int iNum) {
-        StringBuffer strBufTemp = new StringBuffer(strTestBase);
-        if (iNum < 10000) {
-            strBufTemp.append("0");
+    public void testTransactionUtilRollback() throws Exception {
+        try {
+            GenericValue testValue = delegator.makeValue("Testing", UtilMisc.toMap("testingId", "rollback-test"));
+            boolean transBegin = TransactionUtil.begin();
+            delegator.create(testValue);
+            TransactionUtil.rollback(transBegin, null, null);
+            GenericValue testValueOut = delegator.findByPrimaryKey("Testing", UtilMisc.toMap("testingId", "rollback-test"));
+            assertEquals("Test that transaction rollback removes value: ", testValueOut, null);
+        } catch (GenericEntityException e) {
+            assertTrue("GenericEntityException:" + e.toString(), false);
+            return;
         }
-        if (iNum < 1000) {
-            strBufTemp.append("0");
-        }
-        if (iNum < 100) {
-            strBufTemp.append("0");
-        }
-        if (iNum < 10) {
-            strBufTemp.append("0");
-        }
-        strBufTemp.append(iNum);
-        return strBufTemp.toString();
     }
+
+    
+  /*
+   * This creates an string id from a number 
+   */
+  private String getTestId(String strTestBase, int iNum) {
+      StringBuffer strBufTemp = new StringBuffer(strTestBase);
+      if (iNum < 10000) {
+         strBufTemp.append("0");
+      }
+      if (iNum < 1000) {
+         strBufTemp.append("0");
+      }
+      if (iNum < 100) {
+         strBufTemp.append("0");
+      }
+      if (iNum < 10) {
+         strBufTemp.append("0");
+      } 
+      strBufTemp.append(iNum);
+      return strBufTemp.toString();
+  }
 
 }
