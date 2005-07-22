@@ -58,8 +58,8 @@
         <description>Verify a user is logged in.</description>
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
-        <response name="success" type="view" value="main" />
-        <response name="error" type="view" value="login" />
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="login"/>
     </request-map>
     <request-map uri="login">
         <security https="true" auth="false"/>

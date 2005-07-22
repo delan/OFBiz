@@ -72,6 +72,7 @@
     <simple-method method-name="deleteExample" short-description="delete a Example">
         <string-to-field string="_DELETE" field-name="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
+        <check-errors/>
         <entity-one entity-name="Example" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>

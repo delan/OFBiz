@@ -40,13 +40,13 @@
             target="updateExample" title="" default-map-name="example"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="example==null" target="createExample"/>
-        <auto-fields-service service-name="updateExample" map-name="example"/>
+        <auto-fields-service service-name="updateExample"/>
  
         <field use-when="example!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="example==null&amp;&amp;exampleId==null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><ignore/></field>
-        <field use-when="example==null&amp;&amp;exampleId!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${exampleId}]"><display description=" " also-hidden="false"/></field>
+        <field use-when="example==null&amp;&amp;exampleId!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><display description="${uiLabelMap.CommonCannotBeFound}: [${exampleId}]" also-hidden="false"/></field>
 
-        <field name="description" title="${uiLabelMap.CommonDescription}"><text size="60" maxlength="250"/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"/>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 
