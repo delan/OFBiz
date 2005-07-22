@@ -45,6 +45,7 @@ import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.xml.sax.SAXException;
@@ -253,11 +254,8 @@ public class PersistedServiceJob extends GenericServiceJob {
             }
 
             // check the runAsUser
-            if (!UtilValidate.isEmpty(jobObj.getString("runAsUser"))) {
-                GenericValue runAsUser = jobObj.getRelatedOne("RunAsUserLogin");
-                if (runAsUser != null) {
-                    context.put("userLogin", runAsUser);
-                }
+            if (!UtilValidate.isEmpty(jobObj.get("runAsUser"))) {
+                context.put("userLogin", ServiceUtil.getUserLogin(dctx, context, jobObj.getString("runAsUser")));                
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "PersistedServiceJob.getContext(): Entity Exception", module);
