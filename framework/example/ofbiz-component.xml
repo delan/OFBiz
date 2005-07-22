@@ -39,11 +39,9 @@
     <!-- entity resources: model(s), eca(s), group, and data definitions -->
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
-    <!--   
-    <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
+    <!-- <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/> -->
     <entity-resource type="data" reader-name="main" loader="main" location="data/ExampleTypeData.xml"/>
-    -->
-    
+ 
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <!--
@@ -57,6 +55,4 @@
         server="default-server"
         location="webapp/example"
         mount-point="/example"/>
-
 </ofbiz-component>
-
