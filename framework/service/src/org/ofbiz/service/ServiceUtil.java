@@ -441,7 +441,7 @@ public class ServiceUtil {
         GenericDelegator delegator = dctx.getDelegator();
         if (runAsUser != null) {
             try {
-                GenericValue runAs = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", runAsUser));
+                GenericValue runAs = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", runAsUser));
                 if (runAs != null) {
                     userLogin = runAs;
                 }
@@ -451,7 +451,7 @@ public class ServiceUtil {
         }
         return userLogin;
     }
-    
+
     private static Locale getLocale(Map context) {
         Locale locale = (Locale) context.get("locale");
         if (locale == null) {
