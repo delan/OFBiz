@@ -978,12 +978,16 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="OrderPDF"/>
     </request-map>
+    <request-map uri="return.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReturnPDF"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
+    <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/> 
     <view-map name="login" type="screen" page="component://order/widget/ordermgr/CommonScreens.xml#login"/>
 
     <view-map name="orderstats" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderStats"/>
@@ -1074,6 +1078,7 @@
 
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="ReturnPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#ReturnPDF" content-type="application/pdf" encoding="none"/>
 
     <!-- end of view mappings -->
 </site-conf>

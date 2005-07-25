@@ -28,11 +28,11 @@
         <fo:simple-page-master master-name="main-page"
             margin-top="1in" margin-bottom="1in"
             margin-left="1in" margin-right="1in">
-            <fo:region-body margin-top="3.5in" margin-bottom="1in"/>  <#-- main body -->
+          <fo:region-body margin-top="3.5in" margin-bottom="1in"/>  <#-- main body -->
             <fo:region-after extent="1in"/>  <#-- a footer -->
             <fo:region-before extent="3.5in"/>  <#-- a header -->
         </fo:simple-page-master>
-    </fo:layout-master-set>
+  </fo:layout-master-set>
   
   <fo:page-sequence master-reference="main-page">
        <#-- the region-before and -after must be declared as fo:static-content and before the fo:flow.  only 1 fo:flow per
@@ -45,13 +45,8 @@
             <fo:table-body>
               <fo:table-row>
                 <fo:table-cell>
-                   <fo:block white-space-collapse="false">
-                   <#-- company information goes here -->
-                   <#-- TODO: figure out why <@ofbizContentUrl> does not work -->
-<fo:external-graphic src="http://127.0.0.1:8080/images/ofbiz_powered.gif" overflow="hidden" width="88pt" height="31pt"/>
-Company Header Information Here
-put addresses, etc. etc.
-</fo:block>
+                   <#-- TODO: figure out how to share these files from the /includes directory -->
+                   <#include "companyLogo.fo.ftl">
                 </fo:table-cell>
                 <fo:table-cell>
                   <fo:table>
