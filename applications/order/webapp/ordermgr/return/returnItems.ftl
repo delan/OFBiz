@@ -30,6 +30,7 @@
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
       <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${externalKeyParam}" class="tabButton">Receive Return</a>
     </#if>
+    <a href="<@ofbizUrl>/return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">PDF</a>
 </div>
 
 <#if !requestParameters.orderId?exists>

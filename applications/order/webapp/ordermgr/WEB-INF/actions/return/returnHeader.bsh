@@ -44,12 +44,15 @@ if (returnId != null) {
     returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
     if (returnHeader != null) {   
         partyId = returnHeader.getString("fromPartyId"); 
+        fromPartyId = partyId;
+        toPartyId = request.getParameter("toPartyId");
         currentStatus = returnHeader.getRelatedOne("StatusItem");
         context.put("currentStatus", currentStatus);
         currentAccount = returnHeader.getRelatedOne("BillingAccount");
         context.put("currentAccount", currentAccount);
         currentFacility = returnHeader.getRelatedOne("Facility");
         context.put("currentFacility", currentFacility);     
+        context.put("entryDate", returnHeader.getTimestamp("entryDate"));
     }
 }
 context.put("returnHeader", returnHeader);
@@ -88,9 +91,34 @@ if (orderId != null) {
 context.put("orderRole", orderRole);
 context.put("orderHeader", orderHeader);
 
-postalAddresses = ContactMechWorker.getPartyPostalAddresses(request, partyId, "_NA_"); 
-context.put("postalAddresses", postalAddresses);
+
+// from address
+postalAddresses = ContactMechWorker.getPartyPostalAddresses(request, fromPartyId, "_NA_"); 
+if (postalAddresses.size() > 0)
+    context.put("postalAddressFrom", postalAddresses.get(0).get("postalAddress"));
+
+// to address (this should use the cursor, but I'm unsure how to construct the condition)
+postalAddressTo = null;
+// can't do this, no given Title under "relations"
+// facility = orderHeader.getRelatedOne("ToFacility");
+facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", returnHeader.getString("destinationFacilityId")));
+if (facility != null) {
+    facilityContactMechs = delegator.findByAnd("FacilityContactMech", UtilMisc.toMap("facilityId", facility.getString("facilityId")), UtilMisc.toList("fromDate DESC"));
+
+    facilityContactMechIterator = facilityContactMechs.iterator();
+    while (facilityContactMechIterator.hasNext()) {
+        facilityContactMech = facilityContactMechIterator.next();
+        contactMech = facilityContactMech.getRelatedOne("ContactMech");
+        if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+            postalAddressTo = contactMech.getRelatedOne("PostalAddress");
+            break;
+        }
+    }
+}
+if (postalAddressTo != null)
+    context.put("postalAddressTo", postalAddressTo);
 
 // get a list of all currencies
 currencies = delegator.findByAndCache("Uom", UtilMisc.toMap("uomTypeId", "CURRENCY_MEASURE"), UtilMisc.toList("description"));
 context.put("currencies", currencies);
+
