@@ -84,7 +84,7 @@
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,classpath">
-        <javac debug="on" deprecation="on" destdir="${build.dir}/classes">
+        <javac debug="on" source="1.4" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
                 <path refid="local.class.path"/>
             </classpath>
@@ -109,7 +109,7 @@
     </target>
 
     <target name="rmi-jar" depends="stubs">
-        <jar jarfile="${build.dir}/lib/${name}-rmi.raj">            
+        <jar jarfile="${build.dir}/lib/${name}-rmi.raj">
             <fileset dir="${build.dir}/classes" includes="**/GenericServiceException.class"/>
             <fileset dir="${build.dir}/classes" includes="**/GenericResultWaiter.class"/>
             <fileset dir="${build.dir}/classes" includes="**/GenericRequester.class"/>
