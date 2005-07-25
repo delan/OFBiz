@@ -43,7 +43,7 @@
         <auto-fields-service service-name="updateExample"/>
  
         <field use-when="example!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="example==null&amp;&amp;exampleId==null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><ignore/></field>
+        <field use-when="example==null&amp;&amp;exampleId==null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><ignored/></field>
         <field use-when="example==null&amp;&amp;exampleId!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><display description="${uiLabelMap.CommonCannotBeFound}: [${exampleId}]" also-hidden="false"/></field>
 
         <field name="description" title="${uiLabelMap.CommonDescription}"/>
@@ -68,12 +68,12 @@
         </field>
     </form>
     <form name="AddExampleItem" type="single" 
-            target="addSecurityPermissionToExample" title=""
+            target="createExampleItem" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <auto-fields-service service-name="addSecurityPermissionToExample"/>
+        <auto-fields-service service-name="createExampleItem"/>
 
         <field name="exampleId"><hidden/></field>
-        <field name="exampleItemSeqId"><ignore/><!-- this will be auto-sequenced --></field>
+        <field name="exampleItemSeqId"><ignored/><!-- this will be auto-sequenced --></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

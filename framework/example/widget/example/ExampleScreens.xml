@@ -28,21 +28,27 @@
     <screen name="FindExample">
         <section>
             <actions>
+                <set field="headerItem" value="Example"/>
                 <set field="titleProperty" value="PageTitleFindExample"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://example/widget/example/CommonScreens.xml">
                     <decorator-section name="body">
-                        <condition>
-                            <if-has-permission permission="EXAMPLE" action="_VIEW"/>
-                        </condition>
-                        <widgets>
-                            <container><label style="head1">${uiLabelMap.${titleProperty}}</label></container>
-                            <include-form name="ListExamples" location="component://example/widget/example/ExampleForms.xml"/>
-                        </widgets>
-                        <fail-widgets>
-                            <label style="head3">${uiLabelMap.ExampleViewPermissionError}</label>
-                        </fail-widgets>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <container><label style="head1">${uiLabelMap.${titleProperty}}</label></container>
+                                <container>
+                                    <link target="EditExample" text="[${uiLabelMap.ExampleNewExample}]" style="buttontext"/>
+                                </container>
+                                <include-form name="ListExamples" location="component://example/widget/example/ExampleForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.ExampleViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -52,7 +58,7 @@
     <screen name="CommonExampleDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="example"/>
+                <set field="headerItem" value="Example"/>
 
                 <set field="exampleId" from-field="parameters.exampleId"/>
                 <entity-one entity-name="Example" value-name="example"/>
@@ -66,17 +72,21 @@
                                 <if-has-permission permission="EXAMPLE" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://example/webapp/example/example/ExampleTabBar.ftl"/></html>
-                                </platform-specific>
-                                <container>
-                                    <link target="EditExample" text="[${uiLabelMap.ProductNewExample}]" style="buttontext"/>
-                                </container>
-                                <container>
-                                    <label style="head1">${uiLabelMap.${titleProperty}}</label><label style="head2"> for "${example.exampleName}" [${exampleId}]</label>
-                                </container>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field-name="example"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="EditExample" location="component://example/widget/example/ExampleMenus.xml"/>
+                                        <container>
+                                            <link target="EditExample" text="[${uiLabelMap.ExampleNewExample}]" style="buttontext"/>
+                                        </container>
+                                        <container>
+                                            <label style="head1">${uiLabelMap.${titleProperty}}</label><label style="head2"> for "${example.exampleName}" [${exampleId}]</label>
+                                        </container>
+                                    </widgets>
+                                </section>
 
-                                <!-- add Create Product and View Product (in ecommerce) links -->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
