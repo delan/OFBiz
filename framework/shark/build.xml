@@ -125,10 +125,17 @@
     <!-- ================================================================== -->
 
     <target name="copyLibs">
+        <property file="shark-build.properties"/>
+        <fail unless="shark.libs"/>
+
+        <echo message="Obtained shark.libs from shark-build.properties: ${shark.libs}"/>
+        <delete includeemptydirs="true">
+            <fileset dir="lib" includes="**/*" excludes="License.txt"/>
+        </delete>
         <copy todir="lib" flatten="true">
-            <fileset dir="../../../Shark/output/Shark/lib/wrapper" includes="*.jar" excludes="**/*-dods.jar"/>
-            <fileset dir="../../../Shark/output/Shark/lib/engine" includes="*.jar" excludes="**/*-dods.jar"/>
-            <fileset dir="../../../Shark/output/Shark/lib" includes="*.jar" excludes="**/*-dods.jar"/>
+            <fileset dir="${shark.libs}/wrapper" includes="*.jar" excludes="**/*-dods.jar"/>
+            <fileset dir="${shark.libs}/engine" includes="*.jar" excludes="**/*-dods.jar"/>
+            <fileset dir="${shark.libs}" includes="*.jar" excludes="**/*-dods.jar"/>
         </copy>
     </target>
 </project>
