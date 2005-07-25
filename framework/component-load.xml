@@ -46,5 +46,5 @@
     <load-component component-location="${ofbiz.home}/framework/shark"/>
     <load-component component-location="${ofbiz.home}/framework/webtools"/>
     <load-component component-location="${ofbiz.home}/framework/images"/>
-    <!-- <load-component component-location="${ofbiz.home}/framework/example"/> -->
+    <load-component component-location="${ofbiz.home}/framework/example"/>
 </component-loader>

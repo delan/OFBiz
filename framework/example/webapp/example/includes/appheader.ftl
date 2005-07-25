@@ -31,17 +31,18 @@
 
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
-<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
-<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+<#assign selectedLeftClassMap = {headerItem?default("void") : "headerButtonLeftSelected"}>
+<#assign selectedRightClassMap = {headerItem?default("void") : "headerButtonRightSelected"}>
 
 <div class="apptitle">${uiLabelMap.ExampleApplication}</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
+    <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>
+    <div class="col"><a href="<@ofbizUrl>/FindExample</@ofbizUrl>" class="${selectedLeftClassMap.Example?default(unselectedLeftClassName)}">${uiLabelMap.ExampleExample}</a></div>
 
-  <#if userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
-  <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
-  </#if>
-  <div class="col-fill">&nbsp;</div>
+    <#if userLogin?has_content>
+        <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
+    <#else>
+        <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
+    </#if>
+    <div class="col-fill">&nbsp;</div>
 </div>
