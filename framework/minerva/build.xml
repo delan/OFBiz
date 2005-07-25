@@ -78,7 +78,7 @@
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,classpath">
-        <javac debug="on" deprecation="off" destdir="${build.dir}/classes">
+        <javac debug="on" source="1.4" deprecation="off" destdir="${build.dir}/classes">
             <classpath>
                 <path refid="local.class.path"/>
             </classpath>

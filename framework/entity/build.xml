@@ -43,7 +43,7 @@
     <target name="classpath">
         <path id="local.class.path">
             <fileset dir="${lib.dir}" includes="*.jar"/>
-            <fileset dir="${lib.dir}/jdbc" includes="*.jar"/>           
+            <fileset dir="${lib.dir}/jdbc" includes="*.jar"/>
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/lib/commons" includes="*.jar"/>
             <fileset dir="../../base/lib/scripting" includes="*.jar"/>
@@ -85,7 +85,7 @@
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,classpath">
-        <javac debug="on" deprecation="on" destdir="${build.dir}/classes">
+        <javac debug="on" source="1.4" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
                 <path refid="local.class.path"/>
             </classpath>
