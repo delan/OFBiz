@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  * @since      2.0
  */
 public class EmailServices {
-    
+
     public final static String module = EmailServices.class.getName();
 
     protected static final HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
@@ -79,12 +79,12 @@ public class EmailServices {
             // no error; just return as if we already processed
             Debug.logImportant("Mail notifications disabled in general.properties; here is the context with info that would have been sent: " + context, module);
             return ServiceUtil.returnSuccess();
-        }      
+        }
         String sendTo = (String) context.get("sendTo");
         String sendCc = (String) context.get("sendCc");
         String sendBcc = (String) context.get("sendBcc");
         String subject = (String) context.get("subject");
-        
+
         // check to see if we should redirect all mail for testing
         String redirectAddress = UtilProperties.getPropertyValue("general.properties", "mail.notifications.redirectTo");
         if (UtilValidate.isNotEmpty(redirectAddress)) {
@@ -94,7 +94,7 @@ public class EmailServices {
             sendCc = null;
             sendBcc = null;
         }
-        
+
         String sendFrom = (String) context.get("sendFrom");
         String body = (String) context.get("body");
         String sendType = (String) context.get("sendType");
@@ -102,12 +102,12 @@ public class EmailServices {
         String authUser = (String) context.get("authUser");
         String authPass = (String) context.get("authPass");
         String contentType = (String) context.get("contentType");
-        boolean useSmtpAuth = false;      
-          
-        // define some default       
+        boolean useSmtpAuth = false;
+
+        // define some default
         if (sendType == null || sendType.equals("mail.smtp.host")) {
             sendType = "mail.smtp.host";
-            if (sendVia == null || sendVia.length() == 0) {            
+            if (sendVia == null || sendVia.length() == 0) {
                 sendVia = UtilProperties.getPropertyValue("general.properties", "mail.smtp.relay.host", "localhost");
             }
             if (authUser == null || authUser.length() == 0) {
@@ -122,18 +122,18 @@ public class EmailServices {
         } else if (sendVia == null) {
             return ServiceUtil.returnError("Parameter sendVia is required when sendType is not mail.smtp.host");
         }
-                       
+
         if (contentType == null) {
             contentType = "text/html";
         }
-                     
+
         try {
             Properties props = System.getProperties();
             props.put(sendType, sendVia);
             if (useSmtpAuth) {
                 props.put("mail.smtp.auth", "true");
             }
-            
+
             Session session = Session.getInstance(props);
 
             MimeMessage mail = new MimeMessage(session);
@@ -157,8 +157,8 @@ public class EmailServices {
             } else {
                 trans.connect(sendVia, authUser, authPass);
             }
-            trans.sendMessage(mail, mail.getAllRecipients()); 
-            trans.close();                  
+            trans.sendMessage(mail, mail.getAllRecipients());
+            trans.close();
         } catch (Exception e) {
             Debug.logError(e, "Cannot send mail message", module);
             return ServiceUtil.returnError("Cannot send mail; see logs");
@@ -205,8 +205,8 @@ public class EmailServices {
 
     /**
      * JavaMail Service that gets body content from a Screen Widget
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
+     *@param dctx The DispatchContext that this service is operating in
+     *@param serviceContext Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
     public static Map sendMailFromScreen(DispatchContext dctx, Map serviceContext) {
@@ -244,17 +244,17 @@ public class EmailServices {
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
-        
+
         String body = bodyWriter.toString();
         serviceContext.put("body", body);
-        
+
         // also expand the subject at this point, just in case it has the FlexibleStringExpander syntax in it...
         String subject = (String) serviceContext.get("subject");
         subject = FlexibleStringExpander.expandString(subject, screenContext, (Locale) screenContext.get("locale"));
         serviceContext.put("subject", subject);
-        
+
         if (Debug.verboseOn()) Debug.logVerbose("sendMailFromScreen sendMail context: " + serviceContext, module);
-        
+
         Map result = sendMail(dctx, serviceContext);
         result.put("body", body);
         return result;
