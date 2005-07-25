@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Base Build Script.
- *  $Id: build.xml,v 1.12 2004/05/22 22:43:27 ajzeneski Exp $
+ *  $Id$
 -->
 
 <project name="OFBiz - Base" default="jar" basedir=".">
@@ -80,7 +80,7 @@
 
     <target name="classes" depends="prepare,classpath">
         <!-- compile start -->
-    	<javac debug="on" deprecation="on" destdir="${build.dir}/classes/start">
+    	<javac debug="on" source="1.4" deprecation="on" destdir="${build.dir}/classes/start">
             <src path="${src.dir}/start"/>
         </javac>
         <copy todir="${build.dir}/classes/start">
@@ -95,7 +95,7 @@
         </condition>
 
         <!-- compile base -->
-    	<javac debug="on" deprecation="on" destdir="${build.dir}/classes/base">
+    	<javac debug="on" source="1.4" deprecation="on" destdir="${build.dir}/classes/base">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/classes/start"/>
