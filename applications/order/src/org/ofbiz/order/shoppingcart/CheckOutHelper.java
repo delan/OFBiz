@@ -788,7 +788,8 @@ public class CheckOutHelper {
             RETRY_ON_ERROR = "Y";
         }
 
-        // Get the orderId from the cart.
+        // Get the orderId/total from the cart.
+        double orderTotal = this.cart.getGrandTotal();
         String orderId = this.cart.getOrderId();
 
         // Get the paymentMethodTypeIds - this will need to change when ecom supports multiple payments
@@ -858,6 +859,15 @@ public class CheckOutHelper {
 
         // Invoke payment processing.
         if (requireAuth) {
+            if (orderTotal == 0) {
+                // if there is nothing to authorize; don't bother
+                boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+                if (!ok) {
+                    throw new GeneralException("Problem with order change; see above error");
+                }
+            }
+
+            // now there should be something to authorize; go ahead
             Map paymentResult = null;
             try {
                 // invoke the payment gateway service.
@@ -1629,7 +1639,7 @@ public class CheckOutHelper {
                 double selectedPaymentTotal = cart.getPaymentTotal();
                 double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
                 double nullAmount = requiredAmount - selectedPaymentTotal;
-                
+
                 String amountString = formatter.format(nullAmount);
                 double newAmount = 0;
                 try {
