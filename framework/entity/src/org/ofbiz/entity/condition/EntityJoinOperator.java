@@ -168,7 +168,11 @@ public class EntityJoinOperator extends EntityOperator {
         if (conditionList == null && conditionList.size() == 0)
             throw new GenericModelException("Empty list for joining");
         for (int i = 0; i < conditionList.size(); i++) {
-            EntityCondition condition = (EntityCondition) conditionList.get(i);
+            Object condObj = conditionList.get(i);
+            if (!(condObj instanceof EntityCondition)) {
+                throw new GenericModelException("Object is not a valid EntityCondition [" + condObj.getClass().getName() + "]");
+            }
+            EntityCondition condition = (EntityCondition) condObj;
             condition.checkCondition(modelEntity);
         }
     }
