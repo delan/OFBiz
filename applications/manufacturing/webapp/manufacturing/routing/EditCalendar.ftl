@@ -59,7 +59,7 @@
       <td width="74%">
          <select class="selectBox" name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>
-          <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description",locale)})?if_exists}</option>
+          <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description",locale))?if_exists}</option>
           </#list>
         </select>
     </tr>
