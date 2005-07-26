@@ -45,6 +45,9 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 import org.apache.xml.serialize.OutputFormat;
@@ -738,6 +741,7 @@ public class UspsServices {
     public static Map uspsUpdateShipmentRateInfo(DispatchContext dctx, Map context) {
 
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
 
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
@@ -857,15 +861,20 @@ public class UspsServices {
                 }
                 if (!"WT_lb".equals(weightUomId)) {
                     // attempt a conversion to pounds
-                    GenericValue uomConversion = null;
-                    uomConversion = delegator.findByPrimaryKey("UomConversion",
-                            UtilMisc.toMap("uomId", weightUomId, "uomIdTo", "WT_lb"));
-
-                    if (uomConversion == null || UtilValidate.isEmpty(uomConversion.getString("conversionFactor"))) {
+                    Map result = new HashMap();
+                    try {
+                        result = dispatcher.runSync("convertUom", UtilMisc.toMap("uomId", weightUomId, "uomIdTo", "WT_lb", "originalValue", new Double(weight)));
+                    } catch (GenericServiceException ex) {
+                        return ServiceUtil.returnError(ex.getMessage());
+                    }
+                    
+                    if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS)) {
+                        weight *= ((Double) result.get("convertedValue")).doubleValue();
+                    } else {
                         return ServiceUtil.returnError("Unsupported weightUom [" + weightUomId + "] for ShipmentPackage " +
                                 spKeyString + ", could not find a conversion factor for WT_lb");
                     }
-                    weight *= uomConversion.getDouble("conversionFactor").doubleValue();
+                    
                 }
 
                 double weightPounds = Math.floor(weight);

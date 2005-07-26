@@ -149,8 +149,14 @@
         			<br/>
         			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductVoidUpsShipment}]</a>
         		</#if>
-                <br/>
         	</#if>
+        	<#if "DHL" == shipmentRouteSegment.carrierPartyId?if_exists>
+        		<#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
+        			<a href="<@ofbizUrl>/dhlShipmentConfirm?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductConfirmShipmentDHL}]</a>
+        		</#if>
+        	</#if>
+
+           <br/>
             <select name="carrierServiceStatusId" class="selectBox">
                 <#if carrierServiceStatusItem?has_content>
                     <option value="${carrierServiceStatusItem.statusId}">${carrierServiceStatusItem.description}</option>
@@ -218,7 +224,7 @@
             <td><div class="tabletext">&nbsp;</div></td>
             <td>
             	<div class="tabletext">
-            		${uiLabelMap.ProductPackage} :${shipmentPackageRouteSeg.shipmentPackageSeqId}
+            		${uiLabelMap.ProductPackage} :${shipmentPackageRouteSeg.shipmentPackageSeqId} label here 
             		<#if shipmentPackageRouteSeg.labelImage?exists>
             			<a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${shipmentPackageRouteSeg.shipmentId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewLabelImage}]</a>
             		</#if>

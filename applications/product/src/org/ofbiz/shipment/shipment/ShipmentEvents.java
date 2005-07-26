@@ -76,13 +76,19 @@ public class ShipmentEvents {
             return "error";
         }
         
+        // TODO: record the image format somehow to make this block nicer.  Right now we're just trying GIF first as a default, then if it doesn't work, trying PNG.
+        // It would be nice to store the actual type of the image alongside the image data.
         try {
             UtilHttp.streamContentToBrowser(response, byteWrapper.getBytes(), "image/gif");
-        } catch (IOException e) {
-            String errorMsg = "Error writing labelImage to OutputStream: " + e.toString();
-            Debug.logError(e, errorMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
-            return "error";
+        } catch (IOException e1) {
+            try {
+                UtilHttp.streamContentToBrowser(response, byteWrapper.getBytes(), "image/png");
+            } catch (IOException e2) {
+                String errorMsg = "Error writing labelImage to OutputStream: " + e2.toString();
+                Debug.logError(e2, errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                return "error";
+            }
         }
         
         return "success";                                                

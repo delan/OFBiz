@@ -610,6 +610,15 @@
         <response name="error" type="view" value="QuickShipOrder"/>
     </request-map>
 
+    <!-- request to quick ship DHL.  Use this instead of quickUpsConfirm in the "success" response of setQuickRouteInfo, and your quick ship
+       orders will be routed to DHL instead of UPS -->
+    <request-map uri="quickDhlConfirm">
+        <security https="true" auth="true" direct-request="false"/>
+        <event type="service" path="" invoke="dhlShipmentConfirm"/>
+        <response name="success" type="request" value="QuickShipOrder"/>
+        <response name="error" type="view" value="QuickShipOrder"/>
+    </request-map>
+
     <!-- ================ Shipment Items Requests ================= -->
     <request-map uri="EditShipmentItems">
         <security https="true" auth="true"/>
@@ -741,6 +750,8 @@
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
+
+    <!-- UPS carrier requests -->
     <request-map uri="upsShipmentConfirm">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="upsShipmentConfirm"/>
@@ -765,6 +776,15 @@
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
+
+    <!-- DHL carrier requests -->
+    <request-map uri="dhlShipmentConfirm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="dhlShipmentConfirm"/>
+        <response name="success" type="view" value="EditShipmentRouteSegments"/>
+        <response name="error" type="view" value="EditShipmentRouteSegments"/>
+    </request-map>
+
     <request-map uri="viewShipmentPackageRouteSegLabelImage">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImage"/>
