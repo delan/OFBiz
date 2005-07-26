@@ -86,12 +86,19 @@
         </field>
 
         <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedShipWorkEffId}" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app"/></field>
-        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><text/></field>
-		<field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app"/></field>
-        <field name="latestCancelDate" title="${uiLabelMap.ProductLatestCancelDate}"><text/></field>
-		<field name="estimatedShipCost" title="${uiLabelMap.ProductEstimatedShipCost}"><text/></field>
-		<field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}"><text/></field>
-		<field name="handlingInstructions" title="${uiLabelMap.ProductHandlingInstructions}"><text/></field>
+        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><date-time/></field>
+        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app"/></field>
+        <field name="latestCancelDate" title="${uiLabelMap.ProductLatestCancelDate}"><date-time/></field>
+        <field name="estimatedShipCost" title="${uiLabelMap.ProductEstimatedShipCost}"><text/></field>
+        <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}">
+            <drop-down allow-empty="true" current="first-in-list">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${abbreviation} [${description}]">
+                    <entity-constraint name="uomTypeId" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="abbreviation"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="handlingInstructions" title="${uiLabelMap.ProductHandlingInstructions}"><text/></field>
 		 
         <field name="originContactMechId" title="${uiLabelMap.ProductOriginPostalAddressId}" 
                 tooltip="To: ${originPostalAddress.toName}, Attn: ${originPostalAddress.attnName}, ${originPostalAddress.address1}, ${originPostalAddress.address2}, ${originPostalAddress.city}, ${originPostalAddress.stateProvinceGeoId}, ${originPostalAddress.postalCode}, ${originPostalAddress.countryGeoId}" tooltip-style="tabletext">
