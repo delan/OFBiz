@@ -156,7 +156,13 @@ public class SqlJdbcUtil {
                     for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
                         ModelKeyMap keyMap = viewLink.getKeyMap(j);
                         ModelField linkField = linkEntity.getField(keyMap.getFieldName());
+                        if (linkField == null) {
+                            throw new GenericModelException("Invalid field name in view-link key-map for the " + viewLink.getEntityAlias() + " and the " + viewLink.getRelEntityAlias() + " member-entities of the " + modelViewEntity.getEntityName() + " view-entity; the field [" + keyMap.getFieldName() + "] does not exist on the [" + linkEntity.getEntityName() + "] entity.");
+                        }
                         ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
+                        if (relLinkField == null) {
+                            throw new GenericModelException("Invalid related field name in view-link key-map for the " + viewLink.getEntityAlias() + " and the " + viewLink.getRelEntityAlias() + " member-entities of the " + modelViewEntity.getEntityName() + " view-entity; the field [" + keyMap.getRelFieldName() + "] does not exist on the [" + relLinkEntity.getEntityName() + "] entity.");
+                        }
 
                         if (condBuffer.length() > 0) {
                             condBuffer.append(" AND ");
