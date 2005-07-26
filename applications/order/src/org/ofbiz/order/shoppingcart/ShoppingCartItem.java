@@ -710,9 +710,9 @@ public class ShoppingCartItem implements java.io.Serializable {
         //Debug.logInfo("Checking availability for product: " + productId.toString() + " and related FixedAsset: " + fixedAssetProduct.getString("fixedAssetId"),module);
 
         // see if this fixed asset has a calendar, when no create one and attach to fixed asset
-        GenericValue techDataCalendar = null;
+        // DEJ20050725 this isn't being used anywhere, commenting out for now and not assigning from the getRelatedOne: GenericValue techDataCalendar = null;
         try {
-            techDataCalendar = fixedAsset.getRelatedOne("TechDataCalendar");
+            fixedAsset.getRelatedOne("TechDataCalendar");
         } catch (GenericEntityException e) {
             // no calendar ok, when not more that total capacity
             if (fixedAsset.getDouble("productionCapacity").doubleValue() >= quantity) {
@@ -1058,7 +1058,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Sets the item's customer desired delivery date. */
     public void setDesiredDeliveryDate(Timestamp ddDate) {
         if (ddDate != null) {
-            this.setAttribute("itemDesiredDeliveryDate", UtilDateTime.toDateTimeString(ddDate));
+            this.setAttribute("itemDesiredDeliveryDate", ddDate.toString());
         }
     }
 
