@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,9 +150,15 @@ public class FreeMarkerWorker {
                         filename = locationUrl.toExternalForm();
                         config = makeDefaultOfbizConfig();
                     }
-                    template = new Template(filename, locationReader, config);            
+                    template = new Template(filename, locationReader, config);
                     
                     cachedTemplates.put(location, template);
+                    
+                    // ensure that freemarker uses locale to display locale sensitive data
+                    Locale locale = (Locale) context.get("locale");
+                    if (locale == null)
+                        locale = Locale.getDefault();
+                    template.setSetting("locale", locale.toString());                    
                 }
             }
         }
@@ -180,7 +187,14 @@ public class FreeMarkerWorker {
         }
         
         Configuration config = makeDefaultOfbizConfig();            
-        Template template = new Template(templateIdString, templateReader, config);            
+        Template template = new Template(templateIdString, templateReader, config); 
+        
+        // ensure that freemarker uses locale to display locale sensitive data
+        Locale locale = (Locale) context.get("locale");
+        if (locale == null)
+            locale = Locale.getDefault();
+        template.setSetting("locale", locale.toString());
+        
         // add the OFBiz transforms/methods
         addAllOfbizTransforms(context);
         
