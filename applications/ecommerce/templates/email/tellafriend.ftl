@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,8 +24,10 @@
  *@since      3.0
 -->
 
-${sendTo},<br/>
-${sendFrom} ${uiLabelMap.EcommerceFollowingMessage}<br/><br/>
+${sendTo},
+<br/>
+${sendFrom} ${uiLabelMap.EcommerceFollowingMessage}
+<br/><br/>
 ${message}
 <br/><br/>
 <a href="${pageUrl}">${pageUrl}</a>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,5 +27,5 @@
 <#-- ReturnHeader and a List of ReturnItem records is available to this template -->
 
 <br/>
-${uiLabelMap.EcommerceReturnRequestNb}${returnHeader.returnId} ${uiLabelMap.EcommerceReturnRequestCompleted}
+${uiLabelMap.EcommerceReturnRequestNb} ${returnHeader.returnId} ${uiLabelMap.EcommerceReturnRequestCompleted}
 <br/>

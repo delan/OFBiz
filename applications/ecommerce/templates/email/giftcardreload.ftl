@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -45,12 +45,15 @@
 <#if processResult>
   <#-- success -->
   <br/>
-  ${uiLabelMap.EcommerceYourGiftCard} ${displayNumber} ${uiLabelMap.EcommerceYourGiftCardReloaded}<br/>
-  ${uiLabelMap.EcommerceGiftCardNewBalance} ${amount} ${uiLabelMap.CommonFrom} ${previousAmount}<br/>
+  ${uiLabelMap.EcommerceYourGiftCard} ${displayNumber} ${uiLabelMap.EcommerceYourGiftCardReloaded}
+  <br/>
+  ${uiLabelMap.EcommerceGiftCardNewBalance} ${amount} ${uiLabelMap.CommonFrom} ${previousAmount}
+  <br/>
 <#else>
   <#-- fail -->
   <br/>
-  ${uiLabelMap.EcommerceGiftCardReloadFailed} ${responseCode}<br/>
+  ${uiLabelMap.EcommerceGiftCardReloadFailed} ${responseCode}
+  <br/>
   ${uiLabelMap.EcommerceGiftCardRefunded}
   <br/>
 </#if>

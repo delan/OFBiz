@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,10 +25,9 @@
 -->
 
 <#-- ReturnHeader and a List of ReturnItem records is available to this template -->
-
 <br/>
-${uiLabelMap.EcommerceReturnRequest}<br/><br/>
-
+${uiLabelMap.EcommerceReturnRequest}
+<br/><br/>
 <pre>
 <#list returnItems as item>
   <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
@@ -38,7 +37,5 @@ ${uiLabelMap.EcommerceReturnRequest}<br/><br/>
 </pre>
 <br/><br/>
 
-${uiLabelMap.EcommerceReturnRequestAccepted}${returnHeader.returnId}<br/>
-
-<br/>
-
+${uiLabelMap.EcommerceReturnRequestAccepted} ${returnHeader.returnId}
+<br/><br/>
