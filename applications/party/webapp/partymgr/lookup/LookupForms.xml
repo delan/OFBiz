@@ -144,4 +144,19 @@
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><display/></field>
     </form>
 
+    <form name="listLookupSegmentGroup" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
+         paginate-target="" title="" type="list" view-size="100">
+          <actions>
+            <entity-and entity-name="SegmentGroup">
+            </entity-and>
+        </actions>
+        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.PartySegmentGroupId}">
+            <hyperlink also-hidden="false" target-type="content" description="${segmentGroupId}" target="javascript:set_value('${segmentGroupId}')"/>
+        </field>
+        <field name="segmentGroupTypeId" title="${uiLabelMap.PartySegmentGroupTypeId}"><display/></field>
+        <field name="description" title="${uiLabelMap.PartySegmentGroupDescription}"><display/></field>
+        <field name="productStoreId" title="${uiLabelMap.PartySegmentGroupProductStoreId}"><display/></field>
+        
+    </form>
+    
 </forms>

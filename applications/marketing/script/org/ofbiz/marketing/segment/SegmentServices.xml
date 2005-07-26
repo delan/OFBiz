@@ -133,6 +133,7 @@
         <check-permission permission="MARKETING" action="_DELETE"><fail-property resource="SegmentGroupUiLabels" property="SegmentGroupRemoveSegmentGroupRolePermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="SegmentGroupRole" value-name="lookedUpValue"/>
+<!--         <field-to-result field-name="lookedUpValue.partyId" result-name="partyId"/> -->
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 

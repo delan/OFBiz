@@ -201,6 +201,7 @@
             location="org/ofbiz/marketing/segment/SegmentServices.xml" invoke="deleteSegmentGroupRole">
         <description>delete SegmentGroupRole</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
+<!--         <attribute name="partyId" mode="OUT" optional="false"></attribute> -->
     </service>
 
     <!-- SegmentGroup Related Find Service -->

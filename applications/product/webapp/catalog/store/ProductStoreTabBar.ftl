@@ -39,5 +39,6 @@
       <a href="<@ofbizUrl>/EditProductStoreEmails?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreEmails?default(unselectedClassName)}">${uiLabelMap.CommonEmails}</a>
       <a href="<@ofbizUrl>/EditProductStoreSurveys?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreSurveys?default(unselectedClassName)}">${uiLabelMap.CommonSurveys}</a>
       <a href="<@ofbizUrl>/editProductStoreKeywordOvrd?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreKeywordOvrd?default(unselectedClassName)}">${uiLabelMap.ProductOverride}</a>
+      <a href="<@ofbizUrl>/ViewProductStoreSegments?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.ViewProductStoreSegments?default(unselectedClassName)}">${uiLabelMap.ProductSegments}</a>
     </div>
   </#if>  

@@ -371,4 +371,32 @@
             </widgets>
        </section>
     </screen>
+    <screen name="ViewProductStoreSegments">
+       <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewProductStoreSegments"/>
+                <set field="headerItem" value="store"/>
+                <set field="tabButtonItem" value="ViewProductStoreSegments"/>
+                <set field="labelTitleProperty" value="ProductSegments"/>
+
+                <set field="productStoreId" from-field="parameters.productStoreId"/>
+               
+                <entity-one entity-name="ProductStore" value-name="productStore" >
+                    <field-map env-name="productStoreId"/>
+                </entity-one>
+               
+
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductStoreDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="/marketing/control/viewSegmentGroup?productStoreId=${productStoreId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}" text="[${uiLabelMap.ProductNewSegment}]" style="buttontext" url-mode="inter-app"/>
+                        </container>
+                        <include-form name="ViewProductStoreSegments" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+       </section>
+    </screen>
 </screens>

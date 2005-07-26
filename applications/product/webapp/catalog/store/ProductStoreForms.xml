@@ -232,4 +232,28 @@
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
+   <form name="ViewProductStoreSegments" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
+        target="" paginate-target="" title="" type="list">
+        <actions>
+        	<entity-and entity-name="SegmentGroup" >
+            	<field-map env-name="productStoreId" />
+        	</entity-and>
+        </actions>
+        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.ProductSegmentGroupId}">
+            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
+        </field>
+        <field name="segmentGroupTypeId" title="${uiLabelMap.ProductSegmentGroupTypeId}"><display/></field>
+        <field name="description" title="${uiLabelMap.ProductSegmentGroupDescription}"><display/></field>
+        <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="/marketing/control/viewSegmentGroup?segmentGroupId=${segmentGroupId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}"
+                description="[${uiLabelMap.CommonUpdate}]" also-hidden="false" target-type="inter-app"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="/marketing/control/deleteSegmentGroup?segmentGroupId=${segmentGroupId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false" target-type="inter-app"/>
+        </field>
+        
+    </form>
+     
 </forms>
