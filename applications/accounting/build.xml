@@ -100,9 +100,8 @@
                 <path refid="local.class.path"/>
             </classpath>
             <src path="${src.dir}"/>
-            <!-- exclude the payment processor packages; comment if you have libs
+            <!-- exclude the payment processor packages; comment this out to not exclude if you have libs -->
             <exclude name="org/ofbiz/accounting/thirdparty/verisign/**"/>
-            -->
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
