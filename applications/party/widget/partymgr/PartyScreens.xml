@@ -513,5 +513,34 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ViewSegmentRoles">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartySegmentRoles"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="ViewPartySegmentRoles"/>
+                
+                <set field="labelTitleProperty" value="PartyViewSegmentRoles"/>
+                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-name="party"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="${uiLabelMap.PartySegmentRoles}"/>
+                            </container>
+                            <container style="screenlet-body">
+                                <include-form name="ListSegmentRoles" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                                <include-form name="AddSegmentRole" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
     

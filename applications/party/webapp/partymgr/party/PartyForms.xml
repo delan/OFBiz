@@ -288,4 +288,47 @@
         
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
+    <form name="ListSegmentRoles" type="list" 
+        target="updateSegmentGroupRole" title="" 
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
+        target=""  title="" type="list">
+        <actions>
+        <entity-and entity-name="SegmentGroupRole">
+            <field-map env-name="partyId" />
+        </entity-and>
+        </actions>
+        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.PartySegmentGroupId}">
+            <display/>
+        </field>
+        <field name="partyId" title="${uiLabelMap.PartyId}"><display/></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartySegmentGroupTypeId}">
+            <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteSegmentGroupRole?segmentGroupId=${segmentGroupId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="AddSegmentRole" type="single" 
+            target="createSegmentRole" title="" default-map-name="segmentGroupRole"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <field name="segmentGroupId" title="${uiLabelMap.PartySegmentGroupId}" >
+            <lookup target-form-name="LookupSegmentGroup"/>
+        </field>
+
+        <field name="partyId">
+            <display/>
+        </field>
+        <field name="roleTypeId">
+            <drop-down>
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <!-- <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field> -->
+    </form>
+    
 </forms>

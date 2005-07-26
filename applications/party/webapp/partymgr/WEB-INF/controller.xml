@@ -682,6 +682,7 @@
         <response name="success" type="view" value="editCommunication"/>
         <response name="success" type="view" value="editCommunication"/>
     </request-map>
+    
     <!-- Lookup request mappings -->
     <request-map uri="LookupPartyName">
         <security https="true" auth="true"/>
@@ -699,6 +700,27 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupPartyGroup"/>
     </request-map>
+    <request-map uri="ViewSegmentRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewSegmentRoles"/>
+    </request-map>
+    <request-map uri="LookupSegmentGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupSegmentGroup"/>
+    </request-map>
+    <request-map uri="createSegmentRole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSegmentGroupRole"/>
+        <response name="success" type="view" value="ViewSegmentRoles"/>
+        <response name="error" type="view" value="ViewSegmentRoles"/>
+    </request-map>
+    <request-map uri="deleteSegmentGroupRole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSegmentGroupRole"/>
+        <response name="success" type="view" value="ViewSegmentRoles"/>
+        <response name="error" type="view" value="ViewSegmentRoles"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -735,6 +757,8 @@
     <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateNewParty"/>
     <view-map name="NewCustomer" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewCustomer"/>
     
+    <view-map name="ViewSegmentRoles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#ViewSegmentRoles"/>
+
     <view-map name="FindSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#FindSecurityGroup"/>
     <view-map name="EditSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#EditSecurityGroup"/>
     <view-map name="EditSecurityGroupPermissions" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#EditSecurityGroupPermissions"/>
@@ -747,5 +771,6 @@
     <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
     <view-map name="LookupPartyAndUserLoginAndPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson"/>
     <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
+    <view-map name="LookupSegmentGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupSegmentGroup"/>
     <!-- end of view mappings -->
 </site-conf>

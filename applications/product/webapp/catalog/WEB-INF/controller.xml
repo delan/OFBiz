@@ -1734,6 +1734,12 @@
         <response name="error" type="view" value="EditProductStoreKeywordOvrd"/>
     </request-map>
 
+    <!-- ================ ProductStore Segment Requests ================= -->
+    <request-map uri="ViewProductStoreSegments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewProductStoreSegments"/>
+    </request-map>
+
     <!-- ================ Keyword Thesaurus Requests ================= -->
     <request-map uri="editKeywordThesaurus">
         <security https="true" auth="true"/>
@@ -2074,6 +2080,7 @@
     <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
     <view-map name="EditProductStoreWebSites" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreWebSites"/>
     <view-map name="EditProductStoreKeywordOvrd" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreKeywordOvrd"/>
+    <view-map name="ViewProductStoreSegments" type="screen" page="component://product/widget/catalog/StoreScreens.xml#ViewProductStoreSegments"/>
 
     <view-map name="EditKeywordThesaurus" type="screen" page="component://product/widget/catalog/ThesaurusScreens.xml#EditKeywordThesaurus"/>
 

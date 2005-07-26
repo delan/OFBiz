@@ -72,15 +72,16 @@
                 <set field="tabButtonItem" value="viewSegmentGroup"/>
                 <set field="labelTitleProperty" value="PageTitleEditSegmentGroup"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="LookupSegmentGroup"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/LookupSegmentGroup"/>
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
+                <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="SegmentGroup" value-name="segmentGroup"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSegmentGroupDecorator">
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleEditSegmentGroup}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupCreate}]" target="/viewSegmentGroup" style="tabletext"/>
+                        <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupCreate}]" target="/viewSegmentGroup?DONE_PAGE=${donePage}" style="tabletext"/>
                         <include-form name="EditSegmentGroup" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -107,6 +108,7 @@
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/LookupSegmentGroup"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://marketing/widget/CommonScreens.xml">

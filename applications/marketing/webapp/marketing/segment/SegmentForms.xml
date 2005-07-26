@@ -39,12 +39,19 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreId">
+        <field name="productStoreId" use-when="&quot;${parameters.productStoreId}&quot;.length()&gt;0" map-name="parameters">
+            <lookup target-form-name="LookupProductStore"/>
+        </field>
+        <field name="productStoreId" use-when="&quot;${parameters.productStoreId}&quot;.length()&gt;0" >
             <lookup target-form-name="LookupProductStore"/>
         </field>
         
+        <field name="DONE_PAGE">
+            <hidden value="${donePage}"/>
+        </field>
+        
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
+        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]" target-type="inter-app"/></field>
     </form>
 
     <form name="EditSegmentGroupClass" type="single" 
@@ -68,9 +75,6 @@
             target="updateSegmentGroupGeo" title="" default-map-name="segmentGroupGeo"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="segmentGroupGeo==null" target="createSegmentGroupGeo"/>
-        <actions>
-        <entity-one entity-name="SegmentGroupGeo"/>
-        </actions>
         <auto-fields-service service-name="updateSegmentGroupGeo"/>
         
         <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -106,9 +110,6 @@
             target="updateSegmentGroupRole" title="" default-map-name="segmentGroupRole"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="segmentGroupRole==null" target="createSegmentGroupRole"/>
-        <actions>
-        <entity-one entity-name="SegmentGroupRole"/>
-        </actions>
         <auto-fields-service service-name="updateSegmentGroupRole"/>
         
         <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
