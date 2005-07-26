@@ -129,6 +129,7 @@
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="orderBy" env-name="orderBy"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
         </actions>
