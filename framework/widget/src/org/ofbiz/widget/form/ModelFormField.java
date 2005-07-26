@@ -23,11 +23,13 @@
  */
 package org.ofbiz.widget.form;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.BshUtil;
@@ -437,8 +439,8 @@ public class ModelFormField {
             ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
             this.setFieldInfo(displayField);
         } else if ("hidden".equals(defaultFieldType)) {
-        	ModelFormField.HiddenField hiddenField = new ModelFormField.HiddenField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
-        	this.setFieldInfo(hiddenField);
+            ModelFormField.HiddenField hiddenField = new ModelFormField.HiddenField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
+            this.setFieldInfo(hiddenField);
         } else {
             if ("id".equals(modelField.getType()) || "id-ne".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
@@ -600,6 +602,10 @@ public class ModelFormField {
     public String getEntry(Map context, String defaultValue) {
         Boolean isError = (Boolean) context.get("isError");
         Boolean useRequestParameters = (Boolean) context.get("useRequestParameters");
+        
+        Locale locale = (Locale) context.get("locale");
+        if (locale == null) locale = Locale.getDefault();
+        
         // if useRequestParameters is TRUE then parameters will always be used, if FALSE then parameters will never be used
         // if isError is TRUE and useRequestParameters is not FALSE (ie is null or TRUE) then parameters will be used
         if ((Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters)) || (Boolean.TRUE.equals(useRequestParameters))) {
@@ -628,12 +634,12 @@ public class ModelFormField {
             }
 
             if (retVal != null) {
-            	// format number in the default way for the server because that is how it will parse it; may want to change this to be based on the user's locale instead of the server's sometime in the future
-            	if (retVal instanceof Double || retVal instanceof Float) {
-            	    return NumberFormat.getInstance().format(retVal);
-            	}
-            	
-                return retVal.toString();
+                // format number based on the user's locale
+                if (retVal instanceof Double || retVal instanceof Float || retVal instanceof BigDecimal) {
+                    return NumberFormat.getInstance(locale).format(retVal);
+                } else {
+                    return retVal.toString();
+                }
             } else {
                 return defaultValue;
             }
@@ -1549,7 +1555,7 @@ public class ModelFormField {
                     String optionDesc = this.description.expandString(localContext, UtilMisc.ensureLocale(context.get("locale")));
                     Object keyFieldObject = value.get(this.getKeyFieldName());
                     if (keyFieldObject == null) {
-                    	throw new IllegalArgumentException("The value found for key-name [" + this.getKeyFieldName() + "], may not be a valid key field name.");
+                        throw new IllegalArgumentException("The value found for key-name [" + this.getKeyFieldName() + "], may not be a valid key field name.");
                     }
                     String keyFieldValue = keyFieldObject.toString();
                     optionValues.add(new OptionValue(keyFieldValue, optionDesc));
@@ -1760,8 +1766,8 @@ public class ModelFormField {
         }
 
         public String getTargetWindow(Map context) {
-        	String targetWindow = this.targetWindowExdr.expandString(context);
-        	return targetWindow;
+            String targetWindow = this.targetWindowExdr.expandString(context);
+            return targetWindow;
         }
         
         /**
@@ -1854,8 +1860,8 @@ public class ModelFormField {
         }
 
         public String getTargetWindow(Map context) {
-        	String targetWindow = this.targetWindowExdr.expandString(context);
-        	return targetWindow;
+            String targetWindow = this.targetWindowExdr.expandString(context);
+            return targetWindow;
         }
         
         /**
