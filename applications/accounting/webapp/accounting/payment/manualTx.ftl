@@ -27,6 +27,8 @@
 <div class="head1">Manual Electronic Transaction</div>
 <br/>
 
+<#assign locale = requestAttributes.locale>
+
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
   ${setRequestAttribute("validTx", "false")}
   <form name="manualTxForm" method="get" action="<@ofbizUrl>/manualETx</@ofbizUrl>">

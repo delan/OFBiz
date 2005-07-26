@@ -48,7 +48,7 @@
       <#assign uom = term.getRelatedOne("Uom")>
     </#if>
     <tr>
-      <td><div class="tabletext">${(termType.get("description", locale))?if_exists}</div></td>
+      <td><div class="tabletext">${(termType.get("description",locale))?if_exists}</div></td>
       <td><div class="tabletext">${term.termValue?if_exists}</div></td>
       <td><div class="tabletext"><#if uom?has_content>${uom.description?if_exists}<#else>&nbsp;</#if></div></td>
       <td align="right">  
