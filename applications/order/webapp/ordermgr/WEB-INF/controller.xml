@@ -408,6 +408,12 @@
         <response name="error" type="request" value="orderentry"/>
     </request-map>
 
+    <request-map uri="chooseOrderPartyAddress">
+        <security https="true" auth="true"/>
+        <!--<event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntry"/>-->
+        <response name="success" type="view" value="addrsetting"/>
+    </request-map>
+
     <!-- ================================================================= -->
     <!-- ==================  MultiParty Modifs =========================== -->
     <!-- ================================================================= -->
@@ -1013,6 +1019,7 @@
 
     <view-map name="custsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#CustSettings"/>
     <view-map name="shipsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#ShipSettings"/>
+    <view-map name="addrsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#AddrSettings"/>
     <view-map name="optionsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OptionSettings"/>
     <view-map name="billsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#BillSettings"/>
     <view-map name="confirm" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#ConfirmOrder"/>

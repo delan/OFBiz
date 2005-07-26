@@ -29,6 +29,19 @@
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
+
+      <#-- header table for company shipping addresses -->
+
+      <br/>
+      <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td><div class="boxhead">${uiLabelMap.OrderSelectAShippingAddress}</div></td>
+          <td valign="middle" align="right">
+            <a href="javascript:document.checkoutsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
+          </td>
+        </tr>
+      </table>
+
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
@@ -37,15 +50,20 @@
               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="finalizeMode" value="ship">
 
-                <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                <tr><td colspan="4"><hr class='sepbar'></td></tr>
+
+                <#-- company postal addresses -->
+                
                 <#list shippingContactMechListF as shippingContactMech>
                   <#if shippingContactMech.postalAddress?exists>
                   <#assign shippingAddress = shippingContactMech.postalAddress>
+
                   <tr>
-                    <td align="left" valign="top" width="1%" nowrap>
+                    <td valign="top" nowrap>
                       <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>
                     </td>
-                    <td align="left" valign="top" width="99%" nowrap>
+                    <td nowrap>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td align="left" valign="top" width="100%" nowrap>
                       <div class="tabletext">
                         <#if shippingAddress.toName?has_content><b>To:</b>&nbsp;${shippingAddress.toName}<br/></#if>
                         <#if shippingAddress.attnName?has_content><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br/></#if>
@@ -62,7 +80,7 @@
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="4"><hr class='sepbar'></td></tr>
                   </#if>
                   </#if>
                 </#list>
@@ -203,11 +221,56 @@
                 </td>
                 </table>
               </form>
+
             </#if>
             </#if>
           </td>
         </tr>
       </table>
+
+      <#-- select a party id to ship to instead -->
+
+      <br/>
+      <form method="post" action="chooseOrderPartyAddress" name="partyshipform">
+
+        <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <tr>
+           <td><div class="boxhead">${uiLabelMap.OrderShipToAnotherParty}</div></td>
+            <td valign="middle" align="right">
+              <a href="javascript:document.partyshipform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
+           </td>
+          </tr>
+        </table>
+
+        <table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
+          <tr><td>
+              <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION">
+              <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+                <tr><td colspan="4">&nbsp;</td></tr>
+                <tr>
+                <td>&nbsp;</td>
+                <td align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
+                <td>&nbsp;</td>
+                <td valign='middle'>
+                  <div class='tabletext' valign='top'>
+                    <input type='text' class='inputBox' name='partyId' value='${thisPartyId?if_exists}'>
+                    <a href="javascript:call_fieldlookup2(document.partyshipform.partyId,'LookupPartyName');">
+                    <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr><td colspan="4">&nbsp;</td></tr>
+            </table>
+          </td></tr>
+        </table>
+      </form>
+
+    </td>
+  </tr>
+</table>
+
+
     </td>
   </tr>
 </table>
