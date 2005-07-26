@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -29,14 +29,17 @@
      from surveyId 1000 - The gift card purchase survey.
  -->
 
-${recipientName},<br/>
+${recipientName},
+<br/>
 
-${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}!<br/><br/> <#-- MyCompany.com (not a variable why?) must be adapted - JLR 1/6/5 -->
+<#-- MyCompany.com (not a variable why?) must be adapted - JLR 1/6/5 -->
+${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}!
+<br/><br/>
 <#if giftMessage?has_content>
-  ${uiLabelMap.OrderGiftMessage}<br/><br/>
+  ${uiLabelMap.OrderGiftMessage}
+  <br/><br/>
   ${giftMessage}
-  <br/>
-  <br/>
+  <br/><br/>
 </#if>
 
 <pre>
@@ -44,5 +47,3 @@ ${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com ${uiLabelMap.EcommerceGiftC
   ${uiLabelMap.EcommerceYourPinNumber} ${pinNumber?if_exists}
   ${uiLabelMap.EcommerceGiftAmount} ${amount?if_exists}
 </pre>
-
-
