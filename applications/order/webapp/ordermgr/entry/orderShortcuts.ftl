@@ -19,6 +19,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     Leon Torres (leon@opensourcestrategies.com)
  *@author     Jacopo Cappellato (tiz@sastau.it)
 -->
 
@@ -78,6 +79,13 @@
                     <a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceQuickAdd}]</a>
                   </td>
                 </tr>
+                <#if shoppingLists?exists>
+                  <tr>
+                    <td>
+                      <a href="<@ofbizUrl>/viewPartyShoppingLists?partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PageTitleShoppingList}]</a>
+                    </td>
+                  </tr>
+                </#if>
             </table>
           </td>
         </tr>

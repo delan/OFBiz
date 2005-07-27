@@ -55,6 +55,9 @@
     </screen>
     <screen name="orderShortcuts">
         <section>
+            <actions>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/shoppinglist.bsh"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/orderShortcuts.ftl"/></html></platform-specific>
             </widgets>
