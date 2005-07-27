@@ -34,9 +34,9 @@
     <fo:simple-page-master master-name="return-summary"
         margin-top="1in" margin-bottom="1in"
         margin-left="1in" margin-right="1in">
-      <fo:region-body margin-top="1in" margin-bottom="1in"/>  <#-- main body with parties, list of returned items and total -->
-      <fo:region-before extent="1in"/>  <#-- header with logo and date/returnId -->
-      <fo:region-after extent="1in"/>  <#-- footer with page number and caption -->
+      <fo:region-body margin-top="3in" margin-bottom="0.5in"/>  <#-- main body with parties, list of returned items and total -->
+      <fo:region-before extent="3in"/>  <#-- header with logo and date/returnId -->
+      <fo:region-after extent="0.5in"/>  <#-- footer with page number and caption -->
     </fo:simple-page-master>
 
   </fo:layout-master-set>
@@ -110,26 +110,10 @@
       </fo:table-body>
       </fo:table>
       </fo:block>
-    </fo:static-content>
-
-
-    <#-- footer.  Use it for standard boilerplate text. -->
-
-
-    <fo:static-content flow-name="xsl-region-after">
-      <#-- displays page number.  "theEnd" is an id of a fo:block at the very end -->    
-      <fo:block font-size="10pt" text-align="center">Page <fo:page-number/> of <fo:page-number-citation ref-id="theEnd"/></fo:block>
-    </fo:static-content>
-
-  
-    <#-- main body -->
-
-    
-    <fo:flow flow-name="xsl-region-body">
 
       <#-- return from and to -->
 
-      <fo:block font-size="10pt">
+      <fo:block font-size="10pt" space-before="5mm">
         <fo:table>
           <fo:table-column column-width="2.75in"/>
           <fo:table-column column-width="0.5in"/>
@@ -179,19 +163,14 @@ ${postalAddressTo.city}<#if postalAddressTo.stateProvinceGeoId?has_content>, ${p
           </fo:table>
       </fo:block>
 
-      <#-- Items returned -->
-      
-      <fo:block space-before="5mm" font-size="10pt">
-        <fo:table border-style="solid" border-width="0.2pt" height="5in">
-          <fo:table-column column-width="0.75in"/>
-          <fo:table-column column-width="0.75in"/>
-          <fo:table-column column-width="2.2in"/>
+        <fo:table height="0.25in" space-before="5mm">
+          <fo:table-column column-width="0.85in"/>
+          <fo:table-column column-width="0.85in"/>
+          <fo:table-column column-width="2in"/>
           <fo:table-column column-width="0.5in"/>
           <fo:table-column column-width="0.85in"/>
           <fo:table-column column-width="0.85in"/>
           <fo:table-body>
-
-            <#-- header -->
             <fo:table-row text-align="center" font-weight="bold">
               <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Order No.</fo:block></fo:table-cell>
               <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Product No.</fo:block></fo:table-cell>
@@ -200,18 +179,51 @@ ${postalAddressTo.city}<#if postalAddressTo.stateProvinceGeoId?has_content>, ${p
               <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Unit Price</fo:block></fo:table-cell>
               <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Amount</fo:block></fo:table-cell>
             </fo:table-row>
+          </fo:table-body>
+        </fo:table>
+
+    </fo:static-content>
+
+
+    <#-- footer.  Use it for standard boilerplate text. -->
+
+
+    <fo:static-content flow-name="xsl-region-after">
+      <#-- displays page number.  "theEnd" is an id of a fo:block at the very end -->    
+      <fo:block space-before="5mm" font-size="10pt" text-align="center">Page <fo:page-number/> of <fo:page-number-citation ref-id="theEnd"/></fo:block>
+    </fo:static-content>
+
+  
+    <#-- main body -->
+
+    
+    <fo:flow flow-name="xsl-region-body">
+
+      <#-- Items returned -->
+      
+      <fo:block font-size="10pt">
+        <fo:table border-style="solid" border-width="0.2pt" height="5in">
+          <fo:table-column column-width="0.85in"/>
+          <fo:table-column column-width="0.85in"/>
+          <fo:table-column column-width="2in"/>
+          <fo:table-column column-width="0.5in"/>
+          <fo:table-column column-width="0.85in"/>
+          <fo:table-column column-width="0.85in"/>
+          <fo:table-body>
 
             <#-- each item -->
             <#assign total = 0.0/>
             <#list returnItems as returnItem>
               <fo:table-row>
-                <fo:table-cell padding="1mm"><fo:block>${returnItem.orderId}</fo:block></fo:table-cell>
-                <fo:table-cell padding="1mm">
+                <fo:table-cell padding="1mm" font-size="8pt">
+                  <fo:block>${returnItem.orderId}</fo:block>
+                </fo:table-cell>
+                <fo:table-cell padding="1mm" font-size="8pt">
                   <fo:block>
                     <#if returnItem.orderItemSeqId?exists>${returnItem.getRelatedOne("OrderItem").getString("productId")}</#if>
                   </fo:block>
                 </fo:table-cell>
-                <fo:table-cell padding="1mm"><fo:block>${returnItem.description}</fo:block></fo:table-cell>
+                <fo:table-cell padding="1mm"><fo:block wrap-option="wrap">${returnItem.description}</fo:block></fo:table-cell>
                 <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnItem.returnQuantity}</fo:block></fo:table-cell>
                 <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnItem.returnPrice?string.currency}</fo:block></fo:table-cell>
                 <fo:table-cell padding="1mm" text-align="right"><fo:block>${(returnItem.returnPrice * returnItem.returnQuantity)?string.currency}</fo:block></fo:table-cell>
@@ -226,9 +238,9 @@ ${postalAddressTo.city}<#if postalAddressTo.stateProvinceGeoId?has_content>, ${p
       <#-- total -->
 
         <fo:table space-before="5mm" font-size="10pt">
-          <fo:table-column column-width="0.75in"/>
-          <fo:table-column column-width="0.75in"/>
-          <fo:table-column column-width="2.2in"/>
+          <fo:table-column column-width="0.85in"/>
+          <fo:table-column column-width="0.85in"/>
+          <fo:table-column column-width="2in"/>
           <fo:table-column column-width="0.5in"/>
           <fo:table-column column-width="0.85in"/>
           <fo:table-column column-width="0.85in"/>
