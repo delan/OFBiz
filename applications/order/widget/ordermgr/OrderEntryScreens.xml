@@ -112,4 +112,44 @@
          </section>
     </screen>
 
+    <!-- display all shopping lists for a party -->
+    <screen name="ViewShoppingLists">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.PageTitleShoppingList}"/>
+                <set field="partyId" from-field="requestParameters.partyId"/>
+                <entity-and entity-name="ShoppingList" list-name="customershoppinglists">
+                    <field-map env-name="partyId" field-name="partyId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="ViewShoppingLists" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- display shopping list items in a shopping list -->
+    <screen name="AddFromShoppingList">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.PageTitleShoppingListItem}"/>
+                <set field="shoppingListId" from-field="requestParameters.shoppingListId"/>
+                <entity-and entity-name="ShoppingListItem" list-name="shoppinglistitems">
+                    <field-map env-name="shoppingListId" field-name="shoppingListId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="AddFromShoppingList" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>

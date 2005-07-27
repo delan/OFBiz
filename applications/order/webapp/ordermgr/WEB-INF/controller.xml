@@ -328,6 +328,22 @@
         <response name="success" type="request" value="orderentry"/>
         <response name="error" type="request" value="orderentry"/>
     </request-map>
+    <request-map uri="viewPartyShoppingLists">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewshoppinglists"/>
+        <response name="error" type="view" value="checkinits"/>
+    </request-map>
+    <request-map uri="addFromShoppingList">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="addfromshoppinglist"/>
+        <response name="error" type="view" value="checkinits"/>
+    </request-map>
+    <request-map uri="addAllFromShoppingList">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addListToCart"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="view" value="checkinits"/>
+    </request-map>
     <request-map uri="addseperator">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
@@ -410,7 +426,6 @@
 
     <request-map uri="chooseOrderPartyAddress">
         <security https="true" auth="true"/>
-        <!--<event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntry"/>-->
         <response name="success" type="view" value="addrsetting"/>
     </request-map>
 
@@ -1010,6 +1025,8 @@
     <view-map name="showcart" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#ShowCart"/>
     <view-map name="checkinits" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#CheckInits"/>
     <view-map name="orderagreements" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#OrderAgreements"/>
+    <view-map name="viewshoppinglists" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#ViewShoppingLists"/>
+    <view-map name="addfromshoppinglist" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#AddFromShoppingList"/>
     <view-map name="keywordsearch" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#keywordsearch"/>
     <view-map name="advancedsearch" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#advancedsearch"/>
 
