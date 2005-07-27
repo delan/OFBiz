@@ -454,37 +454,39 @@ public class OrderReadHelper {
     public String getStatusString() {
         List orderStatusList = this.getOrderHeaderStatuses();
 
-        if (orderStatusList == null) return "";
+        if (orderStatusList == null || orderStatusList.size() == 0) return "";
 
         Iterator orderStatusIter = orderStatusList.iterator();
-        StringBuffer orderStatusIds = new StringBuffer(50);
-        boolean statusSet = false;
+        StringBuffer orderStatusString = new StringBuffer(50);
 
-        while (orderStatusIter.hasNext()) {
-            try {
+        try {
+            boolean isCurrent = true;
+            while (orderStatusIter.hasNext()) {
                 GenericValue orderStatus = (GenericValue) orderStatusIter.next();
                 GenericValue statusItem = orderStatus.getRelatedOneCache("StatusItem");
-
-                if ( false == statusSet ) {
-                    statusSet = true;
-                } else {
-                    orderStatusIds.append( "/" );
-                }
-
+    
                 if (statusItem != null) {
-                    orderStatusIds.append(statusItem.getString("description"));
+                    orderStatusString.append(statusItem.getString("description"));
                 } else {
-                    orderStatusIds.append(orderStatus.getString("statusId"));
+                    orderStatusString.append(orderStatus.getString("statusId"));
                 }
-            } catch (GenericEntityException gee) {
-                Debug.logWarning(gee, module);
+                
+                if (isCurrent && orderStatusIter.hasNext()) {
+                    orderStatusString.append(" (");
+                    isCurrent = false;
+                } else {
+                    if (orderStatusIter.hasNext()) {
+                        orderStatusString.append("/");
+                    } else {
+                        orderStatusString.append(")");
+                    }
+                }
             }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting Order Status information: " + e.toString(), module);
         }
 
-        if (false == statusSet) {
-            orderStatusIds.append("(unspecified)");
-        }
-        return orderStatusIds.toString();
+        return orderStatusString.toString();
     }
 
     public GenericValue getBillingAccount() {
@@ -492,7 +494,7 @@ public class OrderReadHelper {
         try {
             billingAccount = orderHeader.getRelatedOne("BillingAccount");
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, module);
+            Debug.logError(e, module);
         }
         return billingAccount;
     }
