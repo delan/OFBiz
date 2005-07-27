@@ -173,8 +173,17 @@
 
         <field-to-field field-name="shoppingListItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingListItem"/>
-        <set-nonpk-fields map-name="parameters" value-name="shoppingListItem"/>
-        <store-value value-name="shoppingListItem"/>
+
+        <if-compare field-name="quantity" map-name="parameters" operator="equals" value="0">
+          <!-- if we're setting quantity to 0.0 then remove the item -->
+            <set-service-fields service-name="removeShoppingListItem" map-name="parameters" to-map-name="removeParams"/>
+            <call-service service-name="removeShoppingListItem" in-map-name="removeParams"/>
+        <else>
+          <!-- otherwise, just update shopping list item in place -->
+            <set-nonpk-fields map-name="parameters" value-name="shoppingListItem"/>
+            <store-value value-name="shoppingListItem"/>
+        </else>
+        </if-compare>
 
         <if-compare-field map-name="shoppingList" field-name="partyId" operator="not-equals" to-map-name="userLogin">
             <now-timestamp-to-env env-name="nowTimestamp"/>
