@@ -99,7 +99,7 @@
 <fo:block font-weight="bold">${contactMechPurpose.description} : </fo:block><#assign postalAddress = orderContactMechValueMap.postalAddress><#if postalAddress?has_content><#if postalAddress.toName?has_content>${postalAddress.toName}</#if><#if postalAddress.attnName?has_content>
 ${postalAddress.attnName}</#if>
 ${postalAddress.address1}<#if postalAddress.address2?has_content>
-${postalAddress.address2}<br/></#if>
+${postalAddress.address2}</#if>
 ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if></#if></fo:block>
                 </fo:table-cell>
                 </#if>
