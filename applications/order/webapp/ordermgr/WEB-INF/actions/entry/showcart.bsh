@@ -72,3 +72,9 @@ if (!UtilValidate.isEmpty(defaultComment)) {
     context.put("useAsDefaultComment", "true");
 }
 context.put("defaultComment", defaultComment);
+
+// get all party shopping lists
+if (partyId != null) {
+  shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", partyId));
+  context.put("shoppingLists", shoppingLists);
+}

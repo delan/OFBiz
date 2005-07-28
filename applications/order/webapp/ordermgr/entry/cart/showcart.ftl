@@ -178,6 +178,47 @@ function gwAll(e) {
     </div>
 </div>
 
+<!-- Screenlet to add cart to shopping list. The shopping lists are presented in a dropdown box. -->
+
+<#if (shoppingLists?exists) && (shoppingCartSize > 0)>
+  <div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.OrderAddOrderToShoppingList}</div>
+    </div>
+    <div class="screenlet-body">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>           
+            <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>/addBulkToShoppingList</@ofbizUrl>" style='margin: 0;'>
+              <#assign index = 0/>
+              <#list shoppingCart.items() as cartLine>
+                <#if (cartLine.getProductId()?exists) && !cartLine.getIsPromo()>
+                  <input type="hidden" name="selectedItem" value="${index}"/>
+                </#if>
+                <#assign index = index + 1/>
+              </#list>
+              <table border="0">
+                <tr>
+                  <td>
+                    <div class="tabletext">
+                    <select name='shoppingListId' class='selectBox'>
+                      <#list shoppingLists as shoppingList>
+                        <option value='${shoppingList.shoppingListId}'>${shoppingList.getString("listName")}</option>
+                      </#list>
+                    </select>
+                    <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddtoShoppingList}"/>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</#if>
+
 <script language="JavaScript" type="text/javascript">
   document.quickaddform.add_product_id.focus();
 </script>
