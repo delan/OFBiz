@@ -45,8 +45,7 @@
             <fo:table-body>
               <fo:table-row>
                 <fo:table-cell>
-                   <#-- TODO: figure out how to share these files from the /includes directory -->
-                   <#include "companyLogo.fo.ftl">
+                   ${screens.render("component://order/widget/ordermgr/OrderPrintForms.xml#CompanyLogo")}
                 </fo:table-cell>
                 <fo:table-cell>
                   <fo:table>

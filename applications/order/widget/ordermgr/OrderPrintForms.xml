@@ -47,7 +47,13 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="CompanyLogo">
+        <section>
+          <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/order/companyLogo.fo.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="ReturnPDF">
         <section>
             <actions>
