@@ -126,6 +126,7 @@
     <entity-group group="org.ofbiz" entity="BillingAccountTerm" />
     <entity-group group="org.ofbiz" entity="BillingAccountTermAttr" />
     <entity-group group="org.ofbiz" entity="CreditCard" />
+    <entity-group group="org.ofbiz" entity="CreditCardTypeGlAccount" />
     <entity-group group="org.ofbiz" entity="Deduction" />
     <entity-group group="org.ofbiz" entity="DeductionType" />
     <entity-group group="org.ofbiz" entity="EftAccount" />
