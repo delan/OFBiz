@@ -46,7 +46,7 @@
         <attribute name="competitivePrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="componentPrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="averageCost" type="Double" mode="OUT" optional="true"/>
-        <attribute name="promoPrice" type="Doube" mode="OUT" optional="true"/>      
+        <attribute name="promoPrice" type="Double" mode="OUT" optional="true"/>      
         <attribute name="isSale" type="Boolean" mode="OUT" optional="false"/>
         <attribute name="validPriceFound" type="Boolean" mode="OUT" optional="false"/>
         <attribute name="currencyUsed" type="String" mode="OUT" optional="false"/>
