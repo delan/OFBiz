@@ -19,11 +19,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     Johan Isacsson
- * @author     David E. Jones
- * @author     Andy Zeneski
- * @created    May 26 2003
- *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ * @author     Al Byers (byersa@automationgroups.com)
+ * @created    July 27 2005
  * @version    1.0
  */
 -->
@@ -32,26 +29,23 @@
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
-<#if security.hasEntityPermission("MARKETING", "_VIEW", session)>
-<#if segmentGroup?has_content>
+<#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 <#-- Main Heading -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
+    <td align="left">
+      <div class="head1">
+      </div>
+    </td>
     <td align="right">
       <div class="tabContainer">
-        <a href="<@ofbizUrl>/LookupSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.LookupSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupLookup}</a>
-        <a href="<@ofbizUrl>/viewSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.viewSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroup}</a>
-        <a href="<@ofbizUrl>/listSegmentGroupClass?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupClassification?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupClassification}</a>
-        <a href="<@ofbizUrl>/listSegmentGroupGeo?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupGeo?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupGeo}</a>
-        <a href="<@ofbizUrl>/listSegmentGroupRole?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupRole?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupRole}</a>
+        <a href="<@ofbizUrl>/EditPartyClassificationGroup?partyClassificationGroupId=<#if partyClassificationGroup?has_content>${partyClassificationGroup.partyClassificationGroupId}</#if></@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroup?default(unselectedClassName)}">${uiLabelMap.PartyClassificationGroups}</a>
+        <a href="<@ofbizUrl>/EditPartyClassificationGroupParties?partyClassificationGroupId=<#if partyClassificationGroup?has_content>${partyClassificationGroup.partyClassificationGroupId}</#if></@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroupParties?default(unselectedClassName)}">${uiLabelMap.Parties}</a>
       </div>
     </td>
   </tr>
- </table>
+</table>
 
 <#else>
-  <div class="head2">${uiLabelMap.SegmentGroupNoSegmentGroupFoundWithId}: ${segmentGroupIdId?if_exists}</div>
-</#if>
-<#else>
-  <div class="head2">${uiLabelMap.MarketingViewPermissionError}</div>
+  <div class="head2">${uiLabelMap.PartyMgrViewPermissionError}</div>
 </#if>

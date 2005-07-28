@@ -63,6 +63,7 @@
         <a href="<@ofbizUrl>/EditPartyTaxInfos?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyTaxInfos?default(unselectedClassName)}">${uiLabelMap.PartyTaxInfos}</a>
         <a href="<@ofbizUrl>/editShoppingList?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.editShoppingList?default(unselectedClassName)}">${uiLabelMap.PartyShoppingLists}</a>
         <a href="<@ofbizUrl>/ViewSegmentRoles?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.ViewPartySegmentRoles?default(unselectedClassName)}">${uiLabelMap.PartySegmentRoles}</a>
+        <a href="<@ofbizUrl>/EditPartyClassifications?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyClassifications?default(unselectedClassName)}">${uiLabelMap.PartyClassifications}</a>
       </div>
     </td>
   </tr>

@@ -105,14 +105,16 @@
         <entity-one entity-name="PartyClassification" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+    <!-- PartyClassificationGroup methods -->
     <simple-method method-name="createPartyClassificationGroup" short-description="create a PartyClassificationGroup">
+        <log level="verbose" message="in newEntity" />
         <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePartyClassificationGroupPermissionError"/></check-permission>
         <check-errors/>
         <make-value entity-name="PartyClassificationGroup" value-name="newEntity"/>
         <sequenced-id-to-env sequence-name="PartyClassificationGroup" env-name="newEntity.partyClassificationGroupId"/>
         <field-to-result field-name="newEntity.partyClassificationGroupId" result-name="partyClassificationGroupId"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <if-empty field-name="newEntity.fromDate"><now-timestamp-to-env env-name="newEntity.fromDate"/></if-empty>        
+        <log level="verbose" message="newEntity:${newEntity}" />
         <create-value value-name="newEntity"/>  
     </simple-method>   
     <simple-method method-name="updatePartyClassificationGroup" short-description="update a PartyClassificationGroup">
@@ -545,4 +547,6 @@
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+    
+    
 </simple-methods>

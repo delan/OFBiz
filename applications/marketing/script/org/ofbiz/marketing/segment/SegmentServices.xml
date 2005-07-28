@@ -48,9 +48,7 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="SegmentGroup"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="SegmentGroup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="SegmentGroup" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -60,9 +58,7 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="SegmentGroup"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="SegmentGroup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="SegmentGroup" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
@@ -80,7 +76,7 @@
         <check-permission permission="MARKETING" action="_UPDATE"><fail-property resource="SegmentGroupUiLabels" property="SegmentGroupUpdateSegmentGroupClassificationPermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="SegmentGroupClassification" value-name="lookedUpValue"/>
-        <set-pk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteSegmentGroupClassification" short-description="delete a SegmentGroupClassification">
@@ -103,7 +99,7 @@
         <check-permission permission="MARKETING" action="_UPDATE"><fail-property resource="SegmentGroupUiLabels" property="SegmentGroupUpdateSegmentGroupGeoPermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="SegmentGroupGeo" value-name="lookedUpValue"/>
-        <set-pk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteSegmentGroupGeo" short-description="delete a SegmentGroupGeo">

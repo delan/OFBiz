@@ -27,7 +27,6 @@
             target="updateSegmentGroup" title="" default-map-name="segmentGroup"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="segmentGroup==null" target="createSegmentGroup"/>
-        <auto-fields-service service-name="updateSegmentGroup"/>
         
         <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="segmentGroup==null&amp;&amp;segmentGroupId==null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><ignored/></field>
@@ -39,11 +38,16 @@
                 </entity-options>
             </drop-down>
         </field>
+        <!-- 
         <field name="productStoreId" use-when="&quot;${parameters.productStoreId}&quot;.length()&gt;0" map-name="parameters">
             <lookup target-form-name="LookupProductStore"/>
         </field>
-        <field name="productStoreId" use-when="&quot;${parameters.productStoreId}&quot;.length()&gt;0" >
+        -->
+        <field name="productStoreId" >
             <lookup target-form-name="LookupProductStore"/>
+        </field>
+        <field name="description" >
+            <text size="55"/>
         </field>
         
         <field name="DONE_PAGE">
@@ -90,14 +94,14 @@
 
    <form name="listSegmentGroupGeo" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupGeo" title="" type="list">
+        list-iterator-name="" target="" paginate-target="listSegmentGroupGeo" title="" type="list">
         <actions>
         <entity-and entity-name="SegmentGroupGeo">
             <field-map env-name="segmentGroupId" />
         </entity-and>
         </actions>
         <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroupGeo?segmentGroupId=${segmentGroupId}"/>
+            <display/>
         </field>
         <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><display/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -132,14 +136,14 @@
 
    <form name="listSegmentGroupRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupRole" title="" type="list">
+        list-iterator-name="" target="" paginate-target="listSegmentGroupRole" title="" type="list">
         <actions>
         <entity-and entity-name="SegmentGroupRole">
             <field-map env-name="segmentGroupId" />
         </entity-and>
         </actions>
         <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroupRole?segmentGroupId=${segmentGroupId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"/>
+            <display/>
         </field>
         <field name="partyId" title="${uiLabelMap.SegmentGroupPartyId}"><display/></field>
         <field name="roleTypeId" title="${uiLabelMap.SegmentGroupRoleTypeId}"><display/></field>
@@ -159,7 +163,7 @@
             </service>
         </actions>
         <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroup?segmentGroupId=${segmentGroupId}&amp;partyClassificationGroupId=${partyClassificationGroupId}"/>
+            <display/>
         </field>
         <field name="partyClassificationGroupId" title="${uiLabelMap.SegmentGroupPartyClassificationGroupId}"><display/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
