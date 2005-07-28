@@ -260,28 +260,54 @@
         <prim-key field="segmentGroupTypeId"/>
     </entity>
     <view-entity entity-name="SegmentGroupViewRelatedParties" package-name="org.ofbiz.marketing.segment">
+        <description>
+            This view entity models the following options:
+            - SegmentGroupRole(SGR) -> SegmentGroupRole(SGRTO)
+            - SegmentGroupRole(SGR) -> SegmentGroupRole(SGRTO) -> PartyRelationship(PRSGR)
+            - SegmentGroupRole(SGR) -> SegmentGroupClassification(SGC) -> PartyClassification(PC)
+            - SegmentGroupRole(SGR) -> SegmentGroupClassification(SGC) -> PartyClassification(PC) -> PartyRelationship(PRPC)
+            Typical fields to constrain:
+            - partyId of User -> sgrPartyId (SGR)
+            - partyId of Customer -> sgrToPartyId (SGRTO) AND prSgrPartyIdTo (PRSGR) AND pcPartyId (PC) AND prPcPartyIdTo (PRPC)
+              NOTE: these 4 partyIds represent the 4 options for entity relationship paths listed above
+              NOTE: because not all of these will exist, each needs to be the given partyId(s) OR null
+            - roleTypeId of User -> sgrRoleTypeId (SGR) - ex: SALES_REP, MANAGER, etc
+            - roleTypeId of Customer -> sgrToRoleTypeId (SGRTO)
+              NOTE: because not all of these will exist, each needs to be the given roleTypeId(s) OR null
+            - roleTypeId of _Employer_ in Employee/Employer relationship -> prSgrRoleTypeIdFrom (PRSGR) AND prPcRoleTypeIdFrom (PRPC) - INTERNAL_ORGANIZATIO
+              NOTE: constraining these fields is optional as the EMPLOYEE roleTypeIdTo is often sufficient
+              NOTE: because not all of these will exist, each needs to be the given partyId(s) OR null
+            - roleTypeId of _Employee_ in Employee/Employer relationship -> prSgrRoleTypeIdTo (PRSGR) AND prPcRoleTypeIdTo (PRPC) - EMPLOYEE
+              NOTE: because not all of these will exist, each needs to be the given partyId(s) OR null
+            - partyRelationshipTypeId in Employee/Employer relationship -> prSgrPartyRelationshipTypeId (PRSGR) AND prPcPartyRelationshipTypeId (PRPC)
+              NOTE: because not all of these will exist, each needs to be the given partyId(s) OR null
+        </description>
         <member-entity entity-alias="SGR" entity-name="SegmentGroupRole"/>
         <member-entity entity-alias="SGRTO" entity-name="SegmentGroupRole"/>
-        <alias-all entity-alias="SGR"/>
-        <alias-all entity-alias="SGRTO" prefix="to">
-            <exclude field="segmentGroupId"/>
-        </alias-all>
-        <view-link entity-alias="SGR" rel-entity-alias="SGRTO">
-            <key-map field-name="segmentGroupId"/>
-        </view-link>
-    </view-entity>
-    <view-entity entity-name="SegmentGroupViewRelatedPartiesClass" package-name="org.ofbiz.marketing.segment">
-        <member-entity entity-alias="SGR" entity-name="SegmentGroupRole"/>
+        <member-entity entity-alias="PRSGR" entity-name="PartyRelationship"/>
         <member-entity entity-alias="SGC" entity-name="SegmentGroupClassification"/>
         <member-entity entity-alias="PC" entity-name="PartyClassification"/>
-        <alias-all entity-alias="SGR"/>
-        <alias-all entity-alias="SGC"/>
-        <alias-all entity-alias="PC" prefix="to"/>
-        <view-link entity-alias="SGR" rel-entity-alias="SGC">
+        <member-entity entity-alias="PRPC" entity-name="PartyRelationship"/>
+        <alias-all entity-alias="SGR" prefix="sgr"/>
+        <alias-all entity-alias="SGRTO" prefix="sgrTo"/>
+        <alias-all entity-alias="PRSGR" prefix="prSgr"/>
+        <alias-all entity-alias="SGC" prefix="sgc"/>
+        <alias-all entity-alias="PC" prefix="pc"/>
+        <alias-all entity-alias="PRPC" prefix="prPc"/>
+        <view-link entity-alias="SGR" rel-entity-alias="SGRTO" rel-optional="true">
+            <key-map field-name="segmentGroupId"/>
+        </view-link>
+        <view-link entity-alias="SGRTO" rel-entity-alias="PRSGR" rel-optional="true">
+            <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
+        </view-link>
+        <view-link entity-alias="SGR" rel-entity-alias="SGC" rel-optional="true">
             <key-map field-name="segmentGroupId"/>
         </view-link>
         <view-link entity-alias="SGC" rel-entity-alias="PC">
             <key-map field-name="partyClassificationGroupId"/>
+        </view-link>
+        <view-link entity-alias="PC" rel-entity-alias="PRPC" rel-optional="true">
+            <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
         </view-link>
     </view-entity>
     
