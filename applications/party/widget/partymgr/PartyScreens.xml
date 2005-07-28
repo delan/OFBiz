@@ -63,7 +63,6 @@
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="find"/>
                 
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
@@ -535,6 +534,129 @@
                             <container style="screenlet-body">
                                 <include-form name="ListSegmentRoles" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                                 <include-form name="AddSegmentRole" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPartyClassifications">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartyClassifications"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="EditPartyClassifications"/>
+                
+                <set field="labelTitleProperty" value="PartyClassifications"/>
+                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-name="party"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="${uiLabelMap.PartyClassifications}"/>
+                            </container>
+                            <container style="screenlet-body">
+                                <include-form name="ListPartyClassifications" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                                <include-form name="AddPartyClassification" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPartyClassificationGroupParties">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartyClassificationGroupParties"/>
+                <set field="headerItem" value="classification"/>
+                <set field="tabButtonItem" value="EditPartyClassificationGroupParties"/>
+                
+                <set field="labelTitleProperty" value="PartyClassificationGroupParties"/>
+                
+                <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId"/>
+                <entity-one entity-name="PartyClassificationGroup" value-name="partyClassificationGroup"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="${uiLabelMap.PartyClassificationGroups}"/>
+                            </container>
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/ClassificationTabBar.ftl"/></html>
+                            </platform-specific>
+                            <container style="screenlet-body">
+                                <include-form name="ListPartyClassificationGroupParties" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                                <include-form name="AddPartyClassificationParty" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindPartyClassificationGroups">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindPartyClassificationGroups"/>
+                <set field="headerItem" value="classification"/>
+                <set field="tabButtonItem" value="FindPartyClassificationGroups"/>
+                
+                <set field="labelTitleProperty" value="PartyClassificationGroups"/>
+                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-name="party"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="${uiLabelMap.PartyClassificationGroups}"/>
+                            </container>
+                            <container><link target="EditPartyClassificationGroup" style="buttontextbig" text="${uiLabelMap.PartyCreateNewPartyClassificationGroup}"></link></container>
+                            <container style="screenlet-body">
+                                <include-form name="ListPartyClassificationGroups" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPartyClassificationGroup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPartyClassificationGroup"/>
+                <set field="headerItem" value="classification"/>
+                <set field="tabButtonItem" value="EditPartyClassificationGroup"/>
+                
+                <set field="labelTitleProperty" value="PartyClassificationGroup"/>
+                
+                <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId"/>
+                <set field="partyId" value="" />
+                <entity-one entity-name="PartyClassificationGroup" value-name="partyClassificationGroup"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="${uiLabelMap.PartyClassificationGroup}"/>
+                            </container>
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/ClassificationTabBar.ftl"/></html>
+                            </platform-specific>
+                            
+                            <container style="screenlet-body">
+                                <include-form name="EditPartyClassificationGroup" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                             </container>
                         </container>
                     </decorator-section>

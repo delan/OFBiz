@@ -720,6 +720,70 @@
         <response name="success" type="view" value="ViewSegmentRoles"/>
         <response name="error" type="view" value="ViewSegmentRoles"/>
     </request-map>
+    <request-map uri="showclassgroups">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPartyClassificationGroups"/>
+    </request-map>
+    <request-map uri="EditPartyClassifications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPartyClassifications"/>
+    </request-map>
+    <request-map uri="EditPartyClassificationGroupParties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPartyClassificationGroupParties"/>
+    </request-map>
+    <request-map uri="EditPartyClassificationGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPartyClassificationGroup"/>
+    </request-map>
+    <request-map uri="createPartyClassification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyClassification"/>
+        <response name="success" type="view" value="EditPartyClassifications"/>
+        <response name="error" type="view" value="EditPartyClassifications"/>
+    </request-map>
+    <request-map uri="updatePartyClassification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyClassification"/>
+        <response name="success" type="view" value="EditPartyClassifications"/>
+        <response name="error" type="view" value="EditPartyClassifications"/>
+    </request-map>
+    <request-map uri="createPartyClassificationParty">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyClassification"/>
+        <response name="success" type="view" value="EditPartyClassificationGroupParties"/>
+        <response name="error" type="view" value="EditPartyClassificationGroupParties"/>
+    </request-map>
+    <request-map uri="updatePartyClassificationParty">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyClassification"/>
+        <response name="success" type="view" value="EditPartyClassificationGroupParties"/>
+        <response name="error" type="view" value="EditPartyClassificationGroupParties"/>
+    </request-map>
+    <request-map uri="deletePartyClassification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyClassification"/>
+        <response name="success" type="view" value="EditPartyClassifications"/>
+        <response name="error" type="view" value="EditPartyClassifications"/>
+    </request-map>
+    <request-map uri="createPartyClassificationGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyClassificationGroup"/>
+        <response name="success" type="view" value="EditPartyClassificationGroup"/>
+        <response name="error" type="view" value="EditPartyClassificationGroup"/>
+    </request-map>
+    <request-map uri="updatePartyClassificationGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyClassificationGroup"/>
+        <response name="success" type="view" value="EditPartyClassificationGroup"/>
+        <response name="error" type="view" value="EditPartyClassificationGroup"/>
+    </request-map>
+    <request-map uri="deletePartyClassificationGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyClassificationGroup"/>
+        <response name="success" type="view" value="FindPartyClassificationGroups"/>
+        <response name="error" type="view" value="FindPartyClassificationGroups"/>
+    </request-map>
     
     <!-- end of request mappings -->
 
@@ -758,6 +822,10 @@
     <view-map name="NewCustomer" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewCustomer"/>
     
     <view-map name="ViewSegmentRoles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#ViewSegmentRoles"/>
+    <view-map name="EditPartyClassifications" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyClassifications"/>
+    <view-map name="EditPartyClassificationGroupParties" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyClassificationGroupParties"/>
+    <view-map name="FindPartyClassificationGroups" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#FindPartyClassificationGroups"/>
+    <view-map name="EditPartyClassificationGroup" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyClassificationGroup"/>
 
     <view-map name="FindSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#FindSecurityGroup"/>
     <view-map name="EditSecurityGroup" type="screen" page="component://party/widget/partymgr/SecurityScreens.xml#EditSecurityGroup"/>

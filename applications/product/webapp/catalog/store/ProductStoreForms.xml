@@ -241,14 +241,10 @@
         	</entity-and>
         </actions>
         <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.ProductSegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
+            <hyperlink also-hidden="false" target-type="inter-app" description="${segmentGroupId}" target="/marketing/control/viewSegmentGroup?segmentGroupId=${segmentGroupId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}"/>
         </field>
         <field name="segmentGroupTypeId" title="${uiLabelMap.ProductSegmentGroupTypeId}"><display/></field>
         <field name="description" title="${uiLabelMap.ProductSegmentGroupDescription}"><display/></field>
-        <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="/marketing/control/viewSegmentGroup?segmentGroupId=${segmentGroupId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}"
-                description="[${uiLabelMap.CommonUpdate}]" also-hidden="false" target-type="inter-app"/>
-        </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="/marketing/control/deleteSegmentGroup?segmentGroupId=${segmentGroupId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false" target-type="inter-app"/>
