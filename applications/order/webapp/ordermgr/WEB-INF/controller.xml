@@ -344,6 +344,12 @@
         <response name="success" type="request" value="orderentry"/>
         <response name="error" type="view" value="checkinits"/>
     </request-map>
+    <request-map uri="addBulkToShoppingList">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addBulkFromCart"/>
+        <response name="success" type="request" value="addFromShoppingList"/>
+        <response name="error" type="view" value="checkinits"/>
+    </request-map>
     <request-map uri="addseperator">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>

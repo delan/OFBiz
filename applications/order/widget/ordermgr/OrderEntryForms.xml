@@ -110,7 +110,7 @@
           <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
           <field name="addFromList" title="&amp;nbsp;" widget-style="buttontext">
               <hyperlink target="addFromShoppingList?shoppingListId=${shoppingListId}"
-                  description="[Add From List]" also-hidden="false"/>
+                  description="[View List]" also-hidden="false"/>
           </field>
           <field name="addAllFromList" title="&amp;nbsp;" widget-style="buttontext">
               <hyperlink target="addAllFromShoppingList?shoppingListId=${shoppingListId}"
@@ -119,13 +119,21 @@
     </form>
     <form name="AddFromShoppingList" type="list" default-title-style="tableheadtext" default-widget-style="tabletext"
           list-name="shoppinglistitems" target="">
+          <auto-fields-entity entity-name="ShoppingListItem" default-field-type="display"/>
           <field name="productId" title="${uiLabelMap.ProductProduct}">
               <display-entity entity-name="Product" description="${productId} - ${description}"/>
           </field>
-          <field name="quantity" title="${uiLabelMap.ProductQuantity}"><display/></field>
           <field name="addToCart" title="&amp;nbsp;" widget-style="buttontext">
               <hyperlink target="additem/editShoppingList?shoppingListId=${shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItemSeqId}&amp;add_product_id=${productId}&amp;quantity=${quantity}"
                   description="[Add ${quantity} to Order]" also-hidden="false"/>
+          </field>
+    </form>
+    <form name="AddFromShoppingListAll" type="single" target="">
+          <field name="addAllFromList" title="&amp;nbsp;" widget-style="buttontext">
+              <hyperlink target="addAllFromShoppingList?shoppingListId=${shoppingListId}" description="[Quick Add All]" also-hidden="false"/>
+          </field>
+          <field name="returnToOrderEntry" title="&amp;nbsp;" widget-style="buttontext">
+              <hyperlink target="orderentry" description="[Return]" also-hidden="false"/>
           </field>
     </form>
 

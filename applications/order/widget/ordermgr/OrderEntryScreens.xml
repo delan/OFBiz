@@ -146,6 +146,7 @@
                 <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="AddFromShoppingList" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                        <include-form name="AddFromShoppingListAll" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
