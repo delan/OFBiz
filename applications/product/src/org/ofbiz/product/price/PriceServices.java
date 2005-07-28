@@ -110,7 +110,7 @@ public class PriceServices {
                     return ServiceUtil.returnError(errMsg);
                 }
             }
-            
+
             // still empty, default to _NA_
             if (UtilValidate.isEmpty(productStoreGroupId)) {
                 productStoreGroupId = "_NA_";
@@ -439,6 +439,7 @@ public class PriceServices {
             result.put("defaultPrice", new Double(defaultPrice));
             result.put("competitivePrice", competitivePriceValue != null ? competitivePriceValue.getDouble("price") : null);
             result.put("averageCost", averageCostValue != null ? averageCostValue.getDouble("price") : null);
+            result.put("promoPrice", promoPriceValue != null ? promoPriceValue.getDouble("price") : null);
         } else {
             try {
                 // get some of the base values to calculate with
