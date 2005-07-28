@@ -1601,6 +1601,15 @@
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
+    <entity entity-name="CreditCardTypeGlAccount"
+            package-name="org.ofbiz.accounting.payment"
+            title="Credit Card Type GL Account Entity">
+      <field name="cardType" type="short-varchar"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
+      <field name="glAccountId" type="id-ne"></field>
+      <prim-key field="cardType"/>
+      <prim-key field="organizationPartyId"/>
+    </entity>
     <entity entity-name="Deduction"
             package-name="org.ofbiz.accounting.payment"
             title="Deduction Entity">
