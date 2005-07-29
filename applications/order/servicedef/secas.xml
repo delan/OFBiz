@@ -219,5 +219,9 @@
     	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
     	<action service="checkCreateStockRequirement" mode="sync"/>
     </eca>
+    <eca service="reserveOrderItemInventory" event="commit">
+    	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
+    	<action service="createRequirementFromItemATP" mode="sync"/>
+    </eca>
 
 </service-eca>
