@@ -115,7 +115,7 @@ public class MrpServices {
         
         listResult = null;
         try{
-            listResult = delegator.findByAnd("Requirement", UtilMisc.toMap("requirementTypeId", "MRP_PRO_PURCH_ORDER"));
+            listResult = delegator.findByAnd("Requirement", UtilMisc.toMap("requirementTypeId", "MRP_PRO_PURCH_ORDER", "statusId", "REQ_CREATED"));
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError("Problem, we can not find all the items of InventoryEventPlanned, for more detail look at the log");
         }
@@ -128,7 +128,7 @@ public class MrpServices {
         }
         listResult = null;
         try{
-            listResult = delegator.findByAnd("Requirement", UtilMisc.toMap("requirementTypeId", "MRP_PRO_PROD_ORDER"));
+            listResult = delegator.findByAnd("Requirement", UtilMisc.toMap("requirementTypeId", "MRP_PRO_PROD_ORDER", "statusId", "REQ_CREATED"));
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError("Problem, we can not find all the items of InventoryEventPlanned, for more detail look at the log");
         }
@@ -699,7 +699,6 @@ public class MrpServices {
                         Map eventMap = UtilMisc.toMap("productId", product.getString("productId"),
                                                       "eventDate", eventDate,
                                                       "inventoryEventPlanTypeId", (isbuild? "PROP_MANUF_O_RECP" : "PROP_PUR_O_RECP"));
-                                                      //"inventoryEventPlanTypeId", (isbuild? "MRP_PRO_PROD_ORDER" : "MRP_PRO_PURCH_ORDER"));
                         try {
                             InventoryEventPlannedServices.createOrUpdateInventoryEventPlanned(eventMap, new Double(proposedOrder.getQuantity()), delegator);
                         } catch (GenericEntityException e) {
