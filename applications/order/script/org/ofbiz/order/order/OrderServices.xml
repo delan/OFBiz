@@ -230,18 +230,18 @@
                     <string-to-field string="REQ_CREATED" field-name="statusId" map-name="lookupParams"/>
                     <find-by-and entity-name="Requirement" map-name="lookupParams" list-name="existingRequirements"/>
                     <if-not-empty field-name="existingRequirements">
-                          <!-- if existing requirements exist, the quantity is based on the total already requested: 
-                              quantity still required = minimum stock - (new QOH on hand + quantity already in existing requirements)
-                              This number can be negative so we'll have to check for it later-->
-                          <find-by-and entity-name="RequirementByProductFacility" map-name="lookupParams" list-name="existingRequirementQuantities"/>
-                          <first-from-list list-name="existingRequirementQuantities" entry-name="existingRequirementQuantity"/>
-			              <calculate field-name="quantity" map-name="inputMap">
-			                  <calcop field-name="minimumStock" map-name="productFacility" operator="subtract">
-      	                         <calcop field-name="newQuantityOnHand" operator="add">
-			                       <calcop operator="get" field-name="quantity" map-name="existingRequirementQuantity"/>
-    			                 </calcop>
-			                   </calcop>
-			              </calculate>
+                        <!-- if existing requirements exist, the quantity is based on the total already requested: 
+                            quantity still required = minimum stock - (new QOH on hand + quantity already in existing requirements)
+                            This number can be negative so we'll have to check for it later-->
+                        <find-by-and entity-name="RequirementByProductFacility" map-name="lookupParams" list-name="existingRequirementQuantities"/>
+                        <first-from-list list-name="existingRequirementQuantities" entry-name="existingRequirementQuantity"/>
+                            <calculate field-name="quantity" map-name="inputMap">
+                                <calcop field-name="minimumStock" map-name="productFacility" operator="subtract">
+                                    <calcop field-name="newQuantityOnHand" operator="add">
+                                        <calcop operator="get" field-name="quantity" map-name="existingRequirementQuantity"/>
+                                    </calcop>
+                                </calcop>
+                            </calculate>
                       <else>
                           <!-- if not, then we may have to create a requirement with a quantity equal to the facility's minimum quanity -->
                         <if-not-empty field-name="productFacility.reorderQuantity">
@@ -256,13 +256,13 @@
                     <!-- if the amount required due to this item issuance is greater than zero, ie not covered by existing requirements,
                         then create a new requirement -->
                     <if-compare field-name="quantity" map-name="inputMap" operator="greater" type="Double" value="0">
-	                    <field-to-field field-name="inventoryItem.productId" to-map-name="inputMap" to-field-name="productId"/>
-	                    <string-to-field string="PRODUCT_REQUIREMENT" map-name="inputMap" field-name="requirementTypeId"/>
-	                    <field-to-field field-name="facilityId" map-name="productFacility" to-map-name="inputMap"/>
-	                    <call-service service-name="createRequirement" in-map-name="inputMap">
-	                         <result-to-field field-name="parameters.requirementId" result-name="requirementId"/>
-	                    </call-service>
-	                    <field-to-result field-name="parameters.requirementId" result-name="requirementId"/>
+                        <field-to-field field-name="inventoryItem.productId" to-map-name="inputMap" to-field-name="productId"/>
+                        <string-to-field string="PRODUCT_REQUIREMENT" map-name="inputMap" field-name="requirementTypeId"/>
+                        <field-to-field field-name="facilityId" map-name="productFacility" to-map-name="inputMap"/>
+                        <call-service service-name="createRequirement" in-map-name="inputMap">
+                            <result-to-field field-name="parameters.requirementId" result-name="requirementId"/>
+                        </call-service>
+                        <field-to-result field-name="parameters.requirementId" result-name="requirementId"/>
                     </if-compare>
                 </if-compare-field>
             </if-not-empty>
