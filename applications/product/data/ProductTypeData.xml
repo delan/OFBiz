@@ -300,8 +300,9 @@
     <!-- AUTO: a requirement is created every time a sales order is entered -->
     <Enumeration description="Automatic For Every Sales Order" enumCode="AUTO" enumId="PRODRQM_AUTO" sequenceId="02" enumTypeId="PROD_REQ_METHOD"/>
     <!-- STOCK: a requirement is created when qoh reaches the minimum stock quantity (from ProductFacility) -->
-    <Enumeration description="When QOH Reaches Minimum Stock for Product-Facility" enumCode="STOCK" enumId="PRODRQM_STOCK" sequenceId="03" enumTypeId="PROD_REQ_METHOD"/>
-
+    <Enumeration description="When QOH Reaches Minimum Stock for Product-Facility" enumCode="STOCK_QOH" enumId="PRODRQM_STOCK" sequenceId="03" enumTypeId="PROD_REQ_METHOD"/>
+    <!-- ATP: a requirement is created when atp reaches the minimum stock quantity (from ProductFacility) -->
+    <Enumeration description="When ATP Reaches Minimum Stock for Product-Facility" enumCode="STOCK_ATP" enumId="PRODRQM_STOCK_ATP" sequenceId="04" enumTypeId="PROD_REQ_METHOD"/>
 
     <!-- inventory item status -->
     <StatusType description="Inventory Item" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_ITEM_STTS"/>
