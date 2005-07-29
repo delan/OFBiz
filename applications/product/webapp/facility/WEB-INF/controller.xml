@@ -115,6 +115,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupProduct"/>
     </request-map>
+    <request-map uri="LookupVariantProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupVariantProduct"/>
+    </request-map>
 
     <!-- ================ Facility Requests ================= -->
     <request-map uri="FindFacility">
@@ -849,7 +853,8 @@
     <view-map name="LookupOrderHeaderAndShipInfo" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeaderAndShipInfo"/>
     <view-map name="LookupPurchaseOrderHeaderAndShipInfo" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupPurchaseOrderHeaderAndShipInfo"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
-
+    <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>
+    
     <view-map name="FindFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
     <view-map name="EditFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacility"/>
     <view-map name="FindFacilityTransfers" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityTransfers"/>
