@@ -62,9 +62,6 @@
                 <set field="entityName" value="Requirement"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
-
-                <set field="parameters.requirementTypeId" to-scope="screen" default-value="MRP_PRO_PURCH_ORDER"/>
-                <set field="parameters.statusId" to-scope="screen" default-value="REQ_APPROVED"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
