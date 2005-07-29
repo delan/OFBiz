@@ -1750,6 +1750,11 @@ public class ShoppingCartItem implements java.io.Serializable {
             return false;
         }
 
+        if (requirementId != null) {
+            // all items linked to a requirement are unique
+            return false;
+        }
+
         return true;
     }
 
