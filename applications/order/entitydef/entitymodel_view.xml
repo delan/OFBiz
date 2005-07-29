@@ -799,5 +799,14 @@
         <key-map field-name="custRequestItemSeqId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="RequirementByProductFacility"
+            package-name="org.ofbiz.order.request"
+            title="Sum of Requirement entity quantities, grouped by productId, facilityId, statusId">
+      <member-entity entity-alias="RQ" entity-name="Requirement"/>
+      <alias entity-alias="RQ" name="statusId" group-by="true"/>
+      <alias entity-alias="RQ" name="productId" group-by="true"/>
+      <alias entity-alias="RQ" name="facilityId" group-by="true"/>
+      <alias entity-alias="RQ" name="quantity" function="sum"/>
+    </view-entity>
 </entitymodel>
 
