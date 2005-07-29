@@ -647,7 +647,7 @@ public class ShoppingCart implements Serializable {
     public Object getAttribute(String name) {
         return this.attributes.get(name);
     }
-    
+
     /** Sets the currency for the cart. */
     public void setCurrency(LocalDispatcher dispatcher, String currencyUom) throws CartItemModifyException {
         String previousCurrency = this.currencyUom;
@@ -1160,6 +1160,7 @@ public class ShoppingCart implements Serializable {
         this.firstAttemptOrderId = null;
         this.billingAccountId = null;
         this.billingAccountAmt = 0.00;
+        this.nextItemSeq = 1;
 
         this.agreementId = null;
         this.quoteId = null;
