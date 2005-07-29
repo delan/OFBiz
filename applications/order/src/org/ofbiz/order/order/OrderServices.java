@@ -3532,48 +3532,56 @@ public class OrderServices {
 
         // now process the digital items
         if (digitalItems.size() > 0) {
-            // invoice all APPROVED digital goods
-            Map invoiceContext = UtilMisc.toMap("orderId", orderId, "billItems", digitalItems, "userLogin", userLogin);
-            Map invoiceResult = null;
-            try {
-                invoiceResult = dispatcher.runSync("createInvoiceForOrder", invoiceContext);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "ERROR: Unable to invoice digital items", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemWithInvoiceCreationDigitalItemsNotFulfilled", locale));
-            }
-            if (ModelService.RESPOND_ERROR.equals(invoiceResult.get(ModelService.RESPONSE_MESSAGE))) {
-                return ServiceUtil.returnError((String) invoiceResult.get(ModelService.ERROR_MESSAGE));
+            GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
+            boolean invoiceItems = true;
+            if (productStore != null && productStore.get("autoInvoiceDigitalItems") != null) {
+                invoiceItems = "Y".equalsIgnoreCase(productStore.getString("autoInvoiceDigitalItems"));
             }
 
-            // update the status of digital goods to COMPLETED; leave physical/digital as APPROVED for pick/ship
-            Iterator dii = digitalItems.iterator();
-            while (dii.hasNext()) {
-                GenericValue productType = null;
-                GenericValue item = (GenericValue) dii.next();
-                GenericValue product = (GenericValue) digitalProducts.get(item);
-
+            if (invoiceItems) {
+                // invoice all APPROVED digital goods
+                Map invoiceContext = UtilMisc.toMap("orderId", orderId, "billItems", digitalItems, "userLogin", userLogin);
+                Map invoiceResult = null;
                 try {
-                    productType = product.getRelatedOne("ProductType");
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "ERROR: Unable to get ProductType from Product", module);
+                    invoiceResult = dispatcher.runSync("createInvoiceForOrder", invoiceContext);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "ERROR: Unable to invoice digital items", module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemWithInvoiceCreationDigitalItemsNotFulfilled", locale));
+                }
+                if (ModelService.RESPOND_ERROR.equals(invoiceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                    return ServiceUtil.returnError((String) invoiceResult.get(ModelService.ERROR_MESSAGE));
                 }
 
-                if (product != null && productType != null) {
-                    String isPhysical = productType.getString("isPhysical");
-                    String isDigital = productType.getString("isDigital");
+                // update the status of digital goods to COMPLETED; leave physical/digital as APPROVED for pick/ship
+                Iterator dii = digitalItems.iterator();
+                while (dii.hasNext()) {
+                    GenericValue productType = null;
+                    GenericValue item = (GenericValue) dii.next();
+                    GenericValue product = (GenericValue) digitalProducts.get(item);
 
-                    // we were set as a digital good; one more check and change status
-                    if ((isDigital != null && "Y".equalsIgnoreCase(isDigital)) && (
-                            isPhysical == null || !"Y".equalsIgnoreCase(isPhysical))) {
-                        Map statusCtx = new HashMap();
-                        statusCtx.put("orderId", item.getString("orderId"));
-                        statusCtx.put("orderItemSeqId", item.getString("orderItemSeqId"));
-                        statusCtx.put("statusId", "ITEM_COMPLETED");
-                        statusCtx.put("userLogin", userLogin);
-                        try {
-                            dispatcher.runSyncIgnore("changeOrderItemStatus", statusCtx);
-                        } catch (GenericServiceException e) {
-                            Debug.logError(e, "ERROR: Problem setting the status to COMPLETED : " + item, module);
+                    try {
+                        productType = product.getRelatedOne("ProductType");
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "ERROR: Unable to get ProductType from Product", module);
+                    }
+
+                    if (product != null && productType != null) {
+                        String isPhysical = productType.getString("isPhysical");
+                        String isDigital = productType.getString("isDigital");
+
+                        // we were set as a digital good; one more check and change status
+                        if ((isDigital != null && "Y".equalsIgnoreCase(isDigital)) && (
+                                isPhysical == null || !"Y".equalsIgnoreCase(isPhysical))) {
+                            Map statusCtx = new HashMap();
+                            statusCtx.put("orderId", item.getString("orderId"));
+                            statusCtx.put("orderItemSeqId", item.getString("orderItemSeqId"));
+                            statusCtx.put("statusId", "ITEM_COMPLETED");
+                            statusCtx.put("userLogin", userLogin);
+                            try {
+                                dispatcher.runSyncIgnore("changeOrderItemStatus", statusCtx);
+                            } catch (GenericServiceException e) {
+                                Debug.logError(e, "ERROR: Problem setting the status to COMPLETED : " + item, module);
+                            }
                         }
                     }
                 }
@@ -3801,7 +3809,7 @@ public class OrderServices {
             if (groupQty == 0) {
                 return ServiceUtil.returnError("Quantity must be >0, use cancel item to cancel completely!");
             }
-            
+
             String[] itemInfo = key.split(":");
             Double tally = (Double) itemTotals.get(itemInfo[0]);
             if (tally == null) {
@@ -4205,11 +4213,10 @@ public class OrderServices {
         Debug.log("Product ID : " + cart.findCartItem(0).getProductId(), module);
         return ServiceUtil.returnSuccess();
     }
-    
-    /** 
-     * Service to create a payment using an order payment preference. 
-     * @return
-     * @author  Leon Torres
+
+    /**
+     * Service to create a payment using an order payment preference.
+     * @return Map   
      */
     public static Map createPaymentFromPreference(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -4276,5 +4283,5 @@ public class OrderServices {
             Debug.logError(ex, "Unable to create payment using payment preference.", module);
             return(ServiceUtil.returnError(ex.getMessage()));
         }
-    }    
+    }
 }
