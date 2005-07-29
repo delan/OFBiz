@@ -45,33 +45,7 @@ import org.ofbiz.service.ServiceUtil;
 public class InventoryEventPlannedServices {
     
     public static final String module = InventoryEventPlannedServices.class.getName();
-    
-    /**
-     *
-     * Transform parameters used to created a requirement to parameters needed to created an InventoryEventPlanned.
-     * This service is call by ECA to create an InventoryEventPlanned when a proposed Order is created.
-     *
-     * @param ctx
-     * @param context: a map containing the parameters used to create an requirement (see the servcie definition)
-     * @return result: a map containing the parameters needed for the InventoryEventPlannedCreate services
-     */
-    public static Map prepParamFromRequirement(DispatchContext ctx, Map context) {
-        // No permission checking because this services is call from other services/
-        Map result = new HashMap();
-        
-        result.put("productId", context.get("productId"));
-        result.put("eventDate", context.get("requiredByDate"));
-        if (context.get("requirementTypeId").equals("MRP_PRO_PROD_ORDER"))
-            result.put("inventoryEventPlanTypeId","PROP_MANUF_O_RECP");
-        else if (context.get("requirementTypeId").equals("MRP_PRO_PURCH_ORDER"))
-            result.put("inventoryEventPlanTypeId","PROP_PUR_O_RECP");
-        else {
-            Debug.logError("Error : createInventoryEventPlanned from Requirement with requirementTypeId = "+context.get("requirementTypeId"), module);
-            return ServiceUtil.returnError("Error createInventoryEventPlanned from Requirement, invalid parameters");
-        }
-        result.put("eventQuantity", context.get("quantity"));
-        return result;
-    }
+   
     /**
      *
      *  Create an InventoryEventPlanned.
@@ -112,42 +86,4 @@ public class InventoryEventPlannedServices {
         }
     }
 
-    /*
-    public static Map createInventoryEventPlanned(DispatchContext ctx, Map context) {
-        GenericDelegator delegator = ctx.getDelegator();
-        // No permission checking because this services is call from other services/
-        Map parameters = UtilMisc.toMap("productId", context.get("productId"),
-                                        "eventDate", context.get("eventDate"),
-                                        "inventoryEventPlanTypeId",context.get("inventoryEventPlanTypeId"));
-        GenericValue inventoryEventPlanned = null;
-        // test if a record exist with same key
-        try {
-            inventoryEventPlanned = delegator.findByPrimaryKey("InventoryEventPlanned", parameters);
-        } catch (GenericEntityException e) {
-            Debug.logError(e,"Error : delegator.findByPrimaryKey(\"InventoryEventPlanned\", parameters =)"+parameters, module);
-            return ServiceUtil.returnError("Problem, on database access, for more detail look at the log");
-        }
-        if(inventoryEventPlanned==null){  // record creation
-            try {
-                inventoryEventPlanned = delegator.makeValue("InventoryEventPlanned",parameters);
-                inventoryEventPlanned.put("eventQuantity", context.get("eventQuantity"));
-                inventoryEventPlanned.create();
-            } catch (GenericEntityException e) {
-                Debug.logError(e,"Error : InventoryEventPlanned.create() parameters = "+inventoryEventPlanned, module);
-                return ServiceUtil.returnError("Problem, we can not create a record in InventoryEventPlanned, for more detail look at the log");
-            }
-        }
-        else{  // adding the eventQuantity to the exiting record) and update the record
-            double quantity = ((Double) context.get("eventQuantity")).doubleValue() + inventoryEventPlanned.getDouble("eventQuantity").doubleValue();
-            inventoryEventPlanned.put("eventQuantity", new Double(quantity));
-            try {
-                inventoryEventPlanned.store();
-            } catch (GenericEntityException e) {
-                Debug.logError(e,"Error : InventoryEventPlanned.store() parameters = "+inventoryEventPlanned, module);
-                return ServiceUtil.returnError("Problem, cannot update InventoryEventPlanned, for more detail look at the log");
-            }
-        }
-        return ServiceUtil.returnSuccess();
-    }
-     */
 }
