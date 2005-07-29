@@ -80,6 +80,7 @@
                 <condition-expr field-name="statusId" value="REQ_APPROVED"/>
                 <condition-list combine="or">
                     <condition-expr field-name="requirementTypeId" value="MRP_PRO_PURCH_ORDER"/>
+                    <condition-expr field-name="requirementTypeId" value="PRODUCT_REQUIREMENT"/>
                 </condition-list>
             </condition-list>
         </entity-condition>
