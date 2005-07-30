@@ -51,14 +51,16 @@
     <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
     <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="OFBiz Demo - Order Payment Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
     
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_RTN_ACCEPT" templatePath="/applications/ecommerce/templates/email/returnaccept.ftl" subject="OFBiz Demo - Return Accepted #${returnHeader.returnId}" fromAddress="ofbiztest@yahoo.com"/>
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_RTN_COMPLETE" templatePath="/applications/ecommerce/templates/email/returncomplete.ftl" subject="OFBiz Demo - Return Completed #${returnHeader.returnId}" fromAddress="ofbiztest@yahoo.com"/>
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_RTN_CANCEL" templatePath="/applications/ecommerce/templates/email/returncancel.ftl" subject="OFBiz Demo - Return Cancelled #${returnHeader.returnId}" fromAddress="ofbiztest@yahoo.com"/>
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_PWD_RETRIEVE" templatePath="/applications/securityext/email/default/passwordemail.ftl" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_TELL_FRIEND" templatePath="/applications/ecommerce/templates/email/tellafriend.ftl" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@yahoo.com"/>
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GC_PURCHASE" templatePath="/applications/ecommerce/templates/email/giftcardpurchase.ftl" fromAddress="ofbiztest@yahoo.com" subject="A Gift From ${senderName}!"/>
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GC_RELOAD" templatePath="/applications/ecommerce/templates/email/giftcardreload.ftl" fromAddress="ofbiztest@yahoo.com" subject="Gift Card Reload Results"/>
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://ecommerce/widget/EmailReturnScreens.xml#ReturnAccept" subject="OFBiz Demo - Return Accepted #${returnHeader.returnId}" fromAddress="ofbiztest@yahoo.com"/>
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://ecommerce/widget/EmailReturnScreens.xml#ReturnComplete" subject="OFBiz Demo - Return Completed #${returnHeader.returnId}" fromAddress="ofbiztest@yahoo.com"/>
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_RTN_CANCEL" bodyScreenLocation="component://ecommerce/widget/EmailReturnScreens.xml#ReturnCancel" subject="OFBiz Demo - Return Cancelled #${returnHeader.returnId}" fromAddress="ofbiztest@yahoo.com"/>
 
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GC_PURCHASE" bodyScreenLocation="component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardPurchase" fromAddress="ofbiztest@yahoo.com" subject="A Gift From ${senderName}!"/>
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GC_RELOAD" bodyScreenLocation="component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardReload" fromAddress="ofbiztest@yahoo.com" subject="Gift Card Reload Results"/>
+
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_TELL_FRIEND" templatePath="/applications/ecommerce/templates/email/tellafriend.ftl" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@yahoo.com"/>
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_PWD_RETRIEVE" templatePath="/applications/securityext/email/default/passwordemail.ftl" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
+    
     <ProductStoreFacility productStoreId="9000" facilityId="WebStoreWarehouse" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreKeywordOvrd productStoreId="9000" keyword="gizmo" fromDate="2001-05-13 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>

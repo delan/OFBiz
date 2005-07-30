@@ -1869,6 +1869,16 @@ public class OrderServices {
         defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://ecommerce/widget/EmailOrderScreens.xml#OrderChangeNotice");
 
         defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://ecommerce/widget/EmailOrderScreens.xml#PaymentRetryNotice");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnAccept");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnComplete");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnCancel");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_GC_PURCHASE", "component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
+        defaultProductStoreEmailScreenLocation.put("PRDS_GC_RELOAD", "component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardReload");
+    }
+    public static String getDefaultProductStoreEmailScreenLocation(String emailType) {
+        return (String) defaultProductStoreEmailScreenLocation.get(emailType);
     }
 
     protected static Map sendOrderNotificationScreen(DispatchContext dctx, Map context, String emailType) {
@@ -1954,9 +1964,7 @@ public class OrderServices {
         Map bodyParameters = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "userLogin", placingUserLogin, "uiLabelMap", uiLabelMap, "locale", locale);
         sendMap.put("bodyParameters", bodyParameters);
 
-        String subjectString = productStoreEmail.getString("subject");
-        sendMap.put("subject", subjectString);
-
+        sendMap.put("subject", productStoreEmail.getString("subject"));
         sendMap.put("contentType", productStoreEmail.get("contentType"));
         sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
         sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
@@ -2171,7 +2179,7 @@ public class OrderServices {
         String purpose[] = { "BILLING_LOCATION", "SHIPPING_LOCATION" };
         String outKey[] = { "billingAddress", "shippingAddress" };
         GenericValue orderHeader = null;
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
 
         try {
             orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -2261,8 +2269,8 @@ public class OrderServices {
         List itemShippingList = (List) context.get("itemShippingList");
         Double orderShippingAmount = (Double) context.get("orderShippingAmount");
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Locale locale = (Locale) context.get("locale");
+        //GenericValue userLogin = (GenericValue) context.get("userLogin");
+        //Locale locale = (Locale) context.get("locale");
 
         // Simple Tax Calc only uses the state from the address and the SalesTaxLookup entity.
 
@@ -2433,7 +2441,7 @@ public class OrderServices {
     // return / refund services
 
     // helper method for sending return notifications
-    private static Map sendReturnNotification(DispatchContext ctx, Map context, String emailType) {
+    private static Map sendReturnNotificationScreen(DispatchContext ctx, Map context, String emailType) {
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -2446,7 +2454,7 @@ public class OrderServices {
             returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderErrorUnableToGetReturnHeaderForID", UtilMisc.toMap("returnId",returnId), locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorUnableToGetReturnHeaderForID", UtilMisc.toMap("returnId",returnId), locale));
         }
 
         // get the return items
@@ -2455,11 +2463,8 @@ public class OrderServices {
             returnItems = returnHeader.getRelated("ReturnItem");
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderErrorUnableToGetReturnItemRecordsFromReturnHeader", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorUnableToGetReturnItemRecordsFromReturnHeader", locale));
         }
-
-        // set the email template context
-        Map templateContext = UtilMisc.toMap("returnHeader", returnHeader, "returnItems", returnItems);
 
         // get the order header -- the first item will determine which product store to use from the order
         String productStoreId = null;
@@ -2471,7 +2476,7 @@ public class OrderServices {
                 orderHeader = firstItem.getRelatedOne("OrderHeader");
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderErrorUnableToGetOrderHeaderFromReturnItem", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorUnableToGetOrderHeaderFromReturnItem", locale));
             }
 
             if (orderHeader != null && UtilValidate.isNotEmpty(orderHeader.getString("productStoreId"))) {
@@ -2483,38 +2488,52 @@ public class OrderServices {
 
         // get the email setting and send the mail
         if (productStoreId != null && productStoreId.length() > 0) {
-            GenericValue emailSetting = null;
+            Map sendMap = FastMap.newInstance();
+
+            GenericValue productStoreEmail = null;
             try {
-                emailSetting = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", productStoreId, "emailType", emailType));
+                productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", productStoreId, "emailType", emailType));
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
 
-            if (emailSetting != null && emailAddress != null) {
-                String subjectString = emailSetting.getString("subject");
-                subjectString = FlexibleStringExpander.expandString(subjectString, templateContext);
+            if (productStoreEmail != null && emailAddress != null) {
+                String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+                if (UtilValidate.isEmpty(bodyScreenLocation)) {
+                    bodyScreenLocation = (String) defaultProductStoreEmailScreenLocation.get(emailType);
+                }
+                sendMap.put("bodyScreenUri", bodyScreenLocation);
 
-                Map emailCtx = new HashMap();
-                emailCtx.put("templateName", emailSetting.get("templatePath"));
-                emailCtx.put("templateData", templateContext);
-                emailCtx.put("sendTo", emailAddress);
-                emailCtx.put("contentType", emailSetting.get("contentType"));
-                emailCtx.put("sendFrom", emailSetting.get("fromAddress"));
-                emailCtx.put("sendCc", emailSetting.get("ccAddress"));
-                emailCtx.put("sendBcc", emailSetting.get("bccAddress"));
-                emailCtx.put("subject", subjectString);
-                emailCtx.put("userLogin", userLogin);
+                ResourceBundleMapWrapper uiLabelMap = (ResourceBundleMapWrapper) UtilProperties.getResourceBundleMap("EcommerceUiLabels", locale);
+                uiLabelMap.addBottomResourceBundle("OrderUiLabels");
+                uiLabelMap.addBottomResourceBundle("CommonUiLabels");
 
-                // send off the email async so we will retry on failed attempts
+                Map bodyParameters = UtilMisc.toMap("returnHeader", returnHeader, "returnItems", returnItems, "uiLabelMap", uiLabelMap, "locale", locale);
+                sendMap.put("bodyParameters", bodyParameters);
+
+                sendMap.put("subject", productStoreEmail.getString("subject"));
+                sendMap.put("contentType", productStoreEmail.get("contentType"));
+                sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
+                sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
+                sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
+                sendMap.put("sendTo", emailAddress);
+    
+                sendMap.put("userLogin", userLogin);
+
+                Map sendResp = null;
                 try {
-                    dispatcher.runAsync("sendGenericNotificationEmail", emailCtx);
+                    sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problem sending mail", module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemSendingEmail", locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", locale));
                 }
 
-                // all done
-                return ServiceUtil.returnSuccess();
+                // check for errors
+                if (sendResp != null && !ServiceUtil.isError(sendResp)) {
+                    sendResp.put("emailType", emailType);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", locale), null, null, sendResp);
+                }
+                return sendResp;
             }
         }
 
@@ -2523,17 +2542,17 @@ public class OrderServices {
 
     // return request notification
     public static Map sendReturnAcceptNotification(DispatchContext ctx, Map context) {
-        return sendReturnNotification(ctx, context, "PRDS_RTN_ACCEPT");
+        return sendReturnNotificationScreen(ctx, context, "PRDS_RTN_ACCEPT");
     }
 
     // return complete notification
     public static Map sendReturnCompleteNotification(DispatchContext ctx, Map context) {
-        return sendReturnNotification(ctx, context, "PRDS_RTN_COMPLETE");
+        return sendReturnNotificationScreen(ctx, context, "PRDS_RTN_COMPLETE");
     }
 
     // return cancel notification
     public static Map sendReturnCancelNotification(DispatchContext ctx, Map context) {
-        return sendReturnNotification(ctx, context, "PRDS_RTN_CANCEL");
+        return sendReturnNotificationScreen(ctx, context, "PRDS_RTN_CANCEL");
     }
 
     // get the returnable quantiy for an order item
@@ -3358,7 +3377,7 @@ public class OrderServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
 
         List ordersToCheck = null;
         List exprs = new ArrayList();

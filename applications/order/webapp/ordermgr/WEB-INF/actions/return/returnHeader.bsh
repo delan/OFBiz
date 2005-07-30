@@ -29,13 +29,10 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.party.contact.*;
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-paramMap = UtilHttp.getParameterMap(request);
 
-orderId = request.getParameter("orderId");
-partyId = request.getParameter("fromPartyId");
-returnId = request.getParameter("returnId");
+orderId = parameters.get("orderId");
+partyId = parameters.get("fromPartyId");
+returnId = parameters.get("returnId");
 if (returnId == null)
     returnId = (String) request.getAttribute("returnId");
     
@@ -44,8 +41,7 @@ if (returnId != null) {
     returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
     if (returnHeader != null) {   
         partyId = returnHeader.getString("fromPartyId"); 
-        fromPartyId = partyId;
-        toPartyId = request.getParameter("toPartyId");
+        toPartyId = parameters.get("toPartyId");
         currentStatus = returnHeader.getRelatedOne("StatusItem");
         context.put("currentStatus", currentStatus);
         currentAccount = returnHeader.getRelatedOne("BillingAccount");
@@ -61,7 +57,7 @@ context.put("returnId", returnId);
 if (returnHeader != null) {
     context.put("returnInfo", returnHeader);
 } else {
-    context.put("returnInfo", paramMap);
+    context.put("returnInfo", parameters);
 }
 
 billingAccountList = null;
@@ -93,32 +89,28 @@ context.put("orderHeader", orderHeader);
 
 
 // from address
-postalAddresses = ContactMechWorker.getPartyPostalAddresses(request, fromPartyId, "_NA_"); 
-if (postalAddresses.size() > 0)
-    context.put("postalAddressFrom", postalAddresses.get(0).get("postalAddress"));
+postalAddresses = ContactMechWorker.getPartyPostalAddresses(request, partyId, "_NA_"); 
+if (postalAddresses.size() > 0) context.put("postalAddressFrom", postalAddresses.get(0).get("postalAddress"));
 
-// to address (this should use the cursor, but I'm unsure how to construct the condition)
-postalAddressTo = null;
-// can't do this, no given Title under "relations"
-// facility = orderHeader.getRelatedOne("ToFacility");
-facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", returnHeader.getString("destinationFacilityId")));
-if (facility != null) {
-    facilityContactMechs = delegator.findByAnd("FacilityContactMech", UtilMisc.toMap("facilityId", facility.getString("facilityId")), UtilMisc.toList("fromDate DESC"));
-
-    facilityContactMechIterator = facilityContactMechs.iterator();
-    while (facilityContactMechIterator.hasNext()) {
-        facilityContactMech = facilityContactMechIterator.next();
-        contactMech = facilityContactMech.getRelatedOne("ContactMech");
-        if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
-            postalAddressTo = contactMech.getRelatedOne("PostalAddress");
-            break;
+if (returnHeader != null) {
+    postalAddressTo = null;
+    facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", returnHeader.getString("destinationFacilityId")));
+    if (facility != null) {
+        facilityContactMechs = delegator.findByAnd("FacilityContactMech", UtilMisc.toMap("facilityId", facility.getString("facilityId")), UtilMisc.toList("fromDate DESC"));
+    
+        facilityContactMechIterator = facilityContactMechs.iterator();
+        while (facilityContactMechIterator.hasNext()) {
+            facilityContactMech = facilityContactMechIterator.next();
+            contactMech = facilityContactMech.getRelatedOne("ContactMech");
+            if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+                postalAddressTo = contactMech.getRelatedOne("PostalAddress");
+                break;
+            }
         }
     }
-}
-if (postalAddressTo != null)
     context.put("postalAddressTo", postalAddressTo);
+}
 
 // get a list of all currencies
 currencies = delegator.findByAndCache("Uom", UtilMisc.toMap("uomTypeId", "CURRENCY_MEASURE"), UtilMisc.toList("description"));
 context.put("currencies", currencies);
-
