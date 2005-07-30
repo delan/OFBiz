@@ -205,23 +205,22 @@
 
     <!-- Requirement / CustRequestItem association event -->
     <eca service="createRequirement" event="commit">
-    	<condition field-name="custRequestId" operator="is-not-empty"/>
-    	<condition field-name="custRequestItemSeqId" operator="is-not-empty"/>
-    	<action service="associatedRequirementWithRequestItem" mode="sync"/>
+        	<condition field-name="custRequestId" operator="is-not-empty"/>
+        	<condition field-name="custRequestItemSeqId" operator="is-not-empty"/>
+        	<action service="associatedRequirementWithRequestItem" mode="sync"/>
     </eca>
 
     <!-- Requirement / stock level -->
     <eca service="createItemIssuance" event="invoke">
-    	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
-    	<action service="checkCreateStockRequirement" mode="sync"/>
+        	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
+        	<action service="checkCreateStockRequirement" mode="sync"/>
     </eca>
     <eca service="updateItemIssuance" event="invoke">
-    	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
-    	<action service="checkCreateStockRequirement" mode="sync"/>
+        	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
+        	<action service="checkCreateStockRequirement" mode="sync"/>
     </eca>
     <eca service="reserveOrderItemInventory" event="commit">
-    	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
-    	<action service="createRequirementFromItemATP" mode="sync"/>
+        	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
+        	<action service="createRequirementFromItemATP" mode="sync"/>
     </eca>
-
 </service-eca>
