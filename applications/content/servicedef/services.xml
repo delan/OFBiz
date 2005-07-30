@@ -55,7 +55,7 @@
         <attribute name="bodyUrlParameters" type="Map" mode="IN" optional="true"/>
         <attribute name="body" type="String" mode="OUT" optional="false"/>
     </service>
-    <service name="sendMailFromScreen" engine="java"
+    <service name="sendMailFromScreen" max-retry="3" engine="java"
         location="org.ofbiz.content.email.EmailServices" invoke="sendMailFromScreen">
         <description>Send E-Mail From Screen Widget Service</description>
         <implements service="sendMailInterface"/>

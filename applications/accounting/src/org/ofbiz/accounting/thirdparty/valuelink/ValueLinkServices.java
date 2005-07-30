@@ -27,6 +27,7 @@ package org.ofbiz.accounting.thirdparty.valuelink;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -39,12 +40,13 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -87,7 +89,7 @@ public class ValueLinkServices {
     // test the KEK encryption
     public static Map testKekEncryption(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        //GenericValue userLogin = (GenericValue) context.get("userLogin");
         Properties props = getProperties(context);
 
         // get an api instance
@@ -987,6 +989,7 @@ public class ValueLinkServices {
         GenericDelegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue orderItem = (GenericValue) context.get("orderItem");
+        Locale locale = (Locale) context.get("locale");
 
         // order ID for tracking
         String orderId = orderItem.getString("orderId");
@@ -1212,8 +1215,11 @@ public class ValueLinkServices {
             if (productStoreEmail == null) {
                 Debug.logError("No gift card purchase email setting found for this store; cannot send gift card information", module);
             } else {
-                String subjectString = productStoreEmail.getString("subject");
-                subjectString = FlexibleStringExpander.expandString(subjectString, answerMap);
+                ResourceBundleMapWrapper uiLabelMap = (ResourceBundleMapWrapper) UtilProperties.getResourceBundleMap("EcommerceUiLabels", locale);
+                uiLabelMap.addBottomResourceBundle("OrderUiLabels");
+                uiLabelMap.addBottomResourceBundle("CommonUiLabels");
+                answerMap.put("uiLabelMap", uiLabelMap);
+                answerMap.put("locale", locale);
 
                 // set the bcc address(s)
                 String bcc = productStoreEmail.getString("bccAddress");
@@ -1225,25 +1231,28 @@ public class ValueLinkServices {
                     }
                 }
 
-                String ofbizHome = System.getProperty("ofbiz.home");
                 Map emailCtx = new HashMap();
-                emailCtx.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
-                emailCtx.put("templateData", answerMap);
+                String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+                if (UtilValidate.isEmpty(bodyScreenLocation)) {
+                    bodyScreenLocation = OrderServices.getDefaultProductStoreEmailScreenLocation(emailType);
+                }
+                emailCtx.put("bodyScreenUri", bodyScreenLocation);
+                emailCtx.put("bodyParameters", answerMap);
                 emailCtx.put("sendTo", sendToEmail);
                 emailCtx.put("contentType", productStoreEmail.get("contentType"));
                 emailCtx.put("sendFrom", productStoreEmail.get("fromAddress"));
                 emailCtx.put("sendCc", productStoreEmail.get("ccAddress"));
                 emailCtx.put("sendBcc", bcc);
-                emailCtx.put("subject", subjectString);
+                emailCtx.put("subject", productStoreEmail.getString("subject"));
                 emailCtx.put("userLogin", userLogin);
 
                 // send off the email async so we will retry on failed attempts
                 try {
-                    dispatcher.runAsync("sendGenericNotificationEmail", emailCtx);
+                    dispatcher.runAsync("sendMailFromScreen", emailCtx);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problem sending mail", module);
                     // this is fatal; we will rollback and try again later
-                    return ServiceUtil.returnError("Problem sending email");
+                    return ServiceUtil.returnError("Error sending Gift Card notice email: " + e.toString());
                 }
             }
         }
@@ -1257,6 +1266,7 @@ public class ValueLinkServices {
         GenericDelegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue orderItem = (GenericValue) context.get("orderItem");
+        Locale locale = (Locale) context.get("locale");
 
         // order ID for tracking
         String orderId = orderItem.getString("orderId");
@@ -1444,28 +1454,34 @@ public class ValueLinkServices {
         if (productStoreEmail == null) {
             Debug.logError("No gift card purchase email setting found for this store; cannot send gift card information", module);
         } else {
-            String subjectString = productStoreEmail.getString("subject");
-            subjectString = FlexibleStringExpander.expandString(subjectString, answerMap);
-
-            String ofbizHome = System.getProperty("ofbiz.home");
             Map emailCtx = new HashMap();
-            emailCtx.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
-            emailCtx.put("templateData", answerMap);
+            ResourceBundleMapWrapper uiLabelMap = (ResourceBundleMapWrapper) UtilProperties.getResourceBundleMap("EcommerceUiLabels", locale);
+            uiLabelMap.addBottomResourceBundle("OrderUiLabels");
+            uiLabelMap.addBottomResourceBundle("CommonUiLabels");
+            answerMap.put("uiLabelMap", uiLabelMap);
+            answerMap.put("locale", locale);
+            
+            String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+            if (UtilValidate.isEmpty(bodyScreenLocation)) {
+                bodyScreenLocation = OrderServices.getDefaultProductStoreEmailScreenLocation(emailType);
+            }
+            emailCtx.put("bodyScreenUri", bodyScreenLocation);
+            emailCtx.put("bodyParameters", answerMap);
             emailCtx.put("sendTo", orh.getOrderEmailString());
             emailCtx.put("contentType", productStoreEmail.get("contentType"));
             emailCtx.put("sendFrom", productStoreEmail.get("fromAddress"));
             emailCtx.put("sendCc", productStoreEmail.get("ccAddress"));
             emailCtx.put("sendBcc", productStoreEmail.get("bccAddress"));
-            emailCtx.put("subject", subjectString);
+            emailCtx.put("subject", productStoreEmail.getString("subject"));
             emailCtx.put("userLogin", userLogin);
 
             // send off the email async so we will retry on failed attempts
             try {
-                dispatcher.runAsync("sendGenericNotificationEmail", emailCtx);
+                dispatcher.runAsync("sendMailFromScreen", emailCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem sending mail", module);
                 // this is fatal; we will rollback and try again later
-                return ServiceUtil.returnError("Problem sending email");
+                return ServiceUtil.returnError("Error sending Gift Card notice email: " + e.toString());
             }
         }
 
