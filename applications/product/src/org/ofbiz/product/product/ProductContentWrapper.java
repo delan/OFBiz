@@ -38,7 +38,6 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
@@ -58,7 +57,7 @@ public class ProductContentWrapper {
     public static final String module = ProductContentWrapper.class.getName();
     public static final String SEPARATOR = "::";    // cache key separator
     
-    public static UtilCache productContentCache;
+    // DEJ20050730 REMOVING this because it doesn't auto-clear, and that's a big NO-NO: public static UtilCache productContentCache;
     
     public static ProductContentWrapper makeProductContentWrapper(GenericValue product, HttpServletRequest request) {
         return new ProductContentWrapper(product, request);
@@ -72,18 +71,18 @@ public class ProductContentWrapper {
         this.product = product;
         this.locale = locale;
         this.mimeTypeId = mimeTypeId;
-        if (productContentCache == null) {
-            productContentCache = new UtilCache("product.content", true);     // use soft reference to free up memory if needed
-        }
+        //if (productContentCache == null) {
+        //    productContentCache = new UtilCache("product.content", true);     // use soft reference to free up memory if needed
+        //}
     }
     
     public ProductContentWrapper(GenericValue product, HttpServletRequest request) {
         this.product = product;
         this.locale = UtilHttp.getLocale(request);
         this.mimeTypeId = "text/html";
-        if (productContentCache == null) {
-            productContentCache = new UtilCache("product.content", true);     // use soft reference to free up memory if needed
-        }
+        //if (productContentCache == null) {
+        //    productContentCache = new UtilCache("product.content", true);     // use soft reference to free up memory if needed
+        //}
     }
     
     public String get(String productContentTypeId) {
@@ -103,19 +102,19 @@ public class ProductContentWrapper {
         /* caching: there is one cache created, "product.content"  Each product's content is cached with a key of
          * contentTypeId::locale::mimeType::productId, or whatever the SEPARATOR is defined above to be.
          */  
-        String cacheKey = productContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + product.get("productId");
+        //String cacheKey = productContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + product.get("productId");
         try {
-            if (productContentCache != null && productContentCache.get(cacheKey) != null) {
-                return (String) productContentCache.get(cacheKey);
-            }
+            //if (productContentCache != null && productContentCache.get(cacheKey) != null) {
+            //    return (String) productContentCache.get(cacheKey);
+            //}
             
             Writer outWriter = new StringWriter();
             getProductContentAsText(null, product, productContentTypeId, locale, mimeTypeId, delegator, outWriter);
             String outString = outWriter.toString();
             if (outString.length() > 0) {
-                if (productContentCache != null) {
-                    productContentCache.put(cacheKey, outString);
-                }
+                //if (productContentCache != null) {
+                //    productContentCache.put(cacheKey, outString);
+                //}
                 return outString;
             } else {
                 String candidateOut = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
