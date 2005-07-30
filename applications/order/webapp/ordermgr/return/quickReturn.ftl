@@ -149,7 +149,7 @@
               <tr><td colspan="8"><hr class="sepbar"></td></tr>
               <tr>
                 <td colspan="8" align="right">
-                  <a href="javascript:document.returnItems.submit();" class="buttontext">Return Selected Item(s) </a>
+                  <a href="javascript:document.selectAllForm.submit();" class="buttontext">Return Selected Item(s)</a>
                 </td>
               </tr>
             <#else>

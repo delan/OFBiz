@@ -32,7 +32,9 @@
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
       <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${externalKeyParam}" class="tabButton">${uiLabelMap.OrderReceiveReturn}</a>
     </#if>
-    <a href="<@ofbizUrl>/return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">PDF</a>
+</div>
+<div>
+    <a href="<@ofbizUrl>/return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="buttontext">[PDF]</a>
 </div>
 <#else>
   <div class="head1">${uiLabelMap.OrderCreateNewReturn}</div>
