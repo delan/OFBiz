@@ -29,14 +29,15 @@
         <div class="boxhead">&nbsp;Return Items</div>
     </div>
     <div class="screenlet-body">
-        <form name="returnItems" method="post" action="<@ofbizUrl>/makeQuickReturn</@ofbizUrl>">
+        <#-- DO NOT CHANGE THE NAME OF THIS FORM, it will break the some of the multi-service pattern features -->
+        <form name="selectAllForm" method="post" action="<@ofbizUrl>/makeQuickReturn</@ofbizUrl>">
           <input type="hidden" name="_checkGlobalScope" value="Y"/>
           <input type="hidden" name="_useRowSubmit" value="Y"/>
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
           <input type="hidden" name="toPartyId" value="${toPartyId?if_exists}"/>
           <input type="hidden" name="order_id" value="${orderId}"/>
           <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
-          <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}">
+          <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}"/>
           </#if>
           <table border="0" width="100%" cellpadding="2" cellspacing="0">
             <tr>
