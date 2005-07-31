@@ -37,7 +37,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/shoppinglist/editShoppingList.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/shoppinglist/editShoppingList.ftl"/></html></platform-specific>
                     </decorator-section>

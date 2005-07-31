@@ -38,6 +38,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -77,9 +78,12 @@ public class ContextFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
 
+        // puts all init-parameters in ServletContext attributes for easier parameterization without code changes
+        this.putAllInitParametersInAttributes();
+        
         // initialize the cached class loader for this application
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
+        localCachedClassLoader = new CachedClassLoader(loader, (String) config.getServletContext().getAttribute("webSiteId"));
 
         // set debug
         this.debug = "true".equalsIgnoreCase(config.getInitParameter("debug"));
@@ -116,7 +120,7 @@ public class ContextFilter implements Filter {
         Thread.currentThread().setContextClassLoader(localCachedClassLoader);
 
         // set the webSiteId in the session
-        httpRequest.getSession().setAttribute("webSiteId", getWebSiteId());
+        httpRequest.getSession().setAttribute("webSiteId", config.getServletContext().getAttribute("webSiteId"));
 
         // set the ServletContext in the request for future use
         request.setAttribute("servletContext", config.getServletContext());
@@ -327,18 +331,16 @@ public class ContextFilter implements Filter {
         return security;
     }
 
-    protected String getWebSiteId() {
-        String webSiteId = (String) config.getServletContext().getAttribute("webSiteId");
-        if (webSiteId == null) {
-            webSiteId = config.getServletContext().getInitParameter("webSiteId");
-            config.getServletContext().setAttribute("webSiteId", webSiteId);
-            if (webSiteId == null) {
-                //Debug.logError("[ContextFilter.init] ERROR: website not defined for context.", module);
-            }
+    protected void putAllInitParametersInAttributes() {
+        Enumeration initParamEnum = config.getServletContext().getInitParameterNames();
+        while (initParamEnum.hasMoreElements()) {
+            String initParamName = (String) initParamEnum.nextElement();
+            String initParamValue = config.getServletContext().getInitParameter(initParamName);
+            if (Debug.infoOn()) Debug.logInfo("Adding web.xml context-param to application attribute with name [" + initParamName + "] and value [" + initParamValue + "]", module);
+            config.getServletContext().setAttribute(initParamName, initParamValue);
         }
-        return webSiteId;
     }
-
+    
     protected String getServerId() {
         String serverId = (String) config.getServletContext().getAttribute("_serverId");
         if (serverId == null) {

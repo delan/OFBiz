@@ -73,7 +73,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/billsettings.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -91,7 +91,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/shipsettings.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -109,7 +109,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/custsettings.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -127,7 +127,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/optionsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/optionsettings.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -145,7 +145,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutreview.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/confirmorder.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -163,7 +163,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutoptions.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -181,7 +181,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingaddress.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutshippingaddress.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -199,7 +199,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutshippingoptions.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -218,7 +218,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutpayment.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -233,7 +233,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/splitship.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/splitship.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -249,7 +249,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutreview.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutreview.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -264,7 +264,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/ordercomplete.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -283,7 +283,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderhistory.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderhistory.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -302,7 +302,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderstatus.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -320,7 +320,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/requestreturn.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/requestreturn.ftl"/></html></platform-specific>
                     </decorator-section>

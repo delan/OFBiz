@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,7 @@ import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
 import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -151,20 +153,65 @@ public class ScreenRenderer {
     public void populateContextForRequest(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         HttpSession session = request.getSession();
 
+        // attribute names to skip for session and application attributes; these are all handles as special cases, duplicating results in undesired messages
+        Set attrNamesToSkip = FastSet.newInstance();
+        attrNamesToSkip.add("delegator");
+        attrNamesToSkip.add("dispatcher");
+        attrNamesToSkip.add("security");
+        attrNamesToSkip.add("webSiteId");
+
         Map parameterMap = UtilHttp.getParameterMap(request);
         // go through all request attributes and for each name that is not already in the parameters Map add the attribute value
-        Enumeration attrNames = request.getAttributeNames();
-        while (attrNames.hasMoreElements()) {
-            String attrName = (String) attrNames.nextElement();
-            Object param = (String) parameterMap.get(attrName);
+        Enumeration requestAttrNames = request.getAttributeNames();
+        while (requestAttrNames.hasMoreElements()) {
+            String attrName = (String) requestAttrNames.nextElement();
+            Object param = parameterMap.get(attrName);
+            Object attrValue = request.getAttribute(attrName);
             if (param == null) {
-                parameterMap.put(attrName, request.getAttribute(attrName));
+                parameterMap.put(attrName, attrValue);
             } else if (param instanceof String && ((String) param).length() == 0) {
                 // also put the attribute value in if the parameter is empty
-                parameterMap.put(attrName, request.getAttribute(attrName));
+                parameterMap.put(attrName, attrValue);
             } else {
                 // do nothing, just log something
                 Debug.logInfo("Found request attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
+            }
+        }
+
+        // do the same for session attributes, for convenience
+        Enumeration sessionAttrNames = session.getAttributeNames();
+        while (sessionAttrNames.hasMoreElements()) {
+            String attrName = (String) sessionAttrNames.nextElement();
+            if (attrNamesToSkip.contains(attrName)) continue;
+            Object param = parameterMap.get(attrName);
+            Object attrValue = session.getAttribute(attrName);
+            if (param == null) {
+                parameterMap.put(attrName, attrValue);
+            } else if (param instanceof String && ((String) param).length() == 0) {
+                // also put the attribute value in if the parameter is empty
+                parameterMap.put(attrName, attrValue);
+            } else {
+                // do nothing, just log something
+                Debug.logInfo("Found session attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
+            }
+        }
+
+        // do the same for servlet context (application) attribute, for convenience
+        Enumeration applicationAttrNames = servletContext.getAttributeNames();
+        while (applicationAttrNames.hasMoreElements()) {
+            String attrName = (String) applicationAttrNames.nextElement();
+            if (attrNamesToSkip.contains(attrName)) continue;
+            Object param = parameterMap.get(attrName);
+            Object attrValue = servletContext.getAttribute(attrName);
+            if (Debug.verboseOn()) Debug.logVerbose("Getting parameter from application attrbute with name [" + attrName + "] and value [" + attrValue + "]", module);
+            if (param == null) {
+                parameterMap.put(attrName, attrValue);
+            } else if (param instanceof String && ((String) param).length() == 0) {
+                // also put the attribute value in if the parameter is empty
+                parameterMap.put(attrName, attrValue);
+            } else {
+                // do nothing, just log something
+                Debug.logInfo("Found servlet context (application) attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
             }
         }
 

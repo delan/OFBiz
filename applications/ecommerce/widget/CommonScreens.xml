@@ -123,7 +123,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/category.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://ecommerce/webapp/ecommerce/main.ftl"/></html>
@@ -141,7 +141,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/login.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://ecommerce/webapp/ecommerce/login.ftl"/></html>

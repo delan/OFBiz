@@ -60,7 +60,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/listparamprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/showforum.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -88,7 +88,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/permprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/showforumarticle.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -135,7 +135,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/contentaddprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/createforumarticle.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -182,7 +182,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/contentprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/editforumarticle.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -228,7 +228,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/viewprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/editforumarticle.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -279,7 +279,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/ownercontentprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/createforumresponse.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -320,7 +320,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/contentprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/editforuminfo.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -373,7 +373,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/contentprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/editaddforumdata.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -419,7 +419,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/editaddprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/editaddimage.ftl"/></html></platform-specific>
                     </decorator-section>
