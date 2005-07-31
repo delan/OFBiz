@@ -36,7 +36,7 @@
                 <set field="title-property" value="PageTitleAdditionalInfo"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/survey.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -52,7 +52,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/newcustomer.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/newcustomer.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -68,7 +68,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/viewprofile.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/viewprofile.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -83,7 +83,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/editcontactmech.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/editcontactmech.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -99,7 +99,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/editpaymentmethod.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/editcreditcard.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -114,7 +114,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/editpaymentmethod.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/editeftaccount.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -129,7 +129,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/editpaymentmethod.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/editgiftcard.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -145,7 +145,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/changepassword.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/changepassword.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -160,7 +160,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/editperson.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/editperson.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -180,7 +180,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/giftcardbalance.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/giftcardbalance.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -199,7 +199,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/giftcardlink.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/giftcardlink.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -215,7 +215,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/customersurvey.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/customersurvey.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -236,7 +236,7 @@
                 <set field="submitRequest" value="contactsubmit"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/newmsg.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -250,7 +250,7 @@
                 <set field="title-property" value="PageTitleMessageList"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="messagelist-include"/>
                     </decorator-section>
@@ -288,7 +288,7 @@
                 <entity-one entity-name="CommunicationEvent" value-name="communicationEvent" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/messagedetail.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -308,7 +308,7 @@
                 <set field="partyIdTo" from-field="communicationEvent.partyIdFrom"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/newmsg.ftl"/></html></platform-specific>
                     </decorator-section>

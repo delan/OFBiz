@@ -81,7 +81,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/contentprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/defaultcontent.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -104,7 +104,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/nodetrailprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/showcontenttree.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -132,7 +132,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/search.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/searchContent.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -155,7 +155,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/includes/mruadd.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/viewcontent.ftl"/></html></platform-specific>
                     </decorator-section>

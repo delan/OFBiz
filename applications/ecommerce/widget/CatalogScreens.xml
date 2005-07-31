@@ -168,7 +168,7 @@
                 <set field="title-property" value="PageTitleCategoryPage"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="breadcrumbs"/>
                         <include-screen name="category-include"/>
@@ -224,7 +224,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/product.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -282,7 +282,7 @@
                 <set field="title-property" value="PageTitleProductReview"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productreview.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -301,7 +301,7 @@
                 <set field="title-property" value="PageTitleLastViewProducts"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/lastviewedproducts.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -345,7 +345,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/quickadd.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/quickadd.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -378,7 +378,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/keywordsearch.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/keywordsearch.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -400,7 +400,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/advancedsearchoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/advancedsearch.ftl"/></html></platform-specific>
                     </decorator-section>
