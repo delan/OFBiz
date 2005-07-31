@@ -1540,6 +1540,9 @@
       <field name="story" type="very-long"></field>
       <prim-key field="custRequestId"/>
       <prim-key field="custRequestItemSeqId"/>
+      <relation type="one" fk-name="CUST_REQITM_CREQ" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestId"/>
+      </relation>
       <relation type="one" fk-name="CUST_REQITM_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
