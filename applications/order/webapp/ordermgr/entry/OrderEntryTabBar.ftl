@@ -33,7 +33,7 @@
         <#if (shoppingCart.size() > 0)>
             <a href="javascript:document.cartform.submit()" class="submenutext">${uiLabelMap.OrderRecalculateOrder}</a>
             <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-                <a href="<@ofbizUrl>/finalizeOrder?finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
+                <a href="<@ofbizUrl>/finalizeOrder?finalizeMode=purchase&finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
             <#else>
                 <a href="<@ofbizUrl>/finalizeOrder?finalizeMode=init</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
             </#if>
