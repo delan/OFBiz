@@ -1013,6 +1013,9 @@
       <alias entity-alias="ATE" name="amount"/>
       <alias entity-alias="ATE" name="organizationPartyId"/>
       <alias entity-alias="GLAC" name="glAccountClassId"/>
+      <alias entity-alias="ATE" name="partyId"/>
+      <alias entity-alias="ATE" name="reconcileStatusId"/>
+      <alias entity-alias="ATE" name="acctgTransEntryTypeId"/>
       <view-link entity-alias="ATR" rel-entity-alias="ATE">
       	  <key-map field-name="acctgTransId"/>
       </view-link>
@@ -1027,6 +1030,9 @@
       </relation>
       <relation type="one" fk-name="ATAE_GLACTCLS" rel-entity-name="GlAccountClass">
         <key-map field-name="glAccountClassId"/>
+      </relation>
+      <relation type="one" fk-name="ATAE_ATTYPE" rel-entity-name="AcctgTransType">
+        <key-map field-name="acctgTransTypeId"/>
       </relation>
     </view-entity>
     <view-entity entity-name="AcctgTransEntryProdSums"
@@ -1350,7 +1356,17 @@
       <field name="description" type="description"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <field name="glAccountId" type="id-ne"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
+      <field name="reconciledBalance" type="currency-amount"></field>
+      <field name="reconciledDate" type="date-time"></field>
       <prim-key field="glReconciliationId"/>
+      <relation type="one" fk-name="GLREC_GLACCT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="GLREC_GLPARTY" rel-entity-name="Party">
+        <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+      </relation>
     </entity>
     <entity entity-name="GlReconciliationEntry"
             package-name="org.ofbiz.accounting.ledger"
