@@ -46,13 +46,14 @@ import org.w3c.dom.Element;
 public class ServiceEcaRule implements java.io.Serializable {
 
     public static final String module = ServiceEcaRule.class.getName();
-    
+
     protected String serviceName = null;
     protected String eventName = null;
     protected boolean runOnFailure = false;
     protected boolean runOnError = false;
     protected List conditions = new LinkedList();
     protected List actions = new LinkedList();
+    protected boolean enabled = true;
 
     protected ServiceEcaRule() {}
 
@@ -82,12 +83,12 @@ public class ServiceEcaRule implements java.io.Serializable {
         while (sfi.hasNext()) {
             conditions.add(new ServiceEcaCondition((Element) sfi.next(), false, true));
         }
-        
+
         if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions, module);
 
         List actList = UtilXml.childElementList(eca, "action");
         Iterator ai = actList.iterator();
-        
+
         while (ai.hasNext()) {
             Element actionElement = (Element) ai.next();
             actions.add(new ServiceEcaAction(actionElement, eventName));
@@ -97,6 +98,10 @@ public class ServiceEcaRule implements java.io.Serializable {
     }
 
     public void eval(String serviceName, DispatchContext dctx, Map context, Map result, boolean isError, boolean isFailure, Set actionsRun) throws GenericServiceException {
+        if (!enabled) {
+            Debug.logInfo("Service ECA [" + this.serviceName + "] on [" + this.eventName + "] is disabled; not running.", module);
+            return;
+        }
         if (isFailure && !this.runOnFailure) {
             return;
         }
@@ -123,7 +128,7 @@ public class ServiceEcaRule implements java.io.Serializable {
             boolean allOkay = true;
             while (a.hasNext() && allOkay) {
                 ServiceEcaAction ea = (ServiceEcaAction) a.next();
-                // in order to enable OR logic without multiple calls to the given service, 
+                // in order to enable OR logic without multiple calls to the given service,
                 // only execute a given service name once per service call phase
                 if (!actionsRun.contains(ea.serviceName)) {
                     if (Debug.infoOn()) Debug.logInfo("Running Service ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName, module);
@@ -135,5 +140,13 @@ public class ServiceEcaRule implements java.io.Serializable {
                 }
             }
         }
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
     }
 }

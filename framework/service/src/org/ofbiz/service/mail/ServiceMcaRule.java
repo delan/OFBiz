@@ -32,23 +32,25 @@ import java.util.Set;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericValue;
 
 import org.w3c.dom.Element;
 
 /**
- * 
+ *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class ServiceMcaRule implements java.io.Serializable {
 
     public static final String module = ServiceMcaRule.class.getName();
 
-    public String ruleName = null;
-    public List conditions = new LinkedList();
-    public List actions = new LinkedList();
+    protected String ruleName = null;
+    protected List conditions = new LinkedList();
+    protected List actions = new LinkedList();
+    protected boolean enabled = true;
 
     public ServiceMcaRule(Element mca) {
         this.ruleName = mca.getAttribute("mail-rule-name");
@@ -83,6 +85,11 @@ public class ServiceMcaRule implements java.io.Serializable {
     }
 
     public void eval(LocalDispatcher dispatcher, MimeMessageWrapper messageWrapper, Set actionsRun, GenericValue userLogin) throws GenericServiceException {
+        if (!enabled) {
+            Debug.logInfo("Service MCA [" + ruleName + "] is disabled; not running.", module);
+            return;
+        }
+        
         boolean allCondTrue = true;
         Iterator i = conditions.iterator();
         while (i.hasNext()) {
@@ -107,5 +114,13 @@ public class ServiceMcaRule implements java.io.Serializable {
                 }
             }
         }
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
     }
 }
