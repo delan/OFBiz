@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Collection;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
@@ -138,6 +139,18 @@ public class ServiceEcaUtil {
     public static Map getServiceEventMap(String serviceName) {
         if (ServiceEcaUtil.ecaCache == null) ServiceEcaUtil.readConfig();
         return (Map) ServiceEcaUtil.ecaCache.get(serviceName);
+    }
+
+    public static Collection getServiceEventRules(String serviceName, String event) {
+        Map eventMap = getServiceEventMap(serviceName);
+        if (eventMap != null) {
+            if (event != null) {
+                return (Collection) eventMap.get(event);
+            } else {
+                return eventMap.values();
+            }
+        }
+        return null;
     }
 
     public static void evalRules(String serviceName, Map eventMap, String event, DispatchContext dctx, Map context, Map result, boolean isError, boolean isFailure) throws GenericServiceException {

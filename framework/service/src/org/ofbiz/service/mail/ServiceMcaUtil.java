@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Collection;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
@@ -44,9 +45,9 @@ import org.ofbiz.entity.GenericValue;
 import org.w3c.dom.Element;
 
 /**
- * 
+ *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class ServiceMcaUtil {
@@ -114,6 +115,13 @@ public class ServiceMcaUtil {
 			}
 			Debug.logImportant("Loaded " + numDefs + " Service MCA definitions from " + resourceLocation, module);
         }
+    }
+
+    public static Collection getServiceMcaRules() {
+        if (mcaCache != null) {
+            return mcaCache.values();
+        }
+        return null;
     }
 
     public static void evalRules(LocalDispatcher dispatcher, MimeMessageWrapper wrapper, GenericValue userLogin) throws GenericServiceException {

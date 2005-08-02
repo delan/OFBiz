@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
@@ -40,6 +41,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.config.DelegatorInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.config.EntityEcaReaderInfo;
+import org.ofbiz.entity.GenericDelegator;
 import org.w3c.dom.Element;
 
 /**
@@ -55,7 +57,7 @@ public class EntityEcaUtil {
     public static final String module = EntityEcaUtil.class.getName();
 
     public static UtilCache entityEcaReaders = new UtilCache("entity.EcaReaders", 0, 0, false);
-    
+
     public static Map getEntityEcaCache(String entityEcaReaderName) {
         Map ecaCache = (Map) entityEcaReaders.get(entityEcaReaderName);
         if (ecaCache == null) {
@@ -70,7 +72,7 @@ public class EntityEcaUtil {
         }
         return ecaCache;
     }
-    
+
     public static String getEntityEcaReaderName(String delegatorName) {
         DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
         if (delegatorInfo == null) {
@@ -79,14 +81,14 @@ public class EntityEcaUtil {
         }
         return delegatorInfo.entityEcaReader;
     }
-    
+
     protected static void readConfig(String entityEcaReaderName, Map ecaCache) {
         EntityEcaReaderInfo entityEcaReaderInfo = EntityConfigUtil.getEntityEcaReaderInfo(entityEcaReaderName);
         if (entityEcaReaderInfo == null) {
             Debug.logError("BAD ERROR: Could not find entity-eca-reader config with name: " + entityEcaReaderName, module);
             return;
         }
-        
+
         Iterator eecaResourceIter = entityEcaReaderInfo.resourceElements.iterator();
         while (eecaResourceIter.hasNext()) {
             Element eecaResourceElement = (Element) eecaResourceIter.next();
@@ -139,5 +141,18 @@ public class EntityEcaUtil {
             numDefs++;
         }
         Debug.logImportant("Loaded " + numDefs + " Entity ECA definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName(), module);
+    }
+
+    public static Collection getEntityEcaRules(GenericDelegator delegator, String entityName, String event) {
+        Map ecaCache = EntityEcaUtil.getEntityEcaCache(EntityEcaUtil.getEntityEcaReaderName(delegator.getDelegatorName()));
+        Map eventMap = (Map) ecaCache.get(entityName);
+        if (eventMap != null) {
+            if (event != null) {
+                return (Collection) eventMap.get(event);
+            } else {
+                return eventMap.values();
+            }
+        }
+        return null;
     }
 }

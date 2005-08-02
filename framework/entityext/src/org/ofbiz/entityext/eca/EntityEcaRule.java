@@ -47,13 +47,14 @@ import org.w3c.dom.Element;
 public class EntityEcaRule implements java.io.Serializable {
 
     public static final String module = EntityEcaRule.class.getName();
-    
+
     protected String entityName = null;
     protected String operationName = null;
     protected String eventName = null;
     protected boolean runOnError = false;
     protected List conditions = new LinkedList();
     protected List actions = new LinkedList();
+    protected boolean enabled = true;
 
     protected EntityEcaRule() {}
 
@@ -87,12 +88,16 @@ public class EntityEcaRule implements java.io.Serializable {
     }
 
     public void eval(String currentOperation, DispatchContext dctx, GenericEntity value, boolean isError, Set actionsRun) throws GenericEntityException {
+        if (!enabled) {
+            Debug.logInfo("Entity ECA [" + this.entityName + "] on [" + this.eventName + "] is disabled; not running.", module);
+            return;
+        }
+
         //Debug.logInfo("eval eeca rule: operation=" + currentOperation + ", in event=" + this.eventName + ", on entity=" + this.entityName + ", for value=" + value, module);
-        
         if (isError && !this.runOnError) {
             return;
         }
-        
+
         if (!"any".equals(this.operationName) && this.operationName.indexOf(currentOperation) == -1) {
             return;
         }
@@ -111,8 +116,8 @@ public class EntityEcaRule implements java.io.Serializable {
             Iterator a = actions.iterator();
             while (a.hasNext()) {
                 EntityEcaAction ea = (EntityEcaAction) a.next();
-                // in order to enable OR logic without multiple calls to the given service, 
-                //only execute a given service name once per service call phase 
+                // in order to enable OR logic without multiple calls to the given service,
+                //only execute a given service name once per service call phase
                 if (!actionsRun.contains(ea.serviceName)) {
                     if (Debug.infoOn()) Debug.logInfo("Running Entity ECA Service: " + ea.serviceName + ", triggered by rule on Entity: " + value.getEntityName(), module);
                     ea.runAction(dctx, value);
@@ -120,5 +125,13 @@ public class EntityEcaRule implements java.io.Serializable {
                 }
             }
         }
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
     }
 }
