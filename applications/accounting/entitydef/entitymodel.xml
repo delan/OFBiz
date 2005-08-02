@@ -617,7 +617,6 @@
       <field name="amount" type="currency-amount"></field>
       <field name="description" type="description"></field>
       <field name="taxAuthPartyId" type="id-ne"/>
-      <field name="taxGlAccountId" type="id-ne"/>
       <field name="taxGeoId" type="id-ne"/>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
@@ -647,9 +646,6 @@
       </relation>
       <relation type="one" fk-name="INVCE_ITM_TAXPTY" title="TaxAuthority" rel-entity-name="Party">
           <key-map field-name="taxAuthPartyId" rel-field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="INVCE_ITM_TAXGLACT" title="Tax" rel-entity-name="GlAccount">
-          <key-map field-name="taxGlAccountId" rel-field-name="glAccountId"/>
       </relation>
       <relation type="one" fk-name="INVCE_ITM_TAXGEO" title="Tax" rel-entity-name="Geo">
           <key-map field-name="taxGeoId" rel-field-name="geoId"/>
