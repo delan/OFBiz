@@ -1639,7 +1639,9 @@ public class CheckOutHelper {
                 double selectedPaymentTotal = cart.getPaymentTotal();
                 double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
                 double nullAmount = requiredAmount - selectedPaymentTotal;
+                boolean setOverflow = false;
 
+                ShoppingCart.CartPaymentInfo info = cart.getPaymentInfo(paymentMethodId);
                 String amountString = formatter.format(nullAmount);
                 double newAmount = 0;
                 try {
@@ -1647,10 +1649,18 @@ public class CheckOutHelper {
                 } catch (ParseException e) {
                     Debug.logError(e, "Problem getting parsed new amount; unable to update payment info!", module);
                 }
+
+                Debug.log("Remaining total is - " + newAmount, module);
                 if (newAmount > 0) {
-                    Debug.log("Reset null paymentMethodId - " + paymentMethodId + " / " + newAmount, module);
-                    cart.addPaymentAmount(paymentMethodId, newAmount);
-                    cart.getPaymentInfo(paymentMethodId, null, null, new Double(newAmount)).overflow = true;
+                    info.amount = new Double(newAmount);
+                    Debug.log("Set null paymentMethodId - " + info.paymentMethodId + " / " + info.amount, module);
+                } else {
+                    info.amount = new Double(0);
+                    Debug.log("Set null paymentMethodId - " + info.paymentMethodId + " / " + info.amount, module);
+                }
+                if (!setOverflow) {
+                    info.overflow = setOverflow = true;
+                    Debug.log("Set overflow flag on payment - " + info.paymentMethodId, module);
                 }
             }
         }
@@ -1685,6 +1695,8 @@ public class CheckOutHelper {
 
         // get the payment config
         String paymentConfig = ProductStoreWorker.getProductStorePaymentProperties(delegator, cart.getProductStoreId(), "GIFT_CARD", null, true);
+        String giftCardType = UtilProperties.getPropertyValue(paymentConfig, "", "ofbiz");
+        String balanceField = null;
 
         // get the gift card objects to check
         Iterator i = cart.getGiftCards().iterator();
@@ -1693,16 +1705,26 @@ public class CheckOutHelper {
             Map gcBalanceMap = null;
             double gcBalance = 0.00;
             try {
-                Map ctx = UtilMisc.toMap("paymentConfig", paymentConfig);
+                Map ctx = UtilMisc.toMap("userLogin", cart.getUserLogin());
                 ctx.put("currency", cart.getCurrency());
-                ctx.put("cardNumber", gc.getString("cardNumber"));
-                ctx.put("pin", gc.getString("pinNumber"));
-                gcBalanceMap = dispatcher.runSync("balanceInquireGiftCard", ctx);
+                if ("ofbiz".equalsIgnoreCase(giftCardType)) {
+                    balanceField = "balance";
+                    ctx.put("cardNumber", gc.getString("cardNumber"));
+                    ctx.put("pinNumber", gc.getString("pinNumber"));
+                    gcBalanceMap = dispatcher.runSync("checkGiftCertificateBalance", ctx);
+                }
+                if ("valuelink".equalsIgnoreCase(giftCardType)) {
+                    balanceField = "balance";
+                    ctx.put("paymentConfig", paymentConfig);
+                    ctx.put("cardNumber", gc.getString("cardNumber"));
+                    ctx.put("pin", gc.getString("pinNumber"));
+                    gcBalanceMap = dispatcher.runSync("balanceInquireGiftCard", ctx);
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
             }
             if (gcBalanceMap != null) {
-                Double bal = (Double) gcBalanceMap.get("balance");
+                Double bal = (Double) gcBalanceMap.get(balanceField);
                 if (bal != null) {
                     gcBalance = bal.doubleValue();
                 }
