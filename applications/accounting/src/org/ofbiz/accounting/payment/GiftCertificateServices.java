@@ -217,6 +217,7 @@ public class GiftCertificateServices {
         if (!validatePin(delegator, cardNumber, pinNumber)) {
             return ServiceUtil.returnError("PIN number is not valid!");
         }
+        Debug.log("Attempting to redeem GC for " + amount, module);
 
         // create the transaction
         double previousBalance = 0.00;
@@ -230,7 +231,7 @@ public class GiftCertificateServices {
         double balance = 0.00;
         String refNum = null;
         Boolean procResult;
-        if (previousBalance > amount.doubleValue()) {
+        if (previousBalance >= amount.doubleValue()) {
             try {
                 refNum = GiftCertificateServices.createTransaction(delegator, dispatcher, userLogin, amount,
                         productStoreId, partyId, currencyUom, withdrawl, cardNumber);
