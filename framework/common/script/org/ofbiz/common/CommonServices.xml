@@ -54,6 +54,13 @@
     </simple-method>
     
     <!-- Uom Conversion service -->
+    <simple-method method-name="createUomConversionDated" short-description="Create a new dated UOM conversion entity">
+        <make-value value-name="newEntity" entity-name="UomConversionDated"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+        
     <simple-method method-name="convertUom" short-description="Convert UOM values" login-required="false">
         <!-- base case: if both uomIds are the same, return the original value -->
         <if-compare-field field-name="parameters.uomId" operator="equals" to-field-name="parameters.uomIdTo">
