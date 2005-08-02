@@ -414,6 +414,7 @@ public class ShoppingCart implements Serializable {
 
         public int compareTo(Object o) {
             CartPaymentInfo that = (CartPaymentInfo) o;
+            Debug.logInfo("Compare [" + this.toString() + "] to [" + that.toString() + "]", module);
             if (this.paymentMethodId != null) {
                 if (that.paymentMethodId == null) {
                     return 1;
@@ -464,7 +465,7 @@ public class ShoppingCart implements Serializable {
         }
 
         public String toString() {
-            return "Pm: " + paymentMethodId + " / PmType: " + paymentMethodTypeId + " / Amt: " + amount + " / Ref: " + refNum;
+            return "Pm: " + paymentMethodId + " / PmType: " + paymentMethodTypeId + " / Amt: " + amount + " / Ref: " + refNum[0] + "!" + refNum[1];
         }
     }
 
@@ -1367,31 +1368,40 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Locates an existing (or creates a new) CartPaymentInfo object */
-    public CartPaymentInfo getPaymentInfo(String id, String refNum, String authCode, Double amount) {
+    public CartPaymentInfo getPaymentInfo(String id, String refNum, String authCode, Double amount, boolean update) {
         CartPaymentInfo thisInf = this.makePaymentInfo(id, refNum, amount);
         Iterator i = paymentInfo.iterator();
         while (i.hasNext()) {
             CartPaymentInfo inf = (CartPaymentInfo) i.next();
             if (inf.compareTo(thisInf) == 0) {
                 // update the info
-                inf.refNum[0] = refNum;
-                inf.refNum[1] = authCode;
-                inf.amount = amount;
+                if (update) {
+                    inf.refNum[0] = refNum;
+                    inf.refNum[1] = authCode;
+                    inf.amount = amount;
+                }
+                Debug.logInfo("Returned existing PaymentInfo - " + inf.toString(), module);
                 return inf;
             }
         }
 
+        Debug.logInfo("Returned new PaymentInfo - " + thisInf.toString(), module);
         return thisInf;
     }
 
     /** Locates an existing (or creates a new) CartPaymentInfo object */
+    public CartPaymentInfo getPaymentInfo(String id, String refNum, String authCode, Double amount) {
+        return this.getPaymentInfo(id, refNum, authCode, amount, false);   
+    }
+
+    /** Locates an existing (or creates a new) CartPaymentInfo object */
     public CartPaymentInfo getPaymentInfo(String id) {
-        return this.getPaymentInfo(id, null, null, null);
+        return this.getPaymentInfo(id, null, null, null, false);
     }
 
     /** adds a payment method/payment method type */
     public void addPaymentAmount(String id, Double amount, String refNum, String authCode, boolean isSingleUse, boolean isPresent, boolean replace) {
-        CartPaymentInfo inf = this.getPaymentInfo(id, refNum, authCode, amount);
+        CartPaymentInfo inf = this.getPaymentInfo(id, refNum, authCode, amount, true);
         inf.singleUse = isSingleUse;
         if (replace) {
             paymentInfo.remove(inf);
