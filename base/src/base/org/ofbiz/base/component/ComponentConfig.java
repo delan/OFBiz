@@ -24,7 +24,6 @@
  */
 package org.ofbiz.base.component;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.xml.parsers.ParserConfigurationException;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -225,7 +225,7 @@ public class ComponentConfig {
                     } else {
                         tm = new TreeMap();
                     }
-                    
+
                     while (i.hasNext()) {
                         ComponentConfig cc = (ComponentConfig) i.next();
                         Iterator wi = cc.getWebappInfos().iterator();
@@ -270,6 +270,7 @@ public class ComponentConfig {
     protected String globalName = null;
     protected String rootLocation = null;
     protected String componentName = null;
+    protected boolean enabled = true;
 
     protected Map resourceLoaderInfos = FastMap.newInstance();
     protected List classpathInfos = FastList.newInstance();
@@ -313,6 +314,7 @@ public class ComponentConfig {
 
         Element ofbizComponentElement = ofbizComponentDocument.getDocumentElement();
         this.componentName = ofbizComponentElement.getAttribute("name");
+        this.enabled = "true".equalsIgnoreCase(ofbizComponentElement.getAttribute("enabled"));
         if (UtilValidate.isEmpty(this.globalName)) {
             this.globalName = this.componentName;
         }
@@ -479,6 +481,9 @@ public class ComponentConfig {
         return webappInfos;
     }
 
+    public boolean enabled() {
+        return enabled;
+    }
 
     public static class ResourceLoaderInfo {
         public String name;

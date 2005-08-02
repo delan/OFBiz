@@ -26,16 +26,15 @@ package org.ofbiz.base.container;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 
+import org.ofbiz.base.component.AlreadyLoadedException;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.component.ComponentLoaderConfig;
-import org.ofbiz.base.component.AlreadyLoadedException;
 import org.ofbiz.base.start.Classpath;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -56,9 +55,10 @@ public class ComponentContainer implements Container {
 
     public static final String module = ComponentContainer.class.getName();
 
-    protected static List loadedComponents = null;
+    //protected static List loadedComponents2 = null;
     protected Classpath classPath = new Classpath(System.getProperty("java.class.path"));
     protected String configFileLocation = null;
+    private boolean loaded = false;
 
     /**
      * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
@@ -100,15 +100,17 @@ public class ComponentContainer implements Container {
 
     public synchronized void loadComponents(String loaderConfig, boolean updateClasspath) throws AlreadyLoadedException, ComponentException {
         // set the loaded list; and fail if already loaded
-        if (loadedComponents == null) {
-            loadedComponents = new LinkedList();
+        //if (loadedComponents == null) {
+        //    loadedComponents = new LinkedList();
+        if (!loaded) {
+            loaded = true;
         } else {
             throw new AlreadyLoadedException("Components already loaded, cannot start");
         }
 
         // get the components to load
         List components = ComponentLoaderConfig.getRootComponents(loaderConfig);
-                       
+
         // load each component
         if (components != null) {
             Iterator ci = components.iterator();
@@ -206,6 +208,12 @@ public class ComponentContainer implements Container {
     }
 
     private void loadComponent(ComponentConfig config) {
+        // make sure the component is enabled
+        if (!config.enabled()) {
+            Debug.logInfo("Not Loading component : [" + config.getComponentName() + "] (disabled)", module);
+            return;
+        }
+
         Debug.logInfo("Loading component : [" + config.getComponentName() + "]", module);
         List classpathInfos = config.getClasspathInfos();
         String configRoot = config.getRootLocation();
@@ -228,7 +236,7 @@ public class ComponentContainer implements Container {
                 } else if ("jar".equals(cp.type)) {
                     String dirLoc = location;
                     if (dirLoc.endsWith("/*")) {
-                        // strip off the slash splat                        
+                        // strip off the slash splat
                         dirLoc = location.substring(0, location.length() - 2);
                     }
                     File path = new File(configRoot + dirLoc);
@@ -243,7 +251,7 @@ public class ComponentContainer implements Container {
                                 }
                             }
                         } else {
-                            // add a single file                                                       
+                            // add a single file
                             classPath.addComponent(configRoot + location);
                         }
                     } else {
