@@ -2,22 +2,22 @@
 <!--
     *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
     *
-    *  Permission is hereby granted, free of charge, to any person obtaining a 
-    *  copy of this software and associated documentation files (the "Software"), 
-    *  to deal in the Software without restriction, including without limitation 
-    *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-    *  and/or sell copies of the Software, and to permit persons to whom the 
+    *  Permission is hereby granted, free of charge, to any person obtaining a
+    *  copy of this software and associated documentation files (the "Software"),
+    *  to deal in the Software without restriction, including without limitation
+    *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    *  and/or sell copies of the Software, and to permit persons to whom the
     *  Software is furnished to do so, subject to the following conditions:
     *
-    *  The above copyright notice and this permission notice shall be included 
+    *  The above copyright notice and this permission notice shall be included
     *  in all copies or substantial portions of the Software.
     *
-    *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
-    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
-    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
-    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+    *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     *  $Id: ofbiz-component.dtd 1174 2003-12-07 18:02:16Z ajzeneski $
 -->
@@ -37,6 +37,7 @@
     </xs:element>
     <xs:attributeGroup name="attlist.ofbiz-component">
         <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="enabled" use="optional" default="true"/>
     </xs:attributeGroup>
     <xs:element name="depends-on">
         <xs:complexType>
@@ -170,18 +171,18 @@
         <resource-loader name="mainfile" type="file" prepend-env="ofbiz.home" prefix=""/>
         <resource-loader name="maincp" type="classpath"/>
         <resource-loader name="mainurl" type="url"/>
-    
+
         <classpath type="jar" location="lib/product.jar"/>
         <classpath type="dir" location="classes"/>
-    
+
         <entity-resource type="model" reader-name="main" loader="maincomponent" location="entity/entitymodel.xml"/>
         <entity-resource type="group" reader-name="main" loader="maincomponent" location="entity/entitygroup.xml"/>
         <entity-resource type="eca" reader-name="main" loader="maincomponent" location="entity/eecas.xml"/>
-    
+
         <service-resource type="model" loader="maincomponent" location="service/services_test.xml"/>
         <service-resource type="group" loader="maincomponent" location="service/groups_test.xml"/>
         <service-resource type="eca" loader="maincomponent" location="service/secas_test.xml"/>
-    
+
     	<webapp name="webtools" title="WebTools" server="default" location="webtools" mount-point="/webtools"/>
-    </ofbiz-component> 
+    </ofbiz-component>
 -->
