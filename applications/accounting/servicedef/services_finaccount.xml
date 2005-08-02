@@ -124,6 +124,8 @@
              location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="checkGiftCertificateBalance" auth="true">
         <description>Obtain the balanace of a Gift Certificate</description>
         <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="pinNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="balance" type="Double" mode="OUT" optional="false"/>
     </service>
 
