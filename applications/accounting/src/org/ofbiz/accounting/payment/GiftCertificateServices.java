@@ -260,7 +260,14 @@ public class GiftCertificateServices {
     public static Map checkGiftCertificateBalance(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         String cardNumber = (String) context.get("cardNumber");
+        String pinNumber = (String) context.get("pinNumber");
 
+        // validate the pin
+        if (!validatePin(delegator, cardNumber, pinNumber)) {
+            return ServiceUtil.returnError("PIN number is not valid!");
+        }
+
+        // get the balance
         double balance = 0.00;
         try {
             balance = GiftCertificateServices.getBalance(delegator, cardNumber);
@@ -500,6 +507,9 @@ public class GiftCertificateServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Unable to get survey response information; cannot fulfill gift card");
+        }
+        if (surveyResponse == null) {
+            return ServiceUtil.returnError("Survey response came back null from the database!");
         }
 
         // get the response answers
