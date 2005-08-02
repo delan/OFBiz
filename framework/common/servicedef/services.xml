@@ -211,6 +211,12 @@
     </service>
     
     <!-- Uom conversion service -->
+    <service name="createUomConversionDated" default-entity-name="UomConversionDated" engine="simple"
+            location="org/ofbiz/common/CommonServices.xml" invoke="createUomConversionDated" auth="true">
+        <description>Create a new dated UOM converesion entity</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
     <service name="convertUom" default-entity-name="UomConversion" engine="simple"
             location="org/ofbiz/common/CommonServices.xml" invoke="convertUom" auth="false">
         <description>Make a unit of measure conversion, first using UomConversion, then with UomConversionDated</description>
