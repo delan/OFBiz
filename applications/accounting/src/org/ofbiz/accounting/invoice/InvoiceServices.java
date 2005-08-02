@@ -377,7 +377,11 @@ public class InvoiceServices {
                             adjInvItem.set("productId", orderItem.get("productId"));
                             adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
                             //adjInvItem.set("uomId", "");
-                            adjInvItem.set("taxableFlag", product.get("taxable"));
+                            
+                            // invoice items for sales tax are not taxable themselves
+                            if (!(adj.getString("orderAdjustmentTypeId").equals("SALES_TAX"))) {
+                                adjInvItem.set("taxableFlag", product.get("taxable"));    
+                            }
                             adjInvItem.set("quantity", new Double(1));
                             adjInvItem.set("amount", new Double(amount));
                             adjInvItem.set("description", adj.get("description"));
