@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="EditProductStore" type="single"
         target="updateProductStore" title="" default-map-name="productStore"
@@ -61,6 +61,9 @@
         </field>
         <field name="autoApproveReviews" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field name="autoInvoiceDigitalItems" widget-style="selectBox">
+            <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
         </field>
         <field name="isDemoStore" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
@@ -121,7 +124,7 @@
         <field name="requireCustomerRole" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
         </field>
-        
+
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -249,7 +252,7 @@
             <hyperlink target="/marketing/control/deleteSegmentGroup?segmentGroupId=${segmentGroupId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false" target-type="inter-app"/>
         </field>
-        
+
     </form>
-     
+
 </forms>
