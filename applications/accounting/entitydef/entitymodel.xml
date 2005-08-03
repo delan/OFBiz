@@ -607,7 +607,7 @@
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
       <field name="invoiceItemTypeId" type="id"></field>
-      <field name="overrideGlAccountId" type="id"></field>
+      <field name="overrideGlAccountId" type="id"><!-- used to specify the override or actual glAccountId used for the invoice, avoids problems if configuration changes after initial posting, etc --></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="productFeatureId" type="id"></field>
@@ -641,7 +641,7 @@
       <relation type="one" fk-name="INVCE_ITM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
       </relation>
-      <relation type="one" fk-name="INVCE_ITM_ORGLA" rel-entity-name="GlAccount">
+      <relation type="one" fk-name="INVCE_ITM_ORGLA" title="Override" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
       </relation>
       <relation type="one" fk-name="INVCE_ITM_TAXPTY" title="TaxAuthority" rel-entity-name="Party">

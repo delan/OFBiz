@@ -85,6 +85,7 @@
       <field name="exemptAmount" type="currency-amount"><!-- an amount that would normally apply, but not to this order; for tax exemption represents the what the tax would have been --></field>
       <field name="taxAuthGeoId" type="id"></field><!-- these taxAuth fields deprecate the primaryGeoId and secondaryGeoId fields and will be used with the newer tax calc stuff -->
       <field name="taxAuthPartyId" type="id"></field>
+      <field name="overrideGlAccountId" type="id"><!-- used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc --></field>
       <field name="includeInTax" type="indicator"></field>
       <field name="includeInShipping" type="indicator"></field>
       <field name="createdDate" type="date-time"></field>
@@ -136,6 +137,9 @@
       <relation type="one" fk-name="ORDER_ADJ_TXA" rel-entity-name="TaxAuthority">
         <key-map field-name="taxAuthGeoId"/>
         <key-map field-name="taxAuthPartyId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ADJ_OGLA" title="Override" rel-entity-name="GlAccount">
+        <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
       </relation>
     </entity>
     <entity entity-name="OrderAdjustmentAttribute"
@@ -384,6 +388,7 @@
       <field name="autoCancelDate" type="date-time"></field>
       <field name="dontCancelSetDate" type="date-time"></field>
       <field name="dontCancelSetUserLogin" type="id-vlong"></field>
+      <field name="overrideGlAccountId" type="id"><!-- used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc --></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <relation type="one" fk-name="ORDER_ITEM_HDR" rel-entity-name="OrderHeader">
@@ -416,6 +421,9 @@
       <relation type="one" fk-name="ORDER_ITEM_QUIT" rel-entity-name="QuoteItem">
         <key-map field-name="quoteId"/>
         <key-map field-name="quoteItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITEM_OGLA" title="Override" rel-entity-name="GlAccount">
+        <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemAssociation"
