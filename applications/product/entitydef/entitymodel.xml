@@ -2607,7 +2607,6 @@
       <field name="viewCartOnAdd" type="indicator"></field>
       <field name="autoSaveCart" type="indicator"></field>
       <field name="autoApproveReviews" type="indicator"></field>
-      <field name="autoInvoiceDigitalItems" type="indicator"></field>
       <field name="isDemoStore" type="indicator"></field>
       <field name="isImmediatelyFulfilled" type="indicator">
           <!-- If immediately fulfilled (for physical stores, etc): don't send email notices, don't reserve inventory, and IFF inventory info isn't found on the server then don't issue inventory right away -->
