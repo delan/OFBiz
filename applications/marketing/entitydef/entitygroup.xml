@@ -52,7 +52,6 @@
     <entity-group group="org.ofbiz" entity="SegmentGroupRole"/>
     <entity-group group="org.ofbiz" entity="SegmentGroupType"/>
     <entity-group group="org.ofbiz" entity="SegmentGroupViewRelatedParties"/>
-    <entity-group group="org.ofbiz" entity="SegmentGroupViewRelatedPartiesClass"/>
     
   <!-- ========================================================= -->
   <!-- org.ofbiz.marketing.tracking -->
@@ -64,4 +63,3 @@
     <entity-group group="org.ofbiz" entity="TrackingCodeVisit" />
 
 </entitygroup>
-
