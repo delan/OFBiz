@@ -24,9 +24,9 @@
 <entitygroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitygroup.xsd">
 
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.order.order -->
-  <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.order -->
+    <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="OldOrderItemInventoryRes" />
     <entity-group group="org.ofbiz" entity="OldOrderShipmentPreference" />
@@ -44,6 +44,7 @@
     <entity-group group="org.ofbiz" entity="OrderHeaderAndPaymentPref" />
     <entity-group group="org.ofbiz" entity="OrderHeaderAndRoleSummary" />
     <entity-group group="org.ofbiz" entity="OrderHeaderAndRoles" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderAndShipGroups" />
     <entity-group group="org.ofbiz" entity="OrderHeaderItemAndRoles" />    
     <entity-group group="org.ofbiz" entity="OrderHeaderNote" />
     <entity-group group="org.ofbiz" entity="OrderHeaderNoteView" />
@@ -80,22 +81,11 @@
     <entity-group group="org.ofbiz" entity="OrderContent" />
     <entity-group group="org.ofbiz" entity="OrderContentType" />
     <entity-group group="org.ofbiz" entity="ProductOrderItem" />
-    <entity-group group="org.ofbiz" entity="SimpleSalesTaxLookup" />
-    <entity-group group="org.ofbiz" entity="ReturnHeader" />
-    <entity-group group="org.ofbiz" entity="ReturnItem" />
-    <entity-group group="org.ofbiz" entity="ReturnItemResponse" />
-    <entity-group group="org.ofbiz" entity="ReturnReason" />
-    <entity-group group="org.ofbiz" entity="ReturnStatus" /> 
-    <entity-group group="org.ofbiz" entity="ReturnType" />   
     <entity-group group="org.ofbiz" entity="WorkOrderItemFulfillment" />
-    <entity-group group="org.ofbiz" entity="ZipSalesRuleLookup" />
-    <entity-group group="org.ofbiz" entity="ZipSalesTaxLookup" />
 
-    <entity-group group="org.ofbiz" entity="OrderHeaderAndShipGroups" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.order.quote -->
-  <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.quote -->
+    <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="Quote" />
     <entity-group group="org.ofbiz" entity="QuoteAttribute" />
@@ -107,9 +97,9 @@
     <entity-group group="org.ofbiz" entity="QuoteTypeAttr" />
     <entity-group group="org.ofbiz" entity="QuoteCoefficient" />
 
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.order.request -->
-  <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.request -->
+    <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="CustRequest" />
     <entity-group group="org.ofbiz" entity="CustRequestAndRole" />
@@ -141,20 +131,42 @@
     <entity-group group="org.ofbiz" entity="WorkReqFulfType" />
     <entity-group group="org.ofbiz" entity="WorkRequirementFulfillment" />
 
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.order.shoppingcart -->
-  <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.return -->
+    <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="ReturnHeader" />
+    <entity-group group="org.ofbiz" entity="ReturnItem" />
+    <entity-group group="org.ofbiz" entity="ReturnItemResponse" />
+    <entity-group group="org.ofbiz" entity="ReturnReason" />
+    <entity-group group="org.ofbiz" entity="ReturnStatus" /> 
+    <entity-group group="org.ofbiz" entity="ReturnType" />   
+    
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.shoppingcart -->
+    <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="CartAbandonedLine" />
 
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.order.shoppinglist -->
-  <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.shoppinglist -->
+    <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="ShoppingList" />
     <entity-group group="org.ofbiz" entity="ShoppingListItem" />
     <entity-group group="org.ofbiz" entity="ShoppingListItemSurvey" />
     <entity-group group="org.ofbiz" entity="ShoppingListType" />
 
-</entitygroup>
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.tax -->
+    <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz" entity="SimpleSalesTaxLookup" />
+    <entity-group group="org.ofbiz" entity="TaxAuthority" />
+    <entity-group group="org.ofbiz" entity="TaxAuthorityCategory" />
+    <entity-group group="org.ofbiz" entity="TaxAuthorityGlAccount" />
+    <entity-group group="org.ofbiz" entity="TaxAuthorityRateProduct" />
+    <entity-group group="org.ofbiz" entity="TaxAuthorityRateType" />
+    <entity-group group="org.ofbiz" entity="ZipSalesRuleLookup" />
+    <entity-group group="org.ofbiz" entity="ZipSalesTaxLookup" />
+</entitygroup>
