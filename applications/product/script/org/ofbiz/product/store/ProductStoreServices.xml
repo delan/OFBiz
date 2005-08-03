@@ -519,7 +519,7 @@
                     
                     <if-compare-field field-name="availableToPromiseTotal" operator="greater-equals" to-field-name="parameters.quantity" type="Double">
                         <string-to-field string="Y" field-name="available"/>
-                        <log level="info" message="Inventory IS available in facility with id ${productStoreFacility.inventoryFacilityId} for product id ${parameters.productId}; desired quantity is ${parameters.quantity}, available quantity is ${availableToPromiseTotal}"/>
+                        <log level="info" message="Inventory IS available in facility with id ${productStoreFacility.facilityId} for product id ${parameters.productId}; desired quantity is ${parameters.quantity}, available quantity is ${availableToPromiseTotal}"/>
                     </if-compare-field>
                     <clear-field field-name="availableToPromiseTotal"/>
                 </if-compare>
