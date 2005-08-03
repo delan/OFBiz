@@ -88,9 +88,9 @@ public class UtilFormatOut {
      */
     public static String formatCurrency(double price, String isoCode, Locale locale) {
         //Debug.logInfo("formatting currency: " + price + ", isoCode: " + isoCode + ", locale: " + locale, module);
-        NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
+        com.ibm.icu.text.NumberFormat nf = com.ibm.icu.text.NumberFormat.getCurrencyInstance(locale);
         if (isoCode != null && isoCode.length() > 1) {
-            nf.setCurrency(Currency.getInstance(isoCode));
+            nf.setCurrency(com.ibm.icu.util.Currency.getInstance(isoCode));
         } else {
             Debug.logWarning("No isoCode specified to format currency value:" + price, module);
         }
@@ -105,6 +105,37 @@ public class UtilFormatOut {
      */
     public static String formatCurrency(Double price, String isoCode, Locale locale) {
         return formatCurrency(price.doubleValue(), isoCode, locale);
+    }
+
+    /** Formats a Double into a properly spelled out number string based on Locale
+     * @param amount The amount Double to be formatted
+     * @param locale The Locale used to format the number
+     * @return A String with the formatted number
+     */
+    public static String formatSpelledOutAmount(Double amount, Locale locale) {
+        return formatSpelledOutAmount(amount.doubleValue(), locale);
+    }
+    /** Formats a double into a properly spelled out number string based on Locale
+     * @param amount The amount double to be formatted
+     * @param locale The Locale used to format the number
+     * @return A String with the formatted number
+     */
+    public static String formatSpelledOutAmount(double amount, Locale locale) {
+        //Debug.logInfo("formatting currency: " + price + ", isoCode: " + isoCode + ", locale: " + locale, module);
+        com.ibm.icu.text.NumberFormat nf = new com.ibm.icu.text.RuleBasedNumberFormat(locale, com.ibm.icu.text.RuleBasedNumberFormat.SPELLOUT);
+        return nf.format(amount);
+    }
+
+    /** Formats a double into a properly formatted string, with two decimals, based on Locale
+     * @param amount The amount double to be formatted
+     * @param locale The Locale used to format the number
+     * @return A String with the formatted amount
+     */
+    public static String formatAmount(double amount, Locale locale) { // dovrebbe sostituire formatPrice
+        com.ibm.icu.text.NumberFormat nf = com.ibm.icu.text.NumberFormat.getInstance(locale);
+        nf.setMinimumFractionDigits(2);
+        nf.setMaximumFractionDigits(2);
+        return nf.format(amount);
     }
 
     // ------------------- percentage format handlers -------------------
