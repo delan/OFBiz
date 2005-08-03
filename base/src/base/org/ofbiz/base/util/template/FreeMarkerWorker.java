@@ -91,6 +91,7 @@ public class FreeMarkerWorker {
             ftlTransforms.put("ofbizUrl", loader.loadClass("org.ofbiz.webapp.ftl.OfbizUrlTransform").newInstance());
             ftlTransforms.put("ofbizContentUrl", loader.loadClass("org.ofbiz.webapp.ftl.OfbizContentTransform").newInstance());
             ftlTransforms.put("ofbizCurrency", loader.loadClass("org.ofbiz.webapp.ftl.OfbizCurrencyTransform").newInstance());
+            ftlTransforms.put("ofbizAmount", loader.loadClass("org.ofbiz.webapp.ftl.OfbizAmountTransform").newInstance());
             ftlTransforms.put("setRequestAttribute", loader.loadClass("org.ofbiz.webapp.ftl.SetRequestAttributeMethod").newInstance());
             ftlTransforms.put("renderWrappedText", loader.loadClass("org.ofbiz.webapp.ftl.RenderWrappedTextTransform").newInstance());
 
