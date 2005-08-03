@@ -129,6 +129,7 @@
     <RoleType description="Ship-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="SHIP_TO_CUSTOMER"/>
     <RoleType description="Supplier Agent" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SUPPLIER_AGENT"/>
     <RoleType description="Supplier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SUPPLIER"/>
+    <RoleType description="Tax Authority" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="TAX_AUTHORITY"/>
     <RoleType description="Union" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="UNION"/>
     <RoleType description="Workflow Owner" hasTable="N" parentTypeId="WORKFLOW_ROLE" roleTypeId="WF_OWNER"/>
 

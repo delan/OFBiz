@@ -1432,9 +1432,32 @@
         <key-map field-name="partyId"/>
       </view-link>
     </view-entity>
+    <entity entity-name="PartyTaxAuthInfo"
+        package-name="org.ofbiz.party.party"
+        title="Party Tax Information Entity">
+        <field name="partyId" type="id-ne"></field>
+        <field name="taxAuthGeoId" type="id-ne"></field>
+        <field name="taxAuthPartyId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="partyTaxId" type="id-long-ne"></field>
+        <field name="isExempt" type="indicator"></field>
+        <prim-key field="partyId"/>
+        <prim-key field="taxAuthGeoId"/>
+        <prim-key field="taxAuthPartyId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="PARTY_TXAI_PTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="PARTY_TXAI_TXA" rel-entity-name="TaxAuthority">
+            <key-map field-name="taxAuthGeoId"/>
+            <key-map field-name="taxAuthPartyId"/>
+        </relation>
+    </entity>
     <entity entity-name="PartyTaxInfo"
             package-name="org.ofbiz.party.party"
             title="Party Tax Information Entity">
+      <description>NOTE: this entity is deprecated by PartyTaxAuthInfo</description>
       <field name="partyId" type="id-ne"></field>
       <field name="geoId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
