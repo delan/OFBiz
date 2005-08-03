@@ -69,7 +69,7 @@
     <Geo abbreviation="BC" geoCode="BC" geoId="BC" geoName="British Columbia" geoTypeId="PROVINCE"/>
     <Geo abbreviation="MB" geoCode="MB" geoId="MB" geoName="Manitoba" geoTypeId="PROVINCE"/>
     <Geo abbreviation="NB" geoCode="NB" geoId="NB" geoName="New Brunswick" geoTypeId="PROVINCE"/>
-    <Geo abbreviation="NF" geoCode="NF" geoId="NF" geoName="Newfoundland" geoTypeId="PROVINCE"/>
+    <Geo abbreviation="NL" geoCode="NL" geoId="NL" geoName="Newfoundland and Labrador" geoTypeId="PROVINCE"/>
     <Geo abbreviation="NS" geoCode="NS" geoId="NS" geoName="Nova Scotia" geoTypeId="PROVINCE"/>
     <Geo abbreviation="NT" geoCode="NT" geoId="NT" geoName="Northwest Territories" geoTypeId="PROVINCE"/>
     <Geo abbreviation="NU" geoCode="NU" geoId="NU" geoName="Nunavut" geoTypeId="PROVINCE"/>
@@ -227,7 +227,7 @@
     <GeoAssoc geoId="CAN" geoIdTo="BC" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="CAN" geoIdTo="MB" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="CAN" geoIdTo="NB" geoAssocTypeId="REGIONS"/>
-    <GeoAssoc geoId="CAN" geoIdTo="NF" geoAssocTypeId="REGIONS"/>
+    <GeoAssoc geoId="CAN" geoIdTo="NL" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="CAN" geoIdTo="NS" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="CAN" geoIdTo="NT" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="CAN" geoIdTo="NU" geoAssocTypeId="REGIONS"/>
