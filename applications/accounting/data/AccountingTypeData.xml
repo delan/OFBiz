@@ -246,6 +246,7 @@
     <PaymentType description="Vendor Payment" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="VENDOR_PAYMENT"/>
     <PaymentType description="Vendor Prepayment" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="VENDOR_PREPAY"/>
     <PaymentType description="Pay Check" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="PAY_CHECK"/>
+    <PaymentType description="Sales Tax Payment" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="SALES_TAX_PAYMENT"/>
 
     <PaymentType description="Receipt" hasTable="N" parentTypeId="" paymentTypeId="RECEIPT"/>
     <PaymentType description="Customer Payment" hasTable="N" parentTypeId="RECEIPT" paymentTypeId="CUSTOMER_PAYMENT"/> <!-- a payment FROM the customer -->
