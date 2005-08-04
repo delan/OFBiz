@@ -27,7 +27,6 @@
 -->
 
 <div class="head1">${uiLabelMap.ProductGlobalPriceRules}</div>
-<a href="<@ofbizUrl>/EditProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateRule}]</a>
 <#if activeOnly>
     <a href="<@ofbizUrl>/FindProductPriceRules?activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
 <#else>
