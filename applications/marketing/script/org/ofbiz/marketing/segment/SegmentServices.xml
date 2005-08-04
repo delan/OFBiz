@@ -154,6 +154,9 @@
         
     </simple-method>
     <simple-method method-name="arePartiesRelatedThroughSegmentGroup" short-description="Determine: are Parties Related Through SegmentGroup?">
+        <!-- NOTE NOTE NOTE: this service is not current and needs to be updated for the new SegmentGroupViewRelatedParties view-entity def -->
+        
+        
         <!--
             The parties can be related through:
             Party -> SegmentGroupRole -> SegmentGroup -> SegmentGroupRole -> Party
@@ -173,6 +176,7 @@
                 <condition-expr field-name="toRoleTypeId" env-name="parameters.toRoleTypeId" ignore-if-empty="true"/>
             </condition-list>
         </entity-condition>
+        <!--
         <entity-condition entity-name="SegmentGroupViewRelatedPartiesClass" list-name="segmentGroupViewRelatedPartiesClassList">
             <condition-list combine="and">
                 <condition-expr field-name="partyId" env-name="parameters.partyId"/>
@@ -185,11 +189,12 @@
                 </condition-list>
             </condition-list>
         </entity-condition>
+        -->
         <if>
             <condition>
                 <and>
                     <if-empty field-name="segmentGroupViewRelatedPartiesList"/>
-                    <if-empty field-name="segmentGroupViewRelatedPartiesClassList"/>
+                    <!-- <if-empty field-name="segmentGroupViewRelatedPartiesClassList"/> -->
                 </and>
             </condition>
             <then>
