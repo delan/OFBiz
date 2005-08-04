@@ -333,7 +333,19 @@
   <GlAccount parentGlAccountId="220000" glAccountId="224000" accountCode="224000" 
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="SALES TAX COLLECTED" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="220000" glAccountId="225000" accountCode="225000" 
+   <GlAccount parentGlAccountId="224000" glAccountId="224100" accountCode="224100" 
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+    accountName="SALES TAX COLLECTED CA" description="" postedBalance="0.0"/>
+   <GlAccount parentGlAccountId="224000" glAccountId="224200" accountCode="224200" 
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+    accountName="SALES TAX COLLECTED NY" description="" postedBalance="0.0"/>
+   <GlAccount parentGlAccountId="224000" glAccountId="224300" accountCode="224300" 
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+    accountName="SALES TAX COLLECTED UT" description="" postedBalance="0.0"/>
+   <GlAccount parentGlAccountId="224000" glAccountId="224400" accountCode="224400" 
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+    accountName="SALES TAX COLLECTED TX" description="" postedBalance="0.0"/>
+   <GlAccount parentGlAccountId="220000" glAccountId="225000" accountCode="225000" 
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED USE TAX" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="220000" glAccountId="226000" accountCode="226000" 
