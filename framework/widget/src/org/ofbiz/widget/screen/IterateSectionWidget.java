@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlWidget.java 3547 2004-09-24 19:23:47Z jonesde $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model HTML class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev: 3547 $
+ * @version    $Rev$
  * @since      3.1
  */
 public class IterateSectionWidget extends ModelScreenWidget {

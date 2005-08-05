@@ -29,7 +29,7 @@ package org.ofbiz.base.util;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     UPS XPCI Sample Code
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 

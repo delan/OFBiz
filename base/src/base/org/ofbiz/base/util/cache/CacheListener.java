@@ -27,7 +27,7 @@ package org.ofbiz.base.util.cache;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public interface CacheListener {

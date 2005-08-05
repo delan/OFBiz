@@ -1,5 +1,5 @@
 /*
- * $Id: WrapSubContentCacheTransform.java 4256 2005-01-14 03:19:50Z jonesde $
+ * $Id$
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleProperties.java,v 1.1 2004/07/01 08:37:48 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

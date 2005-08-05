@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev: 4895 $
+ *@version    $Rev$
  *@since      2.2
 -->
 <script language="JavaScript" type="text/javascript">

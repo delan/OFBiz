@@ -21,7 +21,7 @@
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     *  Servlet Controller - Controller Request Definition DTD
-    *  $Id: site-conf.dtd 3661 2004-10-13 02:01:25Z jaz $
+    *  $Id$
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:element name="site-conf">

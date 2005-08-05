@@ -21,7 +21,7 @@
  *
  *@author	  Hans Bakker (hb@opentravelsystem.org) Modified to create webapp application bar.
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4-OTS1 $
+ *@version    $Revision$
  *@since      3.0
 -->
 <#if (requestAttributes.uiLabelMap)?exists>	<#assign uiLabelMap = requestAttributes.uiLabelMap></#if>

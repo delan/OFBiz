@@ -1,5 +1,5 @@
 /*
- * $Id: userpermprep.bsh 2449 2004-06-07 18:01:01Z byersa $
+ * $Id$
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision$
  * @since      2.1
 
  */

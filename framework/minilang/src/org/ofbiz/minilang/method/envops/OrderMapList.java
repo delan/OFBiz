@@ -1,5 +1,5 @@
 /*
- * $Id: FieldToList.java 4066 2004-12-18 12:24:00Z jonesde $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

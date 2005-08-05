@@ -1,5 +1,5 @@
 /*
- * $Id: userpermprep.bsh 3103 2004-08-20 21:45:49Z jaz $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
  * prepForumList.bsh
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev: 3103 $
+ * @version    $Rev$
  * @since      3.2
  *
  * 

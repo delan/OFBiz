@@ -30,7 +30,7 @@ import org.ofbiz.entity.GenericDelegator;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public abstract class InstanceEntityObject {

@@ -1,5 +1,5 @@
 /*
- * $Id: mostrecentprep.bsh 2490 2004-06-11 00:27:28Z byersa $
+ * $Id$
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision$
  * @since      3.0
 
  */

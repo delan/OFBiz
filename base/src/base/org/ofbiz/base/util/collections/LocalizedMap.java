@@ -29,7 +29,7 @@ import java.util.Locale;
  * A simple interface to facilitate the retreival of values based on a Locale.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public interface LocalizedMap {

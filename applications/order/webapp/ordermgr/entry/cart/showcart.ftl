@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
- *@version    $Rev: 3227 $
+ *@version    $Rev$
  *@since      2.2
 -->
 

@@ -28,7 +28,7 @@ package org.ofbiz.base.container;
  * Container - Interface for containers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Rev:$
+  *@version    $Rev$
  * @since      3.0
  */
 public interface Container {

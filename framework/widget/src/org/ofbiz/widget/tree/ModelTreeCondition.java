@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTreeCondition.java 3103 2004-08-20 21:45:49Z jaz $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model condition class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev: 3103 $
+ * @version    $Rev$
  * @since      3.1
  */
 public class ModelTreeCondition {

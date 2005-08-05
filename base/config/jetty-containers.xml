@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml 4595 2005-03-02 00:08:43Z jaz $
+ *  $Id$
 -->
 
 <ofbiz-containers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 

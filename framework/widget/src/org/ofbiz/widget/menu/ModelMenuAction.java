@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuAction.java 3611 2004-10-07 03:05:03Z jonesde $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import javax.servlet.http.*;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev: 3611 $
+ * @version    $Rev$
  * @since      3.1
  */
 public abstract class ModelMenuAction {

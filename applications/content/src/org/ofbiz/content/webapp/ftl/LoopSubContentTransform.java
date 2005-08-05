@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentTransform.java 3466 2004-09-20 22:27:16Z jaz $
+ * $Id$
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 

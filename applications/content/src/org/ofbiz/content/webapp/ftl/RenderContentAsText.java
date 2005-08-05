@@ -1,5 +1,5 @@
 /*
- * $Id: RenderContentAsText.java 3608 2004-10-07 00:27:29Z byersa $
+ * $Id$
  * 
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  * 

@@ -38,7 +38,7 @@ import org.enhydra.shark.api.client.wfmodel.WfEventAudit;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class SimpleRequester extends AbstractRequester {

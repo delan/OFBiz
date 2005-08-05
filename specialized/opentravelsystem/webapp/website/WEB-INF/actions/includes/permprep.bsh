@@ -1,5 +1,5 @@
 /*
- * $Id: permprep.bsh 3103 2004-08-20 21:45:49Z jaz $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev: 3103 $
+ * @version    $Rev$
  * @since      3.0
 
  * Does either a "simple" (does entity perm check) or complex

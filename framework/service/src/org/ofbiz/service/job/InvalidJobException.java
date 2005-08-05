@@ -26,7 +26,7 @@ package org.ofbiz.service.job;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      Jul 12, 2005
  */
 public class InvalidJobException extends JobManagerException {

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java 4895 2005-04-27 09:08:15Z jonesde $
+ * $Id$
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

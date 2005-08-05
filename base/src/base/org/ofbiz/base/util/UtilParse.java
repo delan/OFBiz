@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleStringExpander.java 3102 2004-08-20 21:45:02Z jaz $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
