@@ -26,7 +26,7 @@ package org.ofbiz.entity.jdbc;
 /**
  *
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 import java.sql.ResultSet;

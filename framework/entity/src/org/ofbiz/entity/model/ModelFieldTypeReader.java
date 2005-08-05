@@ -45,7 +45,7 @@ import org.w3c.dom.Node;
  * Generic Entity - Field Type Definition Reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ModelFieldTypeReader {

@@ -28,7 +28,7 @@ package org.ofbiz.workflow;
  * WfCreateProcessEventAudit - Workflow Create Process Event Audit Interface
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public interface WfCreateProcessEventAudit extends WfEventAudit {

@@ -47,7 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      1.0
  */
 public class GenericValue extends GenericEntity implements Reusable {

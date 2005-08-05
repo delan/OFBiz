@@ -40,7 +40,7 @@ package org.ofbiz.entity.transaction;
  * TyrexTransactionFactory - central source for Tyrex JTA objects
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class TyrexFactory {

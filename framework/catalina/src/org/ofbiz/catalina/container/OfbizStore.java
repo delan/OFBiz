@@ -31,7 +31,7 @@ import org.apache.catalina.util.CustomObjectInputStream;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      Jul 4, 2004
  */
 public class OfbizStore extends StoreBase implements Store {

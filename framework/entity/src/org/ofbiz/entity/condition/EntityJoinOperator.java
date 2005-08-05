@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelEntity;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Rev:$
+ *@version    $Rev$
  */
 public class EntityJoinOperator extends EntityOperator {
 

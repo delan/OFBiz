@@ -28,7 +28,7 @@ package org.ofbiz.workflow;
  * CannotSuspend Workflow Exception
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public final class CannotSuspend extends WfException {

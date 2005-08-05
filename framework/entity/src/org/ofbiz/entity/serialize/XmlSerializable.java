@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * XmlSerializable
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public interface XmlSerializable {

@@ -48,7 +48,7 @@ import org.ofbiz.service.ModelService;
  * Order Processing Task Events
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class TaskEvents {

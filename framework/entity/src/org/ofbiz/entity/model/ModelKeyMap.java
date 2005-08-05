@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Generic Entity - KeyMap model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ModelKeyMap implements java.io.Serializable {

@@ -44,7 +44,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public interface DelegatorInterface {

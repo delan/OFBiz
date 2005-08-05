@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  * transactional datasources yet (DBCP 1.0).
  *
  * @author     <a href="mailto:mike@atlassian.com">Mike Cannon-Brookes</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class DBCPConnectionFactory {

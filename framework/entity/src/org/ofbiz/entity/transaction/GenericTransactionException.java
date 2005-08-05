@@ -29,7 +29,7 @@ import org.ofbiz.entity.GenericEntityException;
  * GenericTransactionException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class GenericTransactionException extends GenericEntityException {

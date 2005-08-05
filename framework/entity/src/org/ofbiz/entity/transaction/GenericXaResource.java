@@ -35,7 +35,7 @@ import javax.transaction.*;
  * GenericXaResource - Abstract XA Resource implementation supporting a single transaction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public abstract class GenericXaResource implements XAResource {

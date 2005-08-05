@@ -72,7 +72,7 @@ import org.ofbiz.workflow.WfResource;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de)
  * @author     Oswin Ondarza and Manuel Soto 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {

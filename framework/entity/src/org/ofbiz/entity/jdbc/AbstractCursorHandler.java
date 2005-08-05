@@ -31,7 +31,7 @@ import java.lang.reflect.Proxy;
 
 /**
  *
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public abstract class AbstractCursorHandler implements InvocationHandler {

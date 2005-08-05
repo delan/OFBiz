@@ -32,7 +32,7 @@ import org.ofbiz.entity.model.ModelField;
  * Represents a single parameter to be used in the preparedStatement
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class EntityConditionParam implements Serializable {

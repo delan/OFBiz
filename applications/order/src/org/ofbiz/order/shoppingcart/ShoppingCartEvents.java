@@ -61,7 +61,7 @@ import org.ofbiz.webapp.control.RequestHandler;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ShoppingCartEvents {

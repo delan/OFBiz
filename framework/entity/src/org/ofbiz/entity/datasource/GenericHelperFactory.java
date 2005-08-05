@@ -35,7 +35,7 @@ import org.ofbiz.entity.config.EntityConfigUtil;
  * Generic Entity Helper Factory Class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class GenericHelperFactory {
