@@ -68,7 +68,7 @@ import freemarker.template.TemplateHashModel;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class EntitySaxReader implements javolution.xml.sax.ContentHandler, ErrorHandler {

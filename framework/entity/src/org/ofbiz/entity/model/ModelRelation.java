@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ModelRelation extends ModelChild {

@@ -28,7 +28,7 @@ package org.ofbiz.entity;
  * GenericFindException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class GenericFindException extends GenericEntityException {

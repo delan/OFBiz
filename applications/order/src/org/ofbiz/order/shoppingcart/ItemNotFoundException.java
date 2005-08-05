@@ -29,7 +29,7 @@ import org.ofbiz.base.util.GeneralException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class ItemNotFoundException extends GeneralException {

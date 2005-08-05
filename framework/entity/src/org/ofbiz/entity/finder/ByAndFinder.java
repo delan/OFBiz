@@ -55,7 +55,7 @@ import java.sql.ResultSet;
  * Uses the delegator to find entity values by a and
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class ByAndFinder {

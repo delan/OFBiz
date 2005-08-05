@@ -39,7 +39,7 @@ import org.ofbiz.service.LocalDispatcher;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class ShippingEstimateWrapper {

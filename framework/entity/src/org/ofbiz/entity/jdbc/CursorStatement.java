@@ -34,7 +34,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  *
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class CursorStatement extends AbstractCursorHandler {

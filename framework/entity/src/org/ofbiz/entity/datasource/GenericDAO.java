@@ -79,7 +79,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      1.0
  */
 public class GenericDAO {

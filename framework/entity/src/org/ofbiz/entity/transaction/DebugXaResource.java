@@ -31,7 +31,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class DebugXaResource extends GenericXaResource {

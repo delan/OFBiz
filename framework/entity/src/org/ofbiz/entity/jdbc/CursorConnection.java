@@ -30,7 +30,7 @@ import java.sql.Statement;
 
 /**
  *
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class CursorConnection extends AbstractCursorHandler {

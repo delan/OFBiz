@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable, Reusable {

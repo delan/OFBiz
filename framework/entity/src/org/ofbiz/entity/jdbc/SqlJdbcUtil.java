@@ -69,7 +69,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SqlJdbcUtil {

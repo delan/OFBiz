@@ -32,7 +32,7 @@ import org.ofbiz.base.util.UtilMisc;
  * WorkflowUtil - Workflow Engine Utilities
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public final class WfUtil {

@@ -45,7 +45,7 @@ import org.ofbiz.workflow.WfResource;
  * WfAssignmentImpl - Workflow Assignment Object implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class WfAssignmentImpl implements WfAssignment {

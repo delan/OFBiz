@@ -44,7 +44,7 @@ import org.ofbiz.workflow.WfException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     Oswin Ondarza and Manuel Soto
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class WfActivityToolImplementation extends WfActivityAbstractImplementation {

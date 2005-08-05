@@ -48,7 +48,7 @@ import org.ofbiz.workflow.WfResource;
  * Workflow Client - Client API to the Workflow Engine.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class WorkflowClient {

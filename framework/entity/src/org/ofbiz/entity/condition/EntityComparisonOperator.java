@@ -46,7 +46,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {

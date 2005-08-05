@@ -30,7 +30,7 @@ import java.sql.ResultSet;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.0
  */
 public class EntityFindOptions implements java.io.Serializable {

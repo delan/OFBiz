@@ -59,7 +59,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class DatabaseUtil {

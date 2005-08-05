@@ -37,7 +37,7 @@ import java.util.List;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public interface EntityConditionVisitor {

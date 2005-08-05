@@ -57,7 +57,7 @@ import org.ofbiz.service.job.JobManagerException;
  * WorkflowEngine - Workflow Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class WorkflowEngine extends AbstractEngine {

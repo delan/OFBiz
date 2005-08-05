@@ -61,7 +61,7 @@ import org.apache.commons.collections.set.ListOrderedSet;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class OrderReadHelper {

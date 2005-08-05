@@ -45,7 +45,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * Uses a collision detection approach to safely get unique sequenced ids in banks from the database
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SequenceUtil {

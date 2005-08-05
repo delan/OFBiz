@@ -44,7 +44,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {
