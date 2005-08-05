@@ -1987,6 +1987,7 @@
       <alias entity-alias="PA" name="invoiceId"/>
       <alias entity-alias="PA" name="invoiceItemSeqId"/>
       <alias entity-alias="PA" name="billingAccountId"/>
+      <alias entity-alias="PA" name="taxAuthGeoId"/>
       <alias entity-alias="PA" name="amountApplied"/>
       <view-link entity-alias="PY" rel-entity-alias="PA">
         <key-map field-name="paymentId"/>
@@ -2000,6 +2001,9 @@
       <relation type="one-nofk" rel-entity-name="PaymentGatewayResponse">
         <key-map field-name="paymentGatewayResponseId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="Geo">
+        <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
+      </relation>
     </view-entity>
     <entity entity-name="PaymentApplication"
             package-name="org.ofbiz.accounting.payment"
@@ -2009,6 +2013,7 @@
       <field name="invoiceId" type="id"></field>
       <field name="invoiceItemSeqId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
+      <field name="taxAuthGeoId" type="id"/>
       <field name="amountApplied" type="currency-amount"></field>
       <prim-key field="paymentApplicationId"/>
       <relation type="one" fk-name="PAYMENT_APP_PMT" rel-entity-name="Payment">
@@ -2023,6 +2028,9 @@
       </relation>
       <relation type="one" fk-name="PAYMENT_APP_BACT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="one" fk-name="PAYMENT_APP_GEO" rel-entity-name="Geo">
+        <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
       </relation>
     </entity>
     <entity entity-name="PaymentAttribute"

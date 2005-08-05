@@ -34,6 +34,11 @@
         
         <alt-target use-when="paymentApplication==null" target="createPaymentApplication"/>
         <auto-fields-service service-name="createPaymentApplication" map-name=""/>
+        <field name="taxAuthGeoId" title="Tax Auth Geo Id">
+             <drop-down>
+             	<entity-options entity-name="TaxAuthority" description="${taxAuthGeoId}"/>
+             </drop-down>
+        </field>
         <field name="paymentId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
