@@ -48,7 +48,7 @@ import org.ofbiz.shark.container.SharkContainer;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      Apr 17, 2005
  */
 public abstract class BaseEntityCondExprBldr implements ExpressionBuilder, Serializable {

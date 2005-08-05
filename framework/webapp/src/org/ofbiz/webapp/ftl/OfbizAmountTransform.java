@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizAmountTransform.java 4518 2005-02-20 11:48:00Z jonesde $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

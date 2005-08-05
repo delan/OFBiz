@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java 4518 2005-02-20 11:48:00Z jonesde $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  * otsEvents - Events for the Opentravelsystem.
  *
  * @author     <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
- * @version    $Rev: 4518 $
+ * @version    $Rev$
  * @since      2.0
  */
 public class otsEvents {

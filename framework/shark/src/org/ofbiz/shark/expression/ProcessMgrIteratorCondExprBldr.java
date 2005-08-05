@@ -31,7 +31,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class ProcessMgrIteratorCondExprBldr extends BaseEntityCondExprBldr implements ProcessMgrIteratorExpressionBuilder {

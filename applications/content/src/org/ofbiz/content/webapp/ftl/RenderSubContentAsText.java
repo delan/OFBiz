@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentAsText.java 3891 2004-11-08 14:48:00Z jonesde $
+ * $Id$
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 

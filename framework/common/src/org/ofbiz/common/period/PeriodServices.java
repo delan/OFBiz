@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java 5191 2005-06-22 18:28:12Z sichen $
+ * $Id$
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

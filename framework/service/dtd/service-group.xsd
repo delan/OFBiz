@@ -21,7 +21,7 @@
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     *  Service Framework - Service Definition DTD
-    *  $Id: service-group.dtd 34 2003-08-17 05:12:42Z ajzeneski $
+    *  $Id$
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:element name="service-group">

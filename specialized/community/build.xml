@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.2 2003/08/22 18:21:07 ajzeneski Exp $
+ *  $Id$
 -->
 
 <project name="OFBiz - Example Component" default="jar" basedir=".">

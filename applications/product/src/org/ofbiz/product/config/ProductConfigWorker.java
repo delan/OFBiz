@@ -1,5 +1,5 @@
 /*
- * $Id: ProductConfigWorker.java 3204 2004-08-30 11:13:25Z jonesde $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

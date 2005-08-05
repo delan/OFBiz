@@ -21,7 +21,7 @@
  *
  *@author     Peter Goron (peter.goron@nereide.biz)
  *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
- *@version    $Rev: 3227 $
+ *@version    $Rev$
  *@since      2.2
 -->
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentCacheTransform.java 4070 2004-12-19 01:56:22Z jonesde $
+ * $Id$
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

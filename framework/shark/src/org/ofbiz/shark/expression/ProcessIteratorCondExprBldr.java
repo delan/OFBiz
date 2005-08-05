@@ -30,7 +30,7 @@ import org.enhydra.shark.api.RootException;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      Apr 24, 2005
  */
 public class ProcessIteratorCondExprBldr extends BaseEntityCondExprBldr implements ProcessIteratorExpressionBuilder {

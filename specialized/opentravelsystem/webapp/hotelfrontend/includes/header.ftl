@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev: 4791 $
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign includeHtmlArea=false/>

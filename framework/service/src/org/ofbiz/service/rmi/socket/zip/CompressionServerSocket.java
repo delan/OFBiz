@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionServerSocket.java 1043 2003-12-02 06:40:07Z ajzeneski $
+ * $Id$
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *

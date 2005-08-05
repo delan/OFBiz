@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev: 3103 $
+ *@version    $Rev$
  *@since      2.2
  -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>

@@ -34,7 +34,7 @@ import java.util.EmptyStackException;
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class LifoSet extends AbstractSet implements Serializable {

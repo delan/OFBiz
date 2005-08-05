@@ -31,7 +31,7 @@ import java.net.URL;
  * A special location resolver that uses Strings like URLs, but with more options 
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.1
  */
 

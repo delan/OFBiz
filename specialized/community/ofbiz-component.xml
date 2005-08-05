@@ -3,7 +3,7 @@
 <!--
  *  Copyright (c) 2004 Undersun Consulting LLC
  *  All rights reserved.
- *  $Id: ofbiz-component.xml,v 1.2 2004/04/08 15:42:36 jonesde Exp $
+ *  $Id$
 -->
 
 <ofbiz-component name="community"

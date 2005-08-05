@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreen.java 3466 2004-09-20 22:27:16Z jaz $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *

@@ -30,7 +30,7 @@ import org.ofbiz.base.config.*;
  * ComponentException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ComponentException extends GenericConfigException {

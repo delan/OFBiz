@@ -20,7 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: AccountingScreens.xml,v 1.4 2004/07/31 12:17:42 jonesde Exp $
+ *  $Id$
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 

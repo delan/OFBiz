@@ -38,7 +38,7 @@ import org.ofbiz.base.util.collections.FlexibleMapAccessor;
  * elements for accessing Map entries and List elements in the context.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class FlexibleStringExpander {

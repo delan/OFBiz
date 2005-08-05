@@ -1,5 +1,5 @@
 /*
- * $Id: OrderContentWrapper.java 4024 2004-12-08 10:19:40Z jonesde $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

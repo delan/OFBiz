@@ -1,5 +1,5 @@
 /*
- * $Id: StandardJavaEngine.java 3103 2004-08-20 21:45:49Z jaz $
+ * $Id$
  *
  * Copyright (c) 2005 The Open For Business Project - www.ofbiz.org
  *

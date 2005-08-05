@@ -21,7 +21,7 @@
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     *  Service Framework - Service ECA Definition DTD
-    *  $Id: entity-eca.dtd 3347 2004-09-12 19:10:54Z jaz $
+    *  $Id$
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:element name="entity-eca">

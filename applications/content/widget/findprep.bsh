@@ -1,5 +1,5 @@
 /*
- * $Id: findprep.bsh 3158 2004-08-26 05:18:24Z byersa $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev: 3158 $
+ * @version    $Rev$
  * @since      2.1
 
  */

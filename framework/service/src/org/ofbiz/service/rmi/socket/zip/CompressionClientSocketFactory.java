@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionClientSocketFactory.java 2069 2004-04-11 08:28:24Z jonesde $
+ * $Id$
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *

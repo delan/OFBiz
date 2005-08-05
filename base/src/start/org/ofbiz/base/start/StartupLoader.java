@@ -28,7 +28,7 @@ package org.ofbiz.base.start;
  * StartupLoader - Interface for loading server startup classes
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Rev:$
+  *@version    $Rev$
  * @since      2.2
  */
 public interface StartupLoader {

@@ -3,7 +3,7 @@
  *  Copyright (c) 2005 Undersun Consulting LLC
  *  Copyright (c) 2005 AntWebsystems Ltd
  *
- *  $Id: ofbiz-component.xml 4471 2005-02-10 08:19:28Z jonesde $
+ *  $Id$
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 

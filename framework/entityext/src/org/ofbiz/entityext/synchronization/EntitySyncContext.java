@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java 3376 2004-09-14 08:32:01Z jonesde $
+ * $Id$
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

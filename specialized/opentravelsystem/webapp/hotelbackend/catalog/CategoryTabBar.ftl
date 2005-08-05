@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier.Heintz@nereide.biz (migration to UiLabel )
- *@version    $Rev: 3103 $
+ *@version    $Rev$
  *@since      2.2
 -->
 

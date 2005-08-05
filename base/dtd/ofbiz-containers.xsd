@@ -21,7 +21,7 @@
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     *  Dynamic OFBiz Containers Definition DTD
-    *  $Id: ofbiz-containers.dtd 2369 2004-05-25 22:45:26Z ajzeneski $
+    *  $Id$
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:element name="ofbiz-containers">

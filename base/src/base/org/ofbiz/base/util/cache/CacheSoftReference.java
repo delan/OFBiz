@@ -33,7 +33,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class CacheSoftReference extends SoftReference implements Serializable {

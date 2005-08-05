@@ -20,7 +20,7 @@
     *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     *
-    *  $Id: widget-screen.dtd 3811 2004-10-29 05:43:54Z jonesde $
+    *  $Id$
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:element name="screens">

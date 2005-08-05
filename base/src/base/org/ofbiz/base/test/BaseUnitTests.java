@@ -11,7 +11,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      May 4, 2004
  */
 public class BaseUnitTests extends TestCase {
