@@ -28,11 +28,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -41,8 +36,10 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
-
 import org.w3c.dom.Element;
+
+import bsh.EvalError;
+import bsh.Interpreter;
 
 /**
  * Widget Library - Menu model class
@@ -82,7 +79,9 @@ public class ModelMenu {
     protected Boolean defaultHideIfSelected;
     protected String defaultDisabledTitleStyle;
     protected String selectedMenuItemContextFieldName;
-    protected FlexibleStringExpander menuWrapperStyleExdr;
+    protected FlexibleStringExpander menuContainerStyleExdr;
+    protected String defaultAlign;
+    protected String defaultAlignStyle;
 
     /** This List will contain one copy of each item for each item name in the order
      * they were encountered in the service, entity, or menu definition; item definitions
@@ -169,6 +168,8 @@ public class ModelMenu {
                 this.menuWidth = parent.menuWidth;
                 this.defaultCellWidth = parent.defaultCellWidth;
                 this.defaultDisabledTitleStyle = parent.defaultDisabledTitleStyle;
+                this.defaultAlign = parent.defaultAlign;
+                this.defaultAlignStyle = parent.defaultAlignStyle;
             }
         }
 
@@ -221,8 +222,12 @@ public class ModelMenu {
             this.defaultDisabledTitleStyle = menuElement.getAttribute("default-disabled-title-style");
         if (this.selectedMenuItemContextFieldName == null || menuElement.hasAttribute("selected-menuitem-context-field-name"))
             this.selectedMenuItemContextFieldName = menuElement.getAttribute("selected-menuitem-context-field-name");
-        if (this.menuWrapperStyleExdr == null || menuElement.hasAttribute("menu-wrapper-style"))
-            this.setMenuWrapperStyle( menuElement.getAttribute("menu-wrapper-style"));
+        if (this.menuContainerStyleExdr == null || menuElement.hasAttribute("menu-container-style"))
+            this.setMenuContainerStyle(menuElement.getAttribute("menu-container-style"));
+        if (this.defaultAlign == null || menuElement.hasAttribute("default-align"))
+            this.defaultAlign = menuElement.getAttribute("default-align");
+        if (this.defaultAlignStyle == null || menuElement.hasAttribute("default-align-style"))
+            this.defaultAlignStyle = menuElement.getAttribute("default-align-style");
 
         // read all actions under the "actions" element
         Element actionsElement = UtilXml.firstChildElement(menuElement, "actions");
@@ -298,25 +303,24 @@ public class ModelMenu {
      *   use the same menu definitions for many types of menu UIs
      */
     public void renderMenuString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
-    	
-    	boolean passed = true;
+        
+        boolean passed = true;
 
             //Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
         if (passed) {
             ModelMenuAction.runSubActions(this.actions, context);
-	        if ("simple".equals(this.type)) {
-	            this.renderSimpleMenuString(buffer, context, menuStringRenderer);
-	        } else {
-	            throw new IllegalArgumentException("The type " + this.getType() + " is not supported for menu with name " + this.getName());
-	        }
+            if ("simple".equals(this.type)) {
+                this.renderSimpleMenuString(buffer, context, menuStringRenderer);
+            } else {
+                throw new IllegalArgumentException("The type " + this.getType() + " is not supported for menu with name " + this.getName());
+            }
         }
             //Debug.logInfo("in ModelMenu, buffer:" + buffer.toString(), module);
     }
 
     public void renderSimpleMenuString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
-        Iterator menuItemIter = null;
-
-        Set alreadyRendered = new TreeSet();
+        //Iterator menuItemIter = null;
+        //Set alreadyRendered = new TreeSet();
 
         // render menu open
         menuStringRenderer.renderMenuOpen(buffer, context, this);
@@ -329,7 +333,7 @@ public class ModelMenu {
         //menuStringRenderer.renderFormatSimpleWrapperRows(buffer, context, this);
         Iterator iter = menuItemList.iterator();
         while (iter.hasNext()) {
-        	ModelMenuItem item = (ModelMenuItem)iter.next();
+            ModelMenuItem item = (ModelMenuItem)iter.next();
             item.renderMenuItemString(buffer, context, menuStringRenderer);
         }
 
@@ -354,6 +358,20 @@ public class ModelMenu {
      */
     public String getDefaultEntityName() {
         return this.defaultEntityName;
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultAlign() {
+        return this.defaultAlign;
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultAlignStyle() {
+        return this.defaultAlignStyle;
     }
 
 
@@ -555,8 +573,8 @@ public class ModelMenu {
     /**
      * @param string
      */
-    public void setMenuWrapperStyle(String string) {
-        this.menuWrapperStyleExdr = new FlexibleStringExpander(string);
+    public void setMenuContainerStyle(String string) {
+        this.menuContainerStyleExdr = new FlexibleStringExpander(string);
     }
 
     /**
@@ -568,8 +586,8 @@ public class ModelMenu {
     /**
      * @return
      */
-    public String getMenuWrapperStyle(Map context) {
-        return menuWrapperStyleExdr.expandString(context);
+    public String getMenuContainerStyle(Map context) {
+        return menuContainerStyleExdr.expandString(context);
     }
 
     /**

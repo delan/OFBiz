@@ -52,10 +52,11 @@
         <xs:attribute type="xs:string" name="title"/>
         <xs:attribute type="xs:string" name="tooltip"/>
         <xs:attribute type="xs:string" name="default-entity-name"/>
-        <xs:attribute type="xs:string" name="default-title-style"/>
+        <xs:attribute type="xs:string" name="default-title-style" default="tabButton"/>
         <xs:attribute type="xs:string" name="default-widget-style"/>
         <xs:attribute type="xs:string" name="default-tooltip-style"/>
-        <xs:attribute type="xs:string" name="default-selected-style"/>
+        <xs:attribute type="xs:string" name="default-selected-style" default="tabButtonSelected"/>
+        <xs:attribute type="xs:string" name="default-align-style"/>
         <xs:attribute name="orientation" default="horizontal">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -80,7 +81,15 @@
         <xs:attribute type="xs:string" name="default-cell-width"/>
         <xs:attribute type="xs:string" name="default-disabled-title-style"/>
         <xs:attribute type="xs:string" name="selected-menuitem-context-field-name" default="currentMenuItemName"/>
-        <xs:attribute type="xs:string" name="menu-wrapper-style"/>
+        <xs:attribute type="xs:string" name="menu-container-style" default="tabContainer"/>
+        <xs:attribute name="default-align" default="left">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="left"/>
+                    <xs:enumeration value="right"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="menu-item">
         <xs:complexType>
@@ -99,6 +108,7 @@
         <xs:attribute type="xs:string" name="tooltip"/>
         <xs:attribute type="xs:string" name="title-style"/>
         <xs:attribute type="xs:string" name="widget-style"/>
+        <xs:attribute type="xs:string" name="align-style"/>
         <xs:attribute type="xs:string" name="tooltip-style"/>
         <xs:attribute type="xs:string" name="selected-style"/>
         <xs:attribute type="xs:string" name="position" default="1"/>
@@ -109,6 +119,14 @@
         <xs:attribute type="xs:string" name="disabled-title-style"/>
         <xs:attribute type="xs:string" name="target-window"/>
         <xs:attribute type="xs:string" name="sub-menu"/>
+        <xs:attribute name="align" >
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="left"/>
+                    <xs:enumeration value="right"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="image">
         <xs:complexType mixed="true">

@@ -26,10 +26,10 @@
     <menu name="EditExample" default-title-style="tabButton" default-selected-style="tabButtonSelected"
         default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="tabButtonItem"
-        orientation="horizontal" menu-width="100%"
+        orientation="horizontal"
         title="" type="simple">
         <menu-item name="EditExample" title="${uiLabelMap.ExampleExample}">
-            <link target="EditExampleItems?exampleId=${exampleId}"/>
+            <link target="EditExample?exampleId=${exampleId}"/>
         </menu-item>
         <menu-item name="EditExampleItems" title="${uiLabelMap.CommonItems}">
             <link target="EditExampleItems?exampleId=${exampleId}"/>

@@ -1031,7 +1031,7 @@ public class ModelForm {
                     localContext.putAll(itemMap);
                 }
                 
-                localContext.put("itemIndex", new Integer(itemIndex));
+                localContext.put("itemIndex", new Integer(itemIndex - lowIndex));
                 
                 this.rowCount++;
 

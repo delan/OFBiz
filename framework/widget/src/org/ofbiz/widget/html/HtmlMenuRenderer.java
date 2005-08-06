@@ -26,6 +26,7 @@ package org.ofbiz.widget.html;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +34,8 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.menu.MenuStringRenderer;
@@ -40,8 +43,6 @@ import org.ofbiz.widget.menu.ModelMenu;
 import org.ofbiz.widget.menu.ModelMenuItem;
 import org.ofbiz.widget.menu.ModelMenuItem.Image;
 import org.ofbiz.widget.menu.ModelMenuItem.Link;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
 
 /**
  * Widget Library - HTML Menu Renderer implementation
@@ -165,28 +166,28 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             return;
 
 
+        String style = menuItem.getAlignStyle();
+
         String orientation = menuItem.getModelMenu().getOrientation();
-        String menuWrapperStyle = menuItem.getModelMenu().getMenuWrapperStyle(context);
-        if (UtilValidate.isEmpty(menuWrapperStyle)) {
-            if (orientation.equalsIgnoreCase("vertical"))
-                buffer.append("<tr>");
-            String cellWidth = menuItem.getCellWidth();
-            String widthStr = "";
-            if (UtilValidate.isNotEmpty(cellWidth)) 
-                widthStr = " width=\"" + cellWidth + "\" ";
-            
-            buffer.append("<td " + widthStr + ">");
+        if (orientation.equalsIgnoreCase("vertical")) style += "-vert";
+        String align = menuItem.getAlign();
+        if (align.equalsIgnoreCase("right")) style += "-right";
+        
+        if (UtilValidate.isNotEmpty(style)) {
+            buffer.append("<div class=\"" + style + "\">");
         }
+        
         Link link = menuItem.getLink();
         //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, link(0):" + link,"");
         if (link != null) {
             renderLink(buffer, context, link);
-        }        
-        if (UtilValidate.isEmpty(menuWrapperStyle)) {
-            buffer.append("</td>");
-            if (orientation.equalsIgnoreCase("vertical"))
-                buffer.append("</tr>");
+        } 
+
+        if (UtilValidate.isNotEmpty(style)) {
+            // only render the close tag if we rendered the open
+            buffer.append("</div>");
         }
+        
         this.appendWhitespace(buffer);
         return;
     }
@@ -218,25 +219,19 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public void renderMenuOpen(StringBuffer buffer, Map context, ModelMenu modelMenu) {
 
-        if (!userLoginIdHasChanged)
-            userLoginIdHasChanged = userLoginIdHasChanged(); 
+        if (!userLoginIdHasChanged) {
+            userLoginIdHasChanged = userLoginIdHasChanged();
+        }
 
             //Debug.logInfo("in HtmlMenuRenderer, userLoginIdHasChanged:" + userLoginIdHasChanged,"");
         String menuWidth = modelMenu.getMenuWidth();
-        String menuWrapperStyle = modelMenu.getMenuWrapperStyle(context);
+        String menuContainerStyle = modelMenu.getMenuContainerStyle(context);
         String widthStr = "";
-        if (UtilValidate.isEmpty(menuWrapperStyle)) {
-        	if (UtilValidate.isNotEmpty(menuWidth)) 
-        		widthStr = " width=\"" + menuWidth + "\" ";
-        
-        	buffer.append("<table border=\"0\" " + widthStr + "> ");
-        } else {
-            if (UtilValidate.isNotEmpty(menuWidth)) 
-                widthStr = " style=\"width:" + menuWidth + ";\" ";
-        
-            buffer.append("<div class=\"" + menuWrapperStyle + "\" " + widthStr + "> ");
-        	
+        if (UtilValidate.isNotEmpty(menuWidth)) {
+            widthStr = " style=\"width:" + menuWidth + ";\"";
         }
+        buffer.append("<div class=\"" + menuContainerStyle + "\"" + widthStr + "> ");
+        
         this.appendWhitespace(buffer);
     }
 
@@ -244,12 +239,8 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
      * @see org.ofbiz.widget.menu.MenuStringRenderer#renderMenuClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.widget.menu.ModelMenu)
      */
     public void renderMenuClose(StringBuffer buffer, Map context, ModelMenu modelMenu) {
-        String menuWrapperStyle = modelMenu.getMenuWrapperStyle(context);
-        if (UtilValidate.isEmpty(menuWrapperStyle)) {
-        	buffer.append("</table> ");
-        } else {
-            buffer.append("</div> ");
-        }
+        //String menuContainerStyle = modelMenu.getMenuContainerStyle(context);
+        buffer.append("</div>");
         this.appendWhitespace(buffer);
         
         userLoginIdHasChanged = userLoginIdHasChanged(); 
@@ -265,29 +256,11 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
     }
 
     public void renderFormatSimpleWrapperOpen(StringBuffer buffer, Map context, ModelMenu modelMenu) {
-        String orientation = modelMenu.getOrientation();
-        String menuWrapperStyle = modelMenu.getMenuWrapperStyle(context);
-        if (UtilValidate.isEmpty(menuWrapperStyle)) {
-            if (orientation.equalsIgnoreCase("horizontal"))
-            	buffer.append("<tr> ");
-        } else {
-            buffer.append("");
-        }
-
-        this.appendWhitespace(buffer);
+        //this.appendWhitespace(buffer);
     }
 
     public void renderFormatSimpleWrapperClose(StringBuffer buffer, Map context, ModelMenu modelMenu) {
-        String orientation = modelMenu.getOrientation();
-        String menuWrapperStyle = modelMenu.getMenuWrapperStyle(context);
-        if (UtilValidate.isEmpty(menuWrapperStyle)) {
-            if (orientation.equalsIgnoreCase("horizontal"))
-            	buffer.append("</tr> ");
-        } else {
-            if (orientation.equalsIgnoreCase("vertical"))
-            	buffer.append("<br/>");
-        }
-        this.appendWhitespace(buffer);
+        //this.appendWhitespace(buffer);
     }
 
     public void setRequest(HttpServletRequest request) {
@@ -381,16 +354,19 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         boolean isSelected = menuItem.isSelected(context);
         
         String style = null;
+        
         if (isSelected) {
-        	style = menuItem.getSelectedStyle();
+            style = menuItem.getSelectedStyle();
         } else {
             style = link.getStyle(context);
+            if (UtilValidate.isEmpty(style)) 
+                style = menuItem.getTitleStyle();
             if (UtilValidate.isEmpty(style)) 
                 style = menuItem.getWidgetStyle();
         }
         
         if (menuItem.getDisabled()) {
-        	style = menuItem.getDisabledTitleStyle();
+            style = menuItem.getDisabledTitleStyle();
         }
         
         if (UtilValidate.isNotEmpty(style)) {

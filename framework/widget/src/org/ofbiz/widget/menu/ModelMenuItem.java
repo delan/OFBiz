@@ -86,6 +86,8 @@ public class ModelMenuItem {
     protected ModelMenuCondition condition;
     protected boolean disabled = false;
     protected List actions;
+    protected String align;
+    protected String alignStyle;
     
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -117,6 +119,8 @@ public class ModelMenuItem {
         this.selectedStyle = fieldElement.getAttribute("selected-style");
         this.setHideIfSelected(fieldElement.getAttribute("hide-if-selected"));
         this.disableIfEmpty = fieldElement.getAttribute("disable-if-empty");
+        this.align = fieldElement.getAttribute("align");
+        this.alignStyle = fieldElement.getAttribute("align-style");
 
         String positionStr = fieldElement.getAttribute("position");
         try {
@@ -291,6 +295,19 @@ public class ModelMenuItem {
         }
     }
 
+    /**
+     * @return
+     */
+    public String getAlign() {
+        if (UtilValidate.isNotEmpty(this.align)) {
+            return this.align;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getAlign();
+        } else {
+            return this.modelMenu.getDefaultAlign();
+        }
+    }
+
 
     /**
      * @return
@@ -382,6 +399,19 @@ public class ModelMenuItem {
             return parentMenuItem.getWidgetStyle();
         } else {
             return this.modelMenu.getDefaultWidgetStyle();
+        }
+    }
+
+    /**
+     * @return
+     */
+    public String getAlignStyle() {
+        if (UtilValidate.isNotEmpty(this.alignStyle)) {
+            return this.alignStyle;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getAlignStyle();
+        } else {
+            return this.modelMenu.getDefaultAlignStyle();
         }
     }
 
