@@ -322,6 +322,7 @@ public class InvoiceServices {
                     invoiceItem.set("amount", orderItem.get("unitPrice"));
                     invoiceItem.set("productId", orderItem.get("productId"));
                     invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
+                    invoiceItem.set("overrideGlAccountId", orderItem.get("overrideGlAccountId"));
                     //invoiceItem.set("uomId", "");
 
                     String itemIssuanceId = null;
@@ -385,6 +386,9 @@ public class InvoiceServices {
                             adjInvItem.set("quantity", new Double(1));
                             adjInvItem.set("amount", new Double(amount));
                             adjInvItem.set("description", adj.get("description"));
+                            adjInvItem.set("taxAuthPartyId", adj.get("taxAuthPartyId"));
+                            adjInvItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
+                            adjInvItem.set("taxGeoId", adj.get("taxAuthGeoId"));
                             toStore.add(adjInvItem);
 
                             // this adjustment amount
@@ -423,6 +427,9 @@ public class InvoiceServices {
                             adjInvItem.set("quantity", orderItem.getDouble("quantity"));
                             adjInvItem.set("amount", new Double(totalAmount));
                             adjInvItem.set("description", adj.get("description"));
+                            adjInvItem.set("taxAuthPartyId", adj.get("taxAuthPartyID"));
+                            adjInvItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
+                            adjInvItem.set("taxGeoId", adj.get("taxAuthGeoId"));
                             toStore.add(adjInvItem);
 
                             // this adjustment amount
