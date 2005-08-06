@@ -157,5 +157,6 @@
 	<classpathentry kind="lib" path="base/lib/avalon-framework-4.1.5.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/jython-nooro.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/barcode4j-fop-ext-0.20.5-complete.jar"/>
+	<classpathentry kind="lib" path="base/lib/icu4j_3_4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
