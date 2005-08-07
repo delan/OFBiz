@@ -634,7 +634,7 @@
     </request-map>
 
     <!-- communication event requests -->
-    <request-map uri="pendingcommunications">
+    <request-map uri="pendingCommunications">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="pendingCommunications"/>
     </request-map>
@@ -643,6 +643,10 @@
         <response name="success" type="view" value="listCommunications"/>
     </request-map>
     <request-map uri="viewCommunicationEvent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editCommunication"/>
+    </request-map>
+    <request-map uri="editCommunication">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editCommunication"/>
     </request-map>
@@ -682,6 +686,18 @@
         <response name="success" type="view" value="editCommunication"/>
         <response name="success" type="view" value="editCommunication"/>
     </request-map>
+    <request-map uri="findCommunications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findCommunications"/>
+    </request-map>
+    <request-map uri="listCommunications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listCommunications"/>
+    </request-map>
+    <request-map uri="listLookupCommunications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listLookupCommunications"/>
+    </request-map>
     
     <!-- Lookup request mappings -->
     <request-map uri="LookupPartyName">
@@ -700,13 +716,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupPartyGroup"/>
     </request-map>
-    <request-map uri="ViewSegmentRoles">
+    <request-map uri="LookupCustRequest">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewSegmentRoles"/>
+        <response name="success" type="view" value="LookupCustRequest"/>
     </request-map>
     <request-map uri="LookupSegmentGroup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupSegmentGroup"/>
+    </request-map>
+
+    <request-map uri="ViewSegmentRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewSegmentRoles"/>
     </request-map>
     <request-map uri="createSegmentRole">
         <security https="true" auth="true"/>
@@ -816,6 +837,8 @@
 
     <view-map name="pendingCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#pendingCommunications"/>
     <view-map name="listCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listCommunications"/>
+    <view-map name="listLookupCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listLookupCommunications"/>
+    <view-map name="findCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#findCommunications"/>
     <view-map name="editCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#editCommunication"/>
     
     <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateNewParty"/>
@@ -840,5 +863,6 @@
     <view-map name="LookupPartyAndUserLoginAndPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson"/>
     <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
     <view-map name="LookupSegmentGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupSegmentGroup"/>
+    <view-map name="LookupCustRequest" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequest"/>
     <!-- end of view mappings -->
 </site-conf>
