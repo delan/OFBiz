@@ -1571,7 +1571,11 @@ public class ModelForm {
      * @return
      */
     public String getPaginateTarget(Map context) {
-        return this.paginateTarget.expandString(context);
+    	String targ = this.paginateTarget.expandString(context);
+    	if (UtilValidate.isEmpty(targ))
+    		targ = getTarget(context);
+    	
+    	return targ;
     }
     
     public String getTargetWindow(Map context) {

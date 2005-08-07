@@ -587,8 +587,7 @@ public class ModelMenuItem {
     
     public boolean isSelected(Map context) {
 
-        String selectedMenuItemContextFieldName = modelMenu.getSelectedMenuItemContextFieldName();
-        String currentMenuItemName = (String)context.get(selectedMenuItemContextFieldName);
+        String currentMenuItemName = modelMenu.getSelectedMenuItemContextFieldName(context);
         if (currentMenuItemName != null && currentMenuItemName.equals(this.name)) 
             return true;
         else
