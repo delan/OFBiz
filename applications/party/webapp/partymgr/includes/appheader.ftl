@@ -42,7 +42,7 @@
   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
     <div class="col"><a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="${selectedLeftClassMap.create?default(unselectedLeftClassName)}">${uiLabelMap.CommonCreate}</a></div>
   </#if>
-  <div class="col"><a href="<@ofbizUrl>/pendingcommunications</@ofbizUrl>" class="${selectedLeftClassMap.comm?default(unselectedLeftClassName)}">Comm</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/pendingCommunications</@ofbizUrl>" class="${selectedLeftClassMap.comm?default(unselectedLeftClassName)}">Comm</a></div>  
   <div class="col"><a href="<@ofbizUrl>/showvisits</@ofbizUrl>" class="${selectedLeftClassMap.visits?default(unselectedLeftClassName)}">${uiLabelMap.PartyVisits}</a></div>
   <div class="col"><a href="<@ofbizUrl>/showclassgroups</@ofbizUrl>" class="${selectedLeftClassMap.classification?default(unselectedLeftClassName)}">${uiLabelMap.PartyClassifications}</a></div>
   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>

@@ -26,7 +26,7 @@
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
-
+/*
 partyId = parameters.get("partyId");
 if (UtilValidate.isEmpty(partyId)) partyId = userLogin.getString("partyId");
 context.put("partyId", partyId);
@@ -73,3 +73,36 @@ context.put("contactMechTypes", contactMechTypes);
 // get role types
 roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
 context.put("roleTypes", roleTypes);
+*/
+
+communicationEvent = context.get("communicationEvent");
+defaultSubject = "";
+if (communicationEvent != null ) {
+    subject = communicationEvent.get("subject");
+	if (subject != null && subject.length() > 0) defaultSubject = subject;
+}    
+if (defaultSubject.length() == 0) {
+    uiLabelMap = context.get("uiLabelMap");
+    replyPrefix = uiLabelMap.get("PartyReplyPrefix") + " ";
+    if (parentEvent != null ) {
+        parentSubject = parentEvent.get("subject");
+	    if (parentSubject != null && parentSubject.length() > 0) {
+	        parentSubjectUpper = parentSubject.toUpperCase();
+	        if (!parentSubject.startsWith(replyPrefix)) {
+	            defaultSubject = replyPrefix;
+	        }
+            defaultSubject += parentSubject;
+	    }
+	}
+}
+subjectMap = new HashMap();
+subjectMap.put("subject", defaultSubject);
+
+eventNote = "";
+if (parentEvent != null) {
+    eventNote = org.ofbiz.base.util.UtilHttp.getFullRequestUrl(request).toString();
+} else if (communicationEvent != null ) {
+    eventNote = communicationEvent.get("note");
+}
+subjectMap.put("note", eventNote);
+context.put("subjectMap", subjectMap);
