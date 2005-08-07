@@ -34,6 +34,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
@@ -78,7 +79,7 @@ public class ModelMenu {
     protected String defaultCellWidth;
     protected Boolean defaultHideIfSelected;
     protected String defaultDisabledTitleStyle;
-    protected String selectedMenuItemContextFieldName;
+    protected FlexibleMapAccessor selectedMenuItemContextFieldName;
     protected FlexibleStringExpander menuContainerStyleExdr;
     protected String defaultAlign;
     protected String defaultAlignStyle;
@@ -221,7 +222,7 @@ public class ModelMenu {
         if (this.defaultDisabledTitleStyle == null || menuElement.hasAttribute("default-disabled-title-style"))
             this.defaultDisabledTitleStyle = menuElement.getAttribute("default-disabled-title-style");
         if (this.selectedMenuItemContextFieldName == null || menuElement.hasAttribute("selected-menuitem-context-field-name"))
-            this.selectedMenuItemContextFieldName = menuElement.getAttribute("selected-menuitem-context-field-name");
+            this.selectedMenuItemContextFieldName = new FlexibleMapAccessor(menuElement.getAttribute("selected-menuitem-context-field-name"));
         if (this.menuContainerStyleExdr == null || menuElement.hasAttribute("menu-container-style"))
             this.setMenuContainerStyle(menuElement.getAttribute("menu-container-style"));
         if (this.defaultAlign == null || menuElement.hasAttribute("default-align"))
@@ -420,8 +421,8 @@ public class ModelMenu {
     /**
      * @return
      */
-    public String getSelectedMenuItemContextFieldName() {
-        return this.selectedMenuItemContextFieldName;
+    public String getSelectedMenuItemContextFieldName(Map context) {
+        return (String)this.selectedMenuItemContextFieldName.get(context);
     }
 
     /**
