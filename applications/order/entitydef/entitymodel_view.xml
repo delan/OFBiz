@@ -808,5 +808,22 @@
       <alias entity-alias="RQ" name="facilityId" group-by="true"/>
       <alias entity-alias="RQ" name="quantity" function="sum"/>
     </view-entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.order.tax -->
+  <!-- ========================================================= -->
+
+    <view-entity entity-name="TaxAuthorityGlAccountBalance"
+            package-name="org.ofbiz.order.tax"
+            title="For viewing balances of tax authority GL accounts">
+      <member-entity entity-alias="TAGA" entity-name="TaxAuthorityGlAccount"/>
+      <member-entity entity-alias="GLAO" entity-name="GlAccountOrganization"/>
+      <alias-all entity-alias="TAGA"/>
+      <alias-all entity-alias="GLAO"/>
+      <view-link entity-alias="TAGA" rel-entity-alias="GLAO">
+        <key-map field-name="glAccountId"/>
+      </view-link>
+    </view-entity>
+
 </entitymodel>
 

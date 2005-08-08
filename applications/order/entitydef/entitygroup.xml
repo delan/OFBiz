@@ -165,6 +165,7 @@
     <entity-group group="org.ofbiz" entity="TaxAuthority" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityCategory" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityGlAccount" />
+    <entity-group group="org.ofbiz" entity="TaxAuthorityGlAccountBalance" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityRateProduct" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityRateType" />
     <entity-group group="org.ofbiz" entity="ZipSalesRuleLookup" />
