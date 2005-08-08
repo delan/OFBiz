@@ -48,12 +48,9 @@ public class ProductConfigWorker {
     public static final String resource = "ProductUiLabels";
     public static final String SEPARATOR = "::";    // cache key separator
 
-    public static UtilCache productConfigCache;
+    public static UtilCache productConfigCache = new UtilCache("product.config", true);     // use soft reference to free up memory if needed
 
     public static ProductConfigWrapper getProductConfigWrapper(String productId, String currencyUomId, HttpServletRequest request) {
-        if (productConfigCache == null) {
-            productConfigCache = new UtilCache("product.config", true);     // use soft reference to free up memory if needed
-        }
         ProductConfigWrapper configWrapper = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         String webSiteId = CatalogWorker.getWebSiteId(request);
