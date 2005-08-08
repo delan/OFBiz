@@ -95,6 +95,7 @@
         <make-value entity-name="ExampleItem" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <make-next-seq-id value-name="newEntity" seq-field-name="exampleItemSeqId"/> <!-- this finds the next sub-sequence ID -->
+        <field-to-result field-name="newEntity.exampleItemSeqId" result-name="exampleItemSeqId"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>  
     </simple-method>   

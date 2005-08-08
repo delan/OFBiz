@@ -19,16 +19,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Rev$
- *@since      2.1
+ *@since      3.5
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
-<#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
-<#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
-
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {headerItem?default("void") : "headerButtonLeftSelected"}>
@@ -38,6 +32,7 @@
 <div class="row">
     <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>
     <div class="col"><a href="<@ofbizUrl>/FindExample</@ofbizUrl>" class="${selectedLeftClassMap.Example?default(unselectedLeftClassName)}">${uiLabelMap.ExampleExample}</a></div>
+    <div class="col"><a href="<@ofbizUrl>/FindExampleFeature</@ofbizUrl>" class="${selectedLeftClassMap.ExampleFeature?default(unselectedLeftClassName)}">${uiLabelMap.ExampleFeature}</a></div>
 
     <#if userLogin?has_content>
         <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>

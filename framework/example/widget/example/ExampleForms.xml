@@ -83,7 +83,7 @@
     </form>
 
     <!-- ExampleItem -->
-    <form name="ListExampleItems" type="list"  list-name="exampleItems"  target=""
+    <form name="ListExampleItems" type="list"  list-name="exampleItems"  target="updateExampleItem"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="ExampleItem">
@@ -91,13 +91,25 @@
                 <order-by field-name="exampleItemSeqId"/>
             </entity-condition>
         </actions>
+        <auto-fields-service service-name="updateExampleItem"/>
         
         <field name="exampleId"><hidden/></field>
-        <field name="permissionId" title="${uiLabelMap.ExamplePermissionId}" widget-style="tabletext"><display-entity entity-name="SecurityPermission" description="[${permissionId}] ${description}"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeSecurityPermissionFromExample?permissionId=${permissionId}&amp;exampleId=${exampleId}"
-                description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+        <field name="exampleItemSeqId" title="${uiLabelMap.CommonItem}" widget-style="tabletext"><display/></field>
+        <field name="description"><text size="30"/></field>
+        <field name="amountUomId" title="${uiLabelMap.CommonUom}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <entity-order-by field-name="typeDescription"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
         </field>
+            
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteExampleItem?exampleId=${exampleId}&amp;exampleItemSeqId=${exampleItemSeqId}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddExampleItem" type="single" 
             target="createExampleItem" title=""
@@ -106,6 +118,69 @@
 
         <field name="exampleId"><hidden/></field>
         <field name="exampleItemSeqId"><ignored/><!-- this will be auto-sequenced --></field>
+        <field name="amountUomId" title="${uiLabelMap.CommonUom}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <entity-order-by field-name="typeDescription"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- ExampleFeatureAppl -->
+    <form name="ListExampleFeatureAppls" type="list"  list-name="exampleFeatureAppls"  target="example_updateExampleFeatureAppl"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="ExampleFeatureAppl">
+                <condition-expr field-name="exampleId" env-name="exampleId"/>
+                <order-by field-name="sequenceNum"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateExampleFeatureAppl"/>
+        
+        <field name="exampleId"><hidden/></field>
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}">
+            <display-entity entity-name="ExampleFeature" description="${description}">
+                <sub-hyperlink target="EditExampleFeature?exampleFeatureId=${exampleFeatureId}" description="[${exampleFeatureId}]" link-style="buttontext"/>
+            </display-entity>
+        </field>
+        <field name="fromDate"><display/></field>
+        <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ExampleFeatureApplType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="example_deleteExampleFeatureAppl?exampleId=${exampleId}&amp;exampleFeatureId=${exampleFeatureId}&amp;fromDate=${fromDate}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="AddExampleFeatureAppl" type="single" 
+            target="example_createExampleFeatureAppl" title=""
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createExampleFeatureAppl"/>
+        
+        <field name="exampleId"><hidden/></field>
+        <field name="exampleFeatureId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ExampleFeature" description="${description} [${exampleFeatureId}]">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ExampleFeatureApplType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
