@@ -76,7 +76,7 @@
         <field name="amountUomId" type="id"></field>
         <prim-key field="exampleId"/>
         <prim-key field="exampleItemSeqId"/>
-        <relation type="one" fk-name="EXMPLIT_UOM" rel-entity-name="Uom">
+        <relation type="one" fk-name="EXMPLIT_UOM" title="Amount" rel-entity-name="Uom">
             <key-map field-name="amountUomId" rel-field-name="uomId"/>
         </relation>
     </entity>
