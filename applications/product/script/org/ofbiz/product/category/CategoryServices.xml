@@ -401,6 +401,40 @@
         </if-compare>
     </simple-method>
 
+    <simple-method method-name="duplicateCategoryEntities" short-description="a service wrapper for copyCategoryEntities">
+            <string-to-field string="duplicateCategoryEntities" field-name="callingMethodName"/>
+        <check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createProductCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>
+        <check-errors/>
+
+            <field-to-env field-name="entityName" map-name="parameters" env-name="entityName"/>
+            <field-to-env field-name="productCategoryId" map-name="parameters" env-name="productCategoryId"/>
+            <field-to-env field-name="productCategoryIdTo" map-name="parameters" env-name="productCategoryIdTo"/>
+        <field-to-env field-name="validDate" map-name="parameters" env-name="validDate"/>
+
+            <call-simple-method method-name="copyCategoryEntities"/>
+    </simple-method>
+
+    <simple-method method-name="copyCategoryEntities" short-description="copies all entities of entityName with a productCategoryId to a new entity with a productCategoryIdTo, 
+            filtering them by a timestamp passed in to validDate if necessary">
+        <env-to-field env-name="productCategoryId" field-name="productCategoryId" map-name="lookupMap"/>
+        <find-by-and entity-name="${entityName}" map-name="lookupMap" list-name="categoryEntities"/>
+
+        <if-not-empty field-name="validDate">
+            <filter-list-by-date list-name="categoryEntities" valid-date-name="validDate"/>
+        </if-not-empty>
+        
+        <!-- add each to a list to store and then store all and let the entity engine do inserts or updates as needed; much more reliable/useful -->
+        <iterate entry-name="categoryEntity" list-name="categoryEntities">
+            <clone-value value-name="categoryEntity" new-value-name="newCategoryEntity"/>
+            <env-to-field env-name="productCategoryIdTo" field-name="productCategoryId" map-name="newCategoryEntity"/>
+            <field-to-list field-name="newCategoryEntity" list-name="entitiesToStore"/>
+        </iterate>
+        <store-list list-name="entitiesToStore"/>
+      </simple-method>
+
     <simple-method method-name="expireAllCategoryProductMembers" short-description="Remove ProductCategory From Category">
         <string-to-field string="expireAllCategoryProductMembers" field-name="callingMethodName"/>
         <string-to-field string="UPDATE" field-name="checkAction"/>
@@ -568,4 +602,118 @@
             </then>
         </if>
     </simple-method>
+    
+    <simple-method method-name="duplicateProductCategory" short-description="Duplicate a ProductCategory">
+        <string-to-field string="duplicateProductCategory" field-name="callingMethodName"/>
+        <check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createProductCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <!-- look up the old product category and clone it -->
+        <field-to-field field-name="oldProductCategoryId" map-name="parameters" to-field-name="productCategoryId" to-map-name="categoryFindContext"/>
+        <find-by-primary-key entity-name="ProductCategory" map-name="categoryFindContext" value-name="oldCategory"/>
+        <clone-value value-name="oldCategory" new-value-name="newCategory"/>
+
+        <!-- set the new product category id, and write it to the datasource -->
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="newCategory"/>
+        <create-value value-name="newCategory"/>
+        <field-to-env env-name="productCategoryId" field-name="oldProductCategoryId" map-name="parameters"/>
+        <field-to-env env-name="productCategoryIdTo" field-name="productCategoryId" map-name="parameters"/>
+
+        <!-- if requested, duplicate related data as well -->
+
+        
+        <if-not-empty field-name="duplicateMembers" map-name="parameters">
+          <string-to-field field-name="entityName" string="ProductCategoryMember"/>
+                <call-simple-method method-name="copyCategoryEntities"/>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateContent" map-name="parameters">
+            <string-to-field field-name="entityName" string="ProductCategoryContent"/>
+                <call-simple-method method-name="copyCategoryEntities"/>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateRoles" map-name="parameters">
+            <string-to-field field-name="entityName" string="ProductCategoryRole"/>
+                <call-simple-method method-name="copyCategoryEntities"/>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateAttributes" map-name="parameters">
+            <string-to-field field-name="entityName" string="ProductCategoryAttribute"/>
+                <call-simple-method method-name="copyCategoryEntities"/>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateFeatures" map-name="parameters">
+            <string-to-field field-name="entityName" string="ProductFeatureCategoryAppl"/>
+                <call-simple-method method-name="copyCategoryEntities"/>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateCatalogs" map-name="parameters">
+            <string-to-field field-name="entityName" string="ProdCatalogCategory"/>
+                <call-simple-method method-name="copyCategoryEntities"/>
+        </if-not-empty>
+ 
+          <!-- parent rollups are where oldProductCategoryId = ProductCategoryRollup.productCategoryId, but the
+            child roll up is where oldProductCategoryId = ProductCategoryRollup.parentProductCategoryId and hence
+            requires a new find-by map -->
+        <if-not-empty field-name="duplicateParentRollup" map-name="parameters">
+            <find-by-and entity-name="ProductCategoryRollup" map-name="categoryFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
+        <if-not-empty field-name="duplicateChildRollup" map-name="parameters">
+            <field-to-field field-name="oldProductCategoryId" map-name="parameters" to-field-name="parentProductCategoryId" to-map-name="childCategoryFindContext"/>
+            <find-by-and entity-name="ProductCategoryRollup" map-name="childCategoryFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="newTempValue" to-field-name="parentProductCategoryId"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
+    </simple-method>
+
+    <!-- ================================================================ -->
+    <!-- Product Category Attribute Services -->
+    <!-- ================================================================ -->
+    
+    <simple-method method-name="createProductCategoryAttribute" 
+        short-description="Create an attribute for a product category">
+        <check-permission permission="CATALOG" action="_CREATE">
+            <fail-message message="Security Error: to create a product category attribute requires the CATALOG_CREATE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductCategoryAttribute"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductCategoryAttribute" 
+        short-description="Update an association between two product categories">
+        <check-permission permission="CATALOG" action="_UPDATE">
+            <fail-message message="Security Error: to update a product category attribute requires the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
+          </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductCategoryAttribute"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductCategoryAttribute" map-name="lookupPKMap" value-name="ProductCategoryAttributeInstance"/>
+        <set-nonpk-fields map-name="parameters" value-name="ProductCategoryAttributeInstance"/>
+        <store-value value-name="ProductCategoryAttributeInstance"/>
+    </simple-method>
+    <simple-method method-name="deleteProductCategoryAttribute" 
+        short-description="Delete an association between two product categories">
+        <check-permission permission="CATALOG" action="_DELETE">
+            <fail-message message="Security Error: to delete a product category attribute requires the CATALOG_DELETE or CATALOG_ADMIN permission"/>
+           </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductCategoryAttribute"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductCategoryAttribute" map-name="lookupPKMap" value-name="ProductCategoryAttributeInstance"/>
+        <remove-value value-name="ProductCategoryAttributeInstance"/>
+    </simple-method>
+    
+
 </simple-methods>

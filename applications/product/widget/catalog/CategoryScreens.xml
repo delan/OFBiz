@@ -321,6 +321,27 @@
             </widgets>
         </section>
     </screen>
+    <screen name="EditCategoryAttributes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditCategoryAttributes"/>
+                <set field="headerItem" value="category"/>
+                <set field="tabButtonItem" value="EditCategoryAttributes"/>
+                <set field="labelTitleProperty" value="CategoryAttributes"/>
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                <entity-one entity-name="ProductCategory" value-name="productCategory"/>
+                <entity-and entity-name="ProductCategoryAttribute" list-name="categoryAttributes"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCategoryDecorator">
+                    <decorator-section name="body">
+                        <include-form name="CreateProductCategoryAttribute" location="component://product/webapp/catalog/category/CategoryForms.xml"/>
+                        <include-form name="EditProductCategoryAttributes" location="component://product/webapp/catalog/category/CategoryForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="createProductInCategoryStart">
         <section>
