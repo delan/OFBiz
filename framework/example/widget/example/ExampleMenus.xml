@@ -24,15 +24,28 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">      
     <menu name="EditExample" default-title-style="tabButton" default-selected-style="tabButtonSelected"
-        default-tooltip-style="tabletext" default-widget-style="tabButton"
-        selected-menuitem-context-field-name="tabButtonItem"
-        orientation="horizontal"
-        title="" type="simple">
+            default-tooltip-style="tabletext" default-widget-style="tabButton"
+            selected-menuitem-context-field-name="tabButtonItem"
+            orientation="horizontal" title="" type="simple">
         <menu-item name="EditExample" title="${uiLabelMap.ExampleExample}">
             <link target="EditExample?exampleId=${exampleId}"/>
         </menu-item>
         <menu-item name="EditExampleItems" title="${uiLabelMap.CommonItems}">
             <link target="EditExampleItems?exampleId=${exampleId}"/>
+        </menu-item>
+        <menu-item name="EditExampleFeatureAppls" title="${uiLabelMap.ExampleFeatures}">
+            <link target="EditExampleFeatureAppls?exampleId=${exampleId}"/>
+        </menu-item>
+    </menu>
+    <menu name="EditExampleFeature" default-title-style="tabButton" default-selected-style="tabButtonSelected"
+            default-tooltip-style="tabletext" default-widget-style="tabButton"
+            selected-menuitem-context-field-name="tabButtonItem"
+            orientation="horizontal" title="" type="simple">
+        <menu-item name="EditExampleFeature" title="${uiLabelMap.ExampleFeature}">
+            <link target="EditExampleFeature?exampleFeatureId=${exampleFeatureId}"/>
+        </menu-item>
+        <menu-item name="EditExampleFeatureExampleAppls" title="${uiLabelMap.ExampleExamples}">
+            <link target="EditExampleFeatureExampleAppls?exampleFeatureId=${exampleFeatureId}"/>
         </menu-item>
     </menu>
 </menus>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <form name="ListExampleFeatures" type="list"  list-name="examples" paginate-target="FindExampleFeature"
+             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="ExampleFeature">
+                <order-by field-name="description"/>
+            </entity-condition>
+        </actions>
+        
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[${exampleFeatureId}]" target="EditExampleFeature?exampleFeatureId=${exampleFeatureId}"/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
+    </form>
+    <form name="EditExampleFeature" type="single" 
+            target="updateExampleFeature" title="" default-map-name="example"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <entity-one entity-name="StatusItem" value-name="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" env-name="example.statusId"/>
+            </entity-one>
+        </actions>
+        <alt-target use-when="exampleFeature==null" target="createExampleFeature"/>
+        <auto-fields-service service-name="updateExampleFeature"/>
+ 
+        <field use-when="exampleFeature!=null" name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="exampleFeature==null&amp;&amp;exampleFeatureId==null" name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"><ignored/></field>
+        <field use-when="exampleFeature==null&amp;&amp;exampleFeatureId!=null" name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"><display description="${uiLabelMap.CommonCannotBeFound}: [${exampleFeatureId}]" also-hidden="false"/></field>
+
+        <field name="description" title="${uiLabelMap.CommonDescription}"/>
+        <field name="featureSourceEnumId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
+                    <entity-constraint name="enumTypeId" value="EXMPL_FEAT_SOURCE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <!-- ExampleFeatureAppl -->
+    <form name="ListExampleFeatureAppls" type="list"  list-name="exampleFeatureAppls"  target="feature_updateExampleFeatureAppl"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="ExampleFeatureAppl">
+                <condition-expr field-name="exampleFeatureId" env-name="exampleFeatureId"/>
+                <order-by field-name="sequenceNum"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateExampleFeatureAppl"/>
+        
+        <field name="exampleId" title="${uiLabelMap.ExampleExample}">
+            <display-entity entity-name="Example" description="${exampleName}">
+                <sub-hyperlink target="EditExample?exampleId=${exampleId}" description="[${exampleId}]" link-style="buttontext"/>
+            </display-entity>
+        </field>
+        <field name="exampleFeatureId"><hidden/></field>
+        <field name="fromDate"><display/></field>
+        <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ExampleFeatureApplType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="feature_deleteExampleFeatureAppl?exampleId=${exampleId}&amp;exampleFeatureId=${exampleFeatureId}&amp;fromDate=${fromDate}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="AddExampleFeatureAppl" type="single" 
+            target="feature_createExampleFeatureAppl" title=""
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createExampleFeatureAppl"/>
+        
+        <field name="exampleId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Example" description="${exampleName} [${exampleId}]">
+                    <entity-order-by field-name="exampleName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="exampleFeatureId"><hidden/></field>
+        <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ExampleFeatureApplType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+</forms>

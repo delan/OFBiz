@@ -93,6 +93,7 @@
         <response name="success" type="view" value="main"/>
     </request-map>
 
+    <!-- Example Requests -->
     <request-map uri="FindExample">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindExample"/>
@@ -137,6 +138,75 @@
         <response name="success" type="view" value="EditExampleItems"/>
         <response name="error" type="view" value="EditExampleItems"/>
     </request-map>
+
+    <request-map uri="EditExampleFeatureAppls">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditExampleFeatureAppls"/>
+    </request-map>
+    <request-map uri="example_createExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createExampleFeatureAppl"/>
+        <response name="success" type="view" value="EditExampleFeatureAppls"/>
+        <response name="error" type="view" value="EditExampleFeatureAppls"/>
+    </request-map>
+    <request-map uri="example_updateExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateExampleFeatureAppl"/>
+        <response name="success" type="view" value="EditExampleFeatureAppls"/>
+        <response name="error" type="view" value="EditExampleFeatureAppls"/>
+    </request-map>
+    <request-map uri="example_deleteExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteExampleFeatureAppl"/>
+        <response name="success" type="view" value="EditExampleFeatureAppls"/>
+        <response name="error" type="view" value="EditExampleFeatureAppls"/>
+    </request-map>
+
+    <!-- ExampleFeature Requests -->
+    <request-map uri="FindExampleFeature">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindExampleFeature"/>
+    </request-map>
+    
+    <request-map uri="EditExampleFeature">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditExampleFeature"/>
+    </request-map>
+    <request-map uri="createExampleFeature">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createExampleFeature"/>
+        <response name="success" type="view" value="EditExampleFeature"/>
+        <response name="error" type="view" value="EditExampleFeature"/>
+    </request-map>
+    <request-map uri="updateExampleFeature">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateExampleFeature"/>
+        <response name="success" type="view" value="EditExampleFeature"/>
+        <response name="error" type="view" value="EditExampleFeature"/>
+    </request-map>
+    
+    <request-map uri="EditExampleFeatureExampleAppls">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditExampleFeatureExampleAppls"/>
+    </request-map>
+    <request-map uri="feature_createExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createExampleFeatureAppl"/>
+        <response name="success" type="view" value="EditExampleFeatureExampleAppls"/>
+        <response name="error" type="view" value="EditExampleFeatureExampleAppls"/>
+    </request-map>
+    <request-map uri="feature_updateExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateExampleFeatureAppl"/>
+        <response name="success" type="view" value="EditExampleFeatureExampleAppls"/>
+        <response name="error" type="view" value="EditExampleFeatureExampleAppls"/>
+    </request-map>
+    <request-map uri="feature_deleteExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteExampleFeatureAppl"/>
+        <response name="success" type="view" value="EditExampleFeatureExampleAppls"/>
+        <response name="error" type="view" value="EditExampleFeatureExampleAppls"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -148,5 +218,10 @@
     <view-map name="FindExample" type="screen" page="component://example/widget/example/ExampleScreens.xml#FindExample"/>
     <view-map name="EditExample" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExample"/>
     <view-map name="EditExampleItems" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExampleItems"/>
+    <view-map name="EditExampleFeatureAppls" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExampleFeatureAppls"/>
+
+    <view-map name="FindExampleFeature" type="screen" page="component://example/widget/example/ExampleFeatureScreens.xml#FindExampleFeature"/>
+    <view-map name="EditExampleFeature" type="screen" page="component://example/widget/example/ExampleFeatureScreens.xml#EditExampleFeature"/>
+    <view-map name="EditExampleFeatureExampleAppls" type="screen" page="component://example/widget/example/ExampleFeatureScreens.xml#EditExampleFeatureExampleAppls"/>
     <!-- end of view mappings -->
 </site-conf>
