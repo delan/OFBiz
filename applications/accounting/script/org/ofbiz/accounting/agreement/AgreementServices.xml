@@ -75,7 +75,7 @@
     <simple-method method-name="cancelAgreement" short-description="Cancel an existing Agreement">
         <check-permission permission="ACCOUNTING" action="_UPDATE">
             <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
-            <fail-message message="Security Error: to run removeAgreement you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+            <fail-message message="Security Error: to run cancelAgreement you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="Agreement" value-name="agreement" auto-field-map="true"/>
