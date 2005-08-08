@@ -29,6 +29,7 @@
         <section>
             <actions>
                 <set field="title" value="Order Purchase Report Options"/>
+                <set field="headerItem" value="reports"/>
                 <!-- <set field="titleProperty" value=""/> -->
             </actions>
             <widgets>
