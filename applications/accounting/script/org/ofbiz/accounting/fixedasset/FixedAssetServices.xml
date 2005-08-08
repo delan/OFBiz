@@ -423,5 +423,52 @@
             <store-value value-name="newProduct"/>
         </if-compare>
     </simple-method>    
-    
+
+    <!-- create a new FixedAssetStdCost -->
+    <simple-method method-name="createFixedAssetStdCost" short-description="Create a FixedAssetStdCost">
+        <check-permission permission="ACCOUNTING" action="_CREATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createFixedAssetStdCost you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_CREATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <!-- TODO: we should cancel the existing costs of the same type -->
+        <!-- create new entity and create all the fields -->
+        <make-value value-name="newEntity" entity-name="FixedAssetStdCost"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <!-- finally create the record (should not exist already)-->
+        <create-value value-name="newEntity"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- update an existing FixedAssetStdCost -->
+    <simple-method method-name="updateFixedAssetStdCost" short-description="Update an existing FixedAssetStdCost">
+        <check-permission permission="ACCOUNTING" action="_UPDATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run updateFixedAssetStdCost you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="FixedAssetStdCost" value-name="fixedAssetStdCost" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="fixedAssetStdCost"/>
+        <store-value value-name="fixedAssetStdCost"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- cancel an existing Agreement -->
+    <simple-method method-name="cancelFixedAssetStdCost" short-description="Cancel an existing FixedAssetStdCost">
+        <check-permission permission="ACCOUNTING" action="_UPDATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run cancelFixedAssetStdCost you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="FixedAssetStdCost" value-name="fixedAssetStdCost" auto-field-map="true"/>
+        <check-errors/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="fixedAssetStdCost"/>
+        <store-value value-name="fixedAssetStdCost"/>
+        <check-errors/>
+    </simple-method>
+
 </simple-methods>

@@ -78,8 +78,15 @@
             </drop-down>
         </field>
             
-        <field name="calendarId"><hidden/></field>  <!-- not show, can better be maintained by the system -->
-    
+        <!--<field name="calendarId"><hidden/></field>-->  <!-- not show, can better be maintained by the system -->
+        <field name="calendarId" title="${uiLabelMap.CommonCalendar}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="TechDataCalendar" description="[${calendarId}] ${description}">
+                    <entity-order-by field-name="calendarId"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        
         <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParent}"><lookup target-form-name="LookupFixedAsset"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
@@ -159,4 +166,46 @@
         <field name="fixedAssetId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
+
+    <form name="ListFixedAssetStdCosts" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext"
+            list-name="fixedAssetStdCosts" target="" paginate-target="ListFixedAssetStdCosts" title="" type="list">
+        <auto-fields-entity entity-name="FixedAssetStdCost" default-field-type="display"/>
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
+        <field name="fixedAssetStdCostTypeId" title="${uiLabelMap.AccountingFixedAssetStdCostTypeId}">
+            <display-entity entity-name="FixedAssetStdCostType" />
+        </field>
+        <field name="edit" title="" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditFixedAssetStdCost?fixedAssetId=${fixedAssetId}&amp;fixedAssetStdCostTypeId=${fixedAssetStdCostTypeId}&amp;fromDate=${fromDate}"/>
+        </field>
+        <field name="cancel" title="" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCancel}" target="cancelFixedAssetStdCost?fixedAssetId=${fixedAssetId}&amp;fixedAssetStdCostTypeId=${fixedAssetStdCostTypeId}&amp;fromDate=${fromDate}"/>
+        </field>
+    </form>
+
+    <form name="EditFixedAssetStdCost" type="single"
+            target="updateFixedAssetStdCost" title="" default-map-name="fixedAssetStdCost"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="fixedAssetStdCost==null" target="createFixedAssetStdCost"/>
+        <auto-fields-entity entity-name="FixedAssetStdCost" default-field-type="edit"/>
+        <field name="fixedAssetId"><hidden/></field>
+        <field name="fixedAssetStdCostTypeId" use-when="fixedAssetStdCost!=null" title="${uiLabelMap.AccountingFixedAssetStdCostTypeId}"><display-entity entity-name="FixedAssetStdCostType" /></field>
+        <field name="fixedAssetStdCostTypeId" use-when="fixedAssetStdCost==null" title="${uiLabelMap.AccountingFixedAssetStdCostTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="FixedAssetStdCostType" key-field-name="fixedAssetStdCostTypeId"/>
+            </drop-down>
+        </field>
+        <field name="fromDate" use-when="fixedAssetStdCost!=null" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="amountUomId">
+            <drop-down allow-empty="true">
+                <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
 </forms>
