@@ -223,4 +223,24 @@ function insertImageName(type,nameValue) {
         </span>
         <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}"/>
     </form>
+    <hr/>
+    <div class="head2">Duplicate a Product Category</div>
+    <form action="/catalog/control/DuplicateProductCategory" method="POST" style="margin: 0;">
+        <span class="tabletext">Duplicate Selected with New ID:</span>
+        <input type=hidden name="oldProductCategoryId" value="${productCategoryId}">
+        <div>
+            <input type="text" class="inputBox" size="20" maxlength="20" name="productCategoryId" >&nbsp;<INPUT type=submit class="standardSubmit" value="Go!">
+        </div>
+        <div class="tabletext">
+            <b>Duplicate:</b>
+            ${uiLabelMap.ProductCategoryContent}&nbsp;<input type="checkbox" class="checkBox" name="duplicateContent" value="Y" checked/>
+            ${uiLabelMap.ProductCategoryRollupParentCategories}&nbsp;<input type="checkbox" class="checkBox" name="duplicateParentRollup" value="Y" checked/>
+            ${uiLabelMap.ProductCategoryRollupChildCategories}&nbsp;<input type="checkbox" class="checkBox" name="duplicateChildRollup" value="Y" />
+            ${uiLabelMap.ProductProducts}&nbsp;<input type="checkbox" class="checkBox" name="duplicateMembers" value="Y" checked/>
+            ${uiLabelMap.ProductCatalogs}&nbsp;<input type="checkbox" class="checkBox" name="duplicateCatalogs" value="Y" checked/>
+            ${uiLabelMap.ProductFeatures}&nbsp;<input type="checkbox" class="checkBox" name="duplicateFeatures" value="Y" checked/>
+            ${uiLabelMap.PartyParties}&nbsp;<input type="checkbox" class="checkBox" name="duplicateRoles" value="Y" checked/>
+            ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" class="checkBox" name="duplicateAttributes" value="Y" checked/>
+        </div>
+    </form>
   </#if>

@@ -185,7 +185,7 @@
             invoke="deleteProductAssoc" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-
+ 
     <!-- Product Price Services -->
     <service name="createProductPrice" default-entity-name="ProductPrice" engine="simple"
                 location="org/ofbiz/product/price/PriceServices.xml" invoke="createProductPrice" auth="true">
@@ -345,6 +345,21 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="productCategoryTypeId" optional="false"/>
     </service>
+    
+    <service name="duplicateProductCategory" engine="simple"
+                location="org/ofbiz/product/category/CategoryServices.xml" invoke="duplicateProductCategory" auth="true">
+        <description>Duplicate a Product Category using from oldProductCategoryId to a new productCategoryId</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="oldProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="duplicateContent" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateParentRollup" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateChildRollup" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateMembers" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateCatalogs" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateFeatures" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateAttributes" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateRoles" type="String" mode="IN" optional="true"/>
+    </service>
 
     <service name="safeAddProductToCategory" default-entity-name="ProductCategoryMember" engine="simple"
                 location="org/ofbiz/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
@@ -468,6 +483,35 @@
         <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+
+    <!-- Product Category Attribute SErvices --> 
+    <service name="createProductCategoryAttribute" default-entity-name="ProductCategoryAttribute" engine="simple"
+            location="org/ofbiz/product/category/CategoryServices.xml" 
+            invoke="createProductCategoryAttribute" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductCategoryAttribute" default-entity-name="ProductCategoryAttribute" engine="simple"
+            location="org/ofbiz/product/category/CategoryServices.xml" 
+            invoke="updateProductCategoryAttribute" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductCategoryAttribute" default-entity-name="ProductCategoryAttribute" engine="simple"
+            location="org/ofbiz/product/category/CategoryServices.xml" 
+            invoke="deleteProductCategoryAttribute" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="duplicateCategoryEntities" engine="simple"
+                location="org/ofbiz/product/category/CategoryServices.xml" invoke="duplicateCategoryEntities" auth="true">
+        <description>Duplicates a named entity from one productCategoryId to another</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="entityName" type="String" mode="IN" optional="false"/>
+        <attribute name="validDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+
 
     <!-- Product content services -->
     <service name="createProductContent" default-entity-name="ProductContent" engine="simple"

@@ -189,6 +189,13 @@
         <response name="success" type="view" value="EditCategory"/>
         <response name="error" type="view" value="EditCategory"/>
     </request-map>
+    <request-map uri="DuplicateProductCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="duplicateProductCategory"/>
+        <response name="success" type="view" value="EditCategory"/>
+        <response name="error" type="view" value="EditCategory"/>
+    </request-map>
+
 
     <!-- ================ Category Rollup Requests ================= -->
     <request-map uri="EditCategoryRollup">
@@ -691,6 +698,30 @@
         <event type="service" path="" invoke="removeProductFromCategory"/>
         <response name="success" type="view" value="EditProductCategories"/>
         <response name="error" type="view" value="EditProductCategories"/>
+    </request-map>
+
+    <!-- ================ Product Category Attribute Requests ================= -->
+    <request-map uri="EditCategoryAttributes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryAttributes"/>
+    </request-map>
+    <request-map uri="createProductCategoryAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductCategoryAttribute"/>
+        <response name="success" type="view" value="EditCategoryAttributes"/>
+        <response name="error" type="view" value="EditCategoryAttributes"/>
+    </request-map>
+    <request-map uri="updateProductCategoryAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductCategoryAttribute"/>
+        <response name="success" type="view" value="EditCategoryAttributes"/>
+        <response name="error" type="view" value="EditCategoryAttributes"/>
+    </request-map>
+    <request-map uri="deleteProductCategoryAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductCategoryAttribute"/>
+        <response name="success" type="view" value="EditCategoryAttributes"/>
+        <response name="error" type="view" value="EditCategoryAttributes"/>
     </request-map>
 
     <!-- ================ Product Keyword Requests ================= -->
@@ -2006,6 +2037,7 @@
 
     <view-map name="EditCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategory"/>
     <view-map name="EditCategoryContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContent"/>
+    <view-map name="EditCategoryAttributes" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryAttributes"/>
     <view-map name="EditCategoryContentContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContentContent"/>
     <view-map name="EditCategoryRollup" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryRollup"/>
     <view-map name="EditCategoryProducts" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProducts"/>
