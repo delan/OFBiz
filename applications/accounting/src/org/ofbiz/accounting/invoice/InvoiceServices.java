@@ -388,7 +388,7 @@ public class InvoiceServices {
                             adjInvItem.set("description", adj.get("description"));
                             adjInvItem.set("taxAuthPartyId", adj.get("taxAuthPartyId"));
                             adjInvItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
-                            adjInvItem.set("taxGeoId", adj.get("taxAuthGeoId"));
+                            adjInvItem.set("taxAuthGeoId", adj.get("taxAuthGeoId"));
                             toStore.add(adjInvItem);
 
                             // this adjustment amount
@@ -429,7 +429,7 @@ public class InvoiceServices {
                             adjInvItem.set("description", adj.get("description"));
                             adjInvItem.set("taxAuthPartyId", adj.get("taxAuthPartyID"));
                             adjInvItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
-                            adjInvItem.set("taxGeoId", adj.get("taxAuthGeoId"));
+                            adjInvItem.set("taxAuthGeoId", adj.get("taxAuthGeoId"));
                             toStore.add(adjInvItem);
 
                             // this adjustment amount
