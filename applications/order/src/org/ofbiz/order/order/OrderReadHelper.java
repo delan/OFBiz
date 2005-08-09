@@ -464,13 +464,13 @@ public class OrderReadHelper {
             while (orderStatusIter.hasNext()) {
                 GenericValue orderStatus = (GenericValue) orderStatusIter.next();
                 GenericValue statusItem = orderStatus.getRelatedOneCache("StatusItem");
-    
+
                 if (statusItem != null) {
                     orderStatusString.append(statusItem.getString("description"));
                 } else {
                     orderStatusString.append(orderStatus.getString("statusId"));
                 }
-                
+
                 if (isCurrent && orderStatusIter.hasNext()) {
                     orderStatusString.append(" (");
                     isCurrent = false;
@@ -564,8 +564,12 @@ public class OrderReadHelper {
         return OrderReadHelper.calcOrderAdjustments(getOrderHeaderAdjustments(), getOrderItemsSubTotal(), false, false, true);
     }
 
-    public double getTaxTotal() {
+    public double getHeaderTaxTotal() {
         return OrderReadHelper.calcOrderAdjustments(getOrderHeaderAdjustments(), getOrderItemsSubTotal(), false, true, false);
+    }
+
+    public double getTaxTotal() {
+        return OrderReadHelper.calcOrderAdjustments(getAdjustments(), getOrderItemsSubTotal(), false, true, false);
     }
 
     public Set getItemFeatureSet(GenericValue item) {
@@ -1364,7 +1368,7 @@ public class OrderReadHelper {
         if (orderItemsSubTotal != 0.0) {
             orderFactorNotReturned = totalSubTotalNotReturned / orderItemsSubTotal;
         }
-        double orderTaxNotReturned = this.getTaxTotal() * orderFactorNotReturned;
+        double orderTaxNotReturned = this.getHeaderTaxTotal() * orderFactorNotReturned;
         double orderShippingNotReturned = this.getShippingTotal() * orderFactorNotReturned;
 
         return totalTaxNotReturned + totalShippingNotReturned + orderTaxNotReturned + orderShippingNotReturned;
