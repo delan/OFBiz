@@ -648,7 +648,7 @@
       <field name="amount" type="currency-amount"></field>
       <field name="description" type="description"></field>
       <field name="taxAuthPartyId" type="id-ne"/>
-      <field name="taxGeoId" type="id-ne"/>
+      <field name="taxAuthGeoId" type="id-ne"/>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
       <relation type="one" fk-name="INVOICE_ITMITYP" rel-entity-name="InvoiceItemType">
@@ -679,7 +679,7 @@
           <key-map field-name="taxAuthPartyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="INVCE_ITM_TAXGEO" title="Tax" rel-entity-name="Geo">
-          <key-map field-name="taxGeoId" rel-field-name="geoId"/>
+          <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
       </relation>
     </entity>
     <entity entity-name="InvoiceItemAttribute"
@@ -902,6 +902,7 @@
       <field name="roleTypeId" type="id"></field>
       <field name="invoiceId" type="id"></field>
       <field name="paymentId" type="id"></field>
+      <field name="returnId" type="id"></field>
       <field name="theirAcctgTransId" type="id-long"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
@@ -946,6 +947,9 @@
       </relation>
       <relation type="one" fk-name="ACCTTX_PAYMENT" rel-entity-name="Payment">
         <key-map field-name="paymentId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTX_RETURN" rel-entity-name="ReturnHeader">
+        <key-map field-name="returnId"/>
       </relation>
       <relation type="many" rel-entity-name="AcctgTransTypeAttr">
         <key-map field-name="acctgTransTypeId"/>
@@ -1035,6 +1039,7 @@
       <alias entity-alias="ATR" name="transactionDate"/>
       <alias entity-alias="ATR" name="invoiceId"/>
       <alias entity-alias="ATR" name="paymentId"/>
+      <alias entity-alias="ATR" name="returnId"/>
       <alias entity-alias="ATE" name="acctgTransId"/>
       <alias entity-alias="ATE" name="acctgTransEntrySeqId"/>
       <alias entity-alias="ATE" name="glAccountId"/>
