@@ -135,4 +135,27 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="LookupExampleFeature">
+        <section>
+            <condition>
+                <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="Lookup ExampleFeature"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="10"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="LookupFindExampleFeature" location="component://example/widget/example/ExampleFeatureForms.xml"/>
+                        <include-form name="LookupListExampleFeature" location="component://example/widget/example/ExampleFeatureForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

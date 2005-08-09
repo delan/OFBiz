@@ -207,6 +207,11 @@
         <response name="success" type="view" value="EditExampleFeatureExampleAppls"/>
         <response name="error" type="view" value="EditExampleFeatureExampleAppls"/>
     </request-map>
+    
+    <request-map uri="LookupExampleFeature">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupExampleFeature"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -219,9 +224,11 @@
     <view-map name="EditExample" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExample"/>
     <view-map name="EditExampleItems" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExampleItems"/>
     <view-map name="EditExampleFeatureAppls" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExampleFeatureAppls"/>
-
+    
     <view-map name="FindExampleFeature" type="screen" page="component://example/widget/example/ExampleFeatureScreens.xml#FindExampleFeature"/>
     <view-map name="EditExampleFeature" type="screen" page="component://example/widget/example/ExampleFeatureScreens.xml#EditExampleFeature"/>
     <view-map name="EditExampleFeatureExampleAppls" type="screen" page="component://example/widget/example/ExampleFeatureScreens.xml#EditExampleFeatureExampleAppls"/>
+
+    <view-map name="LookupExampleFeature" type="screen" page="component://example/widget/example/ExampleFeatureScreens.xml#LookupExampleFeature"/>
     <!-- end of view mappings -->
 </site-conf>
