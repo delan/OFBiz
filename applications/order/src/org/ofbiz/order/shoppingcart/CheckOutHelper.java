@@ -527,7 +527,10 @@ public class CheckOutHelper {
         // check for error message(s)
         if (ServiceUtil.isError(storeResult)) {
             String errMsg = UtilProperties.getMessage(resource, "checkhelper.did_not_complete_order_following_occurred", (cart != null ? cart.getLocale() : Locale.getDefault()));
-            return ServiceUtil.returnError(errMsg);
+            List resErrorMessages = new LinkedList();
+            resErrorMessages.add(errMsg);
+            resErrorMessages.add(ServiceUtil.getErrorMessage(storeResult));
+            return ServiceUtil.returnError(resErrorMessages);
         }
 
         // ----------
