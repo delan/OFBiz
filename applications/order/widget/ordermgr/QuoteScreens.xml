@@ -54,6 +54,36 @@
             </widgets>
         </section>
     </screen>
+    <screen name="CommonQuotePriceDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ORDERMGR, _QUOTE_PRICE permission -->
+                            <condition>
+                                <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/quote/QuoteTabBar.ftl"/></html>
+                                </platform-specific>
+                                <container>
+                                    <label style="head1">[${uiLabelMap.CommonId}:${quote.quoteId}] ${quote.description}</label>
+                                </container>
+
+                                <decorator-section-include name="body"/>
+
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.OrderQuotePricePermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- list all assets in a tabular format -->
     <screen name="FindQuote">
@@ -272,7 +302,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonQuoteDecorator">
+                <decorator-screen name="CommonQuotePriceDecorator">
                     <decorator-section name="body">
                         <container>
                             <link target="EditQuoteCoefficient?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteCoefficient}]" style="buttontext"/>
@@ -298,7 +328,7 @@
                 <entity-one entity-name="QuoteCoefficient" value-name="quoteCoefficient"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonQuoteDecorator">
+                <decorator-screen name="CommonQuotePriceDecorator">
                     <decorator-section name="body">
                         <container>
                             <link target="EditQuoteCoefficient?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteCoefficient}]" style="buttontext"/>
@@ -331,7 +361,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/quote/ManageQuotePrices.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonQuoteDecorator">
+                <decorator-screen name="CommonQuotePriceDecorator">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/quote/ManageQuotePrices.ftl"/></html>
