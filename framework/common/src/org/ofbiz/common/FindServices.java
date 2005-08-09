@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
@@ -94,18 +95,6 @@ public class FindServices {
      * @return a map with field name and operator
      */
     public static HashMap prepareField(Map inputFields, Map queryStringMap, Map origValueMap) {
-        String fieldNameRaw = null; // The name as it appeas in the HTML form
-        String fieldNameRoot = null; // The entity field name. Everything to the left of the first "_" if
-                                                             //  it exists, or the whole word, if not.
-        String fieldPair = null; // "fld0" or "fld1" - begin/end of range or just fld0 if no range.
-        String fieldValue = null; // If it is a "value" field, it will be the value to be used in the query.
-                                                    // If it is an "op" field, it will be "equals", "greaterThan", etc.
-        int iPos = -1;
-        int iPos2 = -1;
-        HashMap subMap = null;
-        HashMap subMap2 = null;
-        String fieldMode = null;
-
         // Strip the "_suffix" off of the parameter name and
         // build a three-level map of values keyed by fieldRoot name,
         //    fld0 or fld1,  and, then, "op" or "value"
@@ -124,10 +113,23 @@ public class FindServices {
         Iterator ifIter = inputFields.keySet().iterator();
         //StringBuffer queryStringBuf = new StringBuffer();
         while (ifIter.hasNext()) {
+            String fieldNameRaw = null; // The name as it appeas in the HTML form
+            String fieldNameRoot = null; // The entity field name. Everything to the left of the first "_" if
+                                                                 //  it exists, or the whole word, if not.
+            String fieldPair = null; // "fld0" or "fld1" - begin/end of range or just fld0 if no range.
+            Object fieldValue = null; // If it is a "value" field, it will be the value to be used in the query.
+                                                        // If it is an "op" field, it will be "equals", "greaterThan", etc.
+            int iPos = -1;
+            int iPos2 = -1;
+            HashMap subMap = null;
+            HashMap subMap2 = null;
+            String fieldMode = null;
+
             fieldNameRaw = (String) ifIter.next();
-            fieldValue = (String) inputFields.get(fieldNameRaw);
-            if (fieldValue == null || fieldValue.length() == 0)
+            fieldValue = inputFields.get(fieldNameRaw);
+            if (ObjectType.isEmpty(fieldValue)) {
                 continue;
+            }
 
             //queryStringBuffer.append(fieldNameRaw + "=" + fieldValue);
             queryStringMap.put(fieldNameRaw, fieldValue);
@@ -197,7 +199,7 @@ public class FindServices {
                 origList = new ArrayList();
                 origValueMap.put(fieldNameRoot, origList);
             }
-            String [] origValues = {fieldNameRaw, fieldValue};
+            Object [] origValues = {fieldNameRaw, fieldValue};
             origList.add(origValues);
         }
         return normalizedFields;

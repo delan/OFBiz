@@ -52,7 +52,7 @@
         <field use-when="exampleFeature==null&amp;&amp;exampleFeatureId!=null" name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"><display description="${uiLabelMap.CommonCannotBeFound}: [${exampleFeatureId}]" also-hidden="false"/></field>
 
         <field name="description" title="${uiLabelMap.CommonDescription}"/>
-        <field name="featureSourceEnumId">
+        <field name="featureSourceEnumId" title="${uiLabelMap.ExampleFeatureSource}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="EXMPL_FEAT_SOURCE"/>
@@ -116,5 +116,42 @@
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="LookupFindExampleFeature" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupExampleFeature" title="" type="single">
+        <auto-fields-entity entity-name="ExampleFeature" default-field-type="find"/>
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"/> <!-- <text-find default-value="equals"/> -->
+        <field name="featureSourceEnumId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
+                    <entity-constraint name="enumTypeId" value="EXMPL_FEAT_SOURCE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"/>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="LookupListExampleFeature" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
+        list-iterator-name="listIt" paginate-target="LookupExampleFeature" title="" type="list">
+        <actions>
+            <set field="entityName" value="ExampleFeature"/>
+            <set field="orderBy" value="description"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="orderBy" env-name="orderBy"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <!--<auto-fields-entity entity-name="ExampleFeature" default-field-type="display"/>-->
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"  widget-style="buttontext">
+            <hyperlink description="${exampleFeatureId}" also-hidden="false" target-type="plain" target="javascript:set_value('${exampleFeatureId}')"/>
+        </field>
+        <field name="featureSourceEnumId" title="${uiLabelMap.ExampleFeatureSource}"> 
+            <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]" also-hidden="false"/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><display also-hidden="false"/></field>
     </form>
 </forms>

@@ -74,6 +74,7 @@
                     <html>
                         <html-template-decorator location="component://common/webcommon/includes/lookup.ftl">
                             <html-template-decorator-section name="body">
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
                                 <decorator-section-include name="body"/>
                             </html-template-decorator-section>
                         </html-template-decorator>
