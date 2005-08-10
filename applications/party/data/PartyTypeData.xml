@@ -33,6 +33,7 @@
     <ContactMechPurposeType contactMechPurposeTypeId="PAYMENT_LOCATION" description="Payment (AR) Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="GENERAL_LOCATION" description="General Correspondence Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PUR_RET_LOCATION" description="Purchase Return Address"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PRIMARY_LOCATION" description="Primary Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIPPING" description="Shipping Destination Phone Number"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIP_ORIG" description="Shipping Origin Phone Number"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PHONE_BILLING" description="Billing (AP) Phone Number"/>
@@ -43,6 +44,7 @@
     <ContactMechPurposeType contactMechPurposeTypeId="FAX_NUMBER" description="Main Fax Number"/>
     <ContactMechPurposeType contactMechPurposeTypeId="FAX_NUMBER_SEC" description="Secondary Fax Number"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PHONE_MOBILE" description="Main Mobile Phone Number"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PRIMARY_PHONE" description="Primary Phone Number"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PRIMARY_EMAIL" description="Primary Email Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="OTHER_EMAIL" description="Other Email Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="ORDER_EMAIL" description="Order Notification Email Address"/>
@@ -64,6 +66,7 @@
     <ContactMechTypePurpose contactMechPurposeTypeId="PAYMENT_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="GENERAL_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PUR_RET_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="FAX_NUMBER" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="FAX_NUMBER_SEC" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_HOME" contactMechTypeId="TELECOM_NUMBER"/>
@@ -74,7 +77,8 @@
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIP_ORIG" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_BILLING" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_PAYMENT" contactMechTypeId="TELECOM_NUMBER"/>
-
+    <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_PHONE" contactMechTypeId="TELECOM_NUMBER"/>
+    
     <!-- top level role types -->
     <RoleType description="Administrator" hasTable="N" parentTypeId="" roleTypeId="ADMIN"/>
     <RoleType description="Agent" hasTable="N" parentTypeId="" roleTypeId="AGENT"/>
