@@ -164,6 +164,7 @@
       <field name="partyId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="preferredContactMechId" type="id"></field>
       <prim-key field="contactListId"/>
       <prim-key field="partyId"/>
       <prim-key field="fromDate"/>
@@ -172,6 +173,9 @@
       </relation>
       <relation type="one" fk-name="CNCT_LSTPTY_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="CNCT_LSTPTY_PCM" title="Preferred" rel-entity-name="ContactMech">
+        <key-map field-name="preferredContactMechId" rel-field-name="contactMechId"/>
       </relation>
     </entity>
     <entity entity-name="ContactListType"
