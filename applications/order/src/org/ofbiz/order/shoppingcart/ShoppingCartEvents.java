@@ -526,6 +526,8 @@ public class ShoppingCartEvents {
         session.removeAttribute("shoppingCart");
         session.removeAttribute("orderPartyId");
         session.removeAttribute("orderMode");
+        session.removeAttribute("productStoreId");
+        session.removeAttribute("CURRENT_CATALOG_ID");
         return "success";
     }
 
@@ -873,6 +875,11 @@ public class ShoppingCartEvents {
       String finalizeMode = (String)session.getAttribute("finalizeMode");
       Locale locale = UtilHttp.getLocale(request);
 
+      String productStoreId = request.getParameter("productStoreId");
+
+      if (UtilValidate.isNotEmpty(productStoreId)) {
+          session.setAttribute("productStoreId", productStoreId);
+      }
       ShoppingCart cart = getCartObject(request);
 
       String orderMode = request.getParameter("orderMode");
@@ -885,7 +892,6 @@ public class ShoppingCartEvents {
       }
 
       // check the selected product store
-      String productStoreId = request.getParameter("productStoreId");
       GenericValue productStore = null;
       if (UtilValidate.isNotEmpty(productStoreId)) {
           productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
@@ -917,7 +923,7 @@ public class ShoppingCartEvents {
               if (hasPermission) {
                   cart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
               } else {
-              	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderYouDoNotHavePermissionToTakeOrdersForThisStore", locale));
+                  request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderYouDoNotHavePermissionToTakeOrdersForThisStore", locale));
                   cart.clear();
                   session.removeAttribute("orderMode");
                   return "error";
@@ -929,7 +935,7 @@ public class ShoppingCartEvents {
       }
 
       if ("SALES_ORDER".equals(cart.getOrderType()) && UtilValidate.isEmpty(cart.getProductStoreId())) {
-      	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderAProductStoreMustBeSelectedForASalesOrder", locale));
+          request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderAProductStoreMustBeSelectedForASalesOrder", locale));
           cart.clear();
           session.removeAttribute("orderMode");
           return "error";
