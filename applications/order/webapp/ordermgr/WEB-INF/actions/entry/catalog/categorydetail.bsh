@@ -47,7 +47,7 @@ context.put("defaultViewSize", defaultViewSize);
 
 // set the limit view
 Boolean limitViewObj = request.getAttribute("limitView");
-limitView = Boolean.TRUE;
+limitView = true;
 if (limitViewObj != null) {
     limitView = limitViewObj;
 }

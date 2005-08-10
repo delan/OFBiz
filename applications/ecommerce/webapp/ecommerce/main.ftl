@@ -30,5 +30,3 @@
 <#else>
   <center><h2>${uiLabelMap.EcommerceNoPROMOTIONCategory}</h2></center>
 </#if>
-
-
