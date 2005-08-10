@@ -427,6 +427,7 @@
       <field name="subject" type="long-varchar"></field>
       <field name="content" type="very-long"></field>
       <field name="note" type="comment"></field>
+      <field name="contactListId" type="id"></field>
       <prim-key field="communicationEventId"/>
       <relation type="one" fk-name="COM_EVNT_TYPE" rel-entity-name="CommunicationEventType">
         <key-map field-name="communicationEventTypeId"/>
@@ -459,6 +460,9 @@
       </relation>
       <relation type="one" fk-name="COM_EVNT_CMTP" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_CLST" rel-entity-name="ContactList">
+        <key-map field-name="contactListId"/>
       </relation>
     </entity>
     <view-entity entity-name="CommunicationEventAndRole"
@@ -715,7 +719,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="allowSolicitation" type="indicator"></field>
-      <field name="extension" type="very-short"></field>
+      <field name="extension" type="long-varchar"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="partyId"/>
       <prim-key field="contactMechId"/>
