@@ -37,6 +37,10 @@ userLogin = session.getAttribute("userLogin");
 
 context.put("dispatcher",dispatcher);
 
+// Just in case we are here from the choosecatalog form, the
+// following call will save in the session the new catalogId
+CatalogWorker.getCurrentCatalogId(request);
+
 // Get the Cart and Prepare Size
 shoppingCart = ShoppingCartEvents.getCartObject(request);
 context.put("shoppingCartSize", shoppingCart.size());
