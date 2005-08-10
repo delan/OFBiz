@@ -41,7 +41,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -50,6 +49,7 @@ import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.finder.ByAndFinder;
 import org.ofbiz.entity.finder.ByConditionFinder;
+import org.ofbiz.entity.finder.EntityFinderUtil;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
@@ -340,9 +340,9 @@ public abstract class ModelScreenAction {
         }
         
         public void runAction(Map context) {
-            String globalStr = this.globalExdr.expandString(context);
+            //String globalStr = this.globalExdr.expandString(context);
             // default to false
-            boolean global = "true".equals(globalStr);
+            //boolean global = "true".equals(globalStr);
 
             Locale locale = (Locale) context.get("locale");
             String resource = this.resourceExdr.expandString(context, locale);
@@ -408,19 +408,7 @@ public abstract class ModelScreenAction {
             this.serviceNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("service-name"));
             this.resultMapNameAcsr = UtilValidate.isNotEmpty(serviceElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(serviceElement.getAttribute("result-map-name")) : null;
             this.autoFieldMapExdr = new FlexibleStringExpander(serviceElement.getAttribute("auto-field-map"));
-            
-            List fieldMapElementList = UtilXml.childElementList(serviceElement, "field-map");
-            if (fieldMapElementList.size() > 0) {
-                this.fieldMap = FastMap.newInstance();
-                Iterator fieldMapElementIter = fieldMapElementList.iterator();
-                while (fieldMapElementIter.hasNext()) {
-                    Element fieldMapElement = (Element) fieldMapElementIter.next();
-                    // set the env-name for each field-name, noting that if no field-name is specified it defaults to the env-name
-                    this.fieldMap.put(
-                            new FlexibleMapAccessor(UtilFormatOut.checkEmpty(fieldMapElement.getAttribute("field-name"), fieldMapElement.getAttribute("env-name"))), 
-                            new FlexibleMapAccessor(fieldMapElement.getAttribute("env-name")));
-                }
-            }
+            this.fieldMap = EntityFinderUtil.makeFieldMap(serviceElement);
         }
         
         public void runAction(Map context) {
@@ -441,13 +429,7 @@ public abstract class ModelScreenAction {
                 }
                 
                 if (this.fieldMap != null) {
-                    Iterator fieldMapEntryIter = this.fieldMap.entrySet().iterator();
-                    while (fieldMapEntryIter.hasNext()) {
-                        Map.Entry entry = (Map.Entry) fieldMapEntryIter.next();
-                        FlexibleMapAccessor serviceContextFieldAcsr = (FlexibleMapAccessor) entry.getKey();
-                        FlexibleMapAccessor contextEnvAcsr = (FlexibleMapAccessor) entry.getValue();
-                        serviceContextFieldAcsr.put(serviceContext, contextEnvAcsr.get(context));
-                    }
+                    EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, serviceContext);
                 }
                 
                 Map result = this.modelScreen.getDispatcher(context).runSync(serviceNameExpanded, serviceContext);

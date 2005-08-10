@@ -72,22 +72,47 @@ public class EntityFinderUtil {
             while (fieldMapElementIter.hasNext()) {
                 Element fieldMapElement = (Element) fieldMapElementIter.next();
                 // set the env-name for each field-name, noting that if no field-name is specified it defaults to the env-name
-                fieldMap.put(
-                        new FlexibleMapAccessor(UtilFormatOut.checkEmpty(fieldMapElement.getAttribute("field-name"), fieldMapElement.getAttribute("env-name"))), 
-                        new FlexibleMapAccessor(fieldMapElement.getAttribute("env-name")));
+                String fieldName = fieldMapElement.getAttribute("field-name");
+                String envName = fieldMapElement.getAttribute("env-name");
+                String value = fieldMapElement.getAttribute("value");
+                if (UtilValidate.isEmpty(fieldName)) {
+                    // no fieldName, use envName for both
+                    fieldMap.put(new FlexibleMapAccessor(envName), new FlexibleMapAccessor(envName));
+                } else {
+                    if (UtilValidate.isNotEmpty(value)) {
+                        fieldMap.put(new FlexibleMapAccessor(fieldName), new FlexibleStringExpander(value));
+                    } else {
+                        // at this point we have a fieldName and no value, do we have a envName?
+                        if (UtilValidate.isNotEmpty(envName)) {
+                            fieldMap.put(new FlexibleMapAccessor(fieldName), new FlexibleMapAccessor(envName));
+                        } else {
+                            // no envName, use fieldName for both
+                            fieldMap.put(new FlexibleMapAccessor(fieldName), new FlexibleMapAccessor(fieldName));
+                        }
+                    }
+                }
             }
         }
         return fieldMap;
     }
 
     public static void expandFieldMapToContext(Map fieldMap, Map context, Map outContext) {
+        //Debug.logInfo("fieldMap: " + fieldMap, module);
         if (fieldMap != null) {
             Iterator fieldMapEntryIter = fieldMap.entrySet().iterator();
             while (fieldMapEntryIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) fieldMapEntryIter.next();
                 FlexibleMapAccessor serviceContextFieldAcsr = (FlexibleMapAccessor) entry.getKey();
-                FlexibleMapAccessor contextEnvAcsr = (FlexibleMapAccessor) entry.getValue();
-                serviceContextFieldAcsr.put(outContext, contextEnvAcsr.get(context));
+                Object valueSrc = entry.getValue();
+                if (valueSrc instanceof FlexibleMapAccessor) {
+                    FlexibleMapAccessor contextEnvAcsr = (FlexibleMapAccessor) valueSrc;
+                    serviceContextFieldAcsr.put(outContext, contextEnvAcsr.get(context));
+                } else if (valueSrc instanceof FlexibleStringExpander) {
+                    FlexibleStringExpander valueExdr = (FlexibleStringExpander) valueSrc;
+                    serviceContextFieldAcsr.put(outContext, valueExdr.expandString(context));
+                } else {
+                    // hmmmm...
+                }
             }
         }
     }
