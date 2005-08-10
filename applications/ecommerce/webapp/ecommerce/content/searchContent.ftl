@@ -48,32 +48,6 @@
         </td>
       </tr>
     </#list>
-<#--
-    <tr>
-      <td align="right" valign="middle">
-        <div class="tabletext">Sort Order:</div>
-      </td>
-      <td valign="middle">
-        <div class="tabletext">
-          <select name="sortOrder" class="selectBox">
-            <option value="SortKeywordRelevancy">Keyword Relevency</option>
-            <option value="SortProductField:productName">Product Name</option>
-            <option value="SortProductField:internalName">Internal Name</option>
-            <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
-            <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
-            <option value="SortProductField:averageCustomerRating">Customer Rating</option>
-            <option value="SortProductPrice:LIST_PRICE">List Price</option>
-            <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
-            <option value="SortProductPrice:AVERAGE_COST">Average Cost</option>
-            <option value="SortProductPrice:MINIMUM_PRICE">Minimum Price</option>
-            <option value="SortProductPrice:MAXIMUM_PRICE">Maximum Price</option>
-          </select>
-          Low to High<input type="radio" name="sortAscending" value="Y" checked>
-          High to Low<input type="radio" name="sortAscending" value="N">
-        </div>
-      </td>
-    </tr>
--->
     <#if searchConstraintStrings?has_content>
       <tr>
         <td align="right" valign="top">
