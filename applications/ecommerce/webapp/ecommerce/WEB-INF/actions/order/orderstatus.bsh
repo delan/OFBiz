@@ -175,5 +175,3 @@ if (orderHeader != null) {
     context.put("orderShipmentInfoSummaryList", orderShipmentInfoSummaryList);
     context.put("customerPoNumberSet", customerPoNumberSet);
 }
-
-Debug.logInfo("orderstatus info context: " + context, "orderstatus.bsh");
