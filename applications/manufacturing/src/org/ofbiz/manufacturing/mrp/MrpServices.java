@@ -38,6 +38,9 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.bom.BOMNode;
 import org.ofbiz.security.Security;
@@ -402,13 +405,22 @@ public class MrpServices {
         
         // Find all products in MrpInventoryEventPlanned, ordered by bom and eventDate
         List listResult = null;
-        Map parameters = UtilMisc.toMap("billOfMaterialLevel", billOfMaterialLevel);
-        // TODO : If billOfMaterialLevel == 0 the search must be done with (billOfMaterialLevel == 0 || billOfMaterialLevel == null)
+        // If billOfMaterialLevel == 0 the search must be done with (billOfMaterialLevel == 0 || billOfMaterialLevel == null)
+        EntityCondition parameters = null;
+        if (billOfMaterialLevel.intValue() == 0) {
+            parameters = new EntityExpr(new EntityExpr("billOfMaterialLevel", EntityOperator.EQUALS, null),
+                                        EntityOperator.OR,
+                                        new EntityExpr("billOfMaterialLevel", EntityOperator.EQUALS, billOfMaterialLevel));
+        } else {
+            parameters = new EntityExpr("billOfMaterialLevel", EntityOperator.EQUALS, billOfMaterialLevel);
+        }
+
         List orderBy = UtilMisc.toList("productId", "eventDate");
         try{
-            listResult = delegator.findByAnd("MrpInventoryEventPlanned", parameters, orderBy);
+            //listResult = delegator.findByAnd("MrpInventoryEventPlanned", parameters, orderBy);
+            listResult = delegator.findByCondition("MrpInventoryEventPlanned", parameters, null, orderBy);
         } catch(GenericEntityException e) {
-            Debug.logError(e, "Error : delegator.findByAnd(\"MrpInventoryEventPlanned\", parameters)", module);
+            Debug.logError(e, "Error : delegator.findByCondition(\"MrpInventoryEventPlanned\", parameters, null, orderBy)", module);
             Debug.logError(e, "Error : parameters = "+parameters,module);
             Debug.logError(e, "Error : orderBy = "+orderBy,module);
             return ServiceUtil.returnError("Problem, we can not find the products, for more detail look at the log");
