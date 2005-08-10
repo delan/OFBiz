@@ -830,7 +830,18 @@ public class GenericDAO {
             SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
         }
 
+        long queryStartTime = 0;
+        if (Debug.timingOn()) {
+            queryStartTime = System.currentTimeMillis();
+        }
         sqlP.executeQuery();
+        if (Debug.timingOn()) {
+            long queryEndTime = System.currentTimeMillis();
+            long queryTotalTime = queryEndTime - queryStartTime;
+            if (queryTotalTime > 50) {
+                Debug.logTiming("Ran query in " + queryTotalTime + " milli-seconds: " + sql, module);
+            }
+        }        
         return new EntityListIterator(sqlP, modelEntity, selectFields, modelFieldTypeReader);
     }
 
@@ -924,7 +935,7 @@ public class GenericDAO {
                 SqlJdbcUtil.setValue(sqlP, mf, modelEntityOne.getEntityName(), curvalue, modelFieldTypeReader);
             }
             sqlP.executeQuery();
-            int collsize = collist.size();
+            //int collsize = collist.size();
 
             while (sqlP.next()) {
                 GenericValue gv = gd.makeValue(modelEntityTwo.getEntityName(), Collections.EMPTY_MAP);
