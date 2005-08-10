@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<entitygroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitygroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitygroup.xsd">
 
   <!-- ========================================================= -->
@@ -89,6 +89,8 @@
     <entity-group group="org.ofbiz" entity="Affiliate" />
     <entity-group group="org.ofbiz" entity="Party" />
     <entity-group group="org.ofbiz" entity="PartyAndContactMech" />
+    <entity-group group="org.ofbiz" entity="PartyAndPostalAddress" />
+    <entity-group group="org.ofbiz" entity="PartyAndTelecomNumber" />
     <entity-group group="org.ofbiz" entity="PartyAndUserLogin" />
     <entity-group group="org.ofbiz" entity="PartyAndUserLoginAndPerson" />
     <entity-group group="org.ofbiz" entity="PartyAttribute" />

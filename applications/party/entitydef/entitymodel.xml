@@ -29,7 +29,7 @@
  */
 -->
 
-<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
@@ -1023,6 +1023,103 @@
       <relation type="one-nofk" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
+       <relation type="one-nofk" rel-entity-name="PostalAddress">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="PartyAndPostalAddress"
+            package-name="org.ofbiz.party.party"
+            title="Party and Contact Mech/Postal Address View Entity">
+      <member-entity entity-alias="PTY" entity-name="Party"/>
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
+      <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PA" entity-name="PostalAddress"/>
+      <alias entity-alias="CM" name="contactMechId"/>
+      <alias entity-alias="PTY" name="partyId"/>
+      <alias entity-alias="PCM" name="fromDate"/>
+      <alias entity-alias="PCM" name="thruDate"/>
+      <alias entity-alias="PTY" name="partyTypeId"/>
+      <alias entity-alias="CM" name="contactMechTypeId"/>
+      <alias entity-alias="CM" name="infoString"/>
+      <alias entity-alias="PCM" name="comments"/>
+      <alias entity-alias="PCM" name="extension"/>
+      <alias entity-alias="PCM" name="allowSolicitation"/>
+      <alias entity-alias="PA" name="toName"/>
+      <alias entity-alias="PA" name="attnName"/>
+      <alias entity-alias="PA" name="address1"/>
+      <alias entity-alias="PA" name="address2"/>
+      <alias entity-alias="PA" name="directions"/>
+      <alias entity-alias="PA" name="city"/>
+      <alias entity-alias="PA" name="postalCode"/>
+      <alias entity-alias="PA" name="postalCodeExt"/>
+      <alias entity-alias="PA" name="countryGeoId"/>
+      <alias entity-alias="PA" name="stateProvinceGeoId"/>
+      <alias entity-alias="PA" name="postalCodeGeoId"/>
+      <view-link entity-alias="PTY" rel-entity-alias="PCM">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="PCM" rel-entity-alias="CM">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="CM" rel-entity-alias="PA">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <relation type="many" rel-entity-name="PartyContactMech">
+        <key-map field-name="partyId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="PartyAndTelecomNumber"
+            package-name="org.ofbiz.party.party"
+            title="Party and Contact Mech/Postal Address View Entity">
+      <member-entity entity-alias="PTY" entity-name="Party"/>
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
+      <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="TN" entity-name="TelecomNumber"/>
+      <alias entity-alias="CM" name="contactMechId"/>
+      <alias entity-alias="PTY" name="partyId"/>
+      <alias entity-alias="PCM" name="fromDate"/>
+      <alias entity-alias="PCM" name="thruDate"/>
+      <alias entity-alias="PTY" name="partyTypeId"/>
+      <alias entity-alias="CM" name="contactMechTypeId"/>
+      <alias entity-alias="CM" name="infoString"/>
+      <alias entity-alias="PCM" name="comments"/>
+      <alias entity-alias="PCM" name="extension"/>
+      <alias entity-alias="PCM" name="allowSolicitation"/>
+      <alias entity-alias="TN" name="countryCode"/>
+      <alias entity-alias="TN" name="areaCode"/>
+      <alias entity-alias="TN" name="contactNumber"/>
+      <view-link entity-alias="PTY" rel-entity-alias="PCM">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="PCM" rel-entity-alias="CM">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="CM" rel-entity-alias="TN">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <relation type="many" rel-entity-name="PartyContactMech">
+        <key-map field-name="partyId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
       <relation type="one-nofk" rel-entity-name="TelecomNumber">
         <key-map field-name="contactMechId"/>
       </relation>
@@ -1297,7 +1394,7 @@
       <alias entity-alias="ND" name="noteParty"/>
       <view-link entity-alias="PN" rel-entity-alias="ND">
         <key-map field-name="noteId"/>
-      </view-link>     
+      </view-link>
     </view-entity>
     <entity entity-name="PartyProfileDefault"
             package-name="org.ofbiz.party.party"
