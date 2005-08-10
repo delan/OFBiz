@@ -1625,6 +1625,7 @@
       <field name="passportExpireDate" type="date"></field>
       <field name="totalYearsWorkExperience" type="floating-point"></field>
       <field name="comments" type="comment"></field>
+      <field name="companyName" type="name"><!-- free-form company name, used when we don't yet have enough info for a PartyRelationship --></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
