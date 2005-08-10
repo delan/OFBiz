@@ -506,7 +506,7 @@ according to which type of entity.
     accountName="DISCOUNTS ON SALES" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="400000" glAccountId="420000" accountCode="420000" 
-    glAccountClassId="REVENUE" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="CUSTOMER RETURNS" description="" postedBalance="0.0"/>
 
 <!-- COST OF GOODS SOLD -->
