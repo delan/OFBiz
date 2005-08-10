@@ -381,11 +381,9 @@
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                
-                <entity-one entity-name="ProductStore" value-name="productStore" >
-                    <field-map env-name="productStoreId"/>
+                <entity-one entity-name="ProductStore" value-name="productStore">
+                    <field-map field-name="productStoreId"/>
                 </entity-one>
-               
-
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator">

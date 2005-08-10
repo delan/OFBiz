@@ -106,6 +106,63 @@
         </field>
         -->
 
+        <field name="headerApprovedStatus">
+            <drop-down no-current-selected-key="ORDER_APPROVED">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description} [${statusCode}]">
+                    <entity-constraint name="statusTypeId" value="ORDER_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="itemApprovedStatus">
+            <drop-down no-current-selected-key="ITEM_APPROVED">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description} [${statusCode}]">
+                    <entity-constraint name="statusTypeId" value="ORDER_ITEM_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="digitalItemApprovedStatus">
+            <drop-down no-current-selected-key="ITEM_APPROVED">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description} [${statusCode}]">
+                    <entity-constraint name="statusTypeId" value="ORDER_ITEM_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="headerDeclinedStatus">
+            <drop-down no-current-selected-key="ORDER_REJECTED">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description} [${statusCode}]">
+                    <entity-constraint name="statusTypeId" value="ORDER_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="itemDeclinedStatus">
+            <drop-down no-current-selected-key="ITEM_REJECTED">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description} [${statusCode}]">
+                    <entity-constraint name="statusTypeId" value="ORDER_ITEM_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="headerCancelStatus">
+            <drop-down no-current-selected-key="ORDER_CANCELLED">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description} [${statusCode}]">
+                    <entity-constraint name="statusTypeId" value="ORDER_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="itemCancelStatus">
+            <drop-down no-current-selected-key="ITEM_CANCELLED">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description} [${statusCode}]">
+                    <entity-constraint name="statusTypeId" value="ORDER_ITEM_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
         <field name="styleSheet"><text size="60" maxlength="250"/></field>
         <field name="headerLogo"><text size="60" maxlength="250"/></field>
         <!--
@@ -240,7 +297,7 @@
         target="" paginate-target="" title="" type="list">
         <actions>
         	<entity-and entity-name="SegmentGroup" >
-            	<field-map env-name="productStoreId" />
+            	<field-map field-name="productStoreId"/>
         	</entity-and>
         </actions>
         <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.ProductSegmentGroupId}">
