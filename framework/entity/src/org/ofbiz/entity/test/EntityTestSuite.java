@@ -49,6 +49,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
@@ -64,7 +65,11 @@ public class EntityTestSuite extends TestCase {
     public static final String module = EntityTestSuite.class.getName();
     public static final String DELEGATOR_NAME = "test";
     public GenericDelegator delegator = null;
-    public static final long TEST_COUNT = 10000; // defines how many values to add for tests which add a large number of values
+    /*
+     * This sets how many values to insert when trying to create a large number of values.  10,000 causes HSQL to crash but is ok
+     * with Derby.  Going up to 100,000 causes problems all around because Java List seems to be capped at about 65,000 values.
+     */
+    public static final long TEST_COUNT = 10000;
 
     public EntityTestSuite(String name) {
         super(name);
@@ -275,6 +280,8 @@ public class EntityTestSuite extends TestCase {
         try {
             delegator.create("Testing", UtilMisc.toMap("testingId", delegator.getNextSeqId("Testing"), "testingTypeId", "NO-SUCH-KEY"));
         } catch(GenericEntityException e) {
+            Debug.logInfo(e.toString(), module);
+            return;
         }
         TestCase.fail("Foreign key referential integrity is not observed for create (INSERT)");
     }
@@ -287,6 +294,7 @@ public class EntityTestSuite extends TestCase {
             EntityCondition isLevel1 = new EntityExpr("description", EntityOperator.EQUALS, "node-level #1");
             delegator.removeByCondition("TestingNode", isLevel1);
         } catch(GenericEntityException e) {
+            Debug.logInfo(e.toString(), module);
             return;
         }
         TestCase.fail("Foreign key referential integrity is not observed for remove (DELETE)");
@@ -328,11 +336,13 @@ public class EntityTestSuite extends TestCase {
         int n = 0;
         try {
             delegator.storeByCondition("TestingNode", fieldsToSet, isLevel1);
+            List updatedNodes = delegator.findByAnd("TestingNode", fieldsToSet);
+            n = updatedNodes.size();
         } catch (GenericEntityException e) {
             TestCase.fail("testStoreByCondition threw an exception");
         }
 
-        TestCase.assertTrue("testStoreByCondition nodes > 0", n > 0);
+        TestCase.assertTrue("testStoreByCondition updated nodes > 0", n > 0);
     }
 
     /*
@@ -468,7 +478,49 @@ public class EntityTestSuite extends TestCase {
         }
     }
 
+    /*
+     * This test will verify that a transaction which takes longer than the pre-set timeout are rolled back. 
+     */
+    public void testTransactionUtilMoreThanTimeout() throws Exception {
+        try {
+            GenericValue testValue = delegator.makeValue("Testing", UtilMisc.toMap("testingId", "timeout-test"));
+            boolean transBegin = TransactionUtil.begin(10); // timeout set to 10 seconds
+            delegator.create(testValue);
+            Thread.sleep(20*1000);
+            TransactionUtil.commit(transBegin);
+            assertTrue(false);
+        } catch (GenericTransactionException e) {
+            assertTrue(true);
+        } catch (GenericEntityException e) {
+            assertTrue("Other GenericEntityException encountered:" + e.toString(), false);
+            return;
+        } finally {
+            delegator.removeByAnd("Testing", UtilMisc.toMap("testingId", "timeout-test"));
+        }
+    }
     
+    /*
+     * This test will verify that the same transaction transaction which takes less time than timeout will be committed.
+     */
+    public void testTransactionUtilLessThanTimeout() throws Exception {
+        try {
+            GenericValue testValue = delegator.makeValue("Testing", UtilMisc.toMap("testingId", "timeout-test"));
+            boolean transBegin = TransactionUtil.begin();
+            TransactionUtil.setTransactionTimeout(20); // now set timeout to 20 seconds
+            delegator.create(testValue);
+            Thread.sleep(10*1000);
+            TransactionUtil.commit(transBegin);
+            assertTrue(true);
+        } catch (GenericTransactionException e) {
+            assertTrue("Transaction error when testing transaction less than timeout " + e.toString(), false);
+        } catch (GenericEntityException e) {
+            assertTrue("Other GenericEntityException encountered:" + e.toString(), false);
+            return;
+        } finally {
+            delegator.removeByAnd("Testing", UtilMisc.toMap("testingId", "timeout-test"));
+        }
+    }
+
   /*
    * This creates an string id from a number 
    */
