@@ -662,29 +662,37 @@
         <response name="success" type="view" value="editCommunication"/>
         <response name="success" type="view" value="editCommunication"/>
     </request-map>
+    <request-map uri="viewCommPurposes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewCommPurposes"/>
+    </request-map>
     <request-map uri="createCommunicationEventPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventPurpose"/>
-        <response name="success" type="view" value="editCommunication"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="viewCommPurposes"/>
+        <response name="success" type="view" value="viewCommPurposes"/>
     </request-map>
     <request-map uri="removeCommunicationEventPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeCommunicationEventPurpose"/>
-        <response name="success" type="view" value="editCommunication"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="viewCommPurposes"/>
+        <response name="success" type="view" value="viewCommPurposes"/>
+    </request-map>
+    <request-map uri="viewCommRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewCommRoles"/>
     </request-map>
     <request-map uri="createCommunicationEventRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventRole"/>
-        <response name="success" type="view" value="editCommunication"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="viewCommRoles"/>
+        <response name="success" type="view" value="viewCommRoles"/>
     </request-map>
     <request-map uri="removeCommunicationEventRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeCommunicationEventRole"/>
-        <response name="success" type="view" value="editCommunication"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="viewCommRoles"/>
+        <response name="success" type="view" value="viewCommRoles"/>
     </request-map>
     <request-map uri="findCommunications">
         <security https="true" auth="true"/>
@@ -840,6 +848,8 @@
     <view-map name="listLookupCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listLookupCommunications"/>
     <view-map name="findCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#findCommunications"/>
     <view-map name="editCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#editCommunication"/>
+    <view-map name="viewCommPurposes" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#viewCommPurposes"/>
+    <view-map name="viewCommRoles" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#viewCommRoles"/>
     
     <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateNewParty"/>
     <view-map name="NewCustomer" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewCustomer"/>
