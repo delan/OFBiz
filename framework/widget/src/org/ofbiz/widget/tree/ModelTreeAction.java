@@ -40,6 +40,7 @@ import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.finder.ByAndFinder;
 import org.ofbiz.entity.finder.ByConditionFinder;
+import org.ofbiz.entity.finder.EntityFinderUtil;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.GenericServiceException;
@@ -190,15 +191,15 @@ public abstract class ModelTreeAction {
                 try {
                     context.put("_LIST_ITERATOR_", null);
                     BshUtil.runBshAtLocation(location, context);
-                	Object obj = context.get("_LIST_ITERATOR_");
-                	if (this.modelSubNode != null) {
-                		if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
-                    		this.modelSubNode.setListIterator((ListIterator)obj);
-                		} else {
-                			if (obj instanceof List)
-                        		this.modelSubNode.setListIterator(((List)obj).listIterator());
-                		}
-                	}
+                    Object obj = context.get("_LIST_ITERATOR_");
+                    if (this.modelSubNode != null) {
+                        if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
+                            this.modelSubNode.setListIterator((ListIterator)obj);
+                        } else {
+                            if (obj instanceof List)
+                                this.modelSubNode.setListIterator(((List)obj).listIterator());
+                        }
+                    }
                 } catch (GeneralException e) {
                     String errMsg = "Error running BSH script at location [" + location + "]: " + e.toString();
                     Debug.logError(e, errMsg, module);
@@ -239,19 +240,7 @@ public abstract class ModelTreeAction {
             this.resultMapListIteratorNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-iterator-name"));
             this.resultMapValueNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-value-name"));
             this.valueNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("value-name"));
-            
-            List fieldMapElementList = UtilXml.childElementList(serviceElement, "field-map");
-            if (fieldMapElementList.size() > 0) {
-                this.fieldMap = new HashMap();
-                Iterator fieldMapElementIter = fieldMapElementList.iterator();
-                while (fieldMapElementIter.hasNext()) {
-                    Element fieldMapElement = (Element) fieldMapElementIter.next();
-                    // set the env-name for each field-name, noting that if no field-name is specified it defaults to the env-name
-                    this.fieldMap.put(
-                            new FlexibleMapAccessor(UtilFormatOut.checkEmpty(fieldMapElement.getAttribute("field-name"), fieldMapElement.getAttribute("env-name"))), 
-                            new FlexibleMapAccessor(fieldMapElement.getAttribute("env-name")));
-                }
-            }
+            this.fieldMap = EntityFinderUtil.makeFieldMap(serviceElement);
         }
         
         public void runAction(Map context) {
@@ -272,13 +261,7 @@ public abstract class ModelTreeAction {
                 }
                 
                 if (this.fieldMap != null) {
-                    Iterator fieldMapEntryIter = this.fieldMap.entrySet().iterator();
-                    while (fieldMapEntryIter.hasNext()) {
-                        Map.Entry entry = (Map.Entry) fieldMapEntryIter.next();
-                        FlexibleMapAccessor serviceContextFieldAcsr = (FlexibleMapAccessor) entry.getKey();
-                        FlexibleMapAccessor contextEnvAcsr = (FlexibleMapAccessor) entry.getValue();
-                        serviceContextFieldAcsr.put(serviceContext, contextEnvAcsr.get(context));
-                    }
+                    EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, serviceContext);
                 }
                 
                 Map result = this.modelTree.getDispatcher().runSync(serviceNameExpanded, serviceContext);
@@ -294,23 +277,23 @@ public abstract class ModelTreeAction {
                 String valueName = valueNameExdr.expandString(context);
                 
                 if (this.modelSubNode != null) {
-                    ListIterator iter = null;
+                    //ListIterator iter = null;
                     if (UtilValidate.isNotEmpty(resultMapListIteratorName)) {
                         this.modelSubNode.setListIterator((ListIterator)result.get(resultMapListIteratorName));
                     } else if (UtilValidate.isNotEmpty(resultMapListName)) {
-                	    List lst = (List)result.get(resultMapListName);
+                        List lst = (List)result.get(resultMapListName);
                         if (lst != null ) {
                             this.modelSubNode.setListIterator(lst.listIterator());
                         }
                     }
                 } else {
-                	if (UtilValidate.isNotEmpty(resultMapValueName)) {
-                		if (UtilValidate.isNotEmpty(valueName)) {
-                			context.put(valueName, result.get(resultMapValueName));
-                    	} else {
-                    		context.putAll((Map)result.get(resultMapValueName));
-                    	}
-                	}
+                    if (UtilValidate.isNotEmpty(resultMapValueName)) {
+                        if (UtilValidate.isNotEmpty(valueName)) {
+                            context.put(valueName, result.get(resultMapValueName));
+                        } else {
+                            context.putAll((Map)result.get(resultMapValueName));
+                        }
+                    }
                 }
             } catch (GenericServiceException e) {
                 String errMsg = "Error calling service with name " + serviceNameExpanded + ": " + e.toString();
@@ -365,8 +348,7 @@ public abstract class ModelTreeAction {
                 if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
                     this.modelSubNode.setListIterator((ListIterator)obj);
                 } else {
-                	if (obj instanceof List)
-                        this.modelSubNode.setListIterator(((List)obj).listIterator());
+                    if (obj instanceof List) this.modelSubNode.setListIterator(((List)obj).listIterator());
                 }
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();
@@ -400,8 +382,7 @@ public abstract class ModelTreeAction {
                 if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
                     this.modelSubNode.setListIterator((ListIterator)obj);
                 } else {
-                	if (obj instanceof List)
-                        this.modelSubNode.setListIterator(((List)obj).listIterator());
+                    if (obj instanceof List) this.modelSubNode.setListIterator(((List)obj).listIterator());
                 }
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();
@@ -411,4 +392,3 @@ public abstract class ModelTreeAction {
         }
     }
 }
-

@@ -137,12 +137,10 @@
     <form name="LookupListExampleFeature" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" paginate-target="LookupExampleFeature" title="" type="list">
         <actions>
-            <set field="entityName" value="ExampleFeature"/>
-            <set field="orderBy" value="description"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
-                <field-map field-name="orderBy" env-name="orderBy"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="orderBy" value="description"/>
+                <field-map field-name="entityName" value="ExampleFeature"/>
             </service>
         </actions>
         <!--<auto-fields-entity entity-name="ExampleFeature" default-field-type="display"/>-->
