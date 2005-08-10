@@ -73,10 +73,8 @@ if (lookupFlag != null) {
     mainCond = null;
 
     // now do the filtering
-    eventDate = request.getParameter("eventDate");
-    paramList = paramList + "&productId=" + productId;
     
-
+    eventDate = request.getParameter("eventDate");
     if (eventDate != null && eventDate.length() > 8) {            
 	eventDate = eventDate.trim();
 	if (eventDate.length() < 14) eventDate = eventDate + " " + "00:00:00.000";
@@ -84,7 +82,7 @@ if (lookupFlag != null) {
         andExprs.add(new EntityExpr("eventDate", EntityOperator.GREATER_THAN, eventDate));
     }
     
-    if (productId != null) {
+    if (productId != null && productId.length() > 0) {
             paramList = paramList + "&productId=" + productId;
 	    if ( productId.length() > 0)
 		andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
