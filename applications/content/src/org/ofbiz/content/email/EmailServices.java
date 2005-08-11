@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.Session;
@@ -37,6 +38,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.xml.parsers.ParserConfigurationException;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -50,6 +53,9 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 import org.ofbiz.widget.screen.ScreenRenderer;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.LocalDispatcher;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -73,6 +79,7 @@ public class EmailServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map sendMail(DispatchContext ctx, Map context) {
+      	Map results = ServiceUtil.returnSuccess();
         // first check to see if sending mail is enabled
         String mailEnabled = UtilProperties.getPropertyValue("general.properties", "mail.notifications.enabled", "N");
         if (!"Y".equalsIgnoreCase(mailEnabled)) {
@@ -84,6 +91,9 @@ public class EmailServices {
         String sendCc = (String) context.get("sendCc");
         String sendBcc = (String) context.get("sendBcc");
         String subject = (String) context.get("subject");
+        String partyId = (String) context.get("partyId");
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         // check to see if we should redirect all mail for testing
         String redirectAddress = UtilProperties.getPropertyValue("general.properties", "mail.notifications.redirectTo");
@@ -102,6 +112,11 @@ public class EmailServices {
         String authUser = (String) context.get("authUser");
         String authPass = (String) context.get("authPass");
         String contentType = (String) context.get("contentType");
+        
+        results.put("partyId", partyId);
+        results.put("subject", subject);
+        results.put("body", body);
+        results.put("userLogin", userLogin);
         boolean useSmtpAuth = false;
 
         // define some default
@@ -163,7 +178,7 @@ public class EmailServices {
             Debug.logError(e, "Cannot send mail message", module);
             return ServiceUtil.returnError("Cannot send mail; see logs");
         }
-        return ServiceUtil.returnSuccess();
+        return results;
     }
 
     /**
@@ -210,10 +225,11 @@ public class EmailServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map sendMailFromScreen(DispatchContext dctx, Map serviceContext) {
-        String webSiteId = (String) serviceContext.get("webSiteId");
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String webSiteId = (String) serviceContext.remove("webSiteId");
         String bodyScreenUri = (String) serviceContext.remove("bodyScreenUri");
         Map bodyParameters = (Map) serviceContext.remove("bodyParameters");
-
+        String partyId = (String) bodyParameters.get("partyId");
         if (UtilValidate.isNotEmpty(webSiteId)) {
             NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
         }
@@ -249,14 +265,54 @@ public class EmailServices {
         serviceContext.put("body", body);
 
         // also expand the subject at this point, just in case it has the FlexibleStringExpander syntax in it...
-        String subject = (String) serviceContext.get("subject");
+        String subject = (String) serviceContext.remove("subject");
         subject = FlexibleStringExpander.expandString(subject, screenContext, (Locale) screenContext.get("locale"));
         serviceContext.put("subject", subject);
+        serviceContext.put("partyId", partyId);
 
         if (Debug.verboseOn()) Debug.logVerbose("sendMailFromScreen sendMail context: " + serviceContext, module);
-
-        Map result = sendMail(dctx, serviceContext);
+        Map result = ServiceUtil.returnSuccess();
+      
+        try {
+            dispatcher.runSync("sendMail", serviceContext);
+        } catch (Exception e) {
+            String errMsg = "Error send email :" + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        } 
         result.put("body", body);
         return result;
+    }
+    
+    /**
+     * Store email as communication event
+     *@param dctx The DispatchContext that this service is operating in
+     *@param serviceContext Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map storeEmailAsCommunication(DispatchContext dctx, Map serviceContext) {
+      	LocalDispatcher dispatcher = dctx.getDispatcher();
+      	String subject = (String) serviceContext.get("subject");
+        String body = (String) serviceContext.get("body");
+        String partyId = (String) serviceContext.get("partyId");
+      
+        GenericValue userLogin = (GenericValue) serviceContext.get("userLogin");
+        String partyIdFrom = (String) userLogin.get("partyId");
+        Map commEventMap = FastMap.newInstance();
+        commEventMap.put("communicationEventTypeId", "EMAIL_COMMUNICATION");
+        commEventMap.put("statusId", "COM_ENTERED");
+        commEventMap.put("contactMechTypeId", "EMAIL_ADDRESS");
+        commEventMap.put("partyIdFrom", partyIdFrom);
+        commEventMap.put("partyIdTo", partyId);
+        commEventMap.put("subject", subject);
+        commEventMap.put("content", body);
+        commEventMap.put("userLogin", userLogin);
+        try {
+        	dispatcher.runSync("createCommunicationEvent", commEventMap);
+        } catch (Exception e) {
+            Debug.logError(e, "Cannot store email as communication event", module);
+            return ServiceUtil.returnError("Cannot store email as communication event; see logs");
+        }
+        return ServiceUtil.returnSuccess();
     }
 }

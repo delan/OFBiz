@@ -45,7 +45,9 @@
             location="org.ofbiz.content.email.EmailServices" invoke="sendMail">
         <description>Send E-Mail Service</description>
         <implements service="sendMailInterface"/>
-        <attribute name="body" type="String" mode="IN" optional="false"/>
+        <attribute name="body" type="String" mode="INOUT" optional="false"/>
+        <attribute name="subject" type="String" mode="INOUT" optional="false"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="sendMailFromUrl" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="sendMailFromUrl">
@@ -89,7 +91,14 @@
         <description>Generic Template Based Notification Service</description>
         <implements service="sendNotificationInterface"/>
     </service>
-
+    <service name="storeEmailAsCommunication" engine="java"
+            location="org.ofbiz.content.email.EmailServices" invoke="storeEmailAsCommunication">
+        <description>Store email as communication </description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="false"/>
+        <attribute name="body" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <!-- WebSite Services -->
     <service name="createWebSite" default-entity-name="WebSite" engine="simple"
         location="org/ofbiz/content/website/WebSiteServices.xml" invoke="createWebSite" auth="true">

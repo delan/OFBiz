@@ -188,4 +188,21 @@
             </widgets>
         </section>
     </screen>
+    <screen name="SendOrderConfirmation">
+        <section>
+            <actions>
+                <set field="title" value="Send Order Confirmation"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/sendconfirmationemail.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderViewDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/sendconfirmationemail.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

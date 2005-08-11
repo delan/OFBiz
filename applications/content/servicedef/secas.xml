@@ -32,5 +32,10 @@
         <condition field-name="surveyId" operator="is-not-empty"/>
         <action service="createSurveyQuestionAppl" mode="sync"/>
     </eca>
-
+    
+     <eca service="sendMail" event="commit">
+    	<condition field-name="partyId" operator="is-not-empty"/>
+    	<action service="storeEmailAsCommunication" mode="sync"/>
+    </eca>
+    
 </service-eca>

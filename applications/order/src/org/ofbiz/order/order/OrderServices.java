@@ -1884,9 +1884,12 @@ public class OrderServices {
     protected static Map sendOrderNotificationScreen(DispatchContext dctx, Map context, String emailType) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericDelegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
         String orderItemSeqId = (String) context.get("orderItemSeqId");
-
+        String sendTo = (String) context.get("sendTo");
+        String sendCc = (String) context.get("sendCc");
+        String note = (String) context.get("note");
         // prepare the order information
         Map sendMap = FastMap.newInstance();
 
@@ -1962,20 +1965,36 @@ public class OrderServices {
         uiLabelMap.addBottomResourceBundle("CommonUiLabels");
 
         Map bodyParameters = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "userLogin", placingUserLogin, "uiLabelMap", uiLabelMap, "locale", locale);
+        if( placingParty!= null) {
+            bodyParameters.put("partyId", placingParty.get("partyId"));
+        }
+        bodyParameters.put("note", note);
         sendMap.put("bodyParameters", bodyParameters);
+        sendMap.put("userLogin",userLogin);
 
-        sendMap.put("subject", productStoreEmail.getString("subject"));
+        String subjectString = productStoreEmail.getString("subject");
+        sendMap.put("subject", subjectString);
+
         sendMap.put("contentType", productStoreEmail.get("contentType"));
         sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
         sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
         sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
+        if (UtilValidate.isEmail(sendTo)) {
+           sendMap.put("sendTo", sendTo);
+        } else {
         sendMap.put("sendTo", emailString);
+        }
+        if (UtilValidate.isEmail(sendCc)) {
+            sendMap.put("sendCc", sendCc);
+         } else {
+        	sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
+         }
 
         // send the notification
         Map sendResp = null;
         try {
             sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
-        } catch (GenericServiceException e) {
+        } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderServiceExceptionSeeLogs",locale));
         }
