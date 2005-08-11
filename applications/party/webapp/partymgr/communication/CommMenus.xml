@@ -23,64 +23,69 @@
  *  $Id: ProductScreens.xml 4990 2005-05-14 10:00:28Z jacopo $
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">
-  <menu default-align="right" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" name="ProfileTabBar" orientation="horizontal" type="simple">
-    <menu-item name="viewprofile" title="${uiLabelMap.PartyProfile}">
-      <link target="/viewprofile?partyId=${party.partyId}"/>
-    </menu-item>
-    <menu-item name="viewroles" title="${uiLabelMap.PartyRoles}">
-      <link target="/viewroles?partyId=${party.partyId}"/>
-    </menu-item>
-    <menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
-      <link target="/EditPartyRelationships?partyId=${party.partyId}"/>
-    </menu-item>
-    <menu-item name="viewcommunications" title="${uiLabelMap.PartyCommunications}">
-      <link target="/viewcommunications?partyId=${party.partyId}"/>
-    </menu-item>
-    <menu-item name="viewvendor" title="${uiLabelMap.PartyVendor}">
-      <link target="/viewvendor?partyId=${party.partyId}"/>
-    </menu-item>
-    <menu-item name="EditPartyTaxInfos" title="${uiLabelMap.PartyTaxInfos}">
-      <link target="/EditPartyTaxInfos?partyId=${party.partyId}"/>
-    </menu-item>
-    <menu-item name="editShoppingList" title="${uiLabelMap.PartyShoppingLists}">
-      <link target="/editShoppingList?partyId=${party.partyId}"/>
-    </menu-item>
-    <menu-item name="ViewSegmentRoles" title="${uiLabelMap.PartySegmentRoles}">
-      <link target="/ViewSegmentRoles?partyId=${party.partyId}"/>
-    </menu-item>
-    <menu-item name="EditPartyClassifications" title="${uiLabelMap.PartyClassifications}">
-      <link target="/EditPartyClassifications?partyId=${party.partyId}"/>
-    </menu-item>
-  </menu>
-  <menu default-align="right" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" name="CommEventTabBar" orientation="horizontal" type="simple">
-    <menu-item name="task" title="${uiLabelMap.PartyNewTask}">
-      <link target="/workeffort/control/task?communicationEventId=${communicationEventId}" url-mode="inter-app"/>
-    </menu-item>
-    <menu-item name="event" title="${uiLabelMap.PartyNewEvent}">
-      <link target="/workeffort/control/event?communicationEventId=${communicationEventId}" url-mode="inter-app"/>
-    </menu-item>
-    <menu-item name="viewCommunicationEvent" title="${uiLabelMap.PartyNewCommunication}">
-      <link target="/viewCommunicationEvent?partyId=${partyId}&amp;partyIdFrom=${partyId}"/>
-    </menu-item>
-    <menu-item name="viewReply" title="[Reply]">
-      <link target="/viewCommunicationEvent?partyId=${partyId}&amp;partyIdTo=${partyId}&amp;parentCommEventId=${communicationEvent.communicationEventId}&amp;origCommEventId=${communicationEvent.origCommEventId}"/>
-    </menu-item>
-    <menu-item name="viewPurposes" title="Purposes">
-      <link target="/viewCommPurposes?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
-    </menu-item>
-    <menu-item name="viewRoles" title="Roles">
-      <link target="/viewCommRoles?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
-    </menu-item>
-  </menu>
-  <menu default-align="right" default-menu-item-name="find" default-selected-style="tabButtonSelected" default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" name="CommFindTabBar" orientation="horizontal" type="simple">
-    <menu-item name="find" title="${uiLabelMap.CommonFind}">
-      <link target="/findCommunications?partyId=${partyId}&amp;communicationEventId=${communicationEventId}" url-mode="intra-app"/>
-    </menu-item>
-    <menu-item name="showall" title="${uiLabelMap.CommonShowAll}">
-      <link target="/listCommunications?partyId=${partyId}&amp;communicationEventId=${communicationEventId}" url-mode="intra-app"/>
-    </menu-item>
-    <menu-item name="pending" title="${uiLabelMap.PartyPending}">
-      <link target="/pendingCommunications?partyId=${partyId}&amp;communicationEventId=${communicationEventId}" url-mode="intra-app"/>
-    </menu-item>
-  </menu>
+    <menu name="ProfileTabBar" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" 
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
+        orientation="horizontal" type="simple">
+        <menu-item name="viewprofile" title="${uiLabelMap.PartyProfile}">
+            <link target="/viewprofile?partyId=${partyId}"/>
+        </menu-item>
+        <menu-item name="viewroles" title="${uiLabelMap.PartyRoles}">
+            <link target="/viewroles?partyId=${partyId}"/>
+        </menu-item>
+        <menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
+            <link target="/EditPartyRelationships?partyId=${partyId}"/>
+        </menu-item>
+        <menu-item name="viewcommunications" title="${uiLabelMap.PartyCommunications}">
+            <link target="/viewcommunications?partyId=${partyId}"/>
+        </menu-item>
+        <menu-item name="viewvendor" title="${uiLabelMap.PartyVendor}">
+            <link target="/viewvendor?partyId=${partyId}"/>
+        </menu-item>
+        <menu-item name="EditPartyTaxInfos" title="${uiLabelMap.PartyTaxInfos}">
+            <link target="/EditPartyTaxInfos?partyId=${partyId}"/>
+        </menu-item>
+        <menu-item name="editShoppingList" title="${uiLabelMap.PartyShoppingLists}">
+            <link target="/editShoppingList?partyId=${partyId}"/>
+        </menu-item>
+        <menu-item name="ViewSegmentRoles" title="${uiLabelMap.PartySegments}">
+            <link target="/ViewSegmentRoles?partyId=${partyId}"/>
+        </menu-item>
+        <menu-item name="EditPartyClassifications" title="${uiLabelMap.PartyClassifications}">
+            <link target="/EditPartyClassifications?partyId=${partyId}"/>
+        </menu-item>
+    </menu>
+    <menu name="CommEventTabBar" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" 
+            default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
+            orientation="horizontal" type="simple">
+        <menu-item name="task" title="${uiLabelMap.PartyNewTask}">
+            <link target="/workeffort/control/task?communicationEventId=${communicationEventId}" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="event" title="${uiLabelMap.PartyNewEvent}">
+            <link target="/workeffort/control/event?communicationEventId=${communicationEventId}" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="viewCommunicationEvent" title="${uiLabelMap.PartyNewCommunication}">
+            <link target="/viewCommunicationEvent?partyId=${partyId}&amp;partyIdFrom=${partyId}"/>
+        </menu-item>
+        <menu-item name="viewReply" title="[Reply]">
+            <link target="/viewCommunicationEvent?partyId=${partyId}&amp;partyIdTo=${partyId}&amp;parentCommEventId=${communicationEvent.communicationEventId}&amp;origCommEventId=${communicationEvent.origCommEventId}"/>
+        </menu-item>
+        <menu-item name="viewPurposes" title="Purposes">
+            <link target="/viewCommPurposes?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
+        </menu-item>
+        <menu-item name="viewRoles" title="Roles">
+            <link target="/viewCommRoles?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
+        </menu-item>
+    </menu>
+    <menu name="CommFindTabBar" default-menu-item-name="find" default-selected-style="tabButtonSelected" default-title-style="tabButton" 
+            default-tooltip-style="tabletext" default-widget-style="tabButton" orientation="horizontal" type="simple">
+        <menu-item name="find" title="${uiLabelMap.CommonFind}">
+            <link target="/findCommunications?partyId=${partyId}&amp;communicationEventId=${communicationEventId}" url-mode="intra-app"/>
+        </menu-item>
+        <menu-item name="showall" title="${uiLabelMap.CommonShowAll}">
+            <link target="/listCommunications?partyId=${partyId}&amp;communicationEventId=${communicationEventId}" url-mode="intra-app"/>
+        </menu-item>
+        <menu-item name="pending" title="${uiLabelMap.PartyPending}">
+            <link target="/pendingCommunications?partyId=${partyId}&amp;communicationEventId=${communicationEventId}" url-mode="intra-app"/>
+        </menu-item>
+    </menu>
 </menus>
