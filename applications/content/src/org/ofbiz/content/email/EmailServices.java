@@ -80,20 +80,26 @@ public class EmailServices {
      */
     public static Map sendMail(DispatchContext ctx, Map context) {
       	Map results = ServiceUtil.returnSuccess();
+        String subject = (String) context.get("subject");
+        String partyId = (String) context.get("partyId");
+        String body = (String) context.get("body");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        results.put("partyId", partyId);
+        results.put("subject", subject);
+        results.put("body", body);
+        results.put("userLogin", userLogin);
+
         // first check to see if sending mail is enabled
         String mailEnabled = UtilProperties.getPropertyValue("general.properties", "mail.notifications.enabled", "N");
         if (!"Y".equalsIgnoreCase(mailEnabled)) {
             // no error; just return as if we already processed
             Debug.logImportant("Mail notifications disabled in general.properties; here is the context with info that would have been sent: " + context, module);
-            return ServiceUtil.returnSuccess();
+            return results;
         }
         String sendTo = (String) context.get("sendTo");
         String sendCc = (String) context.get("sendCc");
         String sendBcc = (String) context.get("sendBcc");
-        String subject = (String) context.get("subject");
-        String partyId = (String) context.get("partyId");
-
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         // check to see if we should redirect all mail for testing
         String redirectAddress = UtilProperties.getPropertyValue("general.properties", "mail.notifications.redirectTo");
@@ -106,17 +112,12 @@ public class EmailServices {
         }
 
         String sendFrom = (String) context.get("sendFrom");
-        String body = (String) context.get("body");
         String sendType = (String) context.get("sendType");
         String sendVia = (String) context.get("sendVia");
         String authUser = (String) context.get("authUser");
         String authPass = (String) context.get("authPass");
         String contentType = (String) context.get("contentType");
         
-        results.put("partyId", partyId);
-        results.put("subject", subject);
-        results.put("body", body);
-        results.put("userLogin", userLogin);
         boolean useSmtpAuth = false;
 
         // define some default
