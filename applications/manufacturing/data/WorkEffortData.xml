@@ -37,6 +37,7 @@
     <StatusItem description="Running" sequenceId="03" statusCode="RUNNING" statusId="PRUN_RUNNING" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Completed" sequenceId="04" statusCode="COMPLETED" statusId="PRUN_COMPLETED" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Closed" sequenceId="05" statusCode="CLOSED" statusId="PRUN_CLOSED" statusTypeId="PRODUCTION_RUN"/>
+    <StatusItem description="Cancelled" sequenceId="10" statusCode="CANCELLED" statusId="PRUN_CANCELLED" statusTypeId="PRODUCTION_RUN"/>
 
     <!-- ProductionRun Inventory assignement status -->
     <!--  <StatusType description="WorkEffort Assignment" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/>

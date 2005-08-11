@@ -76,7 +76,8 @@
                             </div>
                             <div class="boxhead-right" align="right">
                                 <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_COMPLETED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickComplete}</a>
-                                <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_CLOSED</@ofbizUrl>" class="submenutextright">${uiLabelMap.ManufacturingQuickClose}</a>
+                                <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_CLOSED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickClose}</a>
+                                <a href="<@ofbizUrl>/cancelProductionRun?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ManufacturingCancel}</a>
                             </div>
                             <div class="boxhead-fill">&nbsp;</div>
                         </div>
