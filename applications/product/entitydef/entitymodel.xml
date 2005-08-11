@@ -1691,7 +1691,7 @@
         <field name="totalTimesViewed" type="numeric"></field>
         <field name="averageCustomerRating" type="floating-point"></field>
         <prim-key field="productId"/>
-        <relation type="one" fk-name="PROD_ATTR" rel-entity-name="Product">
+        <relation type="one" fk-name="PRODCI_PROD" rel-entity-name="Product">
             <key-map field-name="productId"/>
         </relation>
     </entity>
