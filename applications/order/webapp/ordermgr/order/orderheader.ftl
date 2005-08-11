@@ -526,13 +526,17 @@
                           <#--<#if partyContactMech.extension?exists>ext&nbsp;${partyContactMech.extension}</#if>-->
                           <#if !telecomNumber.countryCode?exists || telecomNumber.countryCode == "011" || telecomNumber.countryCode == "1">
                             <a target="_blank" href="http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8" class="buttontext">(lookup:anywho.com)</a>
-                            <a target="_blank" href="http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode}&s=&p=${telecomNumber.contactNumber}&pt=b&x=40&y=9" class="buttontext">(lookup:whitepages.com)</a>
+                           <a target="_blank" href="http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode}&s=&p=${telecomNumber.contactNumber}&pt=b&x=40&y=9" class="buttontext">(lookup:whitepages.com)</a>
                           </#if>
                         </div>
                       <#elseif contactMech.contactMechTypeId == "EMAIL_ADDRESS">
                         <div class="tabletext">
                           ${contactMech.infoString}
-                          <a href="mailto:${contactMech.infoString}" class="buttontext">(${uiLabelMap.OrderSendEmail})</a>
+                          <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>  
+                             <a href="<@ofbizUrl>/confirmationmailedit?orderId=${orderId}&partyId=${partyId}&sendTo=${contactMech.infoString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderSendConfirmationEmail}</a>
+                          <#else>
+                             <a href="mailto:${contactMech.infoString}" class="buttontext">(${uiLabelMap.OrderSendEmail})</a>
+                          </#if>
                         </div>
                       <#elseif contactMech.contactMechTypeId == "WEB_ADDRESS">
                         <div class="tabletext">

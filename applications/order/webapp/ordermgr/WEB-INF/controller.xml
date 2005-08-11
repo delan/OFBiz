@@ -123,6 +123,17 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ordertasklist"/>
     </request-map>
+    <request-map uri="confirmationmailedit">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SendConfirmationMail"/>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>
+    <request-map uri="sendconfirmationmail">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="sendOrderConfirmation"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="SendConfirmationMail"/>
+    </request-map>
 
     <!-- Order Manager Task List Requests -->
     <request-map uri="acceptassignment">
@@ -1109,6 +1120,8 @@
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="ReturnPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#ReturnPDF" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="SendConfirmationMail" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#SendOrderConfirmation"/>
 
     <!-- end of view mappings -->
 </site-conf>

@@ -40,7 +40,7 @@
 
 <div class="head1">${title}</div>
 <#if !isDemoStore?exists || isDemoStore><p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p></#if>
-
+<#if note?exists><p class="tabletext">${note}</p></#if>
 <#if orderHeader?exists>
 ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
 <br/>
