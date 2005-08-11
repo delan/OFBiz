@@ -313,6 +313,11 @@
         <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="cancelProductionRun" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="cancelProductionRun" auth="true">
+        <description>Cancels a ProductionRun.</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- MRP services -->
     <service name="runningMrp" engine="java"

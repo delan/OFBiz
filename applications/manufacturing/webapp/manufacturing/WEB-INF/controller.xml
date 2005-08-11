@@ -501,6 +501,12 @@
         <response name="success" type="view" value="ProductionRunDeclaration"/>
         <response name="error" type="view" value="ProductionRunDeclaration"/>
     </request-map>
+    <request-map uri="cancelProductionRun">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelProductionRun"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
     <request-map uri="productionRunProduce">
         <security https="true" auth="true"/>
         <event type="service" invoke="productionRunProduce"/>

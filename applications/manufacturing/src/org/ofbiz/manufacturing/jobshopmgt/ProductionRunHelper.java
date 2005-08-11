@@ -89,7 +89,7 @@ public class ProductionRunHelper {
 
     public static void getLinkedProductionRuns(GenericDelegator delegator, String productionRunId, List productionRuns)  throws GenericEntityException {
         productionRuns.add(new ProductionRun(delegator, productionRunId));
-        List linkedWorkEfforts = delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY"));
+        List linkedWorkEfforts = EntityUtil.filterByDate(delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY")));
         for (int i = 0; i < linkedWorkEfforts.size(); i++) {
             GenericValue link = (GenericValue)linkedWorkEfforts.get(i);
             getLinkedProductionRuns(delegator, link.getString("workEffortIdFrom"), productionRuns);

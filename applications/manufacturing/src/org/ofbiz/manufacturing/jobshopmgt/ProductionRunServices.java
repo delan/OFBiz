@@ -72,15 +72,61 @@ public class ProductionRunServices {
      * @return Map with the result of the service, the output parameters.
      */
     public static Map cancelProductionRun(DispatchContext ctx, Map context) {
-        /*
-         * pretty serious operation, status depending would cancel:
-         * - task
-         * - goods
-         * - inventoryItem
-         * - ...
-         * - also, we can not cancel a prun if there are other pruns which depends on it
-         */
-        return ServiceUtil.returnError("Cannot cancel productionRun , operation not yet implemented");
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        Security security = ctx.getSecurity();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        String productionRunId = (String) context.get("productionRunId");
+        
+        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        if (!productionRun.exist()){
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotExists", locale));
+        }
+        String currentStatusId = productionRun.getGenericValue().getString("currentStatusId");
+
+        // PRUN_CREATED, PRUN_DOC_PRINTED --> PRUN_CANCELLED
+        if (currentStatusId.equals("PRUN_CREATED") || currentStatusId.equals("PRUN_DOC_PRINTED")) {
+            try {
+                // First of all, make sure that there aren't production runs that depend on this one.
+                List mandatoryWorkEfforts = new ArrayList();
+                ProductionRunHelper.getLinkedProductionRuns(delegator, productionRunId, mandatoryWorkEfforts);
+                for (int i = 1; i < mandatoryWorkEfforts.size(); i++) {
+                    GenericValue mandatoryWorkEffort = ((ProductionRun)mandatoryWorkEfforts.get(i)).getGenericValue();
+                    if (!(mandatoryWorkEffort.getString("currentStatusId").equals("PRUN_CANCELLED"))) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChangedMandatoryProductionRunFound", locale));
+                    }
+                }
+                Map serviceContext = new HashMap();
+                // change the production run (header) status to PRUN_CANCELLED
+                serviceContext.put("workEffortId", productionRunId);
+                serviceContext.put("currentStatusId", "PRUN_CANCELLED");
+                serviceContext.put("userLogin", userLogin);
+                Map resultService = null;
+                resultService = dispatcher.runSync("updateWorkEffort", serviceContext);
+                // change the tasks status to PRUN_CANCELLED
+                List tasks = productionRun.getProductionRunRoutingTasks();
+                GenericValue oneTask = null;
+                String taskId = null;
+                for (int i = 0; i < tasks.size(); i++) {
+                    oneTask = (GenericValue)tasks.get(i);
+                    taskId = oneTask.getString("workEffortId");
+                    serviceContext.clear();
+                    serviceContext.put("workEffortId", taskId);
+                    serviceContext.put("currentStatusId", "PRUN_CANCELLED");
+                    serviceContext.put("userLogin", userLogin);
+                    resultService = dispatcher.runSync("updateWorkEffort", serviceContext);
+                }
+            } catch (Exception e) {
+                Debug.logError(e, "Problem calling the updateWorkEffort service", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
+            }
+            result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusChanged",UtilMisc.toMap("newStatusId", "PRUN_DOC_PRINTED"), locale));
+            return result;
+        }
+        return ServiceUtil.returnError("Cannot cancel productionRun, not in a valid status");
     }
     
     /**
