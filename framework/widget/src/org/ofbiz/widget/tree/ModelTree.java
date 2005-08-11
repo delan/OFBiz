@@ -564,7 +564,6 @@ public class ModelTree {
         }
 
         public void getChildren(Map context) {
-      
              this.subNodeValues = new ArrayList();
              Iterator nodeIter = subNodeList.iterator();
              while (nodeIter.hasNext()) {
@@ -574,24 +573,29 @@ public class ModelTree {
                  List subNodeActions = subNode.getActions();
                  //if (Debug.infoOn()) Debug.logInfo(" context.currentValue:" + context.get("currentValue"), module);
                  ModelTreeAction.runSubActions(subNodeActions, context);
-                 List dataFound = (List)context.get("dataFound");
+                 // List dataFound = (List)context.get("dataFound");
                  ListIterator dataIter =  subNode.getListIterator();
-                 while (dataIter != null && dataIter.hasNext()) {
-                     //GenericValue val = (GenericValue)dataIter.next();
-                     Map val = (Map)dataIter.next();
-                     Object [] arr = {node,val};
-                     this.subNodeValues.add(arr);
-                 }
                  if (dataIter instanceof EntityListIterator) {
+                     EntityListIterator eli = (EntityListIterator) dataIter;
+                     Map val = null;
+                     while ((val = (Map) eli.next()) != null) {
+                         Object [] arr = {node, val};
+                         this.subNodeValues.add(arr);
+                     }
                      try {
-                     ((EntityListIterator)dataIter).close();
-                    } catch(GenericEntityException e) {
-                        throw new RuntimeException(e.getMessage());
-                    }
+                         eli.close();
+                     } catch(GenericEntityException e) {
+                         Debug.logError(e, module);
+                         throw new RuntimeException(e.getMessage());
+                     }
+                 } else if (dataIter != null) {
+                     while (dataIter.hasNext()) {
+                         Map val = (Map) dataIter.next();
+                         Object [] arr = {node, val};
+                         this.subNodeValues.add(arr);
+                     }
                  }
-                 
              }
-             
              return;
         }
 

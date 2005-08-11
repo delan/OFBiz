@@ -619,7 +619,7 @@ public class ModelServiceReader {
                     param = new ModelParam();
                     param.name = name;
                 } else {
-                    Debug.logWarning("No parameter found for override parameter named: " + name, module);
+                    Debug.logWarning("No parameter found for override parameter named: " + name + " in service " + service.name, module);
                 }
             }             
             
