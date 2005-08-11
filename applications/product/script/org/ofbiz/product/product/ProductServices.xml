@@ -333,21 +333,28 @@
     </simple-method>
 
     <simple-method method-name="countProductView" short-description="Count Product View" login-required="false">
-        <env-to-env env-name="parameters.productId" to-env-name="productLookupMap.productId"/>
-        <string-to-list string="totalTimesViewed" list-name="fieldsToSelect"/>
-        <string-to-list string="isVariant" list-name="fieldsToSelect"/>
-        <find-by-primary-key entity-name="Product" map-name="productLookupMap" fields-to-select-list="fieldsToSelect" value-name="product" use-cache="false"/>
         <if-empty field-name="parameters.weight">
             <calculate field-name="parameters.weight" type="Long"><number value="1"/></calculate>
         </if-empty>
-        <calculate field-name="product.totalTimesViewed" type="Long">
-            <calcop field-name="product.totalTimesViewed" operator="add">
-                <calcop field-name="parameters.weight" operator="get"></calcop>
-            </calcop>
-        </calculate>
-        <store-value value-name="product"/>
+        <entity-one entity-name="ProductCalculatedInfo" value-name="productCalculatedInfo"/>
+        <if-empty field-name="productCalculatedInfo">
+            <!-- go ahead and create it -->
+            <make-value value-name="productCalculatedInfo" entity-name="ProductCalculatedInfo"/>
+            <env-to-env env-name="parameters.productId" to-env-name="productCalculatedInfo.productId"/>
+            <env-to-env env-name="parameters.weight" to-env-name="productCalculatedInfo.totalTimesViewed"/>
+            <create-value value-name="productCalculatedInfo"/>
+        <else>
+            <calculate field-name="productCalculatedInfo.totalTimesViewed" type="Long">
+                <calcop field-name="productCalculatedInfo.totalTimesViewed" operator="add">
+                    <calcop field-name="parameters.weight" operator="get"></calcop>
+                </calcop>
+            </calculate>
+            <store-value value-name="productCalculatedInfo"/>
+        </else>
+        </if-empty>
 
         <!-- do the same for the virtual product... -->
+        <entity-one entity-name="Product" value-name="product" use-cache="true"/>
         <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getVariantVirtualId" ret-field-name="virtualProductId">
             <field field-name="product" type="GenericValue"/>
         </call-class-method>
@@ -358,21 +365,28 @@
         </if-not-empty>
     </simple-method>
     <simple-method method-name="countProductQuantityOrdered" short-description="Count Product Quantity Ordered" login-required="true">
-        <env-to-env env-name="parameters.productId" to-env-name="productLookupMap.productId"/>
-        <string-to-list string="totalQuantityOrdered" list-name="fieldsToSelect"/>
-        <string-to-list string="isVariant" list-name="fieldsToSelect"/>
-        <find-by-primary-key entity-name="Product" map-name="productLookupMap" fields-to-select-list="fieldsToSelect" value-name="product" use-cache="false"/>
         <if-empty field-name="parameters.quantity">
             <calculate field-name="parameters.quantity" type="Double"><number value="1"/></calculate>
         </if-empty>
-        <calculate field-name="product.totalQuantityOrdered" type="Double">
-            <calcop field-name="product.totalQuantityOrdered" operator="add">
-                <calcop field-name="parameters.quantity" operator="get"></calcop>
-            </calcop>
-        </calculate>
-        <store-value value-name="product"/>
+        <entity-one entity-name="ProductCalculatedInfo" value-name="productCalculatedInfo"/>
+        <if-empty field-name="productCalculatedInfo">
+            <!-- go ahead and create it -->
+            <make-value value-name="productCalculatedInfo" entity-name="ProductCalculatedInfo"/>
+            <env-to-env env-name="parameters.productId" to-env-name="productCalculatedInfo.productId"/>
+            <env-to-env env-name="parameters.quantity" to-env-name="productCalculatedInfo.totalQuantityOrdered"/>
+            <create-value value-name="productCalculatedInfo"/>
+        <else>
+            <calculate field-name="productCalculatedInfo.totalQuantityOrdered" type="Double">
+                <calcop field-name="productCalculatedInfo.totalQuantityOrdered" operator="add">
+                    <calcop field-name="parameters.quantity" operator="get"></calcop>
+                </calcop>
+            </calculate>
+            <store-value value-name="productCalculatedInfo"/>
+        </else>
+        </if-empty>
 
         <!-- do the same for the virtual product... -->
+        <entity-one entity-name="Product" value-name="product" use-cache="true"/>
         <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getVariantVirtualId" ret-field-name="virtualProductId">
             <field field-name="product" type="GenericValue"/>
         </call-class-method>
@@ -550,16 +564,25 @@
     </simple-method>
     <simple-method method-name="updateProductWithReviewRatingAvg" short-description="Update Product with new Review Rating Avg">
     	<!-- this method is meant to be called in-line and depends in a productId parameter -->
-        <!-- update the review average on the Product entity -->
-        <make-value entity-name="Product" value-name="product"/>
-        <env-to-env env-name="productId" to-env-name="product.productId"/>
-        <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getAverageProductRating" ret-field-name="product.averageCustomerRating">
+        <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getAverageProductRating" ret-field-name="averageCustomerRating">
             <field field-name="delegator" type="org.ofbiz.entity.GenericDelegator"/>
             <field field-name="productId" type="java.lang.String"/>
         </call-class-method>
         <log level="info" message="Got new average customer rating ${product.averageCustomerRating}"/>
-        
-        <store-value value-name="product"/>
+
+        <!-- update the review average on the ProductCalculatedInfo entity -->
+        <entity-one entity-name="ProductCalculatedInfo" value-name="productCalculatedInfo"/>
+        <if-empty field-name="productCalculatedInfo">
+            <!-- go ahead and create it -->
+            <make-value value-name="productCalculatedInfo" entity-name="ProductCalculatedInfo"/>
+            <env-to-env env-name="parameters.productId" to-env-name="productCalculatedInfo.productId"/>
+            <env-to-env env-name="averageCustomerRating" to-env-name="productCalculatedInfo.averageCustomerRating"/>
+            <create-value value-name="productCalculatedInfo"/>
+        <else>
+            <env-to-env env-name="averageCustomerRating" to-env-name="productCalculatedInfo.averageCustomerRating"/>
+            <store-value value-name="productCalculatedInfo"/>
+        </else>
+        </if-empty>
     </simple-method>
     <simple-method method-name="copyToProductVariants" short-description="Updates the Product's Variants">
         <string-to-field string="copyToProductVariants" field-name="callingMethodName"/>

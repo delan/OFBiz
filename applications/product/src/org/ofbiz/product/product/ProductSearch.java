@@ -167,6 +167,8 @@ public class ProductSearch {
             this.delegator = delegator;
             this.visitId = visitId;
             dynamicViewEntity.addMemberEntity("PROD", "Product");
+            dynamicViewEntity.addMemberEntity("PRODCI", "ProductCalculatedInfo");
+            dynamicViewEntity.addViewLink("PROD", "PRODCI", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
         }
 
         public GenericDelegator getDelegator() {
@@ -1063,7 +1065,11 @@ public class ProductSearch {
         }
 
         public void setSortOrder(ProductSearchContext productSearchContext) {
-            productSearchContext.dynamicViewEntity.addAlias("PROD", fieldName);
+            if (productSearchContext.getDelegator().getModelEntity("Product").isField(fieldName)) {
+                productSearchContext.dynamicViewEntity.addAlias("PROD", fieldName);
+            } else if (productSearchContext.getDelegator().getModelEntity("ProductCalculatedInfo").isField(fieldName)) {
+                productSearchContext.dynamicViewEntity.addAlias("PRODCI", fieldName);
+            }
             if (ascending) {
                 productSearchContext.orderByList.add("+" + fieldName);
             } else {

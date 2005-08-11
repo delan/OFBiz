@@ -136,6 +136,7 @@
     <entity-group group="org.ofbiz" entity="ProductAssoc" />
     <entity-group group="org.ofbiz" entity="ProductAssocType" />
     <entity-group group="org.ofbiz" entity="ProductAttribute" />
+    <entity-group group="org.ofbiz" entity="ProductCalculatedInfo" />
     <entity-group group="org.ofbiz" entity="ProductContent" />
     <entity-group group="org.ofbiz" entity="ProductContentAndInfo" />
     <entity-group group="org.ofbiz" entity="ProductContentType" />
