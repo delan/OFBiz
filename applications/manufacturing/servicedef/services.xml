@@ -296,6 +296,17 @@
         <attribute name="addTaskTime" type="Double" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="quickRunProductionRunTask" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="quickRunProductionRunTask" auth="true">
+        <description>Quick runs a ProductionRun task to the completed status, also issuing components if necessary.</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="taskId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="quickRunAllProductionRunTasks" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="quickRunAllProductionRunTasks" auth="true">
+        <description>Quick runs all the tasks of a ProductionRun to the completed status, also issuing components if necessary.</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- MRP services -->
     <service name="runningMrp" engine="java"
