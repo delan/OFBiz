@@ -167,15 +167,15 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
 
         String style = menuItem.getAlignStyle();
-
-        String orientation = menuItem.getModelMenu().getOrientation();
-        if (orientation.equalsIgnoreCase("vertical")) style += "-vert";
-        String align = menuItem.getAlign();
-        if (align.equalsIgnoreCase("right")) style += "-right";
-        
         if (UtilValidate.isNotEmpty(style)) {
+            String orientation = menuItem.getModelMenu().getOrientation();
+            if (orientation.equalsIgnoreCase("vertical")) style += "-vert";
+            String align = menuItem.getAlign();
+            if (align.equalsIgnoreCase("right")) style += "-right";
+            
             buffer.append("<div class=\"" + style + "\">");
         }
+        
         
         Link link = menuItem.getLink();
         //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, link(0):" + link,"");
