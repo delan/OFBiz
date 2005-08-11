@@ -190,15 +190,25 @@
     
               <#-- List Of ProductionRun RoutingTasks  sub-screen -->
     <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-      <tr><td>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-            <tr>
-                <td><div class="boxhead">${uiLabelMap.ManufacturingListOfProductionRunRoutingTasks}</div></td>
-                <td align="right"><div class="tabletext">
-                </td>
-        </table>
-        ${ListProductionRunRoutingTasksWrapper.renderFormString(context)}
-      </td></tr>
+        <tr>
+            <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+                    <tr>
+                        <td><div class="boxhead">${uiLabelMap.ManufacturingListOfProductionRunRoutingTasks}</div></td>
+                        <td align="right">
+                            <div class="boxhead-right" align="right">
+                                <a href="<@ofbizUrl>/quickRunAllProductionRunTasks?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickRunAllTasks}</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                ${ListProductionRunRoutingTasksWrapper.renderFormString(context)}
+            </td>
+        </tr>
     </table>
 
         <#-- List Of ProductionRun Components  sub-screen -->

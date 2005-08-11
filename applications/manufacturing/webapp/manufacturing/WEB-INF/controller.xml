@@ -483,6 +483,18 @@
         <response name="success" type="view" value="ProductionRunDeclaration"/>
         <response name="error" type="view" value="ProductionRunDeclaration"/>
     </request-map>
+    <request-map uri="quickRunProductionRunTask">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="quickRunProductionRunTask"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
+    <request-map uri="quickRunAllProductionRunTasks">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="quickRunAllProductionRunTasks"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
     <request-map uri="productionRunProduce">
         <security https="true" auth="true"/>
         <event type="service" invoke="productionRunProduce"/>
