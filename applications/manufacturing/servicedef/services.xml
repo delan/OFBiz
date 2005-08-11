@@ -307,6 +307,12 @@
         <description>Quick runs all the tasks of a ProductionRun to the completed status, also issuing components if necessary.</description>
         <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="quickChangeProductionRunStatus" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="quickChangeProductionRunStatus" auth="true">
+        <description>Quick moves a ProductionRun to the passed in status, performing all the needed tasks in the way</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- MRP services -->
     <service name="runningMrp" engine="java"
