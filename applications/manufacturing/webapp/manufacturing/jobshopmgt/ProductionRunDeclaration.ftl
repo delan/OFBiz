@@ -70,13 +70,16 @@
             <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
                 <tr>
                     <td>
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-                            <tr>
-                                <td>
-                                    <div class="boxhead">${uiLabelMap.ManufacturingProductionRunId}: ${productionRunId}</div>
-                                </td>
-                            </tr>
-                        </table>
+                        <div class="boxtop">
+                            <div class="boxhead-left">
+                                ${uiLabelMap.ManufacturingProductionRunId}: ${productionRunId}
+                            </div>
+                            <div class="boxhead-right" align="right">
+                                <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_COMPLETED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickComplete}</a>
+                                <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_CLOSED</@ofbizUrl>" class="submenutextright">${uiLabelMap.ManufacturingQuickClose}</a>
+                            </div>
+                            <div class="boxhead-fill">&nbsp;</div>
+                        </div>
                         ${updateProductionRunWrapper.renderFormString(context)}
                     </td>
                 </tr>

@@ -524,8 +524,9 @@ public class ProductionRunServices {
             result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusChanged",UtilMisc.toMap("newStatusId", "PRUN_CLOSED"), locale));
             return result;
         }
-        
-        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
+        result.put("newStatusId", currentStatusId);
+        result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusChanged",UtilMisc.toMap("newStatusId", currentStatusId), locale));
+        return result;
     }
 
     public static Map changeProductionRunTaskStatus(DispatchContext ctx, Map context) {
@@ -683,9 +684,9 @@ public class ProductionRunServices {
             result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusChanged",UtilMisc.toMap("newStatusId", "PRUN_DOC_PRINTED"), locale));
             return result;
         }
-        
-        //return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
-        return ServiceUtil.returnSuccess();
+        result.put("newStatusId", currentStatusId);
+        result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunTaskStatusChanged",UtilMisc.toMap("newStatusId", currentStatusId), locale));
+        return result;
     }
 
     /**
@@ -1680,6 +1681,64 @@ public class ProductionRunServices {
                 Debug.logError(e, "Problem calling the quickRunProductionRunTask service", module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
             }
+        }
+        return result;
+    }
+
+    /**
+     * Quick moves a ProductionRun to the passed in status, performing all
+     * the needed tasks in the way.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
+     */
+    public static Map quickChangeProductionRunStatus(DispatchContext ctx, Map context) {
+        Map result = ServiceUtil.returnSuccess();
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        Security security = ctx.getSecurity();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        String productionRunId = (String) context.get("productionRunId");
+        String statusId = (String) context.get("statusId");
+
+        try {
+            Map serviceContext = null;
+            Map resultService = null;
+            // Change the task status to running
+            serviceContext = new HashMap();
+            if (statusId.equals("PRUN_DOC_PRINTED") ||
+                    statusId.equals("PRUN_RUNNING") ||
+                    statusId.equals("PRUN_COMPLETED") ||
+                    statusId.equals("PRUN_CLOSED")) {
+                serviceContext.put("productionRunId", productionRunId);
+                serviceContext.put("statusId", "PRUN_DOC_PRINTED");
+                serviceContext.put("userLogin", userLogin);
+                resultService = dispatcher.runSync("changeProductionRunStatus", serviceContext);
+            }
+            if (statusId.equals("PRUN_COMPLETED") ||
+                    statusId.equals("PRUN_CLOSED")) {
+                serviceContext.clear();
+                serviceContext.put("productionRunId", productionRunId);
+                serviceContext.put("userLogin", userLogin);
+                resultService = dispatcher.runSync("quickRunAllProductionRunTasks", serviceContext);
+            }
+            if (statusId.equals("PRUN_CLOSED")) {
+                // Put in warehouse the products manufactured
+                serviceContext.clear();
+                serviceContext.put("productionRunId", productionRunId);
+                serviceContext.put("userLogin", userLogin);
+                resultService = dispatcher.runSync("productionRunProduce", serviceContext);
+                serviceContext.clear();
+                serviceContext.put("productionRunId", productionRunId);
+                serviceContext.put("statusId", "PRUN_CLOSED");
+                serviceContext.put("userLogin", userLogin);
+                resultService = dispatcher.runSync("changeProductionRunStatus", serviceContext);
+            }
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem calling the changeProductionRunStatus service", module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
         }
         return result;
     }
