@@ -82,7 +82,6 @@ public class EntityExpr extends EntityCondition {
         this(new EntityFieldValue(lhs), operator, rhs);
     }
 
-    /** @deprecated */
     public EntityExpr(String lhs, boolean leftUpper, EntityComparisonOperator operator, Object rhs, boolean rightUpper) {
         if (lhs == null) {
             throw new IllegalArgumentException("The field value cannot be null");
