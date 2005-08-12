@@ -171,7 +171,7 @@ public class ProductServices {
         if (featureSet.size() == 0) {
             errMsg = UtilProperties.getMessage(resource,"productservices.problem_reading_product_features", locale);
             // ToDo DO 2004-02-23 Where should the errMsg go?
-            Debug.logWarning(errMsg, module);
+            Debug.logWarning(errMsg + " for product " + productId, module);
             //return ServiceUtil.returnError(errMsg);
         }
         Map result = ServiceUtil.returnSuccess();
