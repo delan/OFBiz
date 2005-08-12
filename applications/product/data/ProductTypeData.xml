@@ -141,7 +141,8 @@
     <ProductCategoryType description="Usage" hasTable="N" parentTypeId="" productCategoryTypeId="USAGE_CATEGORY"/>
     <ProductCategoryType description="Mix and Match" hasTable="N" parentTypeId="" productCategoryTypeId="MIXMATCH_CATEGORY"/>
     <ProductCategoryType description="Cross Sell" hasTable="N" parentTypeId="" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
-
+    <ProductCategoryType description="Tax" hasTable="N" parentTypeId="" productCategoryTypeId="TAX_CATEGORY"/>
+    
     <ProductCategoryContentType description="Description" hasTable="N" parentTypeId="" prodCatContentTypeId="DESCRIPTION"/>
     <ProductCategoryContentType description="Description - Long" hasTable="N" parentTypeId="" prodCatContentTypeId="LONG_DESCRIPTION"/>
 
