@@ -46,168 +46,158 @@ function refreshInfo() {
 }
 </script>
 
-  <form method='post' name="lookupparty" action="<@ofbizUrl>/findparty</@ofbizUrl>" onsubmit="javascript:lookupParty();">
-    <input type='hidden' name='lookupFlag' value='Y'>
-    <input type='hidden' name='hideFields' value='Y'>
-    <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-      <tr>
-        <td width='100%'>
-          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+<#assign extInfo = parameters.extInfo?default("N")>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
+            <div class="tabletext">
+              <#if parameters.hideFields?default("N") == "Y">
+                <a href="<@ofbizUrl>/findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
+              <#else>
+                <#if partyList?exists><a href="<@ofbizUrl>/findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
+                <a href="javascript:document.lookupparty.submit();" class="submenutextright">${uiLabelMap.PartyLookupParty}</a>
+              </#if>
+            </div>
+        </div>
+        <div class="boxhead">&nbsp;${uiLabelMap.PartyFindParty}</div>
+    </div>
+  <#if parameters.hideFields?default("N") != "Y">
+    <div class="screenlet-body">
+      <form method="post" name="lookupparty" action="<@ofbizUrl>/findparty</@ofbizUrl>" onsubmit="javascript:lookupParty();">
+          <input type="hidden" name="lookupFlag" value="Y">
+          <input type="hidden" name="hideFields" value="Y">
+          <table border="0" cellspacing="0" cellpadding="2">
             <tr>
-              <td><div class='boxhead'>${uiLabelMap.PartyFindParty}</div></td>
-              <td align='right'>
+              <td width="25%" align="right" nowrap><div class="tableheadtext">${uiLabelMap.PartyContactInformation} :</div></td>
+              <td width="5%">&nbsp;</td>
+              <td nowrap>
                 <div class="tabletext">
-                  <#if requestParameters.hideFields?default("N") == "Y">
-                    <a href="<@ofbizUrl>/findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
-                  <#else>
-                    <#if partyList?exists><a href="<@ofbizUrl>/findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
-                    <a href="javascript:lookupParty(true);" class="submenutextright">${uiLabelMap.PartyLookupParty}</a>
+                  <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked</#if>>${uiLabelMap.CommonNone}&nbsp;
+                  <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked</#if>>${uiLabelMap.PartyPostal}&nbsp;
+                  <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked</#if>>${uiLabelMap.PartyTelecom}&nbsp;
+                  <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked</#if>>${uiLabelMap.CommonOther}&nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyPartyId} :</div></td>
+              <td width="5%">&nbsp;</td>
+              <td><input type="text" class="inputBox" name="partyId"></td>
+            </tr>
+            <tr>
+              <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyUserLogin} :</div></td>
+              <td width="5%">&nbsp;</td>
+              <td><input type="text" class="inputBox" name="userloginId" value="${parameters.userLoginId?if_exists}"></td>
+            </tr>
+            <tr>
+              <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyLastName} :</div></td>
+              <td width="5%">&nbsp;</td>
+              <td><input type="text" class="inputBox" name="lastName" value="${parameters.lastName?if_exists}"></td>
+            </tr>
+            <tr>
+              <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyFirstName} :</div></td>
+              <td width="5%">&nbsp;</td>
+              <td><input type="text" class="inputBox" name="firstName" value="${parameters.firstName?if_exists}"></td>
+            </tr>
+            <tr>
+              <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyPartyGroupName} :</div></td>
+              <td width="5%">&nbsp;</td>
+              <td><input type="text" class="inputBox" name="groupName" value="${parameters.groupName?if_exists}"></td>
+            </tr>
+            <tr>
+              <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyRoleType} :</div></td>
+              <td width="5%">&nbsp;</td>
+              <td>
+                <select name="roleTypeId" class="selectBox">
+                  <#if currentRole?has_content>
+                    <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
+                    <option value="${currentRole.roleTypeId}">---</option>
                   </#if>
+                  <option value="ANY">${uiLabelMap.CommonAnyRoleType}</option>
+                  <#list roleTypes as roleType>
+                    <option value="${roleType.roleTypeId}">${roleType.description}</option>
+                  </#list>
+                </select>
+              </td>
+            </tr>
+            <#if extInfo == "P">
+              <tr><td colspan="3"><hr class="sepbar"></td></tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonAddress1} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td><input type="text" class="inputBox" name="address1" value="${parameters.address1?if_exists}"></td>
+              </tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonAddress2} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td><input type="text" class="inputBox" name="address2" value="${parameters.address2?if_exists}"></td>
+              </tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonCity} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td><input type="text" class="inputBox" name="city" value="${parameters.city?if_exists}"></td>
+              </tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonStateProvince} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td>
+                  <select name="stateProvinceGeoId" class="selectBox">
+                    <#if currentStateGeo?has_content>
+                      <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
+                      <option value="${currentStateGeo.geoId}">---</option>
+                    </#if>
+                    <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
+                    ${screens.render("component://common/widget/CommonScreens.xml#states")}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyPostalCode} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td><input type="text" class="inputBox" name="postalCode" value="${parameters.postalCode?if_exists}"></td>
+              </tr>
+            </#if>
+            <#if extInfo == "T">
+              <tr><td colspan="3"><hr class="sepbar"></td></tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyCountryCode} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td><input type="text" class="inputBox" name="countryCode" value="${parameters.countryCode?if_exists}"></td>
+              </tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyAreaCode} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td><input type="text" class="inputBox" name="areaCode" value="${parameters.areaCode?if_exists}"></td>
+              </tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyContactNumber} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td><input type="text" class="inputBox" name="contactNumber" value="${parameters.contactNumber?if_exists}"></td>
+              </tr>
+            </#if>
+            <#if extInfo == "O">
+              <tr><td colspan="3"><hr class="sepbar"></td></tr>
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyContactInfoList} :</div></td>
+                <td width="5%">&nbsp;</td>
+                <td><input type="text" class="inputBox" name="infoString" value="${parameters.infoString?if_exists}"></td>
+              </tr>
+            </#if>
+            <tr><td colspan="3"><hr class="sepbar"></td></tr>
+            <tr>
+              <td colspan="3" align="center">
+                <div class="tabletext">
+                  <a href="javascript:document.lookupparty.submit();" class="buttontext">[${uiLabelMap.PartyLookupParty}]</a>
+                  <a href="<@ofbizUrl>findparty?showAll=Y&amp;lookupFlag=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonShowAllRecords}]</a>
                 </div>
               </td>
             </tr>
           </table>
-          <#assign extInfo = requestParameters.extInfo?default("N")>
-          <#if requestParameters.hideFields?default("N") != "Y">
-            <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
-              <tr>
-                <td align='center' width='100%'>
-                  <table border='0' cellspacing='0' cellpadding='2'>
-                    <tr>
-                      <td width='25%' align='right' nowrap><div class='tableheadtext'>${uiLabelMap.PartyContactInfo} :</div></td>
-                      <td width='5%'>&nbsp;</td>
-                      <td nowrap>
-                        <div class="tabletext">
-                          <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked</#if>>${uiLabelMap.PartyNone}&nbsp;
-                          <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked</#if>>${uiLabelMap.PartyPostal}&nbsp;
-                          <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked</#if>>${uiLabelMap.PartyTelecom}&nbsp;
-                          <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked</#if>>${uiLabelMap.PartyOther}&nbsp;
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyId} :</div></td>
-                      <td width='5%'>&nbsp;</td>
-                      <td><input type='text' class='inputBox' name='partyId'></td>
-                    </tr>
-                    <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyUserLogin} :</div></td>
-                      <td width='5%'>&nbsp;</td>
-                      <td><input type='text' class='inputBox' name='userlogin_id' value='${requestParameters.userLoginId?if_exists}'></td>
-                    </tr>
-                    <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyLastName} :</div></td>
-                      <td width='5%'>&nbsp;</td>
-                      <td><input type='text' class='inputBox' name='lastName' value='${requestParameters.lastName?if_exists}'></td>
-                    </tr>
-                    <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyFirstName} :</div></td>
-                      <td width='5%'>&nbsp;</td>
-                      <td><input type='text' class='inputBox' name='firstName' value='${requestParameters.firstName?if_exists}'></td>
-                    </tr>
-                    <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyGroupName} :</div></td>
-                      <td width='5%'>&nbsp;</td>
-                      <td><input type='text' class='inputBox' name='groupName' value='${requestParameters.groupName?if_exists}'></td>
-                    </tr>
-                    <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyRoleType} :</div></td>
-                      <td width='5%'>&nbsp;</td>
-                      <td>
-                        <select name='roleTypeId' class='selectBox'>
-                          <#if currentRole?has_content>
-                            <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
-                            <option value="${currentRole.roleTypeId}">---</option>
-                          </#if>
-                          <option value="ANY">${uiLabelMap.CommonAnyRoleType}</option>
-                          <#list roleTypes as roleType>
-                            <option value="${roleType.roleTypeId}">${roleType.description}</option>
-                          </#list>
-                        </select>
-                      </td>
-                    </tr>
-                    <#if extInfo == 'P'>
-                      <tr><td colspan="3"><hr class="sepbar"></td></tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonAddress1} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td><input type='text' class='inputBox' name='address1' value='${requestParameters.address1?if_exists}'></td>
-                      </tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonAddress2} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td><input type='text' class='inputBox' name='address2' value='${requestParameters.address2?if_exists}'></td>
-                      </tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonCity} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td><input type='text' class='inputBox' name='city' value='${requestParameters.city?if_exists}'></td>
-                      </tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonStateProvince} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td>
-                          <select name='stateProvinceGeoId' class='selectBox'>
-                            <#if currentStateGeo?has_content>
-                              <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
-                              <option value="${currentStateGeo.geoId}">---</option>
-                            </#if>
-                            <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
-                            ${screens.render("component://common/widget/CommonScreens.xml#states")}
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPostalCode} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td><input type='text' class='inputBox' name='postalCode' value='${requestParameters.postalCode?if_exists}'></td>
-                      </tr>
-                    </#if>
-                    <#if extInfo == 'T'>
-                      <tr><td colspan="3"><hr class="sepbar"></td></tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyCountryCode} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td><input type='text' class='inputBox' name='countryCode' value='${requestParameters.countryCode?if_exists}'></td>
-                      </tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyAreaCode} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td><input type='text' class='inputBox' name='areaCode' value='${requestParameters.areaCode?if_exists}'></td>
-                      </tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyContactNumber} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td><input type='text' class='inputBox' name='contactNumber' value='${requestParameters.contactNumber?if_exists}'></td>
-                      </tr>
-                    </#if>
-                    <#if extInfo == 'O'>
-                      <tr><td colspan="3"><hr class="sepbar"></td></tr>
-                      <tr>
-                        <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyContactInfoList} :</div></td>
-                        <td width='5%'>&nbsp;</td>
-                        <td><input type='text' class='inputBox' name='infoString' value='${requestParameters.infoString?if_exists}'></td>
-                      </tr>
-                    </#if>
-                    <tr><td colspan="3"><hr class="sepbar"></td></tr>
-                    <tr>
-                      <td width='25%' align='right'>&nbsp;</td>
-                      <td width='5%'>&nbsp;</td>
-                      <td>
-                        <div class="tabletext">
-                          <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupParty(true);">&nbsp;${uiLabelMap.CommonShowAllRecords}
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </#if>
-        </td>
-      </tr>
-    </table>
-    <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.lookupparty.submit();">
-  </form>
+          <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.lookupparty.submit();">
+      </form>
+    </div>
+  </#if>
+</div>
+
 <#if parameters.hideFields?default("N") != "Y">
   <script language="JavaScript" type="text/javascript">
     <!--//
@@ -217,17 +207,17 @@ function refreshInfo() {
 </#if>
   <#if partyList?exists>
     <br/>
-    <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
       <tr>
-        <td width='100%'>
-          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <td width="100%">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
             <tr>
               <td width="50%"><div class="boxhead">${uiLabelMap.PartyPartiesFound}</div></td>
               <td width="50%">
                  <div class="boxhead" align="right">
                   <#if (partyListSize > 0)>
                     <#if (viewIndex > 1)>
-                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
+                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                     <#else>
                       <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                     </#if>
@@ -235,7 +225,7 @@ function refreshInfo() {
                       <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${partyListSize}</span>
                     </#if>
                     <#if (partyListSize > highIndex)>
-                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                     <#else>
                       <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                     </#if>
@@ -265,7 +255,7 @@ function refreshInfo() {
               <#assign rowClass = "viewManyTR2">
               <#list partyList as partyRow>
                 <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
-                <tr class='${rowClass}'>
+                <tr class="${rowClass}">
                   <td><a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${partyRow.partyId}</a></td>
                   <td>
                     <div class="tabletext">
@@ -315,12 +305,12 @@ function refreshInfo() {
                   <td align="right">
                     <!-- this is all on one line so that no break will be inserted -->
                     <div class="tabletext"><nobr>
-                      <a href='<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDetails}]</a>&nbsp;
+                      <a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a>&nbsp;
                       <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-                        <a href='/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyRow.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
+                        <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyRow.partyId + externalKeyParam}" class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
                       </#if>
                       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-                        <a href='/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>&nbsp;
+                        <a href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>&nbsp;
                       </#if>
                     </nobr></div>
                   </td>
@@ -334,15 +324,15 @@ function refreshInfo() {
               </#list>
             <#else>
               <tr>
-                <td colspan='5'>
-                  <span class='head3'>${uiLabelMap.PartyNoPartiesFound}</span>
+                <td colspan="5">
+                  <span class="head3">${uiLabelMap.PartyNoPartiesFound}</span>
                   &nbsp;&nbsp;<a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="buttontext">[Create New]</a>
                 </td>
               </tr>
             </#if>
             <#if lookupErrorMessage?exists>
               <tr>
-                <td colspan='5'><div class="head3">${lookupErrorMessage}</div></td>
+                <td colspan="5"><div class="head3">${lookupErrorMessage}</div></td>
               </tr>
             </#if>
           </table>
