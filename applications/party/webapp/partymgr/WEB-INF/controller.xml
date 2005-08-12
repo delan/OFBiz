@@ -644,7 +644,7 @@
     </request-map>
     <request-map uri="viewCommunicationEvent">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewCommunication"/>
+        <response name="success" type="view" value="editCommunication"/>
     </request-map>
     <request-map uri="viewCommunication">
         <security https="true" auth="true"/>
