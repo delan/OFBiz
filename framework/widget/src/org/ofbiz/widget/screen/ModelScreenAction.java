@@ -418,13 +418,19 @@ public abstract class ModelScreenAction {
             }
             
             String autoFieldMapString = this.autoFieldMapExdr.expandString(context);
-            boolean autoFieldMapBool = !"false".equals(autoFieldMapString);
             
             try {
                 Map serviceContext = null;
-                if (autoFieldMapBool) {
+                if ("true".equals(autoFieldMapString)) {
                     serviceContext = this.modelScreen.getDispatcher(context).getDispatchContext().makeValidContext(serviceNameExpanded, ModelService.IN_PARAM, context);
-                } else {
+                } else if (UtilValidate.isNotEmpty(autoFieldMapString) && !"false".equals(autoFieldMapString)) {
+                    FlexibleMapAccessor fieldFma = new FlexibleMapAccessor(autoFieldMapString);
+                    Map autoFieldMap = (Map) fieldFma.get(context);
+                    if (autoFieldMap != null) {
+                        serviceContext = this.modelScreen.getDispatcher(context).getDispatchContext().makeValidContext(serviceNameExpanded, ModelService.IN_PARAM, autoFieldMap);
+                    }
+                } 
+                if (serviceContext == null) {
                     serviceContext = FastMap.newInstance();
                 }
                 
