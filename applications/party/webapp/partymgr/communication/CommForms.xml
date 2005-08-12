@@ -82,6 +82,60 @@
       <submit button-type="button"/>
     </field>
   </form>
+  <form default-map-name="communicationEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" name="viewCommunication" target="editCommunication" title="" type="single">
+    <alt-target target="createCommunicationEvent" use-when="communicationEvent==null"/>
+    <field name="communicationEventId" use-when="communicationEvent != null">
+      <display/>
+    </field>
+    <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} From">
+      <display/>
+    </field>
+    <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} To">
+      <display/>
+    </field>
+    <field name="statusId" use-when="statusId==null">
+      <display/>
+    </field>
+    <field name="statusId" use-when="statusId!=null">
+      <display/>
+    </field>
+    <field name="contactMechTypeId" use-when="commEventContactMechType!=null&amp;&amp;parentCommEventContactMechType==null">
+      <display/>
+    </field>
+    <field name="contactMechTypeId" use-when="commEventContactMechType==null&amp;&amp;parentCommEventContactMechType!=null">
+      <display/>
+    </field>
+    <field name="contactMechTypeId" use-when="commEventContactMechType==null&amp;&amp;parentCommEventContactMechType==null">
+      <display/>
+    </field>
+    <field name="roleTypeIdFrom" use-when="commEventRoleTypeIdFrom!=null">
+      <display/>
+    </field>
+    <field name="roleTypeIdTo" use-when="commEventRoleTypeIdTo!=null">
+      <display/>
+    </field>
+    <field name="custRequestId" position="1">
+      <display/>
+    </field>
+    <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}">
+      <display/>
+    </field>
+    <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}">
+      <display/>
+    </field>
+    <field map-name="subjectMap" name="subject">
+      <display/>
+    </field>
+    <field map-name="subjectMap" name="note" title="${uiLabelMap.CommonNote}">
+      <display/>
+    </field>
+    <field name="content" title="${uiLabelMap.CommonContent}">
+      <text size="1"/>
+    </field>
+    <field name="submitButton" title="${uiLabelMap.CommonEdit}">
+      <submit button-type="button"/>
+    </field>
+  </form>
   <form default-map-name="communicationEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" name="editCommEvent" target="updateCommunicationEvent" title="" type="single">
     <alt-target target="createCommunicationEvent" use-when="communicationEvent==null"/>
     <field name="communicationEventId" use-when="communicationEvent != null">
@@ -146,12 +200,6 @@
     </field>
     <field name="custRequestId" position="1">
       <lookup size="20" target-form-name="LookupCustRequest"/>
-    </field>
-    <field name="newCustomerRequest" position="2" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;custRequestId&quot;)==null">
-      <hyperlink target="/workeffort/control/request?partyId=${partyId}&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;subject=${communicationEvent.subject}${externalKeyParam}" target-type="inter-app"/>
-    </field>
-    <field name="newCustomerRequest" position="2" use-when="commEventContactMechType==null&amp;&amp;parentCommEventContactMechType==null">
-      <hyperlink target="/workeffort/control/request?custRequestId=${communicationEvent.custRequestId}${externalKeyParam}" target-type="inter-app"/>
     </field>
     <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}">
       <date-time/>
@@ -255,7 +303,7 @@
   </form>
   <form default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" name="listCommEvents" title="" type="list">
     <field name="communicationEventId">
-      <hyperlink description="${communicationEventId}" target="editCommunication?communicationEventId=${communicationEventId}" target-type="intra-app"/>
+      <hyperlink description="${communicationEventId}" target="viewCommunication?communicationEventId=${communicationEventId}" target-type="intra-app"/>
     </field>
     <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} From">
       <display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/>

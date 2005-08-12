@@ -198,6 +198,105 @@
       </widgets>
     </section>
   </screen>
+  <screen name="viewCommunication">
+    <section>
+      <actions>
+        <property-map map-name="uiLabelMap" resource="PartyUiLabels"/>
+        <set field="titleProperty" value="PageTitleViewCommunication"/>
+        <set field="headerItem" value="comm"/>
+        <set field="tabButtonItem" value="viewCommunication"/>
+        <set field="communicationEventId" from-field="parameters.communicationEventId"/>
+        <set field="parentCommEventId" from-field="parameters.parentCommEventId"/>
+        <set default-value="${userLogin.partyId}" field="partyId" value="${parameters.partyId}"/>
+        <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyId}"/>
+        <set default-value="${userLogin.partyId}" field="partyIdTo" value="${parameters.partyId}"/>
+        <entity-one entity-name="Party" use-cache="true" value-name="party"/>
+        <entity-one entity-name="Person" use-cache="true" value-name="lookupPerson"/>
+        <entity-one entity-name="CommunicationEvent" value-name="communicationEvent"/>
+        <entity-one entity-name="CommunicationEvent" value-name="parentEvent">
+          <field-map env-name="parentCommEventId" field-name="communicationEventId"/>
+        </entity-one>
+        <entity-one entity-name="StatusItem" value-name="commEventStatusItem">
+          <field-map env-name="communicationEvent.statusId" field-name="statusId"/>
+        </entity-one>
+        <set field="COMM_EVENT" value="COM_EVENT_STATUS"/>
+        <entity-one entity-name="ContactMechType" value-name="commEventContactMechType">
+          <field-map env-name="communicationEvent.contactMechTypeId" field-name="contactMechTypeId"/>
+        </entity-one>
+        <entity-one entity-name="ContactMechType" value-name="parentEventContactMechType">
+          <field-map env-name="parentEvent.contactMechTypeId" field-name="contactMechTypeId"/>
+        </entity-one>
+        <entity-one entity-name="RoleType" value-name="fromRoleType">
+          <field-map env-name="communicationEvent.roleTypeIdFrom" field-name="roleTypeId"/>
+        </entity-one>
+        <entity-one entity-name="RoleType" value-name="toRoleType">
+          <field-map env-name="communicationEvent.roleTypeIdTo" field-name="roleTypeId"/>
+        </entity-one>
+        <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/editCommunication.bsh"/>
+      </actions>
+      <widgets>
+        <section>
+          <condition>
+            <and>
+              <not>
+                <if-empty field-name="communicationEvent.statusId"/>
+              </not>
+              <or>
+                <if-compare field-name="communicationEvent.statusId" operator="equals" type="String" value="COM_COMPLETE"/>
+                <if-compare field-name="communicationEvent.statusId" operator="equals" type="String" value="COM_RESOLVED"/>
+                <if-compare field-name="communicationEvent.statusId" operator="equals" type="String" value="COM_REFERRED"/>
+              </or>
+            </and>
+          </condition>
+          <widgets/>
+        </section>
+        <decorator-screen location="component://party/widget/partymgr/CommonScreens.xml" name="main-decorator">
+          <decorator-section name="body">
+            <section>
+              <!-- do check for PARTYMGR, _VIEW permission -->
+              <condition>
+                <if-has-permission action="_VIEW" permission="PARTYMGR"/>
+              </condition>
+              <widgets>
+                <section>
+                  <condition>
+                    <not>
+                      <if-empty field-name="partyId"/>
+                    </not>
+                  </condition>
+                  <widgets>
+                    <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
+                  </widgets>
+                </section>
+                <section>
+                  <condition>
+                    <not>
+                      <if-empty field-name="communicationEvent"/>
+                    </not>
+                  </condition>
+                  <widgets>
+                    <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
+                    <label style="head1" text="${uiLabelMap.PartyViewCommunicationEvent}"/>
+                  </widgets>
+                  <fail-widgets>
+                    <label style="head1" text="${uiLabelMap.PartyNewCommunication}"/>
+                  </fail-widgets>
+                </section>
+                <section>
+                  <widgets>
+                    <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="viewCommunication"/>
+                  </widgets>
+                </section>
+              </widgets>
+              <fail-widgets>
+                <label style="head3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+              </fail-widgets>
+            </section>
+          </decorator-section>
+        </decorator-screen>
+      </widgets>
+    </section>
+  </screen>
   <screen name="editCommunication">
     <section>
       <actions>

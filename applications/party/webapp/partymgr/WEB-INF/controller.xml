@@ -644,7 +644,11 @@
     </request-map>
     <request-map uri="viewCommunicationEvent">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="viewCommunication"/>
+    </request-map>
+    <request-map uri="viewCommunication">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewCommunication"/>
     </request-map>
     <request-map uri="editCommunication">
         <security https="true" auth="true"/>
@@ -653,14 +657,14 @@
     <request-map uri="createCommunicationEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEvent"/>
-        <response name="success" type="view" value="editCommunication"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="viewCommunication"/>
+        <response name="success" type="view" value="viewCommunication"/>
     </request-map>
     <request-map uri="updateCommunicationEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateCommunicationEvent"/>
-        <response name="success" type="view" value="editCommunication"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="viewCommunication"/>
+        <response name="success" type="view" value="viewCommunication"/>
     </request-map>
     <request-map uri="viewCommPurposes">
         <security https="true" auth="true"/>
@@ -848,6 +852,7 @@
     <view-map name="listLookupCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listLookupCommunications"/>
     <view-map name="findCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#findCommunications"/>
     <view-map name="editCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#editCommunication"/>
+    <view-map name="viewCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#viewCommunication"/>
     <view-map name="viewCommPurposes" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#viewCommPurposes"/>
     <view-map name="viewCommRoles" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#viewCommRoles"/>
     
