@@ -108,7 +108,7 @@
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="ProductPrice" list-name="productPrices">
-                    <field-map env-name="productId"/>
+                    <field-map field-name="productId"/>
                     <order-by field-name="productStoreGroupId"/>
                     <order-by field-name="productPriceTypeId"/>
                     <order-by field-name="currencyUomId"/>
@@ -165,7 +165,7 @@
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="ProductConfig" list-name="productConfigs">
-                    <field-map env-name="productId"/>
+                    <field-map field-name="productId"/>
                     <order-by field-name="sequenceNum"/>
                     <order-by field-name="fromDate"/>
                 </entity-and>
@@ -262,17 +262,17 @@
                 
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="ProductAssoc" list-name="components">
-                    <field-map env-name="productId"/>
-                    <field-map env-name="productAssocTypeId"/>
+                    <field-map field-name="productId"/>
+                    <field-map field-name="productAssocTypeId"/>
                     <order-by field-name="sequenceNum"/>
                 </entity-and>
                 <entity-and entity-name="ProductAssoc" list-name="parents">
                     <field-map env-name="productId" field-name="productIdTo"/>
-                    <field-map env-name="productAssocTypeId"/>
+                    <field-map field-name="productAssocTypeId"/>
                 </entity-and>
                 <entity-and entity-name="WorkEffortGoodStandard" list-name="routings">
-                    <field-map env-name="productId"/>
-                    <field-map env-name="statusId"/>
+                    <field-map field-name="productId"/>
+                    <field-map field-name="statusId"/>
                 </entity-and>
             </actions>
             <widgets>
@@ -549,7 +549,7 @@
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="SupplierProduct" list-name="productSuppliers">
-                    <field-map env-name="productId"/>
+                    <field-map field-name="productId"/>
                 </entity-and>
                 <entity-one entity-name="SupplierProduct" value-name="supplierProduct" auto-field-map="true"/>
             </actions>
@@ -621,7 +621,7 @@
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="ProductAttribute" list-name="productAttributes">
-                    <field-map env-name="productId"/>
+                    <field-map field-name="productId"/>
                     <order-by field-name="attrType"/>
                     <order-by field-name="attrName"/>
                 </entity-and>
@@ -669,7 +669,7 @@
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="ProductAssoc" list-name="productAssocs">
-                    <field-map env-name="productId"/>
+                    <field-map field-name="productId"/>
                     <order-by field-name="productAssocTypeId"/>
                 </entity-and>
                 <entity-and entity-name="ProductAssoc" list-name="productAssocsTo">
