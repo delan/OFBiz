@@ -42,6 +42,7 @@ import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -76,8 +77,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     public static NumberFormat nf = NumberFormat.getInstance();
     static {
-        nf.setMaximumFractionDigits( 100 );
-        nf.setGroupingUsed( false );
+        nf.setMaximumFractionDigits(100);
+        nf.setGroupingUsed(false);
     }
                 
     /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
@@ -327,7 +328,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         return containsPrimaryKey(false);
     }
     public boolean containsPrimaryKey(boolean requireValue) {
-        TreeSet fieldKeys = new TreeSet(fields.keySet());
+        //TreeSet fieldKeys = new TreeSet(fields.keySet());
         Iterator pkIter = getModelEntity().getPksIterator();
         while (pkIter.hasNext()) {
             ModelField curPk = (ModelField) pkIter.next();
@@ -369,25 +370,32 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", must be one of: " + getModelEntity().fieldNameString());
         }
         if (value != null || setIfNull) {
+            ModelFieldType type = null;
+            try {
+                type = getDelegator().getEntityFieldType(getModelEntity(), modelField.getType());
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+            if (type == null) {
+                throw new IllegalArgumentException("Type " + modelField.getType() + " not found");
+            }
+
             if (value instanceof Boolean) {
                 // if this is a Boolean check to see if we should convert from an indicator or just leave as is
-                ModelFieldType type = null;
-
-                try {
-                    type = getDelegator().getEntityFieldType(getModelEntity(), modelField.getType());
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e, module);
-                }
-                if (type == null) throw new IllegalArgumentException("Type " + modelField.getType() + " not found");
-
                 try {
                     int fieldType = SqlJdbcUtil.getType(type.getJavaType());
-
                     if (fieldType != 9) {
                         value = ((Boolean) value).booleanValue() ? "Y" : "N";
                     }
                 } catch (GenericNotImplementedException e) {
                     throw new IllegalArgumentException(e.getMessage());
+                }
+            } else if (value != null) {
+                // make sure the type matches the field Java type
+                if (!ObjectType.instanceOf(value, type.getJavaType())) {
+                    String errMsg = "In entity field set the value passed in [" + value.getClass().getName() + "] is not compatible with the Java type of the field [" + type.getJavaType() + "]";
+                    // eventually we should do this, but for now we'll do a "soft" failure: throw new IllegalArgumentException(errMsg);
+                    Debug.logError(errMsg, module);
                 }
             }
             Object old = fields.put(name, value);
