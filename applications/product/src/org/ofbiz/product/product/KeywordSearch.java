@@ -166,6 +166,13 @@ public class KeywordSearch {
                 if (anyPrefix) strSb.append('%');
                 strSb.append(token);
                 if (anySuffix) strSb.append('%');
+                // replace all %% with %
+                int dblPercIdx = -1;
+                while ((dblPercIdx = strSb.indexOf("%%")) >= 0) {
+                    //Debug.logInfo("before strSb: " + strSb, module);
+                    strSb.replace(dblPercIdx, dblPercIdx+2, "%");
+                    //Debug.logInfo("after strSb: " + strSb, module);
+                }
                 token = strSb.toString();
             }
             
