@@ -83,14 +83,13 @@ public class ProductEvents {
      * @return String specifying the exit status of this event
      */
     public static String updateProductKeyword(HttpServletRequest request, HttpServletResponse response) {
-        String errMsg = "";
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
         String updateMode = request.getParameter("UPDATE_MODE");
 
         if (updateMode == null || updateMode.length() <= 0) {
-            errMsg = UtilProperties.getMessage(resource,"productevents.updatemode_not_specified", UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource,"productevents.updatemode_not_specified", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[ProductEvents.updateProductKeyword] Update Mode was not specified, but is required", module);
             return "error";
@@ -99,31 +98,41 @@ public class ProductEvents {
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
             Map messageMap = UtilMisc.toMap("updateMode", updateMode);
-            errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
         String productId = request.getParameter("PRODUCT_ID");
         String keyword = request.getParameter("KEYWORD");
-        String relevancyWeight = request.getParameter("relevancyWeight");
-
-        if (!UtilValidate.isNotEmpty(productId))
-            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.product_ID_missing", UtilHttp.getLocale(request)));
-        if (!UtilValidate.isNotEmpty(keyword))
-            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.keyword_missing", UtilHttp.getLocale(request)));
-        if (errMsg.length() > 0) {
-            errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
-            errMsg += ("</b><br/><ul>" + errMsg + "</ul>");
+        String relevancyWeightString = request.getParameter("relevancyWeight");
+        Long relevancyWeight = null;
+        try {
+            relevancyWeight = Long.valueOf(relevancyWeightString);
+        } catch (NumberFormatException e) {
+            String errMsg = "Bad format for relevancyWeight [" + relevancyWeightString + "]: " + e.toString();
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
+
+        String errMsgTemp = "";
+        if (!UtilValidate.isNotEmpty(productId)) {
+            errMsgTemp += ("<li>" + UtilProperties.getMessage(resource,"productevents.product_ID_missing", UtilHttp.getLocale(request)));
+        }
+        if (!UtilValidate.isNotEmpty(keyword)) {
+            errMsgTemp += ("<li>" + UtilProperties.getMessage(resource,"productevents.keyword_missing", UtilHttp.getLocale(request)));
+        }
+        if (errMsgTemp.length() > 0) {
+            errMsgTemp += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
+            errMsgTemp += ("</b><br/><ul>" + errMsgTemp + "</ul>");
+            request.setAttribute("_ERROR_MESSAGE_", errMsgTemp);
             return "error";
         }
 
         if (updateMode.equals("CREATE")) {
             keyword = keyword.toLowerCase();
 
-            GenericValue productKeyword =
-                delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "relevancyWeight", relevancyWeight));
+            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "relevancyWeight", relevancyWeight));
             GenericValue newValue = null;
 
             try {
@@ -134,7 +143,7 @@ public class ProductEvents {
             }
 
             if (newValue != null) {
-                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_productkeyword_entry_exists", UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_productkeyword_entry_exists", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
@@ -146,7 +155,7 @@ public class ProductEvents {
                 productKeyword = null;
             }
             if (productKeyword == null) {
-                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_productkeyword_entry_write", UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_productkeyword_entry_write", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
@@ -160,21 +169,21 @@ public class ProductEvents {
                 productKeyword = null;
             }
             if (productKeyword == null) {
-                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_productkeyword_entry_notexists", UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_productkeyword_entry_notexists", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
             try {
                 productKeyword.remove();
             } catch (GenericEntityException e) {
-                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_productkeyword_entry_writeerror", UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_productkeyword_entry_writeerror", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateProductKeyword] Could not remove product-keyword (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {
             Map messageMap = UtilMisc.toMap("updateMode", updateMode);
-            errMsg = UtilProperties.getMessage(resource,"productevents.specified_update_mode_not_supported", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource,"productevents.specified_update_mode_not_supported", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
