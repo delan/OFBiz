@@ -119,6 +119,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         productionRunData.put("estimatedStartDate", productionRun.getEstimatedStartDate());
         productionRunData.put("actualStartDate", productionRun.getGenericValue().getTimestamp("actualStartDate"));
         productionRunData.put("actualCompletionDate", productionRun.getGenericValue().getTimestamp("actualCompletionDate"));
+        productionRunData.put("currentStatusId", productionRun.getGenericValue().getString("currentStatusId"));
         actionForm = request.getParameter("actionForm");
         if (UtilValidate.isEmpty(actionForm)) {
             actionForm = "beforeActionProductionRun";

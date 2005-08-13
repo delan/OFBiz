@@ -223,6 +223,9 @@
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <display description="[${productionRunData.productId}]/${productionRunData.productName}"/>
         </field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId"/>
+        </field>
         <field name="quantityToProduce" title="${uiLabelMap.ManufacturingQuantityToProduce}">
             <display/>
         </field>

@@ -75,9 +75,28 @@
                                 ${uiLabelMap.ManufacturingProductionRunId}: ${productionRunId}
                             </div>
                             <div class="boxhead-right" align="right">
-                                <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_COMPLETED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickComplete}</a>
-                                <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_CLOSED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickClose}</a>
-                                <a href="<@ofbizUrl>/cancelProductionRun?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ManufacturingCancel}</a>
+                                <#assign currentStatus = productionRun.getString("currentStatusId")/>
+                                <span class="submenutextdisabled">${uiLabelMap.ManufacturingConfirmProductionRun}</span>
+                                <#if currentStatus == "PRUN_COMPLETED">
+                                    <a href="<@ofbizUrl>/changeProductionRunStatusToClosed?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingProductionRunClose}</a>
+                                <#else>
+                                    <span class="submenutextdisabled">${uiLabelMap.ManufacturingProductionRunClose}</span>
+                                </#if>
+                                <#if currentStatus == "PRUN_CANCELLED" || currentStatus == "PRUN_COMPLETED" || currentStatus == "PRUN_CLOSED">
+                                    <span class="submenutextdisabled">${uiLabelMap.ManufacturingQuickComplete}</span>
+                                <#else>
+                                    <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_COMPLETED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickComplete}</a>
+                                </#if>
+                                <#if currentStatus == "PRUN_CANCELLED" || currentStatus == "PRUN_CLOSED">
+                                    <span class="submenutextdisabled">${uiLabelMap.ManufacturingQuickClose}</span>
+                                <#else>
+                                    <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_CLOSED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickClose}</a>
+                                </#if>
+                                <#if currentStatus == "PRUN_CANCELLED" || currentStatus == "PRUN_COMPLETED" || currentStatus == "PRUN_CLOSED">
+                                    <span class="submenutextdisabled">${uiLabelMap.ManufacturingCancel}</span>
+                                <#else>
+                                    <a href="<@ofbizUrl>/cancelProductionRun?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ManufacturingCancel}</a>
+                                </#if>
                             </div>
                             <div class="boxhead-fill">&nbsp;</div>
                         </div>
@@ -127,13 +146,6 @@
                                 </td>
                             </tr>
                         </table>
-                    </td>
-                </tr>
-                </#if>
-                <#if productionRun.getString("currentStatusId") == "PRUN_COMPLETED">
-                <tr>
-                    <td align="center">
-                        <a href="<@ofbizUrl>/changeProductionRunStatusToClosed?productionRunId=${productionRunId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductionRunClose}]</a>
                     </td>
                 </tr>
                 </#if>
