@@ -48,8 +48,8 @@
     <WorkEffortAssoc workEffortIdFrom="ROUT01" workEffortIdTo="TASK03" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="30" fromDate="2004-09-24 15:09:55.279"/>
 
     <ProductCategory productCategoryId="PC-100" productCategoryTypeId="CATALOG_CATEGORY" description="Configurable PCs"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="PC-100"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PC-100" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="PC-100"/>
+    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
 </entity-engine-xml>
-
