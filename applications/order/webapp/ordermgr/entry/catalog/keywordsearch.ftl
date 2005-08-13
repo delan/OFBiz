@@ -62,7 +62,6 @@
 
 <#if productIds?has_content>
     <div class="productsummary-container">
-        <#assign listIndex = lowIndex>
         <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
             ${setRequestAttribute("optProductId", productId)}
             ${setRequestAttribute("listIndex", productId_index)}
@@ -95,4 +94,3 @@
         </b>
     </div>
 </#if>
-

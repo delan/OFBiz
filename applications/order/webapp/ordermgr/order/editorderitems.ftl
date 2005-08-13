@@ -239,8 +239,8 @@
           <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">
             <tr>
               <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>/addOrderAdjustment?${paramString}</@ofbizUrl>">
-                <input type="hidden" name="orderId" value="${orderId}">
-                <input type="hidden" name="comments" value="Added manually by "${userLogin.userLoginId}"">
+                <input type="hidden" name="orderId" value="${orderId}"/>
+                <input type="hidden" name="comments" value="Added manually by [${userLogin.userLoginId}]"/>
                 <td align="right" colspan="5">
                   <select name="orderAdjustmentTypeId" class="selectBox">
                     <#list orderAdjustmentTypes as type>
@@ -249,7 +249,7 @@
                   </select>
                 </td>
                 <td align="right">
-                  <input type="text" name="amount" size="6" value="0.00" class="inputBox">
+                  <input type="text" name="amount" size="6" value="0.00" class="inputBox"/>
                 </td>
                 <td align="right" colspan="2">
                   <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">[${uiLabelMap.CommonAdd}]</a>
