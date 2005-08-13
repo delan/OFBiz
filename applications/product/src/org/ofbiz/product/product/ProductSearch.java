@@ -168,7 +168,7 @@ public class ProductSearch {
             this.visitId = visitId;
             dynamicViewEntity.addMemberEntity("PROD", "Product");
             dynamicViewEntity.addMemberEntity("PRODCI", "ProductCalculatedInfo");
-            dynamicViewEntity.addViewLink("PROD", "PRODCI", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+            dynamicViewEntity.addViewLink("PROD", "PRODCI", Boolean.TRUE, ModelKeyMap.makeKeyMapList("productId"));
         }
 
         public GenericDelegator getDelegator() {
@@ -370,7 +370,7 @@ public class ProductSearch {
                     hasResults = true;
                 }
                 if (resultOffset != null && resultOffset.intValue() > 1) {
-                    Debug.logInfo("Before relative, current index=" + eli.currentIndex(), module);
+                    if (Debug.infoOn()) Debug.logInfo("Before relative, current index=" + eli.currentIndex(), module);
                     hasResults = eli.relative(resultOffset.intValue() - 1);
                     initialResult = null;
                 }
