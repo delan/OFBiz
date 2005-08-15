@@ -204,7 +204,24 @@
     <StatusItem description="Complete" sequenceId="20" statusCode="COMPLETE" statusId="COM_COMPLETE" statusTypeId="COM_EVENT_STATUS"/>
     <StatusItem description="Resolved" sequenceId="21" statusCode="RESOLVED" statusId="COM_RESOLVED" statusTypeId="COM_EVENT_STATUS"/>
     <StatusItem description="Referred" sequenceId="22" statusCode="REFERRED" statusId="COM_REFERRED" statusTypeId="COM_EVENT_STATUS"/>
-
+    <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="COM_CANCELLED" statusTypeId="COM_EVENT_STATUS"/>
+    <StatusValidChange condition="" statusId="COM_ENTERED" statusIdTo="COM_PENDING" transitionName="Set Pending"/>
+    <StatusValidChange condition="" statusId="COM_PENDING" statusIdTo="COM_READ" transitionName="Mark Read"/>
+    <StatusValidChange condition="" statusId="COM_PENDING" statusIdTo="COM_IN_PROGRESS" transitionName="Set In Progress"/>
+    <StatusValidChange condition="" statusId="COM_READ" statusIdTo="COM_IN_PROGRESS" transitionName="Set In Progress"/>
+    <StatusValidChange condition="" statusId="COM_READ" statusIdTo="COM_COMPLETE" transitionName="Complete"/>
+    <StatusValidChange condition="" statusId="COM_IN_PROGRESS" statusIdTo="COM_COMPLETE" transitionName="Complete"/>
+    <StatusValidChange condition="" statusId="COM_COMPLETE" statusIdTo="COM_RESOLVED" transitionName="Resolve"/>
+    <StatusValidChange condition="" statusId="COM_COMPLETE" statusIdTo="COM_REFERRED" transitionName="Refer"/>
+    
+    <StatusValidChange condition="" statusId="COM_ENTERED" statusIdTo="COM_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="COM_PENDING" statusIdTo="COM_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="COM_READ" statusIdTo="COM_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="COM_IN_PROGRESS" statusIdTo="COM_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="COM_COMPLETE" statusIdTo="COM_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="COM_RESOLVED" statusIdTo="COM_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="COM_REFERRED" statusIdTo="COM_CANCELLED" transitionName="Cancel"/>
+    
     <StatusType description="Party Relationship" hasTable="N" parentTypeId="" statusTypeId="PARTY_REL_STATUS"/>
 
     <TermType description="Financial" hasTable="N" parentTypeId="" termTypeId="FINANCIAL_TERM"/>

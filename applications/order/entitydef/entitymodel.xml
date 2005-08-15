@@ -46,6 +46,7 @@
   <!--  - org.ofbiz.order.order -->
   <!--  - org.ofbiz.order.quote -->
   <!--  - org.ofbiz.order.request -->
+  <!--  - org.ofbiz.order.requirement -->
   <!--  - org.ofbiz.order.return -->
   <!--  - org.ofbiz.order.shoppingcart -->
   <!--  - org.ofbiz.order.shoppinglist -->
@@ -1101,6 +1102,18 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
+    <entity entity-name="QuoteCoefficient"
+        package-name="org.ofbiz.order.quote"
+        title="Quote Coefficient Entity">
+        <field name="quoteId" type="id-ne"></field>
+        <field name="coeffName" type="id-long-ne"></field>
+        <field name="coeffValue" type="floating-point"></field>
+        <prim-key field="quoteId"/>
+        <prim-key field="coeffName"/>
+        <relation type="one" fk-name="QUOTE_COEFF" rel-entity-name="Quote">
+            <key-map field-name="quoteId"/>
+        </relation>
+    </entity>
     <entity entity-name="QuoteItem"
             package-name="org.ofbiz.order.quote"
             title="Quote Item Entity">
@@ -1241,17 +1254,19 @@
         <key-map field-name="quoteTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="QuoteCoefficient"
-            package-name="org.ofbiz.order.quote"
-            title="Quote Coefficient Entity">
-      <field name="quoteId" type="id-ne"></field>
-      <field name="coeffName" type="id-long-ne"></field>
-      <field name="coeffValue" type="floating-point"></field>
-      <prim-key field="quoteId"/>
-      <prim-key field="coeffName"/>
-      <relation type="one" fk-name="QUOTE_COEFF" rel-entity-name="Quote">
-        <key-map field-name="quoteId"/>
-      </relation>
+    <entity entity-name="QuoteWorkEffort"
+        package-name="org.ofbiz.order.quote"
+        title="Quote Work Effort Entity">
+        <field name="quoteId" type="id-ne"></field>
+        <field name="workEffortId" type="id-ne"></field>
+        <prim-key field="quoteId"/>
+        <prim-key field="workEffortId"/>
+        <relation type="one" fk-name="QUOTE_WE_QUOTE" rel-entity-name="Quote">
+            <key-map field-name="quoteId"/>
+        </relation>
+        <relation type="one" fk-name="QUOTE_WE_WEFF" rel-entity-name="WorkEffort">
+            <key-map field-name="workEffortId"/>
+        </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -1318,6 +1333,20 @@
         <key-map field-name="custRequestTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="CustRequestCommEvent"
+        package-name="org.ofbiz.order.request"
+        title="Customer Request Communication Event Entity">
+        <field name="custRequestId" type="id-ne"></field>
+        <field name="communicationEventId" type="id-ne"></field>
+        <prim-key field="custRequestId"/>
+        <prim-key field="communicationEventId"/>
+        <relation type="one" fk-name="CUSTREQ_CEV_CRQ" rel-entity-name="CustRequest">
+            <key-map field-name="custRequestId"/>
+        </relation>
+        <relation type="one" fk-name="CUSTREQ_CEV_CEV" rel-entity-name="CommunicationEvent">
+            <key-map field-name="communicationEventId"/>
+        </relation>
+    </entity>
     <entity entity-name="CustRequestItem"
             package-name="org.ofbiz.order.request"
             title="Customer Request Item Entity">
@@ -1366,7 +1395,7 @@
     </entity>
     <entity entity-name="CustRequestItemWorkEffort"
             package-name="org.ofbiz.order.request"
-            title="Cust Request Work Effort Entity">
+            title="Cust Request Item Work Effort Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestItemSeqId" type="id-ne"></field>
       <field name="workEffortId" type="id-ne"></field>
@@ -1467,8 +1496,27 @@
         <key-map field-name="custRequestTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="CustRequestWorkEffort"
+        package-name="org.ofbiz.order.request"
+        title="Cust Request Work Effort Entity">
+        <field name="custRequestId" type="id-ne"></field>
+        <field name="workEffortId" type="id-ne"></field>
+        <prim-key field="custRequestId"/>
+        <prim-key field="workEffortId"/>
+        <relation type="one" fk-name="CSTREQ_WF_CREQ" rel-entity-name="CustRequest">
+            <key-map field-name="custRequestId"/>
+        </relation>
+        <relation type="one" fk-name="CSTREQ_WF_WEFF" rel-entity-name="WorkEffort">
+            <key-map field-name="workEffortId"/>
+        </relation>
+    </entity>
+    
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.requirement -->
+    <!-- ========================================================= -->
+    
     <entity entity-name="DesiredFeature"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Desired Feature Entity">
       <field name="desiredFeatureId" type="id-ne"></field>
       <field name="requirementId" type="id-ne"></field>
@@ -1484,7 +1532,7 @@
       </relation>
     </entity>
     <entity entity-name="OrderRequirementCommitment"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Order Requirement Commitment Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
@@ -1505,7 +1553,7 @@
       </relation>
     </entity>
     <entity entity-name="Requirement"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Requirement Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="requirementTypeId" type="id"></field>
@@ -1549,7 +1597,7 @@
       </relation>
     </entity>
     <entity entity-name="RequirementAttribute"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Requirement Attribute Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
@@ -1564,7 +1612,7 @@
       </relation>
     </entity>
     <entity entity-name="RequirementBudgetAllocation"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Requirement Budget Allocation Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetItemSeqId" type="id-ne"></field>
@@ -1585,7 +1633,7 @@
       </relation>
     </entity>
     <entity entity-name="RequirementCustRequest"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Requirement Customer Request Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestItemSeqId" type="id-ne"></field>
@@ -1605,7 +1653,7 @@
       </relation>
     </entity>
     <entity entity-name="RequirementRole"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Requirement Role Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
@@ -1628,7 +1676,7 @@
       </relation>
     </entity>
     <entity entity-name="RequirementStatus"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Requirement Status Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
@@ -1643,7 +1691,7 @@
       </relation>
     </entity>
     <entity entity-name="RequirementType"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Requirement Type Entity">
       <field name="requirementTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -1655,7 +1703,7 @@
       </relation>
     </entity>
     <entity entity-name="RequirementTypeAttr"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Requirement Type Attribute Entity">
       <field name="requirementTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
@@ -1672,7 +1720,7 @@
       </relation>
     </entity>
     <entity entity-name="RespondingParty"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Responding Party Entity">
       <field name="respondingPartySeqId" type="id-ne"></field>
       <field name="custRequestId" type="id-ne"></field>
@@ -1693,14 +1741,14 @@
       </relation>
     </entity>
     <entity entity-name="WorkReqFulfType"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Work Requirement Fulfillment Type Entity">
       <field name="workReqFulfTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="workReqFulfTypeId"/>
     </entity>
     <entity entity-name="WorkRequirementFulfillment"
-            package-name="org.ofbiz.order.request"
+            package-name="org.ofbiz.order.requirement"
             title="Work Requirement Fulfillment Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="workEffortId" type="id-ne"></field>
