@@ -89,7 +89,6 @@
           <#if 0 < defaultQuantity>
           <#assign orderItem = returnItem.getRelatedOne("OrderItem")?if_exists>
           <#assign orderItemType = (orderItem.getRelatedOne("OrderItemType"))?if_exists>
-          <input type="hidden" name="inventoryItemTypeId_o_${rowCount}" value="SERIALIZED_INV_ITEM">
           <input type="hidden" name="returnId_o_${rowCount}" value="${returnItem.returnId}">
           <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="${returnItem.returnItemSeqId}"> 
           <input type="hidden" name="facilityId_o_${rowCount}" value="${requestParameters.facilityId?if_exists}">       
@@ -160,7 +159,18 @@
                   </td>                                                      
                 </tr>
                 <tr>
-                  <td width="45%">
+                   <td width='10%'>
+                      <select name="inventoryItemTypeId_o_0" size="1" class="selectBox">  
+                         <#list inventoryItemTypes as nextInventoryItemType>                      
+                            <option value='${nextInventoryItemType.inventoryItemTypeId}' 
+                         <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
+                            SELECTED
+                          </#if>
+                         >${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+                         </#list>
+                      </select>
+                  </td>                
+                  <td width="35%">
                     <span class="tableheadtext">${uiLabelMap.ProductInitialInventoryItemStatus}:</span>&nbsp;&nbsp;
                     <select name="statusId_o_${rowCount}" size='1' class="selectBox">
                       <option value="INV_RETURNED">${uiLabelMap.ProductReturned}</option>
