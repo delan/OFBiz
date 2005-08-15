@@ -141,13 +141,12 @@
             title="Contact List Entity">
       <field name="contactListId" type="id-ne"></field>
       <field name="contactListTypeId" type="id-ne"></field>
+      <field name="contactMechTypeId" type="id-ne"></field>
       <field name="contactListName" type="id-ne"></field>
       <field name="marketingCampaignId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
-      <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
-      <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="contactListId"/>
       <relation type="one" fk-name="CNCT_LST_MKCMPN" rel-entity-name="MarketingCampaign">
@@ -164,6 +163,7 @@
       <field name="partyId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
       <field name="preferredContactMechId" type="id"></field>
       <prim-key field="contactListId"/>
       <prim-key field="partyId"/>
@@ -173,6 +173,9 @@
       </relation>
       <relation type="one" fk-name="CNCT_LSTPTY_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="CNCT_LSTPTY_STS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
       <relation type="one" fk-name="CNCT_LSTPTY_PCM" title="Preferred" rel-entity-name="ContactMech">
         <key-map field-name="preferredContactMechId" rel-field-name="contactMechId"/>

@@ -89,13 +89,14 @@
 
     <entity-group group="org.ofbiz" entity="Quote" />
     <entity-group group="org.ofbiz" entity="QuoteAttribute" />
+    <entity-group group="org.ofbiz" entity="QuoteCoefficient" />
     <entity-group group="org.ofbiz" entity="QuoteItem" />
     <entity-group group="org.ofbiz" entity="QuoteRole" />
     <entity-group group="org.ofbiz" entity="QuoteTerm" />
     <entity-group group="org.ofbiz" entity="QuoteTermAttribute" />
     <entity-group group="org.ofbiz" entity="QuoteType" />
     <entity-group group="org.ofbiz" entity="QuoteTypeAttr" />
-    <entity-group group="org.ofbiz" entity="QuoteCoefficient" />
+    <entity-group group="org.ofbiz" entity="QuoteWorkEffort" />
 
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.request -->
@@ -105,6 +106,7 @@
     <entity-group group="org.ofbiz" entity="CustRequestAndRole" />
     <entity-group group="org.ofbiz" entity="CustRequestAttribute" />
     <entity-group group="org.ofbiz" entity="CustRequestCategory" />
+    <entity-group group="org.ofbiz" entity="CustRequestCommEvent" />
     <entity-group group="org.ofbiz" entity="CustRequestItem" />
     <entity-group group="org.ofbiz" entity="CustRequestItemNote" />
     <entity-group group="org.ofbiz" entity="CustRequestItemNoteView" />
@@ -114,6 +116,12 @@
     <entity-group group="org.ofbiz" entity="CustRequestStatus" />
     <entity-group group="org.ofbiz" entity="CustRequestType" />
     <entity-group group="org.ofbiz" entity="CustRequestTypeAttr" />
+    <entity-group group="org.ofbiz" entity="CustRequestWorkEffort" />
+    
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.requirement -->
+    <!-- ========================================================= -->
+    
     <entity-group group="org.ofbiz" entity="DesiredFeature" />
     <entity-group group="org.ofbiz" entity="OrderRequirementCommitment" />
     <entity-group group="org.ofbiz" entity="Requirement" />
