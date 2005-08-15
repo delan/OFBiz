@@ -28,7 +28,7 @@
 
 <#if requirement?exists>
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditRequirement?requirementId=${requirement.requirementId}</@ofbizUrl>" class="${selectedClassMap.EditRequirement?default(unselectedClassName)}">${uiLabelMap.OrderEditRequirement}</a>
-    <a href="<@ofbizUrl>/ListRequirementCustRequests?requirementId=${requirement.requirementId}</@ofbizUrl>" class="${selectedClassMap.ListRequirementCustRequests?default(unselectedClassName)}">${uiLabelMap.OrderRequirementCustRequests}</a>
+    <a href="<@ofbizUrl>/EditRequirement?requirementId=${requirement.requirementId}</@ofbizUrl>" class="${selectedClassMap.EditRequirement?default(unselectedClassName)}">${uiLabelMap.OrderRequirement}</a>
+    <a href="<@ofbizUrl>/ListRequirementCustRequests?requirementId=${requirement.requirementId}</@ofbizUrl>" class="${selectedClassMap.ListRequirementCustRequests?default(unselectedClassName)}">${uiLabelMap.OrderRequests}</a>
 </div>
 </#if>
