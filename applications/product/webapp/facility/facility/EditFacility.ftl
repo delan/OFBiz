@@ -80,6 +80,22 @@
   </tr>
 </#if>
   <tr>
+    <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductFacilityDefaultInventoryItemType}</div></td>
+    <td>&nbsp;</td>
+    <td width="74%">
+      <select name="defaultInventoryItemTypeId" size="1" class='selectBox'>
+          <#list inventoryItemTypes as nextInventoryItemType>                      
+            <option value='${nextInventoryItemType.inventoryItemTypeId}'
+               <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
+               SELECTED
+               </#if>
+             >${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+          </#list>
+      </select>
+    </td>
+  </tr>
+
+  <tr>
     <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductName}</div></td>
     <td>&nbsp;</td>
     <td width="74%"><input type="text" class="inputBox" name="facilityName" value="${facility.facilityName?if_exists}" size="30" maxlength="60"></td>

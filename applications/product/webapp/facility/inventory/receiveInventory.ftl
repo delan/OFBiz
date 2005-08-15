@@ -146,7 +146,11 @@
         <td width='74%'>
           <select name="inventoryItemTypeId_o_0" size="1" class="selectBox">  
             <#list inventoryItemTypes as nextInventoryItemType>                      
-              <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+              <option value='${nextInventoryItemType.inventoryItemTypeId}'
+                <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
+                  SELECTED
+                </#if>
+              >${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
             </#list>
           </select>
         </td>                
@@ -384,7 +388,11 @@
                     <span class="tableheadtext">${uiLabelMap.ProductInventoryItemType} :</span>&nbsp;&nbsp;
                     <select name="inventoryItemTypeId_o_${rowCount}" size='1' class="selectBox">  
                       <#list inventoryItemTypes as nextInventoryItemType>                      
-                      <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+                      <option value='${nextInventoryItemType.inventoryItemTypeId}'
+                       <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
+                        SELECTED
+                      </#if>
+                      >${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                       </#list>
                     </select>                    
                   </td>                    
