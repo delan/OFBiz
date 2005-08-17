@@ -116,14 +116,9 @@ public class InvoiceServices {
 
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
 
-            // get the product store
-            GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orh.getProductStoreId()));
-
-            // get the payToParty
-            String payToPartyId = productStore.getString("payToPartyId");
-            if (payToPartyId == null) {
-                return ServiceUtil.returnError("Unable to create invoice; no payToPartyId set for ProductStore Id : " + orh.getProductStoreId());
-            }
+            // get the billing parties
+            String billToCustomerPartyId = orh.getBillToParty().getString("partyId");
+            String billFromVendorPartyId = orh.getBillFromParty().getString("partyId");
 
             // get some quantity totals
             double totalItemsInOrder = orh.getTotalOrderItemsQuantity();
@@ -141,6 +136,8 @@ public class InvoiceServices {
 
             // create the invoice record
             Map createInvoiceContext = FastMap.newInstance();
+            createInvoiceContext.put("partyId", billToCustomerPartyId);
+            createInvoiceContext.put("partyIdFrom", billFromVendorPartyId);
             createInvoiceContext.put("billingAccountId", billingAccountId);
             createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
             createInvoiceContext.put("invoiceTypeId", invoiceType);
@@ -178,10 +175,12 @@ public class InvoiceServices {
                 Iterator billToIter = billToRoles.iterator();
                 while (billToIter.hasNext()) {
                     GenericValue billToRole = (GenericValue) billToIter.next();
-                    GenericValue invoiceRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
-                    invoiceRole.set("partyId", billToRole.get("partyId"));
-                    invoiceRole.set("roleTypeId", "BILL_TO_CUSTOMER");
-                    toStore.add(invoiceRole);
+                    if (!(billToRole.getString("partyId").equals(billToCustomerPartyId))) {
+                        GenericValue invoiceRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
+                        invoiceRole.set("partyId", billToRole.get("partyId"));
+                        invoiceRole.set("roleTypeId", "BILL_TO_CUSTOMER");
+                        toStore.add(invoiceRole);
+                    }
                 }
 
                 // set the bill-to contact mech as the contact mech of the billing account
@@ -192,20 +191,6 @@ public class InvoiceServices {
                     toStore.add(billToContactMech);
                 }
             } else {
-                // no billing account use the info off the order header.  Look for BILL_TO_CUSTOMER unless it's a purchase invoice, in which case,
-                // look for and create BILL_FROM_VENDOR
-                String roleTypeId = "BILL_TO_CUSTOMER";
-                if ("PURCHASE_INVOICE".equals(invoiceType)) {
-                    roleTypeId = "BILL_FROM_VENDOR";
-                }
-                GenericValue billToPerson = orh.getPartyFromRole(roleTypeId);
-                if (billToPerson != null) {
-                    GenericValue invoiceRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
-                    invoiceRole.set("partyId", billToPerson.getString("partyId"));
-                    invoiceRole.set("roleTypeId", roleTypeId);
-                    toStore.add(invoiceRole);
-                }
-
                 List billingLocations = orh.getBillingLocations();
                 if (billingLocations != null) {
                     Iterator bli = billingLocations.iterator();
@@ -222,15 +207,8 @@ public class InvoiceServices {
             // get a list of the payment method types
             //DEJ20050705 doesn't appear to be used: List paymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
 
-            // payToPartyId of the store is the Vendor on Sales Invoices and Customer on Purchase Invoices
-            GenericValue payToRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
-            payToRole.set("partyId", payToPartyId);
-            if (invoiceType.equals("PURCHASE_INVOICE")) {
-                payToRole.set("roleTypeId", "BILL_TO_CUSTOMER");
-            } else {
-                payToRole.set("roleTypeId", "BILL_FROM_VENDOR");
-            }
-            toStore.add(payToRole);
+            // get the product store
+            GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orh.getProductStoreId()));
 
             // create the bill-from (or pay-to) contact mech as the primary PAYMENT_LOCATION of the party from the store
             GenericValue payToAddress = null;
@@ -246,7 +224,7 @@ public class InvoiceServices {
                 }
             } else {
                 // for sales orders, it is the payment address on file for the store
-                payToAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId);
+                payToAddress = PaymentWorker.getPaymentAddress(delegator, productStore.getString("payToPartyId"));
             }
             if (payToAddress != null) {
                 GenericValue payToCm = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
