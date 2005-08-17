@@ -168,7 +168,7 @@
           <td>&nbsp;</td>
           <td valign='middle'>
             <div class='tabletext' valign='top'>
-              <select class="selectBox" name="billFromVendorPartyId"<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> disabled</#if>>
+              <select class="selectBox" name="billToCustomerPartyId"<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> disabled</#if>>
                 <#list organizations as organization>
                   <#assign organizationName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(organization, true)/>
                     <#if (organizationName.length() != 0)>
