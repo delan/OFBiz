@@ -159,7 +159,7 @@ public class OrderServices {
         // get the product store for the order, but it is required only for sales orders
         String productStoreId = (String) context.get("productStoreId");
         GenericValue productStore = null;
-        if ((orderTypeId.equals("SALES_ORDER")) & (UtilValidate.isNotEmpty(productStoreId))) {
+        if ((orderTypeId.equals("SALES_ORDER")) && (UtilValidate.isNotEmpty(productStoreId))) {
             try {
                 productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
             } catch (GenericEntityException e) {
