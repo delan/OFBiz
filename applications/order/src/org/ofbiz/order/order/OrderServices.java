@@ -156,16 +156,19 @@ public class OrderServices {
             }
         }
 
-        boolean isImmediatelyFulfilled = false;
+        // get the product store for the order, but it is required only for sales orders
         String productStoreId = (String) context.get("productStoreId");
         GenericValue productStore = null;
-        if (UtilValidate.isNotEmpty(productStoreId)) {
+        if ((orderTypeId.equals("SALES_ORDER")) & (UtilValidate.isNotEmpty(productStoreId))) {
             try {
                 productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
             } catch (GenericEntityException e) {
             	return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderErrorCouldNotFindProductStoreWithID",UtilMisc.toMap("productStoreId",productStoreId),locale)  + e.toString());
             }
         }
+
+        // figure out if the order is immediately fulfilled based on product store settings
+        boolean isImmediatelyFulfilled = false;
         if (productStore != null) {
             isImmediatelyFulfilled = "Y".equals(productStore.getString("isImmediatelyFulfilled"));
         }
