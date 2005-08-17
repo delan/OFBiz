@@ -549,7 +549,7 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Creates new empty ShoppingCart object. */
-    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billFromVendorPartyId) {
+    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId) {
         this.delegator = delegator;
         this.delegatorName = delegator.getDelegatorName();
         this.productStoreId = productStoreId;
@@ -577,12 +577,13 @@ public class ShoppingCart implements Serializable {
         } else {
             this.billFromVendorPartyId = billFromVendorPartyId;
         }
+        this.billToCustomerPartyId = billToCustomerPartyId;
     }
 
 
     /** Creates new empty ShoppingCart object. */
     public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom) {
-        this(delegator, productStoreId, webSiteId, locale, currencyUom, null);
+        this(delegator, productStoreId, webSiteId, locale, currencyUom, null, null);
     }
 
     /** Creates a new empty ShoppingCart object. */

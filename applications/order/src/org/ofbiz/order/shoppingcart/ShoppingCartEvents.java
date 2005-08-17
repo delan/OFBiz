@@ -882,6 +882,7 @@ public class ShoppingCartEvents {
       }
       ShoppingCart cart = getCartObject(request);
 
+      // TODO: re-factor and move this inside the ShoppingCart constructor
       String orderMode = request.getParameter("orderMode");
       if (orderMode != null) {
           cart.setOrderType(orderMode);
