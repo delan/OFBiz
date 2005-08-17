@@ -98,9 +98,11 @@ public class OrderServices {
     static {
         salesAttributeRoleMap.put("placingCustomerPartyId", "PLACING_CUSTOMER");
         salesAttributeRoleMap.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
+        salesAttributeRoleMap.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
         salesAttributeRoleMap.put("shipToCustomerPartyId", "SHIP_TO_CUSTOMER");
         salesAttributeRoleMap.put("endUserCustomerPartyId", "END_USER_CUSTOMER");
 
+        purchaseAttributeRoleMap.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
         purchaseAttributeRoleMap.put("billFromVendorPartyId", "BILL_FROM_VENDOR");
         purchaseAttributeRoleMap.put("shipFromVendorPartyId", "SHIP_FROM_VENDOR");
         purchaseAttributeRoleMap.put("supplierAgentPartyId", "SUPPLIER_AGENT");

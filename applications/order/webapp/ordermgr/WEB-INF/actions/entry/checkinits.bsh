@@ -55,3 +55,5 @@ context.put("productStores", productStores);
 suppliers = delegator.findByAnd("PartyRole", UtilMisc.toMap("roleTypeId", "SUPPLIER"));
 context.put("suppliers", suppliers);
 
+organizations = delegator.findByAnd("PartyRole", UtilMisc.toMap("roleTypeId", "INTERNAL_ORGANIZATIO"));
+context.put("organizations", organizations);

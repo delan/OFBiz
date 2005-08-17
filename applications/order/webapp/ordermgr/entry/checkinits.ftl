@@ -164,6 +164,23 @@
         </#if>
         <tr>
           <td>&nbsp;</td>
+          <td align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.OrderOrderEntryInternalOrganziation}</div></td>
+          <td>&nbsp;</td>
+          <td valign='middle'>
+            <div class='tabletext' valign='top'>
+              <select class="selectBox" name="billFromVendorPartyId"<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> disabled</#if>>
+                <#list organizations as organization>
+                  <#assign organizationName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(organization, true)/>
+                    <#if (organizationName.length() != 0)>
+                      <option value="${organization.partyId}">${organization.partyId} - ${organizationName}</option>
+                    </#if>
+                </#list>
+              </select>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
           <td align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.PartySupplier}</div></td>
           <td>&nbsp;</td>
           <td valign='middle'>
