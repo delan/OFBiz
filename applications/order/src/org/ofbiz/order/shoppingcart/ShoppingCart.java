@@ -549,7 +549,7 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Creates new empty ShoppingCart object. */
-    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom) {
+    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billFromVendorPartyId) {
         this.delegator = delegator;
         this.delegatorName = delegator.getDelegatorName();
         this.productStoreId = productStoreId;
@@ -570,6 +570,19 @@ public class ShoppingCart implements Serializable {
         if (storeViewCartOnAdd != null && "Y".equalsIgnoreCase(storeViewCartOnAdd)) {
             this.viewCartOnAdd = true;
         }
+
+        if (billFromVendorPartyId == null) {
+            // since default cart is of type SALES_ORDER, set to store's payToPartyId
+            this.billFromVendorPartyId = productStore.getString("payToPartyId");
+        } else {
+            this.billFromVendorPartyId = billFromVendorPartyId;
+        }
+    }
+
+
+    /** Creates new empty ShoppingCart object. */
+    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom) {
+        this(delegator, productStoreId, webSiteId, locale, currencyUom, null);
     }
 
     /** Creates a new empty ShoppingCart object. */
@@ -3067,15 +3080,16 @@ public class ShoppingCart implements Serializable {
         result.put("currencyUom", this.getCurrency());
         result.put("billingAccountId", this.getBillingAccountId());
 
+        result.put("billToCustomerPartyId", this.getBillToCustomerPartyId());
+        result.put("billFromVendorPartyId", this.getBillFromVendorPartyId());
+
         if (this.isSalesOrder()) {
             result.put("placingCustomerPartyId", this.getPlacingCustomerPartyId());
-            result.put("billToCustomerPartyId", this.getBillToCustomerPartyId());
             result.put("shipToCustomerPartyId", this.getShipToCustomerPartyId());
             result.put("endUserCustomerPartyId", this.getEndUserCustomerPartyId());
         }
 
         if (this.isPurchaseOrder()) {
-            result.put("billFromVendorPartyId", this.getBillFromVendorPartyId());
             result.put("shipFromVendorPartyId", this.getShipFromVendorPartyId());
             result.put("supplierAgentPartyId", this.getSupplierAgentPartyId());
         }

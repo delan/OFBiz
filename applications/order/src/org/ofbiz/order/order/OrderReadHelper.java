@@ -502,6 +502,10 @@ public class OrderReadHelper {
     public GenericValue getBillToParty() {
         return this.getPartyFromRole("BILL_TO_CUSTOMER");
     }
+    
+    public GenericValue getBillFromParty() {
+        return this.getPartyFromRole("BILL_FROM_VENDOR");
+    }
 
     public GenericValue getShipToParty() {
         return this.getPartyFromRole("SHIP_TO_CUSTOMER");

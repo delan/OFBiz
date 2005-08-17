@@ -52,7 +52,8 @@ public class WebShoppingCart extends ShoppingCart {
     public WebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
         super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request),
                 WebSiteWorker.getWebSiteId(request), (locale != null ? locale : UtilHttp.getLocale(request)), 
-                (currencyUom != null ? currencyUom : UtilHttp.getCurrencyUom(request)));
+                (currencyUom != null ? currencyUom : UtilHttp.getCurrencyUom(request)), 
+                request.getParameter("billFromVendorPartyId"));
 
         HttpSession session = request.getSession(true);
         this.userLogin = (GenericValue) session.getAttribute("userLogin");
