@@ -533,7 +533,7 @@
                         <div class="tabletext">
                           ${contactMech.infoString}
                           <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>  
-                             <a href="<@ofbizUrl>/confirmationmailedit?orderId=${orderId}&partyId=${partyId}&sendTo=${contactMech.infoString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderSendConfirmationEmail}</a>
+                             <br/>(<a href="<@ofbizUrl>/confirmationmailedit?orderId=${orderId}&partyId=${partyId}&sendTo=${contactMech.infoString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSendConfirmationEmail}</a>)
                           <#else>
                              <a href="mailto:${contactMech.infoString}" class="buttontext">(${uiLabelMap.OrderSendEmail})</a>
                           </#if>
