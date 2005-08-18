@@ -39,6 +39,9 @@
                     <#if currentStatus.statusId == "ORDER_CREATED" || currentStatus.statusId == "ORDER_PROCESSING">
                         <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_APPROVED&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderApproveOrder}</a></div>
                     </#if>
+                    <#if setOrderCompleteOption>
+                    	  <div class="tabletext"><a href="<@ofbizUrl>/changeOrderStatus?orderId=${orderId}&statusId=ORDER_COMPLETED</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCompleteOrder}</a></div>
+                    </#if>
                 </div>
                 <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${uiLabelMap.CommonInformation} [<a href="<@ofbizUrl>/order.pdf?order_id=${orderId}</@ofbizUrl>" class="submenutextright">PDF</a> ]</div>
             </div>
