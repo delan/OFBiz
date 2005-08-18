@@ -123,6 +123,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ordertasklist"/>
     </request-map>
+    <request-map uri="orderlist">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderlist"/>
+    </request-map>
     <request-map uri="confirmationmailedit">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="SendConfirmationMail"/>
@@ -193,7 +197,7 @@
     <request-map uri="changeOrderStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="changeOrderStatus"/>
-        <response name="success" type="view" value="orderview"/>
+        <response name="success" type="view" value="orderlist"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>
     <request-map uri="changeOrderItemStatus">
@@ -1025,13 +1029,14 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/> 
+    <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderListView"/> 
     <view-map name="login" type="screen" page="component://order/widget/ordermgr/CommonScreens.xml#login"/>
 
     <view-map name="orderstats" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderStats"/>
     <view-map name="findorders" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
     <view-map name="OrderDeliveryScheduleInfo" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderDeliveryScheduleInfo"/>
     <view-map name="orderview" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderView"/>
+    <view-map name="orderlist" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderListView"/>
     <view-map name="editorderitems" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderItemEdit"/>
     <view-map name="createnewnote" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderNewNote"/>
     <view-map name="receivepayment" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderReceivePayment"/>
