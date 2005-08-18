@@ -134,6 +134,7 @@ public class GenericDelegator implements DelegatorInterface {
                 delegator = (GenericDelegator) delegatorCache.get(delegatorName);
                 if (delegator == null) {
                     if (Debug.infoOn()) Debug.logInfo("Creating new delegator [" + delegatorName + "] (" + Thread.currentThread().getName() + ")", module);
+                    //Debug.logInfo(new Exception(), "Showing stack where new delegator is being created...", module);
                     try {
                         delegator = new GenericDelegator(delegatorName);
                     } catch (GenericEntityException e) {
@@ -141,6 +142,8 @@ public class GenericDelegator implements DelegatorInterface {
                     }
                     if (delegator != null) {
                         delegatorCache.put(delegatorName, delegator);
+                    } else {
+                        Debug.logError("Could not create delegator with name " + delegatorName + ", constructor failed (got null value) not sure why/how.", module);
                     }
                 }
             }
@@ -203,19 +206,18 @@ public class GenericDelegator implements DelegatorInterface {
                     try {
                         helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, datasourceInfo.addMissingOnStart);
                     } catch (GenericEntityException e) {
-                        Debug.logWarning(e.getMessage(), module);
+                        Debug.logWarning(e, e.getMessage(), module);
                     }
                 }
             }
         }
 
         // NOTE: doing some things before the ECAs and such to make sure it is in place just in case it is used in a service engine startup thing or something
+        // put the delegator in the master Map by its name
+        delegatorCache.put(delegatorName, this);
 
         // setup the crypto class
         this.crypto = new EntityCrypto(this);
-
-        // put the delegator in the master Map by its name
-        delegatorCache.put(delegatorName, this);
 
         //time to do some tricks with manual class loading that resolves circular dependencies, like calling services...
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -502,7 +504,6 @@ public class GenericDelegator implements DelegatorInterface {
     /** Creates a Primary Key in the form of a GenericPK without persisting it */
     public GenericPK makePK(String entityName, Map fields) {
         ModelEntity entity = this.getModelEntity(entityName);
-
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.makePK] could not find entity for entityName: " + entityName);
         }
