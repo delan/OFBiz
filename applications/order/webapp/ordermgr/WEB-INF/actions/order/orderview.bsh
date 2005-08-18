@@ -239,6 +239,16 @@ if (orderHeader != null) {
 
     orderContentWrapper = OrderContentWrapper.makeOrderContentWrapper(orderHeader, request);
     context.put("orderContentWrapper", orderContentWrapper);
+    
+    // see if an approved order with all items completed exists
+    context.put("setOrderCompleteOption", false);
+    if ("ORDER_APPROVED".equals(orderHeader.getString("statusId"))) {
+        expr = new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED");
+        notCreatedItems = orderReadHelper.getOrderItemsByCondition(expr);
+        if (notCreatedItems.size() == 0) {
+            context.put("setOrderCompleteOption", true);
+        }
+    }
 }
 
 paramString = "";

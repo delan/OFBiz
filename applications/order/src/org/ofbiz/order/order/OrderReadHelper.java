@@ -45,6 +45,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.security.Security;
 
@@ -1540,6 +1541,11 @@ public class OrderReadHelper {
             return orderHeader.getString("statusId");
         }
     }
+    
+    /** Fetches the set of order items with the given EntityCondition. */
+    public List getOrderItemsByCondition(EntityCondition entityCondition) {
+        return EntityUtil.filterByCondition(getOrderItems(), entityCondition);
+    }
 
     /**
      * Checks to see if this user has read permission on this order
@@ -1885,6 +1891,7 @@ public class OrderReadHelper {
     public static List getOrderItemStatuses(GenericValue orderItem, List orderStatuses) {
         return EntityUtil.filterByAnd(orderStatuses, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
     }
+
 
     // Order Item Adjs Utility Methods
 
