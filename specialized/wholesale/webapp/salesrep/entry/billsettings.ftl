@@ -94,16 +94,7 @@ function makeExpDate() {
                       <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
                     </td>
                   </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
-                  <tr>
-                    <td width="1%" nowrap>
-                      <input type="radio" name="checkOutPaymentId" value="OFFLINE_PAYMENT" <#if checkOutPaymentId?exists && checkOutPaymentId == "OFFLINE_PAYMENT">CHECKED</#if>>
-                    </td>
-                    <td colpan="2" width="50%" nowrap>
-                      <span class="tabletext">Payment already received</span>
-                    </td>
-                  </tr>
-                  <tr><td colspan="3"><hr class='sepbar'></td></tr>                  
+                 <tr><td colspan="3"><hr class='sepbar'></td></tr>                  
                   <#if billingAccountList?has_content>                                                         
 <!-- old billsettings.ftl code Si Chen 2004-01-19
                     <#list billingAccountList as billingAccount>                          

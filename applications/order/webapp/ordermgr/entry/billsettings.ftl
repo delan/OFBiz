@@ -73,16 +73,7 @@ function makeExpDate() {
                   <span class="tabletext">${uiLabelMap.OrderOfflineCheckMoney}</span>
                 </td>
               </tr>
-              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
-              <tr>
-                <td width="1%">
-                  <input type="radio" name="checkOutPaymentId" value="OFFLINE_PAYMENT" <#if checkOutPaymentId?exists && checkOutPaymentId == "OFFLINE_PAYMENT">checked="checked"</#if>/>
-                </td>
-                <td colpan="2" width="50%">
-                  <span class="tabletext">${uiLabelMap.AccountingPaymentAlreadyReceived}</span>
-                </td>
-              </tr>
-              <tr><td colspan="3"><hr class="sepbar"/></td></tr>                  
+             <tr><td colspan="3"><hr class="sepbar"/></td></tr>                  
               <#if billingAccountList?has_content>
                 <tr>
                   <td width="1%">
