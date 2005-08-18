@@ -4,15 +4,16 @@
       <form method="post" name="findorder" action="<@ofbizUrl>/orderlist</@ofbizUrl>">
         <table border=0 cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
+          <td><div class="tableheadtext">Status:</div></td>
+          <td>&nbsp;&nbsp;</td>
             <td nowrap>
                 <div class="tabletext">
-				Status:
 				<input type="checkbox" name="viewall" value="Y" <#if viewall?exists>CHECKED</#if> />All
 				<input type="checkbox" name="viewcreated" value="Y" <#if viewcreated?exists>CHECKED</#if> />Created
-				<input type="checkbox" name="viewprocessing" value="Y" <#if viewcreated?exists>CHECKED</#if> />Processing
+				<input type="checkbox" name="viewprocessing" value="Y" <#if viewprocessing?exists>CHECKED</#if> />Processing
 				<input type="checkbox" name="viewapproved" value="Y" <#if viewapproved?exists>CHECKED</#if> />Approved
 				<input type="checkbox" name="viewcompleted" value="Y" <#if viewcompleted?exists>CHECKED</#if> />Completed
-				<input type="checkbox" name="viewsent" value="Y" <#if viewapproved?exists>CHECKED</#if> />Sent
+				<input type="checkbox" name="viewsent" value="Y" <#if viewsent?exists>CHECKED</#if> />Sent
 				<input type="checkbox" name="viewrejected" value="Y" <#if viewrejected?exists>CHECKED</#if> />Rejected
 				<input type="checkbox" name="viewcancelled" value="Y" <#if viewcancelled?exists>CHECKED</#if> />Cancelled
                 </div>
@@ -23,9 +24,10 @@
             </td>
           </tr>
           <tr>
+          <td><div class="tableheadtext">Type:</div></td>
+          <td>&nbsp;&nbsp;</td>
             <td nowrap>
                 <div class="tabletext">
-				Type:
 				<input type="checkbox" name="view_SALES_ORDER" value="Y" <#if view_SALES_ORDER?exists>CHECKED</#if> />
         ${descr_SALES_ORDER}
 				<input type="checkbox" name="view_PURCHASE_ORDER" value="Y" <#if view_PURCHASE_ORDER?exists>CHECKED</#if> />
@@ -40,14 +42,12 @@
       </form>
     </td>
   </tr>
+<#if hasPermission>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align='left'><div class="boxhead">${uiLabelMap.OrderList}</div></td>
-          <#--<td align='right'>
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
-          </td>-->
         </tr>
       </table>      
     </td>
@@ -144,4 +144,9 @@
       </table>
     </td>
   </tr>
+
+<#else>
+<tr><td><div class="tableheadtext">${uiLabelMap.OrderViewPermissionError}</div></td></tr>
+</#if>
 </table>
+
