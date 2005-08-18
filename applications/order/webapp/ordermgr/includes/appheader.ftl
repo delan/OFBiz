@@ -42,6 +42,9 @@
   <div class="col"><a href="<@ofbizUrl>FindQuote</@ofbizUrl>" class="${selectedLeftClassMap.quote?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderQuotes}</a></div>
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+  <div class="col"><a href="<@ofbizUrl>/orderlist</@ofbizUrl>" class="${selectedLeftClassMap.orderlist?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderList}</a></div>  
+  </#if>
+  <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
   <div class="col"><a href="<@ofbizUrl>/findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">${uiLabelMap.OrderFindOrder}</a></div>  
   </#if>
   <#if (security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session))>
@@ -52,7 +55,7 @@
   </#if>
   <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session) || security.hasRolePermission("ORDERMGR_ROLE", "_VIEW", "", "", session)>
   <div class="col"><a href="<@ofbizUrl>FindRequirements</@ofbizUrl>" class="${selectedLeftClassMap.requirement?default(unselectedLeftClassName)}">${uiLabelMap.OrderRequirements}</a></div>
-  <div class="col"><a href="<@ofbizUrl>/tasklist</@ofbizUrl>" class="${selectedLeftClassMap.orderlist?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderTasks}</a></div>
+  <div class="col"><a href="<@ofbizUrl>/tasklist</@ofbizUrl>" class="${selectedLeftClassMap.tasklist?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderTasks}</a></div>
   </#if>
 
   <#if requestAttributes.userLogin?has_content>
