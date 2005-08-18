@@ -9,7 +9,9 @@ dispatcher = request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
 security = request.getAttribute("security");
 partyId = request.getParameter("partyId");
-viewcompleted = request.getParameter("viewcompleted");    // specifies which orders are to be shown
+
+// checkboxes
+viewcompleted = request.getParameter("viewcompleted");
 viewcancelled = request.getParameter("viewcancelled");
 viewrejected = request.getParameter("viewrejected");
 viewapproved = request.getParameter("viewapproved");
@@ -26,6 +28,7 @@ if ((viewcompleted == null) && (viewcancelled == null) && (viewrejected == null)
     viewall = "Y";
 }
 
+// put back in context for pre-checking checkboxes
 context.put("viewcompleted", viewcompleted);
 context.put("viewcancelled", viewcancelled);
 context.put("viewrejected", viewrejected);
@@ -34,23 +37,20 @@ context.put("viewcreated", viewcreated);
 context.put("viewprocessing", viewprocessing);
 context.put("viewsent", viewsent);
 context.put("viewall", viewall);
+
 // when no constraints are evident, default to view all sales
 if ((view_SALES_ORDER == null) && (view_PURCHASE_ORDER == null) && (view_WORK_ORDER == null)) {
     view_SALES_ORDER = "Y";
 }
 context.put("view_SALES_ORDER", view_SALES_ORDER);
-
-// TODO: security
-context.put("allowpurchaseview", view_PURCHASE_ORDER);
 context.put("view_PURCHASE_ORDER", view_PURCHASE_ORDER);
-context.put("allowworkview", view_WORK_ORDER);
 context.put("view_WORK_ORDER", view_WORK_ORDER);
 
-// check if each of these has been selected.  If not, then add a filter out condition.  Then do the filtering if the user
-// has not selected a view all, and we actually have conditions to filter
-salesOrdersCondition = new EntityExpr("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER");
-purchaseOrdersCondition = new EntityExpr("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER");
-workOrdersCondition = new EntityExpr("orderTypeId", EntityOperator.EQUALS, "WORK_ORDER");
+typeConditions = new ArrayList();       // list of order type conditions
+statusConditions = new ArrayList();     // list of order status conditions
+allConditions = new ArrayList();        // type and status conditions joined by AND
+
+// conditions for order status
 completedOrdersCondition = new EntityExpr("statusId", EntityOperator.EQUALS, "ORDER_COMPLETED");
 cancelledOrdersCondition = new EntityExpr("statusId", EntityOperator.EQUALS, "ORDER_CANCELLED");
 rejectedOrdersCondition = new EntityExpr("statusId", EntityOperator.EQUALS, "ORDER_REJECTED");
@@ -58,10 +58,28 @@ approvedOrdersCondition = new EntityExpr("statusId", EntityOperator.EQUALS, "ORD
 createdOrdersCondition = new EntityExpr("statusId", EntityOperator.EQUALS, "ORDER_CREATED");
 processingOrdersCondition = new EntityExpr("statusId", EntityOperator.EQUALS, "ORDER_PROCESSING");
 sentOrdersCondition = new EntityExpr("statusId", EntityOperator.EQUALS, "ORDER_SENT");
-typeConditions = new ArrayList();
-statusConditions = new ArrayList();
-allConditions = new ArrayList();
-    
+
+// conditions for order type
+salesOrdersCondition = null;
+purchaseOrdersCondition = null;
+workOrdersCondition = null;
+
+// check permission for each order type
+hasPermission = false;
+if ((view_SALES_ORDER != null) && security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {
+    hasPermission = true;
+    salesOrdersCondition = new EntityExpr("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER");
+}
+if ((view_PURCHASE_ORDER != null) && security.hasEntityPermission("ORDERMGR", "_PURCHASE_VIEW", session)) {
+    hasPermission = true;
+    purchaseOrdersCondition = new EntityExpr("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER");
+}
+if ((view_WORK_ORDER != null) && security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {
+    hasPermission = true;
+    workOrdersCondition = new EntityExpr("orderTypeId", EntityOperator.EQUALS, "WORK_ORDER");
+}
+context.put("hasPermission", hasPermission);
+
 
 // this is for convenience
 allStatus = false;
@@ -90,21 +108,23 @@ if (allStatus || (viewprocessing != null)) {
 if (allStatus || (viewsent != null)) {
     statusConditions.add(sentOrdersCondition);
 }
-if (view_SALES_ORDER != null) {
+if (salesOrdersCondition != null) {
     typeConditions.add(salesOrdersCondition);
 }
-if (view_PURCHASE_ORDER != null) {
+if (purchaseOrdersCondition != null) {
     typeConditions.add(purchaseOrdersCondition);
 }
-if (view_WORK_ORDER != null) {
+if (workOrdersCondition != null) {
     typeConditions.add(workOrdersCondition);
 }
 
-// construct conditions and find orderheaders
-typeConditionsList = new EntityConditionList(typeConditions, EntityOperator.OR);
+// construct conditions and find orderheaders: select ORH where (status1 OR status2 OR ...) AND (type1 OR type2 OR ...) 
 statusConditionsList = new EntityConditionList(statusConditions,  EntityOperator.OR);
-if (typeConditions.size() > 0) allConditions.add(typeConditionsList);
-if (statusConditions.size() > 0) allConditions.add(statusConditionsList);
+typeConditionsList = new EntityConditionList(typeConditions, EntityOperator.OR);
+if ((typeConditions.size() > 0) && (statusConditions.size() > 0)) {
+    allConditions.add(statusConditionsList);
+    allConditions.add(typeConditionsList);
+}
 queryConditionsList = new EntityConditionList(allConditions, EntityOperator.AND);
 orderHeaderList = delegator.findByCondition("OrderHeader", queryConditionsList, null, UtilMisc.toList("orderId DESC"));
 context.put("orderHeaderList", orderHeaderList);
