@@ -42,10 +42,10 @@
             <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
         </div>
         <div class="screenlet-body" style="text-align: center;">
-          <form method="post" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style="margin: 0;">
+          <form method="post" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform">
               <div class="tabletext">
                   ${uiLabelMap.CommonUsername}:&nbsp;
-                  <input type="text" class="inputBox" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>" size="20">
+                  <input type="text" class="inputBox" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>" size="20"/>
               </div>
               <#if autoUserLogin?has_content>
                   <div class="tabletext">
@@ -70,14 +70,13 @@
         <div class="screenlet-body" style="text-align: center;">
           <form method="post" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style="margin: 0;">
             <span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span><input type="text" size="20" class="inputBox" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>">
-            <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}" name="EMAIL_PASSWORD"></div>
+            <div><input type="submit" name="GET_PASSWORD_HINT" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}"/>&nbsp;<input type="submit" name="EMAIL_PASSWORD" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}"/></div>
           </form>
         </div>
     </div>
 
   </div>
   <div style="float: right; width: 49%; margin-left: 5px; text-align: center;">
-
     <div class="screenlet">
         <div class="screenlet-header">
             <div class="boxhead">${uiLabelMap.CommonNewUser}</div>
