@@ -271,6 +271,19 @@ public class RequestHandler implements Serializable {
             }
         }
 
+         // If error, then display more error messages:
+         if ("error".equals(eventReturnString)) {
+             if (Debug.errorOn()) {
+                 String errorMessageHeader = "Request " + requestUri + " caused an error with the following message: ";
+                 if (request.getAttribute("_ERROR_MESSAGE_") != null) {
+                     Debug.logError(errorMessageHeader + request.getAttribute("_ERROR_MESSAGE_"), module);  
+                 }
+                 if (request.getAttribute("_ERROR_MESSAGE_LIST_") != null) {
+                     Debug.logError(errorMessageHeader + request.getAttribute("_ERROR_MESSAGE_LIST_"), module);  
+                 }
+             }
+         }
+
         // Process the eventReturn.
         String eventReturn = requestManager.getRequestAttribute(requestUri, eventReturnString);
         if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
