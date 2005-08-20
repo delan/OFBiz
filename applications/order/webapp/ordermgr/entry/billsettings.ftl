@@ -488,11 +488,6 @@ function makeExpDate() {
                 <td width='50%'nowrap><div class="tabletext">${uiLabelMap.OrderPaymentOfflineCheckMoney}</div></td>
               </tr>
               <tr><td colspan="2"><hr class="sepbar"/></td></tr>
-              <tr>
-                <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="offline_payment"/></td>
-                <td width='50%' nowrap><div class="tabletext">${uiLabelMap.AccountingPaymentAlreadyReceived}</div></td>
-              </tr>
-              <tr><td colspan="2"><hr class="sepbar"/></td></tr>
               </#if>
               <tr>
                 <td width='1%' nowrap><input type="radio" name="paymentMethodType" value="CC"/>
