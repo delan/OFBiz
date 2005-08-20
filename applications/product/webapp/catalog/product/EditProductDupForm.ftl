@@ -25,8 +25,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-
     <#if productId?exists>
         <hr class="sepbar"/>
         <div class="head2">${uiLabelMap.ProductDuplicateProduct}</div>
