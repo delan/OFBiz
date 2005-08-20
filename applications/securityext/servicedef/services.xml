@@ -37,7 +37,8 @@
 		<attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
 		<attribute name="userLoginSession" type="java.util.Map" mode="OUT" optional="true"/>
 	</service>
-	<service name="createUserLogin" engine="java" location="org.ofbiz.securityext.login.LoginServices" invoke="createUserLogin" auth="false">
+    <service name="createUserLogin" engine="java" auth="false" 
+	        location="org.ofbiz.securityext.login.LoginServices" invoke="createUserLogin">
 		<description>Create a UserLogin</description>
 		<attribute name="userLoginId" type="String" mode="IN" optional="false"/>
 		<attribute name="currentPassword" type="String" mode="IN" optional="false"/>
