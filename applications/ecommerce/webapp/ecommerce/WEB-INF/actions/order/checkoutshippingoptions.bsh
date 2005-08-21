@@ -31,12 +31,9 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.shipping.*;
 
-dispatcher = request.getAttribute("dispatcher");
-delegator = request.getAttribute("delegator");
 cart = session.getAttribute("shoppingCart");
-userLogin = session.getAttribute("userLogin");
 party = userLogin.getRelatedOne("Party");
-productStoreId = ProductStoreWorker.getProductStoreId(request);
+productStore = ProductStoreWorker.getProductStore(request);
 
 itemSizes = new LinkedList();
 featureIdSet = new HashSet();
@@ -51,7 +48,8 @@ if (cart != null) {
 
 context.put("shoppingCart", cart);
 context.put("userLogin", userLogin);
-context.put("productStoreId", productStoreId);
+context.put("productStoreId", productStore.get("productStoreId"));
+context.put("productStore", productStore);
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
 
 if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null) {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -33,8 +33,6 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
-delegator = request.getAttribute("delegator");
-userLogin = session.getAttribute("userLogin");
 cart = session.getAttribute("shoppingCart");
 context.put("cart", cart);
 
@@ -72,6 +70,7 @@ if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
 webSiteId = CatalogWorker.getWebSiteId(request);
 
 productStore = ProductStoreWorker.getProductStore(request);
+context.put("productStore", productStore);
 
 isDemoStore = !"N".equals(productStore.getString("isDemoStore"));
 context.put("isDemoStore", isDemoStore);
@@ -79,7 +78,6 @@ context.put("isDemoStore", isDemoStore);
 payToPartyId = productStore.getString("payToPartyId");
 paymentAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId);
 if (paymentAddress != null) context.put("paymentAddress", paymentAddress);
-
 
 
 // TODO: FIXME!
@@ -109,5 +107,3 @@ context.put("orderGrandTotal", new Double(cart.getGrandTotal()));
 
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");
-
-

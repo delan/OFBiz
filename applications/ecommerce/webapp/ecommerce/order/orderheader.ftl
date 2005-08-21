@@ -427,6 +427,7 @@
                   <#assign giftMessage = cart.getGiftMessage(groupIdx)?if_exists>
                 </#if>
 
+               <#if productStore.showCheckoutGiftOptions?if_exists != "N">
                 <tr>
                   <td align="right" valign="top" width="15%">
                     <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderGift}?</b></div>
@@ -451,6 +452,7 @@
                     </td>
                   </tr>
                 </#if>
+               </#if>
                 <#if shipGroup_has_next>
                   <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                   <tr><td colspan="7"><hr class="sepbar"/></td></tr>

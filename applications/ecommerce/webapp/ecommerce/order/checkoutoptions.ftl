@@ -87,8 +87,7 @@ function toggleBillingAccount(box) {
 }
 </script>
 
-<#assign cart = shoppingCart?if_exists>
-<#assign shipping = !cart.containAllWorkEffortCartItems()> <#-- contains items which need shipping? -->
+<#assign shipping = !shoppingCart.containAllWorkEffortCartItems()> <#-- contains items which need shipping? -->
 <form method="post" name="checkoutInfoForm" style="margin:0;">
   <input type="hidden" name="checkoutpage" value="quick"/>
   <input type="hidden" name="DONE_PAGE" value="quickcheckout"/>
@@ -97,7 +96,6 @@ function toggleBillingAccount(box) {
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr valign="top" align="left">
       <td height="100%">
-
         <div class="screenlet" style="height: 100%;">
             <div class="screenlet-header">
                 <#if shipping == true>
@@ -114,12 +112,12 @@ function toggleBillingAccount(box) {
                       <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
                     </td>
                   </tr>
-                  <#if (cart.getTotalQuantity() > 1) && !cart.containAllWorkEffortCartItems()> <#-- no splitting when only rental items -->
+                  <#if (shoppingCart.getTotalQuantity() > 1) && !shoppingCart.containAllWorkEffortCartItems()> <#-- no splitting when only rental items -->
                     <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                     <tr>
                       <td colspan="2" align="center">
                         <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderSplitIntoMultipleShipments}]</a>
-                        <#if (cart.getShipGroupSize() > 1)>
+                        <#if (shoppingCart.getShipGroupSize() > 1)>
                           <div class="tabletext" style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}.</div>
                         </#if>
                       </td>
@@ -131,7 +129,7 @@ function toggleBillingAccount(box) {
                        <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                        <tr>
                          <td align="left" valign="top" width="1%">
-                           <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" onclick="javascript:submitForm(document.checkoutInfoForm, 'SA', null);"<#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId> checked="checked"</#if>/>
+                           <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" onclick="javascript:submitForm(document.checkoutInfoForm, 'SA', null);"<#if shoppingCart.getShippingContactMechId()?default("") == shippingAddress.contactMechId> checked="checked"</#if>/>
                          </td>
                          <td align="left" valign="top" width="99%">
                            <div class="tabletext">
@@ -155,11 +153,9 @@ function toggleBillingAccount(box) {
                  </table>
             </div>
         </div>
-
       </td>
       <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
       <td height="100%">
-
         <div class="screenlet" style="height: 100%;">
             <div class="screenlet-header">
                 <#if shipping == true>
@@ -179,11 +175,11 @@ function toggleBillingAccount(box) {
                       </td>
                       <td valign="top">
                         <div class="tabletext">
-                          <#if cart.getShippingContactMechId()?exists>
+                          <#if shoppingCart.getShippingContactMechId()?exists>
                             <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                           </#if>
                           <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}
-                          <#if shippingEst?has_content> - <#if (shippingEst > -1)?exists><@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
+                          <#if shippingEst?has_content> - <#if (shippingEst > -1)?exists><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
                         </div>
                       </td>
                     </tr>
@@ -206,7 +202,7 @@ function toggleBillingAccount(box) {
                   </tr>
                   <tr>
                     <td valign="top">
-                      <input type="radio" <#if cart.getMaySplit()?default("N") == "N">checked="checked"</#if> name="may_split" value="false">
+                      <input type="radio" <#if shoppingCart.getMaySplit()?default("N") == "N">checked="checked"</#if> name="may_split" value="false"/>
                     </td>
                     <td valign="top">
                       <div class="tabletext">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</div>
@@ -214,17 +210,17 @@ function toggleBillingAccount(box) {
                   </tr>
                   <tr>
                     <td valign="top">
-                      <input <#if cart.getMaySplit()?default("N") == "Y">checked="checked"</#if> type="radio" name="may_split" value="true">
+                      <input <#if shoppingCart.getMaySplit()?default("N") == "Y">checked="checked"</#if> type="radio" name="may_split" value="true"/>
                     </td>
                     <td valign="top">
                       <div class="tabletext">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</div>
                     </td>
                   </tr>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
-                 <#else>
-                    <input type="hidden" name="shipping_method" value="NO_SHIPPING@_NA_">
-                    <input type="hidden" name="may_split" value="false">
-                    <input type="hidden" name="is_gift" value="false">
+                 <#else/>
+                    <input type="hidden" name="shipping_method" value="NO_SHIPPING@_NA_"/>
+                    <input type="hidden" name="may_split" value="false"/>
+                    <input type="hidden" name="is_gift" value="false"/>
                  </#if>
                   <tr>
                     <td colspan="2">
@@ -233,27 +229,28 @@ function toggleBillingAccount(box) {
                   </tr>
                   <tr>
                     <td colspan="2">
-                      <textarea class="textAreaBox" cols="30" rows="3" wrap="hard" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
+                      <textarea class="textAreaBox" cols="30" rows="3" wrap="hard" name="shipping_instructions">${shoppingCart.getShippingInstructions()?if_exists}</textarea>
                     </td>
                   </tr>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td colspan="2">
                       <span class="head2"><b>${uiLabelMap.OrderPoNumber}</b></span>&nbsp;
-                      <#if cart.getPoNumber()?exists && cart.getPoNumber() != "(none)">
-                        <#assign currentPoNumber = cart.getPoNumber()>
+                      <#if shoppingCart.getPoNumber()?exists && shoppingCart.getPoNumber() != "(none)">
+                        <#assign currentPoNumber = shoppingCart.getPoNumber()>
                       </#if>
                       <input type="text" class="inputBox" name="corresponding_po_id" size="15" value="${currentPoNumber?if_exists}">
                     </td>
                   </tr>
-                  <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                  <#if shipping == true>
+                  <#if productStore.showCheckoutGiftOptions?if_exists != "N">
+                  <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td colspan="2">
                       <div>
                         <span class="head2"><b>${uiLabelMap.OrderIsThisGift}?</b></span>
-                        <input type="radio" <#if cart.getIsGift()?default("Y") == "Y">checked="checked"</#if> name="is_gift" value="true"><span class="tabletext">${uiLabelMap.CommonYes}</span>
-                        <input type="radio" <#if cart.getIsGift()?default("N") == "N">checked="checked"</#if> name="is_gift" value="false"><span class="tabletext">${uiLabelMap.CommonNo}</span>
+                        <input type="radio" <#if shoppingCart.getIsGift()?default("Y") == "Y">checked="checked"</#if> name="is_gift" value="true"><span class="tabletext">${uiLabelMap.CommonYes}</span>
+                        <input type="radio" <#if shoppingCart.getIsGift()?default("N") == "N">checked="checked"</#if> name="is_gift" value="false"><span class="tabletext">${uiLabelMap.CommonNo}</span>
                       </div>
                     </td>
                   </tr>
@@ -265,11 +262,14 @@ function toggleBillingAccount(box) {
                   </tr>
                   <tr>
                     <td colspan="2">
-                      <textarea class="textAreaBox" cols="30" rows="3" wrap="hard" name="gift_message">${cart.getGiftMessage()?if_exists}</textarea>
+                      <textarea class="textAreaBox" cols="30" rows="3" wrap="hard" name="gift_message">${shoppingCart.getGiftMessage()?if_exists}</textarea>
                     </td>
                   </tr>
-                  <tr><td colspan="2"><hr class="sepbar"/></td></tr>
+                  <#else/>
+                  <input type="hidden" name="is_gift" value="false"/>
+                  </#if>
                  </#if>
+                  <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td colspan="2">
                       <div class="head2"><b>${uiLabelMap.PartyEmailAddresses}</b></div>
@@ -280,15 +280,15 @@ function toggleBillingAccount(box) {
                       <div class="tabletext">${uiLabelMap.OrderEmailSentToFollowingAddresses}:</div>
                       <div class="tabletext">
                       <b>
-                          <#list emailList as email>
-                            ${email.infoString?if_exists}<#if email_has_next>,</#if>
-                          </#list>
+                      <#list emailList as email>
+                        ${email.infoString?if_exists}<#if email_has_next>,</#if>
+                      </#list>
                       </b>
                       </div>
                       <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
                       <br/>
                       <div class="tabletext">${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
-                      <input type="text" class="inputBox" size="30" name="order_additional_emails" value="${cart.getOrderAdditionalEmails()?if_exists}"/>
+                      <input type="text" class="inputBox" size="30" name="order_additional_emails" value="${shoppingCart.getOrderAdditionalEmails()?if_exists}"/>
                     </td>
                   </tr>
                 </table>
@@ -323,7 +323,7 @@ function toggleBillingAccount(box) {
                   <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE?exists>
                   <tr>
                     <td width="1%">
-                      <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked="checked"</#if>>
+                      <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked="checked"</#if>/>
                     </td>
                     <td width="50%">
                       <span class="tabletext">${uiLabelMap.OrderMoneyOrder}</span>
@@ -333,7 +333,7 @@ function toggleBillingAccount(box) {
                   <#if productStorePaymentMethodTypeIdMap.EXT_COD?exists>
                   <tr>
                     <td width="1%">
-                      <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked="checked"</#if>>
+                      <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked="checked"</#if>/>
                     </td>
                     <td width="50%">
                       <span class="tabletext">${uiLabelMap.OrderCOD}</span>
@@ -343,7 +343,7 @@ function toggleBillingAccount(box) {
                   <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY?exists>
                   <tr>
                     <td width="1%">
-                      <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked="checked"</#if>>
+                      <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked="checked"</#if>/>
                     </td>
                     <td width="50%">
                       <span class="tabletext">${uiLabelMap.AccountingPayWithWorldPay}</span>
@@ -353,7 +353,7 @@ function toggleBillingAccount(box) {
                   <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL?exists>
                   <tr>
                     <td width="1%">
-                      <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked="checked"</#if>>
+                      <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked="checked"</#if>/>
                     </td>
                     <td width="50%">
                       <span class="tabletext">${uiLabelMap.AccountingPayWithPayPal}</span>
@@ -375,7 +375,7 @@ function toggleBillingAccount(box) {
                       <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                       <tr>
                         <td width="1%">
-                          <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if>/>
                         </td>
                         <td width="50%">
                           <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
@@ -388,7 +388,7 @@ function toggleBillingAccount(box) {
                       <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                       <tr>
                         <td width="1%">
-                          <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if>/>
                         </td>
                         <td width="50%">
                           <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
@@ -418,7 +418,7 @@ function toggleBillingAccount(box) {
 
                       <tr>
                         <td width="1%">
-                          <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if>/>
                         </td>
                         <td width="50%">
                           <span class="tabletext">${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
@@ -436,7 +436,7 @@ function toggleBillingAccount(box) {
                     <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                     <tr>
                       <td width="1%">
-                        <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT" <#if "EXT_BILLACT" == checkOutPaymentId>checked="checked"</#if>></hr>
+                        <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT" <#if "EXT_BILLACT" == checkOutPaymentId>checked="checked"</#if>/></hr>
                       </td>
                       <td width="50%">
                         <span class="tabletext">${uiLabelMap.AccountingPayOnlyWithBillingAccount}</span>
@@ -447,11 +447,11 @@ function toggleBillingAccount(box) {
                       <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>
                       <tr>
                         <td align="left" valign="top" width="1%">
-                          <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="${billingAccount.billingAccountId}" <#if (billingAccount.billingAccountId == selectedBillingAccount?default(""))>checked="checked"</#if>>
+                          <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="${billingAccount.billingAccountId}" <#if (billingAccount.billingAccountId == selectedBillingAccount?default(""))>checked="checked"</#if>/>
                         </td>
                         <td align="left" valign="top" width="99%">
                           <div class="tabletext">
-                           ${billingAccount.description?default("Bill Account")} [${uiLabelMap.OrderNbr}<b>${billingAccount.billingAccountId}</b>]&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(cart.getCurrency())/>)<br/>
+                           ${billingAccount.description?default("Bill Account")} [${uiLabelMap.OrderNbr}<b>${billingAccount.billingAccountId}</b>]&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(shoppingCart.getCurrency())/>)<br/>
                            <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="8" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                           </div>
                         </td>
@@ -459,8 +459,8 @@ function toggleBillingAccount(box) {
                     </#list>
                     <tr>
                       <td align="left" valign="top" width="1%">
-                        <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="_NA" <#if (selectedBillingAccount?default("") == "N")>checked="checked"</#if>>
-                        <input type="hidden" name="_NA_amount" value="0.00">
+                        <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="_NA" <#if (selectedBillingAccount?default("") == "N")>checked="checked"</#if>/>
+                        <input type="hidden" name="_NA_amount" value="0.00"/>
                       </td>
                       <td align="left" valign="top" width="99%">
                         <div class="tabletext">${uiLabelMap.AccountingNoBillingAccount}</div>
@@ -474,7 +474,7 @@ function toggleBillingAccount(box) {
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td width="1%">
-                      <input type="checkbox" name="addGiftCard" value="Y">
+                      <input type="checkbox" name="addGiftCard" value="Y"/>
                     </td>
                     <td width="50%">
                       <span class="tabletext">${uiLabelMap.AccountingUseGiftCardNotOnFile}</span>
@@ -485,7 +485,7 @@ function toggleBillingAccount(box) {
                       <div class="tabletext">${uiLabelMap.AccountingNumber}</div>
                     </td>
                     <td width="50%">
-                      <input type="text" size="15" class="inputBox" name="giftCardNumber" value="${(requestParameters.giftCardNumber)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                      <input type="text" size="15" class="inputBox" name="giftCardNumber" value="${(requestParameters.giftCardNumber)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
                     </td>
                   </tr>
                   <tr>
@@ -493,7 +493,7 @@ function toggleBillingAccount(box) {
                       <div class="tabletext">${uiLabelMap.AccountingPIN}</div>
                     </td>
                     <td width="50%">
-                      <input type="text" size="10" class="inputBox" name="giftCardPin" value="${(requestParameters.giftCardPin)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                      <input type="text" size="10" class="inputBox" name="giftCardPin" value="${(requestParameters.giftCardPin)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
                     </td>
                   </tr>
                   <tr>
@@ -501,7 +501,7 @@ function toggleBillingAccount(box) {
                       <div class="tabletext">${uiLabelMap.AccountingAmount}</div>
                     </td>
                     <td width="50%">
-                      <input type="text" size="6" class="inputBox" name="giftCardAmount" value="${(requestParameters.giftCardAmount)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                      <input type="text" size="6" class="inputBox" name="giftCardAmount" value="${(requestParameters.giftCardAmount)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
                     </td>
                   </tr>
                 </#if>

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -32,18 +32,14 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.shipping.*;
 
-dispatcher = request.getAttribute("dispatcher");
-delegator = request.getAttribute("delegator");
-cart = session.getAttribute("shoppingCart");
-currencyUomId = cart.getCurrency();
-userLogin = session.getAttribute("userLogin");
+shoppingCart = session.getAttribute("shoppingCart");
+currencyUomId = shoppingCart.getCurrency();
 party = userLogin.getRelatedOne("Party");
-productStoreId = ProductStoreWorker.getProductStoreId(request);
+productStore = ProductStoreWorker.getProductStore(request);
 
 shippingEstWpr = null;
-
-if (cart != null) {
-    shippingEstWpr = new ShippingEstimateWrapper(dispatcher, cart, 0);
+if (shoppingCart != null) {
+    shippingEstWpr = new ShippingEstimateWrapper(dispatcher, shoppingCart, 0);
     context.put("shippingEstWpr", shippingEstWpr);
     context.put("carrierShipmentMethodList", shippingEstWpr.getShippingMethods());
 }
@@ -51,22 +47,23 @@ if (cart != null) {
 profiledefs = delegator.findByPrimaryKey("PartyProfileDefault", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "productStoreId", productStoreId));
 context.put("profiledefs", profiledefs);
 
-context.put("shoppingCart", cart);
+context.put("shoppingCart", shoppingCart);
 context.put("userLogin", userLogin);
-context.put("productStoreId", productStoreId);
+context.put("productStoreId", productStore.get("productStoreId"));
+context.put("productStore", productStore);
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
 
-if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null) {
-    context.put("chosenShippingMethod", cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId());
+if (shoppingCart.getShipmentMethodTypeId() != null && shoppingCart.getCarrierPartyId() != null) {
+    context.put("chosenShippingMethod", shoppingCart.getShipmentMethodTypeId() + '@' + shoppingCart.getCarrierPartyId());
 } else if (profiledefs != null && profiledefs.get("defaultShipMeth") != null) {
     context.put("chosenShippingMethod", profiledefs.get("defaultShipMeth"));
 }
 
 // other profile defaults
-if (cart.getShippingAddress() == null && profiledefs != null && profiledefs.get("defaultShipAddr") != null) {
-    cart.setShippingContactMechId(profiledefs.get("defaultShipAddr"));
+if (shoppingCart.getShippingAddress() == null && profiledefs != null && profiledefs.get("defaultShipAddr") != null) {
+    shoppingCart.setShippingContactMechId(profiledefs.get("defaultShipAddr"));
 }
-if (cart.selectedPayments() == 0 && profiledefs != null && profiledefs.get("defaultPayMeth") != null) {
-    cart.addPayment(profiledefs.get("defaultPayMeth"));
+if (shoppingCart.selectedPayments() == 0 && profiledefs != null && profiledefs.get("defaultPayMeth") != null) {
+    shoppingCart.addPayment(profiledefs.get("defaultPayMeth"));
 }

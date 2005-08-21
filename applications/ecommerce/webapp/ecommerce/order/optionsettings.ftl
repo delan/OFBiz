@@ -45,11 +45,11 @@
               </td>
               <td valign="top">
                 <div class='tabletext'>
-                          <#if cart.getShippingContactMechId()?exists>
+                          <#if shoppingCart.getShippingContactMechId()?exists>
                             <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                           </#if>
                           <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}
-                          <#if shippingEst?has_content> - <#if (shippingEst > -1)?exists><@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
+                          <#if shippingEst?has_content> - <#if (shippingEst > -1)?exists><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
                 </div>
               </td>
             </tr>
@@ -72,7 +72,7 @@
             </tr>
             <tr>
               <td valign="top">
-                 <input type='radio' <#if cart.getMaySplit()?default("N") == "N">checked</#if> name='may_split' value='false'>
+                 <input type='radio' <#if shoppingCart.getMaySplit()?default("N") == "N">checked</#if> name='may_split' value='false'>
               </td>
               <td valign="top">
                 <div class="tabletext">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</div>
@@ -80,7 +80,7 @@
             </tr>
             <tr>
               <td valign="top">
-                 <input <#if cart.getMaySplit()?default("N") == "Y">checked</#if> type='radio' name='may_split' value='true'>
+                 <input <#if shoppingCart.getMaySplit()?default("N") == "Y">checked</#if> type='radio' name='may_split' value='true'>
               </td>
               <td valign="top">
                 <div class="tabletext">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</div>
@@ -94,23 +94,24 @@
             </tr>
             <tr>
               <td colspan="2">
-                <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
+                <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()?if_exists}</textarea>
               </td>
             </tr>
             <tr><td colspan="2"><hr class="sepbar"/></td></tr>
             <tr>
               <td colspan="2">
                 <span class="head2"><b>${uiLabelMap.OrderPoNumber}</b></span>&nbsp;
-                <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${cart.getPoNumber()?if_exists}'/>
+                <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${shoppingCart.getPoNumber()?if_exists}'/>
               </td>
             </tr>
+            <#if productStore.showCheckoutGiftOptions?if_exists != "N">
             <tr><td colspan="2"><hr class="sepbar"/></td></tr>
             <tr>
               <td colspan="2">
                 <div>
                   <span class="head2"><b>${uiLabelMap.OrderIsThisGift}?</b></span>
-                  <input type='radio' <#if cart.getIsGift()?default("Y") == "Y">checked</#if> name='is_gift' value='true'/><span class='tabletext'>${uiLabelMap.CommonYes}</span>
-                  <input type='radio' <#if cart.getIsGift()?default("N") == "N">checked</#if> name='is_gift' value='false'/><span class='tabletext'>${uiLabelMap.CommonNo}</span>
+                  <input type='radio' <#if shoppingCart.getIsGift()?default("Y") == "Y">checked</#if> name='is_gift' value='true'/><span class='tabletext'>${uiLabelMap.CommonYes}</span>
+                  <input type='radio' <#if shoppingCart.getIsGift()?default("N") == "N">checked</#if> name='is_gift' value='false'/><span class='tabletext'>${uiLabelMap.CommonNo}</span>
                 </div>
               </td>
             </tr>
@@ -122,9 +123,10 @@
             </tr>
             <tr>
               <td colspan="2">
-                <textarea class='textAreaBox' cols="30" rows="3" name="gift_message">${cart.getGiftMessage()?if_exists}</textarea>
+                <textarea class='textAreaBox' cols="30" rows="3" name="gift_message">${shoppingCart.getGiftMessage()?if_exists}</textarea>
               </td>
             </tr>
+            </#if>
             <tr>
               <td align="center" colspan="2">
                 <input type="submit" class="smallsubmit" value="${uiLabelMap.CommonContinue}"/>
