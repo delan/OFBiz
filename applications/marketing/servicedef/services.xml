@@ -92,6 +92,12 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="removeContactList" default-entity-name="ContactList" engine="simple"
+            location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="removeContactList" auth="true">
+        <description>Remove a ContactList record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
         
     <!-- ContactListParty Services -->
     <service name="createContactListParty" default-entity-name="ContactListParty" engine="simple"
