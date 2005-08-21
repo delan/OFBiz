@@ -634,83 +634,93 @@
     </request-map>
 
     <!-- communication event requests -->
-    <request-map uri="pendingCommunications">
+    <request-map uri="PendingCommunications">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="pendingCommunications"/>
+        <response name="success" type="view" value="PendingCommunications"/>
     </request-map>
-    <request-map uri="viewcommunications">
+    <request-map uri="EditCommunicationEvent">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="listCommunications"/>
+        <response name="success" type="view" value="EditCommunicationEvent"/>
     </request-map>
-    <request-map uri="viewCommunicationEvent">
+    <request-map uri="ViewCommunicationEvent">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="ViewCommunicationEvent"/>
     </request-map>
-    <request-map uri="viewCommunication">
+    <request-map uri="EditCommunication">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewCommunication"/>
-    </request-map>
-    <request-map uri="editCommunication">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="editCommunication"/>
+        <response name="success" type="view" value="EditCommunicationEvent"/>
     </request-map>
     <request-map uri="createCommunicationEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEvent"/>
-        <response name="success" type="view" value="viewCommunication"/>
-        <response name="success" type="view" value="viewCommunication"/>
+        <response name="success" type="view" value="EditCommunicationEvent"/>
+        <response name="success" type="view" value="EditCommunicationEvent"/>
     </request-map>
     <request-map uri="updateCommunicationEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateCommunicationEvent"/>
-        <response name="success" type="view" value="viewCommunication"/>
-        <response name="success" type="view" value="viewCommunication"/>
+        <response name="success" type="view" value="EditCommunicationEvent"/>
+        <response name="success" type="view" value="EditCommunicationEvent"/>
     </request-map>
-    <request-map uri="viewCommPurposes">
+    <request-map uri="UpdateCommPurposes">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewCommPurposes"/>
+        <response name="success" type="view" value="UpdateCommPurposes"/>
     </request-map>
     <request-map uri="createCommunicationEventPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventPurpose"/>
-        <response name="success" type="view" value="viewCommPurposes"/>
-        <response name="success" type="view" value="viewCommPurposes"/>
+        <response name="success" type="view" value="UpdateCommPurposes"/>
+        <response name="success" type="view" value="UpdateCommPurposes"/>
     </request-map>
     <request-map uri="removeCommunicationEventPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeCommunicationEventPurpose"/>
-        <response name="success" type="view" value="viewCommPurposes"/>
-        <response name="success" type="view" value="viewCommPurposes"/>
+        <response name="success" type="view" value="UpdateCommPurposes"/>
+        <response name="success" type="view" value="UpdateCommPurposes"/>
     </request-map>
-    <request-map uri="viewCommRoles">
+    <request-map uri="UpdateCommRoles">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewCommRoles"/>
+        <response name="success" type="view" value="UpdateCommRoles"/>
     </request-map>
     <request-map uri="createCommunicationEventRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventRole"/>
-        <response name="success" type="view" value="viewCommRoles"/>
-        <response name="success" type="view" value="viewCommRoles"/>
+        <response name="success" type="view" value="UpdateCommRoles"/>
+        <response name="success" type="view" value="UpdateCommRoles"/>
     </request-map>
-    <request-map uri="removeCommunicationEventRole">
+    <request-map uri="RemoveCommunicationEventRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeCommunicationEventRole"/>
-        <response name="success" type="view" value="viewCommRoles"/>
-        <response name="success" type="view" value="viewCommRoles"/>
+        <response name="success" type="view" value="UpdateCommRoles"/>
+        <response name="success" type="view" value="UpdateCommRoles"/>
     </request-map>
-    <request-map uri="findCommunications">
+    <request-map uri="FindCommEvents">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="findCommunications"/>
+        <response name="success" type="view" value="FindCommunications"/>
     </request-map>
-    <request-map uri="listCommunications">
+    <request-map uri="ListPartyCommEvents">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="listCommunications"/>
+        <response name="success" type="view" value="ListPartyCommEvents"/>
     </request-map>
-    <request-map uri="listLookupCommunications">
+    <request-map uri="ListLookupCommEvents">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="listLookupCommunications"/>
+        <response name="success" type="view" value="ListLookupCommEvents"/>
     </request-map>
-    
+    <request-map uri="ListCommWorkEfforts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListCommWorkEfforts"/>
+    </request-map>
+    <request-map uri="ListCommCustRequests">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListCommCustRequests"/>
+    </request-map>
+
+    <!-- ContactList request mappings -->
+    <request-map uri="ListPartyContactLists">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListPartyContactLists"/>
+    </request-map>
+   
     <!-- Lookup request mappings -->
     <request-map uri="LookupPartyName">
         <security https="true" auth="true"/>
@@ -847,14 +857,18 @@
     <view-map name="editeftaccount" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editeftaccount"/>
     <view-map name="editavsoverride" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editavsoverride"/>
 
-    <view-map name="pendingCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#pendingCommunications"/>
-    <view-map name="listCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listCommunications"/>
-    <view-map name="listLookupCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#listLookupCommunications"/>
-    <view-map name="findCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#findCommunications"/>
-    <view-map name="editCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#editCommunication"/>
-    <view-map name="viewCommunication" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#viewCommunication"/>
-    <view-map name="viewCommPurposes" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#viewCommPurposes"/>
-    <view-map name="viewCommRoles" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#viewCommRoles"/>
+    <view-map name="PendingCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#PendingCommunications"/>
+    <view-map name="ListPartyCommEvents" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListPartyCommEvents"/>
+    <view-map name="ListLookupCommEvents" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListLookupCommEvents"/>
+    <view-map name="FindCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#FindCommunications"/>
+    <view-map name="EditCommunicationEvent" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#EditCommunicationEvent"/>
+    <view-map name="ViewCommunicationEvent" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ViewCommunicationEvent"/>
+    <view-map name="UpdateCommPurposes" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#UpdateCommPurposes"/>
+    <view-map name="UpdateCommRoles" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#UpdateCommRoles"/>
+    <view-map name="ListCommWorkEfforts" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommWorkEfforts"/>
+    <view-map name="ListCommCustRequests" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommCustRequests"/>
+    
+    <view-map name="ListPartyContactLists" type="screen" page="component://party/widget/partymgr/ContactListScreens.xml#ListPartyContactLists"/>
     
     <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateNewParty"/>
     <view-map name="NewCustomer" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewCustomer"/>

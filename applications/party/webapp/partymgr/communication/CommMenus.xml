@@ -35,8 +35,8 @@
         <menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
             <link target="/EditPartyRelationships?partyId=${partyId}"/>
         </menu-item>
-        <menu-item name="viewcommunications" title="${uiLabelMap.PartyCommunications}">
-            <link target="/viewcommunications?partyId=${partyId}"/>
+        <menu-item name="PartyCommEvents" title="${uiLabelMap.PartyCommunications}" >
+            <link target="/ListPartyCommEvents?partyId=${partyId}"/>
         </menu-item>
         <menu-item name="viewvendor" title="${uiLabelMap.PartyVendor}">
             <link target="/viewvendor?partyId=${partyId}"/>
@@ -56,7 +56,8 @@
     </menu>
     <menu name="CommEventTabBar" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" 
             default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
-            orientation="horizontal" type="simple">
+            orientation="horizontal" type="simple"  selected-menuitem-context-field-name="subTabButtonItem">
+            <!-- 
         <menu-item name="task" title="${uiLabelMap.PartyNewTask}">
             <link target="/workeffort/control/task?communicationEventId=${communicationEventId}" url-mode="inter-app"/>
         </menu-item>
@@ -69,11 +70,21 @@
         <menu-item name="viewReply" title="[Reply]">
             <link target="/viewCommunicationEvent?partyId=${partyId}&amp;partyIdTo=${partyId}&amp;parentCommEventId=${communicationEvent.communicationEventId}&amp;origCommEventId=${communicationEvent.origCommEventId}"/>
         </menu-item>
-        <menu-item name="viewPurposes" title="Purposes">
-            <link target="/viewCommPurposes?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
+        -->
+        <menu-item name="CommunicationEvent" title="CommEvent">
+            <link target="/EditCommunicationEvent?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </menu-item>
-        <menu-item name="viewRoles" title="Roles">
-            <link target="/viewCommRoles?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
+        <menu-item name="UpdateCommPurposes" title="Purposes">
+            <link target="/UpdateCommPurposes?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
+        </menu-item>
+        <menu-item name="UpdateCommRoles" title="Roles">
+            <link target="/UpdateCommRoles?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
+        </menu-item>
+        <menu-item name="ListCommWorkEfforts" title="WorkEfforts">
+            <link target="/ListCommWorkEfforts?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
+        </menu-item>
+        <menu-item name="ListCommCustRequests" title="CustRequests">
+            <link target="/ListCommCustRequests?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </menu-item>
     </menu>
     <menu name="CommFindTabBar" default-menu-item-name="find" default-selected-style="tabButtonSelected" default-title-style="tabButton" 
