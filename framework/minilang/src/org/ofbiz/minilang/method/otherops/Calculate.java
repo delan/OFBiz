@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,14 +23,21 @@
  */
 package org.ofbiz.minilang.method.otherops;
 
-import java.util.*;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.w3c.dom.*;
-import org.ofbiz.base.util.*;
-import org.ofbiz.minilang.*;
-import org.ofbiz.minilang.method.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.minilang.SimpleMethod;
+import org.ofbiz.minilang.method.ContextAccessor;
+import org.ofbiz.minilang.method.MethodContext;
+import org.ofbiz.minilang.method.MethodOperation;
+import org.w3c.dom.Element;
 
 /**
  * Calculates a result based on nested calcops.
@@ -43,16 +50,20 @@ public class Calculate extends MethodOperation {
     
     public static final String module = Calculate.class.getName();
     
+    public static final BigDecimal ZERO = new BigDecimal(0.0);
     public static final int TYPE_DOUBLE = 1;
     public static final int TYPE_FLOAT = 2;
     public static final int TYPE_LONG = 3;
     public static final int TYPE_INTEGER = 4;
     public static final int TYPE_STRING = 5;
+    public static final int TYPE_BIG_DECIMAL = 6;
 
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
-    String formatString;
+    String decimalScaleString;
+    String decimalFormatString;
     String typeString;
+    String roundingModeString;
     Calculate.SubCalc calcops[];
 
     public Calculate(Element element, SimpleMethod simpleMethod) {
@@ -60,8 +71,10 @@ public class Calculate extends MethodOperation {
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
-        formatString = element.getAttribute("decimal-format");
+        decimalScaleString = element.getAttribute("decimal-scale");
+        decimalFormatString = element.getAttribute("decimal-format");
         typeString = element.getAttribute("type");
+        roundingModeString = element.getAttribute("rounding-mode");
 
         List calcopElements = UtilXml.childElementList(element);
         calcops = new Calculate.SubCalc[calcopElements.size()];
@@ -97,50 +110,97 @@ public class Calculate extends MethodOperation {
             type = Calculate.TYPE_INTEGER;
         } else if ("String".equals(typeString)) {
             type = Calculate.TYPE_STRING;
+        } else if ("BigDecimal".equals(typeString)) {
+            type = Calculate.TYPE_BIG_DECIMAL;
         } else {
             type = Calculate.TYPE_DOUBLE;
         }
         
-        double resultValue = 0;
+        String roundingModeString = methodContext.expandString(this.roundingModeString);
+        int roundingMode;
+        if ("Ceiling".equals(roundingModeString)) {
+            roundingMode = BigDecimal.ROUND_CEILING;
+        } else if ("Floor".equals(roundingModeString)) {
+            roundingMode = BigDecimal.ROUND_FLOOR;
+        } else if ("Up".equals(roundingModeString)) {
+            roundingMode = BigDecimal.ROUND_UP;
+        } else if ("Down".equals(roundingModeString)) {
+            roundingMode = BigDecimal.ROUND_DOWN;
+        } else if ("HalfUp".equals(roundingModeString)) {
+            roundingMode = BigDecimal.ROUND_HALF_UP;
+        } else if ("HalfDown".equals(roundingModeString)) {
+            roundingMode = BigDecimal.ROUND_HALF_DOWN;
+        } else if ("HalfEven".equals(roundingModeString)) {
+            roundingMode = BigDecimal.ROUND_HALF_EVEN;
+        } else if ("Unnecessary".equals(roundingModeString)) {
+            roundingMode = BigDecimal.ROUND_UNNECESSARY;
+        } else {
+            // default to HalfEven, reduce cumulative errors
+            roundingMode = BigDecimal.ROUND_HALF_EVEN;
+        }
 
+        String decimalScaleString = methodContext.expandString(this.decimalScaleString);
+        int decimalScale = 2;
+        if (UtilValidate.isNotEmpty(decimalScaleString)) {
+            decimalScale = Integer.valueOf(decimalScaleString).intValue();
+        }
+        
+        String decimalFormatString = methodContext.expandString(this.decimalFormatString);
+        DecimalFormat df = null;
+        if (UtilValidate.isNotEmpty(decimalFormatString)) {
+            df = new DecimalFormat(decimalFormatString);
+        }
+        
+        BigDecimal resultValue = ZERO;
+        resultValue.setScale(decimalScale, roundingMode);
         for (int i = 0; i < calcops.length; i++) {
-            resultValue += calcops[i].calcValue(methodContext);
+            resultValue = resultValue.add(calcops[i].calcValue(methodContext, roundingMode));
             // Debug.logInfo("main total so far: " + resultValue, module);
         }
-
-        // run the decimal-formatting         
-        if (UtilValidate.isNotEmpty(formatString) && resultValue > 0) {
-            DecimalFormat df = new DecimalFormat(formatString);
-            try {
-                resultValue = ((Double) df.parse(df.format(resultValue))).doubleValue();
-            } catch (ParseException e) {
-                String errorMessage = "Unable to format [" + formatString + "] result [" + resultValue + "]";
-                Debug.logError(e, errorMessage, module);
-                if (methodContext.getMethodType() == MethodContext.EVENT) {
-                    methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errorMessage);
-                } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                    methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errorMessage);
-                }
-                return false;
+        resultValue.setScale(decimalScale, roundingMode);
+        
+        /* the old thing that did conversion to string and back, may want to use somewhere sometime...:
+         * for now just doing the setScale above (before and after calc ops)
+        try {
+            resultValue = new BigDecimal(df.format(resultValue));
+        } catch (ParseException e) {
+            String errorMessage = "Unable to format [" + formatString + "] result [" + resultValue + "]";
+            Debug.logError(e, errorMessage, module);
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errorMessage);
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errorMessage);
             }
+            return false;
         }
-
+        */
+        
         Object resultObj = null;
         switch (type) {
         case TYPE_DOUBLE:
-            resultObj = new Double(resultValue);
+            resultObj = new Double(resultValue.doubleValue());
             break;
         case TYPE_FLOAT:
-            resultObj = new Float(resultValue);
+            resultObj = new Float(resultValue.floatValue());
             break;
         case TYPE_LONG:
-            resultObj = new Long(Math.round(resultValue));
+            resultValue.setScale(0, roundingMode);
+            resultObj = new Long(resultValue.longValue());
             break;
         case TYPE_INTEGER:
-            resultObj = new Integer((int) Math.round(resultValue));
+            resultValue.setScale(0, roundingMode);
+            resultObj = new Integer(resultValue.intValue());
             break;
         case TYPE_STRING:
-            resultObj = new Double(resultValue).toString();
+            // run the decimal-formatting         
+            if (df != null && resultValue.compareTo(ZERO) > 0) {
+                resultObj = df.format(resultValue);
+            } else {
+                resultObj = resultValue.toString();
+            }
+            break;            
+        case TYPE_BIG_DECIMAL:
+            resultObj = resultValue;
             break;            
         }
 
@@ -169,7 +229,7 @@ public class Calculate extends MethodOperation {
     }
 
     protected static interface SubCalc {
-        public double calcValue(MethodContext methodContext);
+        public BigDecimal calcValue(MethodContext methodContext, int roundingMode);
     }
 
     protected static class NumberOp implements SubCalc {
@@ -179,11 +239,11 @@ public class Calculate extends MethodOperation {
             valueStr = element.getAttribute("value");
         }
 
-        public double calcValue(MethodContext methodContext) {
+        public BigDecimal calcValue(MethodContext methodContext, int roundingMode) {
             String valueStr = methodContext.expandString(this.valueStr);
-            double value;
+            BigDecimal value;
             try {
-                value = Double.parseDouble(valueStr);
+                value = new BigDecimal(valueStr);
             } catch (Exception e) {
                 Debug.logError(e, "Could not parse the number string: " + valueStr, module);
                 throw new IllegalArgumentException("Could not parse the number string: " + valueStr);
@@ -233,7 +293,7 @@ public class Calculate extends MethodOperation {
             }
         }
 
-        public double calcValue(MethodContext methodContext) {
+        public BigDecimal calcValue(MethodContext methodContext, int roundingMode) {
             String operatorStr = methodContext.expandString(this.operatorStr);
             int operator = CalcOp.OPERATOR_ADD;
             if ("get".equals(operatorStr)) {
@@ -250,7 +310,7 @@ public class Calculate extends MethodOperation {
                 operator = CalcOp.OPERATOR_NEGATIVE;
             }
             
-            double resultValue = 0;
+            BigDecimal resultValue = ZERO;
             boolean isFirst = true;
 
             // if a fieldAcsr was specified, get the field from the map or result and use it as the initial value
@@ -271,17 +331,19 @@ public class Calculate extends MethodOperation {
 
                 if (fieldObj != null) {
                     if (fieldObj instanceof Double) {
-                        resultValue = ((Double) fieldObj).doubleValue();
+                        resultValue = new BigDecimal(((Double) fieldObj).doubleValue());
                     } else if (fieldObj instanceof Long) {
-                        resultValue = (double) ((Long) fieldObj).longValue();
+                        resultValue = BigDecimal.valueOf(((Long) fieldObj).longValue());
                     } else if (fieldObj instanceof Float) {
-                        resultValue = (double) ((Float) fieldObj).floatValue();
+                        resultValue = new BigDecimal(((Float) fieldObj).floatValue());
                     } else if (fieldObj instanceof Integer) {
-                        resultValue = (double) ((Integer) fieldObj).intValue();
-                    } else if (fieldObj instanceof String) {             
-                        resultValue = Double.valueOf((String) fieldObj).doubleValue();                        
+                        resultValue = BigDecimal.valueOf(((Integer) fieldObj).longValue());
+                    } else if (fieldObj instanceof String) {
+                        resultValue = new BigDecimal((String) fieldObj);
+                    } else if (fieldObj instanceof BigDecimal) {
+                        resultValue = (BigDecimal) fieldObj;
                     }
-                    if (operator == OPERATOR_NEGATIVE) resultValue = -resultValue;
+                    if (operator == OPERATOR_NEGATIVE) resultValue = resultValue.negate();
                     isFirst = false;
                 } else {
                     if (Debug.infoOn()) Debug.logInfo("Field not found with field-name " + fieldAcsr + ", and map-name " + mapAcsr + "using a default of 0", module);
@@ -290,23 +352,23 @@ public class Calculate extends MethodOperation {
 
             for (int i = 0; i < calcops.length; i++) {
                 if (isFirst) {
-                    resultValue = calcops[i].calcValue(methodContext);
-                    if (operator == OPERATOR_NEGATIVE) resultValue = -resultValue;
+                    resultValue = calcops[i].calcValue(methodContext, roundingMode);
+                    if (operator == OPERATOR_NEGATIVE) resultValue = resultValue.negate();
                     isFirst = false;
                 } else {
                     switch (operator) {
                     case OPERATOR_ADD:
-                        resultValue += calcops[i].calcValue(methodContext);
+                        resultValue = resultValue.add(calcops[i].calcValue(methodContext, roundingMode));
                         break;
                     case OPERATOR_SUBTRACT:
                     case OPERATOR_NEGATIVE:
-                        resultValue -= calcops[i].calcValue(methodContext);
+                        resultValue = resultValue.subtract(calcops[i].calcValue(methodContext, roundingMode));
                         break;
                     case OPERATOR_MULTIPLY:
-                        resultValue *= calcops[i].calcValue(methodContext);
+                        resultValue = resultValue.multiply(calcops[i].calcValue(methodContext, roundingMode));
                         break;
                     case OPERATOR_DIVIDE:
-                        resultValue /= calcops[i].calcValue(methodContext);
+                        resultValue = resultValue.divide(calcops[i].calcValue(methodContext, roundingMode), roundingMode);
                         break;
                     }
                 }
