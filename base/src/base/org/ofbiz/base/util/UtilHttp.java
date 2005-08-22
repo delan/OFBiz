@@ -35,13 +35,16 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -642,14 +645,30 @@ public class UtilHttp {
     }
 
     public static String stripViewParamsFromQueryString(String queryString) {
+        Set paramNames = new HashSet();
+        paramNames.add("VIEW_INDEX");
+        paramNames.add("VIEW_SIZE");
+        paramNames.add("viewIndex");
+        paramNames.add("viewSize");
+        return stripNamedParamsFromQueryString(queryString, paramNames);
+    }
+    
+    public static String stripNamedParamsFromQueryString(String queryString, Collection paramNames) {
         String retStr = null;
         if (UtilValidate.isNotEmpty(queryString)) {
             StringTokenizer queryTokens = new StringTokenizer(queryString, "&");
             StringBuffer cleanQuery = new StringBuffer();
             while (queryTokens.hasMoreTokens()) {
-                String token =  queryTokens.nextToken();
-                if ((token.indexOf("VIEW_INDEX") == -1) && (token.indexOf("VIEW_SIZE")==-1)
-                    && (token.indexOf("viewIndex") == -1) && (token.indexOf("viewSize")==-1)) {
+                String token = queryTokens.nextToken();
+                if (token.startsWith("amp;")) {
+                    token = token.substring(4);
+                }
+                int equalsIndex = token.indexOf("=");
+                String name = token;
+                if (equalsIndex > 0) {
+                    name = token.substring(0, equalsIndex);
+                }
+                if (!paramNames.contains(name)) {
                     cleanQuery.append(token);
                     if(queryTokens.hasMoreTokens()){
                         cleanQuery.append("&");
