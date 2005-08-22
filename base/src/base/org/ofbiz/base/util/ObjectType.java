@@ -25,6 +25,7 @@ package org.ofbiz.base.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -383,7 +384,7 @@ public class ObjectType {
     }
 
     public static Class loadInfoClass(String typeName, ClassLoader loader) {
-        Class infoClass = null;
+        //Class infoClass = null;
         try {
             return ObjectType.loadClass(typeName, loader);
         } catch (SecurityException se1) {
@@ -489,14 +490,27 @@ public class ObjectType {
                 } else {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ");    
                 }
+            } else if ("BigDecimal".equals(type) || "java.math.BigDecimal".equals(type)) {
+                try {
+                    NumberFormat nf = null;
+                    if (locale == null) {
+                        nf = NumberFormat.getNumberInstance();
+                    } else {
+                        nf = NumberFormat.getNumberInstance(locale);
+                    }
+                    Number tempNum = nf.parse(str);
+                    return new BigDecimal(tempNum.toString());
+                } catch (ParseException e) {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                }
             } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 try {
                     NumberFormat nf = null;
-
-                    if (locale == null)
+                    if (locale == null) {
                         nf = NumberFormat.getNumberInstance();
-                    else
+                    } else {
                         nf = NumberFormat.getNumberInstance(locale);
+                    }
                     Number tempNum = nf.parse(str);
 
                     return new Double(tempNum.doubleValue());
@@ -506,11 +520,11 @@ public class ObjectType {
             } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
                 try {
                     NumberFormat nf = null;
-
-                    if (locale == null)
+                    if (locale == null) {
                         nf = NumberFormat.getNumberInstance();
-                    else
+                    } else {
                         nf = NumberFormat.getNumberInstance(locale);
+                    }
                     Number tempNum = nf.parse(str);
 
                     return new Float(tempNum.floatValue());
@@ -520,11 +534,11 @@ public class ObjectType {
             } else if ("Long".equals(type) || "java.lang.Long".equals(type)) {
                 try {
                     NumberFormat nf = null;
-
-                    if (locale == null)
+                    if (locale == null) {
                         nf = NumberFormat.getNumberInstance();
-                    else
+                    } else {
                         nf = NumberFormat.getNumberInstance(locale);
+                    }
                     nf.setMaximumFractionDigits(0);
                     Number tempNum = nf.parse(str);
 
@@ -535,11 +549,11 @@ public class ObjectType {
             } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
                 try {
                     NumberFormat nf = null;
-
-                    if (locale == null)
+                    if (locale == null) {
                         nf = NumberFormat.getNumberInstance();
-                    else
+                    } else {
                         nf = NumberFormat.getNumberInstance(locale);
+                    }
                     nf.setMaximumFractionDigits(0);
                     Number tempNum = nf.parse(str);
 
@@ -570,7 +584,6 @@ public class ObjectType {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat(format);
                         java.util.Date fieldDate = sdf.parse(str);
-
                         return new java.sql.Date(fieldDate.getTime());
                     } catch (ParseException e) {
                         throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -599,7 +612,6 @@ public class ObjectType {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat(format);
                         java.util.Date fieldDate = sdf.parse(str);
-
                         return new java.sql.Time(fieldDate.getTime());
                     } catch (ParseException e) {
                         throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
@@ -635,7 +647,7 @@ public class ObjectType {
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
-        } else if (obj instanceof java.lang.Double) {
+        } else if (obj instanceof Double) {
             fromType = "Double";
             Double dbl = (Double) obj;
 
@@ -648,6 +660,8 @@ public class ObjectType {
                     nf = NumberFormat.getNumberInstance(locale);
                 }
                 return nf.format(dbl.doubleValue());
+            } else if ("BigDecimal".equals(type) || "java.math.BigDecimal".equals(type)) {
+                return new BigDecimal(dbl.doubleValue());
             } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 return obj;
             } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
@@ -659,7 +673,7 @@ public class ObjectType {
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
-        } else if (obj instanceof java.lang.Float) {
+        } else if (obj instanceof Float) {
             fromType = "Float";
             Float flt = (Float) obj;
 
@@ -671,6 +685,8 @@ public class ObjectType {
                 else
                     nf = NumberFormat.getNumberInstance(locale);
                 return nf.format(flt.doubleValue());
+            } else if ("BigDecimal".equals(type) || "java.math.BigDecimal".equals(type)) {
+                return new BigDecimal(flt.doubleValue());
             } else if ("Double".equals(type)) {
                 return new Double(flt.doubleValue());
             } else if ("Float".equals(type)) {
@@ -682,18 +698,20 @@ public class ObjectType {
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
-        } else if (obj instanceof java.lang.Long) {
+        } else if (obj instanceof Long) {
             fromType = "Long";
             Long lng = (Long) obj;
 
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
-
-                if (locale == null)
+                if (locale == null) {
                     nf = NumberFormat.getNumberInstance();
-                else
+                } else {
                     nf = NumberFormat.getNumberInstance(locale);
+                }
                 return nf.format(lng.longValue());
+            } else if ("BigDecimal".equals(type) || "java.math.BigDecimal".equals(type)) {
+                return BigDecimal.valueOf(lng.longValue());
             } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 return new Double(lng.doubleValue());
             } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
@@ -705,18 +723,19 @@ public class ObjectType {
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
-        } else if (obj instanceof java.lang.Integer) {
+        } else if (obj instanceof Integer) {
             fromType = "Integer";
             Integer intgr = (Integer) obj;
-
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
-
-                if (locale == null)
+                if (locale == null) {
                     nf = NumberFormat.getNumberInstance();
-                else
+                } else {
                     nf = NumberFormat.getNumberInstance(locale);
+                }
                 return nf.format(intgr.longValue());
+            } else if ("BigDecimal".equals(type) || "java.math.BigDecimal".equals(type)) {
+                return BigDecimal.valueOf(intgr.longValue());
             } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 return new Double(intgr.doubleValue());
             } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
@@ -728,16 +747,38 @@ public class ObjectType {
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
+        } else if (obj instanceof BigDecimal) {
+            fromType = "BigDecimal";
+            BigDecimal bigDec = (BigDecimal) obj;
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
+                NumberFormat nf = null;
+                if (locale == null) {
+                    nf = NumberFormat.getNumberInstance();
+                } else {
+                    nf = NumberFormat.getNumberInstance(locale);
+                }
+                return nf.format(bigDec.doubleValue());
+            } else if ("BigDecimal".equals(type) || "java.math.BigDecimal".equals(type)) {
+                return obj;
+            } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
+                return new Double(bigDec.doubleValue());
+            } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
+                return new Float(bigDec.floatValue());
+            } else if ("Long".equals(type) || "java.lang.Long".equals(type)) {
+                return new Long(bigDec.longValue());
+            } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
+                return new Integer(bigDec.intValue());
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
         } else if (obj instanceof java.sql.Date) {
             fromType = "Date";
             java.sql.Date dte = (java.sql.Date) obj;
-
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 if (format == null || format.length() == 0) {
                     return dte.toString();
                 } else {
                     SimpleDateFormat sdf = new SimpleDateFormat(format);
-
                     return sdf.format(new java.util.Date(dte.getTime()));
                 }
             } else if ("Date".equals(type) || "java.sql.Date".equals(type)) {
@@ -1014,7 +1055,7 @@ public class ObjectType {
                 }
             }
             result = str1.compareTo(str2);
-        } else if ("java.lang.Double".equals(type) || "java.lang.Float".equals(type) || "java.lang.Long".equals(type) || "java.lang.Integer".equals(type)) {
+        } else if ("java.lang.Double".equals(type) || "java.lang.Float".equals(type) || "java.lang.Long".equals(type) || "java.lang.Integer".equals(type) || "java.math.BigDecimal".equals(type)) {
             Number tempNum = (Number) convertedValue1;
             double value1Double = tempNum.doubleValue();
 

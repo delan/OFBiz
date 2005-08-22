@@ -1738,8 +1738,27 @@
                     <xs:enumeration value="Float"/>
                     <xs:enumeration value="Long"/>
                     <xs:enumeration value="Integer"/>
+                    <xs:enumeration value="BigDecimal"/>
                 </xs:restriction>
             </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="rounding-mode" default="HalfEven">
+            <xs:annotation><xs:documentation>Rounding mode for BigDecimal calculation, primarily for divide operation.</xs:documentation></xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="Ceiling"><xs:annotation><xs:documentation>Rounding mode to round towards positive infinity</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="Floor"><xs:annotation><xs:documentation>Rounding mode to round towards negative infinity</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="Up"><xs:annotation><xs:documentation>Rounding mode to round towards "nearest neighbor" unless both neighbors are equidistant, in which case round up</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="Down"><xs:annotation><xs:documentation>Rounding mode to round towards "nearest neighbor" unless both neighbors are equidistant, in which case round down</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HalfUp"><xs:annotation><xs:documentation>Rounding mode to round towards "nearest neighbor" unless both neighbors are equidistant, in which case round up</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HalfDown"><xs:annotation><xs:documentation>Rounding mode to round towards "nearest neighbor" unless both neighbors are equidistant, in which case round down</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HalfEven"><xs:annotation><xs:documentation>Rounding mode to round towards the "nearest neighbor" unless both neighbors are equidistant, in which case, round towards the even neighbor</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="Unnecessary"><xs:annotation><xs:documentation>Rounding mode to assert that the requested operation has an exact result, hence no rounding is necessary</xs:documentation></xs:annotation></xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="decimal-scale" default="2">
+            <xs:annotation><xs:documentation>Initial scale to use for the internal BigDecimal. Defaults to 2 for monetary calculations.</xs:documentation></xs:annotation>
         </xs:attribute>
         <xs:attribute type="xs:string" name="decimal-format"/>
     </xs:attributeGroup>
