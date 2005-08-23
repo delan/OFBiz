@@ -31,7 +31,7 @@
               ${screens.render("component://ecommerce/widget/OrderScreens.xml#anonymoustrail")}
             </div>
         </div>
-        <div class='boxhead'>&nbsp;${uiLabelMap.PartyBasicInformation}</div>
+        <div class="boxhead">&nbsp;${uiLabelMap.PartyBasicInformation}</div>
     </div>
     <div class="screenlet-body">
         <form name="custsetupform" method="post" action="<@ofbizUrl>/setBasicInfo</@ofbizUrl>">
@@ -41,35 +41,35 @@
                 <td width="26%" align="right"><div class="tabletext">${uiLabelMap.CommonTitle}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
-                  <input type="text" class='inputBox' name="personalTitle" value="${requestParameters.personalTitle?if_exists}" size="10" maxlength="30"/>
+                  <input type="text" class="inputBox" name="personalTitle" value="${requestParameters.personalTitle?if_exists}" size="10" maxlength="30"/>
                 </td>
               </tr>
               <tr>
                 <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyFirstName}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
-                  <input type="text" class='inputBox' name="firstName" value="${requestParameters.firstName?if_exists}" size="30" maxlength="30"/>
+                  <input type="text" class="inputBox" name="firstName" value="${requestParameters.firstName?if_exists}" size="30" maxlength="30"/>
                 *</td>
               </tr>
               <tr>
                 <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyMiddleInitial}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
-                  <input type="text" class='inputBox' name="middleName" value="${requestParameters.middleName?if_exists}" size="4" maxlength="4"/>
+                  <input type="text" class="inputBox" name="middleName" value="${requestParameters.middleName?if_exists}" size="4" maxlength="4"/>
                 </td>
               </tr>
               <tr>
                 <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyLastName} </div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
-                  <input type="text" class='inputBox' name="lastName" value="${requestParameters.lastName?if_exists}" size="30" maxlength="30"/>
+                  <input type="text" class="inputBox" name="lastName" value="${requestParameters.lastName?if_exists}" size="30" maxlength="30"/>
                 *</td>
               </tr>
               <tr>
                 <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartySuffix}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
-                  <input type="text" class='inputBox' name="suffix" value="${requestParameters.suffix?if_exists}" size="10" maxlength="30"/>
+                  <input type="text" class="inputBox" name="suffix" value="${requestParameters.suffix?if_exists}" size="10" maxlength="30"/>
                 </td>
               </tr>
               <tr>
@@ -79,14 +79,14 @@
                 <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyHomePhone}<br/>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
-                  <input type="text" class='inputBox' name="homeCountryCode" value="${requestParameters.homeCountryCode?if_exists}" size="4" maxlength="10"/>
-                  -&nbsp;<input type="text" class='inputBox' name="homeAreaCode" value="${requestParameters.homeAreaCode?if_exists}" size="4" maxlength="10"/>
-                  -&nbsp;<input type="text" class='inputBox' name="homeContactNumber" value="${requestParameters.homeContactNumber?if_exists}" size="15" maxlength="15"/>
-                  &nbsp;ext&nbsp;<input type="text" class='inputBox' name="homeExt" value="${requestParameters.homeExt?if_exists}" size="6" maxlength="10"/>
+                  <input type="text" class="inputBox" name="homeCountryCode" value="${requestParameters.homeCountryCode?if_exists}" size="4" maxlength="10"/>
+                  -&nbsp;<input type="text" class="inputBox" name="homeAreaCode" value="${requestParameters.homeAreaCode?if_exists}" size="4" maxlength="10"/>
+                  -&nbsp;<input type="text" class="inputBox" name="homeContactNumber" value="${requestParameters.homeContactNumber?if_exists}" size="15" maxlength="15"/>
+                  &nbsp;ext&nbsp;<input type="text" class="inputBox" name="homeExt" value="${requestParameters.homeExt?if_exists}" size="6" maxlength="10"/>
                   <br/>
-                  <select name="homeSol" class='selectBox'>
+                  <select name="homeSol" class="selectBox">
                     <option>${requestParameters.homeSol?default("Y")}</option>
-                    <option></option><option>${uiLabelMap.CommonY}</option><option>N</option>
+                    <option></option><option value="Y">${uiLabelMap.CommonY}</option><option value="N">${uiLabelMap.CommonN}</option>
                   </select>
                 </td>
               </tr>
@@ -94,14 +94,14 @@
                 <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyBusinessPhone}<br/>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
-                  <input type="text" class='inputBox' name="workCountryCode" value="${requestParameters.CUSTOMER_WORK_COUNTRY?if_exists}" size="4" maxlength="10"/>
-                  -&nbsp;<input type="text" class='inputBox' name="workAreaCode" value="${requestParameters.CUSTOMER_WORK_AREA?if_exists}" size="4" maxlength="10"/>
-                  -&nbsp;<input type="text" class='inputBox' name="workContactNumber" value="${requestParameters.CUSTOMER_WORK_CONTACT?if_exists}" size="15" maxlength="15"/>
-                  &nbsp;ext&nbsp;<input type="text" class='inputBox' name="workExt" value="${requestParameters.CUSTOMER_WORK_EXT?if_exists}" size="6" maxlength="10"/>
+                  <input type="text" class="inputBox" name="workCountryCode" value="${requestParameters.CUSTOMER_WORK_COUNTRY?if_exists}" size="4" maxlength="10"/>
+                  -&nbsp;<input type="text" class="inputBox" name="workAreaCode" value="${requestParameters.CUSTOMER_WORK_AREA?if_exists}" size="4" maxlength="10"/>
+                  -&nbsp;<input type="text" class="inputBox" name="workContactNumber" value="${requestParameters.CUSTOMER_WORK_CONTACT?if_exists}" size="15" maxlength="15"/>
+                  &nbsp;ext&nbsp;<input type="text" class="inputBox" name="workExt" value="${requestParameters.CUSTOMER_WORK_EXT?if_exists}" size="6" maxlength="10"/>
                   <br/>
-                  <select name="workSol" class='selectBox'>
+                  <select name="workSol" class="selectBox">
                     <option>${requestParameters.workSol?default("Y")}</option>
-                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonN}</option>
+                    <option></option><option value="Y">${uiLabelMap.CommonY}</option><option value="N">${uiLabelMap.CommonN}</option>
                   </select>
                 </td>
               </tr>
@@ -112,11 +112,11 @@
                 <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyEmailAddress}<br/>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
-                  <input type="text" class='inputBox' name="emailAddress" value="" size="60" maxlength="255"/> *
+                  <input type="text" class="inputBox" name="emailAddress" value="" size="60" maxlength="255"/> *
                   <br/>
-                  <select name="emailSol" class='selectBox'>
+                  <select name="emailSol" class="selectBox">
                     <option>${requestParameters.emailSol?default("Y")}</option>
-                    <option></option><option>${uiLabelMap.CommonY}</option><option>${uiLabelMap.CommonY}</option>
+                    <option></option><option value="Y">${uiLabelMap.CommonY}</option><option value="N">${uiLabelMap.CommonN}</option>
                   </select>
                 </td>
               </tr>
