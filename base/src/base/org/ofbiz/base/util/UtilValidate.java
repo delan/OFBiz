@@ -335,10 +335,8 @@ public class UtilValidate {
      */
     public static boolean isSignedInteger(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
-
         try {
-            int temp = Integer.parseInt(s);
-
+            Integer.parseInt(s);
             return true;
         } catch (Exception e) {
             return false;
@@ -361,10 +359,8 @@ public class UtilValidate {
      */
     public static boolean isSignedLong(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
-
         try {
-            long temp = Long.parseLong(s);
-
+            Long.parseLong(s);
             return true;
         } catch (Exception e) {
             return false;
@@ -462,16 +458,67 @@ public class UtilValidate {
             char c = s.charAt(i);
 
             if (c == decimalPointDelimiter.charAt(0)) {
-                if (!seenDecimalPoint)
+                if (!seenDecimalPoint) {
                     seenDecimalPoint = true;
-                else
+                } else {
                     return false;
+                }
             } else {
                 if (!isDigit(c)) return false;
             }
         }
         // All characters are numbers.
         return true;
+    }
+
+    /** General routine for testing whether a string is a float.
+     */
+    public static boolean isFloat(String s, boolean allowNegative, boolean allowPositive, int minDecimal, int maxDecimal) {
+        if (isEmpty(s)) return defaultEmptyOK;
+
+        try {
+            float temp = Float.parseFloat(s);
+            if (!allowNegative && temp < 0) return false;
+            if (!allowPositive && temp > 0) return false;
+            String floatString = Float.toString(temp);
+            int decimalPoint = floatString.indexOf(".");
+            if (decimalPoint == -1) {
+                if (minDecimal > 0) return false;
+                return true;
+            }
+            // 1.2345; length=6; point=1; num=4
+            int numDecimals = floatString.length() - decimalPoint;
+            if (minDecimal >= 0 && numDecimals < minDecimal) return false;
+            if (maxDecimal >= 0 && numDecimals > maxDecimal) return false;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** General routine for testing whether a string is a double.
+     */
+    public static boolean isDouble(String s, boolean allowNegative, boolean allowPositive, int minDecimal, int maxDecimal) {
+        if (isEmpty(s)) return defaultEmptyOK;
+
+        try {
+            double temp = Double.parseDouble(s);
+            if (!allowNegative && temp < 0) return false;
+            if (!allowPositive && temp > 0) return false;
+            String doubleString = Double.toString(temp);
+            int decimalPoint = doubleString.indexOf(".");
+            if (decimalPoint == -1) {
+                if (minDecimal > 0) return false;
+                return true;
+            }
+            // 1.2345; length=6; point=1; num=4
+            int numDecimals = doubleString.length() - decimalPoint;
+            if (minDecimal >= 0 && numDecimals < minDecimal) return false;
+            if (maxDecimal >= 0 && numDecimals > maxDecimal) return false;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /** True if string s is a signed or unsigned floating point
@@ -483,16 +530,14 @@ public class UtilValidate {
      */
     public static boolean isSignedFloat(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
-
         try {
-            float temp = Float.parseFloat(s);
-
-            if (temp <= 0) return true;
-            return false;
+            Float.parseFloat(s);
+            return true;
         } catch (Exception e) {
             return false;
         }
 
+        //The old way:
         // int startPos = 0;
         // if(isSignedFloat.arguments.length > 1) secondArg = isSignedFloat.arguments[1];
         // skip leading + or -
@@ -509,10 +554,8 @@ public class UtilValidate {
      */
     public static boolean isSignedDouble(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
-
         try {
-            double temp = Double.parseDouble(s);
-
+            Double.parseDouble(s);
             return true;
         } catch (Exception e) {
             return false;
