@@ -154,7 +154,7 @@ public class Calculate extends MethodOperation {
         BigDecimal resultValue = ZERO;
         resultValue.setScale(decimalScale, roundingMode);
         for (int i = 0; i < calcops.length; i++) {
-            resultValue = resultValue.add(calcops[i].calcValue(methodContext, roundingMode));
+            resultValue = resultValue.add(calcops[i].calcValue(methodContext, decimalScale, roundingMode));
             // Debug.logInfo("main total so far: " + resultValue, module);
         }
         resultValue.setScale(decimalScale, roundingMode);
@@ -229,7 +229,7 @@ public class Calculate extends MethodOperation {
     }
 
     protected static interface SubCalc {
-        public BigDecimal calcValue(MethodContext methodContext, int roundingMode);
+        public BigDecimal calcValue(MethodContext methodContext, int scale, int roundingMode);
     }
 
     protected static class NumberOp implements SubCalc {
@@ -239,11 +239,12 @@ public class Calculate extends MethodOperation {
             valueStr = element.getAttribute("value");
         }
 
-        public BigDecimal calcValue(MethodContext methodContext, int roundingMode) {
+        public BigDecimal calcValue(MethodContext methodContext, int scale, int roundingMode) {
             String valueStr = methodContext.expandString(this.valueStr);
             BigDecimal value;
             try {
                 value = new BigDecimal(valueStr);
+                value.setScale(scale, roundingMode);
             } catch (Exception e) {
                 Debug.logError(e, "Could not parse the number string: " + valueStr, module);
                 throw new IllegalArgumentException("Could not parse the number string: " + valueStr);
@@ -293,7 +294,7 @@ public class Calculate extends MethodOperation {
             }
         }
 
-        public BigDecimal calcValue(MethodContext methodContext, int roundingMode) {
+        public BigDecimal calcValue(MethodContext methodContext, int scale, int roundingMode) {
             String operatorStr = methodContext.expandString(this.operatorStr);
             int operator = CalcOp.OPERATOR_ADD;
             if ("get".equals(operatorStr)) {
@@ -311,6 +312,7 @@ public class Calculate extends MethodOperation {
             }
             
             BigDecimal resultValue = ZERO;
+            resultValue.setScale(scale, roundingMode);
             boolean isFirst = true;
 
             // if a fieldAcsr was specified, get the field from the map or result and use it as the initial value
@@ -352,23 +354,23 @@ public class Calculate extends MethodOperation {
 
             for (int i = 0; i < calcops.length; i++) {
                 if (isFirst) {
-                    resultValue = calcops[i].calcValue(methodContext, roundingMode);
+                    resultValue = calcops[i].calcValue(methodContext, scale, roundingMode);
                     if (operator == OPERATOR_NEGATIVE) resultValue = resultValue.negate();
                     isFirst = false;
                 } else {
                     switch (operator) {
                     case OPERATOR_ADD:
-                        resultValue = resultValue.add(calcops[i].calcValue(methodContext, roundingMode));
+                        resultValue = resultValue.add(calcops[i].calcValue(methodContext, scale, roundingMode));
                         break;
                     case OPERATOR_SUBTRACT:
                     case OPERATOR_NEGATIVE:
-                        resultValue = resultValue.subtract(calcops[i].calcValue(methodContext, roundingMode));
+                        resultValue = resultValue.subtract(calcops[i].calcValue(methodContext, scale, roundingMode));
                         break;
                     case OPERATOR_MULTIPLY:
-                        resultValue = resultValue.multiply(calcops[i].calcValue(methodContext, roundingMode));
+                        resultValue = resultValue.multiply(calcops[i].calcValue(methodContext, scale, roundingMode));
                         break;
                     case OPERATOR_DIVIDE:
-                        resultValue = resultValue.divide(calcops[i].calcValue(methodContext, roundingMode), roundingMode);
+                        resultValue = resultValue.divide(calcops[i].calcValue(methodContext, scale, roundingMode), scale, roundingMode);
                         break;
                     }
                 }
