@@ -1500,7 +1500,12 @@ public class ShoppingCartItem implements java.io.Serializable {
         orderAdjustment.set("description", additionalProductFeatureAndAppl.get("description"));
         orderAdjustment.set("productFeatureId", additionalProductFeatureAndAppl.get("productFeatureId"));
         // NOTE: this is a VERY simple pricing scheme for additional features and will likely need to be extended for most real applications
-        orderAdjustment.set("amountPerQuantity", additionalProductFeatureAndAppl.get("amount"));
+        double amount = 0;
+        Double amountDbl = (Double) additionalProductFeatureAndAppl.get("amount");
+        if (amountDbl != null) {
+            amount = amountDbl.doubleValue() * this.getQuantity();
+        }
+        orderAdjustment.set("amount", new Double(amount));
 
         this.addAdjustment(orderAdjustment);
     }

@@ -23,6 +23,7 @@
  */
 package org.ofbiz.accounting.invoice;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -365,47 +366,6 @@ public class InvoiceServices {
                             adjInvItem.set("amount", new Double(amount));
                             adjInvItem.set("description", adj.get("description"));
                             adjInvItem.set("taxAuthPartyId", adj.get("taxAuthPartyId"));
-                            adjInvItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
-                            adjInvItem.set("taxAuthGeoId", adj.get("taxAuthGeoId"));
-                            toStore.add(adjInvItem);
-
-                            // this adjustment amount
-                            double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
-
-                            // adjustments only apply to totals when they are not tax or shipping adjustments
-                            if (!"SALES_TAX".equals(adj.getString("orderAdjustmentTypeId")) &&
-                                    !"SHIPPING_ADJUSTMENT".equals(adj.getString("orderAdjustmentTypeId"))) {
-                                // increment the invoice subtotal
-                                invoiceSubTotal += thisAdjAmount;
-
-                                // add to the ship amount only if it applies to this item
-                                if (shippingApplies) {
-                                    invoiceShipProRateAmount += thisAdjAmount;
-                                }
-                            }
-
-                            // increment the counter
-                            itemSeqId++;
-                        }
-                        if (adj.get("percentage") != null || adj.get("amountPerQuantity") != null) {
-                            Double amountPerQty = adj.getDouble("amountPerQuantity");
-                            Double percent = adj.getDouble("percentage");
-                            double totalAmount = 0.00;
-                            if (percent != null)
-                                totalAmount += percent.doubleValue() * (invoiceItem.getDouble("amount").doubleValue() * invoiceItem.getDouble("quantity").doubleValue());
-                            if (amountPerQty != null)
-                                totalAmount += amountPerQty.doubleValue() * invoiceItem.getDouble("quantity").doubleValue();
-
-                            GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                            adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceType, "INVOICE_ITM_ADJ"));
-                            adjInvItem.set("productId", orderItem.get("productId"));
-                            adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
-                            //adjInvItem.set("uomId", "");
-                            adjInvItem.set("taxableFlag", product.get("taxable"));
-                            adjInvItem.set("quantity", orderItem.getDouble("quantity"));
-                            adjInvItem.set("amount", new Double(totalAmount));
-                            adjInvItem.set("description", adj.get("description"));
-                            adjInvItem.set("taxAuthPartyId", adj.get("taxAuthPartyID"));
                             adjInvItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
                             adjInvItem.set("taxAuthGeoId", adj.get("taxAuthGeoId"));
                             toStore.add(adjInvItem);
@@ -803,13 +763,14 @@ public class InvoiceServices {
         double adjAmount = 0.00;
         if (adj.get("amount") != null) {
             // pro-rate the amount
-            double baseAdjAmount = adj.getDouble("amount").doubleValue();
-            double amount = 0.0;
+            BigDecimal baseAdjAmount = new BigDecimal(adj.getDouble("amount").doubleValue());
+            BigDecimal amount = BigDecimal.valueOf(0);
             // make sure the divisor is not 0 to avoid NaN problems; just leave the amount as 0 and skip it in essense
             if (divisor != 0.0) {
-                amount = ((baseAdjAmount / divisor) * multiplier);
+                // multiply first then divide to avoid rounding errors
+                amount = baseAdjAmount.multiply(new BigDecimal(multiplier)).divide(new BigDecimal(divisor), 2, BigDecimal.ROUND_HALF_EVEN);
             }
-            if (amount != 0.0) {
+            if (!amount.equals(BigDecimal.valueOf(0))) {
                 GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
                 invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceTypeId, "INVOICE_ADJ"));
                 //invoiceItem.set("productId", orderItem.get("productId"));
@@ -817,35 +778,12 @@ public class InvoiceServices {
                 //invoiceItem.set("uomId", "");
                 //invoiceItem.set("taxableFlag", product.get("taxable"));
                 invoiceItem.set("quantity", new Double(1));
-                invoiceItem.set("amount", new Double(amount));
+                invoiceItem.set("amount", new Double(amount.doubleValue()));
                 invoiceItem.set("description", adj.get("description"));
                 toStore.add(invoiceItem);
             }
-            adjAmount = amount;
-        } else if (adj.get("percentage") != null || adj.get("amountPerQuantity") != null) {
-            Double amountPerQty = adj.getDouble("amount");
-            Double percent = adj.getDouble("percentage");
-            double totalAmount = 0.0;
-            if (percent != null) {
-                totalAmount += percent.doubleValue() * multiplier;
-            }
-            if (amountPerQty != null) {
-                totalAmount += amountPerQty.doubleValue() * invoiceQuantity;
-            }
-
-            if (totalAmount != 0.0) {
-                GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceTypeId, "INVOICE_ITM_ADJ"));
-                //adjInvItem.set("productId", orderItem.get("productId"));
-                //adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
-                //adjInvItem.set("uomId", "");
-                //adjInvItem.set("taxableFlag", product.get("taxable"));
-                adjInvItem.set("quantity", new Double(1));
-                adjInvItem.set("amount", new Double(totalAmount));
-                adjInvItem.set("description", adj.get("description"));
-                toStore.add(adjInvItem);
-            }
-            adjAmount = totalAmount;
+            amount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            adjAmount = amount.doubleValue();
         }
 
         Debug.logInfo("adjAmount: " + adjAmount + ", divisor: " + divisor + ", multiplier: " + multiplier + ", invoiceTypeId: " + invoiceTypeId + ", invoiceId: " + invoiceId + ", itemSeqId: " + itemSeqId + ", adj: " + adj, module);

@@ -71,8 +71,6 @@
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
       <field name="amount" type="currency-amount"></field>
-      <field name="amountPerQuantity" type="currency-amount"></field>
-      <field name="percentage" type="floating-point"></field>
       <field name="productPromoId" type="id"></field>
       <field name="productPromoRuleId" type="id"></field>
       <field name="productPromoActionSeqId" type="id"></field>
@@ -91,6 +89,9 @@
       <field name="includeInShipping" type="indicator"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
+      <!-- old fields, deprecated -->
+        <field name="oldAmountPerQuantity" col-name="AMOUNT_PER_QUANTITY" type="currency-amount"></field>
+        <field name="oldPercentage" col-name="PERCENTAGE" type="floating-point"></field>
       <prim-key field="orderAdjustmentId"/>
       <relation type="one" fk-name="ORDER_ADJ_TYPE" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
