@@ -41,12 +41,12 @@
             <div class="tableheadtext">${uiLabelMap.ProductActualStartArrive}</div>
         </td>
         <td>
-        	<div class="tableheadtext">${uiLabelMap.ProductBillingWeightUom}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductCurrencyUom}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductActualTransport}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductActualServices}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductActualOther}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductActualTotal}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductBillingWeightUom}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductCurrencyUom}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualTransport}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualServices}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualOther}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualTotal}</div>
         </td>
         <td><div class="tableheadtext">&nbsp;</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
@@ -137,24 +137,24 @@
             </div>
         </td>
         <td>
-        	<#if "UPS" == shipmentRouteSegment.carrierPartyId?if_exists>
-        		<#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
-        			<a href="<@ofbizUrl>/upsShipmentConfirm?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductConfirmShipmentUps}]</a>
-        		<#elseif "SHRSCS_CONFIRMED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
-        			<a href="<@ofbizUrl>/upsShipmentAccept?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductAcceptUpsShipmentConfirmation}]</a>
-        			<br/>
-        			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductVoidUpsShipmentConfirmation}]</a>
-        		<#elseif "SHRSCS_ACCEPTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
-        			<a href="<@ofbizUrl>/upsTrackShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductTrackUpsShipment}]</a>
-        			<br/>
-        			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductVoidUpsShipment}]</a>
-        		</#if>
-        	</#if>
-        	<#if "DHL" == shipmentRouteSegment.carrierPartyId?if_exists>
-        		<#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
-        			<a href="<@ofbizUrl>/dhlShipmentConfirm?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductConfirmShipmentDHL}]</a>
-        		</#if>
-        	</#if>
+            <#if "UPS" == shipmentRouteSegment.carrierPartyId?if_exists>
+                <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
+                    <a href="<@ofbizUrl>/upsShipmentConfirm?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductConfirmShipmentUps}]</a>
+                <#elseif "SHRSCS_CONFIRMED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
+                    <a href="<@ofbizUrl>/upsShipmentAccept?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductAcceptUpsShipmentConfirmation}]</a>
+                    <br/>
+                    <a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductVoidUpsShipmentConfirmation}]</a>
+                <#elseif "SHRSCS_ACCEPTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
+                    <a href="<@ofbizUrl>/upsTrackShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductTrackUpsShipment}]</a>
+                    <br/>
+                    <a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductVoidUpsShipment}]</a>
+                </#if>
+            </#if>
+            <#if "DHL" == shipmentRouteSegment.carrierPartyId?if_exists>
+                <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
+                    <a href="<@ofbizUrl>/dhlShipmentConfirm?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductConfirmShipmentDHL}]</a>
+                </#if>
+            </#if>
 
            <br/>
             <select name="carrierServiceStatusId" class="selectBox">
@@ -178,7 +178,7 @@
             <input type="text" size="25" name="actualArrivalDate" value="${(shipmentRouteSegment.actualArrivalDate.toString())?if_exists}" class="inputBox"/><a href="javascript:call_cal(document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.actualArrivalDate, '${(shipmentRouteSegment.actualArrivalDate.toString())?default(nowTimestampString)}');"><img src='<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>' width='16' height='16' border='0' alt='Calendar'></a>
         </td>
         <td>
-        	<input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight?if_exists}" class="inputBox"/>
+            <input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight?if_exists}" class="inputBox"/>
             <select name="billingWeightUomId" class="selectBox">
                 <#if billingWeightUom?has_content>
                     <option value="${billingWeightUom.uomId}">${billingWeightUom.description} [${billingWeightUom.abbreviation}]</option>
@@ -203,13 +203,13 @@
                 </#list>
             </select>
             <br/>
-        	<input type="text" size="8" name="actualTransportCost" value="${shipmentRouteSegment.actualTransportCost?if_exists}" class="inputBox"/>
+            <input type="text" size="8" name="actualTransportCost" value="${shipmentRouteSegment.actualTransportCost?if_exists}" class="inputBox"/>
             <br/>
-        	<input type="text" size="8" name="actualServiceCost" value="${shipmentRouteSegment.actualServiceCost?if_exists}" class="inputBox"/>
+            <input type="text" size="8" name="actualServiceCost" value="${shipmentRouteSegment.actualServiceCost?if_exists}" class="inputBox"/>
             <br/>
-        	<input type="text" size="8" name="actualOtherCost" value="${shipmentRouteSegment.actualOtherCost?if_exists}" class="inputBox"/>
+            <input type="text" size="8" name="actualOtherCost" value="${shipmentRouteSegment.actualOtherCost?if_exists}" class="inputBox"/>
             <br/>
-        	<input type="text" size="8" name="actualCost" value="${shipmentRouteSegment.actualCost?if_exists}" class="inputBox"/>
+            <input type="text" size="8" name="actualCost" value="${shipmentRouteSegment.actualCost?if_exists}" class="inputBox"/>
         </td>
         <td><a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
         <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentRouteSegment?shipmentId=${shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
@@ -223,12 +223,12 @@
         <tr>
             <td><div class="tabletext">&nbsp;</div></td>
             <td>
-            	<div class="tabletext">
-            		${uiLabelMap.ProductPackage} :${shipmentPackageRouteSeg.shipmentPackageSeqId} label here 
-            		<#if shipmentPackageRouteSeg.labelImage?exists>
-            			<a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${shipmentPackageRouteSeg.shipmentId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewLabelImage}]</a>
-            		</#if>
-            	</div>
+                <div class="tabletext">
+                    ${uiLabelMap.ProductPackage} :${shipmentPackageRouteSeg.shipmentPackageSeqId} label here 
+                    <#if shipmentPackageRouteSeg.labelImage?exists>
+                        <a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${shipmentPackageRouteSeg.shipmentId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewLabelImage}]</a>
+                    </#if>
+                </div>
             </td>
             <td><span class="tabletext">${uiLabelMap.ProductTrack} #:</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
             <td><span class="tabletext">${uiLabelMap.ProductBox} #:</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
@@ -313,7 +313,7 @@
             <input type="text" size="25" name="actualArrivalDate" value="" class="inputBox"/><a href="javascript:call_cal(document.createShipmentRouteSegmentForm.actualArrivalDate, '${nowTimestampString}');"><img src='<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>' width='16' height='16' border='0' alt='Calendar'></a>
         </td>
         <td>
-        	<input type="text" size="5" name="billingWeight" value="${(shipmentRouteSegment.billingWeight)?if_exists}" class="inputBox"/>
+            <input type="text" size="5" name="billingWeight" value="${(shipmentRouteSegment.billingWeight)?if_exists}" class="inputBox"/>
             <select name="billingWeightUomId" class="selectBox">
                 <option value="">&nbsp;</option>
                 <#list weightUoms as weightUom>
@@ -328,13 +328,13 @@
                 </#list>
             </select>
             <br/>
-        	<input type="text" size="8" name="actualTransportCost" class="inputBox"/>
+            <input type="text" size="8" name="actualTransportCost" class="inputBox"/>
             <br/>
-        	<input type="text" size="8" name="actualServiceCost" class="inputBox"/>
+            <input type="text" size="8" name="actualServiceCost" class="inputBox"/>
             <br/>
-        	<input type="text" size="8" name="actualOtherCost" class="inputBox"/>
+            <input type="text" size="8" name="actualOtherCost" class="inputBox"/>
             <br/>
-        	<input type="text" size="8" name="actualCost" class="inputBox"/>
+            <input type="text" size="8" name="actualCost" class="inputBox"/>
         </td>
         <td><a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="buttontext">${uiLabelMap.CommonCreate}</a></td>
         <td>&nbsp;</td>
