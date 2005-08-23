@@ -84,7 +84,9 @@ public class ComponentConfig {
                         if (componentConfigs.containsKey(componentConfig.getGlobalName())) {
                             Debug.logWarning("WARNING: Loading ofbiz-component using a global name that already exists, will over-write: " + componentConfig.getGlobalName(), module);
                         }
-                        componentConfigs.put(componentConfig.getGlobalName(), componentConfig);
+                        if (componentConfig.enabled()) {
+                            componentConfigs.put(componentConfig.getGlobalName(), componentConfig);
+                        }
                     }
                 }
             } else {
