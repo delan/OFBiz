@@ -1286,6 +1286,9 @@
       <view-link entity-alias="GLAO" rel-entity-alias="GLA">
       	  <key-map field-name="glAccountId"/>
       </view-link>
+      <relation type="one" fk-name="GLAOC_GLA" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
       <relation type="one" fk-name="GLAOC_GLAO" rel-entity-name="GlAccountOrganization">
         <key-map field-name="glAccountId"/>
         <key-map field-name="organizationPartyId"/>
