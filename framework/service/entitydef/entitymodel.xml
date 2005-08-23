@@ -84,6 +84,10 @@
       <relation type="one" fk-name="JOB_SNDBX_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
+      <index name="JOB_SNDBX_RUNSTAT">
+          <index-field name="runByInstanceId"/>
+          <index-field name="statusId"/>
+      </index>
     </entity>
     <entity entity-name="RecurrenceInfo"
             package-name="org.ofbiz.service.schedule"
