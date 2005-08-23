@@ -1946,6 +1946,8 @@
       <field name="comments" type="comment"></field>
       <field name="finAccountTransId" type="id"></field>
       <field name="overrideGlAccountId" type="id"></field>
+      <field name="actualCurrencyAmount" type="currency-amount"><!-- The ActualCurrency amount and uomId are for the values coming from the bank (if known) and are to be used for reconciliation and such later, and not for PaymentApplication. --></field>
+      <field name="actualCurrencyUomId" type="id"></field>
       <prim-key field="paymentId"/>
       <relation type="one" fk-name="PAYMENT_PMTYP" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId"/>
@@ -1959,8 +1961,11 @@
       <relation type="one" fk-name="PAYMENT_PMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" fk-name="PAYMENT_CUOM" rel-entity-name="Uom">
+      <relation type="one" fk-name="PAYMENT_CUOM" title="Currency" rel-entity-name="Uom">
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PAYMENT_ACUOM" title="ActualCurrency" rel-entity-name="Uom">
+        <key-map field-name="actualCurrencyUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId"/>
@@ -2006,27 +2011,8 @@
             title="Payment and Application View Entity">
       <member-entity entity-alias="PY" entity-name="Payment"/>
       <member-entity entity-alias="PA" entity-name="PaymentApplication"/>
-      <alias entity-alias="PY" name="paymentId"/>
-      <alias entity-alias="PY" name="paymentTypeId"/>
-      <alias entity-alias="PY" name="statusId"/>
-      <alias entity-alias="PY" name="paymentGatewayResponseId"/>
-      <alias entity-alias="PY" name="paymentMethodTypeId"/>
-      <alias entity-alias="PY" name="paymentMethodId"/>
-      <alias entity-alias="PY" name="paymentPreferenceId"/>
-      <alias entity-alias="PY" name="partyIdFrom"/>
-      <alias entity-alias="PY" name="partyIdTo"/>
-      <alias entity-alias="PY" name="roleTypeIdTo"/>
-      <alias entity-alias="PY" name="effectiveDate"/>
-      <alias entity-alias="PY" name="paymentRefNum"/>
-      <alias entity-alias="PY" name="amount"/>
-      <alias entity-alias="PY" name="currencyUomId"/>
-      <alias entity-alias="PY" name="comments"/>
-      <alias entity-alias="PY" name="finAccountTransId"/>
-      <alias entity-alias="PA" name="invoiceId"/>
-      <alias entity-alias="PA" name="invoiceItemSeqId"/>
-      <alias entity-alias="PA" name="billingAccountId"/>
-      <alias entity-alias="PA" name="taxAuthGeoId"/>
-      <alias entity-alias="PA" name="amountApplied"/>
+      <alias-all entity-alias="PY"/>
+      <alias-all entity-alias="PA"/>
       <view-link entity-alias="PY" rel-entity-alias="PA">
         <key-map field-name="paymentId"/>
       </view-link>
