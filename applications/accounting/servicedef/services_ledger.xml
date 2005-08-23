@@ -118,17 +118,6 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="calculateGlJournalTrialBalance" default-entity-name="GlJournal" engine="simple"
-            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="calculateGlJournalTrialBalance" auth="true">
-        <description>Calculate Trial Balance for a GlJournal</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-    <service name="postGlJournal" default-entity-name="GlJournal" engine="simple"
-            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="postGlJournal" auth="true">
-        <description>Post a GlJournal</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-
     <!-- GlReconciliation & Related -->
     <service name="createGlReconciliation" default-entity-name="GlReconciliation" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlReconciliation" auth="true">
@@ -194,23 +183,12 @@
     <service name="updateAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTrans" auth="true">
         <description>Update a AcctgTrans record</description>
-        <implements service="interfaceAcctgTrans"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="deleteAcctgTrans" auth="true">
         <description>Delete a AcctgTrans record</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-
-    <service name="calculateAcctgTransTrialBalance" default-entity-name="AcctgTrans" engine="simple"
-            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="calculateAcctgTransTrialBalance" auth="true">
-        <description>Calculate Trial Balance for a AcctgTrans</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-    <service name="postAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
-            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="postAcctgTrans" auth="true">
-        <description>Post a AcctgTrans</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -234,8 +212,8 @@
     <service name="updateAcctgTransEntry" default-entity-name="AcctgTransEntry" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTransEntry" auth="true">
         <description>Update an Entry to a AcctgTrans record</description>
-        <implements service="interfaceAcctgTransEntry"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteAcctgTransEntry" default-entity-name="AcctgTransEntry" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="deleteAcctgTransEntry" auth="true">

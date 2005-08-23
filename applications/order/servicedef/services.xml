@@ -145,30 +145,13 @@
         <attribute name="amount" type="Double" mode="IN" optional="true"/>
     </service>
 
-    <service name="createOrderAdjustment" engine="simple"
+    <service name="createOrderAdjustment" default-entity-name="OrderAdjustment" engine="simple"
             location="org/ofbiz/order/order/OrderSimpleMethods.xml" invoke="createOrderAdjustment">
         <description>Creates a new order adjustment record</description>
-        <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="amount" type="Double" mode="IN" optional="true"/>
-        <attribute name="amountPerQuantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="percentage" type="Double" mode="IN" optional="true"/>
-        <attribute name="productPromoId" type="String" mode="IN" optional="true"/>
-        <attribute name="productPromoRuleId" type="String" mode="IN" optional="true"/>
-        <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="productFeatureId" type="String" mode="IN" optional="true"/>
-        <attribute name="correspondingProductId" type="String" mode="IN" optional="true"/>
-        <attribute name="sourceReferenceId" type="String" mode="IN" optional="true"/>
-        <attribute name="customerReferenceId" type="String" mode="IN" optional="true"/>
-        <attribute name="primaryGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="secondaryGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="exemptAmount" type="Double" mode="IN" optional="true"/>
-        <attribute name="includeInTax" type="Boolean" mode="IN" optional="true"/>
-        <attribute name="includeInShipping" type="Boolean" mode="IN" optional="true"/>
-        <attribute name="orderAdjustmentId" type="String" mode="OUT" optional="false"/>
+        <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="orderAdjustmentTypeId" optional="false"/>
+        <override name="orderId" optional="false"/>
     </service>
 
     <service name="createPaymentFromPreference" engine="java"

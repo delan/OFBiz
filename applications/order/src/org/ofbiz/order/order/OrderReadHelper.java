@@ -1737,9 +1737,6 @@ public class OrderReadHelper {
         if (orderAdjustment.get("amount") != null) {
             adjustment += orderAdjustment.getDouble("amount").doubleValue();
         }
-        if (orderAdjustment.get("percentage") != null) {
-            adjustment += (orderAdjustment.getDouble("percentage").doubleValue() * orderSubTotal);
-        }
         return UtilFormatOut.formatPriceNumber(adjustment).doubleValue();
     }
 
@@ -1917,18 +1914,10 @@ public class OrderReadHelper {
 
     public static double calcItemAdjustment(GenericValue itemAdjustment, Double quantity, Double unitPrice) {
         double adjustment = 0.0;
-
         if (itemAdjustment.get("amount") != null) {
             adjustment += itemAdjustment.getDouble("amount").doubleValue();
         }
-        if (itemAdjustment.get("amountPerQuantity") != null && quantity != null) {
-            adjustment += itemAdjustment.getDouble("amountPerQuantity").doubleValue() * quantity.doubleValue();
-        }
-        if (itemAdjustment.get("percentage") != null && unitPrice != null) {
-            adjustment += (itemAdjustment.getDouble("percentage").doubleValue() * unitPrice.doubleValue());
-        }
-        if (Debug.verboseOn())
-            Debug.logVerbose("calcItemAdjustment: " + itemAdjustment + ", quantity=" + quantity + ", unitPrice=" + unitPrice + ", adjustment=" + adjustment, module);
+        if (Debug.verboseOn()) Debug.logVerbose("calcItemAdjustment: " + itemAdjustment + ", quantity=" + quantity + ", unitPrice=" + unitPrice + ", adjustment=" + adjustment, module);
         return adjustment;
     }
 

@@ -186,18 +186,6 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
-    <!-- GlJournal Trial Balance and Post routines -->
-    <simple-method method-name="calculateGlJournalTrialBalance" short-description="Calculate Trial Balance for a GlJournal">
-        <check-permission permission="ACCOUNTING" action="_VIEW"><fail-message message="Security Error: to run calculateGlJournalTrialBalance you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-        <!-- TODO: implement this -->
-    </simple-method>
-    <simple-method method-name="postGlJournal" short-description="Post a GlJournal">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run postGlJournal you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-        <!-- TODO: implement this -->
-    </simple-method>
-
     <!-- ========= GlReconciliation methods ========= -->
     <simple-method method-name="createGlReconciliation" short-description="Create an GlReconciliation">
         <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createGlReconciliation you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
