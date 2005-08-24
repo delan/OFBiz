@@ -1447,6 +1447,7 @@
        <field name="taxFormId" type="id-ne"/>
        <field name="cogsMethodId" type="id-ne"/>
        <field name="baseCurrencyUomId" type="id-ne"/>
+       <field name="invoiceSequenceEnumId" type="id-ne"/>
        <prim-key field="partyId"/>
        <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREF_PTY">
            <key-map field-name="partyId"/>
@@ -1457,8 +1458,11 @@
        <relation type="one" fk-name="ACTGPREF_COGS" title="Cogs" rel-entity-name="Enumeration">
            <key-map field-name="cogsMethodId" rel-field-name="enumId"/>
        </relation>
-       <relation type="one" rel-entity-name="Uom" fk-name="ACCTG_PREF_CURNCY">
+       <relation type="one" fk-name="ACCTGPREF_CURNCY" rel-entity-name="Uom">
            <key-map field-name="baseCurrencyUomId" rel-field-name="uomId"/>
+       </relation>
+       <relation type="one" fk-name="ACTGPREF_INVSQ" title="InvoiceSequence" rel-entity-name="Enumeration">
+           <key-map field-name="invoiceSequenceEnumId" rel-field-name="enumId"/>
        </relation>
     </entity>
     <entity entity-name="ProductAverageCost"
