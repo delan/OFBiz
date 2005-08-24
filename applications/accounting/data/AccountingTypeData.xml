@@ -320,6 +320,12 @@
     <Enumeration description="FIFO" enumCode="FIFO" enumId="COGS_FIFO" sequenceId="02" enumTypeId="COGS_METHODS"/>
     <Enumeration description="Average Cost" enumCode="AVG_COST" enumId="COGS_AVG_COST" sequenceId="03" enumTypeId="COGS_METHODS"/>
 
+    <!-- inventory sequencing mode for accounting preferences -->
+    <EnumerationType description="Invoice Sequence Mode" enumTypeId="INVOICE_SEQMD" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Standard (faster, may have gaps)" enumCode="STANDARD" enumId="INVSQ_STANDARD" sequenceId="01" enumTypeId="INVOICE_SEQMD"/>
+    <Enumeration description="Enforced Sequence (no gaps)" enumCode="ENF_SEQ" enumId="INVSQ_ENF_SEQ" sequenceId="02" enumTypeId="INVOICE_SEQMD"/>
+    <Enumeration description="Restart on Fiscal Year (no gaps, reset to 1 each year)" enumCode="RESTARTYR" enumId="INVSQ_RESTARTYR" sequenceId="03" enumTypeId="INVOICE_SEQMD"/>
+    
     <!-- Standard Industrial Cost Types -->
     <FixedAssetStdCostType description="Standard Setup Cost" hasTable="N" parentTypeId="" fixedAssetStdCostTypeId="SETUP_COST"/>
     <FixedAssetStdCostType description="Standard Usage Cost" hasTable="N" parentTypeId="" fixedAssetStdCostTypeId="USAGE_COST"/>
