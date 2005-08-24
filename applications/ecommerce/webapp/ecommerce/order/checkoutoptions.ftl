@@ -309,8 +309,12 @@ function toggleBillingAccount(box) {
                   <tr>
                     <td colspan="2">
                       <span class="tabletext">${uiLabelMap.CommonAdd}:</span>
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.AccountingCreditCard}]</a>
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
+                      <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.AccountingCreditCard}]</a>
+                      </#if>
+                      <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
+                      </#if>
                     </td>
                   </tr>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
