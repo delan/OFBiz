@@ -1445,17 +1445,17 @@
             title="Party (organization) accounting preferences">
        <field name="partyId" type="id-ne"/>
        <field name="taxFormId" type="id-ne"/>
-       <field name="COGSMethodId" type="id-ne"/>
+       <field name="cogsMethodId" type="id-ne"/>
        <field name="baseCurrencyUomId" type="id-ne"/>
        <prim-key field="partyId"/>
        <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREF_PTY">
            <key-map field-name="partyId"/>
        </relation>
-       <relation type="one" title="TaxForm" rel-entity-name="Enumeration" fk-name="ACTG_PREF_TAX_FORM">
+       <relation type="one" fk-name="ACTGPREF_TAXFORM" title="TaxForm" rel-entity-name="Enumeration">
            <key-map field-name="taxFormId" rel-field-name="enumId"/>
        </relation>
-       <relation type="one" title="COGS" rel-entity-name="Enumeration" fk-name="ACTG_PREF_COGS">
-           <key-map field-name="COGSMethodId" rel-field-name="enumId"/>
+       <relation type="one" fk-name="ACTGPREF_COGS" title="Cogs" rel-entity-name="Enumeration">
+           <key-map field-name="cogsMethodId" rel-field-name="enumId"/>
        </relation>
        <relation type="one" rel-entity-name="Uom" fk-name="ACCTG_PREF_CURNCY">
            <key-map field-name="baseCurrencyUomId" rel-field-name="uomId"/>
