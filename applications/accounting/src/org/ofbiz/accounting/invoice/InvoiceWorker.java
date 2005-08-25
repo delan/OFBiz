@@ -111,13 +111,23 @@ public class InvoiceWorker {
         
         return formattedTotal.doubleValue();        
     }
-    
+
     /**
-     * Method to obtain the bill to party for an invoice
+     * Method to obtain the bill to party for an invoice. Note that invoice.partyId is the bill to party.
      * @param invoice GenericValue object of the Invoice
      * @return GenericValue object of the Party
      */
     public static GenericValue getBillToParty(GenericValue invoice) {
+        try {
+            GenericValue billToParty = invoice.getRelatedOne("Party");
+            if (billToParty != null) {
+                return billToParty;
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting Party from Invoice", module);
+        }
+
+        // remaining code is the old method, which we leave here for compatibility purposes
         List billToRoles = null;
         try {
             billToRoles = invoice.getRelated("InvoiceRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER"), 
@@ -139,6 +149,16 @@ public class InvoiceWorker {
         }            
         return null;        
     }
+
+    /** Convenience method to obtain the bill from party for an invoice. Note that invoice.partyIdFrom is the bill from party. */
+    public static GenericValue getBillFromParty(GenericValue invoice) {
+        try {
+            return invoice.getRelatedOne("FromParty");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting FromParty from Invoice", module);
+        }
+        return null;
+    }
     
     /**
       * Method to obtain the send from party for an invoice
@@ -146,6 +166,12 @@ public class InvoiceWorker {
       * @return GenericValue object of the Party
       */    
     public static GenericValue getSendFromParty(GenericValue invoice) {
+        GenericValue billFromParty = getBillFromParty(invoice);
+        if (billFromParty != null) {
+            return billFromParty;
+        }
+
+        // remaining code is the old method, which we leave here for compatibility purposes
         List sendFromRoles = null;
         try {
             sendFromRoles = invoice.getRelated("InvoiceRole", UtilMisc.toMap("roleTypeId", "BILL_FROM_VENDOR"), 
