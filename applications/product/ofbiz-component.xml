@@ -23,7 +23,7 @@
 -->
 
 <ofbiz-component name="product"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
     <classpath type="dir" location="config"/>
@@ -57,12 +57,12 @@
         title="Catalog"
         server="default-server"
         location="webapp/catalog"
-        base-permission="CATALOG"
+        base-permission="OFBTOOLS,CATALOG"
         mount-point="/catalog"/>
     <webapp name="facility"
         title="Facility"
         server="default-server"
         location="webapp/facility"
-        base-permission="FACILITY"
+        base-permission="OFBTOOLS,FACILITY"
         mount-point="/facility"/>
 </ofbiz-component>

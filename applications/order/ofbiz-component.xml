@@ -23,7 +23,7 @@
 -->
 
 <ofbiz-component name="order"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
@@ -47,7 +47,7 @@
         title="Order"
         server="default-server"
         location="webapp/ordermgr"
-        base-permission="ORDERMGR"
+        base-permission="OFBTOOLS,ORDERMGR"
         mount-point="/ordermgr"/>
 </ofbiz-component>
 
