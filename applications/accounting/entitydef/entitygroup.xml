@@ -150,6 +150,8 @@
     <entity-group group="org.ofbiz" entity="PaymentAttribute" />
     <entity-group group="org.ofbiz" entity="PaymentBudgetAllocation" />
     <entity-group group="org.ofbiz" entity="PaymentMethod" />
+    <entity-group group="org.ofbiz" entity="PaymentMethodAndCreditCard" />
+    <entity-group group="org.ofbiz" entity="PaymentMethodAndGiftCard" />
     <entity-group group="org.ofbiz" entity="PaymentMethodType" />
     <entity-group group="org.ofbiz" entity="PaymentMethodTypeGlAccount" />
     <entity-group group="org.ofbiz" entity="PaymentType" />
