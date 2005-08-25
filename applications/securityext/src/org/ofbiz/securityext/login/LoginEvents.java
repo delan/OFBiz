@@ -75,7 +75,7 @@ public class LoginEvents {
      *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
-     * @return
+     * @return String
      */
     public static String saveEntryParams(HttpServletRequest request, HttpServletResponse response) {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
@@ -113,7 +113,7 @@ public class LoginEvents {
      *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
-     * @return
+     * @return String
      */
     public static String checkLogin(HttpServletRequest request, HttpServletResponse response) {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
@@ -241,11 +241,11 @@ public class LoginEvents {
         }
 
         request.setAttribute("_LOGIN_PASSED_", "TRUE");
-        
+
         // run the after-login events
         RequestHandler rh = RequestHandler.getRequestHandler(request.getSession().getServletContext());
         rh.runAfterLoginEvents(request, response);
-        
+
         // make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
         return autoLoginSet(request, response);
     }
@@ -253,7 +253,7 @@ public class LoginEvents {
     public static void doBasicLogin(GenericValue userLogin, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("userLogin", userLogin);
-        
+
         try {
             GenericValue person = userLogin.getRelatedOne("Person");
             GenericValue partyGroup = userLogin.getRelatedOne("PartyGroup");
@@ -262,7 +262,7 @@ public class LoginEvents {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error getting person/partyGroup info for session, ignoring...", module);
         }
-        
+
         // let the visit know who the user is
         VisitHandler.setUserLogin(session, userLogin, false);
     }
@@ -279,7 +279,7 @@ public class LoginEvents {
         // run the before-logout events
         RequestHandler rh = RequestHandler.getRequestHandler(request.getSession().getServletContext());
         rh.runBeforeLogoutEvents(request, response);
-        
+
 
         // invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
@@ -699,9 +699,11 @@ public class LoginEvents {
         ComponentConfig.WebappInfo info = ComponentConfig.getWebAppInfo(serverId, contextPath);
         if (security != null) {
             if (info != null) {
-                String permission = info.getBasePermission();
-                if (!"NONE".equals(permission) && !security.hasEntityPermission(permission, "_VIEW", userLogin)) {
-                    return false;
+                String[] permissions = info.getBasePermission();
+                for (int i = 0; i < permissions.length; i++) {
+                    if (!"NONE".equals(permissions[i]) && !security.hasEntityPermission(permissions[i], "_VIEW", userLogin)) {
+                        return false;
+                    }
                 }
             } else {
                 Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
@@ -721,7 +723,7 @@ public class LoginEvents {
         // if we are logged in okay, do the check store customer role
         return ProductEvents.checkStoreCustomerRole(request, response);
     }
-    
+
     public static String storeLogin(HttpServletRequest request, HttpServletResponse response) {
         String responseString = LoginEvents.login(request, response);
         if ("error".equals(responseString)) {

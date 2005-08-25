@@ -26,6 +26,8 @@ package org.ofbiz.securityext.thirdparty.truition;
 
 import java.util.Collection;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,31 +61,53 @@ public class TruitionCoReg {
         if (!truitionEnabled()) {
             return "success";
         }
-        
+
+        boolean cookieOk = false;
         if (userLogin != null) {
-            TruitionCoReg.makeTruitionCookie(userLogin, cookieNameB, cookieValue);
+            cookieOk = TruitionCoReg.makeTruitionCookie(userLogin, cookieNameB, cookieValue);
         }
 
         // locate the domain/cookie name setting
         String domainName = UtilProperties.getPropertyValue("truition.properties", "truition.domain.name");
+        String cookiePath = UtilProperties.getPropertyValue("truition.properties", "truition.cookie.path");
         String cookieName = UtilProperties.getPropertyValue("truition.properties", "truition.cookie.name");
+        int time = (int) UtilProperties.getPropertyNumber("truition.properties", "truition.cookie.time");
         if (UtilValidate.isEmpty(domainName)) {
             Debug.logError("Truition is not properly configured; domainName missing; see truition.properties", module);
+            return "error";
+        }
+        if (UtilValidate.isEmpty(cookiePath)) {
+            Debug.logError("Truition is not properly configured; cookiePath missing; see truition.properties", module);
             return "error";
         }
         if (UtilValidate.isEmpty(cookieName)) {
             Debug.logError("Truition is not properly configured; cookieName missing; see truition.properties", module);
             return "error";
         }
+        if (time == 0) {
+            Debug.logError("Truition is not properly configured; cookieTime missing; see trution.properties", module);
+            return "error";
+        }
+
+        // strip out CR/LF from cookie value
+        String thisValue = cookieValue.toString();
+        thisValue = thisValue.replaceAll("\n", "");
+        thisValue = thisValue.replaceAll("\r", "");
 
         // create the cookie
-        Cookie tru = new Cookie(cookieName, cookieValue.toString());
-        tru.setDomain(domainName);
-        tru.setPath("/");
-        tru.setMaxAge(-1); // session cookie (not persisted)
-        resp.addCookie(tru);
-
-        Debug.log("Set Truition Cookie [" + cookieName + "] - " + cookieValue.toString(), module);
+        if (cookieOk) {
+            try {
+                Cookie tru = new Cookie(cookieName, URLEncoder.encode(thisValue, "UTF-8"));
+                tru.setDomain(domainName);
+                tru.setPath(cookiePath);
+                tru.setMaxAge(time);
+                resp.addCookie(tru);
+                Debug.log("Set Truition Cookie [" + tru.getName() + "/" + tru.getDomain() + " @ " + tru.getPath() + "] - " + tru.getValue(), module);
+            } catch (UnsupportedEncodingException e) {
+                Debug.logError(e, module);
+                return "error";
+            }
+        }
         return "success";
     }
 
@@ -134,12 +158,17 @@ public class TruitionCoReg {
         return "success";
     }
 
-    public static void makeTruitionCookie(GenericValue userLogin, StringBuffer cookieName, StringBuffer cookieValue) {
+    public static boolean makeTruitionCookie(GenericValue userLogin, StringBuffer cookieName, StringBuffer cookieValue) {
+        String domainName = UtilProperties.getPropertyValue("truition.properties", "truition.domain.name");
         String siteId = UtilProperties.getPropertyValue("truition.properties", "truition.siteId");
 
+        if (UtilValidate.isEmpty(domainName)) {
+            Debug.logError("Truition is not properly configured; domainName missing; see truition.properties!", module);
+            return false;
+        }
         if (UtilValidate.isEmpty(siteId)) {
             Debug.logError("Truition is not properly configured; siteId missing; see truition.properties!", module);
-            return;
+            return false;
         }
 
         // user login information
@@ -274,13 +303,26 @@ public class TruitionCoReg {
                 }
                 Debug.log(logPrefix + "phoneNumber: " + phoneNumber, module);
 
-                // create the cookie
-                edeal.coreg.EdCoReg.ed_create_cookie_nvp(nickName, password, title, firstName, lastName, emailAddress, address1, address2, city, state, zipCode, country, phoneNumber, siteId, cookieName, cookieValue, "", "", "", partyId, "", "");
+                int retCode = -1;
+
+                if (lastName != null && address1 != null) {
+                    retCode = edeal.coreg.EdCoReg.ed_create_cookie_nvp(nickName, "pwd", title, firstName,
+                        lastName, emailAddress, address1, address2, city, state, zipCode, country, phoneNumber,
+                        siteId, cookieName, cookieValue, "", "", "", partyId, "", "");
+                }
+
+                if (retCode < 0) {
+                    Debug.logError("EDeal cookie not set; API return code: " + retCode, module);
+                    return false;
+                } else {
+                    Debug.logInfo("EDeal cookie success; API return code: " + retCode, module);
+                }
             } else {
                 Debug.logError("Truition requires a Person to be logged in. First/Last name required!", module);
-                return;
+                return false;
             }
         }
+        return true;
     }
 
     public static boolean truitionEnabled() {
