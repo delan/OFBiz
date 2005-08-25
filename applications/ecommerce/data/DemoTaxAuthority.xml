@@ -17,8 +17,20 @@
   <PartyContactMech partyId="NY_DTF" contactMechId="NY_DTF_0" fromDate="2000-01-01 00:00:00.000" allowSolicitation="N"/>
   <PartyContactMechPurpose partyId="NY_DTF" contactMechId="NY_DTF_0" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
   <PartyRole partyId="NY_DTF" roleTypeId="TAX_AUTHORITY"/>  
+
+  <Party partyId="TX_BOE" partyTypeId="PARTY_GROUP"/>
+  <PartyGroup partyId="TX_BOE" groupName="Texas Taxman"/>
+
+  <Party partyId="UT_BOE" partyTypeId="PARTY_GROUP"/>
+  <PartyGroup partyId="UT_BOE" groupName="Utah Taxman"/>
+
+  <Party partyId="OFBIZ_TAX" partyTypeId="PARTY_GROUP"/>
+  <PartyGroup partyId="OFBIZ_TAX" groupName="Ofbiz Tax"/>
   
   <TaxAuthority taxAuthGeoId="CA" taxAuthPartyId="CA_BOE" requireTaxIdForOrder="N" includeTaxInPrice="N"/>
   <TaxAuthority taxAuthGeoId="NY" taxAuthPartyId="NY_DTF" requireTaxIdForOrder="N" includeTaxInPrice="N"/>
+  <TaxAuthority taxAuthGeoId="TX" taxAuthPartyId="TX_TAXMAN" requireTaxIdForOrder="N" includeTaxInPrice="N"/>
+  <TaxAuthority taxAuthGeoId="UT" taxAuthPartyId="UT_TAXMAN" requireTaxIdForOrder="N" includeTaxInPrice="N"/>
+  <TaxAuthority taxAuthGeoId="_NA_" taxAuthPartyId="OFBIZ_TAX" requireTaxIdForOrder="N" includeTaxInPrice="N"/>
 </entity-engine-xml>
 
