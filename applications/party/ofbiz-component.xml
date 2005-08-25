@@ -23,7 +23,7 @@
 -->
 
 <ofbiz-component name="party"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
@@ -43,6 +43,6 @@
         title="Party"
         server="default-server"
         location="webapp/partymgr"
-        base-permission="PARTYMGR"
+        base-permission="OFBTOOLS,PARTYMGR"
         mount-point="/partymgr"/>
 </ofbiz-component>

@@ -24,7 +24,7 @@
 -->
 
 <ofbiz-component name="marketing"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
@@ -39,7 +39,7 @@
         title="Marketing"
         server="default-server"
         location="webapp/marketing"
-        base-permission="MARKETING"
+        base-permission="OFBTOOLS,MARKETING"
         mount-point="/marketing"/>
 </ofbiz-component>
 

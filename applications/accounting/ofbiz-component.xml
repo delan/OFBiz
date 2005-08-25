@@ -68,7 +68,7 @@
         title="Accounting"
         server="default-server"
         location="webapp/accounting"
-        base-permission="ACCOUNTING"
+        base-permission="OFBTOOLS,ACCOUNTING"
         mount-point="/accounting"/>
 </ofbiz-component>
 

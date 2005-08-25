@@ -23,7 +23,7 @@
 -->
 
 <ofbiz-component name="content"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
     <classpath type="dir" location="config"/>
@@ -48,6 +48,6 @@
         title="Content"
         server="default-server"
         location="webapp/content"
-        base-permission="CONTENTMGR"
+        base-permission="OFBTOOLS,CONTENTMGR"
         mount-point="/content"/>
 </ofbiz-component>
