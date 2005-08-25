@@ -821,7 +821,7 @@ public class CheckOutHelper {
                 }
                 authCtx.put("processAmount", opp.getDouble("maxAmount"));
                 authCtx.put("authRefNum", opp.getString("manualRefNum"));
-                authCtx.put("authResult", new Boolean(true));
+                authCtx.put("authResult", Boolean.TRUE);
                 authCtx.put("userLogin", userLogin);
 
                 Map authResp = dispatcher.runSync("processAuthResult", authCtx);
@@ -839,7 +839,7 @@ public class CheckOutHelper {
                     if (opp.get("paymentMethodId") == null) {
                         captCtx.put("serviceTypeEnum", "PRDS_PAY_EXTERNAL");
                     }
-                    captCtx.put("captureResult", new Boolean(true));
+                    captCtx.put("captureResult", Boolean.TRUE);
                     captCtx.put("captureAmount", opp.getDouble("maxAmount"));
                     captCtx.put("captureRefNum", opp.getString("manualRefNum"));
                     captCtx.put("userLogin", userLogin);

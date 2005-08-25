@@ -138,8 +138,8 @@ public class ShoppingCart implements Serializable {
         public String maySplit = "N";
         public String isGift = "N";
         public double shipEstimate = 0.00;
-        public Timestamp shipBeforeDate=null;
-        public Timestamp shipAfterDate=null;
+        public Timestamp shipBeforeDate = null;
+        public Timestamp shipAfterDate = null;
 
         public List makeItemShipGroupAndAssoc(GenericDelegator delegator, ShoppingCart cart, long groupIndex) {
             String shipGroupSeqId = UtilFormatOut.formatPaddedNumber(groupIndex, 5);
@@ -161,8 +161,8 @@ public class ShoppingCart implements Serializable {
             shipGroup.set("shippingInstructions", shippingInstructions);
             shipGroup.set("giftMessage", giftMessage);
             shipGroup.set("contactMechId", contactMechId);
-            shipGroup.set("maySplit", new String(maySplit));
-            shipGroup.set("isGift", new String(isGift));
+            shipGroup.set("maySplit", maySplit);
+            shipGroup.set("isGift", isGift);
             shipGroup.set("shipGroupSeqId", shipGroupSeqId);
             shipGroup.set("shipByDate", shipBeforeDate);
             shipGroup.set("shipAfterDate", shipAfterDate);
@@ -219,6 +219,9 @@ public class ShoppingCart implements Serializable {
             }
             itemInfo.quantity = quantity;
             itemInfo.itemTaxAdj.clear();
+            if (taxAdj == null) {
+                taxAdj = new LinkedList();
+            }
             itemInfo.itemTaxAdj.addAll(taxAdj);
             return itemInfo;
         }
@@ -231,6 +234,9 @@ public class ShoppingCart implements Serializable {
                 shipItemInfo.put(item, itemInfo);
             }
             itemInfo.itemTaxAdj.clear();
+            if (taxAdj == null) {
+                taxAdj = new LinkedList();
+            }
             itemInfo.itemTaxAdj.addAll(taxAdj);
             return itemInfo;
         }
@@ -1405,7 +1411,7 @@ public class ShoppingCart implements Serializable {
 
     /** Locates an existing (or creates a new) CartPaymentInfo object */
     public CartPaymentInfo getPaymentInfo(String id, String refNum, String authCode, Double amount) {
-        return this.getPaymentInfo(id, refNum, authCode, amount, false);   
+        return this.getPaymentInfo(id, refNum, authCode, amount, false);
     }
 
     /** Locates an existing (or creates a new) CartPaymentInfo object */
