@@ -6,6 +6,12 @@
     <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
     <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
 
+    <!-- general admin tools permission -->
+    <SecurityPermission description="Permission to access the WebTools Menu." permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="OFBTOOLS_VIEW"/>
+
     <!-- System UserLogin Account -->
     <UserLogin userLoginId="system" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint="Do Not Enable This Account" enabled="N" isSystem="Y"/>
     <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="system" fromDate="2001-01-01 12:00:00.0"/>
