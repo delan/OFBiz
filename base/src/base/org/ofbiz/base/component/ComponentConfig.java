@@ -558,7 +558,7 @@ public class ComponentConfig {
         public String server;
         public String mountPoint;
         public String location;
-        public String basePermission;
+        public String[] basePermission;
         public boolean appBarDisplay;
 
         public WebappInfo(ComponentConfig componentConfig, Element element) {
@@ -570,8 +570,22 @@ public class ComponentConfig {
             this.server = element.getAttribute("server");
             this.mountPoint = element.getAttribute("mount-point");
             this.location = element.getAttribute("location");
-            this.basePermission = element.getAttribute("base-permission");
             this.appBarDisplay = !"false".equals(element.getAttribute("app-bar-display"));
+            String basePermStr = element.getAttribute("base-permission");
+            if (basePermStr != null) {
+                this.basePermission = basePermStr.split(",");
+            } else {
+                // default base permission is NONE
+                this.basePermission = new String[] { "NONE" };
+            }
+
+            // trim the permussions (remove spaces)
+            for (int i = 0; i < this.basePermission.length; i++) {
+                this.basePermission[i] = this.basePermission[i].trim();
+                if (this.basePermission[i].indexOf('_') != -1) {
+                    this.basePermission[i] = this.basePermission[i].substring(0, this.basePermission[i].indexOf('_'));
+                }
+            }
 
             // default title is name w/ upper-cased first letter
             if (UtilValidate.isEmpty(this.title)) {
@@ -581,11 +595,6 @@ public class ComponentConfig {
             // default mount point is name if none specified
             if (UtilValidate.isEmpty(this.mountPoint)) {
                 this.mountPoint = this.name;
-            }
-
-            // default base permission 'NONE'
-            if (UtilValidate.isEmpty(this.basePermission)) {
-                this.basePermission = "NONE";
             }
 
             // check the mount point and make sure it is properly formatted
@@ -629,10 +638,7 @@ public class ComponentConfig {
             return mountPoint;
         }
 
-        public String getBasePermission() {
-            if (this.basePermission.indexOf('_') != -1) {
-                return this.basePermission.substring(0, this.basePermission.indexOf('_'));
-            }
+        public String[] getBasePermission() {            
             return this.basePermission;
         }
 
