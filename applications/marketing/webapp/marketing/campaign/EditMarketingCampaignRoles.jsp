@@ -36,7 +36,7 @@
     String marketingCampaignId = request.getParameter("marketingCampaignId");
     GenericValue marketingCampaign = delegator.findByPrimaryKey("MarketingCampaign", UtilMisc.toMap("marketingCampaignId", marketingCampaignId));
     Collection marketingCampaignRoles = delegator.findByAnd("MarketingCampaignRole", 
-            UtilMisc.toMap("marketingCampaignId", marketingCampaignId), UtilMisc.toList("orderId"));
+            UtilMisc.toMap("marketingCampaignId", marketingCampaignId), UtilMisc.toList("partyId"));
     if (marketingCampaignRoles != null) pageContext.setAttribute("marketingCampaignRoles", marketingCampaignRoles);
 
     //RoleTypes
