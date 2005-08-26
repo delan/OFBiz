@@ -1,22 +1,22 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
@@ -45,7 +45,7 @@
         <tr>
           <#if layoutSettings.headerImageUrl?exists>
           <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
-          </#if>       
+          </#if>
           <td align='right' width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='${layoutSettings.headerRightBackgroundUrl}'</#if>>
             <#if requestAttributes.person?has_content>
               <div class="insideHeaderText">Welcome&nbsp;${requestAttributes.person.firstName?if_exists}&nbsp;${requestAttributes.person.lastName?if_exists}!</div>
@@ -63,15 +63,21 @@
 </table>
 
 <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#FFFFFF">    
+  <tr bgcolor="#FFFFFF">
     <td><div class="appbarleft"></div></td>
     <td height="15" width="100%">
-	  <table width="100%" border="0" cellspacing="0" cellpadding="0">                      
+	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <#list displayApps as display>
             <#assign thisApp = display.getContextRoot()>
-            <#assign permission = display.getBasePermission()>
-            <#if (permission == "NONE" || security.hasEntityPermission(permission, "_VIEW", session))>
+           <#assign permission = true>
+            <#assign permissions = display.getBasePermission()>
+            <#list permissions as perm>
+                <#if (perm != "NONE" && !security.hasEntityPermission(perm, "_VIEW", session))>
+                    <#assign permission = false>
+                </#if>
+            </#list>
+            <#if permission == true>
               <#if thisApp == contextPath>
                 <#assign class = selectedClass>
               <#else>
@@ -92,15 +98,15 @@
               </td>
             </#if>
           </#list>
-		  <td><div class="appbarright"></div></td>            
+		  <td><div class="appbarright"></div></td>
           <td width="100%" class="appbarresize">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">                
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td>               
-              </tr>               
+                <td class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td>
+              </tr>
             </table>
-          </td>           
-        </tr>        
+          </td>
+        </tr>
       </table>
     </td>
   </tr>
