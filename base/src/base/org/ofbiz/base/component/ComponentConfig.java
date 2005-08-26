@@ -572,7 +572,7 @@ public class ComponentConfig {
             this.location = element.getAttribute("location");
             this.appBarDisplay = !"false".equals(element.getAttribute("app-bar-display"));
             String basePermStr = element.getAttribute("base-permission");
-            if (basePermStr != null) {
+            if (UtilValidate.isNotEmpty(basePermStr)) {
                 this.basePermission = basePermStr.split(",");
             } else {
                 // default base permission is NONE
@@ -638,7 +638,7 @@ public class ComponentConfig {
             return mountPoint;
         }
 
-        public String[] getBasePermission() {            
+        public String[] getBasePermission() {
             return this.basePermission;
         }
 
