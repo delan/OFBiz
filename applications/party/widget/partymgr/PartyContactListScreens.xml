@@ -28,7 +28,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitlePartyContactLists"/>
                 <set field="headerItem" value="contactlist"/>
-                <set field="tabButtonItem" value="contactlist"/>
+                <set field="tabButtonItem" value="ContactList"/>
                 <set field="partyId" value="${parameters.partyId}"/>
                  <set field="entityName" value="ContactListParty"/>
             </actions>
@@ -51,14 +51,38 @@
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
+                                <container><label style="head1" text="${uiLabelMap.PartyContactList}"/></container>
+                                <include-form location="component://party/webapp/partymgr/contactlist/PartyContactListForms.xml" name="ListPartyContactLists"/>
                                 <container><label style="head1" text="${uiLabelMap.PartyContactListPartyCreate}"/></container>
-                                <container><link style="buttontext" target="/AddContactList?partyId=${partyId}" text="[${uiLabelMap.PartyContactListCreate}]"/></container>
-                                <include-form location="component://party/webapp/partymgr/communication/PartyContactListForms.xml" name="ListPartyContactLists"/>
+                                <include-form location="component://party/webapp/partymgr/contactlist/PartyContactListForms.xml" name="AddPartyContactList"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <screen name="ListLookupContactList">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleListContactList"/>
+                <set field="tabButtonItem" value="ContactList"/>
+                <set field="labelTitleProperty" value="PageTitleListContactList"/>
+                <set field="title" value="ContactList Lookup"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactList"/>
+                <set field="contactListId" from-field="parameters.contactListId"/>
+                <set field="entityName" value="ContactList"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                        <container><link  text="&lt;br/&gt;[${uiLabelMap.ContactListCreate}]" target="/EditContactList?DONE_PAGE=${donePage}" style="tabletext"/></container>
+                        <include-form location="component://party/webapp/partymgr/contactlist/PartyContactListForms.xml" name="ListLookupContactList"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

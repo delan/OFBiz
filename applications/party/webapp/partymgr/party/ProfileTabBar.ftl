@@ -64,6 +64,7 @@
         <a href="<@ofbizUrl>/editShoppingList?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.editShoppingList?default(unselectedClassName)}">${uiLabelMap.PartyShoppingLists}</a>
         <a href="<@ofbizUrl>/ViewSegmentRoles?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.ViewPartySegmentRoles?default(unselectedClassName)}">${uiLabelMap.PartySegments}</a>
         <a href="<@ofbizUrl>/EditPartyClassifications?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyClassifications?default(unselectedClassName)}">${uiLabelMap.PartyClassifications}</a>
+        <a href="<@ofbizUrl>/ListPartyContactLists?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.ContactList?default(unselectedClassName)}">${uiLabelMap.PartyContactLists}</a>
       </div>
     </td>
   </tr>

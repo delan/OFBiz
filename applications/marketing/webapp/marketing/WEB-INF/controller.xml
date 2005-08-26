@@ -188,7 +188,7 @@
     </request-map>
     <request-map uri="LookupSegmentGroup">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="lookupSegmentGroup"/>
+        <response name="success" type="view" value="LookupSegmentGroup"/>
     </request-map>
     <request-map uri="createSegmentGroup">
         <security https="true" auth="true"/>
@@ -297,38 +297,38 @@
    <!-- Lookup request mappings -->
     <request-map uri="LookupSegmentGroup">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="lookupSegmentGroup"/>
+        <response name="success" type="view" value="LookupSegmentGroup"/>
     </request-map>
      
     <request-map uri="LookupProductStore">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="lookupProductStore"/>
+        <response name="success" type="view" value="LookupProductStore"/>
     </request-map>
      
     <request-map uri="LookupPartyClassificationGroup">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="lookupPartyClassificationGroup"/>
+        <response name="success" type="view" value="LookupPartyClassificationGroup"/>
     </request-map>
      
     <request-map uri="LookupGeo">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="lookupGeo"/>
+        <response name="success" type="view" value="LookupGeo"/>
     </request-map>
 
     <request-map uri="LookupParty">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="lookupParty"/>
+        <response name="success" type="view" value="LookupParty"/>
     </request-map>
 
     <request-map uri="LookupRoleType">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="lookupRoleType"/>
+        <response name="success" type="view" value="LookupRoleType"/>
     </request-map>
     
-    <!--  ContactList requests -->
-    <request-map uri="ListContactList">
+    <!--  ContactList request mappings -->
+    <request-map uri="ListContactLists">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListContactList"/>
+        <response name="success" type="view" value="ListContactLists"/>
     </request-map>
     <request-map uri="EditContactList">
         <security https="true" auth="true"/>
@@ -351,12 +351,11 @@
     <request-map uri="removeContactList">
         <event type="service" invoke="removeContactList"/>
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListContactList"/>
-        <response name="error" type="view" value="ListContactList"/>
+        <response name="success" type="view" value="ListContactLists"/>
+        <response name="error" type="view" value="ListContactLists"/>
     </request-map>
     
-    <!--  ContactList request mappings -->
-    <request-map uri="ListContactListParty">
+    <request-map uri="ListContactListParties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListContactListParty"/>
     </request-map>
@@ -364,12 +363,33 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditContactListParty"/>
     </request-map>
-    <request-map uri="FindContactListParty">
+    <request-map uri="FindContactListParties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindContactListParty"/>
     </request-map>
     
-    <request-map uri="ListContactListCommEvent">
+    <request-map uri="createContactListParty">
+        <event type="service" invoke="createContactListParty"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditContactListParty"/>
+        <response name="error" type="view" value="EditContactListParty"/>
+    </request-map>
+    
+    <request-map uri="updateContactListParty">
+        <event type="service" invoke="updateContactListParty"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditContactListParty"/>
+        <response name="error" type="view" value="EditContactListParty"/>
+    </request-map>
+    
+    <request-map uri="removeContactListParty">
+        <event type="service" invoke="deleteContactListParty"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListContactListParties"/>
+        <response name="error" type="view" value="ListContactListParties"/>
+    </request-map>
+    
+    <request-map uri="ListContactListCommEvents">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListContactListCommEvent"/>
     </request-map>
@@ -377,7 +397,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditContactListCommEvent"/>
     </request-map>
-    <request-map uri="FindContactListCommEvent">
+    <request-map uri="FindContactListCommEvents">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindContactListCommEvent"/>
     </request-map>
@@ -407,13 +427,22 @@
     <view-map name="viewSegmentGroupRole" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroupRole"/>
     <view-map name="listSegmentGroupRole" type="screen" page="component://marketing/widget/SegmentScreens.xml#listSegmentGroupRole"/>
 
-    <view-map name="lookupSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupSegmentGroup"/>
-    <view-map name="lookupProductStore" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupProductStore"/>
-    <view-map name="lookupPartyClassificationGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupPartyClassificationGroup"/>
+    <view-map name="LookupSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupSegmentGroup"/>
+    <view-map name="LookupProductStore" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupProductStore"/>
+    <view-map name="LookupPartyClassificationGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupPartyClassificationGroup"/>
 
-    <view-map name="lookupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupGeo"/>
-    <view-map name="lookupParty" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
-    <view-map name="lookupRoleType" type="screen" page="component://marketing/widget/SegmentScreens.xml#lookupRoleType"/>
+    <view-map name="LookupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupGeo"/>
+    <view-map name="LookupParty" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupRoleType" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupRoleType"/>
+
+    <view-map name="ListContactLists" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactLists"/>
+    <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>
+    <view-map name="ListContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParties"/>
+    <view-map name="EditContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListParty"/>
+    <view-map name="FindContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListParties"/>
+    <view-map name="ListContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListCommEvents"/>
+    <view-map name="EditContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListCommEvent"/>
+    <view-map name="FindContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvents"/>
 
     <view-map name="ListContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactList"/>
     <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>

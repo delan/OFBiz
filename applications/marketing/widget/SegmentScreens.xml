@@ -90,7 +90,7 @@
     </screen>
     
     <!-- SegmentGroup Find Screen -->
-    <screen name="lookupSegmentGroup">
+    <screen name="LookupSegmentGroup">
         <section>
             <condition>
                 <or>
@@ -121,7 +121,7 @@
                             <widgets>
                                 <label style="head1">${uiLabelMap.PageTitleFindSegmentGroup}</label>
                                 <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupCreate}]" target="/viewSegmentGroup" style="tabletext"/>
-                                <!-- <include-form name="lookupSegmentGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/> -->
+                                <!-- <include-form name="LookupSegmentGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/> -->
                                 <include-form name="listLookupSegmentGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                             </widgets>
                             <fail-widgets>
@@ -348,7 +348,7 @@
         </section>
     </screen>
     <!-- ProductStore Lookup Screen -->
-    <screen name="lookupProductStore">
+    <screen name="LookupProductStore">
         <section>
             <condition>
                 <or>
@@ -367,7 +367,7 @@
             <widgets>
                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                 <decorator-section name="body">
-                    <!-- <include-form name="lookupProductStore" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>-->
+                    <!-- <include-form name="LookupProductStore" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>-->
                     <include-form name="listLookupProductStore" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                 </decorator-section>
               </decorator-screen>
@@ -376,7 +376,7 @@
     </screen>
     
     <!-- PartyClassificationGroup Lookup Screen -->
-    <screen name="lookupPartyClassificationGroup">
+    <screen name="LookupPartyClassificationGroup">
         <section>
             <condition>
                 <or>
@@ -395,7 +395,7 @@
             <widgets>
                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                 <decorator-section name="body">
-                    <!-- <include-form name="lookupPartyClassificationGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>-->
+                    <!-- <include-form name="LookupPartyClassificationGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>-->
                     <include-form name="listLookupPartyClassificationGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                 </decorator-section>
               </decorator-screen>
@@ -404,7 +404,7 @@
     </screen>
     
     <!-- Party Lookup Screen -->
-    <screen name="lookupParty">
+    <screen name="LookupParty">
         <section>
             <condition>
                 <or>
@@ -423,7 +423,7 @@
             <widgets>
                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                 <decorator-section name="body">
-                    <include-form name="lookupParty" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
+                    <include-form name="LookupParty" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                     <include-form name="listLookupParty" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                 </decorator-section>
               </decorator-screen>
@@ -432,7 +432,7 @@
     </screen>
 
    <!-- Geo Lookup Screen -->
-    <screen name="lookupGeo">
+    <screen name="LookupGeo">
         <section>
             <condition>
                 <or>
@@ -451,7 +451,7 @@
             <widgets>
                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                 <decorator-section name="body">
-                    <include-form name="lookupGeo" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
+                    <include-form name="LookupGeo" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                     <include-form name="listLookupGeo" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                 </decorator-section>
               </decorator-screen>

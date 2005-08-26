@@ -53,6 +53,9 @@
         <menu-item name="EditPartyClassifications" title="${uiLabelMap.PartyClassifications}">
             <link target="/EditPartyClassifications?partyId=${partyId}"/>
         </menu-item>
+        <menu-item name="ContactList" title="${uiLabelMap.PartyContactList}">
+            <link target="/ListPartyContactLists?partyId=${partyId}"/>
+        </menu-item>
     </menu>
     <menu name="CommEventTabBar" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" 
             default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 

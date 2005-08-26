@@ -24,7 +24,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <!-- SegmentGroup Lookup forms -->
-    <form name="lookupSegmentGroup" default-title-style="tableheadtext"
+    <form name="LookupSegmentGroup" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupSegmentGroup" title="" type="single">
         <field name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><text-find default-value="equals"/></field>
@@ -73,7 +73,7 @@
         </field>
     </form>
     
-    <form name="lookupProductStore" default-title-style="tableheadtext"
+    <form name="LookupProductStore" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProductStore" title="" type="single">
         <auto-fields-entity entity-name="ProductStore" default-field-type="find" />
@@ -124,7 +124,7 @@
         </field>
     </form>
     <!-- Geo Lookup forms -->
-    <form name="lookupGeo" default-title-style="tableheadtext"
+    <form name="LookupGeo" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupGeo" title="" type="single" >
         <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><text-find default-value="equals"/></field>
