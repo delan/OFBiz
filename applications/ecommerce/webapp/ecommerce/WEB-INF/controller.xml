@@ -396,6 +396,10 @@
     </request-map>
     <!-- end of anonymous checkout requests -->
 
+    <request-map uri="checkoutpayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="checkoutpayment"/>
+    </request-map>
     <request-map uri="checkoutoptions">
       <security https="true" auth="true"/>
       <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutPages"/>
