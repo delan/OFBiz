@@ -208,7 +208,7 @@
         <attribute mode="OUT" name="permissionRecorder" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
     </service>
     <service name="findRelatedContent" default-entity-name="Content" engine="java"
-            location="org.ofbiz.content.content.ContentServices.xml" invoke="findRelatedContent" auth="true">
+            location="org.ofbiz.content.content.ContentServices" invoke="findRelatedContent" auth="true">
         <description>Create a Content</description>
         <attribute mode="IN" name="currentContent" optional="false" type="GenericValue"/>
         <attribute mode="IN" name="toFrom" optional="true" type="String"/>
