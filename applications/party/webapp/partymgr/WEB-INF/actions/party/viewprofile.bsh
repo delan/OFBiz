@@ -111,3 +111,6 @@ Map result = dispatcher.runSync("getOrderedSummaryInformation", serviceIn);
 context.put("monthsToInclude", monthsToInclude);
 context.put("totalSubRemainingAmount", result.get("totalSubRemainingAmount"));
 context.put("totalOrders", result.get("totalOrders"));
+
+
+

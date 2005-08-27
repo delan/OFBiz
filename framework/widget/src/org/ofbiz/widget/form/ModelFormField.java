@@ -31,6 +31,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
+
+import javolution.util.FastList;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -2581,11 +2584,13 @@ public class ModelFormField {
     public static class LookupField extends TextField {
         protected String formName;
         protected String descriptionFieldName;
-
+        protected String targetParameter;
+        
         public LookupField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
             this.formName = element.getAttribute("target-form-name");
             this.descriptionFieldName = element.getAttribute("description-field-name");
+            this.targetParameter = element.getAttribute("target-parameter");
         }
 
         public LookupField(int fieldSource, ModelFormField modelFormField) {
@@ -2598,6 +2603,17 @@ public class ModelFormField {
 
         public String getFormName() {
             return this.formName;
+        }
+
+        public List getTargetParameterList() {
+            List paramList = FastList.newInstance();
+            if (UtilValidate.isNotEmpty(this.targetParameter)) {
+                StringTokenizer stk = new StringTokenizer(this.targetParameter, ", ");
+                while (stk.hasMoreTokens()) {
+                    paramList.add(stk.nextToken());
+                }
+            }
+            return paramList;
         }
 
         public void setFormName(String str) {
