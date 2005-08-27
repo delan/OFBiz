@@ -96,5 +96,9 @@ if (userLogin != null) {
     context.put("monthsToInclude", monthsToInclude);
     context.put("totalSubRemainingAmount", result.get("totalSubRemainingAmount"));
     context.put("totalOrders", result.get("totalOrders"));
+    
+	contactlistparties = delegator.findByAnd("ContactListParty", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("fromDate"));
+	context.put("contactlistparties", contactlistparties);
+    
 }
 

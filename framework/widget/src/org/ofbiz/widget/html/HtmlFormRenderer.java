@@ -1621,22 +1621,36 @@ public class HtmlFormRenderer implements FormStringRenderer {
         String descriptionFieldName = lookupField.getDescriptionFieldName();
         // add lookup pop-up button 
         if (UtilValidate.isNotEmpty(descriptionFieldName)) {
-        	buffer.append("<a href=\"javascript:call_fieldlookup3(document.");
-        	buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
-        	buffer.append('.');
-        	buffer.append(modelFormField.getParameterName(context));
-        	buffer.append(", '");
+            buffer.append("<a href=\"javascript:call_fieldlookup3(document.");
+            buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+            buffer.append('.');
+            buffer.append(modelFormField.getParameterName(context));
+            buffer.append(", '");
             buffer.append(descriptionFieldName);
             buffer.append(", '");
         } else {
-        	buffer.append("<a href=\"javascript:call_fieldlookup2(document.");
-        	buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
-        	buffer.append('.');
-        	buffer.append(modelFormField.getParameterName(context));
-        	buffer.append(", '");
+            buffer.append("<a href=\"javascript:call_fieldlookup2(document.");
+            buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+            buffer.append('.');
+            buffer.append(modelFormField.getParameterName(context));
+            buffer.append(", '");
         }
         buffer.append(lookupField.getFormName());
-        buffer.append("');\">");
+        buffer.append("'");
+        List targetParameterList = lookupField.getTargetParameterList();
+        if (targetParameterList.size() > 0) {
+            Iterator targetParameterIter = targetParameterList.iterator();
+            while (targetParameterIter.hasNext()) {
+                String targetParameter = (String) targetParameterIter.next();
+                // named like: document.${formName}.${targetParameter}.value
+                buffer.append(", document.");
+                buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+                buffer.append(".");
+                buffer.append(targetParameter);
+                buffer.append(".value");
+            }
+        }
+        buffer.append(");\">");
         buffer.append("<img src=\"");
         this.appendContentUrl(buffer, "/content/images/fieldlookup.gif");
         buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Lookup\"/></a>");

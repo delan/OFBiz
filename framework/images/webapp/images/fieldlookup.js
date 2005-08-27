@@ -8,7 +8,7 @@ function call_fieldlookup(target, viewName, formName,viewWidth,viewheight) {
     fieldLookup.popup(viewName, formName, viewWidth, viewheight);
 }
 function call_fieldlookup2(target, viewName) {   
-    var fieldLookup = new fieldLookup1(target);  
+    var fieldLookup = new fieldLookup1(target, arguments);  
     fieldLookup.popup2(viewName);
 }
 function call_fieldlookup3(target, target2, viewName) {
@@ -16,7 +16,8 @@ function call_fieldlookup3(target, target2, viewName) {
     fieldLookup.popup2(viewName);
 }
 
-function fieldLookup1(obj_target) {
+function fieldLookup1(obj_target, args) {
+    this.args = args;
 	// passing methods
 	this.popup = lookup_popup1;
 	this.popup2 = lookup_popup2;
@@ -62,7 +63,13 @@ function lookup_popup1 (view_name, form_name, viewWidth, viewheight) {
 	obj_lookupwindow.focus();
 }
 function lookup_popup2 (view_name) {
-	var obj_lookupwindow = window.open(view_name + '?id=' + this.id,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+    var argString = "";
+    if (this.args.length > 2) {
+        for(var i=2; i < this.args.length; i++) {
+            argString += "&parm" + (i-2) + "=" + this.args[i];
+        }
+    }
+	var obj_lookupwindow = window.open(view_name + '?id=' + this.id + argString,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }

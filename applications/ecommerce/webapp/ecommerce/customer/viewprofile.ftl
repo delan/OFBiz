@@ -464,6 +464,44 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
     </div>
 </div>
 </#if>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.PartyContactLists}</div>
+    </div>
+    <div class="screenlet-body">
+        <table width="100%" border="0" cellpadding="1">
+            <tr>
+              <td>&nbsp;</td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>List Name</b></div></td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>List Type</b></div></td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>Marketing Campaign</b></div></td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>From Date</b></div></td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>Thru Date</b></div></td>
+              <td width="5">&nbsp;</td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>&nbsp;</b></div></td>
+            </tr>
+          <#list contactlistparties as contactListParty>
+            <#assign contactList = contactListParty.getRelatedOne("ContactList")>
+            <#assign contactListType = contactList.getRelatedOne("ContactListType")>
+            <#assign marketingCampaign = contactList.getRelatedOne("MarketingCampaign")>
+            <tr>
+              <td>&nbsp;</td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>${contactList.contactListName?if_exists}</b>&nbsp;-&nbsp;${contactList.description?if_exists}</div></td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext">${contactListType.description?if_exists}</div></td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext">${marketingCampaign.campaignName?if_exists}</div></td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext">${contactListParty.fromDate?if_exists}</div></td>
+              <td align="left" valign="top" width="20%" nowrap><div class="tabletext">${contactListParty.thruDate?if_exists}</div></td>
+              <td width="5">&nbsp;</td>
+              <#if (contactListParty.statusId?if_exists == "CLPT_ACCEPTED")>
+                <td align="right" valign="top" width="20%" nowrap><a href="<@ofbizUrl>/updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_REJECTED</@ofbizUrl>" class="buttontext">Unsubscribe</a></td>
+              <#else>
+                <td align="right" valign="top" width="20%" nowrap><a href="<@ofbizUrl>/updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_ACCEPTED</@ofbizUrl>" class="buttontext">Subscribe</a></td>
+              </#if>
+            </tr>
+          </#list>
+        </table>
+    </div>
+</div>
 
 
 <#else>
