@@ -44,7 +44,8 @@ public class ElseIf {
 
     public ElseIf(Element element, SimpleMethod simpleMethod) {
         Element conditionElement = UtilXml.firstChildElement(element, "condition");
-        this.condition = ConditionalFactory.makeConditional(conditionElement, simpleMethod);
+        Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
+        this.condition = ConditionalFactory.makeConditional(conditionChildElement, simpleMethod);
         
         Element thenElement = UtilXml.firstChildElement(element, "then");
         SimpleMethod.readOperations(thenElement, thenSubOps, simpleMethod);
