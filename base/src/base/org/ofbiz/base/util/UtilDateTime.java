@@ -210,22 +210,30 @@ public class UtilDateTime {
      * @return
      */
     public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp) {
-        return getYearStart(stamp, 0, 0);
+        return getYearStart(stamp, 0, 0, 0);
     }
 
     public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp, int daysLater) {
-        return getYearStart(stamp, daysLater, 0);
+        return getYearStart(stamp, daysLater, 0, 0);
     }
 
     public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp, int daysLater, int yearsLater) {
+        return getYearStart(stamp, daysLater, 0, yearsLater);
+    }
+    public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp, int daysLater, int monthsLater, int yearsLater) {
         Calendar tempCal = Calendar.getInstance();
         tempCal.setTime(new java.util.Date(stamp.getTime()));
         tempCal.set(tempCal.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
-        tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
         tempCal.add(Calendar.YEAR, yearsLater);
+        tempCal.add(Calendar.MONTH, monthsLater);
+        tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
         java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
         retStamp.setNanos(0);
         return retStamp;
+    }
+    public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp, Number daysLater, Number monthsLater, Number yearsLater) {
+        return getYearStart(stamp, (daysLater == null ? 0 : daysLater.intValue()), 
+                (monthsLater == null ? 0 : monthsLater.intValue()), (yearsLater == null ? 0 : yearsLater.intValue()));
     }
 
     /**
