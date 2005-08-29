@@ -1444,10 +1444,15 @@
             package-name="org.ofbiz.accounting.ledger"
             title="Party (organization) accounting preferences">
        <field name="partyId" type="id-ne"/>
+       <field name="fiscalYearStartMonth" type="numeric"/>
+       <field name="fiscalYearStartDay" type="numeric"/>
        <field name="taxFormId" type="id-ne"/>
        <field name="cogsMethodId" type="id-ne"/>
        <field name="baseCurrencyUomId" type="id-ne"/>
        <field name="invoiceSequenceEnumId" type="id-ne"/>
+       <field name="invoiceIdPrefix" type="very-short"/>
+       <field name="lastInvoiceNumber" type="numeric"/>
+       <field name="lastInvoiceRestartDate" type="date-time"/>
        <prim-key field="partyId"/>
        <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREF_PTY">
            <key-map field-name="partyId"/>
