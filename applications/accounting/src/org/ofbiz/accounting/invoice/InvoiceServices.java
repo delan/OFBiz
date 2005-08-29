@@ -37,6 +37,7 @@ import javolution.util.FastMap;
 import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
@@ -294,7 +295,8 @@ public class InvoiceServices {
                         shippingApplies = true;
                     }
 
-                    GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
+                    String invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(itemSeqId, 2);
+                    GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId));
                     invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, lookupType, invoiceType, "INV_FPROD_ITEM"));
                     invoiceItem.set("description", orderItem.get("itemDescription"));
                     invoiceItem.set("quantity", billingQuantity);

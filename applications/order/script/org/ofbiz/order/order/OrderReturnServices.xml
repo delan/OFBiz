@@ -28,17 +28,19 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-method method-name="createReturnHeader" short-description="Create a ReturnHeader">
-    	<if>
-    	  <condition>
-    	    <and>
-    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
-    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="parameters"/></not>
-    	    </and>
-    	  </condition>
-    	  <then>
-    	    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateReturnHeader"/></add-error>
-    	  </then>
-    	</if>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+
+        <if>
+            <condition>
+                <and>
+                    <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+                    <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="parameters"/></not>
+                </and>
+            </condition>
+            <then>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateReturnHeader"/></add-error>
+            </then>
+        </if>
 
         <if-empty field-name="parameters.toPartyId">
             <!-- no toPartyId was specified.  use destination facility to determine the party of the return -->
@@ -63,21 +65,18 @@
 
         <make-value value-name="newEntity" entity-name="ReturnHeader"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <now-timestamp-to-env env-name="nowTimestamp"/>
 
-        <sequenced-id-to-env sequence-name="ReturnHeader" env-name="returnId"/>
-        <to-string field-name="returnId"/>
-        <env-to-field env-name="returnId" map-name="newEntity"/>
-        <field-to-result field-name="returnId" result-name="returnId"/>
+        <sequenced-id-to-env sequence-name="ReturnHeader" env-name="newEntity.returnId"/>
+        <field-to-result field-name="newEntity.returnId" result-name="returnId"/>
 
         <if>
-          <condition>
-          	<not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
-          </condition>
-          <then>
-          	<string-to-field field-name="statusId" map-name="newEntity" string="RETURN_REQUESTED"/>
-          	<env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
-          </then>
+            <condition>
+                <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+            </condition>
+            <then>
+                <string-to-field field-name="statusId" map-name="newEntity" string="RETURN_REQUESTED"/>
+                <env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+            </then>
         </if>
 
         <if-empty field-name="entryDate" map-name="newEntity">
@@ -106,25 +105,25 @@
     </simple-method>
 
     <simple-method method-name="createReturnItem" short-description="Create Return Item">
-    	<field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
-    	<find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
 
-    	<if>
-    	  <condition>
-    	    <and>
-    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
-    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="returnHeader"/></not>
-    	    </and>
-    	  </condition>
-    	  <then>
-    	    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateReturnItem"/></add-error>
-    	  </then>
-    	</if>
+        <if>
+          <condition>
+            <and>
+              <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+              <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="returnHeader"/></not>
+            </and>
+          </condition>
+          <then>
+            <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateReturnItem"/></add-error>
+          </then>
+        </if>
         <check-errors/>
 
         <if-compare field-name="returnQuantity" map-name="parameters" operator="equals" value="0" type="Double">
             <add-error><fail-property resource="OrderErrorUiLabels" property="OrderNoReturnQuantityAvailablePreviousReturnsMayExist"/></add-error>
-        	<check-errors/>
+            <check-errors/>
         </if-compare>
 
         <make-value value-name="itemLookup" entity-name="OrderItem"/>
@@ -142,10 +141,10 @@
 
             <if>
                 <condition>
-          	        <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+                      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
                 </condition>
                 <then>
-          	        <field-to-field field-name="returnablePrice" to-field-name="returnPrice" to-map-name="parameters"/>
+                      <field-to-field field-name="returnablePrice" to-field-name="returnPrice" to-map-name="parameters"/>
                 </then>
             </if>
 
@@ -315,16 +314,16 @@
     
     <simple-method method-name="quickReturnFromOrder" short-description="Create Quick Return From Order">
         <if>
-    	  <condition>
-    	    <and>
-    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
-    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="parameters"/></not>
-    	    </and>
-    	  </condition>
-    	  <then>
-    	    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunQuickReturnFromOrder"/></add-error>
-    	  </then>
-    	</if>
+          <condition>
+            <and>
+              <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+              <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="parameters"/></not>
+            </and>
+          </condition>
+          <then>
+            <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunQuickReturnFromOrder"/></add-error>
+          </then>
+        </if>
         <check-errors/>
 
         <!-- get primary information from the order header -->
@@ -397,13 +396,13 @@
 
             <!-- add in the item amount for a calc total -->
             <calculate field-name="returnTotal">
-        	    <calcop field-name="returnTotal" operator="add">
-        	        <calcop operator="multiply">
-        	            <calcop operator="get" field-name="returnPrice" map-name="newItemCtx"/>
+                <calcop field-name="returnTotal" operator="add">
+                    <calcop operator="multiply">
+                        <calcop operator="get" field-name="returnPrice" map-name="newItemCtx"/>
                         <calcop operator="get" field-name="returnQuantity" map-name="newItemCtx"/>
                     </calcop>
                 </calcop>
-        	</calculate>
+            </calculate>
 
             <!-- create the return item -->
             <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
@@ -437,13 +436,13 @@
 
             <!-- add in the item amount for a calc total -->
             <calculate field-name="returnTotal" type="Double">
-        	    <calcop field-name="returnTotal" operator="add">
-        	        <calcop operator="multiply">
-        	            <calcop operator="get" field-name="returnPrice" map-name="shipItemCtx"/>
+                <calcop field-name="returnTotal" operator="add">
+                    <calcop operator="multiply">
+                        <calcop operator="get" field-name="returnPrice" map-name="shipItemCtx"/>
                         <calcop operator="get" field-name="returnQuantity" map-name="shipItemCtx"/>
                     </calcop>
                 </calcop>
-        	</calculate>
+            </calculate>
 
             <!-- create the shipping adjustment return item -->
             <call-service service-name="createReturnItem" in-map-name="shipItemCtx" include-user-login="true"/>
