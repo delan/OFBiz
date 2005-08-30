@@ -73,7 +73,9 @@ if (action != null) {
     }
 
     EntityCondition searchCondition = new EntityFieldMap(conditionMap, EntityOperator.AND);
-    EntityCondition notVirtualCondition = new EntityExpr("isVirtual", EntityComparisonOperator.NOT_EQUAL, "Y");
+    EntityCondition notVirtualCondition = new EntityExpr(new EntityExpr("isVirtual", EntityOperator.EQUALS, null),
+                                                         EntityOperator.OR,
+                                                         new EntityExpr("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
     EntityCondition whereCondition = new EntityConditionList(UtilMisc.toList(searchCondition, notVirtualCondition), EntityOperator.AND);
 
     boolean beganTransaction = false;
