@@ -45,21 +45,22 @@
         <if-empty field-name="parameters.toPartyId">
             <!-- no toPartyId was specified.  use destination facility to determine the party of the return -->
             <if-not-empty field-name="parameters.destinationFacilityId">
-                 <field-to-field field-name="parameters.destinationFacilityId" to-field-name="facilityId" to-map-name="lookupParams"/>
-                 <find-by-primary-key entity-name="Facility" map-name="lookupParams" value-name="destinationFacility"/>
-                 <field-to-field field-name="ownerPartyId" map-name="destinationFacilityId" to-field-name="toPartyId" to-map-name="parameters"/>
+                <field-to-field field-name="parameters.destinationFacilityId" to-field-name="facilityId" to-map-name="lookupParams"/>
+                <find-by-primary-key entity-name="Facility" map-name="lookupParams" value-name="destinationFacility"/>
+                <field-to-field field-name="destinationFacility.ownerPartyId" to-field-name="parameters.toPartyId"/>
             </if-not-empty>
-            <else>
-        <!-- make sure that the party to return to is an INTERNAL_ORGANIZATIO or stop 
+        <else>
+            <!-- make sure that the party to return to is an INTERNAL_ORGANIZATIO or stop 
             TODO: if we want to implement returns to vendor later, simply change this to make sure that EITHER fromPartyId or toPartyId
             is an internal organization, and possibly also do a security check on the user -->
-                 <field-to-field field-name="parameters.toPartyId" to-field-name="partyId" to-map-name="lookupParams"/>
-                 <string-to-field string="INTERNAL_ORGANIZATIO" field-name="roleTypeId" map-name="lookupParams"/>
-                 <find-by-primary-key entity-name="PartyRole" value-name="partyRole" map-name="lookupParams" use-cache="true"/>
-                 <if-empty field-name="partyRole">
-                      <add-error><fail-message message="Error: a return must be to a party in the role of internal organization"/></add-error>
-                 </if-empty>
-             </else>
+            <entity-one entity-name="PartyRole" value-name="partyRole" use-cache="true" auto-field-map="false">
+                <field-map field-name="partyId" env-name="parameters.toPartyId"/>
+                <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+            </entity-one>
+            <if-empty field-name="partyRole">
+                <add-error><fail-message message="Error: a return must be to a party in the role of internal organization"/></add-error>
+            </if-empty>
+         </else>
         </if-empty>
         <check-errors/>
 
