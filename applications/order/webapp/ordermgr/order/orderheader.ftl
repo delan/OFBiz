@@ -484,7 +484,7 @@
                         ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(displayParty)}
                       </#if>
                       <#if partyId?exists>
-                        &nbsp;(<a href="/partymgr/control/viewprofile?party_id=${partyId}" target="partymgr" class="buttontext">${partyId}</a>)
+                        &nbsp;(<a href="/partymgr/control/viewprofile?partyId=${partyId}" target="partymgr" class="buttontext">${partyId}</a>)
                       </#if>
                     </div>
                   </td>

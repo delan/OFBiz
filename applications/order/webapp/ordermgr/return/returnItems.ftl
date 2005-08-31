@@ -116,7 +116,7 @@
       </tr>
     <#else>
       <tr>
-        <td colspan="4" nowrap><div class='tableheadtext'>No orders found for partyId: <a href="/partymgr/control/viewprofile?party_id=${returnHeader.fromPartyId?default('_NA_')}" class="buttontext">${returnHeader.fromPartyId?default('[null]')}</a></div></td>
+        <td colspan="4" nowrap><div class='tableheadtext'>No orders found for partyId: <a href="/partymgr/control/viewprofile?partyId=${returnHeader.fromPartyId?default('_NA_')}" class="buttontext">${returnHeader.fromPartyId?default('[null]')}</a></div></td>
       </tr>
       <tr>
         <td width='25%' align='right' nowrap><div class='tableheadtext'>Order ID:</div></td>
