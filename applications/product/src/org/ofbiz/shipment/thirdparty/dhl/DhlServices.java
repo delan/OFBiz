@@ -591,7 +591,7 @@ public class DhlServices {
                 GenericValue shipmentPackageRouteSeg = (GenericValue) shipmentPackageRouteSegIter.next();
                 GenericValue shipmentPackage = shipmentPackageRouteSeg.getRelatedOne("ShipmentPackage");
                 GenericValue shipmentBoxType = shipmentPackage.getRelatedOne("ShipmentBoxType");
-                List carrierShipmentBoxTypes = shipmentPackage.getRelated("CarrierShipmentBoxType", UtilMisc.toMap("partyId", "UPS"), null);
+                List carrierShipmentBoxTypes = shipmentPackage.getRelated("CarrierShipmentBoxType", UtilMisc.toMap("partyId", "DHL"), null);
                 GenericValue carrierShipmentBoxType = null;
                 if (carrierShipmentBoxTypes.size() > 0) {
                     carrierShipmentBoxType = (GenericValue) carrierShipmentBoxTypes.get(0); 
@@ -718,14 +718,14 @@ public class DhlServices {
             if (shipmentConfirmResponseString != null) {
                 Debug.logError("Got XML ShipmentConfirmRespose: " + shipmentConfirmResponseString, module);
                 return ServiceUtil.returnError(UtilMisc.toList(
-                            "Error reading or writing Shipment data for UPS Shipment Confirm: " + e.toString(),
+                            "Error reading or writing Shipment data for DHL Shipment Confirm: " + e.toString(),
                             "A ShipmentConfirmRespose was received: " + shipmentConfirmResponseString));
             } else {
-                return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Confirm: " + e.toString());
+                return ServiceUtil.returnError("Error reading or writing Shipment data for DHL Shipment Confirm: " + e.toString());
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Confirm: " + e.toString());
+            return ServiceUtil.returnError("Error reading or writing Shipment data for DHL Shipment Confirm: " + e.toString());
         }
     }
 
