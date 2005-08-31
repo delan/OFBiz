@@ -822,6 +822,7 @@
       <alias-all entity-alias="GLAO"/>
       <view-link entity-alias="TAGA" rel-entity-alias="GLAO">
         <key-map field-name="glAccountId"/>
+        <key-map field-name="organizationPartyId"/>
       </view-link>
     </view-entity>
 
