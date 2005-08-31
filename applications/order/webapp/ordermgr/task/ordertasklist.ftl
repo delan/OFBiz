@@ -157,7 +157,7 @@
                           <td>
                             <div class="tabletext">
                               <#if task.customerPartyId?exists>
-                                <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                                <a href="/partymgr/control/viewprofile?partyId=${task.customerPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                               <#else>
                                 N/A
                               </#if>
@@ -242,7 +242,7 @@
                             </td>
                             <td>
                               <#if task.customerPartyId?exists>
-                              <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                              <a href="/partymgr/control/viewprofile?partyId=${task.customerPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                               <#else>
                               &nbsp;
                               </#if>
@@ -266,7 +266,7 @@
                               <#if task.wepaPartyId == "_NA_">
                                 <div class="tabletext">N/A</div>
                               <#else>                              
-                                <a href="/partymgr/control/viewprofile?party_id=${task.wepaPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${task.wepaPartyId}</a>
+                                <a href="/partymgr/control/viewprofile?partyId=${task.wepaPartyId}${externalKeyParam}" target="partymgr" class="buttontext">${task.wepaPartyId}</a>
                               </#if>
                             </td>  
                             <td><div class='tabletext'>${Static["org.ofbiz.order.task.TaskWorker"].getRoleDescription(task)}</div></td>
