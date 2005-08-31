@@ -1270,6 +1270,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-amount"></field>
+      <field name="timeFreqUomId" type="id"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -1287,6 +1288,9 @@
       </relation>
       <relation type="one" fk-name="PROD_PRICE_CUOM" title="Currency" rel-entity-name="Uom">
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_TFUOM" title="TimeFreq" rel-entity-name="Uom">
+        <key-map field-name="timeFreqUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="PROD_PRICE_PSTG" rel-entity-name="ProductStoreGroup">
         <key-map field-name="productStoreGroupId"/>
