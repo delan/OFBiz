@@ -76,7 +76,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingContactMech.contactMech.contactMechId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
