@@ -380,6 +380,8 @@
       <field name="unitPrice" type="currency-amount"></field>
       <field name="unitListPrice" type="currency-amount"></field>
       <field name="unitAverageCost" type="currency-amount"></field>
+      <field name="unitRecurringPrice" type="currency-amount"></field>
+      <field name="recurringFreqUomId" type="id"></field>
       <field name="itemDescription" type="description"></field>
       <field name="comments" type="comment"></field>
       <field name="correspondingPoId" type="id"></field>
@@ -404,6 +406,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITEM_RFUOM" title="RecurringFreq" rel-entity-name="Uom">
+        <key-map field-name="recurringFreqUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -756,6 +761,7 @@
             title="The Order Payment Preference Entity">
       <field name="orderPaymentPreferenceId" type="id-ne"></field>
       <field name="orderId" type="id"></field>
+      <field name="orderItemSeqId" type="id"></field>
       <field name="paymentMethodTypeId" type="id"></field>
       <field name="paymentMethodId" type="id"></field>
       <field name="securityCode" type="long-varchar" encrypt="true"></field>
