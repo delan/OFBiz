@@ -28,6 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -349,6 +351,213 @@ public class ShoppingCartServices {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(e.getMessage());
                 }
+            }
+        }
+
+        Map result = ServiceUtil.returnSuccess();
+        result.put("shoppingCart", cart);
+        return result;
+    }
+    
+    public static Map loadCartFromQuote(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String quoteId = (String) context.get("quoteId");
+        String applyQuoteAdjustmentsString = (String) context.get("applyQuoteAdjustments");
+        Locale locale = (Locale) context.get("locale");
+
+        boolean applyQuoteAdjustments = applyQuoteAdjustmentsString == null || "true".equals(applyQuoteAdjustmentsString);
+        
+        // get the quote header
+        GenericValue quote = null;
+        try {
+            quote = delegator.findByPrimaryKey("Quote", UtilMisc.toMap("quoteId", quoteId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // initial require cart info
+        String productStoreId = quote.getString("productStoreId");
+        String currency = quote.getString("currencyUomId");
+
+        // create the cart
+        ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, currency);
+
+        try {
+            cart.setUserLogin(userLogin, dispatcher);
+        } catch (CartItemModifyException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // set the role information
+        cart.setOrderPartyId(quote.getString("partyId"));
+
+        cart.setQuoteId(quoteId);
+        
+        List quoteItems = null;
+        List quoteAdjs = null;
+        try {
+            quoteItems = quote.getRelated("QuoteItem");
+            quoteAdjs = quote.getRelated("QuoteAdjustment");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        // Convert the quote adjustment to order header adjustments and
+        // put them in a map: the key/values pairs are quoteItemSeqId/List of adjs
+        Map orderAdjsMap = new HashMap();
+        Iterator quoteAdjsIter = quoteAdjs.iterator();
+        while (quoteAdjsIter.hasNext()) {
+            GenericValue quoteAdj = (GenericValue)quoteAdjsIter.next();
+            List orderAdjs = (List)orderAdjsMap.get(quoteAdj.get("quoteItemSeqId"));
+            if (orderAdjs == null) {
+                orderAdjs = new LinkedList();
+                orderAdjsMap.put(quoteAdj.get("quoteItemSeqId"), orderAdjs);
+            }
+            // convert quote adjustments to order adjustments
+            GenericValue orderAdj = delegator.makeValue("OrderAdjustment", null);
+            orderAdj.put("orderAdjustmentId", quoteAdj.get("quoteAdjustmentId"));
+            orderAdj.put("orderAdjustmentTypeId", quoteAdj.get("quoteAdjustmentTypeId"));
+            orderAdj.put("orderItemSeqId", quoteAdj.get("quoteItemSeqId"));
+            orderAdj.put("comments", quoteAdj.get("comments"));
+            orderAdj.put("description", quoteAdj.get("description"));
+            orderAdj.put("amount", quoteAdj.get("amount"));
+            orderAdj.put("productPromoId", quoteAdj.get("productPromoId"));
+            orderAdj.put("productPromoRuleId", quoteAdj.get("productPromoRuleId"));
+            orderAdj.put("productPromoActionSeqId", quoteAdj.get("productPromoActionSeqId"));
+            orderAdj.put("productFeatureId", quoteAdj.get("productFeatureId"));
+            orderAdj.put("correspondingProductId", quoteAdj.get("correspondingProductId"));
+            orderAdj.put("sourceReferenceId", quoteAdj.get("sourceReferenceId"));
+            orderAdj.put("sourcePercentage", quoteAdj.get("sourcePercentage"));
+            orderAdj.put("customerReferenceId", quoteAdj.get("customerReferenceId"));
+            orderAdj.put("primaryGeoId", quoteAdj.get("primaryGeoId"));
+            orderAdj.put("secondaryGeoId", quoteAdj.get("secondaryGeoId"));
+            orderAdj.put("exemptAmount", quoteAdj.get("exemptAmount"));
+            orderAdj.put("taxAuthGeoId", quoteAdj.get("taxAuthGeoId"));
+            orderAdj.put("taxAuthPartyId", quoteAdj.get("taxAuthPartyId"));
+            orderAdj.put("overrideGlAccountId", quoteAdj.get("overrideGlAccountId"));
+            orderAdj.put("includeInTax", quoteAdj.get("includeInTax"));
+            orderAdj.put("includeInShipping", quoteAdj.get("includeInShipping"));
+            orderAdj.put("createdDate", quoteAdj.get("createdDate"));
+            orderAdj.put("createdByUserLogin", quoteAdj.get("createdByUserLogin"));
+            orderAdjs.add(orderAdj);
+        }
+
+        long nextItemSeq = 0;
+        if (quoteItems != null) {
+            Iterator i = quoteItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+
+                // get the next item sequence id
+                String orderItemSeqId = item.getString("quoteItemSeqId");
+                try {
+                    long seq = Long.parseLong(orderItemSeqId);
+                    if (seq > nextItemSeq) {
+                        nextItemSeq = seq;
+                    }
+                } catch (NumberFormatException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+
+                boolean isPromo = item.get("isPromo") != null && "Y".equals(item.getString("isPromo"));
+                if (isPromo && applyQuoteAdjustments) {
+                    // do not include PROMO items
+                    continue;
+                }
+
+                // not a promo item; go ahead and add it in
+                Double amount = item.getDouble("selectedAmount");
+                if (amount == null) {
+                    amount = new Double(0);
+                }
+                //Double quantity = OrderReadHelper.getOrderItemQuantity(item);
+                Double quantity = item.getDouble("quantity");
+                if (quantity == null) {
+                    quantity = new Double(0);
+                }
+                int itemIndex = -1;
+                if (item.get("productId") == null) {
+                    // non-product item
+                    //String itemType = item.getString("orderItemTypeId");
+                    String desc = item.getString("description");
+                    try {
+                        //itemIndex = cart.addNonProductItem(itemType, desc, null, 0.00, quantity.doubleValue(), null, null, dispatcher);
+                        itemIndex = cart.addNonProductItem(null, desc, null, 0.00, quantity.doubleValue(), null, null, dispatcher);
+                    } catch (CartItemModifyException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                } else {
+                    // product item
+                    //String prodCatalogId = item.getString("prodCatalogId");
+                    String productId = item.getString("productId");
+                    try {
+                        //itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), null, null, prodCatalogId, dispatcher);
+                        itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), null, null, null, dispatcher);
+                    } catch (ItemNotFoundException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    } catch (CartItemModifyException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                }
+
+                // flag the item w/ the orderItemSeqId so we can reference it
+                ShoppingCartItem cartItem = cart.findCartItem(itemIndex);
+                cartItem.setOrderItemSeqId(orderItemSeqId);
+                // attach addition item information
+                //cartItem.setStatusId(item.getString("statusId"));
+                //cartItem.setItemType(item.getString("orderItemTypeId"));
+                cartItem.setItemComment(item.getString("comments"));
+                cartItem.setQuoteId(item.getString("quoteId"));
+                cartItem.setQuoteItemSeqId(item.getString("quoteItemSeqId"));
+                cartItem.setIsPromo(isPromo);
+                //cartItem.setProductCategoryId(item.getString("productCategoryId"));
+                // TODO: impostare una data?
+                //cartItem.setDesiredDeliveryDate(item.getTimestamp("estimatedDeliveryDate"));
+                //cartItem.setShoppingList(item.getString("shoppingListId"), item.getString("shoppingListItemSeqId"));
+
+            }
+
+        }
+
+        // If applyQuoteAdjustments is set to false then standard cart adjustments are used.
+        if (applyQuoteAdjustments) {
+            // The auto adjustments are removed
+            cart.clearAllAdjustments();
+            // TODO: we should also remove promo item generated in the cart
+            // HINT: this items are the ones with a null orderItemSeqId...
+            // The cart adjustments, derived from quote adjustments, are added to the cart
+            List adjs = (List)orderAdjsMap.get(null);
+            if (adjs != null) {
+                cart.getAdjustments().addAll(adjs);
+            }
+            // The cart item adjustments, derived from quote item adjustments, are added to the cart
+            if (quoteItems != null) {
+                Iterator i = cart.iterator();
+                while (i.hasNext()) {
+                    ShoppingCartItem item = (ShoppingCartItem) i.next();
+                    adjs = (List)orderAdjsMap.get(item.getOrderItemSeqId());
+                    if (adjs != null) {
+                        item.getAdjustments().addAll(adjs);
+                    }
+                }
+            }
+        }
+        // set the item seq in the cart
+        if (nextItemSeq > 0) {
+            try {
+                cart.setNextItemSeq(nextItemSeq);
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
             }
         }
 

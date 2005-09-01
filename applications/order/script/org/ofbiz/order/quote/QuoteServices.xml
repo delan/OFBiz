@@ -114,7 +114,7 @@
         <field-to-field field-name="parameters.quoteId" to-field-name="newEntity.quoteId"/>
         <env-to-field env-name="quoteItemSeqId" map-name="newEntity"/>
         <field-to-result field-name="quoteId" result-name="quoteId"/>
-        <field-to-result field-name="quoteItemSeqId" result-name="quoteItemSeqId"/>
+        <field-to-result field-name="newEntity.quoteItemSeqId" result-name="quoteItemSeqId"/>
 
         <!-- finally create the record (should not exist already)-->
         <create-value value-name="newEntity"/>
@@ -141,6 +141,7 @@
         </check-permission>
         <check-errors/>
         <entity-one entity-name="QuoteItem" value-name="quoteItem" auto-field-map="true"/>
+        <remove-related value-name="quoteItem" relation-name="QuoteAdjustment"/>
         <check-errors/>
         <remove-value value-name="quoteItem"/>
     </simple-method>
@@ -315,6 +316,60 @@
         <store-value value-name="quoteItem"/>
         <check-errors/>
         <field-to-request field-name="quoteItem.quoteId" request-name="quoteId"/>
+    </simple-method>
+    <simple-method method-name="autoCreateQuoteAdjustments" short-description="Auto create QuoteAdjustments">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunAutoUpdateQuotePrice"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+        <!-- all existing quote adjustments are removed -->
+        <!-- TODO: how to manage manual adjustments? -->
+        <remove-related value-name="quote" relation-name="QuoteAdjustment"/>
+        <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
+        <iterate list-name="quoteItems" entry-name="quoteItem">
+            <if-compare field-name="quoteItem.isPromo" value="Y" operator="equals">
+                <clear-field field-name="removeQuoteItemInMap"/>
+                <set-service-fields service-name="removeQuoteItem" to-map-name="removeQuoteItemInMap" map-name="parameters"/>
+                <field-to-field field-name="quoteItem.quoteItemSeqId" to-field-name="removeQuoteItemInMap.quoteItemSeqId"/>
+                <call-service service-name="removeQuoteItem" in-map-name="removeQuoteItemInMap"/>
+            </if-compare>
+        </iterate>
+        <set-service-fields service-name="loadCartFromQuote" to-map-name="loadCartFromQuoteInMap" map-name="parameters"/>
+        <string-to-field string="false" field-name="loadCartFromQuoteInMap.applyQuoteAdjustments"/>
+        <call-service service-name="loadCartFromQuote" in-map-name="loadCartFromQuoteInMap">
+            <result-to-field result-name="shoppingCart" field-name="cart"/>
+        </call-service>
+
+        <call-object-method obj-field-name="cart" method-name="items" ret-field-name="items"/>
+        <iterate list-name="items" entry-name="item">
+            <call-object-method obj-field-name="item" method-name="getOrderItemSeqId" ret-field-name="orderItemSeqId"/>
+            <if-empty field-name="orderItemSeqId">
+                <!-- this is a new (promo) item -->
+                <!-- a new quote item is created -->
+                <clear-field field-name="createQuoteItemInMap"/>
+                <set-service-fields service-name="createQuoteItem" to-map-name="createQuoteItemInMap" map-name="parameters"/>
+                <call-object-method obj-field-name="item" method-name="getProductId" ret-field-name="createQuoteItemInMap.productId"/>
+                <call-object-method obj-field-name="item" method-name="getQuantity" ret-field-name="createQuoteItemInMap.quantity"/>
+                <string-to-field string="Y" field-name="createQuoteItemInMap.isPromo"/>
+                <call-service service-name="createQuoteItem" in-map-name="createQuoteItemInMap">
+                    <result-to-field result-name="quoteItemSeqId" field-name="quoteItemSeqId"/>
+                </call-service>
+                <!-- and the quoteItemSeqId is assigned to the shopping cart item (as orderItemSeqId) -->
+                <call-object-method obj-field-name="item" method-name="setOrderItemSeqId">
+                    <field field-name="quoteItemSeqId" type="String"/>
+                </call-object-method>
+            <call-object-method obj-field-name="item" method-name="getOrderItemSeqId" ret-field-name="newOrderItemSeqId"/>
+            </if-empty>
+        </iterate>
+        <call-object-method obj-field-name="cart" method-name="makeAllQuoteAdjustments" ret-field-name="adjustments"/>
+
+        <iterate list-name="adjustments" entry-name="adjustment">
+            <field-to-field field-name="parameters.quoteId" to-field-name="adjustment.quoteId"/>
+            <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="quoteAdjustmentId"/>
+            <field-to-field field-name="quoteAdjustmentId" to-field-name="adjustment.quoteAdjustmentId"/>
+            <create-value value-name="adjustment"/>
+        </iterate>
     </simple-method>
 
 </simple-methods>

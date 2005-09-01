@@ -375,5 +375,31 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ListQuoteAdjustments">
+        <section>
+            <actions>
+                <set field="title" value="List Quote Adjustments"/>
+                <set field="titleProperty" value="PageTitleListQuoteAdjustments"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="ListQuoteAdjustments"/>
+    
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+                <entity-and entity-name="QuoteAdjustment" list-name="quoteAdjustments">
+                    <field-map env-name="quote.quoteId" field-name="quoteId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonQuotePriceDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="autoCreateQuoteAdjustments?quoteId=${quoteId}" text="[${uiLabelMap.OrderAutoCreateQuoteAdjustments}]" style="buttontext"/>
+                        </container>
+                        <include-form name="ListQuoteAdjustments" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
 
