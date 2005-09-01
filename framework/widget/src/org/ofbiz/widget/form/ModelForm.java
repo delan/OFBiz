@@ -888,7 +888,7 @@ public class ModelForm {
 
         List headerFormFields = new LinkedList();
         Iterator formFieldIter = this.fieldList.iterator();
-        boolean isFirstFormHeader = true;
+        //boolean isFirstFormHeader = true;
         while (formFieldIter.hasNext()) {
             ModelFormField modelFormField = (ModelFormField) formFieldIter.next();
             ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
@@ -921,7 +921,7 @@ public class ModelForm {
         Iterator headerFormFieldIter = headerFormFields.iterator();
         while (headerFormFieldIter.hasNext()) {
             ModelFormField modelFormField = (ModelFormField) headerFormFieldIter.next();
-            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+            //ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
 
             if (separateColumns || modelFormField.getSeparateColumn()) 
                 formStringRenderer.renderFormatItemRowCellOpen(buffer, context, this, modelFormField);
@@ -970,9 +970,9 @@ public class ModelForm {
         formStringRenderer.renderFormatHeaderRowClose(buffer, context, this);
     }
 
-    protected Object safeNext(ListIterator listIt) {
+    protected Object safeNext(Iterator iterator) {
         try {
-            return listIt.next();
+            return iterator.next();
         } catch (NoSuchElementException e) {
             return null;
         }
@@ -994,13 +994,13 @@ public class ModelForm {
             return;
         }
         // if list is empty, do not render rows
-        ListIterator iter = null;
+        Iterator iter = null;
         List items = null;
-        if (obj instanceof ListIterator) {
-            iter = (ListIterator)obj;   
+        if (obj instanceof Iterator) {
+            iter = (Iterator) obj;   
             setPaginate(true);
         } else if (obj instanceof List) {
-            items = (List)obj;
+            items = (List) obj;
             iter = items.listIterator();
             setPaginate(false);
         }
@@ -1147,9 +1147,9 @@ public class ModelForm {
             
             if (iter instanceof EntityListIterator) {
                 try {
-                    ((EntityListIterator)iter).close();
+                    ((EntityListIterator) iter).close();
                 } catch(GenericEntityException e) {
-                    throw new RuntimeException(e.getMessage());
+                    Debug.logError(e, "Error closing list form render EntityListIterator: " + e.toString(), module);
                 }
             }
 //            if (listSize < actualPageSize) {
