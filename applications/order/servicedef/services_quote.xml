@@ -128,4 +128,9 @@
         <!--<attribute name="averageCost" type="Double" mode="IN" optional="true"/>
         <attribute name="costToPriceMult" type="Double" mode="IN" optional="true"/>-->
     </service>
+    <service name="autoCreateQuoteAdjustments" engine="simple" auth="true"
+            location="org/ofbiz/order/quote/QuoteServices.xml" invoke="autoCreateQuoteAdjustments">
+        <description>Remove all existing quote adjustments, recalc them and persist in QuoteAdjustment.</description>
+        <attribute name="quoteId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

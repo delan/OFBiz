@@ -2584,6 +2584,19 @@ public class ShoppingCart implements Serializable {
         }
     }
 
+    public void clearAllAdjustments() {
+        // remove all the promotion information (including adjustments)
+        clearAllPromotionInformation();
+        // remove all cart adjustments
+        this.adjustments.clear();
+        // remove all cart item adjustments
+        Iterator cartItemIter = this.iterator();
+        while (cartItemIter.hasNext()) {
+            ShoppingCartItem checkItem = (ShoppingCartItem) cartItemIter.next();
+            checkItem.getAdjustments().clear();
+        }
+    }
+
     /** Adds a promotion code to the cart, checking if it is valid. If it is valid this will return null, otherwise it will return a message stating why it was not valid
      * @param productPromoCodeId The promotion code to check and add
      * @return String that is null if valid, and added to cart, or an error message of the code was not valid and not added to the cart.
@@ -2881,6 +2894,48 @@ public class ShoppingCart implements Serializable {
         }
 
         return allAdjs;
+    }
+
+    /** make a list of all quote adjustments including header adjustments, line adjustments, and special adjustments (shipping and tax if applicable).
+     *  Internally, the quote adjustments are created from the order adjustments.
+     */
+    public List makeAllQuoteAdjustments() {
+        List quoteAdjs = new LinkedList();
+
+        List orderAdjs = makeAllAdjustments();
+        Iterator orderAdjsIter = orderAdjs.iterator();
+
+        while (orderAdjsIter.hasNext()) {
+            GenericValue orderAdj = (GenericValue) orderAdjsIter.next();
+            GenericValue quoteAdj = this.getDelegator().makeValue("QuoteAdjustment", null);
+            quoteAdj.put("quoteAdjustmentId", orderAdj.get("orderAdjustmentId"));
+            quoteAdj.put("quoteAdjustmentTypeId", orderAdj.get("orderAdjustmentTypeId"));
+            quoteAdj.put("quoteItemSeqId", orderAdj.get("orderItemSeqId"));
+            quoteAdj.put("comments", orderAdj.get("comments"));
+            quoteAdj.put("description", orderAdj.get("description"));
+            quoteAdj.put("amount", orderAdj.get("amount"));
+            quoteAdj.put("productPromoId", orderAdj.get("productPromoId"));
+            quoteAdj.put("productPromoRuleId", orderAdj.get("productPromoRuleId"));
+            quoteAdj.put("productPromoActionSeqId", orderAdj.get("productPromoActionSeqId"));
+            quoteAdj.put("productFeatureId", orderAdj.get("productFeatureId"));
+            quoteAdj.put("correspondingProductId", orderAdj.get("correspondingProductId"));
+            quoteAdj.put("sourceReferenceId", orderAdj.get("sourceReferenceId"));
+            quoteAdj.put("sourcePercentage", orderAdj.get("sourcePercentage"));
+            quoteAdj.put("customerReferenceId", orderAdj.get("customerReferenceId"));
+            quoteAdj.put("primaryGeoId", orderAdj.get("primaryGeoId"));
+            quoteAdj.put("secondaryGeoId", orderAdj.get("secondaryGeoId"));
+            quoteAdj.put("exemptAmount", orderAdj.get("exemptAmount"));
+            quoteAdj.put("taxAuthGeoId", orderAdj.get("taxAuthGeoId"));
+            quoteAdj.put("taxAuthPartyId", orderAdj.get("taxAuthPartyId"));
+            quoteAdj.put("overrideGlAccountId", orderAdj.get("overrideGlAccountId"));
+            quoteAdj.put("includeInTax", orderAdj.get("includeInTax"));
+            quoteAdj.put("includeInShipping", orderAdj.get("includeInShipping"));
+            quoteAdj.put("createdDate", orderAdj.get("createdDate"));
+            quoteAdj.put("createdByUserLogin", orderAdj.get("createdByUserLogin"));
+            quoteAdjs.add(quoteAdj);
+        }
+
+        return quoteAdjs;
     }
 
     /** make a list of all OrderPaymentPreferences and Billing info including all payment methods and types */

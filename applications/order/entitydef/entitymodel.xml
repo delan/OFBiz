@@ -1073,6 +1073,7 @@
       <field name="issueDate" type="date-time"></field>
       <field name="statusId" type="id"></field>
       <field name="currencyUomId" type="id"></field>
+      <field name="productStoreId" type="id"></field>
       <field name="validFromDate" type="date-time"></field>
       <field name="validThruDate" type="date-time"></field>
       <field name="quoteName" type="name"></field>
@@ -1092,6 +1093,9 @@
       </relation>
       <relation type="one" fk-name="QUOTE_CUOM" rel-entity-name="Uom">
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
       </relation>
     </entity>
     <entity entity-name="QuoteAttribute"
@@ -1135,9 +1139,11 @@
       <field name="custRequestId" type="id"></field>
       <field name="custRequestItemSeqId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="selectedAmount" type="floating-point"></field>
       <field name="quoteUnitPrice" type="currency-amount"></field>
       <field name="estimatedDeliveryDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
+      <field name="isPromo" type="indicator"></field>
       <prim-key field="quoteId"/>
       <prim-key field="quoteItemSeqId"/>
       <relation type="one" fk-name="QUOTE_ITM_QTE" rel-entity-name="Quote">
@@ -1274,6 +1280,76 @@
         <relation type="one" fk-name="QUOTE_WE_WEFF" rel-entity-name="WorkEffort">
             <key-map field-name="workEffortId"/>
         </relation>
+    </entity>
+    <entity entity-name="QuoteAdjustment"
+            package-name="org.ofbiz.order.quote"
+            never-cache="true"
+            title="Quote Adjustment Entity">
+      <description>Note that both includeInTax and includeInShipping should default to true, except in the case where this adjustment is a tax or shipping adjustment then should be ignored.</description>
+      <field name="quoteAdjustmentId" type="id-ne"></field>
+      <field name="quoteAdjustmentTypeId" type="id"></field>
+      <field name="quoteId" type="id"></field>
+      <field name="quoteItemSeqId" type="id"></field>
+      <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="productPromoId" type="id"></field>
+      <field name="productPromoRuleId" type="id"></field>
+      <field name="productPromoActionSeqId" type="id"></field>
+      <field name="productFeatureId" type="id"></field>
+      <field name="correspondingProductId" type="id"></field>
+      <field name="sourceReferenceId" type="id-long"></field>
+      <field name="sourcePercentage" type="floating-point"><!-- for tax entries this is the tax percentage --></field>
+      <field name="customerReferenceId" type="id-long"><!-- for tax entries this is partyTaxId --></field>
+      <field name="primaryGeoId" type="id"><!-- for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city) --></field>
+      <field name="secondaryGeoId" type="id"><!-- for tax entries this is the secondary jurisdiction Geo (usually a country, or other Geo that the primary is within) --></field>
+      <field name="exemptAmount" type="currency-amount"><!-- an amount that would normally apply, but not to this order; for tax exemption represents the what the tax would have been --></field>
+      <field name="taxAuthGeoId" type="id"></field><!-- these taxAuth fields deprecate the primaryGeoId and secondaryGeoId fields and will be used with the newer tax calc stuff -->
+      <field name="taxAuthPartyId" type="id"></field>
+      <field name="overrideGlAccountId" type="id"><!-- used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc --></field>
+      <field name="includeInTax" type="indicator"></field>
+      <field name="includeInShipping" type="indicator"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <prim-key field="quoteAdjustmentId"/>
+      <relation type="one" fk-name="QUOTE_ADJ_TYPE" rel-entity-name="OrderAdjustmentType">
+        <key-map field-name="quoteAdjustmentTypeId" rel-field-name="orderAdjustmentTypeId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_ADJ_OHEAD" rel-entity-name="Quote">
+        <key-map field-name="quoteId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_ADJ_USERL" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="QuoteItem">
+        <key-map field-name="quoteId"/>
+        <key-map field-name="quoteItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_ADJ_PROMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductPromoAction">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+        <key-map field-name="productPromoActionSeqId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_ADJ_PRGEO" title="Primary" rel-entity-name="Geo">
+        <key-map field-name="primaryGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_ADJ_SCGEO" title="Secondary" rel-entity-name="Geo">
+        <key-map field-name="secondaryGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_ADJ_TXA" rel-entity-name="TaxAuthority">
+        <key-map field-name="taxAuthGeoId"/>
+        <key-map field-name="taxAuthPartyId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_ADJ_OGLA" title="Override" rel-entity-name="GlAccount">
+        <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->

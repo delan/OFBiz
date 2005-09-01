@@ -113,6 +113,11 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="productStoreId" title="${uiLabelMap.QuoteProductStoreId}">
+            <drop-down allow-empty="true">
+                <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId"/>
+            </drop-down>
+        </field>
         <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}">
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
@@ -165,6 +170,13 @@
             list-name="quoteItems" target="" paginate-target="ListQuoteItems" title="" type="list">
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
         <field name="quoteId"><hidden/></field>
+        <!--
+        TODO: fix this!
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext" use-when="isPromo==null&#124;&#124;&quot;${isPromo}&quot;.equals(&quot;N&quot;)">
+            <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
+        </field>
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" use-when="${isPromo}!=null&amp;&amp;&quot;${isPromo}&quot;.equals(&quot;Y&quot;)"/>
+        -->
         <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
@@ -224,6 +236,12 @@
         <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}"></field>
         <field name="estimatedDeliveryDate" title="${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}"></field>
         <field name="comments" title="${uiLabelMap.CommonComments}"></field>
+        <field name="isPromo" title="${uiLabelMap.OrderOrderIsPromo}">
+            <drop-down allow-empty="true">
+                <option key="N" description="${uiLabelMap.CommonN}"/>
+                <option key="Y" description="${uiLabelMap.CommonY}"/>
+            </drop-down>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -300,5 +318,9 @@
             <submit/>
         </field>
     </form>
-
+    <form name="ListQuoteAdjustments" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="quoteAdjustments"
+            target="" paginate-target="ListQuoteAdjustments" title="" type="list">
+        <auto-fields-entity entity-name="QuoteAdjustment" default-field-type="display"/>
+    </form>
 </forms>

@@ -36,6 +36,7 @@
         <#if security.hasEntityPermission("ORDERMGR", "_QUOTE_PRICE", session)>
         <a href="<@ofbizUrl>/ListQuoteCoefficients?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteCoefficients?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteCoefficients}</a>
         <a href="<@ofbizUrl>/ManageQuotePrices?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ManageQuotePrices?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuotePrices}</a>
+        <a href="<@ofbizUrl>/ListQuoteAdjustments?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteAdjustments?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteAdjustments}</a>
         </#if>
     </div>
 </#if>

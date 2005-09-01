@@ -916,6 +916,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ManageQuotePrices"/>
     </request-map>
+    <request-map uri="ListQuoteAdjustments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListQuoteAdjustments"/>
+    </request-map>
 
     <request-map uri="createQuote">
         <security https="true" auth="true"/>
@@ -987,6 +991,11 @@
         <event type="service-multi" invoke="autoUpdateQuotePrice"/>
         <response name="success" type="view" value="ManageQuotePrices"/>
         <response name="error" type="view" value="ManageQuotePrices"/>
+    </request-map>
+    <request-map uri="autoCreateQuoteAdjustments">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="autoCreateQuoteAdjustments"/>
+        <response name="success" type="view" value="ListQuoteAdjustments"/>
     </request-map>
 
     <!-- Lookup request mappings -->
@@ -1102,6 +1111,7 @@
     <view-map name="ListQuoteCoefficients" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteCoefficients"/>
     <view-map name="EditQuoteCoefficient" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteCoefficient"/>
     <view-map name="ManageQuotePrices" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ManageQuotePrices"/>
+    <view-map name="ListQuoteAdjustments" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteAdjustments"/>
 
     <view-map name="FindRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#FindRequest"/>
     <view-map name="EditRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditRequest"/>
