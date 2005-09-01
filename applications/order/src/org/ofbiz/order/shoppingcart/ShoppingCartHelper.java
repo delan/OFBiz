@@ -471,7 +471,7 @@ public class ShoppingCartHelper {
         Iterator itemIter = null;
         
         try {
-            itemIter = UtilMisc.toIterator(delegator.findByAnd("QuoteItem", UtilMisc.toMap("quoteId", quoteId), null));
+            itemIter = UtilMisc.toIterator(delegator.findByAnd("QuoteItem", UtilMisc.toMap("quoteId", quoteId), UtilMisc.toList("quoteItemSeqId")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             itemIter = null;
@@ -500,7 +500,7 @@ public class ShoppingCartHelper {
                     try {
                         // TODO: it would be better to implement a new ShoppingCartItem.makeItem(...) method
                         //       that takes as input the quoteItem generic value
-                        ShoppingCartItem sci = ShoppingCartItem.makeItem(new Integer(0), quoteItem.getString("productId"),
+                        ShoppingCartItem sci = ShoppingCartItem.makeItem(null, quoteItem.getString("productId"),
                                                                          0, quoteItem.getDouble("quantity").doubleValue(), 
                                                                          null, null, catalogId, null, 
                                                                          dispatcher, this.cart);
