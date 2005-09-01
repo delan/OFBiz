@@ -83,7 +83,6 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
     return buf.toString();
 }
 
-requestParams = UtilHttp.getParameterMap(request);
 cart = ShoppingCartEvents.getCartObject(request);
 
 // get the shopping lists for the user (if logged in)
@@ -133,7 +132,7 @@ if (product != null) {
     }
 
     // get next/previous information for category
-    categoryId = requestParams.get("category_id");
+    categoryId = parameters.get("category_id");
     if (categoryId == null) categoryId = product.getString("primaryProductCategoryId");
     if (categoryId != null) context.put("categoryId", categoryId);
 
