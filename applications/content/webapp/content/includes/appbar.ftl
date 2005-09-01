@@ -26,7 +26,7 @@
 
 <#assign security = requestAttributes.security>
 <#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey?if_exists>
-<#assign ofbizServerName = application.getAttribute("_serverId")?if_exists>
+<#assign ofbizServerName = application.getAttribute("_serverId")?default("default-server")>
 <#assign contextPath = request.getContextPath()>
 <#assign displayApps = Static["org.ofbiz.base.component.ComponentConfig"].getAppBarWebInfos(ofbizServerName)>
 

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@
 <#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
 <#if (requestAttributes.externalLoginKey)?exists><#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey?if_exists></#if>
 <#if (externalLoginKey)?exists><#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey?if_exists></#if>
-<#assign ofbizServerName = application.getAttribute("_serverId")?if_exists>
+<#assign ofbizServerName = application.getAttribute("_serverId")?default("default-server")>
 <#assign contextPath = request.getContextPath()>
 <#assign displayApps = Static["org.ofbiz.base.component.ComponentConfig"].getAppBarWebInfos(ofbizServerName)>
 <#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
@@ -42,7 +42,7 @@
   <tr bgcolor="#FFFFFF">
     <td><div class="appbarleft"></div></td>
     <td height="15" width="100%">
-	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <#list displayApps as display>
             <#assign thisApp = display.getContextRoot()>
@@ -74,7 +74,7 @@
               </td>
             </#if>
           </#list>
-		  <td><div class="appbarright"></div></td>
+          <td><div class="appbarright"></div></td>
           <td width="100%" class="appbarresize">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
@@ -88,4 +88,3 @@
   </tr>
 </table>
 </#if>
-
