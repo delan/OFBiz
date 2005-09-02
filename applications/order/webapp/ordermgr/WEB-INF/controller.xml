@@ -997,6 +997,12 @@
         <event type="service" path="" invoke="autoCreateQuoteAdjustments"/>
         <response name="success" type="view" value="ListQuoteAdjustments"/>
     </request-map>
+    <request-map uri="loadCartFromQuote">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="loadCartFromQuote"/>
+        <response name="success" type="view" value="showcart"/>
+        <response name="error" type="view" value="EditQuote"/>
+    </request-map>
 
     <!-- Lookup request mappings -->
     <request-map uri="LookupPerson">
