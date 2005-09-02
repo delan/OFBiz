@@ -224,7 +224,7 @@
             <td><div class="tabletext">&nbsp;</div></td>
             <td>
                 <div class="tabletext">
-                    ${uiLabelMap.ProductPackage} :${shipmentPackageRouteSeg.shipmentPackageSeqId} label here 
+                    ${uiLabelMap.ProductPackage} :${shipmentPackageRouteSeg.shipmentPackageSeqId}
                     <#if shipmentPackageRouteSeg.labelImage?exists>
                         <a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${shipmentPackageRouteSeg.shipmentId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewLabelImage}]</a>
                     </#if>
