@@ -70,8 +70,8 @@ public class ShipmentEvents {
             return "error";
         }
         
-        ByteWrapper byteWrapper = (ByteWrapper) shipmentPackageRouteSeg.get("labelImage");
-        if (byteWrapper == null || byteWrapper.getBytes().length == 0) {
+        byte[] bytes = shipmentPackageRouteSeg.getBytes("labelImage");
+        if (bytes == null || bytes.length == 0) {
             request.setAttribute("_ERROR_MESSAGE_", "The ShipmentPackageRouteSeg was found where shipmentId=[" + shipmentId + "], shipmentRouteSegmentId=[" + shipmentRouteSegmentId + "], shipmentPackageSeqId=[" + shipmentPackageSeqId + "], but there was no labelImage on the value.");
             return "error";
         }
@@ -79,10 +79,10 @@ public class ShipmentEvents {
         // TODO: record the image format somehow to make this block nicer.  Right now we're just trying GIF first as a default, then if it doesn't work, trying PNG.
         // It would be nice to store the actual type of the image alongside the image data.
         try {
-            UtilHttp.streamContentToBrowser(response, byteWrapper.getBytes(), "image/gif");
+            UtilHttp.streamContentToBrowser(response, bytes, "image/gif");
         } catch (IOException e1) {
             try {
-                UtilHttp.streamContentToBrowser(response, byteWrapper.getBytes(), "image/png");
+                UtilHttp.streamContentToBrowser(response, bytes, "image/png");
             } catch (IOException e2) {
                 String errorMsg = "Error writing labelImage to OutputStream: " + e2.toString();
                 Debug.logError(e2, errorMsg, module);
