@@ -204,6 +204,7 @@ public class FindServices {
         }
         return normalizedFields;
     }
+    
     /**
      * createCondition, comparing the normalizedFields with the list of keys, .
      *
@@ -435,13 +436,13 @@ public class FindServices {
         results.put("entityConditionList", exprList);
         return results;
     }
+
     /**
      * executeFind
      *
      * This is a generic method that returns an EntityListIterator.
      */
     public static Map executeFind(DispatchContext dctx, Map context) {
-
         String entityName = (String)context.get("entityName");
         EntityConditionList exprList = (EntityConditionList)context.get("entityConditionList");
         List orderByList = (List)context.get("orderByList");
@@ -454,7 +455,7 @@ public class FindServices {
             listIt = delegator.findListIteratorByCondition(entityName, exprList,
                     null, null, orderByList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Error finding iterator: " + e.getMessage());
+            return ServiceUtil.returnError("Error running Find on the [" + entityName + "] entity: " + e.getMessage());
         }
 
         Map results = ServiceUtil.returnSuccess();
