@@ -127,6 +127,9 @@
                         <container>
                             <link target="EditQuote" text="[${uiLabelMap.OrderCreateOrderQuote}]" style="buttontext"/>
                         </container>
+                        <container>
+                            <link target="loadCartFromQuote?quoteId=${quoteId}" text="[${uiLabelMap.OrderCreateOrder}]" style="buttontext"/>
+                        </container>
                         <include-form name="EditQuote" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

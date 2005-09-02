@@ -324,7 +324,7 @@
         <check-errors/>
         <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
         <!-- all existing quote adjustments are removed -->
-        <!-- TODO: how to manage manual adjustments? -->
+        <!-- TODO: manual adjustments: remove only adjustments with promoId and actionId not null -->
         <remove-related value-name="quote" relation-name="QuoteAdjustment"/>
         <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
         <iterate list-name="quoteItems" entry-name="quoteItem">

@@ -168,6 +168,27 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @param productId The primary key of the product being added
      * @param selectedAmount ?
      * @param quantity The quantity to add
+     * @param additionalProductFeatureAndAppls Product feature/appls map
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException, ItemNotFoundException {
+        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, triggerExternalOps);
+    }
+
+    /**
+     * Makes a ShoppingCartItem and adds it to the cart.
+     * NOTE: This method will get the product entity and check to make sure it can be purchased.
+     *
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param productId The primary key of the product being added
+     * @param selectedAmount ?
+     * @param quantity The quantity to add
      * @param reservStart start of the reservation
      * @param reservLength length of the reservation
      * @param reservPersons nbr of persons taking advantage of the reservation
@@ -181,6 +202,29 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
+        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, true);
+    }
+    /**
+     * Makes a ShoppingCartItem and adds it to the cart.
+     * NOTE: This method will get the product entity and check to make sure it can be purchased.
+     *
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param productId The primary key of the product being added
+     * @param selectedAmount ?
+     * @param quantity The quantity to add
+     * @param reservStart start of the reservation
+     * @param reservLength length of the reservation
+     * @param reservPersons nbr of persons taking advantage of the reservation
+     * @param additionalProductFeatureAndAppls Product feature/appls map
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException, ItemNotFoundException {
     GenericDelegator delegator = cart.getDelegator();
     GenericValue product = null;
 
@@ -210,7 +254,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         throw new ItemNotFoundException(excMsg);
     }
 
-    return makeItem(cartLocation, product, selectedAmount, quantity, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, true);
+    return makeItem(cartLocation, product, selectedAmount, quantity, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, triggerExternalOps);
 }
 
     /**
