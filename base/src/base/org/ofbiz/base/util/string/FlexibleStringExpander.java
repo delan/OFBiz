@@ -29,8 +29,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+
+import bsh.EvalError;
 
 /**
  * Expands string values with in a Map context supporting the ${} syntax for
@@ -185,8 +188,14 @@ public class FlexibleStringExpander {
             // append everything from the current index to the start of the var
             handler.handleConstant(original, currentInd, start);
             
-            // get the environment value and append it
-            handler.handleVariable(original, start+2, end);
+            // check to see if this starts with a "bsh:", if so treat the rest of the string as a bsh scriptlet
+            if (original.indexOf("bsh:", start+2) == start+2) {
+                // get the bsh scriptlet and append it
+                handler.handleBsh(original, start+6, end);
+            } else {
+                // get the environment value and append it
+                handler.handleVariable(original, start+2, end);
+            }
             
             // reset the current index to after the var, and the start to the beginning of the next var
             currentInd = end + 1;
@@ -215,6 +224,26 @@ public class FlexibleStringExpander {
         }
     }
     
+    public static class BshElement implements StringElement {
+        String scriptlet;
+        
+        public BshElement(String scriptlet) {
+            this.scriptlet = scriptlet;
+        }
+        
+        public void appendElement(StringBuffer buffer, Map context, Locale locale) {
+            try {
+                Object scriptResult = BshUtil.eval(scriptlet, context);
+                if (scriptResult != null) {
+                    buffer.append(scriptResult.toString());
+                } else {
+                    Debug.logWarning("BSH scriplet evaluated to null [" + scriptlet + "], got no return so inserting nothing.", module);
+                }
+            } catch (EvalError e) {
+                Debug.logWarning(e, "Error evaluating BSH scriplet [" + scriptlet + "], inserting nothing; error was: " + e.toString(), module);
+            }
+        }
+    }
     public static class VariableElement implements StringElement {
         protected FlexibleMapAccessor fma;
         
@@ -236,6 +265,7 @@ public class FlexibleStringExpander {
         public void handleConstant(String original, int start); 
         public void handleConstant(String original, int start, int end); 
         public void handleVariable(String original, int start, int end); 
+        public void handleBsh(String original, int start, int end); 
     }
     
     public static class PreParseHandler implements ParseElementHandler {
@@ -255,6 +285,10 @@ public class FlexibleStringExpander {
         
         public void handleVariable(String original, int start, int end) {
             stringElements.add(new VariableElement(original.substring(start, end))); 
+        }
+
+        public void handleBsh(String original, int start, int end) {
+            stringElements.add(new BshElement(original.substring(start, end))); 
         }
     }
     
@@ -286,6 +320,21 @@ public class FlexibleStringExpander {
                 targetBuffer.append(envVal.toString());
             } else {
                 Debug.logWarning("Could not find value in environment for the name [" + envName + "], inserting nothing.", module);
+            }
+        }
+
+        public void handleBsh(String original, int start, int end) {
+            //run the scriplet and append the result
+            String scriptlet = original.substring(start, end);
+            try {
+                Object scriptResult = BshUtil.eval(scriptlet, context);
+                if (scriptResult != null) {
+                    targetBuffer.append(scriptResult.toString());
+                } else {
+                    Debug.logWarning("BSH scriplet evaluated to null [" + scriptlet + "], got no return so inserting nothing.", module);
+                }
+            } catch (EvalError e) {
+                Debug.logWarning(e, "Error evaluating BSH scriplet [" + scriptlet + "], inserting nothing; error was: " + e.toString(), module);
             }
         }
     }

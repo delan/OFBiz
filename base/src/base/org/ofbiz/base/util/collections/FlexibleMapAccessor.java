@@ -30,6 +30,7 @@ import java.util.Map;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 
 /**
@@ -136,32 +137,44 @@ public class FlexibleMapAccessor {
         // so we can keep the passed context
         Map newBase = null;
         if (this.subMapAccessor != null) {
-            newBase = this.subMapAccessor.getSubMap(base, false);
+            try {
+                newBase = this.subMapAccessor.getSubMap(base, false);
+            } catch (Exception e) {
+                String errMsg = "Error getting map accessor sub-map [" + this.subMapAccessor.extName + "] as part of [" + this.original + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
         } else {
             // DEJ 20041221 was like this, any reason to create a new Map?: newBase = new HashMap(base);
             newBase = base;
         }
         
-        Object ret = null;
-        if (this.isListReference) {
-            List lst = (List) newBase.get(this.extName);
-            if (lst == null) {
-                return null;
+        try {
+            Object ret = null;
+            if (this.isListReference) {
+                List lst = (List) newBase.get(this.extName);
+                if (lst == null) {
+                    return null;
+                }
+                if (lst.size() == 0) {
+                    return null;
+                }
+                ret = lst.get(this.isAddAtEnd ? lst.size() -1 : this.listIndex);
+            } else {
+                ret = getByLocale(this.extName, base, newBase, locale);
             }
-            if (lst.size() == 0) {
-                return null;
-            }
-            ret = lst.get(this.isAddAtEnd ? lst.size() -1 : this.listIndex);
-        } else {
-            ret = getByLocale(this.extName, base, newBase, locale);
+            
+            // in case the name has a dot like system env values
+            if (ret == null) {
+                ret = getByLocale(this.original, base, base, locale);
+            }        
+            
+            return ret;
+        } catch (Exception e) {
+            String errMsg = "Error getting map accessor entry with name [" + this.extName + "] or [" + this.original + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            throw new RuntimeException(errMsg);
         }
-        
-        // in case the name has a dot like system env values
-        if (ret == null) {
-            ret = getByLocale(this.original, base, base, locale);
-        }        
-        
-        return ret;
     }
     
     protected Object getByLocale(String name, Map base, Map sub, Locale locale) {
@@ -287,6 +300,7 @@ public class FlexibleMapAccessor {
         
         public Map getSubMap(Map base, boolean forPut) {
             if (base == null) return null;
+            if (this.extName == null) return null;
             if (this.subMapAccessor != null) {
                 base = this.subMapAccessor.getSubMap(base, forPut);
             }
