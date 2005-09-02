@@ -364,6 +364,9 @@
             <first-from-list entry-name="destinationOrderContactMech" list-name="destinationOrderContactMechs"/>
             <if-not-empty field-name="destinationOrderContactMech">
                 <env-to-env env-name="destinationOrderContactMech.contactMechId" to-env-name="shipment.destinationContactMechId"/>
+               <else>
+                  <log level="warning" message="Cannot find a shipping destination address for ${shipment.primaryOrderId}"/>
+                </else>
             </if-not-empty>
         </if-empty>
         <!-- originContactMechId.  Only do this if it is not a purchase shipment -->
@@ -374,6 +377,9 @@
                 <first-from-list entry-name="originOrderContactMech" list-name="originOrderContactMechs"/>
                 <if-not-empty field-name="originOrderContactMech">
                     <env-to-env env-name="originOrderContactMech.contactMechId" to-env-name="shipment.originContactMechId"/>
+                  <else>
+                    <log level="warning" message="Cannot find a shipping origin address for ${shipment.primaryOrderId}"/>
+                  </else>
                 </if-not-empty>
             </if-empty>
         </if-compare>
@@ -385,6 +391,9 @@
             <first-from-list entry-name="destTelecomOrderContactMech" list-name="destTelecomOrderContactMechs"/>
             <if-not-empty field-name="destTelecomOrderContactMech">
                 <field-to-field field-name="contactMechId" map-name="destTelecomOrderContactMech" to-field-name="destinationTelecomNumberId" to-map-name="shipment"/>
+               <else>
+                  <log level="warning" message="Cannot find a shipping destination phone number for ${shipment.primaryOrderId}"/>
+                </else>
             </if-not-empty>
         </if-empty>
         <!-- originTelecomNumberId -->
@@ -394,6 +403,9 @@
             <first-from-list entry-name="originTelecomOrderContactMech" list-name="originTelecomOrderContactMechs"/>
             <if-not-empty field-name="originTelecomOrderContactMech">
                 <field-to-field field-name="contactMechId" map-name="originTelecomOrderContactMech" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
+              <else>
+                  <log level="warning" message="Cannot find a shipping origin phone number for ${shipment.primaryOrderId}"/>
+              </else>
             </if-not-empty>
         </if-empty>
 
