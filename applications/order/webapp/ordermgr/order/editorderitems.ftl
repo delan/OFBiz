@@ -156,7 +156,7 @@
                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                           <#if orderItemAdjustment.primaryGeoId?has_content>
                             <#assign primaryGeo = orderItemAdjustment.getRelatedOneCache("PrimaryGeo")/>
-                            <b>Jurisdiction:</b> ${primaryGeo.geoName} [${primaryGeo.abbreviation?if_exists}]
+                            <b>${uiLabelMap.OrderJurisdiction}:</b> ${primaryGeo.geoName} [${primaryGeo.abbreviation?if_exists}]
                             <#if orderItemAdjustment.secondaryGeoId?has_content>
                               <#assign secondaryGeo = orderItemAdjustment.getRelatedOneCache("SecondaryGeo")/>
                               (<b>in:</b> ${secondaryGeo.geoName} [${secondaryGeo.abbreviation?if_exists}])
