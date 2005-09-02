@@ -866,6 +866,36 @@ public class ShoppingCartEvents {
       return "success";
   }
 
+  /** Initialize order entry from a quote **/
+  public static String loadCartFromQuote(HttpServletRequest request, HttpServletResponse response) {
+      LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+      HttpSession session = request.getSession();
+      GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+      Locale locale = UtilHttp.getLocale(request);
+      
+      String quoteId = request.getParameter("quoteId");
+      
+      ShoppingCart cart = null;
+      try {
+          Map outMap = dispatcher.runSync("loadCartFromQuote", 
+                                          UtilMisc.toMap("quoteId", quoteId,
+                                                         "applyQuoteAdjustments", "true",
+                                                         "userLogin", userLogin));
+          cart = (ShoppingCart)outMap.get("shoppingCart");
+      } catch(Exception exc) {
+          //request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderUnableToInitializeCart", locale));
+          request.setAttribute("_ERROR_MESSAGE_", exc.getMessage());
+          return "error";
+      }
+      
+      session.setAttribute("shoppingCart", cart);
+      session.setAttribute("productStoreId", cart.getProductStoreId());
+      session.setAttribute("orderMode", cart.getOrderType());
+      session.setAttribute("orderPartyId", cart.getOrderPartyId());
+      
+      return "success";
+  }
+
   /** Initialize order entry **/
   public static String initializeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
       GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");

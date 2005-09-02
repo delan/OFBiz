@@ -466,7 +466,7 @@ public class ShoppingCartServices {
                 }
 
                 boolean isPromo = item.get("isPromo") != null && "Y".equals(item.getString("isPromo"));
-                if (isPromo && applyQuoteAdjustments) {
+                if (isPromo && !applyQuoteAdjustments) {
                     // do not include PROMO items
                     continue;
                 }
@@ -499,7 +499,7 @@ public class ShoppingCartServices {
                     String productId = item.getString("productId");
                     try {
                         //itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), null, null, prodCatalogId, dispatcher);
-                        itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), null, null, null, dispatcher);
+                        itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), null, null, null, dispatcher, !applyQuoteAdjustments);
                     } catch (ItemNotFoundException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
@@ -530,10 +530,6 @@ public class ShoppingCartServices {
 
         // If applyQuoteAdjustments is set to false then standard cart adjustments are used.
         if (applyQuoteAdjustments) {
-            // The auto adjustments are removed
-            cart.clearAllAdjustments();
-            // TODO: we should also remove promo item generated in the cart
-            // HINT: this items are the ones with a null orderItemSeqId...
             // The cart adjustments, derived from quote adjustments, are added to the cart
             List adjs = (List)orderAdjsMap.get(null);
             if (adjs != null) {
