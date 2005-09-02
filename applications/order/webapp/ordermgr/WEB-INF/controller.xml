@@ -920,6 +920,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListQuoteAdjustments"/>
     </request-map>
+    <request-map uri="EditQuoteAdjustment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuoteAdjustment"/>
+    </request-map>
 
     <request-map uri="createQuote">
         <security https="true" auth="true"/>
@@ -1002,6 +1006,21 @@
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="loadCartFromQuote"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="EditQuote"/>
+    </request-map>
+    <request-map uri="createQuoteAdjustment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createQuoteAdjustment"/>
+        <response name="success" type="view" value="EditQuoteAdjustment"/>
+    </request-map>
+    <request-map uri="updateQuoteAdjustment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateQuoteAdjustment"/>
+        <response name="success" type="view" value="EditQuoteAdjustment"/>
+    </request-map>
+    <request-map uri="removeQuoteAdjustment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeQuoteAdjustment"/>
+        <response name="success" type="view" value="ListQuoteAdjustments"/>
     </request-map>
 
     <!-- Lookup request mappings -->
@@ -1118,6 +1137,7 @@
     <view-map name="EditQuoteCoefficient" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteCoefficient"/>
     <view-map name="ManageQuotePrices" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ManageQuotePrices"/>
     <view-map name="ListQuoteAdjustments" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteAdjustments"/>
+    <view-map name="EditQuoteAdjustment" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteAdjustment"/>
 
     <view-map name="FindRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#FindRequest"/>
     <view-map name="EditRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditRequest"/>

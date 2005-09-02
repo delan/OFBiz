@@ -133,4 +133,25 @@
         <description>Remove all existing quote adjustments, recalc them and persist in QuoteAdjustment.</description>
         <attribute name="quoteId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="createQuoteAdjustment" default-entity-name="QuoteAdjustment" engine="simple" auth="true"
+            location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteAdjustment">
+        <description>Creates a new quote adjustment record</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <override name="quoteAdjustmentTypeId" optional="false"/>
+        <override name="quoteId" optional="false"/>
+    </service>
+    <service name="updateQuoteAdjustment" default-entity-name="QuoteAdjustment" engine="simple"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="updateQuoteAdjustment" auth="true">
+        <description>Update a QuoteAdjustment</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeQuoteAdjustment" engine="simple" default-entity-name="QuoteAdjustment"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="removeQuoteAdjustment" auth="true">
+        <description>Remove a QuoteAdjustment</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
 </services>

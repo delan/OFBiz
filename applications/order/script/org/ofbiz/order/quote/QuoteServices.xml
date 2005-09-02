@@ -323,9 +323,7 @@
         </check-permission>
         <check-errors/>
         <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
-        <!-- all existing quote adjustments are removed -->
-        <!-- TODO: manual adjustments: remove only adjustments with promoId and actionId not null -->
-        <remove-related value-name="quote" relation-name="QuoteAdjustment"/>
+        <!-- all existing promo quote items are removed -->
         <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
         <iterate list-name="quoteItems" entry-name="quoteItem">
             <if-compare field-name="quoteItem.isPromo" value="Y" operator="equals">
@@ -334,6 +332,17 @@
                 <field-to-field field-name="quoteItem.quoteItemSeqId" to-field-name="removeQuoteItemInMap.quoteItemSeqId"/>
                 <call-service service-name="removeQuoteItem" in-map-name="removeQuoteItemInMap"/>
             </if-compare>
+        </iterate>
+        <!-- all existing auto quote adjustments are removed -->
+        <get-related value-name="quote" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
+        <iterate list-name="quoteAdjustments" entry-name="quoteAdjustment">
+            <!-- make sure this is not a manual adjustments -->
+            <if-not-empty field-name="quoteAdjustment.productPromoId">
+                <clear-field field-name="removeQuoteAdjustmentInMap"/>
+                <set-service-fields service-name="removeQuoteAdjustment" to-map-name="removeQuoteAdjustmentInMap" map-name="parameters"/>
+                <field-to-field field-name="quoteAdjustment.quoteAdjustmentId" to-field-name="removeQuoteAdjustmentInMap.quoteAdjustmentId"/>
+                <call-service service-name="removeQuoteAdjustment" in-map-name="removeQuoteAdjustmentInMap"/>
+            </if-not-empty>
         </iterate>
         <set-service-fields service-name="loadCartFromQuote" to-map-name="loadCartFromQuoteInMap" map-name="parameters"/>
         <string-to-field string="false" field-name="loadCartFromQuoteInMap.applyQuoteAdjustments"/>
@@ -371,5 +380,43 @@
             <create-value value-name="adjustment"/>
         </iterate>
     </simple-method>
+    <simple-method method-name="createQuoteAdjustment" short-description="Create a QuoteAdjustment">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteAdjustement"/>
+        </check-permission>
+        <check-errors/>
 
+        <make-value value-name="newEntity" entity-name="QuoteAdjustment"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="quoteAdjustmentId"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="quoteAdjustmentId" map-name="newEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>                
+        <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.createdByUserLogin"/>
+        <field-to-result field-name="quoteAdjustmentId" result-name="quoteAdjustmentId"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="removeQuoteAdjustment" short-description="Remove an existing QuoteAdjustment">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveQuoteAdjustment"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="QuoteAdjustment" value-name="quoteAdjustment" auto-field-map="true"/>
+        <check-errors/>
+        <remove-value value-name="quoteAdjustment"/>
+        <check-errors/>
+    </simple-method>
+    <simple-method method-name="updateQuoteAdjustment" short-description="Update an existing QuoteAdjustment">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateQuoteAdjustment"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="QuoteAdjustment" value-name="quoteAdjustment" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="quoteAdjustment"/>
+        <store-value value-name="quoteAdjustment"/>
+        <check-errors/>
+    </simple-method>
 </simple-methods>
