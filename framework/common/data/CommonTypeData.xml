@@ -56,6 +56,8 @@
     <StatusItem description="Synchronized" sequenceId="02" statusCode="SYNCHRONIZED" statusId="SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
 
     <UomType description="Currency" hasTable="N" parentTypeId="" uomTypeId="CURRENCY_MEASURE"/>
+    <UomType description="Data Size" hasTable="N" parentTypeId="" uomTypeId="DATA_MEASURE"/>
+    <UomType description="Data Speed" hasTable="N" parentTypeId="" uomTypeId="DATASPD_MEASURE"/>
     <UomType description="Time/Frequency" hasTable="N" parentTypeId="" uomTypeId="TIME_FREQ_MEASURE"/>
     <UomType description="Length" hasTable="N" parentTypeId="" uomTypeId="LENGTH_MEASURE"/>
     <UomType description="Area" hasTable="N" parentTypeId="" uomTypeId="AREA_MEASURE"/>
