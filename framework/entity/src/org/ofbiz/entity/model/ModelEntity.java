@@ -213,7 +213,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
 
     /** DB Names Constructor */
-    public ModelEntity(String tableName, List colList, ModelFieldTypeReader modelFieldTypeReader, boolean isCaseSensitive) {
+    public ModelEntity(String tableName, Map colMap, ModelFieldTypeReader modelFieldTypeReader, boolean isCaseSensitive) {
         // if there is a dot in the name, remove it and everything before it, should be the schema name
         this.tableName = tableName;
         int dotIndex = this.tableName.indexOf(".");
@@ -221,11 +221,11 @@ public class ModelEntity extends ModelInfo implements Comparable {
             this.tableName = this.tableName.substring(dotIndex + 1);
         }
         this.entityName = ModelUtil.dbNameToClassName(this.tableName);
-        Iterator columns = colList.iterator();
-        while (columns.hasNext()) {
-            DatabaseUtil.ColumnCheckInfo ccInfo = (DatabaseUtil.ColumnCheckInfo) columns.next();
+        Iterator columnEntryIter = colMap.entrySet().iterator();
+        while (columnEntryIter.hasNext()) {
+            Map.Entry columnEntry = (Map.Entry) columnEntryIter.next();
+            DatabaseUtil.ColumnCheckInfo ccInfo = (DatabaseUtil.ColumnCheckInfo) columnEntry.getValue();
             ModelField newField = new ModelField(ccInfo, modelFieldTypeReader);
-
             this.fields.add(newField);
         }
         this.updatePkLists();
