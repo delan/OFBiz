@@ -114,6 +114,36 @@
         <create-value value-name="newEntity"/>
     </simple-method>
 
+    <!-- ProductPaymentMethodType methods -->
+    <simple-method method-name="createProductPaymentMethodType" short-description="create a ProductPaymentMethodType">
+        <string-to-field string="createProductPaymentMethodType" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <check-errors/>
+        <make-value entity-name="ProductPaymentMethodType" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="newEntity.fromDate"><now-timestamp-to-env env-name="newEntity.fromDate"/></if-empty>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>  
+    </simple-method>   
+    <simple-method method-name="updateProductPaymentMethodType" short-description="update a ProductPaymentMethodType">
+        <string-to-field string="updateProductPaymentMethodType" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <check-errors/>
+        <entity-one entity-name="ProductPaymentMethodType" value-name="lookedUpValue"/>
+        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteProductPaymentMethodType" short-description="delete a ProductPaymentMethodType">
+        <string-to-field string="deleteProductPaymentMethodType" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <check-errors/>
+        <entity-one entity-name="ProductPaymentMethodType" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
     <!-- ProductPriceRule methods -->
     <simple-method method-name="createProductPriceRule" short-description="Create an ProductPriceRule">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductPriceRule you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
