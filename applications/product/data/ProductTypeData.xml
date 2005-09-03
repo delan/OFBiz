@@ -268,11 +268,13 @@
     <ProductPriceType description="Maximum Price" productPriceTypeId="MAXIMUM_PRICE"/>
     <ProductPriceType description="Promotional Price" productPriceTypeId="PROMO_PRICE"/>
     <ProductPriceType description="Competitive Price" productPriceTypeId="COMPETITIVE_PRICE"/>
-    <ProductPriceType description="Recurring Charge" productPriceTypeId="RECURRING_CHARGE"/>
-    <ProductPriceType description="Usage Charge" productPriceTypeId="USAGE_CHARGE"/>
-    <ProductPriceType description="Component Price" productPriceTypeId="COMPONENT_PRICE"/>
     <ProductPriceType description="Wholesale Price" productPriceTypeId="WHOLESALE_PRICE"/>
 
+    <ProductPricePurpose description="Purchase/Initial" productPricePurposeId="PURCHASE"/>
+    <ProductPricePurpose description="Recurring Charge" productPricePurposeId="RECURRING_CHARGE"/>
+    <ProductPricePurpose description="Usage Charge" productPricePurposeId="USAGE_CHARGE"/>
+    <ProductPricePurpose description="Component Price" productPricePurposeId="COMPONENT_PRICE"/>
+    
     <ProductPriceActionType description="Percent Of List Price" productPriceActionTypeId="PRICE_POL"/>
     <ProductPriceActionType description="Percent Of Default Price" productPriceActionTypeId="PRICE_POD"/>
     <ProductPriceActionType description="Percent Of Average Cost" productPriceActionTypeId="PRICE_POAC"/>

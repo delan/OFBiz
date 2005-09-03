@@ -401,9 +401,9 @@ public class ProductConfigWrapper implements Serializable {
                 GenericValue oneComponent = (GenericValue)componentsIt.next();
                 // Get the component's price
                 Map fieldMap = UtilMisc.toMap("product", oneComponent.getRelatedOne("ProductProduct"), "prodCatalogId", catalogId, "webSiteId", webSiteId,
-                                              "currencyUomId", currencyUomId, "autoUserLogin", autoUserLogin);
+                        "currencyUomId", currencyUomId, "productPricePurposeId", "COMPONENT_PRICE", "autoUserLogin", autoUserLogin);
                 Map priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
-                Double componentPrice = (Double)priceMap.get("componentPrice");
+                Double componentPrice = (Double) priceMap.get("price");
                 double mult = 1;
                 if (oneComponent.getDouble("quantity") != null) {
                     mult = oneComponent.getDouble("quantity").doubleValue();
@@ -414,7 +414,12 @@ public class ProductConfigWrapper implements Serializable {
                 if (componentPrice != null) {
                     price = componentPrice.doubleValue();
                 } else {
-                    price = ((Double)priceMap.get("price")).doubleValue();
+                    fieldMap.put("productPricePurposeId", "PURCHASE");
+                    Map purchasePriceResultMap = dispatcher.runSync("calculateProductPrice", fieldMap);
+                    Double purchasePrice = (Double) purchasePriceResultMap.get("price");
+                    if (purchasePrice != null) {
+                        price = purchasePrice.doubleValue();
+                    }
                 }
                 optionPrice += (price * mult);
                 // TODO: get the component's availability date

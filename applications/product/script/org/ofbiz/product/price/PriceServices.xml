@@ -59,9 +59,7 @@
         <check-permission permission="CATALOG_PRICE_MAINT"><fail-property resource="ProductUiLabels" property="ProductPriceMaintPermissionError"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="ProductPrice" value-name="lookedUpValue"/>
 
         <!-- grab the old price value before setting nonpk parameter fields -->
         <field-to-result map-name="lookedUpValue" field-name="price" result-name="oldPrice"/>
@@ -98,7 +96,7 @@
             <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
             <alt-permission permission="CATALOG_ROLE" action="_UPDATE"/>
             <alt-permission permission="CATALOG_ROLE" action="_DELETE"/>
-            <fail-message message="Security Error: to run saveProductPriceChange you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
+            <fail-message message="Security Error: to run saveProductPriceChange you must have a CATALOG_* or CATALOG_ROLE_* permission"/>
         </check-permission>
         <check-errors/>
 

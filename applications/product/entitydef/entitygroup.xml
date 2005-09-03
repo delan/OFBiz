@@ -52,6 +52,20 @@
     <entity-group group="org.ofbiz" entity="ProductCategoryType" />
     <entity-group group="org.ofbiz" entity="ProductCategoryTypeAttr" />
 
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.product.config -->
+    <!-- ========================================================= -->
+    
+    <entity-group group="org.ofbiz" entity="ProductConfig" />
+    <entity-group group="org.ofbiz" entity="ProductConfigItem" />
+    <entity-group group="org.ofbiz" entity="ProdConfItemContent" />
+    <entity-group group="org.ofbiz" entity="ProdConfItemContentType" />
+    <entity-group group="org.ofbiz" entity="ProductConfigOption" />
+    <entity-group group="org.ofbiz" entity="ProductConfigOptionIactn" />
+    <entity-group group="org.ofbiz" entity="ProductConfigProduct" />
+    <entity-group group="org.ofbiz" entity="ProductConfigConfig" />
+    <entity-group group="org.ofbiz" entity="ProductConfigStats" />
+    
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.cost -->
   <!-- ========================================================= -->
@@ -113,12 +127,14 @@
   <!-- org.ofbiz.product.price -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz" entity="ProductPaymentMethodType" />
     <entity-group group="org.ofbiz" entity="ProductPrice" />
     <entity-group group="org.ofbiz" entity="ProductPriceAction" />
     <entity-group group="org.ofbiz" entity="ProductPriceActionType" />
     <entity-group group="org.ofbiz" entity="ProductPriceAutoNotice" />
     <entity-group group="org.ofbiz" entity="ProductPriceChange" />
     <entity-group group="org.ofbiz" entity="ProductPriceCond" />
+    <entity-group group="org.ofbiz" entity="ProductPricePurpose" />
     <entity-group group="org.ofbiz" entity="ProductPriceRule" />
     <entity-group group="org.ofbiz" entity="ProductPriceType" />
     <entity-group group="org.ofbiz" entity="QuantityBreak" />
@@ -280,19 +296,5 @@
     <entity-group group="org.ofbiz" entity="ShipmentTypeAttr" />
     <entity-group group="org.ofbiz" entity="ShippingDocument" />
     
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.product.config -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz" entity="ProductConfig" />
-    <entity-group group="org.ofbiz" entity="ProductConfigItem" />
-    <entity-group group="org.ofbiz" entity="ProdConfItemContent" />
-    <entity-group group="org.ofbiz" entity="ProdConfItemContentType" />
-    <entity-group group="org.ofbiz" entity="ProductConfigOption" />
-    <entity-group group="org.ofbiz" entity="ProductConfigOptionIactn" />
-    <entity-group group="org.ofbiz" entity="ProductConfigProduct" />
-    <entity-group group="org.ofbiz" entity="ProductConfigConfig" />
-    <entity-group group="org.ofbiz" entity="ProductConfigStats" />
-
 </entitygroup>
 
