@@ -151,7 +151,7 @@ public class UtilDateTime {
     public static String nowDateString() {
         return nowDateString("yyyyMMddHHmmss");
     }
-    
+
     /**
      * Return a string formatted as format
      *
@@ -207,7 +207,7 @@ public class UtilDateTime {
      * Return the date for the first day of the year
      *
      * @param stamp
-     * @return
+     * @return java.sql.Timestamp
      */
     public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp) {
         return getYearStart(stamp, 0, 0, 0);
@@ -240,7 +240,7 @@ public class UtilDateTime {
      * Return the date for the first day of the month
      *
      * @param stamp
-     * @return
+     * @return java.sql.Timestamp
      */
     public static java.sql.Timestamp getMonthStart(java.sql.Timestamp stamp) {
         return getMonthStart(stamp, 0, 0);
@@ -265,7 +265,7 @@ public class UtilDateTime {
      * Return the date for the first day of the week
      *
      * @param stamp
-     * @return
+     * @return java.sql.Timestamp
      */
     public static java.sql.Timestamp getWeekStart(java.sql.Timestamp stamp) {
         return getWeekStart(stamp, 0, 0);
@@ -285,6 +285,12 @@ public class UtilDateTime {
         java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
         retStamp.setNanos(0);
         return retStamp;
+    }
+
+    public static java.util.Calendar toCalendar(java.sql.Timestamp stamp) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(stamp.getTime());
+        return cal;
     }
 
     /**
@@ -471,7 +477,7 @@ public class UtilDateTime {
         if (date == null) return null;
         return new Timestamp(date.getTime());
     }
-    
+
     /**
      * Converts a date and time String into a Date
      *
@@ -593,7 +599,7 @@ public class UtilDateTime {
         } else {
             dateFormat = new SimpleDateFormat();
         }
-        
+
         Calendar calendar = Calendar.getInstance();
 
         calendar.setTime(date);
@@ -705,7 +711,7 @@ public class UtilDateTime {
 
         int days = 0;
         for (days = 0; UtilDateTime.getDayStart(weekStart, days).compareTo(yearStart) == 0; days++) ;
-        
+
         // the splitted week belongs to the year where there are the most days (ISO)
         Timestamp week1Start = weekStart;
         if (days < 4)
