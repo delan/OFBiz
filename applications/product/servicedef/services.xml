@@ -222,14 +222,33 @@
 
 	<!-- called by ECAs on ProductPrice service call events -->
     <service name="saveProductPriceChange" default-entity-name="ProductPrice" engine="simple"
-                location="org/ofbiz/product/price/PriceServices.xml" invoke="saveProductPriceChange" auth="true">
+            location="org/ofbiz/product/price/PriceServices.xml" invoke="saveProductPriceChange" auth="true">
         <description>Save History of a ProductPrice Change</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="oldPrice" type="Double" mode="IN" optional="true"/>
     </service>
 
-
+    <!-- Product PaymentMethodType Services -->
+    <service name="createProductPaymentMethodType" default-entity-name="ProductPaymentMethodType" engine="simple"
+            location="org/ofbiz/product/price/PriceServices.xml" invoke="createProductPaymentMethodType" auth="true">
+        <description>Create an ProductPaymentMethodType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateProductPaymentMethodType" default-entity-name="ProductPaymentMethodType" engine="simple"
+            location="org/ofbiz/product/price/PriceServices.xml" invoke="updateProductPaymentMethodType" auth="true">
+        <description>Update an ProductPaymentMethodType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPaymentMethodType" default-entity-name="ProductPaymentMethodType" engine="simple"
+            location="org/ofbiz/product/price/PriceServices.xml" invoke="deleteProductPaymentMethodType" auth="true">
+        <description>Delete an ProductPaymentMethodType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
     <!-- GoodIdentification Services -->
     <service name="createGoodIdentification" default-entity-name="GoodIdentification" engine="simple"
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="createGoodIdentification" auth="true">

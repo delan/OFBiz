@@ -110,6 +110,7 @@
                 <entity-and entity-name="ProductPrice" list-name="productPrices">
                     <field-map field-name="productId"/>
                     <order-by field-name="productStoreGroupId"/>
+                    <order-by field-name="productPricePurposeId"/>
                     <order-by field-name="productPriceTypeId"/>
                     <order-by field-name="currencyUomId"/>
                     <order-by field-name="fromDate"/>
@@ -296,7 +297,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleQuickAddProductVariants"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="QuickAddVariants"/>
                 <set field="labelTitleProperty" value="ProductQuickAddVariants"/>
 
@@ -320,7 +320,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductQuickAdmin"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductQuickAdmin"/>
                 <set field="labelTitleProperty" value="ProductQuickAdmin"/>
     
@@ -345,7 +344,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFacilities"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductFacilities"/>
                 <set field="labelTitleProperty" value="ProductFacilities"/>
     
@@ -375,7 +373,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFacilityLocations"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductFacilityLocations"/>
                 <set field="labelTitleProperty" value="ProductFacilityLocations"/>
     
@@ -406,7 +403,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductKeywords"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductKeyword"/>
                 <set field="labelTitleProperty" value="ProductKeywords"/>
 
@@ -428,7 +424,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductInventoryItems"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductInventoryItems"/>
                 <set field="labelTitleProperty" value="ProductInventorySummary"/>
     
@@ -453,7 +448,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductGoodIdentifications"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductGoodIdentifications"/>
                 <set field="labelTitleProperty" value="CommonIds"/>
     
@@ -484,7 +478,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductGlAccounts"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductGlAccounts"/>
                 <set field="labelTitleProperty" value="ProductGlAccounts"/>
     
@@ -508,6 +501,32 @@
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductGlAccounts.ftl"/></html>
                         </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductPaymentMethodTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductPaymentTypes"/>
+                <set field="tabButtonItem" value="EditProductPaymentMethodTypes"/>
+                <set field="labelTitleProperty" value="ProductPaymentTypes"/>
+                
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                
+                <entity-condition entity-name="ProductPaymentMethodType" list-name="productPaymentMethodTypes">
+                    <order-by field-name="productPricePurposeId"/>
+                    <order-by field-name="paymentMethodTypeId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                    <decorator-section name="body">
+                        <include-form name="UpdateProductPaymentMethodType" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="AddProductPaymentMethodType" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -540,7 +559,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSupplierProduct"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditSupplierProduct"/>
                 <set field="labelTitleProperty" value="ProductSuppliers"/>
 
@@ -712,7 +730,6 @@
             <actions>
                 <set field="titleProperty" value="PageTitleApplyFeaturesFromCategory"/>
                 <set field="labelTitleProperty" value="ProductAddProductFeatureFromCategory"/>
-                <set field="headerItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductFeatures"/>
 
                 <set field="productId" from-field="parameters.productId"/>

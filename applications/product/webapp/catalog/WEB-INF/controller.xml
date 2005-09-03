@@ -934,6 +934,30 @@
         <response name="error" type="view" value="EditProductGlAccounts"/>
     </request-map>
 
+    <!-- ================ Product PaymentMethodTypes Requests ================= -->
+    <request-map uri="EditProductPaymentMethodTypes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductPaymentMethodTypes"/>
+    </request-map>
+    <request-map uri="createProductPaymentMethodType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPaymentMethodType"/>
+        <response name="success" type="view" value="EditProductPaymentMethodTypes"/>
+        <response name="error" type="view" value="EditProductPaymentMethodTypes"/>
+    </request-map>
+    <request-map uri="updateProductPaymentMethodType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPaymentMethodType"/>
+        <response name="success" type="view" value="EditProductPaymentMethodTypes"/>
+        <response name="error" type="view" value="EditProductPaymentMethodTypes"/>
+    </request-map>
+    <request-map uri="deleteProductPaymentMethodType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductPaymentMethodType"/>
+        <response name="success" type="view" value="EditProductPaymentMethodTypes"/>
+        <response name="error" type="view" value="EditProductPaymentMethodTypes"/>
+    </request-map>
+    
     <!-- ================ Feature Requests ================= -->
     <request-map uri="EditFeatureCategories">
         <security https="true" auth="true"/>
@@ -2069,6 +2093,7 @@
     <view-map name="EditProductQuickAdmin" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductQuickAdmin"/>
     <view-map name="EditProductInventoryItems" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductInventoryItems"/>
     <view-map name="EditProductGlAccounts" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductGlAccounts"/>
+    <view-map name="EditProductPaymentMethodTypes" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductPaymentMethodTypes"/>
     <view-map name="EditProductContentContent" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductContentContent"/>
     <view-map name="EditSupplierProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditSupplierProduct"/>
     <view-map name="EditProductConfigs" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductConfigs"/>

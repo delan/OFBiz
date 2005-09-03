@@ -239,7 +239,6 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProductPrice" map-name="productPrice"/>
         <field name="productId"><hidden/></field>
-        <!-- TODO: get descriptions from IDs <display description="${roleType.description}"/> -->
         <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}" widget-style="tabletext"><display-entity entity-name="ProductPriceType"/></field>
         <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}" widget-style="tabletext"><display-entity entity-name="ProductPricePurpose"/></field>
         <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}" widget-style="tabletext"><display-entity entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]"/></field>
@@ -252,10 +251,49 @@
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="deleteProductPrice?productId=${productId}&amp;productPriceTypeId=${productPriceTypeId}&amp;currencyUomId=${currencyUomId}&amp;productStoreGroupId=${productStoreGroupId}&amp;fromDate=${fromDate}"
+            <hyperlink target="deleteProductPrice?productId=${productId}&amp;productPriceTypeId=${productPriceTypeId}&amp;productPricePurposeId=${productPricePurposeId}&amp;currencyUomId=${currencyUomId}&amp;productStoreGroupId=${productStoreGroupId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
+
+    <!-- ProductPaymentMethodType -->
+    <form name="AddProductPaymentMethodType" type="single"
+        target="createProductPaymentMethodType" title="" 
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createProductPaymentMethodType"/>
+        <field name="productId"><hidden/></field>
+        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}" widget-style="smallSelect">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProductPricePurpose" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="paymentMethodTypeId" title="Payment Method Type" widget-style="smallSelect">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentMethodType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateProductPaymentMethodType" type="list"
+        target="updateProductPaymentMethodType" title="" list-name="productPaymentMethodTypes"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateProductPaymentMethodType" map-name="productPrice"/>
+        <field name="productId"><hidden/></field>
+        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}" widget-style="tabletext"><display-entity entity-name="ProductPricePurpose"/></field>
+        <field name="paymentMethodTypeId" title="Payment Method Type" widget-style="tabletext"><display-entity entity-name="PaymentMethodType"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteProductPaymentMethodType?productId=${productId}&amp;productPricePurposeId=${productPricePurposeId}&amp;paymentMethodTypeId=${paymentMethodTypeId}&amp;fromDate=${fromDate}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+
     <!-- ProductCategoryMember -->
     <form name="AddProductCategoryMember" type="single"
             target="addProductToCategory" title="${uiLabelMap.ProductAddProductCategoryMemberFromDate}:"
@@ -297,6 +335,7 @@
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
+
     <!-- ProductContent -->
     <form name="AddProductContentAssoc" type="single"
             target="addContentToProduct" title="${uiLabelMap.ProductAddProductContentFromDate}" 

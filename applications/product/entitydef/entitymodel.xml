@@ -2867,6 +2867,7 @@
       <field name="requireCustomerRole" type="indicator"></field>
       <field name="autoInvoiceDigitalItems" type="indicator"></field>
       <field name="showCheckoutGiftOptions" type="indicator"></field>
+      <field name="selectPaymentTypePerItem" type="indicator"></field>
       <prim-key field="productStoreId"/>
       <relation type="one" fk-name="PROD_STR_PRSTRGP" title="Primary" rel-entity-name="ProductStoreGroup">
         <key-map field-name="primaryStoreGroupId" rel-field-name="productStoreGroupId"/>
@@ -3109,6 +3110,7 @@
       <field name="paymentServiceTypeEnumId" type="id-ne"></field>
       <field name="paymentService" type="value"></field>
       <field name="paymentPropertiesPath" type="value"></field>
+      <field name="applyToAllProducts" type="indicator"></field>
       <prim-key field="productStoreId"/>
       <prim-key field="paymentMethodTypeId"/>
       <prim-key field="paymentServiceTypeEnumId"/>
