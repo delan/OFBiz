@@ -39,12 +39,13 @@
         <attribute name="productStoreGroupId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="productPricePurposeId" type="String" mode="IN" optional="true"><!-- defaults to PURCHASE --></attribute>
         <attribute name="autoUserLogin" type="GenericValue" mode="IN" optional="true"/>
+
         <attribute name="price" type="Double" mode="OUT" optional="false"/>
         <attribute name="listPrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="defaultPrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="competitivePrice" type="Double" mode="OUT" optional="true"/>
-        <attribute name="componentPrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="averageCost" type="Double" mode="OUT" optional="true"/>
         <attribute name="promoPrice" type="Double" mode="OUT" optional="true"/>      
         <attribute name="isSale" type="Boolean" mode="OUT" optional="false"/>
