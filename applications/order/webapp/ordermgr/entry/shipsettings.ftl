@@ -57,7 +57,6 @@
                 <#list shippingContactMechListF as shippingContactMech>
                   <#if shippingContactMech.postalAddress?exists>
                   <#assign shippingAddress = shippingContactMech.postalAddress>
-
                   <tr>
                     <td valign="top" nowrap>
                       <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>
@@ -76,7 +75,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingContactMech.contactMech.contactMechId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingAddress.contactMechId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
