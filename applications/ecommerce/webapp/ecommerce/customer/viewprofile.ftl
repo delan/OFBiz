@@ -25,7 +25,7 @@
 -->
 <#if party?exists>
 <#-- Main Heading -->
-<table width='100%' cellpadding='0' cellspacing='0' border='0'>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td align="left">
       <div class="head1">${uiLabelMap.PartyTheProfileOf}
@@ -42,9 +42,9 @@
     </td>
     <td align="right">
       <#if showOld>
-        <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyHideOld}]</a>&nbsp;&nbsp;
+        <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyHideOld}</a>&nbsp;&nbsp;
       <#else>
-        <a href="<@ofbizUrl>/viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>&nbsp;&nbsp;
+        <a href="<@ofbizUrl>/viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyShowOld}</a>&nbsp;&nbsp;
       </#if>
     </td>
   </tr>
@@ -62,7 +62,7 @@
     <div class="screenlet-body">
 <#if person?exists>
 <div>
-  <table width="100%" border="0" cellpadding="0" cellspacing='0'>
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td align="right" width="10%"><div class="tabletext"><b>${uiLabelMap.PartyName}</b></div></td>
       <td width="5">&nbsp;</td>
@@ -76,18 +76,18 @@
         </div>
       </td>
     </tr>
-    <#if person.nickname?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyNickName}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.nickname}</div></td></tr></#if>
-    <#if person.gender?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyGender}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.gender}</div></td></tr></#if>
-    <#if person.birthDate?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyBirthDate}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.birthDate.toString()}</div></td></tr></#if>
-    <#if person.height?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyHeight}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.height}</div></td></tr></#if>
-    <#if person.weight?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyWeight}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.weight}</div></td></tr></#if>
-    <#if person.mothersMaidenName?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaidenName}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.mothersMaidenName}</div></td></tr></#if>
-    <#if person.maritalStatus?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaritalStatus}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.maritalStatus}</div></td></tr></#if>
-    <#if person.socialSecurityNumber?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartySocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.socialSecurityNumber}</div></td></tr></#if>
-    <#if person.passportNumber?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportNumber}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.passportNumber}</div></td></tr></#if>
-    <#if person.passportExpireDate?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportExpireDate}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.passportExpireDate.toString()}</div></td></tr></#if>
-    <#if person.totalYearsWorkExperience?exists><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.totalYearsWorkExperience}</div></td></tr></#if>
-    <#if person.comments?has_content><tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.CommonComments}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>${person.comments}</div></td></tr></#if>
+    <#if person.nickname?has_content><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyNickName}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.nickname}</div></td></tr></#if>
+    <#if person.gender?has_content><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyGender}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.gender}</div></td></tr></#if>
+    <#if person.birthDate?exists><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyBirthDate}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.birthDate.toString()}</div></td></tr></#if>
+    <#if person.height?exists><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyHeight}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.height}</div></td></tr></#if>
+    <#if person.weight?exists><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyWeight}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.weight}</div></td></tr></#if>
+    <#if person.mothersMaidenName?has_content><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyMaidenName}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.mothersMaidenName}</div></td></tr></#if>
+    <#if person.maritalStatus?has_content><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyMaritalStatus}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.maritalStatus}</div></td></tr></#if>
+    <#if person.socialSecurityNumber?has_content><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartySocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.socialSecurityNumber}</div></td></tr></#if>
+    <#if person.passportNumber?has_content><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyPassportNumber}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.passportNumber}</div></td></tr></#if>
+    <#if person.passportExpireDate?exists><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyPassportExpireDate}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.passportExpireDate.toString()}</div></td></tr></#if>
+    <#if person.totalYearsWorkExperience?exists><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.totalYearsWorkExperience}</div></td></tr></#if>
+    <#if person.comments?has_content><tr><td align="right" nowrap><div class="tabletext"><b>${uiLabelMap.CommonComments}</b></div></td><td>&nbsp;</td><td align="left"><div class="tabletext">${person.comments}</div></td></tr></#if>
   </table>
 </div>
 <#else>
@@ -123,7 +123,7 @@
         <th>${uiLabelMap.PartyContactType}</th>
         <th width="5">&nbsp;</th>
         <th>${uiLabelMap.CommonInformation}</th>
-        <th colspan='2'>${uiLabelMap.PartySolicitingOk}?</th>
+        <th colspan="2">${uiLabelMap.PartySolicitingOk}?</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
@@ -145,9 +145,9 @@
                       <#if contactMechPurposeType?exists>
                         <b>${contactMechPurposeType.description}</b>
                         <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
-                          <span class="buttontextdisabled">[${uiLabelMap.EcommerceIsDefaul}]</span>
+                          <span class="buttontextdisabled">${uiLabelMap.EcommerceIsDefaul}</span>
                         <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
-                          <a href='<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.EcommerceSetDefault}]</a>
+                          <a href="<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceSetDefault}</a>
                         </#if>
                       <#else>
                         <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
@@ -170,7 +170,7 @@
                       <#if (addr1.indexOf(" ") > 0)>
                         <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
                         <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
-                        <a target='_blank' href='${uiLabelMap.EcommerceLookupWhitepagesLink}' class='buttontext'>(${uiLabelMap.EcommerceLookupWhitepages})</a>
+                        <a target="_blank" href="${uiLabelMap.EcommerceLookupWhitepagesLink}" class="linktext">(${uiLabelMap.EcommerceLookupWhitepages})</a>
                       </#if>
                     </#if>
                   <#else>
@@ -185,8 +185,8 @@
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber?if_exists}
                     <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
                     <#if (!telecomNumber.countryCode?has_content || telecomNumber.countryCode = "011")>
-                      <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(lookup:anywho.com)</a>
-                      <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode?if_exists}&s=&p=${telecomNumber.contactNumber?if_exists}&pt=b&x=40&y=9' class='buttontext'>(lookup:whitepages.com)</a>
+                      <a target="_blank" href="http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8" class="linktext">(lookup:anywho.com)</a>
+                      <a target="_blank" href="http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode?if_exists}&s=&p=${telecomNumber.contactNumber?if_exists}&pt=b&x=40&y=9" class="linktext">(lookup:whitepages.com)</a>
                     </#if>
                   <#else>
                     ${uiLabelMap.PartyPhoneNumberInfoNotFound}.
@@ -195,30 +195,30 @@
               <#elseif contactMech.contactMechTypeId?if_exists = "EMAIL_ADDRESS">
                   <div class="tabletext">
                     ${contactMech.infoString}
-                    <a href='mailto:${contactMech.infoString}' class='buttontext'>(${uiLabelMap.PartySendEmail})</a>
+                    <a href="mailto:${contactMech.infoString}" class="linktext">(${uiLabelMap.PartySendEmail})</a>
                   </div>
               <#elseif contactMech.contactMechTypeId?if_exists = "WEB_ADDRESS">
                   <div class="tabletext">
                     ${contactMech.infoString}
                     <#assign openAddress = contactMech.infoString?if_exists>
                     <#if !openAddress.startsWith("http") && !openAddress.startsWith("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target='_blank' href='${openAddress}' class='buttontext'>(${uiLabelMap.CommonOpenNewWindow})</a>
+                    <a target="_blank" href="${openAddress}" class="linktext">(${uiLabelMap.CommonOpenNewWindow})</a>
                   </div>
               <#else>
                   <div class="tabletext">${contactMech.infoString?if_exists}</div>
               </#if>
               <div class="tabletext">(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>
-              <#if partyContactMech.thruDate?exists><div class='tabletext'><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
+              <#if partyContactMech.thruDate?exists><div class="tabletext"><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
             </td>
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(${partyContactMech.allowSolicitation?if_exists})</b></div></td>
             <td width="5">&nbsp;</td>
             <td align="right" valign="top" nowrap width="1%" nowrap>
-              <div><a href='<@ofbizUrl>/editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
-              [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div>
+              <div><a href="<@ofbizUrl>/editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">
+              ${uiLabelMap.CommonUpdate}</a>&nbsp;</div>
             </td>
             <td align="right" valign="top" width="1%" nowrap>
-              <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
-              [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div>
+              <div><a href="<@ofbizUrl>/deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">
+              ${uiLabelMap.CommonExpire}</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
       </#list>
@@ -267,9 +267,9 @@
                             </div>
                           </td>
                           <td width="5">&nbsp;</td>
-                          <td align="right" valign="top" width='1%' nowrap>
-                            <div><a href='<@ofbizUrl>/editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                            [${uiLabelMap.CommonUpdate}]</a></div>
+                          <td align="right" valign="top" width="1%" nowrap>
+                            <div><a href="<@ofbizUrl>/editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                            ${uiLabelMap.CommonUpdate}</a></div>
                           </td>
                       <#elseif paymentMethod.paymentMethodTypeId?if_exists == "GIFT_CARD">
                           <#if giftCard?has_content && giftCard.cardNumber?has_content>
@@ -296,9 +296,9 @@
                             </div>
                           </td>
                           <td width="5">&nbsp;</td>
-                          <td align="right" valign="top" width='1%' nowrap>
-                            <div><a href='<@ofbizUrl>/editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                            [${uiLabelMap.CommonUpdate}]</a></div>
+                          <td align="right" valign="top" width="1%" nowrap>
+                            <div><a href="<@ofbizUrl>/editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                            ${uiLabelMap.CommonUpdate}</a></div>
                           </td>
                       <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
                           <td width="90%" valign="top">
@@ -309,28 +309,28 @@
                             </div>
                           </td>
                           <td width="5">&nbsp;</td>
-                          <td align="right" valign="top" width='1%' nowrap>
-                            <div><a href='<@ofbizUrl>/editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                            [${uiLabelMap.CommonUpdate}]</a></div>
+                          <td align="right" valign="top" width="1%" nowrap>
+                            <div><a href="<@ofbizUrl>/editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                            ${uiLabelMap.CommonUpdate}</a></div>
                           </td>
                       </#if>
-                      <td align="right" valign="top" width='1%' nowrap>
-                        <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                        [${uiLabelMap.CommonExpire}]</a></div>
+                      <td align="right" valign="top" width="1%" nowrap>
+                        <div><a href="<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                        ${uiLabelMap.CommonExpire}</a></div>
                       </td>
-                      <td align="right" valign="top" width='1%' nowrap>
+                      <td align="right" valign="top" width="1%" nowrap>
                         <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
-                          <div class="buttontextdisabled">[${uiLabelMap.EcommerceIsDefault}]</span>
+                          <div class="buttontextdisabled">${uiLabelMap.EcommerceIsDefault}</span>
                         <#else>
-                          <div><a href='<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                          [${uiLabelMap.EcommerceSetDefault}]</a></div>
+                          <div><a href="<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                          ${uiLabelMap.EcommerceSetDefault}</a></div>
                         </#if>
                       </td>
                     </tr>
                 </#list>
               </table>
             <#else>
-              <div class='tabletext'>${uiLabelMap.AccountingNoPaymentMethodInformation}.</div>
+              <div class="tabletext">${uiLabelMap.AccountingNoPaymentMethodInformation}.</div>
             </#if>
           </td>
         </tr>
@@ -409,8 +409,8 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
                 <td><div class="tabletext">${status.description?if_exists}</div></td>
                 <td><div class="tabletext">${contentRole.fromDate?if_exists}</div></td>
                 <td align="right">
-                  <a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">[${uiLabelMap.CommonView}]</a>
-                  <a href="<@ofbizUrl>/removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
+                  <a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">${uiLabelMap.CommonView}</a>
+                  <a href="<@ofbizUrl>/removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
                 </td>
               </tr>
             </#list>
@@ -422,11 +422,11 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
         <div align="right" class="head3"><b><u>${uiLabelMap.EcommerceUploadNewFile}</u></b>
           <div>&nbsp;</div>
           <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/createPartyAsset</@ofbizUrl>" style="margin: 0;">
-            <input type="hidden" name="dataCategoryId" value="PERSONAL">
-            <input type="hidden" name="contentTypeId" value="DOCUMENT">
-            <input type="hidden" name="statusId" value="CTNT_PUBLISHED">
-            <input type="file" name="uploadedFile" size="14">
-            <input type="submit" value="Upload">
+            <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
+            <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
+            <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
+            <input type="file" name="uploadedFile" size="14" class="inputBox"/>
+            <input type="submit" value="Upload" class="smallSubmit"/>
           </form>
         </div>
     </div>
@@ -503,7 +503,6 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
     </div>
 </div>
 
-
 <#else>
-    <div class='head3'>${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</div>
+    <div class="head3">${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</div>
 </#if>
