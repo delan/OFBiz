@@ -1375,11 +1375,9 @@
     <view-map name="EditContent" page="component://content/widget/content/ContentScreens.xml#EditContent" type="screen"/>
     <view-map name="EditContentAssoc" page="component://content/widget/content/ContentScreens.xml#EditContentAssoc" type="screen"/>
     <view-map name="AddContent" page="component://content/widget/content/ContentScreens.xml#AddContent" type="screen"/>
-    <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
-    <view-map name="LookupDataResource" page="component://content/widget/data/DataScreens.xml#LookupDataResource" type="screen"/>
     <view-map name="ClipBoardContent" page="/content/ClipBoardContent.ftl" type="jpublish"/>
     <view-map name="ClipBoardDataResource" page="/data/ClipBoardDataResource.ftl" type="jpublish"/>
-    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
+
     <view-map name="EditContentAttribute" page="component://content/widget/content/ContentScreens.xml#EditContentAttribute" type="screen"/>
     <view-map name="EditContentMetaData" page="component://content/widget/content/ContentScreens.xml#EditContentMetaData" type="screen"/>
     <view-map name="EditContentType" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentType" type="screen"/>
@@ -1415,7 +1413,6 @@
     <view-map name="EditMimeType" page="/datasetup/EditMimeType.ftl" type="jpublish"/>
     <view-map name="EditHtmlText" page="/data/EditHtmlText.ftl" type="jpublish"/>
 
-    <view-map name="LookupListLayout" page="/layout/LookupListLayout.ftl" type="jpublish"/>
     <view-map name="ListLayout" page="/layout/ListLayout.ftl" type="jpublish"/>
     <view-map name="FindLayout" page="/layout/FindLayout.ftl" type="jpublish"/>
     <view-map name="EditLayout" page="/layout/EditLayout.ftl" type="jpublish"/>
@@ -1425,6 +1422,7 @@
     <view-map name="EditLayoutHtml" page="/layout/EditLayoutHtml.ftl" type="jpublish"/>
     <view-map name="EditLayoutImage" page="/layout/EditLayoutImage.ftl" type="jpublish"/>
     <view-map name="EditLayoutUrl" page="/layout/EditLayoutUrl.ftl" type="jpublish"/>
+    <view-map name="LookupListLayout" page="/layout/LookupListLayout.ftl" type="jpublish"/>
     <view-map name="LookupSubContent" page="/layout/LookupSubContent.ftl" type="jpublish"/>
 
     <view-map name="ContentMenu"  page="component://content/widget/content/ContentScreens.xml#ContentMenu" type="screen"/>
@@ -1437,7 +1435,6 @@
     <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
-    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
     <view-map name="SurveyResponse" page="/survey/SurveyResponse.ftl" type="jpublish"/>
     <view-map name="ViewSurveyResponse" page="/survey/ViewResponse.ftl" type="jpublish"/>
 
@@ -1459,5 +1456,9 @@
     <view-map name="EditAddSubContent" page="component://content/widget/cms/CMSScreens.xml#EditAddSubContent" type="screen"/>
     <view-map name="TestPermission" page="component://content/widget/cms/CMSScreens.xml#TestPermission" type="screen"/>
 
+    <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
+    <view-map name="LookupDataResource" page="component://content/widget/data/DataScreens.xml#LookupDataResource" type="screen"/>
+    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>
