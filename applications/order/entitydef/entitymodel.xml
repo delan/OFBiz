@@ -762,6 +762,7 @@
       <field name="orderPaymentPreferenceId" type="id-ne"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
+      <field name="productPricePurposeId" type="id"></field>
       <field name="paymentMethodTypeId" type="id"></field>
       <field name="paymentMethodId" type="id"></field>
       <field name="securityCode" type="long-varchar" encrypt="true"></field>
@@ -778,6 +779,13 @@
       <prim-key field="orderPaymentPreferenceId"/>
       <relation type="one" fk-name="ORDER_PMPRF_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_PMPRF_PPRP" rel-entity-name="ProductPricePurpose">
+        <key-map field-name="productPricePurposeId"/>
       </relation>
       <relation type="one" fk-name="ORDER_PMPRF_PMTP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
