@@ -446,24 +446,40 @@ text-decoration: none;
 color: #333333;
 }
 
-A.buttontext {
+A.buttontext, .buttontextdisabled {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
+background: white;
+border: #999999 solid 1px;
+margin: 2px 5px 2px 5px;
+padding: 1px 4px 1px 4px;
+}
+
+A.buttontext {
 color: #000099;
 }
 
 A.buttontext:hover {
-color: #000099;
+color: red;
 text-decoration: underline;
 }
 
-.buttontextdisabled {
+A.linktext {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
+color: #000099;
+}
+
+A.linktext:hover {
+color: red;
+text-decoration: underline;
+}
+
+.buttontextdisabled {
 color: #333333;
 }
 
@@ -715,27 +731,39 @@ border-left-width: thin
 }
 
 .editInputBox {
-background: #FFFFFF;
 font-size: 8pt;
+background: #FFFFFF;
 font-family: Verdana, Arial, Helvetica, sans-serif;
+background: white;
+border: #999999 solid 1px;
+margin: 2px;
 }
 
 .inputBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 background: #FFFFFF;
 font-size: 8pt;
+background: white;
+border: #999999 solid 1px;
+margin: 2px;
 }
 
 .selectBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 background: #FFFFFF;
 font-size: 8pt;
+background: white;
+border: #999999 solid 1px;
+margin: 2px;
 }
 
 .textAreaBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 background: #FFFFFF;
 font-size: 8pt;
+background: white;
+border: #999999 solid 1px;
+margin: 2px;
 }
 
 .radioButton {
@@ -758,6 +786,7 @@ text-decoration: none;
 color: #000099;
 background: white;
 border: #999999 solid 1px;
+margin: 2px;
 }
 
 .mediumSubmit,.largeSubmit,.loginButton {
@@ -768,10 +797,12 @@ text-decoration: none;
 color: #000099;
 background: white;
 border: #999999 solid 1px;
+margin: 2px;
 }
 
 .smallSubmit:hover,.mediumSubmit:hover,.largeSubmit:hover,.loginButton:hover {
 color: red;
+text-decoration: underline;
 }
 
 .smallAltSubmit,.mediumAltSubmit,.largeAltSubmit {

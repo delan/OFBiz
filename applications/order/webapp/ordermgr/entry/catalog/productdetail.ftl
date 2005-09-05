@@ -207,11 +207,11 @@ ${virtualJavaScript?if_exists}
     <tr>
       <td colspan="2" align="right">
         <#if previousProductId?exists>
-          <a href="<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${previousProductId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
+          <a href="<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${previousProductId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>/category/~category_id=${categoryId?if_exists}</@ofbizUrl>" class="buttontext">${category.description?if_exists}</a>
+        <a href="<@ofbizUrl>/category/~category_id=${categoryId?if_exists}</@ofbizUrl>" class="linktext">${category.description?if_exists}</a>
         <#if nextProductId?exists>
-          &nbsp;|&nbsp;<a href="<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${nextProductId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+          &nbsp;|&nbsp;<a href="<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${nextProductId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
       </td>
     </tr>
@@ -333,6 +333,7 @@ ${virtualJavaScript?if_exists}
       <div class="tabletext">
         <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
       </div>
+      <br/>
 
       <#if disFeatureList?exists && 0 < disFeatureList.size()>
       <p>&nbsp;</p>
@@ -404,7 +405,7 @@ ${virtualJavaScript?if_exists}
                 <input type="text" class="inputBox" size="5" name="quantity" value="1"<#if product.isVirtual?if_exists?upper_case == "Y"> disabled="disabled"</#if>/>
             </#if>
             <#-- This calls addItem() so that variants of virtual products cant be added before distinguishing features are selected, it should not be changed to additemSubmit() -->
-            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>&nbsp;
+            <a href="javascript:addItem()" class="buttontext"><nobr>${uiLabelMap.EcommerceAddtoCart}</nobr></a>&nbsp;
           </#if>
           <#if requestParameters.category_id?exists>
             <input type="hidden" name="category_id" value="${requestParameters.category_id}"/>
@@ -435,7 +436,7 @@ ${virtualJavaScript?if_exists}
               <input type="text" class="inputBox" size="5" name="quantity" value="1"/>
               <input type="hidden" name="reservStartStr" value= ""/>
           </#if>
-          <a href="javascript:addShoplistSubmit();" class="buttontext">[${uiLabelMap.EcommerceAddtoShoppingList}]</a>
+          <a href="javascript:addShoplistSubmit();" class="buttontext">${uiLabelMap.EcommerceAddtoShoppingList}</a>
         </form>
       <#else> <br/>
         ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
@@ -469,7 +470,7 @@ ${virtualJavaScript?if_exists}
                 <td align="center" valign="bottom">
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60"></a>
                   <br/>
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="buttontext">${key}</a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="linktext">${key}</a>
                 </td>
               </#if>
               <#assign indexer = indexer + 1>
@@ -528,12 +529,12 @@ ${virtualJavaScript?if_exists}
               </table>
         </#list>
         <div>
-            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
+            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductReviewThisProduct}!</a>
         </div>
       <#else>
         <div class="tabletext">${uiLabelMap.ProductProductNotReviewedYet}.</div>
         <div>
-            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
+            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
         </div>
       </#if>
   </div>

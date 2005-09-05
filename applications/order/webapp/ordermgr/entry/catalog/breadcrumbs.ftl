@@ -37,7 +37,7 @@
     <#if curCategoryId?exists && curCategoryId == category.productCategoryId>
       -> <a href="<@ofbizUrl>/category/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="buttontextdisabled">${category.description?if_exists}</a>
     <#else>
-      -> <a href="<@ofbizUrl>/category/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="buttontext">${category.description?if_exists}</a>
+      -> <a href="<@ofbizUrl>/category/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="linktext">${category.description?if_exists}</a>
     </#if>
     <#local subCatList = Static["org.ofbiz.product.category.CategoryWorker"].getRelatedCategoriesRet(request, "subCatList", category.getString("productCategoryId"), true)>
     <#if subCatList?exists>
@@ -49,7 +49,7 @@
 </#macro>
 
 <div class="tabletext">
-  <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonMain}</a>
+  <a href="<@ofbizUrl>/main</@ofbizUrl>" class="linktext">${uiLabelMap.CommonMain}</a>
   <#-- Show the category branch -->
   <#list topLevelList as category>
     <@categoryList parentCategory=category category=category/>
