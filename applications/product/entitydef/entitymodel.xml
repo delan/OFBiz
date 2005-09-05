@@ -2020,7 +2020,7 @@
         <key-map field-name="productId"/>
       </relation>
     </entity>
-    <entity entity-name="ProductKeywordResult"
+    <entity entity-name="OldProductKeywordResult" table-name="PRODUCT_KEYWORD_RESULT"
             package-name="org.ofbiz.product.product"
             never-cache="true"
             title="Product Keyword Result Entity">

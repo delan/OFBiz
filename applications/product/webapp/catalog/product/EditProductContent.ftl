@@ -63,6 +63,7 @@ function insertImageName(type,nameValue) {
         <td>Use Time UOM</td>
         <td>Use Role</td>
         <td>&nbsp;</td>
+        <td>&nbsp;</td>
     </tr>
     <#list productContentList as entry>
         <#assign productContent=entry.productContent/>
@@ -209,7 +210,7 @@ function insertImageName(type,nameValue) {
     </tr>        
     <tr>
         <td colspan="2">&nbsp;</td>
-        <td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"></td>
+        <td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/></td>
         <td colspan="3">&nbsp;</td>
     </tr>
     </table>
