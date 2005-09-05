@@ -135,7 +135,7 @@ public class PriceServices {
             productPricePurposeId = "PURCHASE";
         }
         
-        // termUomId, for things like recurring prices specifies the term (time/frequency measure for example) of the recurrance
+        // termUomId, for things like recurring prices specifies the term (time/frequency measure for example) of the recurrence
         // if this is empty it will simply not be used to constrain the selection
         String termUomId = (String) context.get("termUomId");
 
