@@ -2020,6 +2020,10 @@
     </request-map>
 
    <!-- ================ Lookup Requests ================= -->
+    <request-map uri="LookupContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupContent"/>
+    </request-map>
     <request-map uri="LookupFixedAsset">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupFixedAsset"/>
@@ -2151,6 +2155,7 @@
     <view-map name="EditProductConfigItemContentContent" type="screen" page="component://product/widget/catalog/ConfigScreens.xml#EditProductConfigItemContentContent"/>
 
     <!-- Lookup request mappings -->
+    <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
     <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
     <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>

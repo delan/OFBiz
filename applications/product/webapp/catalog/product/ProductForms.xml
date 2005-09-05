@@ -188,7 +188,7 @@
         <field name="detailImageUrl"><text size="60" maxlength="255"/></field>
         <field name="detailScreen"><text size="60" maxlength="250"/></field>
         -->
-        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <field use-when="product!=null" position="1" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
             <display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
@@ -241,7 +241,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductPrice" type="list"
             target="updateProductPrice" title="" list-name="productPrices"
@@ -268,7 +268,7 @@
             <display description="[${productPrice.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${productPrice.lastModifiedDate}" also-hidden="false"/>
         </field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="deleteProductPrice?productId=${productId}&amp;productPriceTypeId=${productPriceTypeId}&amp;productPricePurposeId=${productPricePurposeId}&amp;currencyUomId=${currencyUomId}&amp;productStoreGroupId=${productStoreGroupId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -295,7 +295,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductPaymentMethodType" type="list"
         target="updateProductPaymentMethodType" title="" list-name="productPaymentMethodTypes"
@@ -306,7 +306,7 @@
         <field name="paymentMethodTypeId" title="Payment Method Type" widget-style="tabletext"><display-entity entity-name="PaymentMethodType"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="deleteProductPaymentMethodType?productId=${productId}&amp;productPricePurposeId=${productPricePurposeId}&amp;paymentMethodTypeId=${paymentMethodTypeId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -332,7 +332,7 @@
         <field name="sequenceNum" title="${uiLabelMap.ProductSequenceNum}" ></field>
         <field name="quantity" title="${uiLabelMap.ProductQuantity}" ></field>
         <field name="comments" ><ignored/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductCategoryMemeber" type="list"
             target="updateProductToCategory" title="" list-name="productCategoryMembers"
@@ -348,7 +348,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
         <field name="comments" title="${uiLabelMap.ProductComments}" ><ignored/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeProductFromCategory?productId=${productId}&amp;productCategoryId=${productCategoryId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -361,7 +361,7 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="ProductContent"/>
         <field name="productId" title="${uiLabelMap.ProductProductId}" map-name="product"><hidden/></field>
-        <field name="contentId" title="${uiLabelMap.ProductContentId}" ></field>
+        <field name="contentId" title="${uiLabelMap.ProductContentId}"><lookup target-form-name="LookupContent"/></field>
         <field name="productContentTypeId" title="${uiLabelMap.ProductProductContentTypeId}" widget-style="selectBox">
             <drop-down>
                 <entity-options entity-name="ProductContentType" description="${description}">
@@ -383,22 +383,18 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="useRoleTypeId" title="${uiLabelMap.ProductUseRole}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="useRoleTypeId" title="${uiLabelMap.ProductUseRole}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="PrepareAddProductContentAssoc" type="single"
             target="prepareAddContentToProduct" title="${uiLabelMap.ProductAddProductContentFromDate}"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <auto-fields-entity entity-name="ProductContent"/>
-        <field name="contentId"><ignored/></field>
-        <field name="useTime"><ignored/></field>
-        <field name="useTimeUomId"><ignored/></field>
-        <field name="useRoleTypeId"><ignored/></field>
-        <field name="useCountLimit"><ignored/></field>
-        <field name="purchaseThruDate"><ignored/></field>
-        <field name="purchaseFromDate"><ignored/></field>
-        <field name="fromDate"><ignored/></field>
-        <field name="thruDate"><ignored/></field>
         <field name="productId" map-name="product"><hidden/></field>
         <field name="productContentTypeId" title="${uiLabelMap.ProductProductContentTypeId}" widget-style="selectBox">
             <drop-down>
@@ -408,7 +404,7 @@
             </drop-down>
         </field>
         <!-- <field name="description"><text size="40"/></field> -->
-        <field name="submitButton" title="${uiLabelMap.ProductPrepareCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductPrepareCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductContentAssoc" type="list"
             target="updateContentToProduct" title="" list-name="productContentDatas"
@@ -427,7 +423,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -464,8 +460,8 @@
         <field name="plainBodyDataResourceId" map-name="emailData"><hidden/></field>
         <field name="htmlBodyDataResourceId" map-name="emailData"><hidden/></field>
         <field name="productContentTypeId"><hidden/></field>
-        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditProductContentDownload" type="single"
             target="updateDownloadContentForProduct" title="${uiLabelMap.ProductUpdateDownloadContentProduct}"
@@ -494,8 +490,8 @@
         <field name="fileDataResourceId" map-name="downloadData"><hidden/></field>
         <field name="productId"><hidden/></field>
         <field name="productContentTypeId"><hidden/></field>
-        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditProductContentExternal" type="single"
             target="updateExternalContentForProduct" title="${uiLabelMap.ProductUpdateExternalContentProduct}"
@@ -510,21 +506,21 @@
         <field use-when="contentId != null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
         <field name="productId"><hidden/></field>
         <field name="productContentTypeId"><hidden/></field>
-        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditProductContentSimpleText" type="single"
             target="updateSimpleTextContentForProduct" title="${uiLabelMap.ProductUpdateSimpleTextContentProduct}"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="contentId==null" target="createSimpleTextContentForProduct"/>
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}*" ></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
         <field name="description" title="${uiLabelMap.ProductDescription}" map-name="content"><text size="40"/></field>
         <field name="localeString" title="${uiLabelMap.ProductLocaleString}" map-name="content"><text size="40"/></field>
         <field use-when="contentId == null" name="contentId"><ignored/></field>
         <field use-when="contentId != null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
-        <field name="text" title="${uiLabelMap.ProductText}" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
+        <field name="text" title="${uiLabelMap.ProductText}*" map-name="textData" widget-style="textAreaBox" ><textarea cols="80" rows="20"/></field>
         <field name="textDataResourceId" title="${uiLabelMap.ProductTextDataResourceId}" map-name="textData"><hidden/></field>
         <field name="useTime"><hidden/></field>
         <field name="useTimeUomId"><hidden/></field>
@@ -533,9 +529,9 @@
         <field name="purchaseThruDate"><hidden/></field>
         <field name="purchaseFromDate"><hidden/></field>
         <field name="productId"><hidden/></field>
-        <field name="productContentTypeId"><hidden/></field>
-        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="productContentTypeId"><display-entity entity-name="ProductContentType" also-hidden="true"/></field>
+        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- SupplierProduct -->
@@ -569,8 +565,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field use-when="supplierProduct == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field use-when="supplierProduct != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="supplierProduct == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="supplierProduct != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateSupplierProduct" type="list" default-service-name="updateSupplierProduct"
             target="updateSupplierProduct" title="" list-name="productSuppliers"
@@ -611,7 +607,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="PrepareAddCategoryContentAssoc" type="single"
             target="prepareAddContentToCategory" title="${uiLabelMap.ProductAddProductCategoryContentFromDate}"
@@ -636,7 +632,7 @@
             </drop-down>
         </field>
         <!-- <field name="description"><text size="40"/></field> -->
-        <field name="submitButton" title="${uiLabelMap.ProductPrepareCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductPrepareCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateCategoryContentAssoc" type="list"
             target="updateContentToCategory" title="" list-name="categoryContentDatas"
@@ -655,7 +651,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeContentFromCategory?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -680,8 +676,8 @@
         <field name="purchaseFromDate"><hidden/></field>
         <field name="productCategoryId"><hidden/></field>
         <field name="prodCatContentTypeId"><hidden/></field>
-        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <!-- ProductConfig -->
@@ -703,7 +699,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductConfig" type="list"
             target="updateProductConfig" title="" list-name="productConfigs"
@@ -723,7 +719,7 @@
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="deleteProductConfig?productId=${productId}&amp;configItemId=${configItemId}&amp;sequenceNum=${sequenceNum}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -741,7 +737,7 @@
         <field position="1" name="reserv2ndPPPerc" title="${uiLabelMap.ProductReserv2ndPPPerc}" ><text size="4" maxlength="10"/></field>
         <field position="2" name="reservNthPPPerc" title="${uiLabelMap.ProductReservNthPPPerc}" ><text size="4" maxlength="10"/></field>
 
-        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
     </form>
 
@@ -796,7 +792,7 @@
             </drop-down>
         </field>
 		
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 	<form name="showFixedAssetProduct" type="single" default-map-name="fixedAssetProduct"
@@ -836,7 +832,7 @@
             </drop-down>
         </field>
 		
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListProductAssocs" type="list" use-row-submit="true" 
