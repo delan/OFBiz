@@ -134,6 +134,10 @@ public class PriceServices {
         if (UtilValidate.isEmpty(productPricePurposeId)) {
             productPricePurposeId = "PURCHASE";
         }
+        
+        // termUomId, for things like recurring prices specifies the term (time/frequency measure for example) of the recurrance
+        // if this is empty it will simply not be used to constrain the selection
+        String termUomId = (String) context.get("termUomId");
 
         // if this product is variant, find the virtual product and apply checks to it as well
         String virtualProductId = null;
@@ -188,6 +192,9 @@ public class PriceServices {
         }
         productPriceEcList.add(new EntityExpr("currencyUomId", EntityOperator.EQUALS, currencyUomId));
         productPriceEcList.add(new EntityExpr("productStoreGroupId", EntityOperator.EQUALS, productStoreGroupId));
+        if (UtilValidate.isNotEmpty(termUomId)) {
+            productPriceEcList.add(new EntityExpr("termUomId", EntityOperator.EQUALS, termUomId));
+        }
         EntityCondition productPriceEc = new EntityConditionList(productPriceEcList, EntityOperator.AND);
 
         // for prices, get all ProductPrice entities for this productId and currencyUomId
@@ -751,12 +758,10 @@ public class PriceServices {
                                     if (defaultPrice != 0.00) {
                                         Debug.logInfo("PromoPrice and ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
                                         price = defaultPrice;
-                                    }
-                                    else if (listPrice != 0.00) {
+                                    } else if (listPrice != 0.00) {
                                         Debug.logInfo("PromoPrice and ProductPriceAction had null amount and no default price was available, using list price: " + listPrice + " for product with id " + productId, module);
                                         price = listPrice;
-                                    }
-                                    else {
+                                    } else {
                                         Debug.logError("PromoPrice and ProductPriceAction had null amount and no default or list price was available, so price is set to zero for product with id " + productId, module);
                                         price = 0.00;
                                     }
@@ -773,12 +778,10 @@ public class PriceServices {
                                     if (defaultPrice != 0.00) {
                                         Debug.logInfo("WholesalePrice and ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
                                         price = defaultPrice;
-                                    }
-                                    else if (listPrice != 0.00) {
+                                    } else if (listPrice != 0.00) {
                                         Debug.logInfo("WholesalePrice and ProductPriceAction had null amount and no default price was available, using list price: " + listPrice + " for product with id " + productId, module);
                                         price = listPrice;
-                                    }
-                                    else {
+                                    } else {
                                         Debug.logError("WholesalePrice and ProductPriceAction had null amount and no default or list price was available, so price is set to zero for product with id " + productId, module);
                                         price = 0.00;
                                     }
