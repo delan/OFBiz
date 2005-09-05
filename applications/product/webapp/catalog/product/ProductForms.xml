@@ -232,6 +232,15 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="termUomId" title="Term UOM">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <entity-constraint name="uomTypeId" operator="not-equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="typeDescription"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductPrice" type="list"
@@ -245,6 +254,16 @@
         <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}" widget-style="tabletext"><display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
 
+        <field name="termUomId" title="Term UOM">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <entity-constraint name="uomTypeId" operator="not-equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="typeDescription"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
         <field name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
             <display description="[${productPrice.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${productPrice.lastModifiedDate}" also-hidden="false"/>
         </field>
