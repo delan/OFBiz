@@ -196,7 +196,7 @@
     <service name="runOfflineEntitySync" engine="java"
             location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runOfflineEntitySync" auth="true" use-transaction="false">
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
-        <attribute name="fileName" type="String" mode="IN" optional="true"/>
+        <attribute name="fileName" type="String" mode="IN" optional="true"><!-- if not specified defaults to "offline_entitySync-" + entitySyncId + "-" + [current date/time in yyyyMMddHHmmss format] + ".xml" --></attribute>
     </service>
     <service name="loadOfflineEntitySyncData" engine="java"
             location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="loadOfflineSyncData" auth="true" use-transaction="false">
