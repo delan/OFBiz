@@ -1984,12 +1984,12 @@ public class OrderServices {
         sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
         sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
         sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
-        if (UtilValidate.isEmail(sendTo)) {
+        if ((sendTo != null) && UtilValidate.isEmail(sendTo)) {
            sendMap.put("sendTo", sendTo);
         } else {
         sendMap.put("sendTo", emailString);
         }
-        if (UtilValidate.isEmail(sendCc)) {
+        if ((sendCc != null) && UtilValidate.isEmail(sendCc)) {
             sendMap.put("sendCc", sendCc);
          } else {
         	sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
