@@ -978,20 +978,23 @@
       <member-entity entity-alias="PTY" entity-name="Party"/>
       <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="CM" entity-name="ContactMech"/>
-      <alias entity-alias="CM" name="contactMechId"/>
-      <alias entity-alias="PTY" name="partyId"/>
-      <alias entity-alias="PCM" name="fromDate"/>
-      <alias entity-alias="PCM" name="thruDate"/>
-      <alias entity-alias="PTY" name="partyTypeId"/>
-      <alias entity-alias="CM" name="contactMechTypeId"/>
-      <alias entity-alias="CM" name="infoString"/>
-      <alias entity-alias="PCM" name="comments"/>
-      <alias entity-alias="PCM" name="extension"/>
-      <alias entity-alias="PCM" name="allowSolicitation"/>
+      <member-entity entity-alias="PA" entity-name="PostalAddress"/>
+      <member-entity entity-alias="TN" entity-name="TelecomNumber"/>
+      <alias-all entity-alias="PTY"/>
+      <alias-all entity-alias="PCM"/>
+      <alias-all entity-alias="CM"/>
+      <alias-all entity-alias="PA" prefix="pa"/>
+      <alias-all entity-alias="TN" prefix="tn"/>
       <view-link entity-alias="PTY" rel-entity-alias="PCM">
         <key-map field-name="partyId"/>
       </view-link>
       <view-link entity-alias="PCM" rel-entity-alias="CM">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="PCM" rel-entity-alias="PA" rel-optional="true">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="PCM" rel-entity-alias="TN" rel-optional="true">
         <key-map field-name="contactMechId"/>
       </view-link>
       <relation type="many" rel-entity-name="PartyContactMech">

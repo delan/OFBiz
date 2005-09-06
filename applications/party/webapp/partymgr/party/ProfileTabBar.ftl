@@ -27,63 +27,51 @@
  * @version    1.0
  */
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 <#if party?has_content>
 <#-- Main Heading -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="left">
-      <div class="head1">${uiLabelMap.PartyTheProfileOf}
-        <#if lookupPerson?has_content>
-          ${lookupPerson.personalTitle?if_exists}
-          ${lookupPerson.firstName?if_exists}
-          ${lookupPerson.middleName?if_exists}
-          ${lookupPerson.lastName?if_exists}
-          ${lookupPerson.suffix?if_exists}
-        <#elseif lookupGroup?has_content>
-          ${lookupGroup.groupName?default("${uiLabelMap.PartyNoNameGroup}")}
-        <#else>
-          ${uiLabelMap.PartyNewUser}
-       </#if>
-       [${partyId}]
-      </div>
-    </td>
-    <td align="right">
-      <div class="tabContainer">
-        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewprofile?default(unselectedClassName)}">${uiLabelMap.PartyProfile}</a>
-        <a href="<@ofbizUrl>/viewroles?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewroles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
-        <a href="<@ofbizUrl>/EditPartyRelationships?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyRelationships?default(unselectedClassName)}">${uiLabelMap.PartyRelationships}</a>
-        <a href="<@ofbizUrl>/ListPartyCommEvents?partyId=${partyId}</@ofbizUrl>" class="${selectedClassMap.PartyCommEvents?default(unselectedClassName)}">${uiLabelMap.PartyCommunications}</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewvendor?default(unselectedClassName)}">${uiLabelMap.PartyVendor}</a>
-        <a href="<@ofbizUrl>/EditPartyTaxInfos?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyTaxInfos?default(unselectedClassName)}">${uiLabelMap.PartyTaxInfos}</a>
-        <a href="<@ofbizUrl>/editShoppingList?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.editShoppingList?default(unselectedClassName)}">${uiLabelMap.PartyShoppingLists}</a>
-        <a href="<@ofbizUrl>/ViewSegmentRoles?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.ViewPartySegmentRoles?default(unselectedClassName)}">${uiLabelMap.PartySegments}</a>
-        <a href="<@ofbizUrl>/EditPartyClassifications?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyClassifications?default(unselectedClassName)}">${uiLabelMap.PartyClassifications}</a>
-        <a href="<@ofbizUrl>/ListPartyContactLists?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.ContactList?default(unselectedClassName)}">${uiLabelMap.PartyContactList}</a>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="right" nowrap>
-      <a href="/accounting/control/FindBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.AccountingBillingAccount}]</a>
-      <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-        <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderOrders}]</a>
-      </#if>
-      <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-        <a href="/ordermgr/control/checkinits?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>
-      </#if>
-      <#if security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-        <a href="/accounting/control/findPayment?lookupFlag=Y&hideFields=Y&toPartyId=${partyId}${externalKeyParam}>" class="buttontext">[${uiLabelMap.AccountingPaymentsSent}]</a>
-        <a href="/accounting/control/findPayment?lookupFlag=Y&hideFields=Y&fromPartyId=${partyId}${externalKeyParam}>" class="buttontext">[${uiLabelMap.AccountingPaymentsReceived}]</a>
-      </#if>
-    </td>
-  </tr>
-</table>
+<div class="tabContainer">
+    <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewprofile?default(unselectedClassName)}">${uiLabelMap.PartyProfile}</a>
+    <a href="<@ofbizUrl>/viewroles?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewroles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
+    <a href="<@ofbizUrl>/EditPartyRelationships?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyRelationships?default(unselectedClassName)}">${uiLabelMap.PartyRelationships}</a>
+    <a href="<@ofbizUrl>/ListPartyCommEvents?partyId=${partyId}</@ofbizUrl>" class="${selectedClassMap.PartyCommEvents?default(unselectedClassName)}">${uiLabelMap.PartyCommunications}</a>
+    <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.viewvendor?default(unselectedClassName)}">${uiLabelMap.PartyVendor}</a>
+    <a href="<@ofbizUrl>/EditPartyTaxInfos?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyTaxInfos?default(unselectedClassName)}">${uiLabelMap.PartyTaxInfos}</a>
+    <a href="<@ofbizUrl>/editShoppingList?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.editShoppingList?default(unselectedClassName)}">${uiLabelMap.PartyShoppingLists}</a>
+    <a href="<@ofbizUrl>/ViewSegmentRoles?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.ViewPartySegmentRoles?default(unselectedClassName)}">${uiLabelMap.PartySegments}</a>
+    <a href="<@ofbizUrl>/EditPartyClassifications?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.EditPartyClassifications?default(unselectedClassName)}">${uiLabelMap.PartyClassifications}</a>
+    <a href="<@ofbizUrl>/ListPartyContactLists?partyId=${party.partyId}</@ofbizUrl>" class="${selectedClassMap.ContactList?default(unselectedClassName)}">${uiLabelMap.PartyContactList}</a>
+</div>
+<div>
+  <a href="/accounting/control/FindBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">${uiLabelMap.AccountingBillingAccount}</a>
+  <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
+    <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">${uiLabelMap.OrderOrders}</a>
+  </#if>
+  <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+    <a href="/ordermgr/control/checkinits?partyId=${partyId}${externalKeyParam}" class="buttontext">${uiLabelMap.OrderNewOrder}</a>
+  </#if>
+  <#if security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+    <a href="/accounting/control/findPayment?lookupFlag=Y&hideFields=Y&toPartyId=${partyId}${externalKeyParam}>" class="buttontext">${uiLabelMap.AccountingPaymentsSent}</a>
+    <a href="/accounting/control/findPayment?lookupFlag=Y&hideFields=Y&fromPartyId=${partyId}${externalKeyParam}>" class="buttontext">${uiLabelMap.AccountingPaymentsReceived}</a>
+  </#if>
+</div>
+<div class="head1">${uiLabelMap.PartyTheProfileOf}
+    <#if lookupPerson?has_content>
+      ${lookupPerson.personalTitle?if_exists}
+      ${lookupPerson.firstName?if_exists}
+      ${lookupPerson.middleName?if_exists}
+      ${lookupPerson.lastName?if_exists}
+      ${lookupPerson.suffix?if_exists}
+    <#elseif lookupGroup?has_content>
+      ${lookupGroup.groupName?default("${uiLabelMap.PartyNoNameGroup}")}
+    <#else>
+      ${uiLabelMap.PartyNewUser}
+   </#if>
+   [${partyId}]
+</div>
 
 <#else>
   <div class="head2">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${partyId?if_exists}</div>

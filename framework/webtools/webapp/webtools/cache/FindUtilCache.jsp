@@ -35,26 +35,26 @@
 <%boolean hasUtilCacheEdit = security.hasPermission("UTIL_CACHE_EDIT", session);%>
 <%Runtime rt = Runtime.getRuntime();%>
 
-<h3 style='margin:0;'>Cache Maintenance Page</h3>
+<h3 style="margin:0;">Cache Maintenance Page</h3>
 
 <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
 
 <div width="100%">
-	<a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>[Reload Cache List]</a>
-	<a href='<ofbiz:url>/FindUtilCacheClearAll</ofbiz:url>' class='buttontext'>[Clear All Caches]</a>
-	<a href='<ofbiz:url>/FindUtilCacheClearAllExpired</ofbiz:url>' class='buttontext'>[Clear Expired From All]</a>
-    <a href='<ofbiz:url>/ForceGarbageCollection</ofbiz:url>' class='buttontext'>[Run GC]</a>
+    <a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class="buttontext">Reload Cache List</a>
+    <a href="<ofbiz:url>/FindUtilCacheClearAll</ofbiz:url>" class="buttontext">Clear All Caches</a>
+    <a href="<ofbiz:url>/FindUtilCacheClearAllExpired</ofbiz:url>" class="buttontext">Clear Expired From All</a>
+    <a href="<ofbiz:url>/ForceGarbageCollection</ofbiz:url>" class="buttontext">Run GC</a>
 </div>
 <div class="tabletext"><u><b>Memory:</b></u> [<b>TOTAL:</b> <%=rt.totalMemory()%>] [<b>FREE:</b> <%=rt.freeMemory()%>] [<b>USED:</b> <%=(rt.totalMemory() - rt.freeMemory())%>] [<b>MAX:</b> <%=rt.maxMemory()%>]</span></div>
 
 <br/>
-<table border='0' cellpadding='2' cellspacing='2'>
+<table border="0" cellpadding="2" cellspacing="2">
 <%
   String rowColor1 = "viewManyTR2";
   String rowColor2 = "viewManyTR1";
   String rowColor = "";
 %>
-  <tr class='viewOneTR1'>
+  <tr class="viewOneTR1">
     <td>Cache&nbsp;Name</td>
     <td>size</td>
     <td>hits</td>
@@ -86,16 +86,16 @@
         <td><%=(new Boolean(utilCache.getUseFileSystemStore())).toString()%></td>
         
         <td align="center" valign=middle>
-          <a href='<ofbiz:url>/FindUtilCacheElements?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Elements</a>
+          <a href="<ofbiz:url>/FindUtilCacheElements?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>" class="buttontext">Elements</a>
         </td>
         <td align="center" valign=middle>
           <%if(hasUtilCacheEdit){%>
-            <a href='<ofbiz:url>/EditUtilCache?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Edit</a>
+            <a href="<ofbiz:url>/EditUtilCache?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>" class="buttontext">Edit</a>
           <%}%>
         </td>
         <td align="center" valign=middle>
           <%if(hasUtilCacheEdit){%>
-            <a href='<ofbiz:url>/FindUtilCacheClear?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Clear</a>
+            <a href="<ofbiz:url>/FindUtilCacheClear?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>" class="buttontext">Clear</a>
           <%}%>
         </td>
       </tr>
@@ -108,9 +108,9 @@
 </table>
 
 <div>
-	<a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>[Reload Cache List]</a>
-	<a href='<ofbiz:url>/FindUtilCacheClearAll</ofbiz:url>' class='buttontext'>[Clear All Caches]</a>
-	<a href='<ofbiz:url>/FindUtilCacheClearAllExpired</ofbiz:url>' class='buttontext'>[Clear Expired From All]</a>
+    <a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class="buttontext">Reload Cache List</a>
+    <a href="<ofbiz:url>/FindUtilCacheClearAll</ofbiz:url>" class="buttontext">Clear All Caches</a>
+    <a href="<ofbiz:url>/FindUtilCacheClearAllExpired</ofbiz:url>" class="buttontext">Clear Expired From All</a>
 </div>
 
 <%}else{%>

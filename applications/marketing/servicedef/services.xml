@@ -105,6 +105,7 @@
         <description>Add Party to ContactList</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
     </service>
     <service name="updateContactListParty" default-entity-name="ContactListParty" engine="simple"
             location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="updateContactListParty" auth="true">

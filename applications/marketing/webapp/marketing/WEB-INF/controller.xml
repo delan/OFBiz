@@ -355,21 +355,17 @@
         <response name="error" type="view" value="ListContactLists"/>
     </request-map>
     
-    <request-map uri="ListContactListParties">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListContactListParty"/>
-    </request-map>
     <request-map uri="EditContactListParty">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditContactListParty"/>
     </request-map>
-    <request-map uri="LookupPreferredContactMech">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPreferredContactMech"/>
-    </request-map>
     <request-map uri="FindContactListParties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindContactListParties"/>
+    </request-map>
+    <request-map uri="ListContactListParties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListContactListParties"/>
     </request-map>
     
     <request-map uri="createContactListParty">
@@ -406,7 +402,11 @@
         <response name="success" type="view" value="FindContactListCommEvent"/>
     </request-map>
     
-     <!-- end of request mappings -->
+    <request-map uri="LookupPreferredContactMech">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPreferredContactMech"/>
+    </request-map>
+    <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
@@ -431,30 +431,22 @@
     <view-map name="viewSegmentGroupRole" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroupRole"/>
     <view-map name="listSegmentGroupRole" type="screen" page="component://marketing/widget/SegmentScreens.xml#listSegmentGroupRole"/>
 
-    <view-map name="LookupSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupSegmentGroup"/>
-    <view-map name="LookupProductStore" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupProductStore"/>
-    <view-map name="LookupPartyClassificationGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupPartyClassificationGroup"/>
-
-    <view-map name="LookupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupGeo"/>
-    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
-    <view-map name="LookupRoleType" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupRoleType"/>
-
     <view-map name="ListContactLists" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactLists"/>
     <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>
-    <view-map name="ListContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParties"/>
+    <view-map name="ListContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParties"/>
     <view-map name="EditContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListParty"/>
     <view-map name="FindContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListParties"/>
     <view-map name="ListContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListCommEvents"/>
     <view-map name="EditContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListCommEvent"/>
     <view-map name="FindContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvents"/>
     <view-map name="LookupPreferredContactMech" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupPreferredContactMech"/>
-
-    <view-map name="ListContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactList"/>
-    <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>
-    <view-map name="ListContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParty"/>
-    <view-map name="EditContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListParty"/>
-    <view-map name="ListContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListCommEvent"/>
-    <view-map name="EditContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListCommEvent"/>
-    <view-map name="FindContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvent"/>
+    
+    <view-map name="LookupSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupSegmentGroup"/>
+    <view-map name="LookupProductStore" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupProductStore"/>
+    <view-map name="LookupPartyClassificationGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupPartyClassificationGroup"/>
+    
+    <view-map name="LookupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupGeo"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupRoleType" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupRoleType"/>
     <!-- end of view mappings -->
 </site-conf>
