@@ -30,9 +30,7 @@
                 <field-map env-name="partyId"/>
             </entity-and>
         </actions>
-        <field name="partyId">
-            <hidden/>
-        </field>
+        <field name="partyId"><hidden/></field>
         
         <field name="contactListId"  widget-style="buttontext" title="${uiLabelMap.ContactListContactListId}">
             <display-entity entity-name="ContactList" description="${contactListName}">
@@ -41,13 +39,8 @@
             </display-entity>
         </field>
         
-        <field name="fromDate">
-            <display/>
-        </field>
-        
-        <field name="thruDate">
-            <date-time/>
-        </field>
+        <field name="fromDate"><display/></field>
+        <field name="thruDate"><date-time/></field>
         
         <field name="statusId">
             <drop-down>
@@ -58,10 +51,7 @@
             </drop-down>
         </field>
         
-        <field name="preferredContactMechId">
-            <lookup target-form-name="LookupPreferredContactMech"/>
-        </field>
-        
+        <field name="preferredContactMechId"><lookup target-form-name="LookupPreferredContactMech"/></field>
         
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
@@ -70,21 +60,10 @@
             target="createContactListParty" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         
-        <field name="contactListId">
-            <lookup target-form-name="LookupContactList"/>
-        </field>
-        
-        <field name="partyId">
-            <hidden/>
-        </field>
-        
-        <field name="fromDate">
-            <date-time/>
-        </field>
-        
-        <field name="thruDate">
-            <date-time/>
-        </field>
+        <field name="contactListId"><lookup target-form-name="LookupContactList"/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
         
         <field name="statusId">
             <drop-down>
@@ -95,9 +74,7 @@
             </drop-down>
         </field>
 
-        <field name="preferredContactMechId">
-            <lookup target-form-name="LookupPreferredContactMech"/>
-        </field>
+        <field name="preferredContactMechId"><lookup target-form-name="LookupPreferredContactMech"/></field>
         
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
      </form>
@@ -114,16 +91,12 @@
             <hyperlink also-hidden="false" target-type="plain" description="${contactListId}" target="javascript:set_value('${contactListId}')"/>
         </field>
 
-        <field name="contactListName">
-           <display/>
-        </field>
+        <field name="contactListName"><display/></field>
         <field name="contactListTypeId">
             <display-entity description="${description}" entity-name="ContactListType" key-field-name="contactListTypeId"/>
         </field>
-        
         <field name="marketingCampaignId">
            <display-entity entity-name="MarketingCampaign" description="${campaignName}"/>
         </field>
-        
     </form>
 </forms>

@@ -256,7 +256,7 @@ function refreshInfo() {
               <#list partyList as partyRow>
                 <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
                 <tr class="${rowClass}">
-                  <td><a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${partyRow.partyId}</a></td>
+                  <td><a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="linktext">${partyRow.partyId}</a></td>
                   <td>
                     <div class="tabletext">
                       <#if partyRow.containsKey("userLoginId")>

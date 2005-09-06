@@ -84,8 +84,8 @@
                                 <include-form name="EditContactList" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="head1">${uiLabelMap.PageTitleEditContactList}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.ContactListCreate}]" target="/EditContactList?DONE_PAGE=${donePage}" style="buttontext"/>
+                                <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                                <container><link  text="${uiLabelMap.ContactListCreate}" target="/EditContactList?DONE_PAGE=${donePage}" style="buttontext"/></container>
                                 <include-form name="EditContactList" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                             </fail-widgets>
                         </section>
@@ -109,15 +109,15 @@
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditContactList}</label>
-                        <link text="&lt;br/&gt;[${uiLabelMap.ContactListCreate}]" target="/EditContactList?DONE_PAGE=${donePage}" style="buttontext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                        <container><link text="${uiLabelMap.ContactListCreate}" target="/EditContactList?DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="ListContactLists" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-   <screen name="EditContactListParty">
+    <screen name="EditContactListParty">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactList"/>
@@ -136,8 +136,8 @@
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditContactList}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.ContactListPartyCreate}]" target="/EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                        <container><link  text="${uiLabelMap.ContactListPartyCreate}" target="/EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="EditContactListParty" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -145,30 +145,28 @@
         </section>
     </screen>
     
-   <screen name="ListContactListParties">
+    <screen name="ListContactListParties">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListContactListParty"/>
                 <set field="tabButtonItem" value="ContactListParty"/>
                 <set field="labelTitleProperty" value="PageTitleListContactListParty"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactList"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactLists"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
-                <set field="entityName" value="ContactListParty"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditContactList}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.ContactListPartyCreate}]" target="/EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                        <container><link  text="${uiLabelMap.ContactListPartyCreate}" target="/EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="ListContactListParties" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
-   <screen name="FindContactListParties">
+    <screen name="FindContactListParties">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindContactListParty"/>
@@ -181,8 +179,8 @@
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleFindContactListParty}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.ContactListPartyCreate}]" target="/EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleFindContactListParty}</label></container>
+                        <container><link  text="${uiLabelMap.ContactListPartyCreate}" target="/EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="FindContactListParties" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -190,7 +188,7 @@
         </section>
     </screen>
     
-   <screen name="EditContactListCommEvent">
+    <screen name="EditContactListCommEvent">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactList"/>
@@ -204,16 +202,15 @@
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditContactList}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.ContactListCommEventCreate}]" target="/EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                        <container><link  text="${uiLabelMap.ContactListCommEventCreate}" target="/EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="EditContactList" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
-   <screen name="ListContactListCommEvent">
+    <screen name="ListContactListCommEvent">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListContactListCommEvent"/>
@@ -227,16 +224,15 @@
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditContactList}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.ContactListCommEventCreate}]" target="/EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                        <container><link  text="${uiLabelMap.ContactListCommEventCreate}" target="/EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="ListContactListCommEvent" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
-   <screen name="FindContactListCommEvent">
+    <screen name="FindContactListCommEvent">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindContactListCommEvent"/>
@@ -249,8 +245,8 @@
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleFindContactListCommEvent}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.ContactListCommEventCreate}]" target="/EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleFindContactListCommEvent}</label></container>
+                        <container><link  text="${uiLabelMap.ContactListCommEventCreate}" target="/EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="FindContactListCommEvent" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -258,7 +254,7 @@
         </section>
     </screen>
 
-   <screen name="LookupPreferredContactMech">
+    <screen name="LookupPreferredContactMech">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePreferredContactMech"/>

@@ -29,10 +29,10 @@
         <menu-item name="ContactList" title="${uiLabelMap.ContactList}">
             <link target="/EditContactList?contactListId=${contactListId}"/>
         </menu-item>
-        <menu-item name="ContactListParty" title="${uiLabelMap.ContactListParty}">
+        <menu-item name="ContactListParties" title="${uiLabelMap.PartyParties}">
             <link target="/FindContactListParties?contactListId=${contactListId}"/>
         </menu-item>
-        <menu-item name="ContactListCommEvent" title="${uiLabelMap.ContactListCommEvent}">
+        <menu-item name="ContactListCommEvents" title="${uiLabelMap.PartyCommEvents}">
             <link target="/FindContactListCommEvents?contactListId=${contactListId}"/>
         </menu-item>
     </menu>
