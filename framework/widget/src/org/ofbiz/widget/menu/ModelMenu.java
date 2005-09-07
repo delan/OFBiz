@@ -83,6 +83,7 @@ public class ModelMenu {
     protected FlexibleStringExpander menuContainerStyleExdr;
     protected String defaultAlign;
     protected String defaultAlignStyle;
+    protected String fillStyle;
 
     /** This List will contain one copy of each item for each item name in the order
      * they were encountered in the service, entity, or menu definition; item definitions
@@ -171,6 +172,7 @@ public class ModelMenu {
                 this.defaultDisabledTitleStyle = parent.defaultDisabledTitleStyle;
                 this.defaultAlign = parent.defaultAlign;
                 this.defaultAlignStyle = parent.defaultAlignStyle;
+                this.fillStyle = parent.fillStyle;
             }
         }
 
@@ -229,6 +231,8 @@ public class ModelMenu {
             this.defaultAlign = menuElement.getAttribute("default-align");
         if (this.defaultAlignStyle == null || menuElement.hasAttribute("default-align-style"))
             this.defaultAlignStyle = menuElement.getAttribute("default-align-style");
+        if (this.fillStyle == null || menuElement.hasAttribute("fill-style"))
+            this.fillStyle = menuElement.getAttribute("fill-style");
 
         // read all actions under the "actions" element
         Element actionsElement = UtilXml.firstChildElement(menuElement, "actions");
@@ -416,6 +420,13 @@ public class ModelMenu {
      */
     public String getDefaultMenuItemName() {
         return this.defaultMenuItemName;
+    }
+
+    /**
+     * @return
+     */
+    public String getFillStyle() {
+        return this.fillStyle;
     }
 
     /**

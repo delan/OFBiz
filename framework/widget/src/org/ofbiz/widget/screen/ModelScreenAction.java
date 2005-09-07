@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -442,6 +443,17 @@ public abstract class ModelScreenAction {
                 
                 if (this.resultMapNameAcsr != null) {
                     this.resultMapNameAcsr.put(context, result);
+                    String queryString = (String)result.get("queryString");
+                    context.put("queryString", queryString);
+                    context.put("queryStringMap", result.get("queryStringMap"));
+                    if (UtilValidate.isNotEmpty(queryString)){
+                    	try {
+                    		String queryStringEncoded = queryString.replaceAll("&", "%26");
+                            context.put("queryStringEncoded", queryStringEncoded);
+                    	} catch (PatternSyntaxException e) {
+                    		
+                    	}
+                    }
                 } else {
                     context.putAll(result);
                 }

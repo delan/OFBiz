@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+    *
+    *  Permission is hereby granted, free of charge, to any person obtaining a
+    *  copy of this software and associated documentation files (the "Software"),
+    *  to deal in the Software without restriction, including without limitation
+    *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    *  and/or sell copies of the Software, and to permit persons to whom the
+    *  Software is furnished to do so, subject to the following conditions:
+    *
+    *  The above copyright notice and this permission notice shall be included
+    *  in all copies or substantial portions of the Software.
+    *
+    *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+    *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <form name="EditWorkEffort" default-map-name="workEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  target="updateWorkEffort" title="" type="single">
+        <auto-fields-entity entity-name="WorkEffort"/>
+    <alt-target target="createWorkEffort" use-when="workEffort==null"/>
+    <field name="workEffortId" use-when="workEffort!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+      <display/>
+    </field>
+    <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId==null" title="${uiLabelMap.WorkEffortWorkEffortId}">
+      <ignored/>
+    </field>
+    <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${workEffortId}]">
+      <display/>
+    </field>
+    <field name="workEffortTypeId">
+      <drop-down>
+        <entity-options description="${description}" entity-name="WorkEffortType" key-field-name="workEffortTypeId"/>
+      </drop-down>
+    </field>
+    <field name="workEffortPurposeTypeId">
+      <drop-down>
+        <entity-options description="${description}" entity-name="WorkEffortPurposeType" key-field-name="workEffortPurposeTypeId"/>
+      </drop-down>
+    </field>
+    <field name="currentStatusId">
+      <drop-down>
+        <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+        </entity-options>
+      </drop-down>
+    </field>
+    <field name="DONE_PAGE">
+      <hidden value="${donePage}"/>
+    </field>
+    <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext">
+      <submit button-type="text-link"/>
+    </field>
+    <field name="cancelLink" title=" " widget-style="buttontext">
+      <hyperlink also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]" target="${donePage}" target-type="inter-app"/>
+    </field>
+  </form>
+  
+  <form name="AddWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  target="createWorkEffortAndAssoc" title="" type="single">
+        <auto-fields-entity entity-name="WorkEffort"/>
+    <sort-order>
+        <sort-field name="workEffortIdTo"/>
+        <sort-field name="workEffortAssocTypeId"/>
+        <sort-field name="sequenceNum"/>
+        <sort-field name="fromDate"/>
+        <sort-field name="thruDate"/>
+        <sort-field name="workEffortName"/>
+        <sort-field name="description"/>
+    </sort-order>
+    <field name="workEffortId" >
+        <hidden/>
+    </field>
+    <field name="workEffortIdTo" >
+        <text/>
+    </field>
+    <field name="workEffortAssocTypeId">
+        <drop-down>
+            <entity-options entity-name="WorkEffortAssocType" description="${description}">
+            </entity-options>
+        </drop-down>
+    </field>
+    <field name="sequenceNum" >
+        <text/>
+    </field>
+    <field name="fromDate" >
+        <date-time/>
+    </field>
+    <field name="thruDate" >
+        <date-time/>
+    </field>
+  </form>
+  
+  <form name="EditWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  target="updateWorkEffortAndAssoc" title="" type="single">
+        <auto-fields-entity entity-name="WorkEffort"/>
+    <alt-target target="createWorkEffortAndAssoc" use-when="workEffortAssoc==null"/>
+    <sort-order>
+        <sort-field name="workEffortIdTo"/>
+        <sort-field name="workEffortIdFrom"/>
+        <sort-field name="workEffortAssocTypeId"/>
+        <sort-field name="fromDate"/>
+        <sort-field name="sequenceNum"/>
+        <sort-field name="thruDate"/>
+    </sort-order>
+    <field name="workEffortIdTo" field-name="workEffortIdTo" map-name="workEffortAssoc">
+        <display/>
+    </field>
+    <field name="workEffortIdFrom" field-name="workEffortIdTo" map-name="workEffortAssoc" >
+        <display/>
+    </field>
+    <field name="workEffortId" >
+        <display/>
+    </field>
+    <field name="workEffortAssocTypeId" field-name="workEffortAssocTypeId" map-name="workEffortAssoc">
+        <display-entity entity-name="WorkEffortAssocType" />
+    </field>
+    <field name="sequenceNum"  field-name="sequenceNum" map-name="workEffortAssoc">
+        <text/>
+    </field>
+    <field name="fromDate"  field-name="fromDate" map-name="workEffortAssoc">
+        <display/>
+    </field>
+    <field name="thruDate"  field-name="thruDate" map-name="workEffortAssoc">
+        <date-time/>
+    </field>
+  </form>
+  
+  
+  <form name="ListWorkEfforts" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="ListWorkEfforts" title="" type="list" list-iterator-name="listIt">
+    <actions>
+      <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+        <field-map env-name="parameters" field-name="inputFields"/>
+        <field-map env-name="entityName" field-name="entityName"/>
+      </service>
+    </actions>
+    <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="${workEffortName}[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}"/>
+    </field>
+    <field name="workEffortTypeId">
+        <display-entity entity-name="WorkEffortType"/>
+    </field>
+    <field name="workEffortPurposeTypeId">
+        <display-entity entity-name="WorkEffortPurposeType"/>
+    </field>
+    <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="[Detail]" target="EditWorkEffort?workEffortId=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
+    </field>
+    <field name="childLink" title="&amp;nbsp;" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="[SubNodes]" target="ChildWorkEfforts?trail=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
+    </field>
+    <field name="editChildLink" title="&amp;nbsp;" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="[Detail + SubNodes]" target="EditListWorkEfforts?trail=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
+    </field>
+    <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeWorkEffort?workEffortId=${workEffortId}"/>
+    </field>
+  </form>
+  
+  <form name="WorkEffortTreeLine"  hide-header="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="ListWorkEfforts" title="" type="list" list-iterator-name="listIt">
+    <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="${workEffortName}[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}"/>
+    </field>
+    <field name="workEffortTypeId">
+        <display-entity entity-name="WorkEffortType"/>
+    </field>
+    <field name="workEffortPurposeTypeId">
+        <display-entity entity-name="WorkEffortPurposeType"/>
+    </field>
+    <field name="detailLink" title="&amp;nbsp;" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="[Detail]" target="ListChildWorkEffort?trail=${workEffortId}"/>
+    </field>
+    <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeWorkEffort?workEffortId=${workEffortId}"/>
+    </field>
+  </form>
+  
+  
+  <form name="FindWorkEffort" default-map-name="workEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="ListWorkEfforts" title="" type="single">
+    <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}">
+      <text-find/>
+    </field>
+    <field name="workEffortParentId">
+      <text-find/>
+    </field>
+    <field name="workEffortName">
+      <text-find/>
+    </field>
+    <field name="workEffortTypeId">
+      <drop-down allow-empty="true">
+        <entity-options description="${description}" entity-name="WorkEffortType" key-field-name="workEffortTypeId"/>
+      </drop-down>
+    </field>
+    <field name="workEffortPurposeTypeId" >
+      <drop-down allow-empty="true">
+        <entity-options description="${description}" entity-name="WorkEffortPurposeType" key-field-name="workEffortPurposeTypeId"/>
+      </drop-down>
+    </field>
+    <field name="submitButton" title="[${uiLabelMap.CommonFind}]" widget-style="buttontext">
+      <submit button-type="text-link"/>
+    </field>
+  </form>
+  <form name="ListLookupWorkEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
+    <actions>
+      <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+        <field-map env-name="parameters" field-name="inputFields"/>
+        <field-map env-name="entityName" field-name="entityName"/>
+      </service>
+    </actions>
+    <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="${workEffortId}" target="javascript:set_value('${workEffortId}')" target-type="plain"/>
+    </field>
+    <field name="workEffortName">
+      <display/>
+    </field>
+    <field name="workEffortTypeId">
+      <display-entity entity-name="WorkEffortType"/>
+    </field>
+    <field name="contactMechTypeId">
+      <display-entity entity-name="ContactMechType"/>
+    </field>
+    <field name="marketingCampaignId">
+      <display-entity description="${campaignName}" entity-name="MarketingCampaign"/>
+    </field>
+  </form>
+  <form name="EditWorkEffortParty" default-map-name="workEffortParty" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="updateWorkEffortParty" title="" type="single">
+    <alt-target target="createWorkEffortParty" use-when="workEffortParty==null"/>
+    <field name="workEffortId">
+      <hidden/>
+    </field>
+    <field name="partyId">
+      <lookup target-form-name="LookupPartyName"/>
+    </field>
+    <field name="fromDate">
+      <date-time/>
+    </field>
+    <field name="thruDate">
+      <date-time/>
+    </field>
+    <field name="statusId">
+      <drop-down no-current-selected-key="CLPT_PENDING">
+        <entity-options description="${description}" entity-name="StatusItem">
+          <entity-constraint name="statusTypeId" operator="equals" value="CONTACTLST_PARTY"/>
+          <entity-order-by field-name="description"/>
+        </entity-options>
+      </drop-down>
+    </field>
+    <field name="preferredContactMechId">
+      <lookup target-form-name="LookupPreferredContactMech" target-parameter="partyId"/>
+    </field>
+    <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext">
+      <submit button-type="text-link"/>
+    </field>
+  </form>
+  <form name="FindWorkEffortParties" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="ListWorkEffortParties" title="" type="single">
+    <field name="workEffortId">
+      <text-find/>
+    </field>
+    <field name="partyId">
+      <lookup target-form-name="LookupPartyName"/>
+    </field>
+    <field name="fromDate">
+      <date-find/>
+    </field>
+    <field name="thruDate">
+      <date-find/>
+    </field>
+    <field name="statusId">
+      <drop-down>
+        <entity-options description="description" entity-name="StatusItem">
+          <entity-constraint name="statusTypeId" operator="equals" value="CONTACTLST_PARTY"/>
+          <entity-order-by field-name="description"/>
+        </entity-options>
+      </drop-down>
+    </field>
+    <field name="preferredContactMechId">
+      <lookup target-form-name="LookupPreferredContactMech" target-parameter="partyId"/>
+    </field>
+    <field name="submitButton" title="[${uiLabelMap.CommonFind}]" widget-style="buttontext">
+      <submit button-type="text-link"/>
+    </field>
+  </form>
+  <form  name="ListWorkEffortParties" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" list-iterator-name="listIt" title="" type="list">
+    <actions>
+      <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+        <field-map env-name="parameters" field-name="inputFields"/>
+        <field-map env-name="entityName" field-name="entityName"/>
+      </service>
+    </actions>
+    <field name="workEffortId">
+      <display/>
+    </field>
+    <field name="partyId">
+      <display-entity description="${firstName}  ${lastName} [${partyId}]" entity-name="Person"/>
+    </field>
+    <field name="fromDate">
+      <display/>
+    </field>
+    <field name="thruDate">
+      <display/>
+    </field>
+    <field name="statusId">
+      <display-entity entity-name="StatusItem"/>
+    </field>
+    <field name="preferredContactMechId">
+      <display/>
+    </field>
+    <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="[${uiLabelMap.CommonEdit}]" target="EditWorkEffortParty?workEffortId=${workEffortId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"/>
+    </field>
+  </form>
+  <form name="EditWorkEffortCommEvent" default-map-name="workEffortCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="updateWorkEffortCommEvent" title="" type="single">
+    <alt-target target="createWorkEffortCommEvent" use-when="communicationEvent==null"/>
+        <field name="communicationEventId" use-when="communicationEvent!=null"><display/></field>
+        <field name="communicationEventTypeId">
+            <drop-down>
+                <entity-options entity-name="CommunicationEventType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} From">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} To">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="statusId" use-when="communicationEvent==null" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="equals" value="COM_EVENT_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" use-when="communicationEvent!=null" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
+            <drop-down allow-empty="false" current-description="${currentStatus.description}">
+                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
+                    <entity-constraint name="statusId" value="${communicationEvent.statusId}"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="contactMechTypeId" use-when="commEventContactMechType!=null&amp;&amp;parentCommEventContactMechType==null">
+            <drop-down>
+                <entity-options description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/>
+            </drop-down>
+        </field>
+        <field name="contactMechTypeId" use-when="commEventContactMechType==null&amp;&amp;parentCommEventContactMechType!=null">
+            <drop-down>
+                <entity-options description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/>
+            </drop-down>
+        </field>
+        <field name="contactMechTypeId" use-when="commEventContactMechType==null&amp;&amp;parentCommEventContactMechType==null">
+            <drop-down>
+                <entity-options description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/>
+            </drop-down>
+        </field>
+        
+        <field name="roleTypeIdFrom" use-when="commEventRoleTypeIdFrom!=null">
+            <drop-down>
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeIdTo" use-when="commEventRoleTypeIdTo!=null">
+            <drop-down>
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+<!--        
+        <field name="custRequestId">
+            <lookup size="20" target-form-name="LookupCustRequest">
+                <sub-hyperlink target="/ordermgr/control/EditRequest?custRequestId=${communicationEvent.custRequestId}" target-type="inter-app" link-style="buttontext"/>
+            </lookup>
+        </field>
+-->
+        <field name="workEffortId">
+            <lookup size="20" target-form-name="LookupWorkEffort">
+                <sub-hyperlink target="/marketing/control/EditWorkEffort?workEffortId=${communicationEvent.workEffortId}" target-type="inter-app" link-style="buttontext"/>
+            </lookup>
+        </field>
+        <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
+        <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><date-time/></field>
+        <field name="subject"><text size="30"/></field>
+        <field name="note" title="${uiLabelMap.CommonNote}"><textarea cols="60" rows="3"/></field>
+        <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="60" rows="10"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/>        </field>
+        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
+  </form>
+  <form name="FindWorkEffortCommEvents" default-map-name="workEffortCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="ListWorkEffortCommEvents" title="" type="single">
+    <field name="workEffortId">
+      <hidden/>
+    </field>
+    <field name="commEventId">
+      <lookup target-form-name="/LookupCommEvent"/>
+    </field>
+    <field name="fromDate">
+      <date-find/>
+    </field>
+    <field name="thruDate">
+      <date-find/>
+    </field>
+    <field name="submitButton" title="[${uiLabelMap.CommonFind}]" widget-style="buttontext">
+      <submit button-type="text-link"/>
+    </field>
+  </form>
+  <form name="ListWorkEffortCommEvents" default-map-name="workEffortCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
+    <actions>
+      <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+        <field-map env-name="requestParameters" field-name="inputFields"/>
+        <field-map env-name="entityName" field-name="entityName"/>
+      </service>
+    </actions>
+        <field name="communicationEventId">
+            <hyperlink description="${communicationEventId}" target="EditWorkEffortCommEvent?communicationEventId=${communicationEventId}&amp;DONE_PAGE=${donePage}" target-type="intra-app"/>
+        </field>
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} From">
+            <display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} To">
+            <display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/>
+        </field>
+        <field name="statusId">
+            <display-entity description="${description}" entity-name="StatusItem" key-field-name="statusId"/>
+        </field>
+        <field name="contactMechTypeId">
+            <display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/>
+        </field>
+        <field name="roleTypeIdFrom">
+            <display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
+        </field>
+        <field name="roleTypeIdTo">
+            <display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
+        </field>
+        <field name="custReqestId" position="1">
+            <text size="20"/>
+        </field>
+        <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}">
+            <display/>
+        </field>
+        <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}">
+            <display/>
+        </field>
+        <field map-name="subjectMap" name="subject">
+            <text size="30"/>
+        </field>
+  </form>
+  <form  name="ListPreferredContactMech" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
+    <actions>
+      <entity-and entity-name="PartyAndContactMech">
+        <field-map field-name="partyId"/>
+      </entity-and>
+    </actions>
+    <field name="contactMechId" title="Contact Mech Id" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="${contactMechId}" target="javascript:set_value('${contactMechId}')" target-type="plain"/>
+    </field>
+    <field name="contactMechTypeId">
+      <display-entity entity-name="ContactMechType"/>
+    </field>
+  </form>
+  <form name="LookupCommEvent"  default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="LookupCommEvent" title="" type="single">
+    <field name="communicationEventId" title="${uiLabelMap.WorkEffortCommEventId}">
+      <text-find/>
+    </field>
+       <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} From">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} To">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="COM_EVENT_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="contactMechTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/>
+            </drop-down>
+        </field>
+        <field name="roleTypeIdFrom">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
+            </drop-down>
+        </field>
+        <field name="custRequestId">
+            <lookup size="20" target-form-name="LookupCustRequest"/>
+        </field>
+        <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}">
+            <date-find/>
+        </field>
+        <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}">
+            <date-find/>
+        </field>
+        <field map-name="subjectMap" name="subject">
+            <text-find/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}">
+            <submit button-type="button"/>
+        </field>
+  </form>
+  <form name="ListLookupCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
+    <actions>
+      <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+        <field-map env-name="parameters" field-name="inputFields"/>
+        <field-map env-name="entityName" field-name="entityName"/>
+      </service>
+    </actions>
+    <field name="communicationEventId" title="${uiLabelMap.WorkEffortCommEventId}" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="${communicationEventId}" target="javascript:set_value('${communicationEventId}')" target-type="plain"/>
+    </field>
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} From">
+            <display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} To">
+            <display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/>
+        </field>
+        <field name="statusId">
+            <display-entity description="${description}" entity-name="StatusItem" key-field-name="statusId"/>
+        </field>
+        <field name="contactMechTypeId">
+            <display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/>
+        </field>
+        <field name="roleTypeIdFrom">
+            <display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
+        </field>
+        <field name="roleTypeIdTo">
+            <display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
+        </field>
+        <field name="custReqestId" position="1">
+            <text size="20"/>
+        </field>
+        <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}">
+            <display/>
+        </field>
+        <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}">
+            <display/>
+        </field>
+  </form>
+</forms>

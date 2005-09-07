@@ -97,7 +97,8 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         String style = label.getStyle(context);
         String id = label.getId(context);
         if (UtilValidate.isNotEmpty(style) || UtilValidate.isNotEmpty(id) ) {
-            writer.write("<span");
+       		writer.write("<span");
+        	
             if (UtilValidate.isNotEmpty(id)) {
                 writer.write(" id=\"");
                 writer.write(id);
@@ -114,7 +115,8 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             writer.write(label.getText(context));
             
             // close tag
-            writer.write("</span>");
+       		writer.write("</span>");
+        	
         } else {
             writer.write(label.getText(context));
         }

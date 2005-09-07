@@ -329,6 +329,8 @@ public class ModelTree {
             this.renderStyle = nodeElement.getAttribute("render-style");
             this.entryName = UtilFormatOut.checkEmpty(nodeElement.getAttribute("entry-name"), null); 
             setEntityName( nodeElement.getAttribute("entity-name") );
+            if (this.pkName == null || nodeElement.hasAttribute("join-field-name"))
+                this.pkName = nodeElement.getAttribute("join-field-name");
     
             Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-one");
             if (actionElement != null) {
@@ -506,16 +508,25 @@ public class ModelTree {
                Object obj = null;
              if (UtilValidate.isNotEmpty(this.entryName)) {
                     Map map = (Map)context.get(this.entryName);
-                 obj = map.get(countFieldName);
+                    if (map instanceof GenericValue) {
+                    	ModelEntity modelEntity = ((GenericValue)map).getModelEntity();
+                    	if (modelEntity.isField(countFieldName)) {
+                    		obj = map.get(countFieldName);
+                    	}
+                    }
              } else {
                    obj = context.get(countFieldName);
              }
-               if (obj != null)
+             if (obj != null) {
                 nodeCount = (Long)obj;
+             }
              String entName = this.getEntityName();
              GenericDelegator delegator = modelTree.getDelegator();
              ModelEntity modelEntity = delegator.getModelEntity(entName);
-             ModelField modelField = modelEntity.getField("childBranchCount"); 
+             ModelField modelField = null;
+         	 if (modelEntity.isField(countFieldName)) {
+                 modelField = modelEntity.getField(countFieldName); 
+        	 }
              if (nodeCount == null && modelField != null) {
                  getChildren(context);
                  /*
@@ -542,14 +553,18 @@ public class ModelTree {
                 } else {
                     id = (String) context.get(pkName);
                 }
-                     try {
-                         GenericValue entity = delegator.findByPrimaryKey(entName, UtilMisc.toMap(pkName, id));
-                         entity.put("childBranchCount", nodeCount);
-                         entity.store();
-                     } catch(GenericEntityException e) {
-                         Debug.logError(e, module); 
-                        throw new RuntimeException(e.getMessage());
-                     }
+                 try {
+                	 if (id != null) {
+                		 GenericValue entity = delegator.findByPrimaryKey(entName, UtilMisc.toMap(pkName, id));
+                         if (modelEntity.isField("childBranchCount")) {
+                    		 entity.put("childBranchCount", nodeCount);
+                         }
+                		 entity.store();
+                	 }
+                 } catch(GenericEntityException e) {
+                     Debug.logError(e, module); 
+                    throw new RuntimeException(e.getMessage());
+                 }
              } else if (nodeCount == null ) {
                  getChildren(context);
                 if (subNodeValues != null )
@@ -705,7 +720,9 @@ public class ModelTree {
             }
         }
     
-        
+        public void setPkName(String pkName) {
+        	this.pkName = pkName;
+        }
         
         public static class ModelSubNode {
     

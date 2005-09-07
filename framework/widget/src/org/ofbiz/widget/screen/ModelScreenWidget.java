@@ -594,7 +594,7 @@ public abstract class ModelScreenWidget {
         public String getStyle(Map context) {
             return this.styleExdr.expandString(context);
         }
-
+        
         public String rawString() {
             return "<label id=\"" + this.idExdr.getOriginal() + "\" style=\"" + this.styleExdr.getOriginal() + "\" text=\"" + this.textExdr.getOriginal() + "\"/>";
         }

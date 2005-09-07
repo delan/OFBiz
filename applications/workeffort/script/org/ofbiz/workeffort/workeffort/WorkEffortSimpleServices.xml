@@ -589,4 +589,18 @@
         </else>
         </if-not-empty>
     </simple-method>
+    <simple-method  method-name="assignAssocWorkEffortId" short-description="Assign workEffortId to empty workEffortIdTo/From">
+        <if-empty field-name="workEffortId" map-name="parameters">
+            <add-error><fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortIdEmpty"/></add-error>
+            <check-errors/>
+        </if-empty>
+        <if-empty field-name="workEffortIdTo" map-name="parameters">
+            <field-to-result field-name="workEffortId" map-name="parameters" result-name="workEffortIdTo" />
+            <else>
+                <if-empty field-name="workEffortIdFrom" map-name="parameters">
+                    <field-to-result field-name="workEffortId" map-name="parameters" result-name="workEffortIdFrom"/>
+                </if-empty>
+            </else>
+        </if-empty>
+    </simple-method>
 </simple-methods>

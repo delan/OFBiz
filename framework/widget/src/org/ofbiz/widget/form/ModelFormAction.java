@@ -30,11 +30,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.PatternSyntaxException;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -340,6 +342,17 @@ public abstract class ModelFormAction {
                 
                 if (this.resultMapNameAcsr != null) {
                     this.resultMapNameAcsr.put(context, result);
+                    String queryString = (String)result.get("queryString");
+                    context.put("queryString", queryString);
+                    context.put("queryStringMap", result.get("queryStringMap"));
+                    if (UtilValidate.isNotEmpty(queryString)){
+                    	try {
+                    		String queryStringEncoded = queryString.replaceAll("&", "%26");
+                            context.put("queryStringEncoded", queryStringEncoded);
+                    	} catch (PatternSyntaxException e) {
+                    		
+                    	}
+                    }
                 } else {
                     context.putAll(result);
                 }

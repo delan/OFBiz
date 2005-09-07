@@ -428,9 +428,10 @@ public class FindServices {
         }
 
         Map results = ServiceUtil.returnSuccess();
-        String queryString = UtilHttp.urlEncodeArgs(queryStringMap);
+        Map reducedQueryStringMap = buildReducedQueryString(inputFields, entityName, delegator);
+        String queryString = UtilHttp.urlEncodeArgs(reducedQueryStringMap);
         results.put("queryString", queryString);
-        results.put("queryStringMap", queryStringMap);
+        results.put("queryStringMap", reducedQueryStringMap);
         
         results.put("orderByList", orderByList);
         results.put("entityConditionList", exprList);
@@ -480,5 +481,74 @@ public class FindServices {
         startTs = UtilDateTime.getDayStart(ts, daysLater);
         retValue = startTs.toString();
         return retValue;
+    }
+
+    public static HashMap buildReducedQueryString(Map inputFields, String entityName, GenericDelegator delegator) {
+        // Strip the "_suffix" off of the parameter name and
+        // build a three-level map of values keyed by fieldRoot name,
+        //    fld0 or fld1,  and, then, "op" or "value"
+        // ie. id
+        //  - fld0
+        //      - op:like
+        //      - value:abc
+        //  - fld1 (if there is a range)
+        //      - op:lessThan
+        //      - value:55 (note: these two "flds" wouldn't really go together)
+        // Also note that op/fld can be in any order. (eg. id_fld1_equals or id_equals_fld1)
+        // Note that "normalizedFields" will contain values other than those
+        // Contained in the associated entity.
+        // Those extra fields will be ignored in the second half of this method.
+    	ModelEntity modelEntity = delegator.getModelEntity(entityName);
+        HashMap normalizedFields = new HashMap();
+        Iterator ifIter = inputFields.keySet().iterator();
+        //StringBuffer queryStringBuf = new StringBuffer();
+        while (ifIter.hasNext()) {
+            String fieldNameRaw = null; // The name as it appeas in the HTML form
+            String fieldNameRoot = null; // The entity field name. Everything to the left of the first "_" if
+                                                                 //  it exists, or the whole word, if not.
+            String fieldPair = null; // "fld0" or "fld1" - begin/end of range or just fld0 if no range.
+            Object fieldValue = null; // If it is a "value" field, it will be the value to be used in the query.
+                                                        // If it is an "op" field, it will be "equals", "greaterThan", etc.
+            int iPos = -1;
+            int iPos2 = -1;
+            HashMap subMap = null;
+            HashMap subMap2 = null;
+            String fieldMode = null;
+
+            fieldNameRaw = (String) ifIter.next();
+            fieldValue = inputFields.get(fieldNameRaw);
+            if (ObjectType.isEmpty(fieldValue)) {
+                continue;
+            }
+
+            //queryStringBuffer.append(fieldNameRaw + "=" + fieldValue);
+            iPos = fieldNameRaw.indexOf("_"); // Look for suffix
+
+            // This is a hack to skip fields from "multi" forms
+            // These would have the form "fieldName_o_1"
+            if (iPos >= 0) {
+                String suffix = fieldNameRaw.substring(iPos + 1);
+                iPos2 = suffix.indexOf("_");
+                if (iPos2 == 1) {
+                    continue;
+                }
+            }
+
+            // If no suffix, assume no range (default to fld0) and operations of equals
+            // If no field op is present, it will assume "equals".
+            if (iPos < 0) {
+                fieldNameRoot = fieldNameRaw;
+                fieldPair = "fld0";
+                fieldMode = "value";
+            } else { // Must have at least "fld0/1" or "equals, greaterThan, etc."
+                // Some bogus fields will slip in, like "ENTITY_NAME", but they will be ignored
+
+                fieldNameRoot = fieldNameRaw.substring(0, iPos);
+            }
+            if (modelEntity.isField(fieldNameRoot)) {
+            	normalizedFields.put(fieldNameRaw, fieldValue);
+            }
+        }
+        return normalizedFields;
     }
 }

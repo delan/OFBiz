@@ -966,3 +966,17 @@ padding-top: 5px;
 border-top: #999 solid 1px;
 }
 
+.treeWrapper { 
+color:black; 
+background:#ffffff; 
+font-size:12pt; 
+font-weight:medium;
+font-family:verdana, arial, sans-serif;
+text-align:left;
+text-decoration:none;
+margin-left:12px;
+margin-top:2px;
+border-top:1px solid black;
+border-left:1px solid black;
+}
+

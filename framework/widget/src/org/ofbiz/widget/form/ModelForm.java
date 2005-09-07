@@ -100,6 +100,7 @@ public class ModelForm {
     protected String defaultRequiredFieldStyle;
     protected boolean skipStart = false;
     protected boolean skipEnd = false;
+    protected boolean hideHeader = false;
 
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
@@ -225,6 +226,7 @@ public class ModelForm {
                 this.targetType = parent.targetType;
                 this.defaultMapName = parent.defaultMapName;
                 this.targetWindowExdr = parent.targetWindowExdr;
+                this.hideHeader = parent.hideHeader;
                 
                 // Update the parent's fields with this form
                 Iterator fieldListIter = this.fieldList.iterator();
@@ -288,6 +290,7 @@ public class ModelForm {
         this.cssStyling = "true".equals(formElement.getAttribute("css-styling"));
         this.skipStart = "true".equals(formElement.getAttribute("skip-start"));
         this.skipEnd = "true".equals(formElement.getAttribute("skip-end"));
+        this.hideHeader = "true".equals(formElement.getAttribute("hide-header"));
         if (formElement.hasAttribute("separate-columns")) {
             String sepColumns = formElement.getAttribute("separate-columns");
             if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
@@ -814,7 +817,9 @@ public class ModelForm {
         formStringRenderer.renderFormatListWrapperOpen(buffer, context, this);
 
         // ===== render header row =====
-        this.renderHeaderRow(buffer, context, formStringRenderer);
+        if (!getHideHeader()) {
+        	this.renderHeaderRow(buffer, context, formStringRenderer);
+        }
 
         // ===== render the item rows =====
         this.renderItemRows(buffer, context, formStringRenderer, true);
@@ -1607,6 +1612,18 @@ public class ModelForm {
     
     public boolean getSkipEnd() {
         return this.skipEnd;
+    }
+    
+    public void setSkipStart(boolean val) {
+        this.skipStart = val;
+    }
+    
+    public void setSkipEnd(boolean val) {
+        this.skipEnd = val;
+    }
+    
+    public boolean getHideHeader() {
+        return this.hideHeader;
     }
     
     public void setPaginate(boolean val) {
