@@ -69,7 +69,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="type"/>
 		</actions>
         <widgets>
@@ -89,7 +89,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="typeAttr"/>
 		</actions>
         <widgets>
@@ -109,7 +109,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="assocType"/>
 		</actions>
         <widgets>
@@ -129,7 +129,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="purposeType"/>
 		</actions>
         <widgets>
@@ -149,7 +149,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="assocPred"/>
 		</actions>
         <widgets>
@@ -169,7 +169,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="contentPurposeOp"/>
 		</actions>
         <widgets>
@@ -189,7 +189,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="ADMIN"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="userpermission"/>
 		  <set field="webSitePublishPoint" from-field="parameters.webSitePublishPoint" default-value="OFBIZDOCROOT"/>
    	      <script location="component://content/widget/contentsetup/userpermprep.bsh"/>
@@ -213,7 +213,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="contentOp"/>
 		</actions>
         <widgets>
@@ -233,7 +233,7 @@
 		  <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
 		</condition>
 		<actions>
-		  <set field="headerItem" value="ContentSetup"/>
+		  <set field="headerItem" value="ContentSetupMenu"/>
 		  <set field="currentMenuItemName" to-scope="user" value="contentPurposeOp"/>
 		</actions>
         <widgets>

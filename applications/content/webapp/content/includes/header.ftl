@@ -27,8 +27,8 @@
 <#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
-<#assign selectedLeftClassMap = {headerItem?default("void") : "headerButtonLeftSelected"}>
-<#assign selectedRightClassMap = {headerItem?default("void") : "headerButtonRightSelected"}>
+<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
+<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 
 <div class="apptitle">&nbsp;Content Manager Application&nbsp;</div>
 <div class="row">
