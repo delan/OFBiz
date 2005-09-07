@@ -714,6 +714,32 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListCommCustRequests"/>
     </request-map>
+    <request-map uri="ListCommWorkEfforts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListCommWorkEfforts"/>
+    </request-map>
+    <request-map uri="EditCommWorkEffort">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCommWorkEffort"/>
+    </request-map>
+    <request-map uri="createCommWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommWorkEffort"/>
+        <response name="success" type="view" value="EditCommWorkEffort"/>
+        <response name="success" type="view" value="EditCommWorkEffort"/>
+    </request-map>
+    <request-map uri="updateCommWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCommWorkEffort"/>
+        <response name="success" type="view" value="EditCommWorkEffort"/>
+        <response name="success" type="view" value="EditCommWorkEffort"/>
+    </request-map>
+    <request-map uri="deleteCommWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCommWorkEffort"/>
+        <response name="success" type="view" value="ListCommWorkEfforts"/>
+        <response name="success" type="view" value="ListCommWorkEfforts"/>
+    </request-map>
 
     <!-- ContactList request mappings -->
     <request-map uri="ListPartyContactLists">
@@ -887,6 +913,8 @@
     <view-map name="ViewCommunicationEvent" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ViewCommunicationEvent"/>
     <view-map name="UpdateCommPurposes" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#UpdateCommPurposes"/>
     <view-map name="UpdateCommRoles" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#UpdateCommRoles"/>
+    <view-map name="EditCommWorkEffort" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#EditCommWorkEffort"/>
+    <view-map name="EditCommCustRequest" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#EditCommCustRequest"/>
     <view-map name="ListCommWorkEfforts" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommWorkEfforts"/>
     <view-map name="ListCommCustRequests" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommCustRequests"/>
     

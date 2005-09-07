@@ -199,6 +199,28 @@
         </description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="assignAssocWorkEffortId"  engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="assignAssocWorkEffortId" auth="true">
+        <description>Assign workEffortId to empty workEffortIdTo/From</description>
+        <attribute name="workEffortId" type="java.lang.String" mode="IN" optional="false"/>
+        <attribute name="workEffortIdFrom" type="java.lang.String" mode="INOUT" optional="true"/>
+        <attribute name="workEffortIdTo" type="java.lang.String" mode="INOUT" optional="true"/>
+    </service>
+    <service name="createWorkEffortAndAssoc" engine="group" location="createWorkEffortAndAssoc" invoke="" auth="true"  >
+        <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffortAssoc"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffortAssoc"/>
+    </service>
+    <service name="updateWorkEffortAndAssoc" engine="group" location="updateWorkEffortAndAssoc" invoke="" auth="true"  >
+        <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffortAssoc"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffortAssoc"/>
+    </service>
+    
     <service name="createWorkEffortGoodStandard" engine="simple" default-entity-name="WorkEffortGoodStandard"
             location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortGoodStandard">
         <description>
@@ -230,6 +252,27 @@
         <description>Create or update WorkEffortInventoryAssign</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="assignAssocWorkEffortId"  engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="assignAssocWorkEffortId" auth="true">
+        <description>Assign workEffortId to empty workEffortIdTo/From</description>
+        <attribute name="workEffortId" type="java.lang.String" mode="IN" optional="false"/>
+        <attribute name="workEffortIdFrom" type="java.lang.String" mode="INOUT" optional="true"/>
+        <attribute name="workEffortIdTo" type="java.lang.String" mode="INOUT" optional="true"/>
+    </service>
+    <service name="createWorkEffortAndAssoc" engine="group" location="createWorkEffortAndAssoc" invoke="" auth="true"  >
+        <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffortAssoc"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffortAssoc"/>
+    </service>
+    <service name="updateWorkEffortAndAssoc" engine="group" location="updateWorkEffortAndAssoc" invoke="" auth="true"  >
+        <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffortAssoc"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffortAssoc"/>
     </service>
 
 </services>

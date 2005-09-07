@@ -106,7 +106,7 @@
 
     <request-map uri="main">
     	<security https="false" auth="true"/>
-    	<response name="success" type="view" value="mytasks"/>
+    	<response name="success" type="view" value="FindWorkEffort"/>
     </request-map>
 
     <!-- Lookup request mappings -->
@@ -463,6 +463,76 @@
         
     <!-- end project management requests -->
     
+    <request-map uri="FindWorkEffort">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindWorkEffort"/>
+    </request-map>
+    
+    <request-map uri="ListWorkEfforts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEfforts"/>
+    </request-map>
+    
+    <request-map uri="ChildWorkEfforts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ChildWorkEfforts"/>
+    </request-map>
+    
+    <request-map uri="EditWorkEffortAndAssoc">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortAndAssoc"/>
+    </request-map>
+    
+    <request-map uri="AddWorkEffortAndAssoc">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddWorkEffortAndAssoc"/>
+    </request-map>
+    
+    <request-map uri="EditListWorkEfforts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditListWorkEfforts"/>
+    </request-map>
+    
+     <request-map uri="EditWorkEffort">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffort"/>
+    </request-map>
+    
+    <request-map uri="createWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffort"/>
+        <response name="success" type="view" value="EditWorkEffort"/>
+        <response name="error" type="view" value="EditWorkEffort"/>
+    </request-map>
+    
+    <request-map uri="createWorkEffortAndAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortAndAssoc"/>
+        <response name="success" type="view" value="EditWorkEffortAndAssoc"/>
+        <response name="error" type="view" value="EditWorkEffortAndAssoc"/>
+    </request-map>
+    
+    <request-map uri="updateWorkEffortAndAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffortAndAssoc"/>
+        <response name="success" type="view" value="EditWorkEffortAndAssoc"/>
+        <response name="error" type="view" value="EditWorkEffortAndAssoc"/>
+    </request-map>
+    
+    <request-map uri="updateWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffort"/>
+        <response name="success" type="view" value="EditWorkEffort"/>
+        <response name="error" type="view" value="EditWorkEffort"/>
+    </request-map>
+    
+    <request-map uri="deleteWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteWorkEffort"/>
+        <response name="success" type="view" value="ListWorkEfforts"/>
+        <response name="error" type="view" value="ListWorkEfforts"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -507,6 +577,13 @@
     <view-map name="edittasknote" type="region"/>
     
     <!-- end project management views -->
+    <view-map name="FindWorkEffort" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#FindWorkEffort"/>
+    <view-map name="EditWorkEffort" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#EditWorkEffort"/>
+    <view-map name="ListWorkEfforts" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEfforts"/>
+    <view-map name="ListChildWorkEfforts" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListChildWorkEfforts"/>
+    <view-map name="ChildWorkEfforts" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ChildWorkEfforts"/>
+    <view-map name="AddWorkEffortAndAssoc" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#AddWorkEffortAndAssoc"/>
+    <view-map name="EditWorkEffortAndAssoc" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#EditWorkEffortAndAssoc"/>
     
     <!-- end of view mappings -->
 </site-conf>

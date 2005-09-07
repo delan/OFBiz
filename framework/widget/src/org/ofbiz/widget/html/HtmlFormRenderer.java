@@ -918,9 +918,13 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("</table>");
 
         this.appendWhitespace(buffer);
-
-        Map inputFields = (Map)context.get("requestParameters");
-        String queryString = UtilHttp.urlEncodeArgs(inputFields);
+        String queryString = null;
+        if (UtilValidate.isNotEmpty((String)context.get("queryString"))) {
+        	queryString = (String)context.get("queryString");
+        } else {
+            Map inputFields = (Map)context.get("requestParameters");
+            queryString = UtilHttp.urlEncodeArgs(inputFields);
+        }
         context.put("_QBESTRING_", queryString);
         this.renderNextPrev(buffer, context, modelForm);
     }

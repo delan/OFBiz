@@ -24,17 +24,32 @@
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">
 
-    <menu name="ContactListTabBar" default-menu-item-name="ContactList" default-selected-style="tabButtonSelected" 
+    <menu name="WorkEffortTabBar" default-menu-item-name="WorkEffort" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
         orientation="horizontal" type="simple">
-        <menu-item name="ContactList" title="${uiLabelMap.ContactList}">
-            <link target="/EditContactList?contactListId=${contactListId}"/>
+        <menu-item name="WorkEffort" title="${uiLabelMap.WorkEffort}">
+            <link target="/EditWorkEffort?workEffortId=${workEffortId}"/>
         </menu-item>
-        <menu-item name="ContactListParty" title="${uiLabelMap.PartyParties}">
-            <link target="/FindContactListParties?contactListId=${contactListId}"/>
+        <menu-item name="WorkEffortAssocs" title="${uiLabelMap.WorkEffortRelated}">
+            <link target="/FindWorkEffortAssocs?workEffortId=${workEffortId}"/>
         </menu-item>
-        <menu-item name="ContactListCommEvent" title="${uiLabelMap.PartyCommEvents}">
-            <link target="/FindContactListCommEvents?contactListId=${contactListId}"/>
+        <menu-item name="WorkEffortPartyAssignments" title="${uiLabelMap.WorkEffortParties}">
+            <link target="/FindWorkEffortPartyAssignments?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortCommEvents" title="${uiLabelMap.WorkEffortCommEvent}">
+            <link target="/FindWorkEffortCommEvents?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortRequestItems" title="${uiLabelMap.WorkEffortRequestItems}">
+            <link target="/FindWorkEffortRequestItems?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortRequests" title="${uiLabelMap.WorkEffortRequests}">
+            <link target="/FindWorkEffortRequests?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortQuoteItems" title="${uiLabelMap.WorkEffortQuoteItems}">
+            <link target="/FindWorkEffortQuoteItems?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortQuotes" title="${uiLabelMap.WorkEffortQuotes}">
+            <link target="/FindWorkEffortQuotes?workEffortId=${workEffortId}"/>
         </menu-item>
     </menu>
 </menus>

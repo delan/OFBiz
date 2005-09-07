@@ -239,6 +239,11 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
      * @see org.ofbiz.widget.menu.MenuStringRenderer#renderMenuClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.widget.menu.ModelMenu)
      */
     public void renderMenuClose(StringBuffer buffer, Map context, ModelMenu modelMenu) {
+    	
+    	String fillStyle = modelMenu.getFillStyle();
+    	if (UtilValidate.isNotEmpty(fillStyle)) {
+    		buffer.append("<div style=\"" + fillStyle + "\">&nbsp;</div>");
+    	}
         //String menuContainerStyle = modelMenu.getMenuContainerStyle(context);
         buffer.append("</div>");
         this.appendWhitespace(buffer);

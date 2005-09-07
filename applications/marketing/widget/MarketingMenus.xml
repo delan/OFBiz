@@ -23,18 +23,29 @@
  *  $Id: ProductScreens.xml 4990 2005-05-14 10:00:28Z jacopo $
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">
-
-    <menu name="ContactListTabBar" default-menu-item-name="ContactList" default-selected-style="tabButtonSelected" 
-        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
+    <menu name="MarketingAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" 
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
+        default-align-style="col" menu-container-style="row"
+        fill-style="col-fill"
         orientation="horizontal" type="simple">
-        <menu-item name="ContactList" title="${uiLabelMap.ContactList}">
-            <link target="/EditContactList?contactListId=${contactListId}"/>
+        <menu-item name="main" title="Main"><link target="/main"/></menu-item>
+        <menu-item name="DataSource" title="DataSource"><link target="/EditDataSources"/></menu-item>
+        <menu-item name="Campaign" title="Campaign"><link target="/FindMarketingCampaign"/></menu-item>
+        <menu-item name="Tracking" title="Tracking"><link target="/FindTrackingCode"/></menu-item>
+        <menu-item name="Segment" title="Segment"><link target="/LookupSegmentGroup"/></menu-item>
+        <menu-item name="ContactList" title="ContactList"><link target="/ListContactLists"/></menu-item>
+        
+        <menu-item name="Logout" title="Logout" align-style="col-right" >
+            <condition>
+                <not><if-empty field-name="requestAttributes.userLogin" /></not>
+            </condition>
+            <link target="/logout"/>
         </menu-item>
-        <menu-item name="ContactListParty" title="${uiLabelMap.PartyParties}">
-            <link target="/FindContactListParties?contactListId=${contactListId}"/>
-        </menu-item>
-        <menu-item name="ContactListCommEvent" title="${uiLabelMap.PartyCommEvents}">
-            <link target="/FindContactListCommEvents?contactListId=${contactListId}"/>
+        <menu-item name="Login" title="Login" align-style="col-right" >
+            <condition>
+                <if-empty field-name="requestAttributes.userLogin" />
+            </condition>
+            <link target="${requestAttributes.checkLoginUrl}"/>
         </menu-item>
     </menu>
 </menus>

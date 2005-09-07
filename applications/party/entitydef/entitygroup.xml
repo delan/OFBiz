@@ -74,7 +74,11 @@
     <entity-group group="org.ofbiz" entity="PostalAddressBoundary" />
     <entity-group group="org.ofbiz" entity="TelecomNumber" />
     <entity-group group="org.ofbiz" entity="ValidContactMechRole" />
-
+    <entity-group group="org.ofbiz" entity="ContactMechDetail" />
+    <entity-group group="org.ofbiz" entity="PartyAndContactMech" />
+    <entity-group group="org.ofbiz" entity="PartyAndPostalAddress" />
+    <entity-group group="org.ofbiz" entity="PartyAndTelecomNumber" />
+    
   <!-- ========================================================= -->
   <!-- org.ofbiz.party.need -->
   <!-- ========================================================= -->
@@ -88,9 +92,6 @@
 
     <entity-group group="org.ofbiz" entity="Affiliate" />
     <entity-group group="org.ofbiz" entity="Party" />
-    <entity-group group="org.ofbiz" entity="PartyAndContactMech" />
-    <entity-group group="org.ofbiz" entity="PartyAndPostalAddress" />
-    <entity-group group="org.ofbiz" entity="PartyAndTelecomNumber" />
     <entity-group group="org.ofbiz" entity="PartyAndUserLogin" />
     <entity-group group="org.ofbiz" entity="PartyAndUserLoginAndPerson" />
     <entity-group group="org.ofbiz" entity="PartyAttribute" />
