@@ -35,7 +35,7 @@
         <alt-target use-when="paymentApplication==null" target="createPaymentApplication"/>
         <auto-fields-service service-name="createPaymentApplication" map-name=""/>
         <field name="taxAuthGeoId" title="Tax Auth Geo Id">
-             <drop-down>
+             <drop-down allow-empty="true">
              	<entity-options entity-name="TaxAuthority" description="${taxAuthGeoId}"/>
              </drop-down>
         </field>
