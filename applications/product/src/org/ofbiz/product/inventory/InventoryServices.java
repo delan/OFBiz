@@ -35,6 +35,7 @@ import java.util.Set;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -170,15 +171,15 @@ public class InventoryServices {
                 }
             } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
                 // set the status to avoid re-moving or something
-            	if (newItem != null) {
+              if (newItem != null) {
                     newItem.refresh();
                     newItem.set("statusId", "INV_BEING_TRANSFERED");
                     newItem.store();
-            	} else {
+              } else {
                     inventoryItem.refresh();
                     inventoryItem.set("statusId", "INV_BEING_TRANSFERED");
                     inventoryItem.store();
-            	}
+              }
             }
                                     
             return results;     
@@ -562,5 +563,67 @@ public class InventoryServices {
         }        
                                                           
         return ServiceUtil.returnSuccess();
-    }    
+    }
+    
+    /**
+     * Get Inventory Available for a Product based on the list of associated products.  The final ATP and QOH will
+     * be the minimum of all the associated products' inventory divided by their ProductAssoc.quantity 
+     * */
+    public static Map getProductInventoryAvailablefromAssocProducts(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        List productAssocList = (List) context.get("assocProducts");
+                
+        Double availableToPromiseTotal = new Double(0);
+        Double quantityOnHandTotal = new Double(0);
+        
+        if (productAssocList != null && productAssocList.size() > 0) {
+        	// minimum QOH and ATP encountered
+           double minQuantityOnHandTotal = Double.MAX_VALUE;
+           double minAvailableToPromiseTotal = Double.MAX_VALUE;
+           
+           // loop through each associated product.  
+           for (int i = 0; productAssocList.size() > i; i++) {
+               GenericValue productAssoc = (GenericValue) productAssocList.get(i);
+               String productIdTo = productAssoc.getString("productIdTo");
+               Double assocQuantity = productAssoc.getDouble("quantity");
+               
+               // figure out the inventory available for this associated product
+               Map resultOutput = null;
+               try {
+                  resultOutput = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productIdTo));
+               } catch (GenericServiceException e) {
+                  Debug.logError(e, "Problems getting inventory available by facility", module);
+                  return ServiceUtil.returnError(e.getMessage());
+               }
+               
+               // Figure out what the QOH and ATP inventory would be with this associated product
+               Double currentQuantityOnHandTotal = (Double) resultOutput.get("quantityOnHandTotal");
+               Double currentAvailableToPromiseTotal = (Double) resultOutput.get("availableToPromiseTotal");
+               double tmpQuantityOnHandTotal = currentQuantityOnHandTotal.doubleValue()/assocQuantity.doubleValue();
+               double tmpAvailableToPromiseTotal = currentAvailableToPromiseTotal.doubleValue()/assocQuantity.doubleValue();
+
+               // reset the minimum QOH and ATP quantities if those quantities for this product are less 
+               if (tmpQuantityOnHandTotal < minQuantityOnHandTotal) {
+                   minQuantityOnHandTotal = tmpQuantityOnHandTotal;
+               }
+               if (tmpAvailableToPromiseTotal < minAvailableToPromiseTotal) {
+                   minAvailableToPromiseTotal = tmpAvailableToPromiseTotal;
+               }
+             
+               if (Debug.verboseOn()) {
+                   Debug.logVerbose("productIdTo = " + productIdTo + " assocQuantity = " + assocQuantity + "current QOH " + currentQuantityOnHandTotal + 
+                		"currentATP = " + currentAvailableToPromiseTotal + " minQOH = " + minQuantityOnHandTotal + " minATP = " + minAvailableToPromiseTotal, module);	
+               }
+           }
+          // the final QOH and ATP quantities are the minimum of all the products 
+          quantityOnHandTotal = new Double(minQuantityOnHandTotal);
+          availableToPromiseTotal = new Double(minAvailableToPromiseTotal);
+        }
+        
+        Map result = ServiceUtil.returnSuccess();
+        result.put("availableToPromiseTotal", availableToPromiseTotal);
+        result.put("quantityOnHandTotal", quantityOnHandTotal);
+        return result;
+    }
 }
