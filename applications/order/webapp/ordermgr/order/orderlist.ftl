@@ -125,7 +125,7 @@
                     <#list trackingCodes as trackingCode>
                       <div class="tabletext">
                       <#if trackingCode?has_content>
-	                      <a href="/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}">${trackingCode}</a><br/>
+	                      <a href="/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}">${trackingCode.trackingCodeId}</a><br/>
 	                    </#if>
                       </div>
                     </#list>
