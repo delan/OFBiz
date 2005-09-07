@@ -98,8 +98,10 @@
                     <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
                 </entity-condition>
 
+                <!-- if no inventory item type specified, get default from facility -->
                 <if-empty field-name="inventoryItemTypeId" map-name="parameters">
-                    <string-to-field string="SERIALIZED_INV_ITEM" field-name="inventoryItemTypeId" map-name="parameters"/>
+                    <get-related-one value-name="returnHeader" relation-name="Facility" to-value-name="facility"/>
+                    <field-to-field field-name="defaultInventoryItemTypeId" map-name="facility" to-field-name="inventoryItemTypeId" to-map-name="parameters"/>
                 </if-empty>
 
                 <if-empty field-name="statusId" map-name="parameters">
