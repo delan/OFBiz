@@ -625,8 +625,8 @@
         description="Pre-Assembled Gizmo Kit"
         longDescription="Pre-Assembled Gizmo Kit"
         taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" />
-    <ProductPrice productId="GZ-KIT" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductPrice productId="GZ-KIT" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="GZ-KIT" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="GZ-KIT" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
     <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1000" productAssocTypeId="MARKETING_PACKAGE" quantity="1" fromDate="2001-05-13 12:00:00.0"/>
     <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1001" productAssocTypeId="MARKETING_PACKAGE" quantity="2" fromDate="2001-05-13 12:00:00.0"/>
     <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1004" productAssocTypeId="MARKETING_PACKAGE" quantity="3" fromDate="2001-05-13 12:00:00.0"/>
@@ -635,8 +635,8 @@
         description="Auto-Explode Gizmo Basket"
         longDescription="Auto-Explode Gizmo Basket"
         taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" />
-    <ProductPrice productId="GZ-BASKET" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductPrice productId="GZ-BASKET" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="GZ-BASKET" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="GZ-BASKET" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
     <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1000" productAssocTypeId="MARKETING_PKG_AUTO" quantity="1" fromDate="2001-05-13 12:00:00.0"/>
     <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1001" productAssocTypeId="MARKETING_PKG_AUTO" quantity="2" fromDate="2001-05-13 12:00:00.0"/>
     <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1004" productAssocTypeId="MARKETING_PKG_AUTO" quantity="3" fromDate="2001-05-13 12:00:00.0"/>
