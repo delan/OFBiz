@@ -766,7 +766,7 @@
                    <td width="5">&nbsp;</td>
                    <td align="left" valign="top" width="80%">
                      <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                       <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
+                       <#if (orderHeader.orderTypeId == "SALES_ORDER") && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
                          <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Entire Order</a></div>
                        </#if>
                        <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
