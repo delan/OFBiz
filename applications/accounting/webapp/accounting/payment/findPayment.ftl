@@ -213,7 +213,11 @@ function lookupPayment() {
               <td><a href="<@ofbizUrl>/editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>${payment.paymentId}</a></td>            
               <td><div class='tabletext'>${paymentType.description?default(paymentType.paymentTypeId?default(""))}</div></td>
               <td><div class='tabletext'>${paymentMethodType.description?if_exists}</div></td>
-              <td><div class='tabletext'>${statusItem.get("description",locale)?default("Not Set")}</div></td>
+              <td>
+                <#if statusItem?has_content>
+                  <div class='tabletext'>${statusItem.get("description",locale)?default("Not Set")}</div>
+                </#if>
+              </td>
               <td><div class='tabletext'>${payment.partyIdFrom}</div></td>
               <td><div class='tabletext'>${payment.partyIdTo}</div></td>
               <td><div class='tabletext'>${(payment.effectiveDate?string)?if_exists}</div></td>
