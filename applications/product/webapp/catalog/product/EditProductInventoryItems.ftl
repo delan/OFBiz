@@ -116,7 +116,7 @@
     </tr>
     <#list productInventoryItems as inventoryItem>
        <#if showEmpty || (inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM" && inventoryItem.statusId?if_exists != "INV_DELIVERED")
-                       || (inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromiseTotal?exists && inventoryItem.availableToPromiseTotal > 0) || (inventoryItem.quantityOnHandTotal?exists && inventoryItem.quantityOnHandTotal > 0)))>
+                       || (inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromiseTotal?exists && inventoryItem.availableToPromiseTotal != 0) || (inventoryItem.quantityOnHandTotal?exists && inventoryItem.quantityOnHandTotal != 0)))>
             <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType")>
             <#if inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                 <#assign curStatusItem = inventoryItem.getRelatedOneCache("StatusItem")?if_exists>
