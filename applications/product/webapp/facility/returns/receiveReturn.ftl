@@ -160,7 +160,7 @@
                 </tr>
                 <tr>
                    <td width='10%'>
-                      <select name="inventoryItemTypeId_o_0" size="1" class="selectBox">  
+                      <select name="inventoryItemTypeId_o_${rowCount}" size="1" class="selectBox">  
                          <#list inventoryItemTypes as nextInventoryItemType>                      
                             <option value='${nextInventoryItemType.inventoryItemTypeId}' 
                          <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
