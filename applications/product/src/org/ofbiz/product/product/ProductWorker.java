@@ -122,6 +122,10 @@ public class ProductWorker {
 
     public static String getVariantVirtualId(GenericValue variantProduct) throws GenericEntityException {
         List productAssocs = getVariantVirtualAssocs(variantProduct);
+        if (productAssocs == null)
+        {
+        	return null;
+        }
         GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
         if (productAssoc != null) {
             return productAssoc.getString("productId");

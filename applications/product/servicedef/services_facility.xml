@@ -130,6 +130,14 @@
         <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
     </service>
+    <service name="getProductInventoryAvailablefromAssocProducts" engine="java"
+                location="org.ofbiz.product.inventory.InventoryServices" invoke="getProductInventoryAvailablefromAssocProducts" auth="false">
+        <description>Get Inventory Availability for a product based on List of associated products, usually marketing
+        	package components.</description>
+        <attribute name="assocProducts" type="List" mode="IN" optional="false"/>
+        <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
+    </service>
 
     <service name="checkInventoryAvailability" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="checkInventoryAvailability">
