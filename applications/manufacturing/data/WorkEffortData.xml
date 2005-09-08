@@ -33,33 +33,27 @@
     <StatusType description="Production Run Status" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="PRODUCTION_RUN"/>
 
     <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="PRUN_CREATED" statusTypeId="PRODUCTION_RUN"/>
-    <StatusItem description="Documents Printed" sequenceId="02" statusCode="DOC_PRINTED" statusId="PRUN_DOC_PRINTED" statusTypeId="PRODUCTION_RUN"/>
+    <StatusItem description="Confirmed" sequenceId="02" statusCode="DOC_PRINTED" statusId="PRUN_DOC_PRINTED" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Running" sequenceId="03" statusCode="RUNNING" statusId="PRUN_RUNNING" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Completed" sequenceId="04" statusCode="COMPLETED" statusId="PRUN_COMPLETED" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Closed" sequenceId="05" statusCode="CLOSED" statusId="PRUN_CLOSED" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Cancelled" sequenceId="10" statusCode="CANCELLED" statusId="PRUN_CANCELLED" statusTypeId="PRODUCTION_RUN"/>
 
     <!-- ProductionRun Inventory assignement status -->
-    <!--  <StatusType description="WorkEffort Assignment" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/>
-
-      <StatusItem description="Created"  sequenceId="01" statusCode="CREATED" statusId="PRUN_CREATED" statusTypeId="PRODUCTION_RUN"/>
-      <StatusItem description="Documents Printed"  sequenceId="02" statusCode="DOC_PRINTED" statusId="PRUN_DOC_PRINTED" statusTypeId="PRODUCTION_RUN"/>
-      <StatusItem description="Running"  sequenceId="03" statusCode="RUNNING" statusId="PRUN_RUNNING" statusTypeId="PRODUCTION_RUN"/>
-      <StatusItem description="Realized"  sequenceId="04" statusCode="REALIZED" statusId="PRUN_REALIZED" statusTypeId="PRODUCTION_RUN"/>
-      <StatusItem description="Closed"  sequenceId="05" statusCode="CLOSED" statusId="PRUN_CLOSED" statusTypeId="PRODUCTION_RUN"/>-->
+    <!--  <StatusType description="WorkEffort Assignment" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/> -->
 
     <!-- For Routing definition, (workEffort Template) -->
     <WorkEffortPurposeType description="Manufacturing" workEffortPurposeTypeId="ROU_MANUFACTURING"/>
     <WorkEffortPurposeType description="Assembling" workEffortPurposeTypeId="ROU_ASSEMBLING"/>
     <WorkEffortPurposeType description="Sub-contracting" workEffortPurposeTypeId="ROU_SUBCONTRACTING"/>
 
-    <WorkEffortType description="For Routing and workeffort template" hasTable="N" parentTypeId="" workEffortTypeId="TEMPLATE"/>
-    <WorkEffortType description="Manufacturing Routing" hasTable="N" parentTypeId="TEMPLATE" workEffortTypeId="ROUTING"/>
-    <WorkEffortType description="Task for Manufacturing routing" hasTable="N" parentTypeId="TEMPLATE" workEffortTypeId="ROU_TASK"/>
-    <WorkEffortType description="For ProductionRun" hasTable="N" parentTypeId="" workEffortTypeId="PRODUCTION_RUN"/>
-    <WorkEffortType description="Production Run Order" hasTable="N" parentTypeId="PRODUCTION_RUN" workEffortTypeId="PROD_ORDER_HEADER"/>
-    <WorkEffortType description="Production Run Task" hasTable="N" parentTypeId="PRODUCTION_RUN" workEffortTypeId="PROD_ORDER_TASK"/>
-    <WorkEffortType description="Fixed Asset Usage(rental)" hasTable="N" parentTypeId="" workEffortTypeId="ASSET_USAGE"/>
+    <WorkEffortType description="Routing" hasTable="N" parentTypeId="" workEffortTypeId="ROUTING"/>
+    <WorkEffortType description="Routing Task" hasTable="N" parentTypeId="" workEffortTypeId="ROU_TASK"/>
+
+    <WorkEffortType description="Production Run Header" hasTable="N" parentTypeId="" workEffortTypeId="PROD_ORDER_HEADER"/>
+    <WorkEffortType description="Production Run Task" hasTable="N" parentTypeId="" workEffortTypeId="PROD_ORDER_TASK"/>
+
+    <WorkEffortType description="Fixed Asset Usage (rental)" hasTable="N" parentTypeId="" workEffortTypeId="ASSET_USAGE"/>
 
     <WorkEffortAssocType description="Routing is composed with routingTask" hasTable="N" parentTypeId="" workEffortAssocTypeId="ROUTING_COMPONENT"/>
 
