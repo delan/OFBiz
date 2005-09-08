@@ -225,14 +225,13 @@
         </field>
         
         <field name="custRequestId">
-            <lookup size="20" target-form-name="LookupCustRequest">
-                <sub-hyperlink target="/ordermgr/control/EditRequest?custRequestId=${communicationEvent.custRequestId}" target-type="inter-app" link-style="buttontext"/>
+            <lookup size="20" target-form-name="/ordermgr/control/LookupCustRequest">
+                <sub-hyperlink target="/ordermgr/control/EditRequest?custRequestId=${communicationEvent.custRequestId}" target-type="inter-app" link-style="buttontext"
+                    description="[Edit]" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;custRequestId&quot;)!= null"/>
             </lookup>
         </field>
         <field name="contactListId">
-            <lookup size="20" target-form-name="LookupContactList">
-                <sub-hyperlink target="EditContactList?contactListId=${communicationEvent.contactListId}" link-style="buttontext"/>
-            </lookup>
+            <lookup size="20" target-form-name="LookupContactList"/>
         </field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><date-time/></field>
