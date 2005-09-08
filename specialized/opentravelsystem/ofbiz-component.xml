@@ -43,7 +43,8 @@
     <!-- data resources for initial data -->
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/hotelfrontend/data/HotelDemoStore.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HaagscheSuites/data/HaagscheSuites.xml"/>
-
+    <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HotelSimple/data/HotelSimple.xml"/>
+    
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 
@@ -87,6 +88,13 @@
         server="default-server"
         location="webapp/HaagscheSuites"
         mount-point="/HaagscheSuites"
+        app-bar-display="false"/>        
+        
+    <webapp name="HotelSimple"
+        title="Hotel simplest, links in the site should open new window"
+        server="default-server"
+        location="webapp/HotelSimple"
+        mount-point="/HotelSimple"
         app-bar-display="false"/>        
 </ofbiz-component>
 

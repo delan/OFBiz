@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev$
+ *@version    $Rev: 5462 $
  *@since      2.1
 -->
 
@@ -42,20 +42,14 @@
         <tr>
           <td>
             <DIV class='tabletext'><br/><br/><br/>
-            <center><h2>Product Section</h2><br/><br/>
-            In this section you can maintain your products (offerings) which are based on fixed assets (you actual rooms)
-            The same rooms can be offered as different products which more or less luxury added when the customer arrives.
-            However at the Fixed Asset level the occupancy is maintained so overbooking is not possible even if several 
-            different products are based on the same physical room. On a Fixed Asset you can set the number of rooms available on a single day.
-            Bookings are shown on the calendar tab of the Fixed Asset.
-            You can organize your products in categories which can be selected by the customer. You can even sell merchandize like 
-            caps and mugs, slippers or bathing robes on your site. These can be organised in a different category.
-            <br/><br/>Here you can:
+            <center><h2>Accounting Section</h2><br/><br/>Here you can:
             <sl>
-            <li>Maintain your Products which the customes sees on your website</li>
-            <li>Organize these products in categories</li>
-            <li>Maintain your fixed assets on which the products are based on.</li>
-            </center></DIV>  
+            <li>Maintain your Invoices (automaticly generated from the order)</li>
+            <li>Print your invoices with your hotel logo and information</li>
+            <li>Upload payments (which you downloaded from your internet banking)</li>
+            <li>Automaticly send reminders by e-mail about invoices not yet paid</li>
+            <li>and more....</li></sl></h2></center></DIV>  
+            <div class='tabletext'></br><center><h3> Coming soon!</h3></center></DIV>  
             <br/>
           </td>
         </tr>

@@ -29,7 +29,7 @@
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -65,7 +65,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CustomerDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                             <label style="head1">List of customers who placed an order.&lt;br&gt;</label>
                         <include-form name="ListCustomers" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
@@ -84,7 +84,7 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CustomerDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <platform-specific>

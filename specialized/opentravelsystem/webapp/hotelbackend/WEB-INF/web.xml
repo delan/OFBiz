@@ -27,12 +27,12 @@
     <display-name>Open For Business - Hotel Webstore Backend application</display-name>
     <description>Demo Hotel applications of the Open Travel System Project</description>
     
+    <!-- productStore id not used, set when a user logs on... -->
     <!--context-param>
         <param-name>webSiteId</param-name>
         <param-value>HotelDemoStore</param-value>
     <description>A unique ID used to look up the WebSite entity to get information about catalogs, etc.</description>
     </context-param-->
-    
     
     <context-param>
         <param-name>entityDelegatorName</param-name>
@@ -44,7 +44,12 @@
         <param-value>hotelbackend</param-value>
         <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
     </context-param>    
-
+    <context-param>
+        <param-name>mainDecoratorLocation</param-name>
+        <param-value>component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml</param-value>
+        <description>The location of the main-decorator screen to use for this webapp; referred to as a context variable in screen def XML files.</description>
+    </context-param>
+    
     <filter>
         <filter-name>ContextFilter</filter-name>
         <display-name>ContextFilter</display-name>

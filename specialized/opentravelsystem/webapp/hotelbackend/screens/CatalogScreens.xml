@@ -23,33 +23,6 @@
  *  $Id$
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-   <screen name="CommonCatalogDecorator">
-        <section>
-            <widgets>
-                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, CATALOG _VIEW permission -->
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderCatalog.ftl"/></html>
-                                </platform-specific>
-                                <container style="contentarea">
-                                 <platform-specific>
-                                    <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
-                                </platform-specific>
-                                <decorator-section-include name="body"/>
-                                </container>
-                            </widgets>
-                            <!--fail-widgets>
-                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
-                            </fail-widgets-->
-                        </section>                    
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
  
     <screen name="main">
         <section>
@@ -61,7 +34,7 @@
                 <!--set field="leftbarScreenName" value="leftbar"/-->
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                                 <container>
                                 <platform-specific>
@@ -103,7 +76,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                         <container>
@@ -137,7 +110,7 @@
                 <entity-one entity-name="ProductCategory" value-name="productCategory"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
 	                       <platform-specific>
 	                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
@@ -170,7 +143,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
 	                       <platform-specific>
@@ -208,7 +181,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.ProductProducts}</label>
@@ -243,7 +216,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
@@ -347,8 +320,8 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
-                <decorator-section name="body">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
                     <container>
                        <platform-specific>
                            <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
@@ -389,7 +362,7 @@
             <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <container>
                        <platform-specific>
@@ -428,7 +401,7 @@
                     resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <container>
                        <platform-specific>
@@ -459,7 +432,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContent.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <platform-specific>
@@ -492,7 +465,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <container>
                        <platform-specific>
@@ -528,7 +501,7 @@
                 <entity-one entity-name="FixedAssetProduct" value-name="fixedAssetProduct"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="showFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
@@ -551,7 +524,7 @@
                 <set field="productId" from-field="parameters.productId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                        <platform-specific><!-- TODO: tabbar does not want to display -->
                            <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
@@ -578,7 +551,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
@@ -610,7 +583,7 @@
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                                  <platform-specific>
@@ -653,7 +626,7 @@
                 
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                       <container>
                        <platform-specific>
@@ -689,7 +662,7 @@
                 <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                        <platform-specific>
                            <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
@@ -746,7 +719,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>

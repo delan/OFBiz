@@ -271,6 +271,19 @@ public class otsUtils {
 
         // get the ProductStoreShipmentMeth
         // explode(productStore, "ProductStoreShipmentMeth",writer);  // no direct link...
+        List productStoreShipmentMethods = null;
+        List expressions = UtilMisc.toList(new EntityExpr("productStoreId", EntityOperator.EQUALS, productStoreId));
+        try {	productStoreShipmentMethods = delegator.findByAnd("ProductStoreShipmentMeth", expressions); } 
+        	catch (GenericEntityException e) {	; }
+        if (productStoreShipmentMethods != null && productStoreShipmentMethods.size() > 0)	{
+            // we found some records....
+            Iterator p = productStoreShipmentMethods.iterator();
+            GenericValue productStoreShipmentMeth = null;
+            while (p.hasNext())	{
+            	productStoreShipmentMeth = (GenericValue) p.next();
+            	productStoreShipmentMeth.writeXmlText(writer, ""); numberWritten++;
+            }
+        }
 
         // see if the primary category exists, if not create
         GenericValue productCategory = null;
@@ -310,7 +323,7 @@ public class otsUtils {
 
         //get products with primary category set to the same name as the productStore
         List products = null;
-        List expressions = UtilMisc.toList(new EntityExpr("primaryProductCategoryId", EntityOperator.EQUALS, productStoreId));
+        expressions = UtilMisc.toList(new EntityExpr("primaryProductCategoryId", EntityOperator.EQUALS, productStoreId));
         try {	products = delegator.findByAnd("Product", expressions); } catch (GenericEntityException e) {	; }
         if (products == null || products.size() == 0)	{
             msgs.append("No products found for primary category: " + productStoreId + "\n");
