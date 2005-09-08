@@ -24,39 +24,10 @@
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="file:/home/hans/ofbiz/framework/widget/dtd/widget-screen.xsd">
-    <screen name="CommonMainDecorator">
-        <section>
-            <widgets>
-                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                 <platform-specific>
-                                    <html>
-                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderMain.ftl"/>
-                                    </html>
-                                </platform-specific>
-                                <container style="contentarea">
-                                    <!-- by default will render left-bar only if leftbarScreen value not empty -->
-                                    <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
-			                        <platform-specific>
-			                             <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
-			                        </platform-specific>
-			                        <decorator-section-include name="body"/>
-                                </container>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="main">
         <section>
             <actions>
+                <set field="page.appTabButtonItem" value="Settings"/>
                 <set field="page.appTabButtonItem" value="Main"/>
                 <set field="page.headerItem" value="main"/>
                 
@@ -69,7 +40,7 @@
                 <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonMainDecorator">
+                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--content content-id="otsfrontpage"/--> <!-- get page from internal cms instead of main.ftl below-->
                         <content content-id="testcontent"/> <!-- xml/xsl test-->
@@ -98,7 +69,7 @@
                 <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonMainDecorator">
+                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--content content-id="otsfrontpage"/--> <!-- get page from internal cms instead of main.ftl below-->
                         <!--content content-id="otsxmlxsl"/--> <!-- xml/xsl test-->
@@ -119,7 +90,7 @@
                 <set field="page.headerItem" value="intro"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonMainDecorator">
+                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
@@ -138,7 +109,7 @@
                 <set field="page.headerItem" value="main"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonMainDecorator">
+                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>

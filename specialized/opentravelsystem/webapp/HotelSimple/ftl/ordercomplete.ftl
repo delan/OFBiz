@@ -20,39 +20,23 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev$
+ *@version    $Rev: 5462 $
  *@since      2.1
 -->
+<p class="head1">${uiLabelMap.OrderConfirmation}</p>
+<#if !isDemoStore?exists || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
 
-<TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <TD align="left" width='90%' >
-            <div class='boxhead'>&nbsp;Settings section.</div>
-          </TD>        
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <DIV class='tabletext'><br/><br/><br/>
-            <center><h2> ${prodCatalogId?if_exists} Settings Section</h2><br/><br/>Here you can:
-            <sl>
-            <li>Select the e-shop you are working on (you can have more than one shop)</li>
-            <li>Maintain the settings of your shop</li>
-            <li>Who has access to your shop and who can do what.</li>
-			</sl></h2></center></DIV>  
-            <div class='tabletext'></br><center><h3> Coming soon!</h3></center></DIV>  
-            <br/>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+<#if orderHeader?has_content>
+  ${screens.render("component://opentravelsystem/webapp/HotelSimple/screens/OrderScreens.xml#orderheader")}
+  <br/>
+  ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
+  <table border="0" cellpadding="1" width="100%">
+   <tr>
+      <td colspan="4" align="right">
+        <a href="<@ofbizUrl>/closeWindow</@ofbizUrl>" class="buttontextbig">[Close Window]</a>
+      </td>
+    </tr>
+  </table>    
+<#else>
+  <h3>${uiLabelMap.OrderSpecifiedNotFound}.</h3>
+</#if>

@@ -39,7 +39,8 @@
  		{"title":"Product",				"url":"mainCatalog"}
 		,{"title":"Reservations",		"url":"findorders"}
 		,{"title":"Customers",			"url":"findparty"}
-		,{"title":"Settings",				"url":"mainSettings"}
+		,{"title":"Accounting",			"url":"mainAccounting"}
+		,{"title":"Settings",			"url":"mainSettings"}
 		,{"title":"Website", 			"url":"/${productStoreId?if_exists}"}
 		,{"title":"Logout", 				"url":"logout"}
 		]>

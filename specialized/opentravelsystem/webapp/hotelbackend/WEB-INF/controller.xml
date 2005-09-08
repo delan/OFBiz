@@ -59,15 +59,6 @@
         <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
-    <!-- Security Mappings -->
-    <request-map uri="checkLogin" edit="false">
-        <description>Verify a user is logged in.</description>
-        <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
-        <response name="success" type="request" value="main" />
-        <response name="error" type="view" value="login" />
-    </request-map>
-
     <request-map uri="checkProductStore" edit="false">
         <description>Check if a valid product store is selected.</description>
         <security https="true" auth="true"/>
@@ -77,23 +68,30 @@
         <response name="error" type="view" value="noAccess" />
     </request-map>
 
-
+    <!-- Security Mappings -->
+    <request-map uri="checkLogin" edit="false">
+        <description>Verify a user is logged in.</description>
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
+        <response name="success" type="request" value="main" />
+        <response name="error" type="view" value="login" />
+    </request-map>
+    
     <request-map uri="login">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
         <response name="success" type="request" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
-
+    
     <request-map uri="logout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="logout"/>
         <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-
     <!-- End of Security Mappings -->
-
+    
     <!-- hotelbackend specific Request Mappings -->
     <request-map uri="main">
         <description>Check if access to productstores, when not log off, otherwise go to selectStore or main</description>
@@ -129,6 +127,11 @@
         <response name="success" type="view" value="mainCatalog"/>
     </request-map>
 
+    <request-map uri="mainAccounting">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="mainAccounting"/>
+    </request-map>
+    
     <request-map uri="unLoad">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.opentravelsystem.otsUtils" invoke="unLoad"/>
@@ -256,7 +259,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderview"/>
     </request-map>
-
+    <request-map uri="changeOrderStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeOrderStatus"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>
+    <request-map uri="changeOrderItemStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeOrderItemStatus"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>
     <request-map uri="downloadorder">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="downloadorder"/>
@@ -2110,6 +2124,8 @@
     <view-map name="setStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#setStore"/>
     <view-map name="noAccess" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#noAccess"/>
     <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
+    <!-- Accounting screens-->
+    <view-map name="mainAccounting" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#main"/>
     <!-- Catalog screens-->
     <view-map name="mainCatalog" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#main"/>
     <view-map name="EditProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProduct"/>
@@ -2136,11 +2152,11 @@
     <view-map name="ListFixedAssetCalendar" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssetCalendar"/> 
     <!-- Settings  screens -->
     <view-map name="mainSettings" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#main"/>
-    <view-map name="EditProductStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStore"/>
-    <view-map name="EditProductStoreRoles" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreRoles"/>
-    <view-map name="EditProductStoreEmails" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreEmails"/>
-    <view-map name="EditProductStoreTaxSetup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreTaxSetup"/>
-    <view-map name="EditProductStorePaySetup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStorePaySetup"/>
+    <view-map name="EditProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStore"/>
+    <view-map name="EditProductStoreRoles" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreRoles"/>
+    <view-map name="EditProductStoreEmails" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreEmails"/>
+    <view-map name="EditProductStoreTaxSetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreTaxSetup"/>
+    <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
     <view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#selectStore"/>
     <!-- reservations /orders -->
     <view-map name="findorders" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#main"/>

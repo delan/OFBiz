@@ -23,34 +23,6 @@
  *  $Id$
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="CommonSettingsDecorator">
-        <section>
-            <widgets>
-                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                 <platform-specific>
-                                    <html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderSettings.ftl"/></html>
-                                </platform-specific>
-                                 <platform-specific>
-                                    <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
-                                </platform-specific>
-                                <container style="contentarea">
-                                    <!-- by default will render left-bar only if leftbarScreen value not empty -->
-                                    <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
-                                    <decorator-section-include name="body"/>
-                                </container>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
         <screen name="main">
         <section>
             <actions>
@@ -58,7 +30,7 @@
                 <set field="page.headerItem" value="main"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator">
+                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                                  <platform-specific>
                                     <html>
@@ -71,7 +43,7 @@
         </section>
     </screen>
     
-    <screen name="EditProductStore">
+    <!--screen name="EditProductStore">
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Settings"/>
@@ -122,11 +94,11 @@
                             <html>
                                 <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
                             </html>
-                        </platform-specific>
+                        </platform-specific-->
 <!--                           <container>
                             <label style="head1">${uiLabelMap.PageTitleEditProductStoreRoles}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]</label>
                              </container>
- -->                        <platform-specific>
+ -->                        <!--platform-specific>
                             <html>
                                 <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/EditProductStoreRoles.ftl"/>
                             </html>
@@ -135,9 +107,9 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen-->
 
-    <screen name="EditProductStoreTaxSetup">
+    <!--screen name="EditProductStoreTaxSetup">
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Settings"/>
@@ -159,11 +131,11 @@
                             <html>
                                 <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
                             </html>
-                        </platform-specific>
+                        </platform-specific-->
 <!--                           <container>
                             <label style="head1">${uiLabelMap.PageTitleEditProductStoreTaxSetup}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]</label>
                              </container>
- -->                        <platform-specific>
+ -->                        <!--platform-specific>
                             <html>
                                 <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/EditProductStoreTaxSetup.ftl"/>
                             </html>
@@ -172,9 +144,9 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen-->
 
-    <screen name="EditProductStorePaySetupOld"><!-- OLD VERSION -->
+    <!--screen name="EditProductStorePaySetupOld">
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Settings"/>
@@ -205,11 +177,11 @@
                             <html>
                                 <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
                             </html>
-                        </platform-specific>
+                        </platform-specific-->
 <!--                           <container>
                             <label style="head1">${uiLabelMap.PageTitleEditProductStorePaySetup}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]</label>
                              </container>
- -->                        <platform-specific>
+ -->                        <!--platform-specific>
                             <html>
                                 <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/EditProductStorePaySetup.ftl"/>
                             </html>
@@ -264,10 +236,10 @@
                 <entity-condition entity-name="ProductStoreEmailSetting" list-name="productStoreEmailSettings">
                     <condition-expr field-name="productStoreId" operator="equals" value="${productStoreId}" />
                     <order-by field-name="emailType"/>
-                    </entity-condition>
+                    </entity-condition-->
 <!--                  <entity-condition entity-name="RoleType" list-name="roleTypes">
                  <order-by field-name="description"/></entity-condition>
- -->            </actions>
+ -->            <!--/actions>
             <widgets>
                 <decorator-screen name="CommonSettingsDecorator">
                     <decorator-section name="body">
@@ -286,7 +258,7 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen-->
 
     <screen name="selectStore">
         <section> 
@@ -307,7 +279,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator">
+                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition> 

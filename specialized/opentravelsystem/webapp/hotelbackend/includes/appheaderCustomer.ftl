@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev$
+ *@version    $Rev: 5462 $
  *@since      2.1
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
@@ -34,12 +34,13 @@
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 
-<div class="apptitle">&nbsp;Reservations</div>
+<div class="apptitle">Customers</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">List Reservations</a></div>  
-  <div class="col"><a href="<@ofbizUrl>downloadorder</@ofbizUrl>" class="${selectedLeftClassMap.downloadorder?default(unselectedLeftClassName)}">Download Reservations</a></div>  
-  <!--div class="col"><a href="<@ofbizUrl>statistics</@ofbizUrl>" class="${selectedLeftClassMap.statistics?default(unselectedLeftClassName)}">Statistics</a></div-->  
-  <div class="col"><a href="<@ofbizUrl>reports</@ofbizUrl>" class="${selectedLeftClassMap.reports?default(unselectedLeftClassName)}">Reports</a></div>  
+  <!--div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/selectStore</@ofbizUrl>" class="${selectedLeftClassMap.selectStore?default(unselectedLeftClassName)}">${uiLabelMap.selectStore}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemStore}</a></div-->  
+  <!--div class="col"><a href="<@ofbizUrl>/findparty?partyGroup=${productStoreId?if_exists}</@ofbizUrl>" class="${selectedLeftClassMap.users?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemUsers}</a></div-->  
+  <!--div class="col"><a href="<@ofbizUrl>/unLoad</@ofbizUrl>" class="${selectedLeftClassMap.unload?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemUnload}</a></div-->  
 
   <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>

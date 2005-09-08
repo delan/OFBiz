@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id$
+-->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="common-decorator">
+    <screen name="main-decorator">
         <section>
             <actions>
+                <!-- base/top/specific map first, then more common map added for shared labels --> 
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
@@ -12,10 +38,12 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="layoutSettings.companyName" from-field="uiLabelMap.opentravelsystemCompanyName" global="true"/>
-                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.opentravelsystemCompanySubtitle" global="true"/>
-                <set field="layoutSettings.headerImageUrl" value="/images/opentravelsystem_logo.jpg" global="true"/>
-                <!--set field="layoutSettings.extraHead" value=" "/-->
+                
+                <set field="MainColumnStyle" value="nocolumns" global="true"/>
+                
+                <set field="layoutSettings.companyName" value="Open Travelsystem Hotel Backend" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ProductCompanySubtitle" global="true"/>
+                <set field="layoutSettings.headerImageUrl" value="/hotelbackend/images/opentravelsystem_logo.jpg" global="true"/>
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
@@ -26,16 +54,161 @@
                 <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/header.ftl"/></html></platform-specific>
                 <!-- render appbar -->
                 <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
-                <container style="centerarea">
-                        <container style="column-main">
+                
                             <decorator-section-include name="body"/>
-                        </container>
-                </container>
+                
                 <!-- render footer -->
                 <platform-specific><html><html-template location="component://opentravelsystem/includes/footer.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
 
-</screens>
+    <screen name="SettingsDecorator">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Settings"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        
+                        <container style="centerarea">
+                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderSettings.ftl"/></html></platform-specific>
+                            <container style="contentarea">
+                                <container style="${MainColumnStyle}">
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
+                                <!--/container-->
+                            </container>
+                        </container>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonProductStoreDecorator">
+        <section>
+            <actions>
+                <!--set field="leftbarScreenName" value="leftbar"/-->
+                <set field="MainColumnStyle" value="leftonly"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SettingsDecorator">
+                    <decorator-section name="body">
+                        <!--section>
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_VIEW"/>
+                            </condition>
+                            <widgets-->
+                        <section>
+                            <condition><not><if-empty field-name="productStoreId"/></not></condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/></html>
+                                </platform-specific>
+                                
+                                <container>
+                                    <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]  ${${extraFunctionName}}</label>
+                                </container>
+                                <!--container>
+                                            <link target="EditProductStore" text="[${uiLabelMap.ProductNewProductStore}]" style="buttontext"/>
+                                        </container-->
+                            </widgets>
+                        </section>
+                        
+                        <decorator-section-include name="body"/>
+                        <!--/widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section-->                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
+    <screen name="CustomerDecorator">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Customers"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        
+                        <container style="centerarea">
+                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderCustomer.ftl"/></html></platform-specific>
+                            <container style="contentarea">
+                                <container style="${MainColumnStyle}">
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
+                                <!--/container-->
+                            </container>
+                        </container>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CatalogDecorator">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Product"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        
+                        <container style="centerarea">
+                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderCatalog.ftl"/></html></platform-specific>
+                            <container style="contentarea">
+                                <container style="${MainColumnStyle}">
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
+                                <!--/container-->
+                            </container>
+                        </container>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ReservationsDecorator">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Reservations"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        
+                        <container style="centerarea">
+                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderReservations.ftl"/></html></platform-specific>
+                            <container style="contentarea">
+                                <container style="${MainColumnStyle}">
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
+                                <!--/container-->
+                            </container>
+                        </container>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+ </screens>
