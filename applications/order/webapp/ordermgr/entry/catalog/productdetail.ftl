@@ -400,7 +400,13 @@ ${virtualJavaScript?if_exists}
               <input type="text" class="inputBox" size="5" name="add_amount" value=""/>
             </div>
             <#if product.productTypeId?if_exists == "ASSET_USAGE">
-                <table width="100%"><tr><td  width="80%">&nbsp;</td><td class="tabletext" nowrap align="right">Start Date<br/>(yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStart"/></td><td class="tabletext" nowrap align="right">Number<br/>of days</td><td><input type="text" class="inputBox" size="4" name="reservLength"/></td></tr><tr><td>&nbsp;</td><td class="tabletext" align="right" nowrap>Number of<br/>persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"/></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"/></td></tr></table>
+                <table width="100%"><tr>
+                <td class="tabletext" nowrap align="right">Start Date<br/>(yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStart"/><a href="javascript:call_cal(document.addform.reservStart, '${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString().substring(0,10)}');"><img src="/content/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a></td>
+                <td class="tabletext" nowrap align="right">End Date<br/>(yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservEnd"/><a href="javascript:call_cal(document.addform.reservEnd, '${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString().substring(0,10)}');"><img src="/content/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a></td></tr>
+                <tr>
+                <#--td class="tabletext" nowrap align="right">Number<br/>of days</td><td><input type="textt" class="inputBox" size="4" name="reservLength"/></td></tr><tr><td>&nbsp;</td><td class="tabletext" align="right" nowrap>&nbsp;</td-->
+                <td class="tabletext" nowrap align="right">Number of persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="2"/></td>
+                <td class="tabletext" nowrap align="right">Number of rooms</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"/></td></tr></table>
             <#else/>
                 <input type="text" class="inputBox" size="5" name="quantity" value="1"<#if product.isVirtual?if_exists?upper_case == "Y"> disabled="disabled"</#if>/>
             </#if>
