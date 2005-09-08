@@ -40,6 +40,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
@@ -105,7 +106,9 @@ public class ShoppingCartEvents {
         String quantityStr = null;
         double quantity = 0;
         String reservStartStr = null;
+        String reservEndStr = null;
         java.sql.Timestamp reservStart = null;
+        java.sql.Timestamp reservEnd = null;
         String reservLengthStr = null;
         double reservLength = 0;
         String reservPersonsStr = null;
@@ -200,6 +203,29 @@ public class ShoppingCartEvents {
             }
             else reservStart = null;
 
+            if (paramMap.containsKey("reservEnd")) {
+                reservEndStr = (String) paramMap.remove("reservEnd");
+                if (reservEndStr.length() == 10) // only date provided, no time string?
+                        reservEndStr += " 00:00:00.000000000"; // should have format: yyyy-mm-dd hh:mm:ss.fffffffff
+                if (reservEndStr.length() > 0) {
+                    try {
+                        reservEnd = java.sql.Timestamp.valueOf((String) reservEndStr);
+                    } catch (Exception e) {
+                        Debug.logWarning(e,"Problems parsing Reservation end string: " + reservEndStr, module);
+                        reservEnd = null;
+                        request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource,"cart.addToCart.rental.endDate", locale));
+                        return "error";
+                    }
+                }
+                else reservEnd = null;
+            }
+            
+            if (reservStart != null && reservEnd != null)	{
+            	reservLength = UtilDateTime.getInterval(reservStart,reservEnd)/86400000;
+            }
+                
+                
+                
             if (reservStart != null && paramMap.containsKey("reservLength")) {
                 reservLengthStr = (String) paramMap.remove("reservLength");
                 // parse the reservation Length
