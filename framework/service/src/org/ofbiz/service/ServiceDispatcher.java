@@ -589,7 +589,7 @@ public class ServiceDispatcher {
             }
         } catch (GenericTransactionException se) {
             Debug.logError(se, "Problems with the transaction", module);
-            throw new GenericServiceException("Problems with the transaction, see logs");
+            throw new GenericServiceException("Problems with the transaction: " + se.getMessage() + "; See logs for more detail");
         } finally {
             // resume the parent transaction
             if (parentTransaction != null) {
@@ -597,7 +597,7 @@ public class ServiceDispatcher {
                     TransactionUtil.resume(parentTransaction);
                 } catch (GenericTransactionException ise) {
                     Debug.logError(ise, "Trouble resuming parent transaction", module);
-                    throw new GenericServiceException("Resume transaction exception, see logs");
+                    throw new GenericServiceException("Resume transaction exception: " + ise.getMessage() + "; See logs for more detail");
                 }
             }
         }
