@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.GenericEntity.NullGenericEntity;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
@@ -80,7 +81,14 @@ public class EntityFieldValue extends EntityConditionValue {
     }
 
     public Object getValue(GenericDelegator delegator, Map map) {
-        return map.get(fieldName);
+        if (map == null) {
+            return null;
+        }
+        if (map instanceof NullGenericEntity) {
+            return null;
+        } else {
+            return map.get(fieldName);
+        }
     }
 
     public void visit(EntityConditionVisitor visitor) {

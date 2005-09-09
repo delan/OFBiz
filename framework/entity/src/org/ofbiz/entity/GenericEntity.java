@@ -1253,7 +1253,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     public static interface NULL {
     }
 
-    protected static class NullGenericEntity extends GenericEntity implements NULL {
+    public static class NullGenericEntity extends GenericEntity implements NULL {
         protected NullGenericEntity() { }
         
         public String toString() {
@@ -1261,7 +1261,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
     }
     
-    protected static class NullField implements NULL {
+    public static class NullField implements NULL {
         protected NullField() { }
     
         public String toString() {
