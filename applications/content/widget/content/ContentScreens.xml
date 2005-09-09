@@ -70,6 +70,7 @@
             <actions>
                 <set field="currentContentMenuItemName" value="FindContent" to-scope="user"/>
                 <set field="currentContentMenuItemName" value="FindContent" to-scope="screen"/>
+                <set field="headerItem" value="Content"/>
                 <set field="title" value="Content Find Page"/>
                 <set field="entityName" value="Content"/>
                 <set field="queryString" from-field="result.queryString"/>
@@ -89,7 +90,6 @@
             </widgets>
         </section>
     </screen>
-
     <screen name="EditContent">
         <section>
             <condition>
@@ -97,6 +97,7 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="headerItem" value="Content"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="EditContent" to-scope="user"/>
@@ -116,7 +117,6 @@
             </widgets>
         </section>
     </screen>
-    
     <screen name="AddContent">
         <section>
             <condition>
@@ -124,6 +124,7 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="headerItem" value="Content"/>
                 <set field="title" value="CMS Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
@@ -137,7 +138,6 @@
             </widgets>
         </section>
     </screen>
-    
     <screen name="EditContentAssoc">
         <section>
             <condition>
@@ -145,6 +145,7 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="headerItem" value="Content"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="contentassoc" to-scope="user"/>
@@ -166,38 +167,38 @@
                 <set field="fromDate" from-field="fromDate" to-scope="user"/>
             </actions>
             <widgets>
-              <decorator-screen name="common">
-                <decorator-section name="body">
-                  <include-form name="ListContentAssocFrom" location="component://content/webapp/content/content/ContentForms.xml"/>
-                  <include-form name="ListContentAssocTo" location="component://content/webapp/content/content/ContentForms.xml"/>
-                  <section>
-                    <condition>
-                      <and>
-                        <not><if-empty field-name="contentId"/></not>  
-                        <not><if-empty field-name="contentIdTo"/></not>  
-                        <not><if-empty field-name="contentAssocTypeId"/></not>  
-                        <not><if-empty field-name="fromDate"/></not>  
-                      </and>  
-                    </condition>
-                    <widgets>
-                      <include-form name="EditContentAssoc" location="component://content/webapp/content/content/ContentForms.xml"/>
-                    </widgets>
-                  </section>
-                  <section>
-                    <condition>
-                      <or>
-                        <if-empty field-name="contentId"/>  
-                        <if-empty field-name="contentIdTo"/>  
-                        <if-empty field-name="contentAssocTypeId"/>  
-                        <if-empty field-name="fromDate"/>  
-                      </or>  
-                    </condition>
-                    <widgets>
-                      <include-form name="AddContentAssoc" location="component://content/webapp/content/content/ContentForms.xml"/>
-                    </widgets>
-                  </section>
-                </decorator-section>
-              </decorator-screen>
+                <decorator-screen name="common">
+                    <decorator-section name="body">
+                        <include-form name="ListContentAssocFrom" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <include-form name="ListContentAssocTo" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not><if-empty field-name="contentId"/></not>
+                                    <not><if-empty field-name="contentIdTo"/></not>
+                                    <not><if-empty field-name="contentAssocTypeId"/></not>
+                                    <not><if-empty field-name="fromDate"/></not>
+                                </and>  
+                            </condition>
+                            <widgets>
+                                <include-form name="EditContentAssoc" location="component://content/webapp/content/content/ContentForms.xml"/>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-empty field-name="contentId"/>  
+                                    <if-empty field-name="contentIdTo"/>  
+                                    <if-empty field-name="contentAssocTypeId"/>  
+                                    <if-empty field-name="fromDate"/>  
+                                </or>  
+                            </condition>
+                            <widgets>
+                                <include-form name="AddContentAssoc" location="component://content/webapp/content/content/ContentForms.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -209,6 +210,7 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="headerItem" value="Content"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="role" to-scope="user"/>
@@ -218,12 +220,12 @@
                 <set field="contentId" from-field="contentId" to-scope="user"/>
             </actions>
             <widgets>
-              <decorator-screen name="common">
-                <decorator-section name="body">
-                  <include-form name="ListContentRole" location="component://content/webapp/content/content/ContentForms.xml"/>
-                  <include-form name="AddContentRole" location="component://content/webapp/content/content/ContentForms.xml"/>
-                </decorator-section>
-              </decorator-screen>
+                <decorator-screen name="common">
+                    <decorator-section name="body">
+                        <include-form name="ListContentRole" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <include-form name="AddContentRole" location="component://content/webapp/content/content/ContentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -235,6 +237,7 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="headerItem" value="Content"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="purpose" to-scope="user"/>
@@ -244,12 +247,12 @@
                 <set field="contentId" from-field="contentId" to-scope="user"/>
             </actions>
             <widgets>
-              <decorator-screen name="common">
-                <decorator-section name="body">
-                  <include-form name="ListContentPurpose" location="component://content/webapp/content/content/ContentForms.xml"/>
-                  <include-form name="AddContentPurpose" location="component://content/webapp/content/content/ContentForms.xml"/>
-                </decorator-section>
-              </decorator-screen>
+                <decorator-screen name="common">
+                    <decorator-section name="body">
+                        <include-form name="ListContentPurpose" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <include-form name="AddContentPurpose" location="component://content/webapp/content/content/ContentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -261,6 +264,7 @@
         </condition>
         <actions>
             <script location="component://content/widget/getMenuContext.bsh"/>
+            <set field="headerItem" value="Content"/>
             <set field="title" value="Content Edit Page"/>
             <set field="titleProperty" value="PageTitleEditContent"/>
             <set field="currentContentMenuItemName" value="attribute" to-scope="user"/>
@@ -270,12 +274,12 @@
             <set field="contentId" from-field="contentId" to-scope="user"/>
         </actions>
         <widgets>
-          <decorator-screen name="common">
-            <decorator-section name="body">
-              <include-form name="ListContentAttribute" location="component://content/webapp/content/content/ContentForms.xml"/>
-              <include-form name="AddContentAttribute" location="component://content/webapp/content/content/ContentForms.xml"/>
-            </decorator-section>
-          </decorator-screen>
+            <decorator-screen name="common">
+                <decorator-section name="body">
+                    <include-form name="ListContentAttribute" location="component://content/webapp/content/content/ContentForms.xml"/>
+                    <include-form name="AddContentAttribute" location="component://content/webapp/content/content/ContentForms.xml"/>
+                </decorator-section>
+            </decorator-screen>
         </widgets>
         </section>
     </screen>
@@ -288,6 +292,7 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="headerItem" value="Content"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="metadata" to-scope="user"/>
@@ -296,12 +301,12 @@
                 <set field="contentId" from-field="contentId" to-scope="user"/>
             </actions>
             <widgets>
-              <decorator-screen name="common">
-                <decorator-section name="body">
-                  <include-form name="ListContentMetaData" location="component://content/webapp/content/content/ContentForms.xml"/>
-                  <include-form name="AddContentMetaData" location="component://content/webapp/content/content/ContentForms.xml"/>
-                </decorator-section>
-              </decorator-screen>
+                <decorator-screen name="common">
+                    <decorator-section name="body">
+                        <include-form name="ListContentMetaData" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <include-form name="AddContentMetaData" location="component://content/webapp/content/content/ContentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -319,14 +324,13 @@
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-              <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
-                <decorator-section name="body">
-                  <include-form name="lookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
-                  <include-form name="listLookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
-                </decorator-section>
-              </decorator-screen>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <include-form name="listLookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
 </screens>
-
