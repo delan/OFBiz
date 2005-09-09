@@ -5,7 +5,6 @@
         default-render-style="simple" default-wrap-style="treeWrapper">
         <node name="node-root"  entity-name="WorkEffort" render-style="expand-collapse">
             <entity-one  entity-name="WorkEffort" value-name="workEffort"/>
-            <label text="NODE LIST&lt;br/&gt;"/>
             <include-screen name="WorkEffortTreeLine" location="component://workeffort/widget/WorkEffortScreens.xml"/>
             <sub-node node-name="node-list" >
                 <entity-condition entity-name="WorkEffortAssoc">

@@ -173,4 +173,9 @@
     <WorkEffortType description="Phase" hasTable="N" parentTypeId="" workEffortTypeId="PHASE"/>
 
     <WorkflowSpecification specificationId="XPDL" currentVersion="0.03"/>
+    
+    <StatusType description="Party" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="PRTYASGN_STATUS"/>
+    <StatusItem description="Offered" sequenceId="01" statusCode="OFFERED" statusId="PRTYASGN_OFFERED" statusTypeId="PRTYASGN_STATUS"/>
+    <StatusItem description="Assigned" sequenceId="02" statusCode="ASSIGNED" statusId="PRTYASGN_ASSIGNED" statusTypeId="PRTYASGN_STATUS"/>
+    <StatusItem description="Unassigned" sequenceId="03" statusCode="UNASSIGNED" statusId="PRTYASGN_UNASSIGNED" statusTypeId="PRTYASGN_STATUS"/>
 </entity-engine-xml>

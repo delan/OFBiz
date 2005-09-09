@@ -25,7 +25,7 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-   <screen name="CommonWorkEffortDecorator">
+    <screen name="CommonWorkEffortDecorator">
         <section>
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
@@ -60,7 +60,7 @@
             </widgets>
         </section>
     </screen>
-   <screen name="EditWorkEffort">
+    <screen name="EditWorkEffort">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffort"/>
@@ -84,8 +84,8 @@
                                 <include-form name="EditWorkEffort" location="component://workeffort/widget/WorkEffortForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="head1">${uiLabelMap.PageTitleEditWorkEffort}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.WorkEffortCreate}]" target="/EditWorkEffort?DONE_PAGE=${donePage}" style="buttontext"/>
+                                <container><label style="head1">${uiLabelMap.PageTitleEditWorkEffort}</label></container>
+                                <container><link  text="[${uiLabelMap.WorkEffortCreate}]" target="/EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
                                 <include-form name="EditWorkEffort" location="component://workeffort/widget/WorkEffortForms.xml"/>
                             </fail-widgets>
                         </section>
@@ -94,7 +94,7 @@
             </widgets>
         </section>
     </screen>
-   <screen name="FindWorkEffort">
+    <screen name="FindWorkEffort">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindWorkEffort"/>
@@ -107,8 +107,8 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator">
                     <decorator-section name="body">
-                                <label style="head1">${uiLabelMap.PageTitleFindWorkEffort}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.WorkEffortCreate}]" target="/EditWorkEffort?DONE_PAGE=${donePage}" style="buttontext"/>
+                                <container><label style="head1">${uiLabelMap.PageTitleFindWorkEffort}</label></container>
+                                <container><link  text="[${uiLabelMap.WorkEffortCreate}]" target="/EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
                                 <include-form name="FindWorkEffort" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -116,7 +116,7 @@
         </section>
     </screen>
     
-   <screen name="ListWorkEfforts">
+    <screen name="ListWorkEfforts">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffort"/>
@@ -130,16 +130,16 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator">
                     <decorator-section name="body">
-                                <label style="head1">${uiLabelMap.PageTitleListWorkEfforts}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.WorkEffortCreate}]" target="/EditWorkEffort?DONE_PAGE=${donePage}" style="buttontext"/>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.CommonFind}]" target="/FindWorkEffort" style="buttontext"/>
+                                <container><label style="head1">${uiLabelMap.PageTitleListWorkEfforts}</label></container>
+                                <container><link  text="[${uiLabelMap.WorkEffortCreate}]" target="/EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
+                                <container><link  text="[${uiLabelMap.CommonFind}]" target="/FindWorkEffort" style="linktext"/></container>
                                 <include-form name="ListWorkEfforts" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-   <screen name="ChildWorkEfforts">
+    <screen name="ChildWorkEfforts">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffort"/>
@@ -154,8 +154,8 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleListWorkEfforts}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.WorkEffortCreate}]" target="/EditWorkEffort?DONE_PAGE=${donePage}" style="buttontext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEfforts}</label></container>
+                        <container><link  text="[${uiLabelMap.WorkEffortCreate}]" target="/EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
                         <include-tree name="TreeWorkEffort" location="component://workeffort/widget/WorkEffortTrees.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -163,7 +163,7 @@
         </section>
     </screen>
     
-   <screen name="AddWorkEffortAndAssoc">
+    <screen name="AddWorkEffortAndAssoc">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffort"/>
@@ -186,7 +186,7 @@
         </section>
     </screen>
 
-   <screen name="EditWorkEffortAndAssoc">
+    <screen name="EditWorkEffortAndAssoc">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffort"/>
@@ -196,16 +196,17 @@
                 <set field="donePage" from-field="parameters.DONE_PAGE" />
                 <set field="workEffortIdTo" from-field="parameters.workEffortIdTo"/>
                 <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
-                <set field="workEffortId" from-field="parameters.workEffortIdFrom"/>
+                <set field="workEffortId" from-field="parameters.workEffortIdFrom" default-value="${parameters.workEffortId}" />
                 <set field="workEffortAssocTypeId" from-field="parameters.workEffortAssocTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
                 <entity-one entity-name="WorkEffort" value-name="workEffort"/>
                 <entity-one entity-name="WorkEffortAssoc" value-name="workEffortAssoc"/>
+                <set field="parameters.workEffortId" from-field="workEffortId" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffort}</label>
+                        <label style="head1">${uiLabelMap.PageTitleEditWorkEffort}</label>
                         <include-form name="EditWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -213,42 +214,29 @@
         </section>
     </screen>
 
-  <screen name="WorkEffortTreeLine">
-    <section>
-        <actions>
-            <set field="workEffortId" from-field="workEffortIdFrom" default-value="${workEffort.workEffortId}" />
-            <script location="component://common/webcommon/scripts/hex_encode_done_page.bsh"/>
-            <!-- <entity-one entity-name="WorkEffort" value-name="workEffort"/>-->
-        </actions>
-        <widgets>
-            <label text="${workEffort.workEffortName}[${workEffort.workEffortId}]" />
-            <link target="/EditWorkEffortAndAssoc?workEffortIdFrom=${workEffortAssoc.workEffortIdFrom}&amp;workEffortIdTo=${workEffortAssoc.workEffortIdTo}&amp;workEffortAssocTypeId=${workEffortAssoc.workEffortAssocTypeId}&amp;fromDate=${workEffortAssoc.fromDate}&amp;DONE_PAGE=${donePage}" text="[Edit]"></link>
-            <link target="/AddWorkEffortAndAssoc?workEffortIdTo=${workEffort.workEffortId}" text="[Add Child]"></link>
-        </widgets>
-    </section>
-  </screen>
-  <screen name="WorkEffortTreeLineForm">
-    <section>
-        <actions>
-            <set field="listIt[]" from-field="workEffort" type="Object" />
-        </actions>
-        <widgets>
-            <include-form name="WorkEffortTreeLine"  location="component://workeffort/widget/WorkEffortForms.xml"/>
-        </widgets>
-    </section>
-  </screen>
-  <screen name="blogTreeLine">
-    <section>
-        <widgets>
-          <container>
-                      <label text="${rsp.contentName}[${rsp.contentId}]" style="responseheader" />
-                        <link  text="View Blog Article" target="ViewBlog?articleContentId=${articleContentId}&amp;ownerContentId=${rsp.ownerContentId}" style="tabButton"/>
-                      <container style="responsetext">
-                        <label text="${rsp.description}" style="responsetext" />
-                      </container>
-          </container>    
-        </widgets>
-    </section>
-  </screen>
+    <screen name="WorkEffortTreeLine">
+        <section>
+            <actions>
+                <set field="workEffortId" from-field="workEffortIdFrom" default-value="${workEffort.workEffortId}" />
+                <script location="component://common/webcommon/scripts/hex_encode_done_page.bsh"/>
+                <!-- <entity-one entity-name="WorkEffort" value-name="workEffort"/>-->
+            </actions>
+            <widgets>
+                <label text="${workEffort.workEffortName}[${workEffort.workEffortId}]" />
+                <link target="/EditWorkEffortAndAssoc?workEffortIdFrom=${workEffortAssoc.workEffortIdFrom}&amp;workEffortIdTo=${workEffortAssoc.workEffortIdTo}&amp;workEffortAssocTypeId=${workEffortAssoc.workEffortAssocTypeId}&amp;fromDate=${workEffortAssoc.fromDate}&amp;DONE_PAGE=${donePage}" text="[Edit]" style="linktext"></link>
+                <link target="/AddWorkEffortAndAssoc?workEffortIdTo=${workEffort.workEffortId}" text="[Add Child]" style="linktext"></link>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="WorkEffortTreeLineForm">
+        <section>
+            <actions>
+                <set field="listIt[]" from-field="workEffort" type="Object" />
+            </actions>
+            <widgets>
+                <include-form name="WorkEffortTreeLine"  location="component://workeffort/widget/WorkEffortForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
 </screens>
 

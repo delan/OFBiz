@@ -47,9 +47,10 @@
                 <platform-specific><html><html-template location="component://common/webcommon/includes/appbar.ftl"/></html></platform-specific>
                 
                 <container style="centerarea">
-                    <!-- render appheader -->
+                    <!-- render appheader
                     <platform-specific><html><html-template location="component://workeffort/webapp/workeffort/includes/header.ftl"/></html></platform-specific>
-                    
+                     -->
+                    <include-menu name="WorkEffortAppBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>                    
                     <container style="contentarea">
                         <container style="column-main">
                             <!-- render messages -->
