@@ -134,6 +134,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupPartyName"/>
     </request-map>
+    <request-map uri="LookupWorkEffort">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupWorkEffort"/>
+    </request-map>
 
     <request-map uri="task">
     	<security https="true" auth="true"/>
@@ -509,7 +513,7 @@
         <security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffortAndAssoc"/>
         <response name="success" type="view" value="EditWorkEffortAndAssoc"/>
-        <response name="error" type="view" value="EditWorkEffortAndAssoc"/>
+        <response name="error" type="view" value="AddWorkEffortAndAssoc"/>
     </request-map>
     
     <request-map uri="updateWorkEffortAndAssoc">
@@ -532,6 +536,108 @@
         <response name="success" type="view" value="ListWorkEfforts"/>
         <response name="error" type="view" value="ListWorkEfforts"/>
     </request-map>
+    <request-map uri="EditWorkEffortPartyAssign">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortPartyAssign"/>
+    </request-map>
+    
+    <request-map uri="ListWorkEffortPartyAssigns">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEffortPartyAssigns"/>
+    </request-map>
+    
+    <request-map uri="createWorkEffortPartyAssign">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="assignPartyToWorkEffort"/>
+        <response name="success" type="view" value="EditWorkEffortPartyAssign"/>
+        <response name="error" type="view" value="EditWorkEffortPartyAssign"/>
+    </request-map>
+    
+    <request-map uri="updateWorkEffortPartyAssign">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyToWorkEffortAssignment"/>
+        <response name="success" type="view" value="EditWorkEffortPartyAssign"/>
+        <response name="error" type="view" value="EditWorkEffortPartyAssign"/>
+    </request-map>
+    
+    <!--  WorkEffort CommunicationEvents requests -->
+    <request-map uri="ListWorkEffortCommEvents">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEffortCommEvents"/>
+    </request-map>
+    
+    <request-map uri="AddWorkEffortCommEvent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddWorkEffortCommEvent"/>
+    </request-map>
+    
+    <request-map uri="EditWorkEffortCommEvent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortCommEvent"/>
+    </request-map>
+    
+    <request-map uri="createWorkEffortCommEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortCommEvent"/>
+        <response name="success" type="view" value="EditWorkEffortCommEvent"/>
+        <response name="error" type="view" value="EditWorkEffortCommEvent"/>
+    </request-map>
+    <request-map uri="updateWorkEffortCommEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCommunicationEventWorkEffort"/>
+        <response name="success" type="view" value="EditWorkEffortCommEvent"/>
+        <response name="error" type="view" value="EditWorkEffortCommEvent"/>
+    </request-map>
+    
+    <request-map uri="deleteCommunicationEventWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCommunicationEventWorkEffort"/>
+        <response name="success" type="view" value="ListWorkEffortCommEvents"/>
+        <response name="error" type="view" value="ListWorkEffortCommEvents"/>
+    </request-map>
+    
+    <!--  WorkEffort CustRequest request mappings -->
+    <request-map uri="ListWorkEffortRequests">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEffortRequests"/>
+    </request-map>
+    
+    <request-map uri="AddWorkEffortRequest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddWorkEffortRequest"/>
+    </request-map>
+    
+    <request-map uri="EditWorkEffortRequest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortRequest"/>
+    </request-map>
+    
+    <request-map uri="createWorkEffortRequest">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortRequest"/>
+        <response name="success" type="view" value="EditWorkEffortRequest"/>
+        <response name="error" type="view" value="AddWorkEffortRequest"/>
+    </request-map>
+    <request-map uri="updateWorkEffortRequest">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCustRequest"/>
+        <response name="success" type="view" value="EditWorkEffortRequest"/>
+        <response name="error" type="view" value="EditWorkEffortRequest"/>
+    </request-map>
+    <request-map uri="deleteWorkEffortRequest">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteWorkEffortRequest"/>
+        <response name="success" type="view" value="ListWorkEffortRequests"/>
+        <response name="error" type="view" value="ListWorkEffortRequests"/>
+    </request-map>
+    
+    <request-map uri="deleteCommunicationEventWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCommunicationEventWorkEffort"/>
+        <response name="success" type="view" value="ListWorkEffortRequests"/>
+        <response name="error" type="view" value="ListWorkEffortRequests"/>
+    </request-map>
+    
     
     <!-- end of request mappings -->
 
@@ -546,6 +652,7 @@
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
+    <view-map name="LookupWorkEffort" page="component://workeffort/widget/LookupScreens.xml#LookupWorkEffort" type="screen"/>
 
     <view-map name="RequestList" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestList"/>
     
@@ -584,6 +691,15 @@
     <view-map name="ChildWorkEfforts" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ChildWorkEfforts"/>
     <view-map name="AddWorkEffortAndAssoc" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#AddWorkEffortAndAssoc"/>
     <view-map name="EditWorkEffortAndAssoc" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#EditWorkEffortAndAssoc"/>
+    <view-map name="EditWorkEffortPartyAssign" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#EditWorkEffortPartyAssign"/>
+    <view-map name="ListWorkEffortPartyAssigns" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEffortPartyAssigns"/>
+    <view-map name="AddWorkEffortCommEvent" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#AddWorkEffortCommEvent"/>
+    <view-map name="EditWorkEffortCommEvent" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#EditWorkEffortCommEvent"/>
+    <view-map name="ListWorkEffortCommEvents" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEffortCommEvents"/>
+
+    <view-map name="AddWorkEffortRequest" type="screen" page="component://workeffort/widget/WorkEffortRequestScreens.xml#AddWorkEffortRequest"/>
+    <view-map name="EditWorkEffortRequest" type="screen" page="component://workeffort/widget/WorkEffortRequestScreens.xml#EditWorkEffortRequest"/>
+    <view-map name="ListWorkEffortRequests" type="screen" page="component://workeffort/widget/WorkEffortRequestScreens.xml#ListWorkEffortRequests"/>
     
     <!-- end of view mappings -->
 </site-conf>

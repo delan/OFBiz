@@ -157,6 +157,35 @@
         </if-empty>
     </simple-method>
 
+    <simple-method method-name="updateCommunicationEventWorkEffort" short-description="Delete a CommunicationEventWorkEff">
+        <check-permission permission="WORKEFFORTMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this work effort."/></check-permission>
+        <check-errors/>
+        <!-- Find old value -->
+        <make-value entity-name="CommunicationEventWorkEff" value-name="communicationEventWorkEff"/>
+        <set-pk-fields value-name="communicationEventWorkEff" map-name="parameters"/>
+        <find-by-primary-key entity-name="CommunicationEventWorkEff" map-name="communicationEventWorkEff" value-name="communicationEventWorkEff"/>
+        <if-empty field-name="communicationEventWorkEff">
+            <add-error><fail-message message="ERROR: Cannot delete specified contact info because it does not correspond to the specified work effort"/></add-error>
+        </if-empty>
+        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="communicationEventWorkEff"/>
+        <store-value value-name="communicationEventWorkEff"/>  
+    </simple-method>
+     
+    <simple-method method-name="deleteCommunicationEventWorkEffort" short-description="Delete a CommunicationEventWorkEff">
+        <check-permission permission="WORKEFFORTMGR" action="_DELETE"><fail-message message="You do not have permission to perform this operation for this work effort."/></check-permission>
+        <check-errors/>
+        <!-- Find old value -->
+        <make-value entity-name="CommunicationEventWorkEff" value-name="communicationEventWorkEff"/>
+        <set-pk-fields value-name="communicationEventWorkEff" map-name="parameters"/>
+        <find-by-primary-key entity-name="CommunicationEventWorkEff" map-name="communicationEventWorkEff" value-name="communicationEventWorkEff"/>
+        <if-empty field-name="communicationEventWorkEff">
+            <add-error><fail-message message="ERROR: Cannot delete specified contact info because it does not correspond to the specified work effort"/></add-error>
+        </if-empty>
+        <check-errors/>
+        <remove-value value-name="communicationEventWorkEff"/>          
+    </simple-method>
+     
     <!-- WorkEffortPartyAssignment -->    
     <simple-method method-name="assignPartyToWorkEffort" short-description="Assign Party to Work Effort">
         <now-timestamp-to-env env-name="nowTimestamp"/>
@@ -517,6 +546,10 @@
                 <calculate field-name="sequenceNum" map-name="newEntity" type="Long"><number value="0"/></calculate>
             </if-empty>        
             <create-value value-name="newEntity"/>
+            <field-to-result field-name="workEffortIdTo" map-name="newEntity"/>
+            <field-to-result field-name="workEffortIdFrom" map-name="newEntity"/>
+            <field-to-result field-name="workEffortAssocTypeId" map-name="newEntity"/>
+            <field-to-result field-name="fromDate" map-name="newEntity"/>
         </else>
         </if-not-empty>
     </simple-method>
@@ -593,7 +626,7 @@
         <if-empty field-name="workEffortId" map-name="parameters">
             <add-error><fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortIdEmpty"/></add-error>
             <check-errors/>
-        </if-empty>
+       </if-empty>
         <if-empty field-name="workEffortIdTo" map-name="parameters">
             <field-to-result field-name="workEffortId" map-name="parameters" result-name="workEffortIdTo" />
             <else>
@@ -603,4 +636,32 @@
             </else>
         </if-empty>
     </simple-method>
+    <!-- CustRequest workeffort -->
+    <simple-method method-name="createWorkEffortRequest" short-description="Create a CustRequestWorkEffort">
+        <make-value entity-name="CustRequestWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="CustRequestWorkEffort" map-name="lookupMap" value-name="custRequestWorkEffort"/>
+        <if-not-empty field-name="custRequestId" map-name="custRequestWorkEffort">
+            <add-error><fail-message message="ERROR: CustRequestWorkEffort [${parameters.custRequestId}][${parameters.workEffortId}] already exists."/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <if-empty field-name="custRequestId" map-name="custRequestWorkEffort">
+            <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
+            <create-value value-name="lookupMap"/>
+            <field-to-result field-name="custRequestId" map-name="lookupMap"/>
+        </if-empty>
+    </simple-method>
+    <simple-method method-name="deleteWorkEffortRequest" short-description="Delete a CustRequestWorkEffort">
+        <make-value entity-name="CustRequestWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="CustRequestWorkEffort" map-name="lookupMap" value-name="custRequestWorkEffort"/>
+        <if-not-empty field-name="custRequestId" map-name="custRequestWorkEffort">
+            <add-error><fail-message message="ERROR: CustRequestWorkEffort [${parameters.custRequestId}][${parameters.workEffortId}] does not exist."/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <if-empty field-name="custRequestId" map-name="custRequestWorkEffort">
+            <remove-value value-name="lookupMap"/>
+        </if-empty>
+    </simple-method>
+
 </simple-methods>
