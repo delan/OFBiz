@@ -379,8 +379,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.limit-range">
-        <xs:attribute type="xs:string" name="start" use="required"/>
-        <xs:attribute type="xs:string" name="size" use="required"/>
+        <xs:attribute name="start" type="xs:string" use="required"><xs:annotation><xs:documentation>Should resolve into a non-negative integer.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="size" type="xs:string" use="required"><xs:annotation><xs:documentation>Should resolve into a non-negative integer.</xs:documentation></xs:annotation></xs:attribute>
     </xs:attributeGroup>
     <xs:element name="limit-view">
         <xs:complexType>
@@ -388,8 +388,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.limit-view">
-        <xs:attribute type="xs:string" name="view-index" use="required"/>
-        <xs:attribute type="xs:string" name="view-size" use="required"/>
+        <xs:attribute name="view-index" type="xs:string" use="required"><xs:annotation><xs:documentation>Should resolve into a non-negative integer.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="view-size" type="xs:string" use="required"><xs:annotation><xs:documentation>Should resolve into a positive integer.</xs:documentation></xs:annotation></xs:attribute>
     </xs:attributeGroup>
     <xs:element name="use-iterator">
         <xs:complexType/>
