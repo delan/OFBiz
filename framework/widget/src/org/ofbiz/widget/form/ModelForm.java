@@ -228,6 +228,14 @@ public class ModelForm {
                 this.targetWindowExdr = parent.targetWindowExdr;
                 this.hideHeader = parent.hideHeader;
                 
+                // TODO: amb, 2005-09-08
+                //This code should be removed because the parent child list could be 
+                // used by multiple forms and there is no point in setting the
+                // modelFields to any particular parent form
+                // This code is duplicated now in renderFormString, but I am
+                // not sure that a modelForm value isn't needed before then,
+                // so I hesitate to remove this code.
+                
                 // Update the parent's fields with this form
                 Iterator fieldListIter = this.fieldList.iterator();
                 while (fieldListIter.hasNext()) {
@@ -582,7 +590,11 @@ public class ModelForm {
             if (curPos > positions) {
                 positions = curPos;
             }
-        }
+            // This a hack made necessary because if two forms extend from the same
+            // extended resource, they use the same field list which has the 
+            // modelForm var set to the last one.
+            modelFormField.setModelForm(this);
+       }
 
         if ("single".equals(this.type)) {
             this.renderSingleFormString(buffer, context, formStringRenderer, positions);
