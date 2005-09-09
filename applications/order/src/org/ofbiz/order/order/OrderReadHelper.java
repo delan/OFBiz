@@ -1886,7 +1886,7 @@ public class OrderReadHelper {
     }
 
     public static List getOrderItemStatuses(GenericValue orderItem, List orderStatuses) {
-        return EntityUtil.filterByAnd(orderStatuses, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
+        return EntityUtil.orderBy(EntityUtil.filterByAnd(orderStatuses, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId"))), UtilMisc.toList("-statusDatetime"));
     }
 
 
