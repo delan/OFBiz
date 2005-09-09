@@ -8,19 +8,19 @@
           <td>&nbsp;&nbsp;</td>
             <td nowrap>
                 <div class="tabletext">
-				<input type="checkbox" name="viewall" value="Y" <#if viewall?exists>CHECKED</#if> />All
-				<input type="checkbox" name="viewcreated" value="Y" <#if viewcreated?exists>CHECKED</#if> />Created
-				<input type="checkbox" name="viewprocessing" value="Y" <#if viewprocessing?exists>CHECKED</#if> />Processing
-				<input type="checkbox" name="viewapproved" value="Y" <#if viewapproved?exists>CHECKED</#if> />Approved
-				<input type="checkbox" name="viewcompleted" value="Y" <#if viewcompleted?exists>CHECKED</#if> />Completed
-				<input type="checkbox" name="viewsent" value="Y" <#if viewsent?exists>CHECKED</#if> />Sent
-				<input type="checkbox" name="viewrejected" value="Y" <#if viewrejected?exists>CHECKED</#if> />Rejected
-				<input type="checkbox" name="viewcancelled" value="Y" <#if viewcancelled?exists>CHECKED</#if> />Cancelled
+				<input type="checkbox" name="viewall" value="Y" <#if viewall?exists>CHECKED</#if> />${uiLabelMap.CommonAll}
+				<input type="checkbox" name="viewcreated" value="Y" <#if viewcreated?exists>CHECKED</#if> />${uiLabelMap.CommonCreated}
+				<input type="checkbox" name="viewprocessing" value="Y" <#if viewprocessing?exists>CHECKED</#if> />${uiLabelMap.CommonProcessing}
+				<input type="checkbox" name="viewapproved" value="Y" <#if viewapproved?exists>CHECKED</#if> />${uiLabelMap.CommonApproved}
+				<input type="checkbox" name="viewcompleted" value="Y" <#if viewcompleted?exists>CHECKED</#if> />${uiLabelMap.CommonCompleted}
+				<input type="checkbox" name="viewsent" value="Y" <#if viewsent?exists>CHECKED</#if> />${uiLabelMap.CommonSent}
+				<input type="checkbox" name="viewrejected" value="Y" <#if viewrejected?exists>CHECKED</#if> />${uiLabelMap.CommonRejected}
+				<input type="checkbox" name="viewcancelled" value="Y" <#if viewcancelled?exists>CHECKED</#if> />${uiLabelMap.CommonCancelled}
                 </div>
 			      </td>            
             <td rowspan="2">&nbsp;&nbsp;</td>
             <td rowspan="2">
-              <a href="javascript:document.findorder.submit()" class="buttontext"><nobr>[Submit]</nobr></a><br/>
+              <a href="javascript:document.findorder.submit()" class="buttontext"><nobr>${uiLabelMap.CommonSubmit}</nobr></a><br/>
             </td>
           </tr>
           <tr>
@@ -47,7 +47,7 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align='left'><div class="boxhead">${uiLabelMap.OrderList}</div></td>
+          <td align='left'><div class="boxhead">${uiLabelMap.OrderOrderList}</div></td>
         </tr>
       </table>      
     </td>
@@ -78,7 +78,7 @@
                   <div class="tabletext"><b>${uiLabelMap.CommonAmount}</b></div>
                 </td>
                 <td width="10%">
-                  <div class="tabletext"><b>Tracking Code</b></div>
+                  <div class="tabletext"><b>${uiLabelMap.OrderTrackingCode}</b></div>
                 </td>
                 <td width="15%">
                   <div class="tabletext"><b>${uiLabelMap.CommonStatus}</b></div>
