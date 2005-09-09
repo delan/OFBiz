@@ -662,16 +662,16 @@ public class ModelForm {
                 while (iter.hasNext()) {
                     Object obj = iter.next(); 
                     if (obj instanceof ModelForm.Banner) {
-                        ((ModelForm.Banner)obj).renderString(buffer, context, formStringRenderer);   
+                        ((ModelForm.Banner) obj).renderString(buffer, context, formStringRenderer);   
                     } else {
                         // no need to open and close an empty table, so skip that call
-                        formStringRenderer.renderFieldGroupOpen(buffer, context, (FieldGroup)obj);
-                        formStringRenderer.renderFieldGroupClose(buffer, context, (FieldGroup)obj);
+                        formStringRenderer.renderFieldGroupOpen(buffer, context, (FieldGroup) obj);
+                        formStringRenderer.renderFieldGroupClose(buffer, context, (FieldGroup) obj);
                     }
                 }
                 if (currentFieldGroup != null && (lastFieldGroup == null || !lastFieldGroupName.equals(currentFieldGroupName))) {
-                        currentFieldGroup.renderStartString(buffer, context, formStringRenderer);
-                        lastFieldGroup = currentFieldGroup;
+                    currentFieldGroup.renderStartString(buffer, context, formStringRenderer);
+                    lastFieldGroup = currentFieldGroup;
                 }
             } else {
                 if (fieldIter.hasNext()) {
@@ -693,7 +693,7 @@ public class ModelForm {
                 }
                 currentFieldGroup = null;
                 if (currentFormField != null) {
-                    currentFieldGroup = (FieldGroup)fieldGroupMap.get(currentFormField.getFieldName()); 
+                    currentFieldGroup = (FieldGroup) fieldGroupMap.get(currentFormField.getName()); 
                 }
                 if (currentFieldGroup == null) {
                     currentFieldGroup = defaultFieldGroup;
@@ -710,11 +710,11 @@ public class ModelForm {
                         while (iter.hasNext()) {
                             Object obj = iter.next(); 
                             if (obj instanceof ModelForm.Banner) {
-                                ((ModelForm.Banner)obj).renderString(buffer, context, formStringRenderer);   
+                                ((ModelForm.Banner) obj).renderString(buffer, context, formStringRenderer);   
                             } else {
                                 // no need to open and close an empty table, so skip that call
-                                formStringRenderer.renderFieldGroupOpen(buffer, context, (FieldGroup)obj);
-                                formStringRenderer.renderFieldGroupClose(buffer, context, (FieldGroup)obj);
+                                formStringRenderer.renderFieldGroupOpen(buffer, context, (FieldGroup) obj);
+                                formStringRenderer.renderFieldGroupClose(buffer, context, (FieldGroup) obj);
                             }
                         }
                     }
@@ -724,7 +724,6 @@ public class ModelForm {
                         currentFieldGroup.renderStartString(buffer, context, formStringRenderer);
                         lastFieldGroup = currentFieldGroup;
                 }
-            
             }
 
             ModelFormField.FieldInfo fieldInfo = currentFormField.getFieldInfo();
