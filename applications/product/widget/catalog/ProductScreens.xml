@@ -35,7 +35,7 @@
                 <entity-one entity-name="Product" value-name="product"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for CATALOG, _VIEW permission -->
@@ -758,7 +758,7 @@
                 <set field="leftbarScreenName" value="leftbar"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="CreateVirtualWithVariantsFormInclude"/>
                     </decorator-section>
