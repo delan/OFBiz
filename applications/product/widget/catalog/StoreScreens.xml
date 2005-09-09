@@ -25,49 +25,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="CommonProductStoreDecorator">
-        <section>
-            <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="MainColumnStyle" value="leftonly"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://product/widget/catalog/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field-name="productStoreId"/></not></condition>
-                                    <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://product/webapp/catalog/store/ProductStoreTabBar.ftl"/></html>
-                                        </platform-specific>
-                    
-                                        <container>
-                                            <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]  ${${extraFunctionName}}</label>
-                                        </container>
-                                        <container>
-                                            <link target="EditProductStore" text="[${uiLabelMap.ProductNewProductStore}]" style="buttontext"/>
-                                        </container>
-                                    </widgets>
-                                </section>
-            
-                                <!-- add Create Product and View Product (in ecommerce) links -->
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>                    
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
 
     <screen name="FindProductStore">
        <section>
@@ -81,7 +38,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/FindProductStore.ftl"/></html>
@@ -104,7 +61,7 @@
                 <entity-one entity-name="ProductStore" value-name="productStore" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditProductStore" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
                     </decorator-section>
@@ -126,7 +83,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/EditProductStoreRoles.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/EditProductStoreRoles.ftl"/></html>
@@ -150,7 +107,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/EditProductStorePromos.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/EditProductStorePromos.ftl"/></html>
@@ -178,7 +135,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="UpdateProductStoreCatalog" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
                         <include-form name="CreateProductStoreCatalog" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
@@ -208,7 +165,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/EditProductStoreWebSites.ftl"/></html>
@@ -237,7 +194,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/EditProductStoreTaxSetup.ftl"/></html>
@@ -262,7 +219,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/EditProductStoreShipSetup.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/EditProductStoreShipSetup.ftl"/></html>
@@ -286,7 +243,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/EditProductStorePaySetup.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/EditProductStorePaySetup.ftl"/></html>
@@ -313,7 +270,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="updateProductStoreEmail" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
                         <include-form name="createProductStoreEmail" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
@@ -336,7 +293,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/EditProductStoreSurveys.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/store/EditProductStoreSurveys.ftl"/></html>
@@ -362,7 +319,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="UpdateproductStorekeywordOvrdForm" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
                         <include-form name="CreateproductStorekeywordOvrdForm" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
@@ -386,7 +343,7 @@
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductStoreDecorator">
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <link target="/marketing/control/viewSegmentGroup?productStoreId=${productStoreId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}" text="[${uiLabelMap.ProductNewSegment}]" style="buttontext" url-mode="inter-app"/>
