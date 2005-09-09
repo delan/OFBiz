@@ -197,8 +197,8 @@
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
-                <set field="communicationEvent" from-field="parameters.communicationEventId"/>
-                <entity-one entity-name="CommunicationEvent"/>
+                <set field="communicationEventId" from-field="parameters.communicationEventId"/>
+                <entity-one entity-name="CommunicationEvent" value-name="communicationEvent"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
@@ -220,12 +220,12 @@
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
-                <set field="entityName" value="ContactListCommEvent"/>
+                <set field="entityName" value="CommunicationEvent"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleListContactList} for contactListId=${contactListId}</label></container>
                         <container><link  text="${uiLabelMap.ContactListCommEventCreate}" target="/EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="ListContactListCommEvents" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>

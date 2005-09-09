@@ -164,7 +164,7 @@
         </field>
     </form>
 
-    <form name="EditContactListCommEvent" default-map-name="contactListCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="updateContactListCommEvent" title="" type="single">
+    <form name="EditContactListCommEvent" default-map-name="communicationEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="updateContactListCommEvent" title="" type="single">
         <alt-target target="createContactListCommEvent" use-when="communicationEvent==null"/>
         <field name="communicationEventId" use-when="communicationEvent!=null"><display/></field>
         <field name="communicationEventTypeId">
@@ -224,12 +224,14 @@
             </drop-down>
         </field>
         
+        <!-- 
         <field name="custRequestId">
             <lookup size="20" target-form-name="/ordermgr/control/LookupCustRequest">
                 <sub-hyperlink target="/ordermgr/control/EditRequest?custRequestId=${communicationEvent.custRequestId}" target-type="inter-app" link-style="buttontext"
                     description="[Edit]" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;custRequestId&quot;)!= null"/>
             </lookup>
         </field>
+        -->
         <field name="contactListId">
             <lookup size="20" target-form-name="LookupContactList"/>
         </field>
@@ -241,8 +243,8 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/>        </field>
         <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
-    <form name="FindContactListCommEvents" default-map-name="contactListCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="ListContactListCommEvents" title="" type="single">
-        <field name="contactListId"><hidden/></field>
+    <form name="FindContactListCommEvents"  default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="ListContactListCommEvents" title="" type="single">
+        <field name="contactListId"><text/></field>
         <field name="commEventId"><lookup target-form-name="LookupCommEvent"/></field>
         <field name="fromDate"><date-find/></field>
         <field name="thruDate"><date-find/></field>
@@ -250,7 +252,7 @@
             <submit button-type="text-link"/>
         </field>
     </form>
-    <form name="ListContactListCommEvents" default-map-name="contactListCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
+    <form name="ListContactListCommEvents" list-iterator-name="listIt" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
         <actions>
             <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="requestParameters" field-name="inputFields"/>
