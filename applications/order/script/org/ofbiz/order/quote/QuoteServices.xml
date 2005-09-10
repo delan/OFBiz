@@ -363,7 +363,8 @@
         <if-empty field-name="newQuote.statusId">
             <string-to-field string="QUO_CREATED" field-name="newQuote.statusId"/>
         </if-empty>
-        
+        <string-to-field string="PROPOSAL" field-name="newQuote.quoteTypeId"/>
+
         <!-- create a non existing ID -->
         <sequenced-id-to-env sequence-name="Quote" env-name="quoteId"/>
         <make-next-seq-id value-name="newQuoteItem" seq-field-name="quoteItemSeqId"/>
