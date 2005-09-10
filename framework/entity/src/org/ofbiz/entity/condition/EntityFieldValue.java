@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
-import org.ofbiz.entity.GenericEntity.NullGenericEntity;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
@@ -84,7 +84,7 @@ public class EntityFieldValue extends EntityConditionValue {
         if (map == null) {
             return null;
         }
-        if (map instanceof NullGenericEntity) {
+        if (map instanceof GenericEntity.NULL) {
             return null;
         } else {
             return map.get(fieldName);
