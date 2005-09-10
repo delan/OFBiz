@@ -1069,7 +1069,6 @@
         <key-map field-name="workEffortTypeId"/>
       </relation>
     </entity>
-    
     <view-entity entity-name="WorkEffortAndGoods" package-name="org.ofbiz.workeffort.workeffort" 
         title="WorkEffort and related WorkEffortGoodStandard">
       <description>WorkEffort and its WorkEffortGoodStandard</description>

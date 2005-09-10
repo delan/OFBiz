@@ -48,6 +48,7 @@
     <entity-group group="org.ofbiz" entity="OrderHeaderItemAndRoles" />    
     <entity-group group="org.ofbiz" entity="OrderHeaderNote" />
     <entity-group group="org.ofbiz" entity="OrderHeaderNoteView" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderWorkEffort" />
     <entity-group group="org.ofbiz" entity="OrderItem" />
     <entity-group group="org.ofbiz" entity="OrderItemAndShipGroupAssoc" />
     <entity-group group="org.ofbiz" entity="OrderItemAndShipGrpInvResAndItem" />
@@ -165,7 +166,8 @@
     <entity-group group="org.ofbiz" entity="ShoppingListItem" />
     <entity-group group="org.ofbiz" entity="ShoppingListItemSurvey" />
     <entity-group group="org.ofbiz" entity="ShoppingListType" />
-
+    <entity-group group="org.ofbiz" entity="ShoppingListWorkEffort" />
+    
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.tax -->
     <!-- ========================================================= -->
