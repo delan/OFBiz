@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-/**
- *  Title: Entity Generator Definitions for the General Data Model
- *  Description: None
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -26,7 +23,6 @@
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @version    $Rev$
- */
 -->
 
 <entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -353,6 +349,20 @@
       <relation type="one" fk-name="ORDER_HDRNT_NOTE" rel-entity-name="NoteData">
         <key-map field-name="noteId"/>
       </relation>
+    </entity>
+    <entity entity-name="OrderHeaderWorkEffort"
+            package-name="org.ofbiz.order.order"
+            title="OrderHeader WorkEffort Entity">
+        <field name="orderId" type="id-ne"></field>
+        <field name="workEffortId" type="id-ne"></field>
+        <prim-key field="orderId"/>
+        <prim-key field="workEffortId"/>
+        <relation type="one" fk-name="ORDERHDWE_OH" rel-entity-name="OrderHeader">
+            <key-map field-name="orderId"/>
+        </relation>
+        <relation type="one" fk-name="ORDERHDWE_WEFF" rel-entity-name="WorkEffort">
+            <key-map field-name="workEffortId"/>
+        </relation>
     </entity>
     <entity entity-name="OrderItem"
             package-name="org.ofbiz.order.order"
@@ -2163,7 +2173,21 @@
       <field name="description" type="description"></field>
       <prim-key field="shoppingListTypeId"/>
     </entity>
-
+    <entity entity-name="ShoppingListWorkEffort"
+        package-name="org.ofbiz.order.shoppinglist"
+        title="ShoppingList WorkEffort Entity">
+        <field name="shoppingListId" type="id-ne"></field>
+        <field name="workEffortId" type="id-ne"></field>
+        <prim-key field="shoppingListId"/>
+        <prim-key field="workEffortId"/>
+        <relation type="one" fk-name="SHLISTWE_SHLST" rel-entity-name="ShoppingList">
+            <key-map field-name="shoppingListId"/>
+        </relation>
+        <relation type="one" fk-name="SHLISTWE_WEFF" rel-entity-name="WorkEffort">
+            <key-map field-name="workEffortId"/>
+        </relation>
+    </entity>
+    
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.tax -->
     <!-- ========================================================= -->
