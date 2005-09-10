@@ -45,4 +45,8 @@
         <action service="createWorkEffort" mode="sync" />
         <action service="assignAssocWorkEffortId" mode="sync" />
     </eca>
+    <eca service="createCommunicationEventWorkEff" event="invoke">
+        <condition field-name="communicationEventId" operator="is-empty"/>
+        <action service="createCommunicationEvent" mode="sync" />
+    </eca>
 </service-eca>
