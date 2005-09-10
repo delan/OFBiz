@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-/**
- *  Title: Entity Generator Definitions for the General Data Model
- *  Description: None
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -26,7 +23,6 @@
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @version    $Rev$
- */
 -->
 
 <entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -36,7 +32,7 @@
   <!-- ========================================================= -->
     <title>Entity of an Open For Business Project Component</title>
     <description>None</description>
-    <copyright>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org</copyright>
+    <copyright>Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org</copyright>
     <author>None</author>
     <version>1.0</version>
 
@@ -383,60 +379,28 @@
     <view-entity entity-name="WorkEffortAndFulfillment"
             package-name="org.ofbiz.workeffort.workeffort"
             title="WorkEffort Requirement View Entity">
-      <member-entity entity-alias="REQ" entity-name="Requirement"/>
       <member-entity entity-alias="WEF" entity-name="WorkEffort"/>
       <member-entity entity-alias="WRF" entity-name="WorkRequirementFulfillment"/>
-      <alias entity-alias="WRF" name="requirementId"/>
-      <alias entity-alias="WRF" name="workEffortId"/>
-      <alias entity-alias="WEF" name="workEffortTypeId"/>
-      <alias entity-alias="WEF" name="workEffortParentId"/>
-      <alias entity-alias="WEF" name="workflowPackageId"/>
-      <alias entity-alias="WEF" name="workflowPackageVersion"/>
-      <alias entity-alias="WEF" name="workflowProcessId"/>
-      <alias entity-alias="WEF" name="workflowProcessVersion"/>
-      <alias entity-alias="WEF" name="workflowActivityId"/>
-      <alias entity-alias="WEF" name="currentStatusId"/>
-      <alias entity-alias="WEF" name="lastStatusUpdate"/>
-      <alias entity-alias="WEF" name="universalId"/>
-      <alias entity-alias="WEF" name="scopeEnumId"/>
-      <alias entity-alias="WEF" name="priority"/>
-      <alias entity-alias="WEF" name="workEffortName"/>
+      <member-entity entity-alias="REQ" entity-name="Requirement"/>
+      <alias-all entity-alias="WEF">
+        <exclude field="description"/>
+        <exclude field="fixedAssetId"/>
+        <exclude field="facilityId"/>
+      </alias-all>
+      <alias-all entity-alias="WRF"/>
+      <alias-all entity-alias="REQ">
+        <exclude field="facilityId"/>
+        <exclude field="fixedAssetId"/>
+        <exclude field="description"/>
+        <exclude field="createdDate"/>
+      </alias-all>
       <alias entity-alias="WEF" name="workEffortDescription" field="description"/>
-      <alias entity-alias="WEF" name="locationDesc"/>
-      <alias entity-alias="WEF" name="revisionNumber"/>
       <alias entity-alias="WEF" name="workEffortFixedAssetId" field="fixedAssetId"/>
       <alias entity-alias="WEF" name="workEffortFacilityId" field="facilityId"/>
-      <alias entity-alias="WEF" name="createdDate"/>
-      <alias entity-alias="WEF" name="createdByUserLogin"/>
-      <alias entity-alias="WEF" name="lastModifiedDate"/>
-      <alias entity-alias="WEF" name="lastModifiedByUserLogin"/>
-      <alias entity-alias="WEF" name="estimatedStartDate"/>
-      <alias entity-alias="WEF" name="estimatedCompletionDate"/>
-      <alias entity-alias="WEF" name="estimatedMilliSeconds"/>
-      <alias entity-alias="WEF" name="totalMilliSecondsAllowed"/>
-      <alias entity-alias="WEF" name="totalMoneyAllowed"/>
-      <alias entity-alias="WEF" name="moneyUomId"/>
-      <alias entity-alias="WEF" name="actualStartDate"/>
-      <alias entity-alias="WEF" name="actualCompletionDate"/>
-      <alias entity-alias="WEF" name="actualMilliSeconds"/>
-      <alias entity-alias="WEF" name="specialTerms"/>
-      <alias entity-alias="WEF" name="timeTransparency"/>
-      <alias entity-alias="WEF" name="infoUrl"/>
-      <alias entity-alias="WEF" name="recurrenceInfoId"/>
-      <alias entity-alias="WEF" name="runtimeDataId"/>
-      <alias entity-alias="WEF" name="noteId"/>
-      <alias entity-alias="WEF" name="serviceLoaderName"/>
-      <alias entity-alias="REQ" name="requirementTypeId"/>
       <alias entity-alias="REQ" name="requirementFacilityId" field="facilityId"/>
-      <alias entity-alias="REQ" name="deliverableId"/>
       <alias entity-alias="REQ" name="requirementFixedAssetId" field="fixedAssetId"/>
-      <alias entity-alias="REQ" name="productId"/>
       <alias entity-alias="REQ" name="requirementDescription" field="description"/>
       <alias entity-alias="REQ" name="requirementCreationDate" field="createdDate"/>
-      <alias entity-alias="REQ" name="requiredByDate"/>
-      <alias entity-alias="REQ" name="quantity"/>
-      <alias entity-alias="REQ" name="useCase"/>
-      <alias entity-alias="REQ" name="reason"/>
       <view-link entity-alias="WEF" rel-entity-alias="WRF">
         <key-map field-name="workEffortId"/>
       </view-link>
@@ -553,52 +517,11 @@
             title="Work Effort And Party Assignment Entity">
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
-      <alias entity-alias="WE" name="workEffortId"/>
-      <alias entity-alias="WE" name="workEffortTypeId"/>
-      <alias entity-alias="WE" name="workEffortPurposeTypeId"/>
-      <alias entity-alias="WE" name="workEffortParentId"/>
-      <alias entity-alias="WE" name="currentStatusId"/>
-      <alias entity-alias="WE" name="lastStatusUpdate"/>
-      <alias entity-alias="WE" name="universalId"/>
-      <alias entity-alias="WE" name="scopeEnumId"/>
-      <alias entity-alias="WE" name="priority"/>
-      <alias entity-alias="WE" name="workEffortName"/>
-      <alias entity-alias="WE" name="description"/>
-      <alias entity-alias="WE" name="locationDesc"/>
-      <alias entity-alias="WE" name="revisionNumber"/>
-      <alias entity-alias="WE" name="fixedAssetId"/>
-      <alias entity-alias="WE" name="facilityId"/>
-      <alias entity-alias="WE" name="createdDate"/>
-      <alias entity-alias="WE" name="createdByUserLogin"/>
-      <alias entity-alias="WE" name="lastModifiedDate"/>
-      <alias entity-alias="WE" name="lastModifiedByUserLogin"/>
-      <alias entity-alias="WE" name="estimatedStartDate"/>
-      <alias entity-alias="WE" name="estimatedCompletionDate"/>
-      <alias entity-alias="WE" name="estimatedMilliSeconds"/>
-      <alias entity-alias="WE" name="totalMilliSecondsAllowed"/>
-      <alias entity-alias="WE" name="totalMoneyAllowed"/>
-      <alias entity-alias="WE" name="moneyUomId"/>
-      <alias entity-alias="WE" name="actualStartDate"/>
-      <alias entity-alias="WE" name="actualCompletionDate"/>
-      <alias entity-alias="WE" name="actualMilliSeconds"/>
-      <alias entity-alias="WE" name="specialTerms"/>
-      <alias entity-alias="WE" name="timeTransparency"/>
-      <alias entity-alias="WE" name="infoUrl"/>
-      <alias entity-alias="WE" name="recurrenceInfoId"/>
-      <alias entity-alias="WE" name="runtimeDataId"/>
-      <alias entity-alias="WE" name="noteId"/>
-      <alias entity-alias="WE" name="serviceLoaderName"/>
-      <alias entity-alias="WE" name="sourceReferenceId"/>
-      <alias entity-alias="WEPA" name="partyId"/>
-      <alias entity-alias="WEPA" name="roleTypeId"/>
-      <alias entity-alias="WEPA" name="fromDate"/>
-      <alias entity-alias="WEPA" name="thruDate"/>
+      <alias-all entity-alias="WE"/>
+      <alias-all entity-alias="WEPA">
+        <exclude field="facilityId"/>
+      </alias-all>
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId"/>
-      <alias entity-alias="WEPA" name="statusId"/>
-      <alias entity-alias="WEPA" name="statusDateTime"/>
-      <alias entity-alias="WEPA" name="comments"/>
-      <alias entity-alias="WEPA" name="mustRsvp"/>
-      <alias entity-alias="WEPA" name="expectationEnumId"/>
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
@@ -931,48 +854,15 @@
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <member-entity entity-alias="PREL" entity-name="PartyRelationship"/>
-      <alias entity-alias="WE" name="workEffortId"/>
-      <alias entity-alias="WE" name="workEffortTypeId"/>
-      <alias entity-alias="WE" name="currentStatusId"/>
-      <alias entity-alias="WE" name="lastStatusUpdate"/>
-      <alias entity-alias="WE" name="universalId"/>
-      <alias entity-alias="WE" name="scopeEnumId"/>
-      <alias entity-alias="WE" name="priority"/>
-      <alias entity-alias="WE" name="workEffortName"/>
-      <alias entity-alias="WE" name="description"/>
-      <alias entity-alias="WE" name="locationDesc"/>
-      <alias entity-alias="WE" name="revisionNumber"/>
-      <alias entity-alias="WE" name="fixedAssetId"/>
-      <alias entity-alias="WE" name="facilityId"/>
-      <alias entity-alias="WE" name="createdDate"/>
-      <alias entity-alias="WE" name="createdByUserLogin"/>
-      <alias entity-alias="WE" name="lastModifiedDate"/>
-      <alias entity-alias="WE" name="lastModifiedByUserLogin"/>
-      <alias entity-alias="WE" name="estimatedStartDate"/>
-      <alias entity-alias="WE" name="estimatedCompletionDate"/>
-      <alias entity-alias="WE" name="estimatedMilliSeconds"/>
-      <alias entity-alias="WE" name="totalMilliSecondsAllowed"/>
-      <alias entity-alias="WE" name="totalMoneyAllowed"/>
-      <alias entity-alias="WE" name="moneyUomId"/>
-      <alias entity-alias="WE" name="actualStartDate"/>
-      <alias entity-alias="WE" name="actualCompletionDate"/>
-      <alias entity-alias="WE" name="actualMilliSeconds"/>
-      <alias entity-alias="WE" name="specialTerms"/>
-      <alias entity-alias="WE" name="timeTransparency"/>
-      <alias entity-alias="WE" name="infoUrl"/>
-      <alias entity-alias="WE" name="recurrenceInfoId"/>
-      <alias entity-alias="WE" name="runtimeDataId"/>
-      <alias entity-alias="WE" name="noteId"/>
-      <alias entity-alias="WE" name="serviceLoaderName"/>
-      <alias entity-alias="WEPA" name="roleTypeId"/>
-      <alias entity-alias="WEPA" name="fromDate"/>
-      <alias entity-alias="WEPA" name="thruDate"/>
+      <alias-all entity-alias="WE"/>
+      <alias-all entity-alias="WEPA">
+        <exclude field="facilityId"/>
+      </alias-all>
+      <alias-all entity-alias="PREL">
+        <exclude field="partyIdTo"/>
+        <exclude field="partyIdFrom"/>
+      </alias-all>
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId"/>
-      <alias entity-alias="WEPA" name="statusId"/>
-      <alias entity-alias="WEPA" name="statusDateTime"/>
-      <alias entity-alias="WEPA" name="comments"/>
-      <alias entity-alias="WEPA" name="mustRsvp"/>
-      <alias entity-alias="WEPA" name="expectationEnumId"/>
       <alias entity-alias="PREL" name="partyId" field="partyIdTo"/>
       <alias entity-alias="PREL" name="groupPartyId" field="partyIdFrom"/>
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
@@ -1008,53 +898,17 @@
             package-name="org.ofbiz.workeffort.workeffort"
             title="Work Effort And Party Assignment By Role Entity">
       <description>Also includes PartyRole Link so that if a partyId is specified it will find all PartyAssignments for all roles a party is in; does not link on the partyId of the PartyAssignment</description>
-      <member-entity entity-alias="PR" entity-name="PartyRole"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
-      <alias entity-alias="WE" name="workEffortId"/>
-      <alias entity-alias="WE" name="workEffortTypeId"/>
-      <alias entity-alias="WE" name="currentStatusId"/>
-      <alias entity-alias="WE" name="lastStatusUpdate"/>
-      <alias entity-alias="WE" name="universalId"/>
-      <alias entity-alias="WE" name="scopeEnumId"/>
-      <alias entity-alias="WE" name="priority"/>
-      <alias entity-alias="WE" name="workEffortName"/>
-      <alias entity-alias="WE" name="description"/>
-      <alias entity-alias="WE" name="locationDesc"/>
-      <alias entity-alias="WE" name="revisionNumber"/>
-      <alias entity-alias="WE" name="fixedAssetId"/>
-      <alias entity-alias="WE" name="facilityId"/>
-      <alias entity-alias="WE" name="createdDate"/>
-      <alias entity-alias="WE" name="createdByUserLogin"/>
-      <alias entity-alias="WE" name="lastModifiedDate"/>
-      <alias entity-alias="WE" name="lastModifiedByUserLogin"/>
-      <alias entity-alias="WE" name="estimatedStartDate"/>
-      <alias entity-alias="WE" name="estimatedCompletionDate"/>
-      <alias entity-alias="WE" name="estimatedMilliSeconds"/>
-      <alias entity-alias="WE" name="totalMilliSecondsAllowed"/>
-      <alias entity-alias="WE" name="totalMoneyAllowed"/>
-      <alias entity-alias="WE" name="moneyUomId"/>
-      <alias entity-alias="WE" name="actualStartDate"/>
-      <alias entity-alias="WE" name="actualCompletionDate"/>
-      <alias entity-alias="WE" name="actualMilliSeconds"/>
-      <alias entity-alias="WE" name="specialTerms"/>
-      <alias entity-alias="WE" name="timeTransparency"/>
-      <alias entity-alias="WE" name="infoUrl"/>
-      <alias entity-alias="WE" name="recurrenceInfoId"/>
-      <alias entity-alias="WE" name="runtimeDataId"/>
-      <alias entity-alias="WE" name="noteId"/>
-      <alias entity-alias="WE" name="serviceLoaderName"/>
+      <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <alias-all entity-alias="WE"/>
+      <alias-all entity-alias="WEPA">
+        <exclude field="partyId"/>
+        <exclude field="facilityId"/>
+      </alias-all>
+      <alias-all entity-alias="PR"/>
       <alias entity-alias="WEPA" name="wepaPartyId" field="partyId"/>
-      <alias entity-alias="WEPA" name="fromDate"/>
-      <alias entity-alias="WEPA" name="thruDate"/>
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId"/>
-      <alias entity-alias="WEPA" name="statusId"/>
-      <alias entity-alias="WEPA" name="statusDateTime"/>
-      <alias entity-alias="WEPA" name="comments"/>
-      <alias entity-alias="WEPA" name="mustRsvp"/>
-      <alias entity-alias="WEPA" name="expectationEnumId"/>
-      <alias entity-alias="PR" name="partyId"/>
-      <alias entity-alias="PR" name="roleTypeId"/>
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
@@ -1251,6 +1105,4 @@
         <key-map field-name="inventoryItemId"></key-map>
       </view-link>
     </view-entity>
-
 </entitymodel>
-
