@@ -935,6 +935,11 @@
         <event type="service" path="" invoke="updateQuote"/>
         <response name="success" type="view" value="EditQuote"/>
     </request-map>
+    <request-map uri="copyQuote">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="copyQuote"/>
+        <response name="success" type="view" value="EditQuote"/>
+    </request-map>
     <request-map uri="createQuoteRole">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createQuoteRole"/>
