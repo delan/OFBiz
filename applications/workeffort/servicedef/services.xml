@@ -274,12 +274,21 @@
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffortAssoc"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffortAssoc"/>
     </service>
-    <service name="createWorkEffortCommEvent" engine="group" location="createWorkEffortCommEvent" invoke="" auth="true"  >
+    <service name="createCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="makeCommunicationEventWorkEffort" auth="true"  >
         <description>Creates a CommunicationEvent entity and CommunicationEventWorkEff</description>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="CommunicationEvent"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEvent"/>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="CommunicationEventWorkEff"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEventWorkEff"/>
+    </service>
+    <service name="updateCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateCommunicationEventWorkEff" auth="true"  >
+        <description>Updates CommunicationEventWorkEff</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="CommunicationEventWorkEff"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEventWorkEff"/>
+    </service>
+    <service name="deleteCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteCommunicationEventWorkEff" auth="true"  >
+        <description>Deletes CommunicationEventWorkEff</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="CommunicationEventWorkEff"/>
     </service>
     <service name="createWorkEffortRequest" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequest" auth="true"  >
         <description>Creates a CustRequestWorkEffort</description>

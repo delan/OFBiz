@@ -23,22 +23,24 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
   
     <form name="ListWorkEffortCommEvents" separate-columns="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-    default-widget-style="tabletext" target="ListWorkEffortCommEvents" title="" type="list" >
+    default-widget-style="tabletext" target="updateCommunicationEventWorkEff" title="" type="list" >
         <actions>
             <entity-condition entity-name="CommunicationEventWorkEff" >
-            <condition-list combine="and">
-                <condition-expr field-name="workEffortId" operator="equals" env-name="workEffortId"/>
-            </condition-list>
+                <condition-list combine="and">
+                    <condition-expr field-name="workEffortId" operator="equals" env-name="workEffortId"/>
+                </condition-list>
+                <order-by field-name="communicationEventId"/>
             </entity-condition>
         </actions>
         <field name="workEffortId">
-      <hyperlink also-hidden="false" description="[${workEffortId}]" target="EditWorkEffortCommEvent?workEffortId=${workEffortId}&amp;communicationEventId=${communicationEventId}"/>
+            <hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" link-style="linktext"/>
         </field>
         <field name="communicationEventId" title="${uiLabelMap.WorkEffortCommEventId}" widget-style="buttontext">
-        <hyperlink target="/party/control/EditCommunicationEvent?communicationEventId=${communicationEventId}" target-type="inter-app" description="${communicationEventId}"/>
+            <hyperlink target="/partymgr/control/EditCommunicationEvent?communicationEventId=${communicationEventId}" target-type="inter-app" description="${communicationEventId}"/>
         </field>
-        <field name="description" > <display/> </field>
-        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteCommunicationEventWorkEffort?workEffortId=${workEffortId}&amp;communicationEventId=${communicationEventId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]"/></field>
+        <field name="description" > <textarea rows="2" cols="30"/> </field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
+        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteCommunicationEventWorkEff?workEffortId=${workEffortId}&amp;communicationEventId=${communicationEventId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]" link-style="linktext"/></field>
     </form>
   
     <form name="AddWorkEffortCommEvent" default-map-name="communicationEvent" 
@@ -51,7 +53,8 @@
             <sort-field name="description"/>
         </sort-order>
         <field name="workEffortId" > <display/> </field>
-        <field name="description" map-name="communicationEventWorkEff"> <textarea/> </field>
+        <field name="description" > <textarea/> </field>
+        <field name="communicationEventId" ><ignored/></field>
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
     </form>
     <form name="EditWorkEffortCommEvent" default-map-name="communicationEvent" 

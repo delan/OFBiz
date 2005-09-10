@@ -155,9 +155,11 @@
             <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
             <create-value value-name="lookupMap"/>
         </if-empty>
+        <field-to-result field-name="workEffortId" map-name="lookupMap"/>
+        <field-to-result field-name="communicationEventId" map-name="lookupMap"/>
     </simple-method>
 
-    <simple-method method-name="updateCommunicationEventWorkEffort" short-description="Delete a CommunicationEventWorkEff">
+    <simple-method method-name="updateCommunicationEventWorkEff" short-description="Delete a CommunicationEventWorkEff">
         <check-permission permission="WORKEFFORTMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this work effort."/></check-permission>
         <check-errors/>
         <!-- Find old value -->
@@ -165,14 +167,14 @@
         <set-pk-fields value-name="communicationEventWorkEff" map-name="parameters"/>
         <find-by-primary-key entity-name="CommunicationEventWorkEff" map-name="communicationEventWorkEff" value-name="communicationEventWorkEff"/>
         <if-empty field-name="communicationEventWorkEff">
-            <add-error><fail-message message="ERROR: Cannot delete specified contact info because it does not correspond to the specified work effort"/></add-error>
+            <add-error><fail-message message="ERROR: Cannot update specified contact info because it does not correspond to the specified work effort"/></add-error>
         </if-empty>
         <check-errors/>
-        <set-nonpk-fields map-name="parameters" value-name="communicationEventWorkEff"/>
+        <set-nonpk-fields value-name="communicationEventWorkEff" map-name="parameters"/>
         <store-value value-name="communicationEventWorkEff"/>  
     </simple-method>
      
-    <simple-method method-name="deleteCommunicationEventWorkEffort" short-description="Delete a CommunicationEventWorkEff">
+    <simple-method method-name="deleteCommunicationEventWorkEff" short-description="Delete a CommunicationEventWorkEff">
         <check-permission permission="WORKEFFORTMGR" action="_DELETE"><fail-message message="You do not have permission to perform this operation for this work effort."/></check-permission>
         <check-errors/>
         <!-- Find old value -->
@@ -183,8 +185,9 @@
             <add-error><fail-message message="ERROR: Cannot delete specified contact info because it does not correspond to the specified work effort"/></add-error>
         </if-empty>
         <check-errors/>
-        <remove-value value-name="communicationEventWorkEff"/>          
+        <remove-value value-name="communicationEventWorkEff"/>  
     </simple-method>
+     
      
     <!-- WorkEffortPartyAssignment -->    
     <simple-method method-name="assignPartyToWorkEffort" short-description="Assign Party to Work Effort">

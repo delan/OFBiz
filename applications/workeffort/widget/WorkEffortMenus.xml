@@ -58,19 +58,19 @@
             <link target="/ListWorkEffortPartyAssigns?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortCommEvents" title="${uiLabelMap.WorkEffortCommEvent}">
-            <link target="/FindWorkEffortCommEvents?workEffortId=${workEffortId}"/>
+            <link target="/ListWorkEffortCommEvents?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortRequestItems" title="${uiLabelMap.WorkEffortRequestItems}">
-            <link target="/FindWorkEffortRequestItems?workEffortId=${workEffortId}"/>
+            <link target="/ListWorkEffortRequestItems?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortRequests" title="${uiLabelMap.WorkEffortRequests}">
             <link target="/ListWorkEffortRequests?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortQuoteItems" title="${uiLabelMap.WorkEffortQuoteItems}">
-            <link target="/FindWorkEffortQuoteItems?workEffortId=${workEffortId}"/>
+            <link target="/ListWorkEffortQuoteItems?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortQuotes" title="${uiLabelMap.WorkEffortQuotes}">
-            <link target="/FindWorkEffortQuotes?workEffortId=${workEffortId}"/>
+            <link target="/ListWorkEffortQuotes?workEffortId=${workEffortId}"/>
         </menu-item>
     </menu>
 </menus>
