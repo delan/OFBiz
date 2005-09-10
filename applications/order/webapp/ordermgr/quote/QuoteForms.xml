@@ -143,7 +143,7 @@
         </field>
         <field name="quoteId"><hidden/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeQuoteRole?partyId=${partyId}&amp;roleTypeId=${roleTypeId}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+            <hyperlink target="removeQuoteRole?partyId=${partyId}&amp;roleTypeId=${roleTypeId}&amp;quoteId=${quoteId}" description="${uiLabelMap.CommonRemove}" also-hidden="false"/>
         </field>
     </form>
     <form name="EditQuoteRole" type="single"
@@ -170,16 +170,14 @@
             list-name="quoteItems" target="" paginate-target="ListQuoteItems" title="" type="list">
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
         <field name="quoteId"><hidden/></field>
-        <!--
-        TODO: fix this!
-        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext" use-when="isPromo==null&#124;&#124;&quot;${isPromo}&quot;.equals(&quot;N&quot;)">
+        <field name="quoteItemSeqId"><hidden/></field>
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext" use-when="${bsh:isPromo==null}">
             <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
-        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" use-when="${isPromo}!=null&amp;&amp;&quot;${isPromo}&quot;.equals(&quot;Y&quot;)"/>
-        -->
-        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext">
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext" use-when="${bsh:isPromo!=null&amp;&amp;isPromo.equals(&quot;N&quot;)}">
             <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" use-when="${bsh:isPromo!=null&amp;&amp;isPromo.equals(&quot;Y&quot;)}"><display/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
@@ -197,9 +195,13 @@
             <hyperlink also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeQuoteItem?quoteItemSeqId=${quoteItemSeqId}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext" use-when="${bsh:isPromo==null}">
+            <hyperlink target="removeQuoteItem?quoteItemSeqId=${quoteItemSeqId}&amp;quoteId=${quoteId}" description="${uiLabelMap.CommonRemove}" also-hidden="false"/>
         </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext" use-when="${bsh:isPromo!=null&amp;&amp;isPromo.equals(&quot;N&quot;)}">
+            <hyperlink target="removeQuoteItem?quoteItemSeqId=${quoteItemSeqId}&amp;quoteId=${quoteId}" description="${uiLabelMap.CommonRemove}" also-hidden="false"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext" use-when="${bsh:isPromo!=null&amp;&amp;isPromo.equals(&quot;Y&quot;)}"><display/></field>
     </form>
     <form name="EditQuoteItem" type="single"
             target="updateQuoteItem" title="" default-map-name="quoteItem"
@@ -207,6 +209,7 @@
         <alt-target use-when="quoteItem==null" target="createQuoteItem"/>
         <auto-fields-entity entity-name="QuoteItem" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
+        <field name="isPromo"><hidden/></field>
         <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}"><display/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <lookup target-form-name="LookupProduct"/>
@@ -236,12 +239,14 @@
         <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}"></field>
         <field name="estimatedDeliveryDate" title="${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}"></field>
         <field name="comments" title="${uiLabelMap.CommonComments}"></field>
+        <!--
         <field name="isPromo" title="${uiLabelMap.OrderOrderIsPromo}">
             <drop-down allow-empty="true">
                 <option key="N" description="${uiLabelMap.CommonN}"/>
                 <option key="Y" description="${uiLabelMap.CommonY}"/>
             </drop-down>
         </field>
+         -->
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -255,7 +260,7 @@
         <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeQuoteAttribute?attrName=${attrName}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+            <hyperlink target="removeQuoteAttribute?attrName=${attrName}&amp;quoteId=${quoteId}" description="${uiLabelMap.CommonRemove}" also-hidden="false"/>
         </field>
     </form>
     <form name="EditQuoteAttribute" type="single"
@@ -279,7 +284,7 @@
         <field name="coeffValue" title="${uiLabelMap.OrderOrderQuoteCoeffValue}"></field>
         <field name="quoteId"><hidden/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeQuoteCoefficient?coeffName=${coeffName}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+            <hyperlink target="removeQuoteCoefficient?coeffName=${coeffName}&amp;quoteId=${quoteId}" description="${uiLabelMap.CommonRemove}" also-hidden="false"/>
         </field>
     </form>
     <form name="EditQuoteCoefficient" type="single"
@@ -322,11 +327,28 @@
             default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="quoteAdjustments"
             target="" paginate-target="ListQuoteAdjustments" title="" type="list">
         <auto-fields-entity entity-name="QuoteAdjustment" default-field-type="display"/>
-        <field name="quoteAdjustmentId" title="${uiLabelMap.OrderOrderQuoteAdjustmentId}" widget-style="buttontext">
+        <field name="quoteId"><hidden/></field>
+        <field name="quoteAdjustmentId"><hidden/></field>
+        <field name="comments"><hidden/></field>
+        <field name="primaryGeoId"><hidden/></field>
+        <field name="secondaryGeoId"><hidden/></field>
+        <field name="taxAuthGeoId"><hidden/></field>
+        <field name="taxAuthPartyId"><hidden/></field>
+        <field name="sourceReferenceId"><hidden/></field>
+        <field name="customerReferenceId"><hidden/></field>
+        <field name="overrideGlAccountId"><hidden/></field>
+        <field name="productFeatureId"><hidden/></field>
+        <field name="createdDate"><hidden/></field>
+        <field name="createdByUserLogin"><hidden/></field>
+        <field name="quoteAdjustmentId" title="${uiLabelMap.OrderOrderQuoteAdjustmentId}" widget-style="buttontext" use-when="${bsh:productPromoId==null}">
             <hyperlink also-hidden="false" description="${quoteAdjustmentId}" target="EditQuoteAdjustment?quoteId=${quoteId}&amp;quoteAdjustmentId=${quoteAdjustmentId}"/>
         </field>
+        <field name="quoteAdjustmentId" title="${uiLabelMap.OrderOrderQuoteAdjustmentId}" use-when="${bsh:productPromoId!=null}"><display/></field>
+        <field name="quoteAdjustmentTypeId" title="${uiLabelMap.OrderOrderQuoteAdjustmentType}">
+            <display-entity entity-name="OrderAdjustmentType" key-field-name="orderAdjustmentTypeId"/>
+        </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="removeQuoteAdjustment?quoteAdjustmentId=${quoteAdjustmentId}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+            <hyperlink target="removeQuoteAdjustment?quoteAdjustmentId=${quoteAdjustmentId}&amp;quoteId=${quoteId}" description="${uiLabelMap.CommonRemove}" also-hidden="false"/>
         </field>
     </form>
     <form name="EditQuoteAdjustment" type="single"
@@ -339,6 +361,18 @@
         <field name="productPromoRuleId"><hidden/></field>
         <field name="productPromoActionSeqId"><hidden/></field>
         <field name="quoteAdjustmentId"><display/></field>
+        <field name="comments"><hidden/></field>
+        <field name="primaryGeoId"><hidden/></field>
+        <field name="secondaryGeoId"><hidden/></field>
+        <field name="taxAuthGeoId"><hidden/></field>
+        <field name="taxAuthPartyId"><hidden/></field>
+        <field name="sourceReferenceId"><hidden/></field>
+        <field name="customerReferenceId"><hidden/></field>
+        <field name="overrideGlAccountId"><hidden/></field>
+        <field name="productFeatureId"><hidden/></field>
+        <field name="createdDate"><hidden/></field>
+        <field name="createdByUserLogin"><hidden/></field>
+
         <field name="quoteAdjustmentTypeId" title="${uiLabelMap.OrderOrderQuoteAdjustmentTypeId}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="OrderAdjustmentType" key-field-name="orderAdjustmentTypeId"/>

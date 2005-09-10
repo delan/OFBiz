@@ -260,6 +260,7 @@
         <field name="quoteItemSeqId"><display/></field>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestItemSeqId"><hidden/></field>
+        <field name="isPromo"><hidden/></field>
         <field name="productId">
             <lookup target-form-name="LookupProduct"/>
         </field>

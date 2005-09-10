@@ -101,7 +101,7 @@
                             <label style="head1">${uiLabelMap.OrderOrderQuotes}</label>
                         </container>
                         <container>
-                            <link target="EditQuote" text="[${uiLabelMap.OrderCreateOrderQuote}]" style="buttontext"/>
+                            <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="buttontext"/>
                         </container>
                         <include-form name="FindQuotes" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                         <include-form name="ListQuotes" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
@@ -125,10 +125,8 @@
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuote" text="[${uiLabelMap.OrderCreateOrderQuote}]" style="buttontext"/>
-                        </container>
-                        <container>
-                            <link target="loadCartFromQuote?quoteId=${quoteId}" text="[${uiLabelMap.OrderCreateOrder}]" style="buttontext"/>
+                            <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="buttontext"/>
+                            <link target="loadCartFromQuote?quoteId=${quoteId}" text="${uiLabelMap.OrderCreateOrder}" style="buttontext"/>
                         </container>
                         <include-form name="EditQuote" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                         <platform-specific>
@@ -157,7 +155,7 @@
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteRole?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteRole}]" style="buttontext"/>
+                            <link target="EditQuoteRole?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteRole}" style="buttontext"/>
                         </container>
                         <include-form name="ListQuoteRoles" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -183,7 +181,7 @@
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteRole?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteRole}]" style="buttontext"/>
+                            <link target="EditQuoteRole?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteRole}" style="buttontext"/>
                         </container>
                         <include-form name="EditQuoteRole" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -209,7 +207,7 @@
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteItem?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteItem}]" style="buttontext"/>
+                            <link target="EditQuoteItem?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteItem}" style="buttontext"/>
                         </container>
                         <include-form name="ListQuoteItems" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -235,7 +233,7 @@
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteItem?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteItem}]" style="buttontext"/>
+                            <link target="EditQuoteItem?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteItem}" style="buttontext"/>
                         </container>
                         <include-form name="EditQuoteItem" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -260,7 +258,7 @@
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteAttribute?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteAttribute}]" style="buttontext"/>
+                            <link target="EditQuoteAttribute?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteAttribute}" style="buttontext"/>
                         </container>
                         <include-form name="ListQuoteAttributes" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -286,7 +284,7 @@
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteAttribute?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteAttribute}]" style="buttontext"/>
+                            <link target="EditQuoteAttribute?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteAttribute}" style="buttontext"/>
                         </container>
                         <include-form name="EditQuoteAttribute" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -311,7 +309,7 @@
                 <decorator-screen name="CommonQuotePriceDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteCoefficient?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteCoefficient}]" style="buttontext"/>
+                            <link target="EditQuoteCoefficient?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteCoefficient}" style="buttontext"/>
                         </container>
                         <include-form name="ListQuoteCoefficients" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -337,7 +335,7 @@
                 <decorator-screen name="CommonQuotePriceDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteCoefficient?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteCoefficient}]" style="buttontext"/>
+                            <link target="EditQuoteCoefficient?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteCoefficient}" style="buttontext"/>
                         </container>
                         <include-form name="EditQuoteCoefficient" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -399,10 +397,8 @@
                 <decorator-screen name="CommonQuotePriceDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="autoCreateQuoteAdjustments?quoteId=${quoteId}" text="[${uiLabelMap.OrderAutoCreateQuoteAdjustments}]" style="buttontext"/>
-                        </container>
-                        <container>
-                            <link target="EditQuoteAdjustment?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteAdjustment}]" style="buttontext"/>
+                            <link target="autoCreateQuoteAdjustments?quoteId=${quoteId}" text="${uiLabelMap.OrderAutoCreateQuoteAdjustments}" style="buttontext"/>
+                            <link target="EditQuoteAdjustment?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteAdjustment}" style="buttontext"/>
                         </container>
                         <include-form name="ListQuoteAdjustments" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
@@ -428,7 +424,7 @@
                 <decorator-screen name="CommonQuotePriceDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuoteAdjustment?quoteId=${quote.quoteId}" text="[${uiLabelMap.OrderCreateOrderQuoteAdjustment}]" style="buttontext"/>
+                            <link target="EditQuoteAdjustment?quoteId=${quote.quoteId}" text="${uiLabelMap.OrderCreateOrderQuoteAdjustment}" style="buttontext"/>
                         </container>
                         <include-form name="EditQuoteAdjustment" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
