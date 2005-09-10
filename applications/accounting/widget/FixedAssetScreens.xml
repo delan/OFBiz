@@ -25,41 +25,13 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="CommonFixedAssetDecorator">
-        <section>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://accounting/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="ACCOUNTING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
-                                </platform-specific>
-
-                                <decorator-section-include name="body"/>
-
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>                    
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     
     <!-- list all assets in a tabular format -->
     <screen name="ListFixedAssets">
         <section>
             <actions>
                 <set field="title" value="List Fixed Assets"/>
-                <set field="page.headerItem" value="ListFixedAssets"/>
-                <set field="page.tabButtonItem" value="ListFixedAssets"/>
+                <set field="tabButtonItem" value="ListFixedAssets"/>
                 <entity-condition entity-name="FixedAsset" list-name="fixedAssets">
                     <!-- <condition-list>
                         <condition-expr field-name="fixedAssetId" operator="greater" value=" "/>
@@ -68,7 +40,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
@@ -97,7 +69,7 @@
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssetEdit}</label>
@@ -118,8 +90,7 @@
             <actions>
                 <set field="title" value="Edit Fixed Asset related Products"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
-                <set field="page.headerItem" value="ListFixedAssets"/>
-                <set field="page.tabButtonItem" value="ListFixedAssetProducts"/>
+                <set field="tabButtonItem" value="ListFixedAssetProducts"/>
                 <set field="labelTitleProperty" value="Products"/>
 
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
@@ -135,11 +106,8 @@
                 
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                          <container>
-                            <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
-                             </container>
                         <include-form name="ListFixedAssetProducts" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
@@ -158,8 +126,7 @@
                 <set field="layoutSettings.extraHead" value="&lt;link rel='stylesheet' href='/images/calendarTable.css' type='text/css'&gt;" global="true"/>
                 <set field="title" value="Edit Fixed Asset Calendar"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
-                <set field="page.headerItem" value="ListFixedAssets"/>
-                <set field="page.tabButtonItem" value="ListFixedAssetCalendar"/>
+                <set field="tabButtonItem" value="ListFixedAssetCalendar"/>
                 <set field="labelTitleProperty" value="Calendar"/>
                 <set field="nowTimestamp" value="UtilDateTime.nowTimestamp()"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
@@ -167,11 +134,8 @@
                 <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                                <container>
-                                   <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
-                                </container>
                                 <container>
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=-3" text="[${uiLabelMap.CommonPrevious} ${uiLabelMap.CommonQuarter}]" style="buttontext"/>
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=-1" text="[${uiLabelMap.CommonPrevious} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
@@ -199,16 +163,16 @@
             <actions>
                 <set field="title" value="List Fixed Asset Standard Costs"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetStdCosts"/>
-                <set field="headerItem" value="ListFixedAssets"/>
                 <set field="tabButtonItem" value="ListFixedAssetStdCosts"/>
-    
+                <set field="labelTitleProperty" value="Standard costs"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset" auto-field-map="true"/>
                 <entity-and entity-name="FixedAssetStdCost" list-name="fixedAssetStdCosts">
                     <field-map env-name="fixedAsset.fixedAssetId" field-name="fixedAssetId"/>
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <link target="EditFixedAssetStdCost?fixedAssetId=${fixedAsset.fixedAssetId}" text="[${uiLabelMap.AccountingNewFixedAssetStdCost}]" style="buttontext"/>
@@ -224,7 +188,6 @@
             <actions>
                 <set field="title" value="Edit Fixed Asset Standard Cost"/>
                 <set field="titleProperty" value="PageTitleEditFixedAssetStdCost"/>
-                <set field="headerItem" value="ListFixedAssets"/>
                 <set field="tabButtonItem" value="ListFixedAssetStdCosts"/>
                 
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
@@ -235,7 +198,7 @@
                 <entity-one entity-name="FixedAssetStdCost" value-name="fixedAssetStdCost" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator">
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <link target="EditFixedAssetStdCost?fixedAssetId=${fixedAsset.fixedAssetId}" text="[${uiLabelMap.AccountingNewFixedAssetStdCost}]" style="buttontext"/>
