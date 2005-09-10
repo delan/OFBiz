@@ -66,6 +66,75 @@
         <check-errors/>
     </simple-method>
 
+    <!-- copy an existing Quote -->
+    <simple-method method-name="copyQuote" short-description="Copy an existing Quote">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCopyQuote"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+        <check-errors/>
+        <set-service-fields service-name="createQuote" to-map-name="createQuoteInMap" map-name="quote"/>
+        <clear-field field-name="createQuoteInMap.statusId"/>
+        <call-service service-name="createQuote" in-map-name="createQuoteInMap">
+            <result-to-field result-name="quoteId" field-name="quoteIdTo"/>
+        </call-service>
+        <if-compare field-name="parameters.copyQuoteItems" value="Y" operator="equals">
+            <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
+            <iterate list-name="quoteItems" entry-name="quoteItem">
+                <clear-field field-name="createQuoteItemInMap"/>
+                <set-service-fields service-name="createQuoteItem" to-map-name="createQuoteItemInMap" map-name="quoteItem"/>
+                <env-to-field env-name="quoteIdTo" field-name="createQuoteItemInMap.quoteIdTo"/>
+                <field-to-field field-name="parameters.copyQuoteAdjustments" to-field-name="createQuoteItemInMap.copyQuoteAdjustments"/>
+                <call-service service-name="copyQuoteItem" in-map-name="createQuoteItemInMap"/>
+            </iterate>
+        </if-compare>
+
+        <if-compare field-name="parameters.copyQuoteAdjustments" value="Y" operator="equals">
+            <get-related value-name="quote" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
+            <iterate list-name="quoteAdjustments" entry-name="quoteAdjustment">
+                <if-empty field-name="quoteAdjustment.quoteItemSeqId">
+                    <clear-field field-name="createQuoteAdjustmentInMap"/>
+                    <set-service-fields service-name="createQuoteAdjustment" to-map-name="createQuoteAdjustmentInMap" map-name="quoteAdjustment"/>
+                    <env-to-field env-name="quoteIdTo" field-name="createQuoteAdjustmentInMap.quoteId"/>
+                    <call-service service-name="createQuoteAdjustment" in-map-name="createQuoteAdjustmentInMap"/>
+                </if-empty>
+            </iterate>
+        </if-compare>
+        
+        <if-compare field-name="parameters.copyQuoteRoles" value="Y" operator="equals">
+            <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
+            <iterate list-name="quoteRoles" entry-name="quoteRole">
+                <clear-field field-name="createQuoteRoleInMap"/>
+                <set-service-fields service-name="createQuoteRole" to-map-name="createQuoteRoleInMap" map-name="quoteRole"/>
+                <env-to-field env-name="quoteIdTo" field-name="createQuoteRoleInMap.quoteId"/>
+                <call-service service-name="createQuoteRole" in-map-name="createQuoteRoleInMap"/>
+            </iterate>
+        </if-compare>
+
+        <if-compare field-name="parameters.copyQuoteAttributes" value="Y" operator="equals">
+            <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
+            <iterate list-name="quoteAttributes" entry-name="quoteAttribute">
+                <clear-field field-name="createQuoteAttributeInMap"/>
+                <set-service-fields service-name="createQuoteAttribute" to-map-name="createQuoteAttributeInMap" map-name="quoteAttribute"/>
+                <env-to-field env-name="quoteIdTo" field-name="createQuoteAttributeInMap.quoteId"/>
+                <call-service service-name="createQuoteAttribute" in-map-name="createQuoteAttributeInMap"/>
+            </iterate>
+        </if-compare>
+
+        <if-compare field-name="parameters.copyQuoteCoefficients" value="Y" operator="equals">
+            <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
+            <iterate list-name="quoteCoefficients" entry-name="quoteCoefficient">
+                <clear-field field-name="createQuoteCoefficientInMap"/>
+                <set-service-fields service-name="createQuoteCoefficient" to-map-name="createQuoteCoefficientInMap" map-name="quoteCoefficient"/>
+                <env-to-field env-name="quoteIdTo" field-name="createQuoteCoefficientInMap.quoteId"/>
+                <call-service service-name="createQuoteCoefficient" in-map-name="createQuoteCoefficientInMap"/>
+            </iterate>
+        </if-compare>
+
+        <check-errors/>
+    </simple-method>
+
     <!-- create a new QuoteRole -->
     <simple-method method-name="createQuoteRole" short-description="Create a QuoteRole">
         <check-permission permission="ORDERMGR" action="_CREATE">
@@ -109,11 +178,14 @@
         <make-value value-name="newEntity" entity-name="QuoteItem"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <!-- create a non existing ID -->
-        <make-next-seq-id value-name="newEntity" seq-field-name="quoteItemSeqId"/>
         <field-to-field field-name="parameters.quoteId" to-field-name="newEntity.quoteId"/>
-        <env-to-field env-name="quoteItemSeqId" map-name="newEntity"/>
-        <field-to-result field-name="quoteId" result-name="quoteId"/>
+        <field-to-field field-name="parameters.quoteItemSeqId" to-field-name="newEntity.quoteItemSeqId"/>
+        <if-empty field-name="newEntity.quoteItemSeqId">
+            <!-- create a non existing ID -->
+            <make-next-seq-id value-name="newEntity" seq-field-name="quoteItemSeqId"/>
+            <env-to-field env-name="quoteItemSeqId" map-name="newEntity"/>
+        </if-empty>
+        <field-to-result field-name="newEntity.quoteId" result-name="quoteId"/>
         <field-to-result field-name="newEntity.quoteItemSeqId" result-name="quoteItemSeqId"/>
 
         <!-- finally create the record (should not exist already)-->
@@ -144,6 +216,45 @@
         <remove-related value-name="quoteItem" relation-name="QuoteAdjustment"/>
         <check-errors/>
         <remove-value value-name="quoteItem"/>
+    </simple-method>
+
+    <!-- copy an existing QuoteItem -->
+    <simple-method method-name="copyQuoteItem" short-description="Copy an existing QuoteItem">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCopyQuoteItem"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="QuoteItem" value-name="quoteItem" auto-field-map="true"/>
+        <check-errors/>
+        
+        <set-service-fields service-name="createQuoteItem" to-map-name="createQuoteItemInMap" map-name="quoteItem"/>
+        <field-to-field field-name="parameters.quoteIdTo" to-field-name="createQuoteItemInMap.quoteId"/>
+        <field-to-field field-name="parameters.quoteItemSeqId" to-field-name="createQuoteItemInMap.quoteItemSeqId"/>
+        <if-empty field-name="parameters.quoteIdTo">
+            <if-empty field-name="parameters.quoteItemSeqIdTo">
+                <clear-field field-name="createQuoteItemInMap.quoteItemSeqId"/>
+            </if-empty>
+        </if-empty>
+       
+        <call-service service-name="createQuoteItem" in-map-name="createQuoteItemInMap">
+            <result-to-field result-name="quoteId" field-name="quoteIdTo"/>
+            <result-to-field result-name="quoteItemSeqId" field-name="quoteItemSeqId"/>
+        </call-service>
+
+        <check-errors/>
+                
+        <if-compare field-name="parameters.copyQuoteAdjustments" value="Y" operator="equals">
+            <get-related value-name="quoteItem" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
+            <iterate list-name="quoteAdjustments" entry-name="quoteAdjustment">
+                <clear-field field-name="createQuoteAdjustmentInMap"/>
+                <set-service-fields service-name="createQuoteAdjustment" to-map-name="createQuoteAdjustmentInMap" map-name="quoteAdjustment"/>
+                <env-to-field env-name="quoteIdTo" field-name="createQuoteAdjustmentInMap.quoteId"/>
+                <env-to-field env-name="quoteItemSeqId" field-name="createQuoteAdjustmentInMap.quoteItemSeqId"/>
+                <call-service service-name="createQuoteAdjustment" in-map-name="createQuoteAdjustmentInMap"/>
+            </iterate>
+        </if-compare>
+
+        <check-errors/>
     </simple-method>
 
     <!-- create a new QuoteAttribute -->

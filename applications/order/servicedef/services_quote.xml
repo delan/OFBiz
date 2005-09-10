@@ -40,6 +40,16 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="copyQuote" default-entity-name="Quote" engine="simple"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="copyQuote" auth="true">
+        <description>Copy a Quote</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="copyQuoteRoles" type="String" mode="IN" optional="true"/>
+        <attribute name="copyQuoteAttributes" type="String" mode="IN" optional="true"/>
+        <attribute name="copyQuoteCoefficients" type="String" mode="IN" optional="true"/>
+        <attribute name="copyQuoteItems" type="String" mode="IN" optional="true"/>
+        <attribute name="copyQuoteAdjustments" type="String" mode="IN" optional="true"/>
+    </service>
     <!-- QuoteRole  -->
     <service name="createQuoteRole" default-entity-name="QuoteRole" engine="simple"
                 location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteRole" auth="true">
@@ -70,6 +80,15 @@
         <description>Remove a QuoteItem</description>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="copyQuoteItem" default-entity-name="QuoteItem" engine="simple"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="copyQuoteItem" auth="true">
+        <description>Copy a QuoteItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="quoteIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="quoteItemSeqIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="copyQuoteAdjustments" type="String" mode="IN" optional="true"/>
     </service>
     <!-- QuoteAttribute  -->
     <service name="createQuoteAttribute" default-entity-name="QuoteAttribute" engine="simple"
