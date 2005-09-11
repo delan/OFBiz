@@ -103,7 +103,6 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
-        <override name="description" optional="false"/>
     </service>
     <service name="updateExampleFeatureAppl" default-entity-name="ExampleFeatureAppl" engine="simple"
         location="org/ofbiz/example/feature/ExampleFeatureServices.xml" invoke="updateExampleFeatureAppl" auth="true">
