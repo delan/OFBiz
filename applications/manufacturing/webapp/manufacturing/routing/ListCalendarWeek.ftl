@@ -24,18 +24,17 @@
  *@since      3.0
 -->
 
-    <div class='tabContainer'>
-        <a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingCalendar}</a>
-        <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingCalendarWeek}</a>
-	</div>
-
-	<div class="head1">${uiLabelMap.ManufacturingListCalendarWeek}&nbsp; </div>
-	<div><a href="<@ofbizUrl>/EditCalendarWeek</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingNewCalendarWeek}]</a></div>
-	<br/>
-	<#if allCalendarWeek?has_content>
-		${listCalendarWeekWrapper.renderFormString(context)} 
-	</#if>
-	<br/>
-
-
+<div class="tabContainer">
+    <a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingCalendar}</a>
+    <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingCalendarWeek}</a>
+</div>
+<div class="head1">${uiLabelMap.ManufacturingListCalendarWeek}&nbsp; </div>
+<div>
+    <a href="<@ofbizUrl>/EditCalendarWeek</@ofbizUrl>" class="buttontext">${uiLabelMap.ManufacturingNewCalendarWeek}</a>
+</div>
+<br/>
+<#if allCalendarWeek?has_content>
+    ${listCalendarWeekWrapper.renderFormString(context)} 
+</#if>
+<br/>
 	

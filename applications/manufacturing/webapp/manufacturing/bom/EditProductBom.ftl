@@ -38,7 +38,7 @@ function lookupBom() {
 
     <div class="head1">${uiLabelMap.ManufacturingBillOfMaterials} <span class="head2"> <#if product?exists>${(product.internalName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
     <#if product?has_content>
-        <a href="<@ofbizUrl>/BomSimulation</@ofbizUrl>?productId=${productId}&bomType=${productAssocTypeId}" class="buttontext">[${uiLabelMap.ManufacturingBillOfMaterials}]</a>
+        <a href="<@ofbizUrl>/BomSimulation</@ofbizUrl>?productId=${productId}&bomType=${productAssocTypeId}" class="buttontext">${uiLabelMap.ManufacturingBillOfMaterials}</a>
         <!--<a href="<@ofbizUrl>/EditRoutingProductLink?byProduct=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductRoutings}]</a></span>-->
     </#if>
 
@@ -277,11 +277,11 @@ function lookupBom() {
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.routingWorkEffortId)?if_exists}</div></td>
                 <td>
                 <a href="<@ofbizUrl>/UpdateProductBom?UPDATE_MODE=DELETE&productId=${productId}&productIdTo=${(assocFromProduct.productIdTo)?if_exists}&productAssocTypeId=${(assocFromProduct.productAssocTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
-                [${uiLabelMap.CommonDelete}]</a>
+                ${uiLabelMap.CommonDelete}</a>
                 </td>
                 <td>
                 <a href="<@ofbizUrl>/EditProductBom?productId=${productId}&productIdTo=${(assocFromProduct.productIdTo)?if_exists}&productAssocTypeId=${(assocFromProduct.productAssocTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
-                [${uiLabelMap.CommonEdit}]</a>
+                ${uiLabelMap.CommonEdit}</a>
                 </td>
             </tr>
             </#list>
@@ -310,7 +310,7 @@ function lookupBom() {
                 <td><div class="tabletext">${(assocToProduct.quantity)?if_exists}&nbsp;</div></td>
                 <td>
                 <a href="<@ofbizUrl>/UpdateProductBom?UPDATE_MODE=DELETE&productId=${(assocToProduct.productId)?if_exists}&productIdTo=${(assocToProduct.productIdTo)?if_exists}&productAssocTypeId=${(assocToProduct.productAssocTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
-                [${uiLabelMap.CommonDelete}]</a>
+                ${uiLabelMap.CommonDelete}</a>
                 </td>
             </tr>
             </#list>

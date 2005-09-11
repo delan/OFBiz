@@ -113,7 +113,7 @@
                             <label style="head1">${uiLabelMap.ManufacturingRoutings}</label>
                         </container>
                         <container>
-                            <link target="EditRouting" text="[${uiLabelMap.ManufacturingNewRouting}]" style="buttontext"/>
+                            <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="buttontext"/>
                         </container>
 
                         <include-form name="FindRoutings" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
@@ -138,7 +138,7 @@
                 <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditRouting" text="[${uiLabelMap.ManufacturingNewRouting}]" style="buttontext"/>
+                            <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="buttontext"/>
                         </container>
                         <include-form name="EditRouting" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
                     </decorator-section>
@@ -164,7 +164,7 @@
                             <label style="head1">${uiLabelMap.ManufacturingRoutingTasks}</label>
                         </container>
                         <container>
-                            <link target="EditRoutingTask" text="[${uiLabelMap.ManufacturingNewRoutingTask}]" style="buttontext"/>
+                            <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="buttontext"/>
                         </container>
 
                         <include-form name="FindRoutingTasks" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
@@ -189,7 +189,7 @@
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditRoutingTask" text="[${uiLabelMap.ManufacturingNewRoutingTask}]" style="buttontext"/>
+                            <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="buttontext"/>
                         </container>
                         <include-form name="EditRoutingTask" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
                     </decorator-section>
