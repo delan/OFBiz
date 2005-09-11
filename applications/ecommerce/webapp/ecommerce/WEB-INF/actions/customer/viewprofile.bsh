@@ -97,8 +97,14 @@ if (userLogin != null) {
     context.put("totalSubRemainingAmount", result.get("totalSubRemainingAmount"));
     context.put("totalOrders", result.get("totalOrders"));
     
-	contactlistparties = delegator.findByAnd("ContactListParty", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("fromDate"));
-	context.put("contactlistparties", contactlistparties);
-    
+    contactListPartyList = delegator.findByAnd("ContactListParty", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("-fromDate"));
+    // show all, including history, ie don't filter: contactListPartyList = EntityUtil.filterByDate(contactListPartyList, true);
+	context.put("contactListPartyList", contactListPartyList);
+	
+	publicContactLists = delegator.findByAnd("ContactList", UtilMisc.toMap("isPublic", "Y"), UtilMisc.toList("contactListName"));
+	context.put("publicContactLists", publicContactLists);
+	
+	partyAndContactMechList = delegator.findByAnd("PartyAndContactMech", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("-fromDate"));
+	partyAndContactMechList = EntityUtil.filterByDate(partyAndContactMechList, true);
+	context.put("partyAndContactMechList", partyAndContactMechList);
 }
-

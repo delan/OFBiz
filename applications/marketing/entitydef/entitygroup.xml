@@ -40,6 +40,8 @@
 
     <entity-group group="org.ofbiz" entity="ContactList" />
     <entity-group group="org.ofbiz" entity="ContactListParty" />
+    <entity-group group="org.ofbiz" entity="ContactListPartyAndStatus" />
+    <entity-group group="org.ofbiz" entity="ContactListPartyStatus" />
     <entity-group group="org.ofbiz" entity="ContactListType" />
 
     <!-- ========================================================= -->

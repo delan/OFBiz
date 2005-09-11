@@ -106,19 +106,32 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
+        <override name="statusId" optional="false"/>
     </service>
     <service name="updateContactListParty" default-entity-name="ContactListParty" engine="simple"
             location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="updateContactListParty" auth="true">
         <description>Update Party to ContactList Join</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="optInVerifyCode" type="String" mode="IN" optional="true"/>
     </service>
     <service name="deleteContactListParty" default-entity-name="ContactListParty" engine="simple"
             location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="deleteContactListParty" auth="true">
         <description>Remove Party from ContactList</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-
+    <service name="createContactListPartyStatus" default-entity-name="ContactListPartyStatus" engine="simple"
+        location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="createContactListPartyStatus" auth="true">
+        <description>Create ContactListParty Status</description>
+        <auto-attributes include="pk" mode="IN" optional="false">
+            <exclude field-name="statusDate"/>
+        </auto-attributes>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="setByUserLoginId"/>
+        </auto-attributes>
+        <override name="statusId" optional="false"/>
+    </service>
+    
     <!-- TrackingCode Services -->
     <service name="createTrackingCode" default-entity-name="TrackingCode" engine="simple"
             location="org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="createTrackingCode" auth="true">

@@ -445,7 +445,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
               <td>&nbsp;</td>
               <td align="left" valign="top" width="10%" nowrap><div class="tabletext"><b>${survey.surveyName?if_exists}</b>&nbsp;-&nbsp;${survey.description?if_exists}</div></td>
               <td width="5">&nbsp;</td>
-              <td align="left" valign="top" width="80%">
+              <td align="left" valign="top" width="70%">
                 <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
                 <div class="tabletext"><#if (responses < 1)><font color="red"><b>${uiLabelMap.EcommerceNotCompleted}</b><#else>${uiLabelMap.EcommerceCompleted}</#if></div>
               </td>
@@ -469,37 +469,74 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
         <div class="boxhead">&nbsp;${uiLabelMap.PartyContactLists}</div>
     </div>
     <div class="screenlet-body">
-        <table width="100%" border="0" cellpadding="1">
+        <table width="100%" border="0" cellpadding="1" cellspacing="0">
             <tr>
               <td>&nbsp;</td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>List Name</b></div></td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>List Type</b></div></td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>Marketing Campaign</b></div></td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>From Date</b></div></td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>Thru Date</b></div></td>
+              <td width="15%" nowrap><div class="tableheadtext">List Name</div></td>
+              <td width="15%" nowrap><div class="tableheadtext">List Type</div></td>
+              <td width="15%" nowrap><div class="tableheadtext">From Date</div></td>
+              <td width="15%" nowrap><div class="tableheadtext">Thru Date</div></td>
+              <td width="15%" nowrap><div class="tableheadtext">Status</div></td>
               <td width="5">&nbsp;</td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>&nbsp;</b></div></td>
+              <td width="20%" nowrap><div class="tableheadtext"><b>&nbsp;</b></div></td>
             </tr>
-          <#list contactlistparties as contactListParty>
+          <#list contactListPartyList as contactListParty>
             <#assign contactList = contactListParty.getRelatedOne("ContactList")>
-            <#assign contactListType = contactList.getRelatedOne("ContactListType")>
-            <#assign marketingCampaign = contactList.getRelatedOne("MarketingCampaign")>
+            <#assign statusItem = contactListParty.getRelatedOneCache("StatusItem")>
+            <#assign contactListType = contactList.getRelatedOneCache("ContactListType")>
+            <tr><td colspan="8"><hr class="sepbar"/></td></tr>
             <tr>
               <td>&nbsp;</td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext"><b>${contactList.contactListName?if_exists}</b>&nbsp;-&nbsp;${contactList.description?if_exists}</div></td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext">${contactListType.description?if_exists}</div></td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext">${marketingCampaign.campaignName?if_exists}</div></td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext">${contactListParty.fromDate?if_exists}</div></td>
-              <td align="left" valign="top" width="20%" nowrap><div class="tabletext">${contactListParty.thruDate?if_exists}</div></td>
+              <td width="15%"><div class="tabletext"><b>${contactList.contactListName?if_exists}</b><#if contactList.description?has_content>&nbsp;-&nbsp;${contactList.description}</#if></div></td>
+              <td width="15%"><div class="tabletext">${contactListType.description?if_exists}</div></td>
+              <td width="15%"><div class="tabletext">${contactListParty.fromDate?if_exists}</div></td>
+              <td width="15%"><div class="tabletext">${contactListParty.thruDate?if_exists}</div></td>
+              <td width="15%"><div class="tabletext">${(statusItem.description)?if_exists}</div></td>
               <td width="5">&nbsp;</td>
+              <td width="20%" nowrap>
               <#if (contactListParty.statusId?if_exists == "CLPT_ACCEPTED")>
-                <td align="right" valign="top" width="20%" nowrap><a href="<@ofbizUrl>/updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_REJECTED</@ofbizUrl>" class="buttontext">Unsubscribe</a></td>
-              <#else>
-                <td align="right" valign="top" width="20%" nowrap><a href="<@ofbizUrl>/updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_ACCEPTED</@ofbizUrl>" class="buttontext">Subscribe</a></td>
+                <a href="<@ofbizUrl>updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_REJECTED</@ofbizUrl>" class="buttontext">Unsubscribe</a>
+              <#elseif (contactListParty.statusId?if_exists == "CLPT_PENDING")>
+                <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistAcceptForm${contactListParty_index}">
+                  <input type="hidden" name="partyId" value="${party.partyId}"/>
+                  <input type="hidden" name="contactListId" value="${contactListParty.contactListId}"/>
+                  <input type="hidden" name="fromDate" value="${contactListParty.fromDate}"/>
+                  <input type="hidden" name="statusId" value="CLPT_ACCEPTED"/>
+                  <input type="text" size="10" name="optInVerifyCode" value="" class="inputBox"/>
+                  <input type="submit" value="Verify Subscription" class="smallSubmit"/>
+                </form>
+              <#elseif (contactListParty.statusId?if_exists == "CLPT_REJECTED")>
+                <a href="<@ofbizUrl>updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_PENDING</@ofbizUrl>" class="buttontext">Subscribe</a>
               </#if>
+              </td>
             </tr>
           </#list>
         </table>
+        <hr class="sepbar"/>
+        <div>
+          <form method="post" action="<@ofbizUrl>createContactListParty</@ofbizUrl>" name="clistPendingForm">
+            <input type="hidden" name="partyId" value="${party.partyId}"/>
+            <input type="hidden" name="statusId" value="CLPT_PENDING"/>
+            <span class="tableheadtext">New List Subscription: </span>
+            <select name="contactListId" class="selectBox">
+              <#list publicContactLists as publicContactList>
+                <#assign publicContactListType = publicContactList.getRelatedOneCache("ContactListType")>
+                <#assign publicContactMechType = publicContactList.getRelatedOneCache("ContactMechType")?if_exists>
+                <option value="${publicContactList.contactListId}">${publicContactList.contactListName?if_exists} [${publicContactListType.description} <#if publicContactMechType?has_content>, ${publicContactMechType.description}</#if>]</option>
+              </#list>
+            </select>
+            <select name="preferredContactMechId" class="selectBox">
+              <option></option>
+              <#list partyAndContactMechList as partyAndContactMech>
+                <option value="${partyAndContactMech.contactMechId}"><#if partyAndContactMech.infoString?has_content>${partyAndContactMech.infoString}<#elseif partyAndContactMech.tnContactNumber?has_content>${partyAndContactMech.tnCountryCode?if_exists}-${partyAndContactMech.tnAreaCode?if_exists}-${partyAndContactMech.tnContactNumber}<#elseif partyAndContactMech.paAddress1?has_content>${partyAndContactMech.paAddress1}, ${partyAndContactMech.paAddress2?if_exists}, ${partyAndContactMech.paCity?if_exists}, ${partyAndContactMech.paStateProvinceGeoId?if_exists}, ${partyAndContactMech.paPostalCode?if_exists}, ${partyAndContactMech.paPostalCodeExt?if_exists} ${partyAndContactMech.paCountryGeoId?if_exists}</#if></option>
+              </#list>
+            </select>
+            <input type="submit" value="Subscribe" class="smallSubmit"/>
+          </form>
+        </div>
+        <div class="tabletext">
+        NOTE: When you subscribe to an email contact list you will receive an email with an opt-in verification code and a link to verify your subscription. As an alternative to the link you can enter you opt-in verify code here.
+        </div>
     </div>
 </div>
 
