@@ -72,9 +72,9 @@
 </form>
 <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      	<td width='100%' align='right' valign='top'>
-			<a href="<@ofbizUrl>/EditCalendar</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingNewCalendar}]</a>
-		</td>
-	</tr>
- </table>
+        <td width='100%' align='right' valign='top'>
+            <a href="<@ofbizUrl>/EditCalendar</@ofbizUrl>" class="buttontext">${uiLabelMap.ManufacturingNewCalendar}</a>
+        </td>
+    </tr>
+</table>
 	

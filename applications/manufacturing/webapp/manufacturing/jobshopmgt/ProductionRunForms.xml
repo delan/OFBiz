@@ -108,11 +108,11 @@
         <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
         <field name="editLink" title="&amp;nbsp;" widget-style="smallSubmit">
-            <hyperlink target="EditProductionRun?actionForm=EditRoutingTask&amp;routingTaskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="[${uiLabelMap.CommonEdit}]" also-hidden="false"/>
+            <hyperlink target="EditProductionRun?actionForm=EditRoutingTask&amp;routingTaskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="smallSubmit">
             <!--<hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;fromDate=${fromDate}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>-->
-            <hyperlink target="deleteProductionRunRoutingTask?workEffortId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="deleteProductionRunRoutingTask?workEffortId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
  
@@ -127,11 +127,11 @@
         </field> 
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
         <field name="editLink" title="&amp;nbsp;" widget-style="smallSubmit">
-            <hyperlink target="EditProductionRun?actionForm=EditProductComponent&amp;workEffortId=${workEffortId}&amp;productId=${productId}&amp;productionRunId=${productionRunId}" description="[${uiLabelMap.CommonEdit}]" also-hidden="false"/>
+            <hyperlink target="EditProductionRun?actionForm=EditProductComponent&amp;workEffortId=${workEffortId}&amp;productId=${productId}&amp;productionRunId=${productionRunId}" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="smallSubmit">
             <!--<hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>-->
-            <hyperlink target="deleteProductionRunComponent?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;productionRunId=${productionRunId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="deleteProductionRunComponent?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;productionRunId=${productionRunId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
 
@@ -273,16 +273,16 @@
         <field name="actualMilliSeconds" title="${uiLabelMap.ManufacturingTaskActualMilliSeconds}" ><display/></field>
         <field name="quantityProduced" title="${uiLabelMap.ManufacturingQuantityProduced}" ><display/></field>
         <field name="startLink" title="&amp;nbsp;" widget-style="smallSubmit" use-when="&quot;${startTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
-            <hyperlink target="changeProductionRunTaskStatus?taskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="[${uiLabelMap.ManufacturingStartProductionRunTask}]" also-hidden="false"/>
+            <hyperlink target="changeProductionRunTaskStatus?taskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.ManufacturingStartProductionRunTask}" also-hidden="false"/>
         </field>
         <field name="issueLink" title="&amp;nbsp;" widget-style="smallSubmit" use-when="&quot;${issueTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
-            <hyperlink target="issueProductionRunRoutingTask?workEffortId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="[${uiLabelMap.ManufacturingIssueProductionRunTask}]" also-hidden="false"/>
+            <hyperlink target="issueProductionRunRoutingTask?workEffortId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.ManufacturingIssueProductionRunTask}" also-hidden="false"/>
         </field>
         <field name="declareLink" title="&amp;nbsp;" widget-style="smallSubmit" use-when="&quot;PRUN_RUNNING&quot;.equals(&quot;${currentStatusId}&quot;)">
-            <hyperlink target="ProductionRunDeclaration?actionForm=EditRoutingTask&amp;routingTaskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="[${uiLabelMap.ManufacturingDeclareProductionRunTask}]" also-hidden="false"/>
+            <hyperlink target="ProductionRunDeclaration?actionForm=EditRoutingTask&amp;routingTaskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.ManufacturingDeclareProductionRunTask}" also-hidden="false"/>
         </field>
         <field name="completeLink" title="&amp;nbsp;" widget-style="smallSubmit" use-when="&quot;${completeTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
-            <hyperlink target="changeProductionRunTaskStatus?taskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="[${uiLabelMap.ManufacturingCompleteProductionRunTask}]" also-hidden="false"/>
+            <hyperlink target="changeProductionRunTaskStatus?taskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.ManufacturingCompleteProductionRunTask}" also-hidden="false"/>
         </field>
     </form>
    <form name="ListProductionRunDeclComponents" type="list" 
@@ -409,7 +409,7 @@
         </field>
         <field name="estimatedShipDate"><display/></field>
         <field name="viewShipmentPlanLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="WorkWithShipmentPlans?shipmentId=${shipmentId}" description="[${uiLabelMap.CommonView}]" also-hidden="false"/>
+            <hyperlink target="WorkWithShipmentPlans?shipmentId=${shipmentId}" description="${uiLabelMap.CommonView}" also-hidden="false"/>
         </field>
     </form>
     <form name="SelectMrpName" type="single" 
