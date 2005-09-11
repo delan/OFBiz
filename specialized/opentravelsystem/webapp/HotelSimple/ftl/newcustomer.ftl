@@ -170,7 +170,7 @@
             <div class="form-field">
                 <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
                 <select name="CUSTOMER_COUNTRY" class='selectBox'>
-                    <#if requestParameters.CUSTOMER_COUNTRY?exists><option value='${requestParameters.CUSTOMER_COUNTRY}'>${selectedCountryName?default(requestParameters.CUSTOMER_COUNTRY)}</option></#if>
+					<option value='NLD'>Netherlands</option>
                     ${screens.render("component://common/widget/CommonScreens.xml#countries")}
                 </select> *
             </div>
@@ -341,7 +341,7 @@
 
 <div class="tabletext">${uiLabelMap.CommonFieldsMarkedAreRequired}</div>
 
-<div>
+<div align=right>
 &nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBack}]</a>
 &nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontextbig">[${uiLabelMap.CommonSave}]</a>
 </div>

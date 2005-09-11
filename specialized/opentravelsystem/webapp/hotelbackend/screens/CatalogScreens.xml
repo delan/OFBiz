@@ -574,23 +574,17 @@
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="page.appTabButtonItem" value="Product"/>
-                <set field="page.headerItem" value="fixedassets"/>
                 <set field="page.tabButtonItem" value="EditFixedAsset"/>
                 <set field="title" value="Edit Fixed Asset"/>
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
+                <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
+                <set field="labelTitleProperty" value="Fixed Asset information"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                                 <platform-specific>
-                                    <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
-                                </platform-specific>
-                            <label style="head1">${uiLabelMap.AccountingFixedAssetEdit}</label>
-                        </container>
                          <container>
                             <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                          </container>
@@ -606,12 +600,10 @@
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="page.appTabButtonItem" value="Product"/>
-                <set field="page.headerItem" value="fixedassets"/>
                 <set field="page.tabButtonItem" value="ListFixedAssetProducts"/>
                 <set field="title" value="Edit Fixed Asset related Products"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
-                <set field="labelTitleProperty" value="Products"/>
+                <set field="labelTitleProperty" value="Related products"/>
 
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset">
@@ -626,14 +618,8 @@
                 
             </actions>
             <widgets>
-                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                      <container>
-                       <platform-specific>
-                           <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
-                       </platform-specific>
-                            <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
-                        </container>
                         <include-form name="ListFixedAssetProducts" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
@@ -651,8 +637,6 @@
             <actions>
                 <set field="layoutSettings.extraHead" value="&lt;link rel='stylesheet' href='/images/calendarTable.css' type='text/css'&gt;" global="true"/>
                 <set field="title" value="Edit Fixed Asset Calendar"/>
-                <set field="page.appTabButtonItem" value="Product"/>
-                <set field="page.headerItem" value="fixedassets"/>
                 <set field="page.tabButtonItem" value="ListFixedAssetCalendar"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
                 <set field="labelTitleProperty" value="Calendar"/>
@@ -662,14 +646,8 @@
                 <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                       <platform-specific>
-                           <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
-                       </platform-specific>
-                                <container>
-                                   <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
-                                </container>
                                 <container>
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=-3" text="[${uiLabelMap.CommonPrevious} ${uiLabelMap.CommonQuarter}]" style="buttontext"/>
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=-1" text="[${uiLabelMap.CommonPrevious} ${uiLabelMap.CommonMonth}]" style="buttontext"/>

@@ -47,13 +47,27 @@
             <li>Maintain your Invoices (automaticly generated from the order)</li>
             <li>Print your invoices with your hotel logo and information</li>
             <li>Upload payments (which you downloaded from your internet banking)</li>
-            <li>Automaticly send reminders by e-mail about invoices not yet paid</li>
+            <li>Automaticly send reminders by e-mail about invoices not yet paid(to be added)</li>
             <li>and more....</li></sl></h2></center></DIV>  
-            <div class='tabletext'></br><center><h3> Coming soon!</h3></center></DIV>  
             <br/>
           </td>
         </tr>
       </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'><center>
+      <table width='60%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <DIV class='tabletext'><br/><br/><br/>
+            The accounting part of the opentravelsystem is currently not opensource and is under development.
+            Have a look at the <a href="http://www.opensourcestrategies.com/ofbiz/accounting.php" target="_blank">
+            open source strategies site</a> for more information.
+            <br/>
+          </td>
+        </tr>
+      </table></center>
     </TD>
   </TR>
 </TABLE>

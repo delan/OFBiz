@@ -318,7 +318,7 @@ visibility: hidden;
 .head1 {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 margin: 0px; 
-font-size: 12pt;
+font-size: 16px;
 font-weight: bold;
 color: #000099;
 }
@@ -326,9 +326,9 @@ color: #000099;
 .head2 {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 margin: 0px;
-font-size: 10pt;
+font-size: 15px;
 font-weight: bold;
-color: #000000;
+color: #000099;
 }
 
 .head3 {
@@ -590,7 +590,7 @@ color: #CCCCCC;
 
 A.buttontextbig {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10pt;
+font-size: 12px;
 font-weight: bold;
 text-decoration: none;
 color: #000099;

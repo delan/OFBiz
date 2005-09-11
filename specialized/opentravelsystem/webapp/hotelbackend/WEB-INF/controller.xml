@@ -2115,6 +2115,151 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupPartyName"/>
     </request-map>
+    <!-- invoice requests -->
+    <request-map uri="findInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findInvoices"/>
+    </request-map>
+    <request-map uri="invoiceOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+    </request-map>
+    <request-map uri="editInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editInvoice"/>
+    </request-map> 
+    <request-map uri="createInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoice"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="editInvoice"/>
+    </request-map>
+    <request-map uri="updateInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoice"/>
+        <response name="success" type="view" value="editInvoice"/>
+        <response name="error" type="view" value="editInvoice"/>
+    </request-map>
+    <request-map uri="listInvoiceItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+    </request-map>    
+    <request-map uri="editInvoiceItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>    
+    <request-map uri="createInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceItem"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="updateInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoiceItem"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="removeInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItem"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="editInvoiceApplications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="updateInvoiceApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentApplication"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+        <response name="error" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="removeInvoiceApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentApplication"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+        <response name="error" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="invoiceStatus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceStatus"/>
+    </request-map>
+    
+    <request-map uri="invoiceRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+    </request-map>
+    <request-map uri="createInvoiceRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceRole"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+        <response name="error" type="view" value="invoiceRoles"/>
+    </request-map>
+    <request-map uri="removeInvoiceRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceRole"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+        <response name="error" type="view" value="invoiceRoles"/>
+    </request-map>
+    
+    
+    <!-- payment requests -->
+    <request-map uri="findPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findPayments"/>
+    </request-map>
+    <request-map uri="editPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editPayment"/>
+    </request-map> 
+    <request-map uri="createPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPayment"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+        <response name="error" type="view" value="editPayment"/>
+    </request-map>
+    <request-map uri="updatePayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePayment"/>
+        <response name="success" type="view" value="editPayment"/>
+        <response name="error" type="view" value="editPayment"/>
+    </request-map>
+    <request-map uri="paymentOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="paymentOverview"/>
+    </request-map> 
+    <request-map uri="paymentApplications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="paymentApplications"/>
+    </request-map>
+    <request-map uri="editPaymentApplications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="updatePaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentApplication"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="removePaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentApplication"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+        <response name="error" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <!-- =============== Data exchange =================-->
+    <request-map uri="DataExchange">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DataExchange"/>
+    </request-map>    
+    <request-map uri="uploadDataFile">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.opentravelsystem.mt940" invoke="importData"/>
+        <response name="success" type="view" value="DataExchange"/>
+    </request-map>    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -2178,5 +2323,21 @@
     <view-map name="LookupFixedAsset" page="component://opentravelsystem/webapp/hotelbackend/screens/LookupScreens.xml#LookupFixedAsset" type="screen"/>
     <view-map name="LookupProduct" page="component://opentravelsystem/webapp/hotelbackend/screens/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
+    <!-- invoices -->
+    <view-map name="invoiceOverview" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#invoiceOverview"/>
+    <view-map name="findInvoices" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#FindInvoices"/>
+    <view-map name="editInvoice" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoice"/>
+    <view-map name="listInvoiceItems" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceItems"/>
+    <view-map name="editInvoiceItem" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceItem"/>
+    <view-map name="invoiceStatus" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#InvoiceStatus"/>
+    <view-map name="editInvoiceApplications" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceApplications"/>
+    <view-map name="invoiceRoles" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#InvoiceRoles"/>
+    <!-- payments -->
+    <view-map name="findPayments" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#FindPayments"/>
+    <view-map name="paymentOverview" type="screen" page="component://accountingext/widget/PaymentScreens.xml#PaymentOverview"/>
+    <view-map name="editPayment" type="screen" page="component://accountingext/widget/PaymentScreens.xml#EditPayment"/>
+    <view-map name="editPaymentApplications" type="screen" page="component://accountingext/widget/PaymentScreens.xml#EditPaymentApplications"/>
+    <!-- data exchange -->
+    <view-map name="DataExchange" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#DataExchange"/>
     <!-- end of view mappings -->
 </site-conf>
