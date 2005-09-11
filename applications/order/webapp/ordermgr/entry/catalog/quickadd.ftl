@@ -69,7 +69,7 @@
   <form method="post" action="<@ofbizUrl>/addtocartbulk</@ofbizUrl>" name="bulkaddform" style='margin: 0;'>
     <input type='hidden' name='category_id' value='${categoryId}'>
     <div class="tabletext" align="right">
-      <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
+      <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>${uiLabelMap.EcommerceAddAlltoCart}</nobr></a>
     </div>     
     <table border='1' cellpadding='2' cellspacing='0'>      
       <#list productCategoryMembers as productCategoryMember>
@@ -81,7 +81,7 @@
       </#list> 
     </table>
     <div class="tabletext" align="right">
-      <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
+      <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>${uiLabelMap.EcommerceAddAlltoCart}</nobr></a>
     </div>      
   </form>
   </center>

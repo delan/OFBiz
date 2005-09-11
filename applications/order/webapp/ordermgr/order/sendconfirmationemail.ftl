@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Tim Chen (timchen_sh@hotmail.com)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      1.0
 -->
 
@@ -28,8 +28,8 @@
 
  <p class="head1">${uiLabelMap.OrderSendConfirmationEmail}</p>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
-  &nbsp;<a href="javascript:document.sendConfirmationForm.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGoBack}</a>
+  &nbsp;<a href="javascript:document.sendConfirmationForm.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
 
   <form method="post" action="<@ofbizUrl>/sendconfirmationmail/${donePage}</@ofbizUrl>" name="sendConfirmationForm">
     <input type="hidden" name="orderId" value="${orderId?if_exists}">
@@ -62,8 +62,8 @@
     </table>
   </form>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
-  &nbsp;<a href="javascript:document.sendConfirmationForm.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGoBack}</a>
+  &nbsp;<a href="javascript:document.sendConfirmationForm.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
   
 <#else>
   <h3>${uiLabelMap.OrderViewPermissionError}</h3>

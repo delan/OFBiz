@@ -77,10 +77,10 @@
                     <td nowrap>
                       <div class="tabletext">&nbsp;
                         <#if security.hasEntityPermission("PAYPROC", "_UPDATE", session)>
-                        <a href="<@ofbizUrl>/paysetup?webSiteId=${paymentSetting.webSiteId?if_exists}&paymentMethodTypeId=${paymentSetting.paymentMethodTypeId?if_exists}</@ofbizUrl>" class="buttontext">[Edit]</a>&nbsp;
+                        <a href="<@ofbizUrl>/paysetup?webSiteId=${paymentSetting.webSiteId?if_exists}&paymentMethodTypeId=${paymentSetting.paymentMethodTypeId?if_exists}</@ofbizUrl>" class="buttontext">Edit</a>&nbsp;
                         </#if>
                         <#if security.hasEntityPermission("PAYPROC", "_DELETE", session)>
-                        <a href="<@ofbizUrl>/removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId?if_exists}&paymentMethodTypeId=${paymentSetting.paymentMethodTypeId?if_exists}</@ofbizUrl>" class="buttontext">[Remove]</a>&nbsp;
+                        <a href="<@ofbizUrl>/removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId?if_exists}&paymentMethodTypeId=${paymentSetting.paymentMethodTypeId?if_exists}</@ofbizUrl>" class="buttontext">Remove</a>&nbsp;
                         </#if>
                       </div>
                     </td>
@@ -114,7 +114,7 @@
             </#if>
           </td>
           <#if webSitePayment?has_content>
-            <td align='right' width='10%'><a href="<@ofbizUrl>/paysetup</@ofbizUrl>" class="lightbuttontext">[Add New]</a></td>          
+            <td align='right' width='10%'><a href="<@ofbizUrl>/paysetup</@ofbizUrl>" class="lightbuttontext">Add New</a></td>          
           <#else>
             <td align='right' width='10%'></td>
           </#if>

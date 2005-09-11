@@ -97,7 +97,7 @@
             <a href="javascript:document.quickAddPartyForm.additionalPartyId.focus();call_fieldlookup2(document.quickAddPartyForm.additionalPartyId, '${lookupPartyView}');"><img src="/content/images/fieldlookup.gif" width="16" height="16" border="0" alt="Lookup"></a>
           </td>
           <td>
-            &nbsp;<a href="javascript:document.quickAddPartyForm.submit()" class="buttontext">[${uiLabelMap.CommonApply}]</a>
+            &nbsp;<a href="javascript:document.quickAddPartyForm.submit()" class="buttontext">${uiLabelMap.CommonApply}</a>
           </td>
         </tr>
       </table>

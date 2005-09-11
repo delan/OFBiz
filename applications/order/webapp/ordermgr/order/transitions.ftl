@@ -53,7 +53,7 @@
                         <div class="tabletext">&nbsp;** Note: If this state is a result of an automated activity, releasing may not have an effect until all conditions are met.</div>                     
                       </td>
                       <td align="right" valign="center">                                        
-                        <a href="javascript:document.activityForm.submit()" class="buttontext">[Release Hold]</a>
+                        <a href="javascript:document.activityForm.submit()" class="buttontext">Release Hold</a>
                       </td>
                     </tr>
                   </table>
@@ -69,7 +69,7 @@
                         <div class="tabletext">This order is currently in a 'Active' state.</div>                    
                       </td>
                       <td align="right" valign="center">                                        
-                        <a href="javascript:document.activityForm.submit()" class="buttontext">[Hold Order]</a>
+                        <a href="javascript:document.activityForm.submit()" class="buttontext">Hold Order</a>
                       </td>
                     </tr>
                   </table>
@@ -121,7 +121,7 @@
                       </select> 
                     </td>
                     <td valign="center">                                        
-                      <a href="javascript:document.transitionForm.submit()" class="buttontext">[Continue]</a>
+                      <a href="javascript:document.transitionForm.submit()" class="buttontext">Continue</a>
                     </td>
                   </tr>
                 </table>

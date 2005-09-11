@@ -28,8 +28,8 @@
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>  
   <p class="head1">${uiLabelMap.OrderAddNote}</p>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
-  &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGoBack}</a>
+  &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
 
   <form method="post" action="<@ofbizUrl>/createordernote/${donePage}</@ofbizUrl>" name="createnoteform">
     <input type="hidden" name="orderId" value="${orderId?if_exists}">
@@ -49,8 +49,8 @@
     </table>
   </form>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
-  &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGoBack}</a>
+  &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
   
 <#else>
   <h3>${uiLabelMap.OrderViewPermissionError}</h3>

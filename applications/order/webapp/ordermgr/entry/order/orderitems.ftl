@@ -29,8 +29,8 @@
     <div class="screenlet-header">
         <div style="float: right;">
             <#if maySelectItems?default(false)>
-                <a href="javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()" class="lightbuttontext">[${uiLabelMap.EcommerceAddAlltoCart}]</a>
-                <a href="javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()" class="lightbuttontext">[${uiLabelMap.EcommerceAddCheckedtoCart}]</a>
+                <a href="javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()" class="lightbuttontext">${uiLabelMap.EcommerceAddAlltoCart}</a>
+                <a href="javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()" class="lightbuttontext">${uiLabelMap.EcommerceAddCheckedtoCart}</a>
             </#if>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderItems}</div>

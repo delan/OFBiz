@@ -61,7 +61,7 @@ function makeExpDate() {
             <table width="100%" cellpadding="1" cellspacing="0" border="0">
               <tr>
                 <td colspan="2">    
-                  <a href="<@ofbizUrl>/setBilling?createNew=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCreateNew}]</a>
+                  <a href="<@ofbizUrl>/setBilling?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
                 </td>
               </tr>
               <tr><td colspan="3"><hr class="sepbar"/></td></tr>                      
@@ -121,7 +121,7 @@ function makeExpDate() {
                       <td width="50%">
                         <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>                            
                       </td>
-                      <td align="right"><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></td>
+                      <td align="right"><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
                     </tr>
                   <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                     <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
@@ -132,7 +132,7 @@ function makeExpDate() {
                       <td width="50%">
                         <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>                            
                       </td>
-                      <td align="right"><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></td>
+                      <td align="right"><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
                     </tr>
                     <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                   </#if>

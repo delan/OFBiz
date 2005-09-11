@@ -656,7 +656,7 @@
                         <#if shipGroup.maySplit?upper_case == "N">
                             ${uiLabelMap.FacilityWaitEntireOrderReady}
                             <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                              <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderAllowSplit}]</a></#if>                                  
+                              <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderAllowSplit}</a></#if>                                  
                             </#if>
                         <#else>
                             ${uiLabelMap.FacilityShipAvailable}

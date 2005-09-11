@@ -147,15 +147,15 @@
     <div class="head2">${uiLabelMap.EcommerceLastSearches}...</div>
   
     <div class="tabletext">
-      <a href="<@ofbizUrl>/clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">[Clear Search History]</a>
+      <a href="<@ofbizUrl>/clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">Clear Search History</a>
       (Note that your history will automatically be cleared after you leave the site)
     </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div class="tabletext">
           <b>Search #${searchOptions_index + 1}</b>
-          <a href="<@ofbizUrl>/setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[Search]</a>
-          <a href="<@ofbizUrl>/setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">[Refine]</a>
+          <a href="<@ofbizUrl>/setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">Search</a>
+          <a href="<@ofbizUrl>/setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">Refine</a>
         </div>
         <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator)>
         <#list constraintStrings as constraintString>
