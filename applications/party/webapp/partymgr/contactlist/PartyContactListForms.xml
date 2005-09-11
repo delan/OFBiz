@@ -21,9 +21,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="ListPartyContactLists" default-title-style="tableheadtext"
-        target="updateContactListParty" separate-columns="true"
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
+    <form name="ListPartyContactLists" target="updateContactListParty" separate-columns="false"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         title="" type="list">
         <actions>
             <entity-and entity-name="ContactListParty">
@@ -37,18 +36,30 @@
             </display-entity>
         </field>
         <field name="fromDate"><display/></field>
+        <field name="statusHistory" widget-style="selectBox">
+            <drop-down>
+                <option key="" description="-- Status History --"/>
+                <entity-options entity-name="ContactListPartyAndStatus" key-field-name="statusId" description="${statusDate} ${description} [by: ${setByUserLoginId}] [code: ${optInVerifyCode}]">
+                    <entity-constraint name="partyId" operator="equals" env-name="partyId"/>
+                    <entity-constraint name="contactListId" operator="equals" env-name="contactListId"/>
+                    <entity-constraint name="fromDate" operator="equals" env-name="fromDate"/>
+                    <entity-order-by field-name="-statusDate"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="thruDate" widget-style="inputBox"><date-time/></field>
         <field name="statusId" widget-style="selectBox">
             <drop-down>
                 <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" value="CONTACTLST_PARTY" operator="equals"/>
+                    <entity-constraint name="statusTypeId" operator="equals" value="CONTACTLST_PARTY"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="optInVerifyCode" title="Opt-in Code" widget-style="inputBox"><text size="10"/></field>
         <field name="preferredContactMechId">
             <drop-down allow-empty="true">
-                <entity-options entity-name="PartyAndContactMech" key-field-name="contactMechId" description="[${contactMechId}] [${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress1}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]">
+                <entity-options entity-name="PartyAndContactMech" key-field-name="contactMechId" description="[${contactMechId}] [${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress2}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]">
                     <entity-constraint name="partyId" env-name="partyId"/>
                     <entity-order-by field-name="contactMechId"/>
                 </entity-options>
@@ -74,7 +85,7 @@
         </field>
         <field name="preferredContactMechId">
             <drop-down allow-empty="true">
-                <entity-options entity-name="PartyAndContactMech" key-field-name="contactMechId" description="[${contactMechId}] [${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress1}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]">
+                <entity-options entity-name="PartyAndContactMech" key-field-name="contactMechId" description="[${contactMechId}] [${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress2}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]">
                     <entity-constraint name="partyId" env-name="partyId"/>
                     <entity-order-by field-name="contactMechId"/>
                 </entity-options>
@@ -84,9 +95,8 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="ListLookupContactList" type="list" 
-            target="LookupContactList" title="" 
-            default-map-name="contactList"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            target="LookupContactList" title="" default-map-name="contactList"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="ContactList"/>
         </actions>

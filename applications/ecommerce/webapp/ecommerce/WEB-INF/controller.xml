@@ -1105,6 +1105,12 @@
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
+    <request-map uri="createContactListParty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createContactListParty"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
     <request-map uri="updateContactListParty">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateContactListParty"/>

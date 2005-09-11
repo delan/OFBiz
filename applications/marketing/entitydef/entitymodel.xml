@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-/**
- *  Title: Entity Generator Definitions for the General Data Model
- *  Description: None
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -26,7 +23,6 @@
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @version    $Rev$
- */
 -->
 
 <entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -36,7 +32,7 @@
   <!-- ========================================================= -->
     <title>Entity of an Open For Business Project Component</title>
     <description>None</description>
-    <copyright>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org</copyright>
+    <copyright>Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org</copyright>
     <author>None</author>
     <version>1.0</version>
 
@@ -156,6 +152,15 @@
       <relation type="one" fk-name="CNCT_LST_TYP" rel-entity-name="ContactListType">
         <key-map field-name="contactListTypeId"/>
       </relation>
+      <relation type="one" fk-name="CNCT_LST_CMCHTP" rel-entity-name="ContactMechType">
+        <key-map field-name="contactMechTypeId"/>
+      </relation>
+      <relation type="one" fk-name="CNCT_LST_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="CNCT_LST_LMUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
     </entity>
     <entity entity-name="ContactListParty"
             package-name="org.ofbiz.marketing.contact"
@@ -181,6 +186,36 @@
       <relation type="one" fk-name="CNCT_LSTPTY_PCM" title="Preferred" rel-entity-name="ContactMech">
         <key-map field-name="preferredContactMechId" rel-field-name="contactMechId"/>
       </relation>
+    </entity>
+    <view-entity entity-name="ContactListPartyAndStatus"
+        package-name="org.ofbiz.marketing.contact">
+        <member-entity entity-alias="CLPS" entity-name="ContactListPartyStatus"/>
+        <member-entity entity-alias="SI" entity-name="StatusItem"/>
+        <alias-all entity-alias="CLPS"/>
+        <alias-all entity-alias="SI"/>
+        <view-link entity-alias="CLPS" rel-entity-alias="SI">
+            <key-map field-name="statusId"/>
+        </view-link>
+    </view-entity>
+    <entity entity-name="ContactListPartyStatus"
+        package-name="org.ofbiz.marketing.contact"
+        title="Contact List Party Status Entity">
+        <field name="contactListId" type="id-ne"></field>
+        <field name="partyId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="statusDate" type="date-time"></field>
+        <field name="statusId" type="id"></field>
+        <field name="setByUserLoginId" type="description"></field>
+        <field name="optInVerifyCode" type="short-varchar"><!-- if statusId is CLPT_PENDING, set optInVerifyCode; else if statusId is CLPT_ACCEPTED, make sure optInVerifyCode is the same as the last CLPT_PENDING --></field>
+        <prim-key field="contactListId"/>
+        <prim-key field="partyId"/>
+        <prim-key field="fromDate"/>
+        <prim-key field="statusDate"/>
+        <relation type="one" fk-name="CTLSTPTST_CLP" rel-entity-name="ContactListParty">
+            <key-map field-name="contactListId"/>
+            <key-map field-name="partyId"/>
+            <key-map field-name="fromDate"/>
+        </relation>
     </entity>
     <entity entity-name="ContactListType"
             package-name="org.ofbiz.marketing.contact"

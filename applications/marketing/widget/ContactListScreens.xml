@@ -77,15 +77,15 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-empty field-name="contactList"/>
+                                <not><if-empty field-name="contactList"/></not>
                             </condition>
                             <widgets>
-                                <label style="head1">${uiLabelMap.PageTitleAddContactList}</label>
+                                <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                                <container><link  text="${uiLabelMap.ContactListCreate}" target="/EditContactList?DONE_PAGE=${donePage}" style="buttontext"/></container>
                                 <include-form name="EditContactList" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
-                                <container><link  text="${uiLabelMap.ContactListCreate}" target="/EditContactList?DONE_PAGE=${donePage}" style="buttontext"/></container>
+                                <label style="head1">${uiLabelMap.PageTitleAddContactList}</label>
                                 <include-form name="EditContactList" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                             </fail-widgets>
                         </section>
@@ -120,25 +120,38 @@
     <screen name="EditContactListParty">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditContactList"/>
+                <set field="titleProperty" value="PageTitleEditContactListParty"/>
                 <set field="tabButtonItem" value="ContactListParty"/>
-                <set field="labelTitleProperty" value="PageTitleEditContactList"/>
+                <set field="labelTitleProperty" value="PageTitleEditContactListParty"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
-                <entity-one entity-name="ContactListParty" value-name="contactListParty">
-                    <field-map field-name="contactListId"/>
-                    <field-map field-name="partyId"/>
-                </entity-one>
+                <entity-one entity-name="ContactListParty" value-name="contactListParty"/>
+                <entity-condition entity-name="ContactListPartyAndStatus" list-name="contactListPartyStatusList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="contactListId" env-name="contactListId"/>
+                        <condition-expr field-name="partyId" env-name="partyId"/>
+                        <condition-expr field-name="fromDate" env-name="fromDate"/>
+                    </condition-list>
+                    <order-by field-name="-statusDate"/>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditContactListParty}</label></container>
                         <container><link  text="${uiLabelMap.ContactListPartyCreate}" target="/EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="EditContactListParty" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
+                        <container><label style="head2" text="${uiLabelMap.CommonStatusHistory}"/></container>
+                        <iterate-section entry-name="contactListPartyStatus" list-name="contactListPartyStatusList">
+                            <section>
+                                <widgets>
+                                    <container><label style="tabletext" text="${contactListPartyStatus.statusDate} ${contactListPartyStatus.description} [by: ${contactListPartyStatus.setByUserLoginId}] [code: ${contactListPartyStatus.optInVerifyCode}]"/></container>
+                                </widgets>
+                            </section>
+                        </iterate-section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
