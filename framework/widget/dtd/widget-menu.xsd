@@ -43,7 +43,7 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute name="type" default="simple">
             <xs:simpleType>
-                <xs:restriction base="xs:token">/logout
+                <xs:restriction base="xs:token">
                     <xs:enumeration value="simple"/>
                     <xs:enumeration value="cascade"/>
                 </xs:restriction>
