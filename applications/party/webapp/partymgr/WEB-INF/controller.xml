@@ -778,10 +778,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupPartyGroup"/>
     </request-map>
-    <request-map uri="LookupPreferredContactMech">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPreferredContactMech"/>
-    </request-map>
     <request-map uri="LookupCustRequest">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupCustRequest"/>
@@ -941,7 +937,6 @@
     <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
     <view-map name="LookupPartyAndUserLoginAndPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson"/>
     <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
-    <view-map name="LookupPreferredContactMech" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupPreferredContactMech"/>
     <view-map name="LookupSegmentGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupSegmentGroup"/>
     <view-map name="LookupCustRequest" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequest"/>
     <view-map name="LookupContactList" type="screen" page="component://party/widget/partymgr/PartyContactListScreens.xml#ListLookupContactList"/>
