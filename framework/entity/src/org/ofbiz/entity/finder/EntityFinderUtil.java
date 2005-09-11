@@ -184,6 +184,10 @@ public class EntityFinderUtil {
         
         public EntityCondition createCondition(Map context, String entityName, GenericDelegator delegator) {
             ModelEntity modelEntity = delegator.getModelEntity(entityName);
+            if (modelEntity == null) {
+                throw new IllegalArgumentException("Error in Entity Find: could not find entity with name [" + entityName + "]");
+            }
+            
             String fieldName = fieldNameExdr.expandString(context);
             
             Object value = null;
