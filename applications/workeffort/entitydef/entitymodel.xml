@@ -393,6 +393,9 @@
         <exclude field="fixedAssetId"/>
         <exclude field="description"/>
         <exclude field="createdDate"/>
+        <exclude field="createdByUserLogin"/>
+        <exclude field="lastModifiedDate"/>
+        <exclude field="lastModifiedByUserLogin"/>
       </alias-all>
       <alias entity-alias="WEF" name="workEffortDescription" field="description"/>
       <alias entity-alias="WEF" name="workEffortFixedAssetId" field="fixedAssetId"/>
@@ -861,10 +864,18 @@
       <alias-all entity-alias="PREL">
         <exclude field="partyIdTo"/>
         <exclude field="partyIdFrom"/>
+        <exclude field="fromDate"/>
+        <exclude field="thruDate"/>
+        <exclude field="statusId"/>
+        <exclude field="comments"/>
       </alias-all>
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId"/>
       <alias entity-alias="PREL" name="partyId" field="partyIdTo"/>
       <alias entity-alias="PREL" name="groupPartyId" field="partyIdFrom"/>
+      <alias entity-alias="PREL" name="prelFromDate" field="fromDate"/>
+      <alias entity-alias="PREL" name="prelThruDate" field="thruDate"/>
+      <alias entity-alias="PREL" name="prelStatusId" field="statusId"/>
+      <alias entity-alias="PREL" name="prelComments" field="comments"/>
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
