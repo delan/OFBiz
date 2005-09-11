@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -232,9 +232,7 @@
             </lookup>
         </field>
         -->
-        <field name="contactListId">
-            <lookup size="20" target-form-name="LookupContactList"/>
-        </field>
+        <field name="contactListId"><lookup size="20" target-form-name="LookupContactList"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><date-time/></field>
         <field name="subject"><text size="30"/></field>
@@ -248,9 +246,7 @@
         <field name="commEventId"><lookup target-form-name="LookupCommEvent"/></field>
         <field name="fromDate"><date-find/></field>
         <field name="thruDate"><date-find/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext">
-            <submit button-type="text-link"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="ListContactListCommEvents" list-iterator-name="listIt" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
         <actions>
@@ -297,7 +293,6 @@
         </field>
         <field name="marketingCampaignId">
             <drop-down allow-empty="true">
-                <view-map name="FindContactListCommEvent" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvents" type="screen"/>
                 <entity-options description="${campaignName}" entity-name="MarketingCampaign">
                     <entity-order-by field-name="campaignName"/>
                 </entity-options>
@@ -372,7 +367,6 @@
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><display/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><display/></field>
     </form>
-    
     <form name="ListPreferredContactMech" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="tabletext"
             target="" title="" type="list">
