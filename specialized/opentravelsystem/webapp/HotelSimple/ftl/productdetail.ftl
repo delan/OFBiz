@@ -211,7 +211,7 @@ ${virtualJavaScript?if_exists}
         <#if previousProductId?exists>
           <a href="<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${previousProductId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>/category/~category_id=${categoryId?if_exists}</@ofbizUrl>" class="linktext">${category.description?if_exists}</a>
+        <a href="<@ofbizUrl>/category/~category_id=${categoryId?if_exists}</@ofbizUrl>" class="buttontext">${category.description?if_exists}</a>
         <#if nextProductId?exists>
           &nbsp;|&nbsp;<a href="<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${nextProductId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
@@ -230,7 +230,7 @@ ${virtualJavaScript?if_exists}
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?has_content>
-        <a href="javascript:popupDetail();"><img src="<@ofbizContentUrl>${contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" border="0" width="200" align="left"></a>
+        <a href="javascript:popupDetail();"><img src="<@ofbizContentUrl>${contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>" name="mainImage" style="border:1px solid #000000;margin:5px" width="200" align="left"></a>
       </#if>
     </td>
     <td align="right" valign="top">
@@ -542,9 +542,11 @@ ${virtualJavaScript?if_exists}
         </div>
       <#else>
         <div class="tabletext">${uiLabelMap.ProductProductNotReviewedYet}.</div>
-        <div>
+      <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
+        <div class="tabletext">
             <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
         </div>
+      </#if>
       </#if>
   </div>
 

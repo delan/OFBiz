@@ -24,34 +24,6 @@
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
  
-    <screen name="main-decorator">
-        <section>
-            <actions>
-                <set field="page.appTabButtonItem" value="Accounting"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
-                    <decorator-section name="body">
-                        
-                        <container style="centerarea">
-                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderAccounting.ftl"/></html></platform-specific>
-                            <container style="contentarea">
-                                <container style="${MainColumnStyle}">
-                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
-                                    <decorator-section-include name="body"/>
-                                </container>
-                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
-                                <!--/container-->
-                            </container>
-                        </container>
-                        
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
- 
     <screen name="main">
         <section>
             <actions>
@@ -62,7 +34,7 @@
                 <!--set field="leftbarScreenName" value="leftbar"/-->
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="AccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                                 <container>
                                 <platform-specific>
@@ -77,4 +49,73 @@
         </section>
     </screen>
 
+    <screen name="FindPayments">
+        <section>
+            <actions>
+                <set field="title" value="Find an Payment"/>
+                <set field="titleProperty" value="PageTitleFindPayment"/>
+                <set field="headerItem" value="payments"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="AccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">Find Payments</label>
+                        </container>
+                        <include-form name="FindPayments" location="component://accountingext/webapp/accountingext/payment/PaymentForms.xml"/>
+                        <container>
+                            <link target="editPayment" text="[${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingPayment}]" style="buttontext"/>
+                            <include-form name="ListPayments"  location="component://accountingext/webapp/accountingext/payment/PaymentForms.xml"/>
+                            <link target="editPayment" text="[${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingPayment}]" style="buttontext"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindInvoices">
+        <section>
+            <actions>
+                <set field="title" value="Find an Invoice"/>
+                <set field="headerItem" value="invoices"/>
+                <set field="titleProperty" value="PageTitleFindInvoice"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="AccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">Find Invoices</label>
+                        </container>
+                        <include-form name="FindInvoices" location="component://accountingext/webapp/accountingext/invoice/InvoiceForms.xml"/>
+                        <container>
+                            <link target="editInvoice" text="[${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingInvoice}]" style="buttontext"/>
+                            <include-form name="ListInvoices"  location="component://accountingext/webapp/accountingext/invoice/InvoiceForms.xml"/>
+                            <link target="editInvoice" text="[${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingInvoice}]" style="buttontext"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="DataExchange">
+        <section>            
+            <actions>
+                <set field="title" value="Data Exchange"/>
+                <set field="headerItem" value="DataExchange"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="AccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">MT940 file upload.</label>
+                        </container>
+                        <include-form name="DataExchange" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
  </screens>

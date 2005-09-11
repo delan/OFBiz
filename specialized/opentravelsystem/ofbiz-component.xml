@@ -83,12 +83,12 @@
         mount-point="/hotelfrontendimages"
         app-bar-display="false"/>        
         
-    <webapp name="HaagscheSuites"
+    <!--webapp name="HaagscheSuites"
         title="Haagsche Suites"
         server="default-server"
         location="webapp/HaagscheSuites"
         mount-point="/HaagscheSuites"
-        app-bar-display="false"/>        
+        app-bar-display="false"/-->        
         
     <webapp name="HotelSimple"
         title="Hotel simplest, links in the site should open new window"

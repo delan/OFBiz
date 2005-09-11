@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev$
+ *@version    $Rev: 5462 $
  *@since      2.1
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
@@ -34,10 +34,12 @@
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 
-<div class="apptitle">${uiLabelMap.opentravelsystemAccounting}</div>
+<div class="apptitle">Customers</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
-  <!--div class="col"><a href="<@ofbizUrl>/intro</@ofbizUrl>" class="${selectedLeftClassMap.intro?default(unselectedLeftClassName)}">${uiLabelMap.CommonIntro}</a></div-->  
+  <div class="col"><a href="<@ofbizUrl>/mainAccounting</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/findInvoices</@ofbizUrl>" class="${selectedLeftClassMap.invoices?default(unselectedLeftClassName)}">${uiLabelMap.AccountingInvoicesMenu}</a></div>
+  <div class="col"><a href="<@ofbizUrl>/findPayments</@ofbizUrl>" class="${selectedLeftClassMap.payments?default(unselectedLeftClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a></div>
+  <div class="col"><a href="<@ofbizUrl>/DataExchange</@ofbizUrl>" class="${selectedLeftClassMap.DataExchange?default(unselectedLeftClassName)}">Bank Upload</a></div>
 
   <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
