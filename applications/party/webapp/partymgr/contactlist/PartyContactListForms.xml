@@ -24,10 +24,10 @@
   <form name="ListPartyContactLists" default-title-style="tableheadtext"
         target="updateContactListParty" separate-columns="true"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-          title="" type="list">
+        title="" type="list">
         <actions>
             <entity-and entity-name="ContactListParty">
-                <field-map env-name="partyId"/>
+                <field-map field-name="partyId"/>
             </entity-and>
         </actions>
         <field name="partyId"><hidden/></field>
@@ -35,7 +35,7 @@
         <field name="contactListId"  widget-style="buttontext" title="${uiLabelMap.ContactListContactListId}">
             <display-entity entity-name="ContactList" description="${contactListName}">
                 <sub-hyperlink  target="/marketing/control/EditContactList?contactListId=${contactListId}&amp;DONE_PAGE=https://localhost:8443/partymgr/control/ListPartyContactLists?partyId=BigSupplier"
-                description="[${contactListId}]" also-hidden="false" target-type="inter-app"/>
+                description="[${contactListId}]" target-type="inter-app"/>
             </display-entity>
         </field>
         
@@ -84,7 +84,7 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         
         <actions>
-            <entity-and entity-name="ContactList"/>
+            <entity-condition entity-name="ContactList"/>
         </actions>
         
         <field name="contactListId"  widget-style="buttontext" title="contactListId">

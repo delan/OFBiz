@@ -290,17 +290,13 @@
     </form>
     <form name="ListSegmentRoles" type="list" 
         target="updateSegmentGroupRole" title="" 
-        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        target=""  title="" type="list">
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-        <entity-and entity-name="SegmentGroupRole">
-            <field-map env-name="partyId" />
-        </entity-and>
+            <entity-and entity-name="SegmentGroupRole">
+                <field-map field-name="partyId" />
+            </entity-and>
         </actions>
-        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.PartySegmentGroupId}">
-            <display/>
-        </field>
+        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.PartySegmentGroupId}"><display/></field>
         <field name="partyId" title="${uiLabelMap.PartyId}"><display/></field>
         <field name="roleTypeId" title="${uiLabelMap.PartySegmentGroupTypeId}">
             <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
@@ -332,12 +328,10 @@
     </form>
     <form name="ListPartyClassifications" type="list" 
         target="updatePartyClassification" title="" 
-        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        target=""  title="" type="list">
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
         <entity-and entity-name="PartyClassification">
-            <field-map env-name="partyId" />
+            <field-map field-name="partyId" />
         </entity-and>
         </actions>
         <field name="partyId" title="${uiLabelMap.PartyId}"><display/></field>
@@ -345,7 +339,7 @@
             <display-entity entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}&amp;nbsp;[${partyClassificationGroupId}]"/>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"><date-time/></field>
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="deletePartyClassification?partyClassificationGroupId=${partyClassificationGroupId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"
@@ -354,17 +348,13 @@
     </form>
     <form name="ListPartyClassificationGroups" type="list" 
         target="" title="" 
-        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        target=""  title="" type="list">
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-            <entity-and entity-name="PartyClassificationGroup"/>
+            <entity-condition entity-name="PartyClassificationGroup"/>
         </actions>
         <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}">
-            
             <hyperlink target="EditPartyClassificationGroup?partyClassificationGroupId=${partyClassificationGroupId}"
                 description="${partyClassificationGroupId}" also-hidden="false"/>
-            
         </field>
         <field name="partyClassificationTypeId" title="${uiLabelMap.PartyClassificationTypeId}">
             <display-entity entity-name="PartyClassificationType" key-field-name="partyClassificationTypeId" description="${description}"/>
@@ -431,7 +421,6 @@
     <form name="AddPartyClassificationParty" type="single" 
             target="createPartyClassificationParty" title="" default-map-name="partyClassification"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        
         <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}" >
             <display-entity entity-name="PartyClassificationGroup" description="${description}" key-field-name="partyClassificationGroupId"/>
         </field>
@@ -451,18 +440,16 @@
     <form name="ListPartyClassificationGroupParties" type="list" 
         target="updatePartyClassificationParty" title="" 
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        target=""  title="" type="list">
         <actions>
-        <entity-and entity-name="PartyClassification">
-            <field-map env-name="partyClassificationGroupId" />
-        </entity-and>
+            <entity-and entity-name="PartyClassification">
+                <field-map field-name="partyClassificationGroupId"/>
+            </entity-and>
         </actions>
-        <field name="partyClassificationGroupId" title="${uiLabelMap.Description} [${uiLabelMap.PartyClassificationGroupId}]">
+        <field name="partyClassificationGroupId" title="${uiLabelMap.Description} [${uiLabelMap.PartyClassificationGroupId}]" widget-style="tabletext">
             <display-entity entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}&amp;nbsp;[${partyClassificationGroupId}]"/>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyId}"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="partyId" title="${uiLabelMap.PartyId}" widget-style="tabletext"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
