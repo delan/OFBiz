@@ -42,7 +42,7 @@
           <#list productPromos as productPromo>
             <tr>
               <td>
-                <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText?if_exists}</div>
+                <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a> ${productPromo.promoText?if_exists}</div>
               </td>
             </tr>
             <#if productPromo_has_next>
@@ -52,7 +52,7 @@
           <tr><td><hr class="sepbar"/></td></tr>
           <tr>
             <td>
-              <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewAllPromotions}]</a></div>
+              <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceViewAllPromotions}</a></div>
             </td>
           </tr>
         </table>

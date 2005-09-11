@@ -46,43 +46,43 @@
                 <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
                   <tr>
                     <td>
-                      <a href="<@ofbizUrl>/RequirementsForSupplier</@ofbizUrl>" class="buttontext">[${uiLabelMap.Requirements}]</a>
+                      <a href="<@ofbizUrl>/RequirementsForSupplier</@ofbizUrl>" class="buttontext">${uiLabelMap.Requirements}</a>
                     </td>
                   </tr>
                 </#if>
                 <#if shoppingCart.getOrderType() == "SALES_ORDER">
                   <tr>
                     <td>
-                      <a href="<@ofbizUrl>/FindQuoteForCart</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderOrderQuotes}]</a>
+                      <a href="<@ofbizUrl>/FindQuoteForCart</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderOrderQuotes}</a>
                     </td>
                   </tr>
                 </#if>
                 <tr>
                   <td>
-                    <a href="/partymgr/control/findparty?${externalKeyParam?if_exists}" class="buttontext">[${uiLabelMap.PartyFindParty}]</a>
+                    <a href="/partymgr/control/findparty?${externalKeyParam?if_exists}" class="buttontext">${uiLabelMap.PartyFindParty}</a>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="<@ofbizUrl>/checkinits</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyChangeParty}]</a>
+                    <a href="<@ofbizUrl>/checkinits</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyChangeParty}</a>
                   </td>
                 </tr>
                 <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
                   <tr>
                     <td>
-                      <a href="/catalog/control/EditProduct?${externalKeyParam?if_exists}" target="catalog" class="buttontext">[${uiLabelMap.ProductCreateNewProduct}]</a>
+                      <a href="/catalog/control/EditProduct?${externalKeyParam?if_exists}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateNewProduct}</a>
                     </td>
                   </tr>
                 </#if>
                 <tr>
                   <td>
-                    <a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceQuickAdd}]</a>
+                    <a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceQuickAdd}</a>
                   </td>
                 </tr>
                 <#if shoppingLists?exists>
                   <tr>
                     <td>
-                      <a href="<@ofbizUrl>/viewPartyShoppingLists?partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PageTitleShoppingList}]</a>
+                      <a href="<@ofbizUrl>/viewPartyShoppingLists?partyId=${partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.PageTitleShoppingList}</a>
                     </td>
                   </tr>
                 </#if>

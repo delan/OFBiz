@@ -88,11 +88,11 @@
                     <span class="tabletext">
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                    <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
                     </#if>
                     ${lowIndex+1} - ${highIndex} of ${listSize}
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                    | <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
                     </#if>
                     </b>
                     </span>

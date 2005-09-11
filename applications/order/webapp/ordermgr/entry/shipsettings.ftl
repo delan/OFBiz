@@ -75,7 +75,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingAddress.contactMechId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingAddress.contactMechId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -90,7 +90,7 @@
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td colspan="3">
-                  <a href="<@ofbizUrl>/setShipping?createNew=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCreateNew}]</a>
+                  <a href="<@ofbizUrl>/setShipping?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
                 </td>
               </tr>
               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform"> 
@@ -116,7 +116,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></div>
                     </td>                      
                   </tr>
                   <#if shippingContactMech_has_next>

@@ -77,10 +77,10 @@
                     </div>
                     <#if productId?exists>
                       <div class="tabletext">
-                        <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductCatalog}]</a>
-                        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.EcommerceEcommerce}]</a>
+                        <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">${uiLabelMap.EcommerceEcommerce}</a>
                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
-                          <a href="<@ofbizUrl>/viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">[${uiLabelMap.OrderViewImage}]</a>
+                          <a href="<@ofbizUrl>/viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
                         </#if>
                       </div>
                     </#if>
@@ -134,7 +134,7 @@
                   <td>&nbsp;</td>
                   <td align="right" valign="top" nowrap>
                     <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED") || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && orderHeader.statusId != "ORDER_SENT")>
-                      <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancelAll}]</a></div>
+                      <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCancelAll}</a></div>
                     <#else>
                       &nbsp;
                     </#if>
@@ -201,7 +201,7 @@
                     <td align="right" valign="top" nowrap>
                       <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)))>
                       <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
-                        <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancel}]</a></div>
+                        <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCancel}</a></div>
                       <#else>
                         &nbsp;
                       </#if>
@@ -252,7 +252,7 @@
                   <input type="text" name="amount" size="6" value="0.00" class="inputBox"/>
                 </td>
                 <td align="right" colspan="2">
-                  <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">[${uiLabelMap.CommonAdd}]</a>
+                  <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">${uiLabelMap.CommonAdd}</a>
                 </td>
               </form>
             </tr>

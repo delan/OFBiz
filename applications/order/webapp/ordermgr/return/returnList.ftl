@@ -25,7 +25,7 @@
 -->
 
 <div class="head1">Current Returns</div>
-<div><a href="<@ofbizUrl>/returnMain</@ofbizUrl>" class="buttontext">[Create Return]</a></div>
+<div><a href="<@ofbizUrl>/returnMain</@ofbizUrl>" class="buttontext">Create Return</a></div>
 
 <br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 

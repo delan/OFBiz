@@ -36,7 +36,7 @@
             <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'/></#if>
             <#if requestParameters.SEARCH_STRING?exists><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'/></#if>
             <#if requestParameters.SEARCH_CATEGORY_ID?exists><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'/></#if>                                     
-            <a href="javascript:document.thecategoryform.submit()" class="buttontext"><nobr>[${uiLabelMap.ProductAddProductsUsingDefaultQuantities}]</nobr></a>
+            <a href="javascript:document.thecategoryform.submit()" class="buttontext"><nobr>${uiLabelMap.ProductAddProductsUsingDefaultQuantities}</nobr></a>
           </form>
         </#if>
         <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductSearchinCategory}</a>
@@ -66,13 +66,13 @@
       <#-- End Page Select Drop-Down -->
       <b>
         <#if (viewIndex?int > 1)>
-          <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+          <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
       </b>
     </div>
@@ -98,13 +98,13 @@
       <#-- End Page Select Drop-Down -->
       <b>
         <#if (viewIndex?int > 1)>
-          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
       </b>
     </div>

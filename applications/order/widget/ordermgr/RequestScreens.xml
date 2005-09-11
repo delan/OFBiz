@@ -75,7 +75,7 @@
                             <label style="head1">${uiLabelMap.OrderRequestList}</label>
                         </container>
                         <container>
-                            <link target="request" text="[${uiLabelMap.OrderNewRequest}]" style="buttontext"/>
+                            <link target="request" text="${uiLabelMap.OrderNewRequest}" style="buttontext"/>
                         </container>
                         <include-form name="FindRequests" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
                         <include-form name="ListRequests" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
@@ -101,7 +101,7 @@
                 <decorator-screen name="CommonRequestDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="request" text="[${uiLabelMap.OrderNewRequest}]" style="buttontext"/>
+                            <link target="request" text="${uiLabelMap.OrderNewRequest}" style="buttontext"/>
                         </container>
                         <include-form name="EditCustRequest" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
                     </decorator-section>
@@ -147,7 +147,7 @@
                 <decorator-screen name="CommonRequestDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.OrderNewRequestItem}]" style="buttontext"/>
+                            <link target="requestitem?custRequestId=${custRequestId}" text="${uiLabelMap.OrderNewRequestItem}" style="buttontext"/>
                         </container>
                         <include-form name="ListRequestItems" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
                     </decorator-section>
@@ -175,7 +175,7 @@
                             <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
                         </container>
                         <container>
-                            <link  target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.OrderNewRequestItem}]" style="buttontext"/>
+                            <link target="requestitem?custRequestId=${custRequestId}" text="${uiLabelMap.OrderNewRequestItem}" style="buttontext"/>
                         </container>
                         <include-form name="EditCustRequestItem" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
                     </decorator-section>
@@ -206,7 +206,7 @@
                             <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
                         </container>
                         <container>
-                            <link  target="requestitem?custRequestId=${custRequestId}" text="[${uiLabelMap.OrderNewRequestItem}]" style="buttontext"/>
+                            <link  target="requestitem?custRequestId=${custRequestId}" text="${uiLabelMap.OrderNewRequestItem}" style="buttontext"/>
                         </container>
                         <include-form name="EditWorkEffort" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
                     </decorator-section>
@@ -265,7 +265,7 @@
                             <label style="head2">[${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId}] ${custRequestItem.description}</label>
                         </container>
                         <container>
-                            <link target="EditRequirement?custRequestId=${custRequestItem.custRequestId}&amp;custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}" text="[${uiLabelMap.OrderNewRequirement}]" style="buttontext"/>
+                            <link target="EditRequirement?custRequestId=${custRequestItem.custRequestId}&amp;custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}" text="${uiLabelMap.OrderNewRequirement}" style="buttontext"/>
                         </container>
 
                         <include-form name="ListRequestItemRequirements" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>

@@ -27,8 +27,8 @@
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
   <p class="head1">Receive Offline Payment(s)</p>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
-  &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[Save]</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">Go&nbsp;Back</a>
+  &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">Save</a>
 
   <form method="post" action="<@ofbizUrl>/receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">    
     <input type="hidden" name="orderId" value="${requestParameters.order_id}">
@@ -55,8 +55,8 @@
     </table>
   </form>
   
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
-  &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[Save]</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">Go&nbsp;Back</a>
+  &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">Save</a>
    
 <br/>
 <#else>

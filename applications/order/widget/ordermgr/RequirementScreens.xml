@@ -73,7 +73,7 @@
                             <label style="head1">${uiLabelMap.OrderRequirements}</label>
                         </container>
                         <container>
-                            <link target="EditRequirement" text="[${uiLabelMap.OrderNewRequirement}]" style="buttontext"/>
+                            <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="buttontext"/>
                         </container>
                         <include-form name="FindRequirements" location="component://order/webapp/ordermgr/requirement/RequirementForms.xml"/>
                         <include-form name="ListRequirements" location="component://order/webapp/ordermgr/requirement/RequirementForms.xml"/>
@@ -98,7 +98,7 @@
                 <decorator-screen name="CommonRequirementDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditRequirement" text="[${uiLabelMap.OrderNewRequirement}]" style="buttontext"/>
+                            <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="buttontext"/>
                         </container>
                         <include-form name="EditRequirement" location="component://order/webapp/ordermgr/requirement/RequirementForms.xml"/>
                     </decorator-section>

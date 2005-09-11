@@ -59,7 +59,7 @@
                 </div>
               </td>
               <td align="right">
-                <a href="<@ofbizUrl>/removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
+                <a href="<@ofbizUrl>/removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
               </td>
             </tr>
           </#list>

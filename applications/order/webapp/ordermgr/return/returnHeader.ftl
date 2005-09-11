@@ -34,7 +34,7 @@
     </#if>
 </div>
 <div>
-    <a href="<@ofbizUrl>/return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="buttontext">[PDF]</a>
+    <a href="<@ofbizUrl>/return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="buttontext">PDF</a>
 </div>
 <#else>
   <div class="head1">${uiLabelMap.OrderCreateNewReturn}</div>
