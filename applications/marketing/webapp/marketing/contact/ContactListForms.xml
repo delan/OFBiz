@@ -61,11 +61,23 @@
                 </entity-options>
             </drop-down>
         </field>
-        
-        <field name="DONE_PAGE"><hidden value="${donePage}"/></field>
+
+        <field name="ownerPartyId"><lookup target-form-name="LookupPartyName"/></field>
+ 
+        <field name="verifyEmailFrom"><text size="40"/></field>
+        <field name="verifyEmailScreen"><text size="60"/></field>
+        <field name="verifyEmailSubject"><text size="60"/></field>
+        <field name="verifyEmailWebSiteId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="WebSite" key-field-name="webSiteId" description="${siteName} [${webSiteId}]">
+                    <entity-order-by field-name="siteName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field>
+        <!-- <field name="DONE_PAGE"><hidden value="${donePage}"/></field> -->
+        <!-- <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
     </form>
 
     <form name="ListContactLists" default-title-style="tableheadtext"

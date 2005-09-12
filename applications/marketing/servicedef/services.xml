@@ -131,6 +131,12 @@
         </auto-attributes>
         <override name="statusId" optional="false"/>
     </service>
+    <service name="sendContactListPartyVerifyEmail" engine="simple" max-retry="3"
+        location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="sendContactListPartyVerifyEmail" auth="true">
+        <description>Send ContactListParty Verify Email</description>
+        <auto-attributes entity-name="ContactListParty" include="pk" mode="IN" optional="false"/>
+    </service>
+    
     
     <!-- TrackingCode Services -->
     <service name="createTrackingCode" default-entity-name="TrackingCode" engine="simple"

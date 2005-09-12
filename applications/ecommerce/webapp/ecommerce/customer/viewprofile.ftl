@@ -119,14 +119,14 @@
     <div class="screenlet-body">
   <#if partyContactMechValueMaps?has_content>
     <table width="100%" border="0" cellpadding="0">
-      <tr align="left" valign=bottom>
-        <th>${uiLabelMap.PartyContactType}</th>
-        <th width="5">&nbsp;</th>
-        <th>${uiLabelMap.CommonInformation}</th>
-        <th colspan="2">${uiLabelMap.PartySolicitingOk}?</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
+      <tr align="left" valign="bottom">
+        <th class="tableheadtext">${uiLabelMap.PartyContactType}</th>
+        <th class="tableheadtext" width="5">&nbsp;</th>
+        <th class="tableheadtext">${uiLabelMap.CommonInformation}</th>
+        <th class="tableheadtext" colspan="2">${uiLabelMap.PartySolicitingOk}?</th>
+        <th class="tableheadtext">&nbsp;</th>
+        <th class="tableheadtext">&nbsp;</th>
+        <th class="tableheadtext">&nbsp;</th>
       </tr>
       <#list partyContactMechValueMaps as partyContactMechValueMap>
         <#assign contactMech = partyContactMechValueMap.contactMech?if_exists>
@@ -250,7 +250,7 @@
                     <#assign eftAccount = paymentMethodValueMap.eftAccount?if_exists>
                     <tr>
                       <#if paymentMethod.paymentMethodTypeId?if_exists == "CREDIT_CARD">
-                          <td width="90%" valign="top">
+                          <td width="80%" valign="top">
                             <div class="tabletext">
                               <b>
                                 ${uiLabelMap.AccountingCreditCard}:&nbsp;
@@ -288,7 +288,7 @@
                             </#if>
                           </#if>
 
-                          <td width="90%" valign="top">
+                          <td width="80%" valign="top">
                             <div class="tabletext">
                               <b>${uiLabelMap.AccountingGiftCard}: ${giftCardNumber}</b>
                               (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
@@ -301,7 +301,7 @@
                             ${uiLabelMap.CommonUpdate}</a></div>
                           </td>
                       <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
-                          <td width="90%" valign="top">
+                          <td width="80%" valign="top">
                             <div class="tabletext">
                               <b>${uiLabelMap.AccountingEftAccount}: ${eftAccount.nameOnAccount?if_exists} - <#if eftAccount.bankName?has_content>Bank: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if></b>
                               (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
@@ -471,9 +471,8 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
     <div class="screenlet-body">
         <table width="100%" border="0" cellpadding="1" cellspacing="0">
             <tr>
-              <td>&nbsp;</td>
               <td width="15%" nowrap><div class="tableheadtext">List Name</div></td>
-              <td width="15%" nowrap><div class="tableheadtext">List Type</div></td>
+              <#-- <td width="15%" nowrap><div class="tableheadtext">List Type</div></td> -->
               <td width="15%" nowrap><div class="tableheadtext">From Date</div></td>
               <td width="15%" nowrap><div class="tableheadtext">Thru Date</div></td>
               <td width="15%" nowrap><div class="tableheadtext">Status</div></td>
@@ -481,14 +480,13 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
               <td width="20%" nowrap><div class="tableheadtext"><b>&nbsp;</b></div></td>
             </tr>
           <#list contactListPartyList as contactListParty>
-            <#assign contactList = contactListParty.getRelatedOne("ContactList")>
-            <#assign statusItem = contactListParty.getRelatedOneCache("StatusItem")>
-            <#assign contactListType = contactList.getRelatedOneCache("ContactListType")>
-            <tr><td colspan="8"><hr class="sepbar"/></td></tr>
+            <#assign contactList = contactListParty.getRelatedOne("ContactList")/>
+            <#assign statusItem = contactListParty.getRelatedOneCache("StatusItem")/>
+            <#-- <#assign contactListType = contactList.getRelatedOneCache("ContactListType")/> -->
+            <tr><td colspan="6"><hr class="sepbar"/></td></tr>
             <tr>
-              <td>&nbsp;</td>
               <td width="15%"><div class="tabletext"><b>${contactList.contactListName?if_exists}</b><#if contactList.description?has_content>&nbsp;-&nbsp;${contactList.description}</#if></div></td>
-              <td width="15%"><div class="tabletext">${contactListType.description?if_exists}</div></td>
+              <#-- <td width="15%"><div class="tabletext">${contactListType.description?if_exists}</div></td> -->
               <td width="15%"><div class="tabletext">${contactListParty.fromDate?if_exists}</div></td>
               <td width="15%"><div class="tabletext">${contactListParty.thruDate?if_exists}</div></td>
               <td width="15%"><div class="tabletext">${(statusItem.description)?if_exists}</div></td>
@@ -520,13 +518,13 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
             <span class="tableheadtext">New List Subscription: </span>
             <select name="contactListId" class="selectBox">
               <#list publicContactLists as publicContactList>
-                <#assign publicContactListType = publicContactList.getRelatedOneCache("ContactListType")>
+                <#-- <#assign publicContactListType = publicContactList.getRelatedOneCache("ContactListType")> -->
                 <#assign publicContactMechType = publicContactList.getRelatedOneCache("ContactMechType")?if_exists>
-                <option value="${publicContactList.contactListId}">${publicContactList.contactListName?if_exists} [${publicContactListType.description} <#if publicContactMechType?has_content>, ${publicContactMechType.description}</#if>]</option>
+                <option value="${publicContactList.contactListId}">${publicContactList.contactListName?if_exists} <#-- ${publicContactListType.description} --> <#if publicContactMechType?has_content>[${publicContactMechType.description}]</#if></option>
               </#list>
             </select>
             <select name="preferredContactMechId" class="selectBox">
-              <option></option>
+              <#-- <option></option> -->
               <#list partyAndContactMechList as partyAndContactMech>
                 <option value="${partyAndContactMech.contactMechId}"><#if partyAndContactMech.infoString?has_content>${partyAndContactMech.infoString}<#elseif partyAndContactMech.tnContactNumber?has_content>${partyAndContactMech.tnCountryCode?if_exists}-${partyAndContactMech.tnAreaCode?if_exists}-${partyAndContactMech.tnContactNumber}<#elseif partyAndContactMech.paAddress1?has_content>${partyAndContactMech.paAddress1}, ${partyAndContactMech.paAddress2?if_exists}, ${partyAndContactMech.paCity?if_exists}, ${partyAndContactMech.paStateProvinceGeoId?if_exists}, ${partyAndContactMech.paPostalCode?if_exists}, ${partyAndContactMech.paPostalCodeExt?if_exists} ${partyAndContactMech.paCountryGeoId?if_exists}</#if></option>
               </#list>

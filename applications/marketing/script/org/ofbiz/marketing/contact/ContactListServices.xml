@@ -147,9 +147,7 @@
         <check-permission permission="MARKETING" action="_DELETE"><fail-message message="Security Error: to run deleteContactListParty you must have the MARKETING_DELETE or MARKETING_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="ContactListParty" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="ContactListParty" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="createContactListPartyStatus" short-description="Create ContactListParty Status">
@@ -211,5 +209,68 @@
         </if>
 
         <create-value value-name="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="sendContactListPartyVerifyEmail" short-description="Send ContactListParty Verify Email">
+        <!-- allow if userLogin.partyId = parameters.partyId or has permission -->
+        <if>
+            <condition>
+                <and>
+                    <if-compare-field field-name="userLogin.partyId" operator="not-equals" to-field-name="parameters.partyId"/>
+                    <not><if-has-permission permission="MARKETING" action="_VIEW"/></not>
+                </and>
+            </condition>
+            <then><add-error><fail-message message="Security Error: to run sendContactListPartyVerifyEmail you must run it for yourself or have the MARKETING_VIEW or MARKETING_ADMIN permissions."/></add-error></then>
+        </if>
+        <check-errors/>
+
+        <entity-one entity-name="ContactList" value-name="contactList"/>
+        <entity-one entity-name="ContactListParty" value-name="contactListParty"/>
+        <get-related-one value-name="contactListParty" relation-name="PreferredContactMech" to-value-name="preferredContactMech"/>
+        
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field-name="contactList.verifyEmailFrom"></if-empty></not>
+                    <not><if-empty field-name="contactList.verifyEmailSubject"></if-empty></not>
+                    <not><if-empty field-name="contactList.verifyEmailScreen"></if-empty></not>
+                    <not><if-empty field-name="contactList.verifyEmailWebSiteId"></if-empty></not>
+                </and>
+            </condition>
+            <then>
+                <!-- get the latest pending status -->
+                <!-- look up the last ContactListPartyStatus with statusId=CLPT_PENDING -->
+                <entity-condition entity-name="ContactListPartyStatus" list-name="lastContactListPartyStatusList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="contactListId" env-name="parameters.contactListId"/>
+                        <condition-expr field-name="partyId" env-name="parameters.partyId"/>
+                        <condition-expr field-name="fromDate" env-name="parameters.fromDate"/>
+                        <condition-expr field-name="statusId" value="CLPT_PENDING"/>
+                    </condition-list>
+                    <order-by field-name="-statusDate"/>
+                </entity-condition>
+                <first-from-list entry-name="contactListPartyStatus" list-name="lastContactListPartyStatusList"/>
+                
+                <!-- TODO: if preferredContactMech.contactMechTypeId != EMAIL_ADDRESS, return an error -->
+                <!-- TODO: if preferredContactMech is empty, should we try to find the ContactMech we want based on the Party? -->
+                
+                <!-- TODO: this could really use some more work to be more flexible, or easier to maintain, like perhaps a general EmailSendSettings entity or something -->
+                <env-to-env env-name="preferredContactMech.infoString" to-env-name="sendMailFromScreenMap.sendTo"/>
+                <env-to-env env-name="contactList.verifyEmailFrom" to-env-name="sendMailFromScreenMap.sendFrom"/>
+                <env-to-env env-name="contactList.verifyEmailSubject" to-env-name="sendMailFromScreenMap.subject"/>
+                <env-to-env env-name="contactList.verifyEmailScreen" to-env-name="sendMailFromScreenMap.bodyScreenUri"/>
+                <env-to-env env-name="contactList.verifyEmailWebSiteId" to-env-name="sendMailFromScreenMap.webSiteId"/>
+                <string-to-field string="text/html" field-name="sendMailFromScreenMap.contentType"/>
+                
+                <env-to-env env-name="contactList" to-env-name="sendMailFromScreenMap.bodyParameters.contactList"/>
+                <env-to-env env-name="contactListParty" to-env-name="sendMailFromScreenMap.bodyParameters.contactListParty"/>
+                <env-to-env env-name="contactListPartyStatus" to-env-name="sendMailFromScreenMap.bodyParameters.contactListPartyStatus"/>
+                
+                <call-service service-name="sendMailFromScreen" in-map-name="sendMailFromScreenMap"/>
+            </then>
+            <else>
+                <log level="warning" message="WARNING: Not sending subscription verify email because verifyEmail* settings are missing on the ContactList record: ${contactList}"/>
+            </else>
+        </if>
     </simple-method>
 </simple-methods>
