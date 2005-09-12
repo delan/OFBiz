@@ -1057,6 +1057,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupCustRequest"/>
     </request-map>
+    <request-map uri="LookupCustRequestItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupCustRequestItem"/>
+    </request-map>
 
     <!-- PDFs -->
     <request-map uri="order.pdf">
@@ -1167,6 +1171,7 @@
     <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
     <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
     <view-map name="LookupCustRequest" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequest"/>
+    <view-map name="LookupCustRequestItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequestItem"/>
 
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>

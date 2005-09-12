@@ -206,7 +206,7 @@
         <attribute name="workEffortIdFrom" type="java.lang.String" mode="INOUT" optional="true"/>
         <attribute name="workEffortIdTo" type="java.lang.String" mode="INOUT" optional="true"/>
     </service>
-    <service name="createWorkEffortAndAssoc" engine="group" location="createWorkEffortAndAssoc" invoke="" auth="true"  >
+    <service name="createWorkEffortAndAssoc" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortAssoc" auth="true"  >
         <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
@@ -253,27 +253,6 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="assignAssocWorkEffortId"  engine="simple"
-            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="assignAssocWorkEffortId" auth="true">
-        <description>Assign workEffortId to empty workEffortIdTo/From</description>
-        <attribute name="workEffortId" type="java.lang.String" mode="IN" optional="false"/>
-        <attribute name="workEffortIdFrom" type="java.lang.String" mode="INOUT" optional="true"/>
-        <attribute name="workEffortIdTo" type="java.lang.String" mode="INOUT" optional="true"/>
-    </service>
-    <service name="createWorkEffortAndAssoc" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortAssoc" auth="true"  >
-        <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
-        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
-        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffortAssoc"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffortAssoc"/>
-    </service>
-    <service name="updateWorkEffortAndAssoc" engine="group" location="updateWorkEffortAndAssoc" invoke="" auth="true"  >
-        <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
-        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
-        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffortAssoc"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffortAssoc"/>
-    </service>
     <service name="createCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="makeCommunicationEventWorkEffort" auth="true"  >
         <description>Creates a CommunicationEvent entity and CommunicationEventWorkEff</description>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="CommunicationEvent"/>
@@ -296,9 +275,28 @@
         <auto-attributes include="all" mode="IN" optional="true" entity-name="CustRequest"/>
         <override name="custRequestId" optional="true" mode="INOUT"/>
     </service>
-    <service name="deleteWorkEffortRequest" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequest" auth="true"  >
+    <service name="deleteWorkEffortRequest" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortRequest" auth="true"  >
         <description>Deletes a CustRequestWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestWorkEffort"/>
+    </service>
+    <service name="createWorkEffortRequestItemAndRequestItem" engine="group" location="createWorkEffortRequestItemAndRequestItem" invoke="" auth="true"  >
+        <description>Creates a CustRequestItem entity and CustRequestItemWorkEffort</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestItemWorkEffort"/>
+        <auto-attributes include="all" mode="IN" optional="true" entity-name="CustRequestItem"/>
+    </service>
+    <service name="createWorkEffortRequestItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequestItem" auth="true"  >
+        <description>Creates a CustRequestItemWorkEffort</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestItemWorkEffort"/>
+        <auto-attributes include="all" mode="IN" optional="true" entity-name="CustRequestItem"/>
+    </service>
+    <service name="deleteWorkEffortRequestItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortRequestItem" auth="true"  >
+        <description>Deletes a CustRequestItemWorkEffort</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestItemWorkEffort"/>
+    </service>
+    <service name="checkCustRequestItemExists" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="checkCustRequestItemExists" auth="true"  >
+        <description>Checks to see if a CustRequestItem exists</description>
+        <auto-attributes include="pk" mode="IN" optional="true" entity-name="CustRequestItem"/>
+        <attribute name="custRequestItemExists" type="java.lang.String" mode="OUT" optional="true"/>
     </service>
 
 </services>

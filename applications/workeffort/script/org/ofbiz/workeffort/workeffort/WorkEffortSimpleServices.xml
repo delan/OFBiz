@@ -648,23 +648,59 @@
             <add-error><fail-message message="ERROR: CustRequestWorkEffort [${parameters.custRequestId}][${parameters.workEffortId}] already exists."/></add-error>
             <check-errors/>
         </if-not-empty>
-        <if-empty field-name="custRequestId" map-name="custRequestWorkEffort">
+        <if-not-empty field-name="custRequestId" map-name="custRequestWorkEffort">
             <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
             <create-value value-name="lookupMap"/>
             <field-to-result field-name="custRequestId" map-name="lookupMap"/>
-        </if-empty>
+        </if-not-empty>
     </simple-method>
     <simple-method method-name="deleteWorkEffortRequest" short-description="Delete a CustRequestWorkEffort">
         <make-value entity-name="CustRequestWorkEffort" value-name="lookupMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupMap"/>
         <find-by-primary-key entity-name="CustRequestWorkEffort" map-name="lookupMap" value-name="custRequestWorkEffort"/>
-        <if-not-empty field-name="custRequestId" map-name="custRequestWorkEffort">
+        <if-empty field-name="custRequestId" map-name="custRequestWorkEffort">
             <add-error><fail-message message="ERROR: CustRequestWorkEffort [${parameters.custRequestId}][${parameters.workEffortId}] does not exist."/></add-error>
             <check-errors/>
-        </if-not-empty>
+        </if-empty>
         <if-empty field-name="custRequestId" map-name="custRequestWorkEffort">
             <remove-value value-name="lookupMap"/>
         </if-empty>
+    </simple-method>
+
+    <!-- CustRequestItem workeffort -->
+    <simple-method method-name="createWorkEffortRequestItem" short-description="Create a CustRequestItemWorkEffort">
+        <make-value entity-name="CustRequestItemWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="CustRequestItemWorkEffort" map-name="lookupMap" value-name="custRequestItemWorkEffort"/>
+        <if-not-empty field-name="custRequestItemSeqId" map-name="custRequestItemWorkEffort">
+            <add-error><fail-message message="ERROR: CustRequestItemWorkEffort [${parameters.custRequestItemSeqId}][${parameters.workEffortId}] already exists."/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <if-empty field-name="custRequestItemSeqId" map-name="custRequestItemWorkEffort">
+            <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
+            <create-value value-name="lookupMap"/>
+        </if-empty>
+    </simple-method>
+    <simple-method method-name="deleteWorkEffortRequestItem" short-description="Delete a CustRequestItemWorkEffort">
+        <make-value entity-name="CustRequestItemWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="CustRequestItemWorkEffort" map-name="lookupMap" value-name="custRequestItemWorkEffort"/>
+        <if-empty field-name="custRequestItemSeqId" map-name="custRequestItemWorkEffort">
+            <add-error><fail-message message="ERROR: CustRequestItemWorkEffort [${parameters.custRequestItemSeqId}][${parameters.workEffortId}] does not exist."/></add-error>
+            <check-errors/>
+        </if-empty>
+        <if-not-empty field-name="custRequestItemSeqId" map-name="custRequestItemWorkEffort">
+            <remove-value value-name="lookupMap"/>
+        </if-not-empty>
+    </simple-method>
+    <simple-method method-name="checkCustRequestItemExists" short-description="Checks to see if a CustRequestItem exists">
+        <make-value entity-name="CustRequestItem" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="CustRequestItem" map-name="lookupMap" value-name="custRequestItem"/>
+        <if-not-empty field-name="custRequestItem">
+            <string-to-field field-name="custRequestItemExists" string="true"/>
+            <field-to-result field-name="custRequestItemExists"/>
+        </if-not-empty>
     </simple-method>
 
 </simple-methods>
