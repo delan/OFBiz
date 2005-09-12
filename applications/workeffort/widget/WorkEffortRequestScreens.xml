@@ -91,5 +91,73 @@
         </section>
     </screen>
 
+    <screen name="AddWorkEffortRequestItem">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleAddWorkEffortRequestItem"/>
+                <set field="tabButtonItem" value="WorkEffortRequestItems"/>
+                <set field="labelTitleProperty" value="PageTitleAddWorkEffortRequestItem"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                    <decorator-section name="body">
+                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortRequestItem} for workEffortId=${workEffortId}</label>
+                        <include-form name="AddWorkEffortRequestItem" location="component://workeffort/widget/WorkEffortRequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditWorkEffortRequestItem">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditWorkEffortRequestItem"/>
+                <set field="tabButtonItem" value="WorkEffortRequestItems"/>
+                <set field="labelTitleProperty" value="PageTitleEditWorkEffortRequestItem"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" />
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="custRequestItemId" from-field="parameters.custRequestItemId"/>
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                    <decorator-section name="body">
+                        <container><label style="head1">${uiLabelMap.PageTitleEditWorkEffortRequestItems} for workEffortId=${workEffortId}</label></container>
+                        <include-form name="EditWorkEffortRequestItem" location="component://workeffort/widget/WorkEffortRequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ListWorkEffortRequestItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleListWorkEffortRequestItems"/>
+                <set field="tabButtonItem" value="WorkEffortRequestItems"/>
+                <set field="labelTitleProperty" value="PageTitleListWorkEffortRequestItems"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                    <decorator-section name="body">
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortRequestItems} for workEffortId=${workEffortId}</label></container>
+                        <container><link target="/AddWorkEffortRequestItem?workEffortId=${workEffortId}" text="[Create New RequestItem]" style="linktext"></link></container>
+                        <include-form name="ListWorkEffortRequestItems" location="component://workeffort/widget/WorkEffortRequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
 

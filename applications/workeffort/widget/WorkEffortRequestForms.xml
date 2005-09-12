@@ -71,4 +71,62 @@
             <submit button-type="text-link"/>
         </field>
     </form>
+    <form name="ListWorkEffortRequestItems" separate-columns="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+        default-widget-style="tabletext" target="ListWorkEffortRequestItems" title="" type="list" >
+        <actions>
+            <entity-and entity-name="CustRequestItemWorkEffort">
+                <field-map field-name="workEffortId"/>
+            </entity-and>
+        </actions>
+        <field name="workEffortId" widget-style="buttontext"><display/></field>
+        <field name="custRequestId" widget-style="buttontext"><display/></field>
+        <field name="custRequestItemSeqId" widget-style="buttontext"><display/></field>
+        <field name="editLink" title="&amp;nbsp;" widget-style="linktext">
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonEdit}]" target="EditWorkEffortRequestItem?workEffortId=${workEffortId}&amp;custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="linktext">
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="deleteWorkEffortRequestItem?workEffortId=${workEffortId}&amp;custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
+        </field>
+    </form>
+  
+    <form name="AddWorkEffortRequestItem" 
+            default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+            default-widget-style="inputBox" 
+            extends="EditCustRequestItem" extends-resource="component://order/webapp/ordermgr/request/RequestForms.xml"
+            target="createWorkEffortRequestItem" title="" type="single">
+        <sort-order>
+            <sort-field name="workEffortId"/>
+            <sort-field name="custRequestId"/>
+            <sort-field name="custRequestItemSeqId"/>
+        </sort-order>
+        <field name="workEffortId"><display/></field>
+        <field name="custRequestId"><lookup target-form-name="/ordermgr/control/LookupCustRequest"/></field>
+        <field name="custRequestItemSeqId"><lookup target-form-name="/ordermgr/control/LookupCustRequestItem" target-parameter="custRequestId"/></field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+    </form>
+    
+    <form name="EditWorkEffortRequestItem" default-map-name="custRequestItem" 
+            default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+            default-widget-style="inputBox" 
+            extends="EditCustRequestItem" extends-resource="component://order/webapp/ordermgr/request/RequestForms.xml"
+            target="updateWorkEffortRequestItem" title="" type="single">
+        <actions>
+            <entity-one entity-name="StatusItem" value-name="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" env-name="custRequestItem.statusId"/>
+            </entity-one>
+        </actions>
+        <sort-order>
+            <sort-field name="workEffortId"/>
+            <sort-field name="custRequestId"/>
+            <sort-field name="custRequestItemSeqId"/>
+        </sort-order>
+        <field name="workEffortId" map-name="parameters" field-name="workEffortId"><display/></field>
+        <field name="custRequestId"><display/></field>
+        <field name="custRequestItemSeqId"><display/></field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+    </form>
 </forms>
