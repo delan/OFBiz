@@ -17,7 +17,7 @@
     <StatusItem description="Outgoing WIP InventoryItem Done" sequenceId="09" statusCode="WIP_OUTGOING_DONE" statusId="WIP_OUTGOING_DONE" statusTypeId="ROU_PRODUCT_ASSOC"/>
 
     <!-- Production Run Inventory event status -->
-    <StatusType description="Product in-out routing Association" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="PRUN_PRODUCT_ASSOC"/>
+    <StatusType description="Product and Raw Materials to Routing Association" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="PRUN_PRODUCT_ASSOC"/>
 
     <StatusItem description="Internal, Used for association between Product and associated Routing" sequenceId="01" statusCode="TEMPLATE" statusId="ROU_PROD_TEMPLATE" statusTypeId="PRUN_PRODUCT_ASSOC"/>
     <StatusItem description="Incoming WIP Product Planned" sequenceId="02" statusCode="WIP_INCOMING_PLAN" statusId="WIP_INCOMING_PLAN" statusTypeId="PRUN_PRODUCT_ASSOC"/>
@@ -55,6 +55,6 @@
 
     <WorkEffortType description="Fixed Asset Usage (rental)" hasTable="N" parentTypeId="" workEffortTypeId="ASSET_USAGE"/>
 
-    <WorkEffortAssocType description="Routing is composed with routingTask" hasTable="N" parentTypeId="" workEffortAssocTypeId="ROUTING_COMPONENT"/>
+    <WorkEffortAssocType description="Routing and Routing Task Association" hasTable="N" parentTypeId="" workEffortAssocTypeId="ROUTING_COMPONENT"/>
 
 </entity-engine-xml>
