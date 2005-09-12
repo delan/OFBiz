@@ -122,7 +122,7 @@
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" />
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
-                <set field="custRequestItemId" from-field="parameters.custRequestItemId"/>
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
             </actions>
