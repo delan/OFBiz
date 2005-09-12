@@ -193,6 +193,18 @@ public class OrderServices {
         if (orderItems.size() < 1) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "items.none", locale));
         }
+        List orderAdjustments = (List) context.get("orderAdjustments");
+        List orderItemShipGroupInfo = (List) context.get("orderItemShipGroupInfo");
+
+        // explode items which are MKTG_PKG_AUTO
+        if (!orderTypeId.equals("PURCHASE_ORDER")) {
+            try {
+               explodeMarketingPkgAutoItem(orderItems, orderAdjustments, orderItemShipGroupInfo, orderTypeId, delegator, dispatcher);
+            } catch (Exception e) {
+               Debug.logError(e, "Error calling explodeMarketingPkgAutoItem " + e.getMessage(), module);
+               return ServiceUtil.returnError("Error on exploding marketing_pkg_auto item.[" + e.toString() + "]");
+            }
+        }
 
         // check inventory and other things for each item
         List errorMessages = new LinkedList();
@@ -563,7 +575,6 @@ public class OrderServices {
 
         // set the orderId on all adjustments; this list will include order and
         // item adjustments...
-        List orderAdjustments = (List) context.get("orderAdjustments");
         if (orderAdjustments != null && orderAdjustments.size() > 0) {
             Iterator iter = orderAdjustments.iterator();
 
@@ -614,7 +625,6 @@ public class OrderServices {
         }
 
         // set the order item ship groups
-        List orderItemShipGroupInfo = (List) context.get("orderItemShipGroupInfo");
         if (orderItemShipGroupInfo != null && orderItemShipGroupInfo.size() > 0) {
             Iterator osiInfos = orderItemShipGroupInfo.iterator();
             while (osiInfos.hasNext()) {
@@ -4328,4 +4338,272 @@ public class OrderServices {
             return(ServiceUtil.returnError(ex.getMessage()));
         }
     }
+    
+
+  /**
+   * Explodes MARKET_PKG_AUTO item by replacing it with the underlying items (productIdTo in ProductAssoc.)
+   * Also pro-rates the adjustments (sales tax, promotions, etc.) among the underlying items.
+   * If there is a price difference between the MARKET_PKG_AUTO parent item and the sum of the underlying items, 
+   * a new OrderAdjustment, "MKTG_PKG_AUTO_ADJUST" is created, to record the difference.
+   * 
+   * @param orderItems
+   * @param orderAdjustments
+   * @param orderItemShipGroupInfo
+   * @param orderTypeId
+   * @param delegator
+   * @param dispatcher
+   * @return
+   */
+  public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, String orderTypeId, 
+      GenericDelegator delegator, LocalDispatcher dispatcher) throws Exception {
+
+    List newOrderItems = new ArrayList();
+    List newOrderAdjustments = new ArrayList();
+    List newOrderItemShipGroupInfo = new ArrayList();
+    Iterator itemIter = orderItems.iterator();
+
+    // loop through all order items to see if the need to be "exploded"
+    while (itemIter.hasNext()) {
+      GenericValue orderItem = (GenericValue) itemIter.next();
+      String productId = orderItem.getString("productId");
+      Double quantity = orderItem.getDouble("quantity");
+      Double unitPrice = orderItem.getDouble("unitPrice");
+      String orderItemSeqId = orderItem.getString("orderItemSeqId");
+      String prodCatalogId = orderItem.getString("prodCatalogId");
+
+      // ignore order items which are not products
+      if (productId == null || "".equals(productId)) {
+           continue;
+      }
+
+      try {
+        //deal with the order adjustment without orderItemSeqId.  These are adjustments of the order, and we just keep them.
+       if (orderAdjustments != null && orderAdjustments.size() > 0) {
+    	    for(int a =0; orderAdjustments.size()>a; a++) {
+    	      GenericValue orderAdjustment = (GenericValue) orderAdjustments.get(a);
+    	      if (UtilValidate.isEmpty(orderAdjustment.getString("orderItemSeqId"))) {
+    	         newOrderAdjustments.add(orderAdjustment);
+    	      }//if
+    	    }//for
+       }//if
+    	          
+      //deal with the item ship group without orderItemSeqId.  Similarly, just keep these
+      if (orderItemShipGroupInfo != null && orderItemShipGroupInfo.size() > 0) {
+    	   Iterator osiInfos = orderItemShipGroupInfo.iterator();
+    	   while (osiInfos.hasNext()) {
+    	     GenericValue valueObj = (GenericValue) osiInfos.next();
+    	     if ("OrderAdjustment".equals(valueObj.getEntityName()) || "OrderItemShipGroupAssoc".equals(valueObj.getEntityName())) {
+    	        if(UtilValidate.isEmpty(valueObj.getString("orderItemSeqId"))) {
+    	           newOrderItemShipGroupInfo.add(valueObj);
+    	        }//if
+    	     } else {
+    	        newOrderItemShipGroupInfo.add(valueObj);
+    	     }//if
+ 	   }//while
+        }//if
+
+        // find the products which are components of a MARKETING_PKG_AUTO, if any, for this product
+        List productAssocList = null;
+        Map tmpResult = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "MARKETING_PKG_AUTO"));
+        if (tmpResult.get("assocProducts") != null) {
+           productAssocList = (List) tmpResult.get("assocProducts");
+        }
+
+        if (productAssocList != null && productAssocList.size() > 0) {
+          Debug.logInfo("The product [" + productId + "] explodes to [" + productAssocList.toString() + "]", module);
+          // now add the associated products to the order
+          List assocOrderItems = new ArrayList();
+          double sumSubItemsPrice = 0;
+          double sumAssocQty = 0;
+          for (int i = 0; productAssocList.size() > i; i++) {
+            GenericValue productAssoc = (GenericValue) productAssocList.get(i);
+            GenericValue productTo = productAssoc.getRelatedOne("AssocProduct");
+            String productIdTo = productTo.getString("productId");
+            String itemDescription = productTo.getString("internalName");
+            Double productToQuantity = productAssoc.getDouble("quantity");
+            Double newQuantity = new Double(productToQuantity.doubleValue()*quantity.doubleValue());
+
+            Double listPrice = new Double(0);
+            Double basePrice = new Double(0);
+            // calculate price of the associated (component) product using calculateProductPrice
+            try {
+              Map priceContext = new HashMap();
+              priceContext.put("product", productTo);
+              priceContext.put("prodCatalogId", prodCatalogId);
+              priceContext.put("quantity", newQuantity);
+              Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
+              if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                  Debug.logWarning("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE), module);
+              }// if
+
+              Boolean validPriceFound = (Boolean) priceResult.get("validPriceFound");
+              if (!validPriceFound.booleanValue()) {
+                  Debug.logWarning("Could not find a valid price for the product with ID [" + productIdTo + "], not adding to cart.", module);
+              }// if
+
+              if (priceResult.get("listPrice") != null) {
+                  listPrice = (Double) priceResult.get("listPrice");
+              }// if
+              if (priceResult.get("price") != null) {
+                  basePrice = (Double) priceResult.get("price");
+              }// if
+             } catch (Exception e) {
+                 Debug.logWarning(e, "There was an error while calculating the price", module);
+                 throw e;
+             }// try
+             Debug.logInfo("The product [" + productIdTo + "] Price [" + basePrice + "]", module);
+             
+             // used to tally up total price of component items, so as to calculate correct adjustment later
+             sumSubItemsPrice = sumSubItemsPrice + newQuantity.doubleValue() * basePrice.doubleValue();
+             sumAssocQty = sumAssocQty + productToQuantity.intValue();
+
+             // now create the new order item
+             GenericValue newOrderItem = GenericValue.create(orderItem);
+             newOrderItem.set("productId", productIdTo);
+             newOrderItem.set("quantity", newQuantity);
+             newOrderItem.set("unitPrice", basePrice);
+             newOrderItem.set("unitListPrice", listPrice);
+             newOrderItem.set("orderItemSeqId", orderItemSeqId + "-" +i);
+             newOrderItem.set("cancelQuantity", productToQuantity);
+             newOrderItem.set("itemDescription", itemDescription);
+             assocOrderItems.add(newOrderItem);
+             Debug.logInfo("explode OrderItem [" + orderItem.toString() + "] to [" + newOrderItem + "]", module);
+           }// for
+          
+          // If there were a difference between the price of the parent item and the sum of the prices of the marketing package components, 
+          // then create an OrderAdjustment for each new order item and pro-rate the difference based on its quantity and the total quantity of all
+          // the component items.
+          double originalItemPrice = quantity.doubleValue() * unitPrice.doubleValue();
+          double adjustmentPrice = originalItemPrice - sumSubItemsPrice;
+          if (adjustmentPrice != 0 ) {
+            for (int a=0; assocOrderItems.size()>a ; a++) {
+                GenericValue assocOrderItem = (GenericValue) assocOrderItems.get(a);
+                String assocOrderItemSeqId = assocOrderItem.getString("orderItemSeqId");
+                Double productToQuantity = assocOrderItem.getDouble("cancelQuantity");
+              
+                Double percentage = new Double(productToQuantity.doubleValue()/sumAssocQty);
+                Double amount = new Double(adjustmentPrice*percentage.doubleValue());
+                GenericValue newOrderAdjustment = delegator.makeValue("OrderAdjustment",UtilMisc.toMap("orderAdjustmentTypeId", "MKTG_PKG_AUTO_ADJUST"));
+                newOrderAdjustment.put("orderItemSeqId", assocOrderItemSeqId);
+                newOrderAdjustment.put("amount", new Double(amount.doubleValue()));
+                newOrderAdjustments.add(newOrderAdjustment);
+                Debug.logInfo("Add new Order Adjustment [" + newOrderAdjustment.toString() + "] for Order Item [" + assocOrderItem.toString() + "]", module);
+            }//for
+          }//if
+          
+          // similarly prop-rate each order adjustment for the parent item to all the marketing package components
+          if (orderAdjustments != null && orderAdjustments.size() > 0) {
+             for(int a =0; orderAdjustments.size()>a; a++) {
+                GenericValue orderAdjustment = (GenericValue) orderAdjustments.get(a);
+                if (orderItemSeqId.equals(orderAdjustment.getString("orderItemSeqId"))) {
+                   Debug.log("Explode Order Adjustment [" + orderAdjustment.toString() + "]", module);
+                   for (int b=0; assocOrderItems.size()>b ; b++) {
+                      GenericValue assocOrderItem = (GenericValue) assocOrderItems.get(b);
+                      String assocOrderItemSeqId = assocOrderItem.getString("orderItemSeqId");
+                      Double productToQuantity = assocOrderItem.getDouble("cancelQuantity");
+                      Double amount = orderAdjustment.getDouble("amount");
+                  
+                      Double percentage = new Double(productToQuantity.doubleValue()/sumAssocQty);
+                      amount = new Double(amount.doubleValue() * percentage.doubleValue());
+                      GenericValue newOrderAdjustment = GenericValue.create(orderAdjustment);
+                      newOrderAdjustment.put("orderItemSeqId", assocOrderItemSeqId);
+                      newOrderAdjustment.put("amount", amount);
+                      newOrderAdjustments.add(newOrderAdjustment);
+                      Debug.logInfo("Add new Order Adjustment [" + newOrderAdjustment.toString() + "]", module);
+                   }//for
+                }//if
+            }//for
+          }//if
+          
+          // assign the new order items to the same ship group as the parent item
+          if (orderItemShipGroupInfo != null && orderItemShipGroupInfo.size() > 0) {
+              Iterator osiInfos = orderItemShipGroupInfo.iterator();
+              while (osiInfos.hasNext()) {
+                  GenericValue valueObj = (GenericValue) osiInfos.next();
+                  if ("OrderItemShipGroupAssoc".equals(valueObj.getEntityName())) {
+                      // assign the ship group
+                      if(orderItemSeqId.equals(valueObj.getString("orderItemSeqId"))) {
+                        Debug.log("Explode OrderItemShipGroupAssoc [" + valueObj.toString() + "]", module);
+                        for (int a=0; assocOrderItems.size()>a ; a++) {
+                           GenericValue assocOrderItem = (GenericValue) assocOrderItems.get(a);
+                           String assocOrderItemSeqId = assocOrderItem.getString("orderItemSeqId");
+                           GenericValue newValueObj = GenericValue.create(valueObj);
+                           newValueObj.put("orderItemSeqId", assocOrderItemSeqId);
+                           newValueObj.put("quantity", assocOrderItem.getDouble("quantity"));        
+                           newOrderItemShipGroupInfo.add(newValueObj);
+                           Debug.log("Create new  OrderItemShipGroupAssoc [" + newValueObj.toString() + "]", module);
+                         }//for  
+                      }//if
+                    } else if ("OrderAdjustment".equals(valueObj.getEntityName())) {
+                        // orderItemShipGroupInfo might also contain an order adjustment for tax adjustments to this ship group.  In that case,
+                        // pro-rate it as well.
+                        // TODO: it would be nice to re-factor this with the pro-rating code up above into one common code block.
+                        if(orderItemSeqId.equals(valueObj.getString("orderItemSeqId"))) {
+                          Debug.log("Explode OrderAdjustment [" + valueObj.toString() + "] ", module);
+                          for (int a=0; assocOrderItems.size()>a ; a++) {
+                             GenericValue assocOrderItem = (GenericValue) assocOrderItems.get(a);
+                             String assocOrderItemSeqId = assocOrderItem.getString("orderItemSeqId");
+
+                             Double productToQuantity = assocOrderItem.getDouble("cancelQuantity");
+                             Double amount = valueObj.getDouble("amount");
+                         
+                             Double percentage = new Double(productToQuantity.doubleValue()/sumAssocQty);
+                             amount = new Double(amount.doubleValue() * percentage.doubleValue());
+                             GenericValue newValueObj = GenericValue.create(valueObj);
+                             Double itemQuantity = assocOrderItem.getDouble("quantity"); 
+                             newValueObj.put("sourcePercentage", new Double(amount.doubleValue()/itemQuantity.doubleValue()));
+                             newValueObj.put("orderItemSeqId", assocOrderItemSeqId);
+                             newValueObj.put("amount", amount);
+                             newOrderItemShipGroupInfo.add(newValueObj);
+                             Debug.log("Create new  Order Adjustment [" + newValueObj.toString() + "]", module);
+                           }//for  
+                      }//if 
+                   }//if
+              }//while
+           }//if
+
+           for (int a=0; assocOrderItems.size()>a ; a++) {
+               GenericValue assocOrderItem = (GenericValue) assocOrderItems.get(a);
+               assocOrderItem.remove("cancelQuantity");
+               newOrderItems.add(assocOrderItem);
+           }//for
+        } else {
+           //deal with the orderItem which cannot be explode - just carry them with their adjustments over in the same ship group
+           newOrderItems.add(orderItem);
+            //order adjustment
+           if (orderAdjustments != null && orderAdjustments.size() > 0) {
+             for(int a =0; orderAdjustments.size()>a; a++) {
+                GenericValue orderAdjustment = (GenericValue) orderAdjustments.get(a);
+                if (orderItemSeqId.equals(orderAdjustment.getString("orderItemSeqId"))) {
+                   newOrderAdjustments.add(orderAdjustment);
+                }//if
+             }//for
+           }//if
+           //order item ship group
+           if (orderItemShipGroupInfo != null && orderItemShipGroupInfo.size() > 0) {
+              Iterator osiInfos = orderItemShipGroupInfo.iterator();
+              while (osiInfos.hasNext()) {
+                  GenericValue valueObj = (GenericValue) osiInfos.next();
+                  if ("OrderAdjustment".equals(valueObj.getEntityName()) || "OrderItemShipGroupAssoc".equals(valueObj.getEntityName())) {
+                     if(orderItemSeqId.equals(valueObj.getString("orderItemSeqId"))) {
+                         newOrderItemShipGroupInfo.add(valueObj);
+                      }//if
+                  }//if
+              }//while
+           }//if  
+         } // if
+      } catch (Exception e) {
+        Debug.logWarning(e, "There was an error in the [explodeMarketingPkgAutoItem]: " + e.getMessage(), module);
+        throw e;
+      }// try
+    }// while
+        
+    orderItems.clear();
+    orderItems.addAll(newOrderItems);
+    orderAdjustments.clear();
+    orderAdjustments.addAll(newOrderAdjustments);
+    orderItemShipGroupInfo.clear();
+    orderItemShipGroupInfo.addAll(newOrderItemShipGroupInfo);   
+  }// explodeMarketingPkgAutoItem
+
 }
