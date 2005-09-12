@@ -25,6 +25,7 @@
     <OrderAdjustmentType description="Surcharge" hasTable="N" orderAdjustmentTypeId="SURCHARGE_ADJUSTMENT" parentTypeId=""/>
     <OrderAdjustmentType description="Additional Feature" hasTable="N" orderAdjustmentTypeId="ADDITIONAL_FEATURE" parentTypeId=""/>
     <OrderAdjustmentType description="Warranty" hasTable="N" orderAdjustmentTypeId="WARRANTY_ADJUSTMENT" parentTypeId=""/>
+    <OrderAdjustmentType description="Marketing Package Adjustment" hasTable="N" orderAdjustmentTypeId="MKTG_PKG_AUTO_ADJUST" parentTypeId=""/>
 
     <OrderBlacklistType orderBlacklistTypeId="BLACKLIST_ADDRESS" description="Addresss"/>
     <OrderBlacklistType orderBlacklistTypeId="BLACKLIST_CREDITCARD" description="Credit Card"/>
