@@ -1055,6 +1055,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupCustRequestItem"/>
     </request-map>
+    <request-map uri="LookupQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupQuote"/>
+    </request-map>
+    <request-map uri="LookupQuoteItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupQuoteItem"/>
+    </request-map>
 
     <!-- PDFs -->
     <request-map uri="order.pdf">
@@ -1166,6 +1174,8 @@
     <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
     <view-map name="LookupCustRequest" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequest"/>
     <view-map name="LookupCustRequestItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequestItem"/>
+    <view-map name="LookupQuote" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuote"/>
+    <view-map name="LookupQuoteItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuoteItem"/>
 
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
