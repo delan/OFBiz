@@ -267,8 +267,8 @@ public class ServiceDispatcher {
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
         GenericEngine engine = this.getGenericEngine(modelService.engineName);
 
-        Map ecaContext = null; 
-        
+        Map ecaContext = null;
+
         // for isolated transactions
         Transaction parentTransaction = null;
 
@@ -347,7 +347,7 @@ public class ServiceDispatcher {
 
                 // re-check the errors/failures
                 isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));            
+                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
                 // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
                 ecaContext = FastMap.newInstance();
@@ -489,7 +489,7 @@ public class ServiceDispatcher {
         Transaction parentTransaction = null;
         // start the transaction
         boolean beganTrans = false;
-        
+
         try {
             if (service.useTransaction) {
                 beganTrans = TransactionUtil.begin(service.transactionTimeout);
@@ -501,7 +501,7 @@ public class ServiceDispatcher {
                     beganTrans = TransactionUtil.begin(service.transactionTimeout);
                 }
             }
-            
+
             // XAResource debugging
             if (beganTrans && TransactionUtil.debugResources) {
                 DebugXaResource dxa = new DebugXaResource(service.name);
@@ -723,7 +723,7 @@ public class ServiceDispatcher {
 
             if (userLogin != null) {
                 // Because of encrypted passwords we can't just pass in the encrypted version of the password from the data, so we'll do something different and not run the userLogin service...
-                
+
                 //The old way: GenericValue newUserLogin = getLoginObject(service, localName, userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), (Locale) context.get("locale"));
                 GenericValue newUserLogin = null;
                 try {
