@@ -205,7 +205,7 @@ function setAlternateGwp(field) {
             <td>
                 <#if cartLine.getShoppingListId()?exists>
                   <#assign itemsFromList = true>
-                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="buttontext">L</a>&nbsp;&nbsp;
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="linktext">L</a>&nbsp;&nbsp;
                 <#elseif cartLine.getIsPromo()>
                   <#assign promoItems = true>
                   <a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="buttontext">P</a>&nbsp;&nbsp;
@@ -227,7 +227,7 @@ function setAlternateGwp(field) {
                     </#if>
                     <#-- end code to display a small image of the product -->
                     <#-- <b>${cartLineIndex}</b> - -->
-                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
+                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="linktext">${cartLine.getProductId()} -
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
                     <#-- For configurable products, the selected options are shown -->
                     <#if cartLine.getConfigWrapper()?exists>
@@ -336,7 +336,7 @@ function setAlternateGwp(field) {
                 <td colspan="5" nowrap align="right">
                     <div class="tabletext">
                         <i>${uiLabelMap.EcommerceAdjustment}</i> - ${adjustmentType.description?if_exists}
-                        <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a></#if>:
+                        <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a></#if>:
                     </div>
                 </td>
                 <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></div></td>
@@ -347,19 +347,19 @@ function setAlternateGwp(field) {
 
         <#if (shoppingCart.getTotalSalesTax() > 0.0)>
         <tr>
-          <td colspan="5" align="right" valign=bottom>
+          <td colspan="5" align="right" valign="bottom">
             <div class="tabletext">${uiLabelMap.OrderSalesTax}:</div>
           </td>
-          <td colspan="2" align="right" valign=bottom>
+          <td colspan="2" align="right" valign="bottom">
             <div class="tabletext"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency()/></div>
           </td>
         </tr>
         </#if>
         <tr>
-          <td colspan="5" align="right" valign=bottom>
+          <td colspan="5" align="right" valign="bottom">
             <div class="tabletext"><b>${uiLabelMap.EcommerceCartTotal}:</b></div>
           </td>
-          <td colspan="2" align="right" valign=bottom>
+          <td colspan="2" align="right" valign="bottom">
             <hr size="1" class="sepbar">
             <div class="tabletext"><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b></div>
           </td>
@@ -394,7 +394,7 @@ function setAlternateGwp(field) {
                 <option value="">${uiLabelMap.EcommerceNewShoppingList}</option>
               </select>
               &nbsp;&nbsp;
-              <a href="javascript:addToList();" class="buttontext">[${uiLabelMap.EcommerceAddSelectedtoList}]</a>&nbsp;&nbsp;
+              <a href="javascript:addToList();" class="buttontext">${uiLabelMap.EcommerceAddSelectedtoList}</a>&nbsp;&nbsp;
               <#else>
                ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
                 ${uiLabelMap.EcommerceToAddSelectedItemsToShoppingList}.&nbsp;
@@ -446,13 +446,13 @@ function setAlternateGwp(field) {
     <div class="screenlet-body">
         <#-- show promotions text -->
         <#list productPromos as productPromo>
-            <div class="tabletext"><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText?if_exists}</div>
+            <div class="tabletext"><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="linktext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText?if_exists}</div>
             <#if productPromo_has_next>
                 <div><hr class="sepbar"/></div>
             </#if>
         </#list>
         <div><hr class="sepbar"/></div>
-        <div class="tabletext"><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewAllPromotions}]</a></div>
+        <div class="tabletext"><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceViewAllPromotions}</a></div>
     </div>
 </div>
 </#if>

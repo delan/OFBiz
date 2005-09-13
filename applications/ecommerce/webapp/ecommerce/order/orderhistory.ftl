@@ -75,7 +75,7 @@
               </td>
               <td width="10">&nbsp;</td>
               <td align="right">
-                <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a>
+                <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
               </td>
             </tr>
           </#list>
