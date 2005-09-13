@@ -24,7 +24,7 @@
 -->
 
 <div>
-    <a href="<@ofbizUrl>/EditQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateOrderQuote}</a>
+    <a href="<@ofbizUrl>/EditQuote</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateOrderQuote}</a>
     <#if quote?exists>
         <#if quote.statusId == "QUO_APPROVED">
             <a href="<@ofbizUrl>/loadCartFromQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateOrder}</a>
