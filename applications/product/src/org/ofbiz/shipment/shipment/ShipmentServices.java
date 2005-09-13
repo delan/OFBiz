@@ -68,7 +68,7 @@ public class ShipmentServices {
         // Create the basic entity.
         GenericValue estimate = delegator.makeValue("ShipmentCostEstimate", null);
 
-        estimate.set("shipmentCostEstimateId", delegator.getNextSeqId("ShipmentCostEstimate").toString());
+        estimate.set("shipmentCostEstimateId", delegator.getNextSeqId("ShipmentCostEstimate"));
         estimate.set("shipmentMethodTypeId", shipMethodSplit.get(1));
         estimate.set("carrierPartyId", shipMethodSplit.get(0));
         estimate.set("carrierRoleTypeId", "CARRIER");
@@ -511,5 +511,120 @@ public class ShipmentServices {
         Map responseResult = ServiceUtil.returnSuccess();
         responseResult.put("shippingEstimateAmount", new Double(shippingTotal));
         return responseResult;
+    }
+
+    public static Map fillShipmentStagingTables(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String shipmentId = (String) context.get("shipmentId");
+
+        GenericValue shipment = null;
+        if (shipmentId != null) {
+            try {
+                shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        if (shipment == null) {
+            return ServiceUtil.returnError("No shipment found!");
+        }
+
+        String shipmentStatusId = shipment.getString("statusId");
+        if ("SHIPMENT_PACKED".equals(shipmentStatusId)) {
+            GenericValue address = null;
+            try {
+                address = shipment.getRelatedOne("DestinationPostalAddress");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+            if (address == null) {
+                return ServiceUtil.returnError("No address found for shipment!");
+            }
+
+            List packages = null;
+            try {
+                packages = shipment.getRelated("ShipmentPackage") ;
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+
+            if (packages == null || packages.size() == 0) {
+                return ServiceUtil.returnError("No packages are available for shipping!");
+            }
+
+            List routeSegs = null;
+            try {
+                routeSegs = shipment.getRelated("ShipmentRouteSegment");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+            GenericValue routeSeg = EntityUtil.getFirst(routeSegs);
+
+            // to store list
+            List toStore = new ArrayList();
+
+            // make the staging records
+            GenericValue stageShip = delegator.makeValue("OdbcShipmentOut", null);
+            stageShip.set("shipmentId", shipment.get("shipmentId"));
+            stageShip.set("partyId", shipment.get("partyIdTo"));
+            stageShip.set("carrierPartyId", routeSeg.get("carrierPartyId"));
+            stageShip.set("shipmentMethodTypeId", routeSeg.get("shipmentMethodTypeId"));
+            stageShip.set("toName", address.get("toName"));
+            stageShip.set("attnName", address.get("attnName"));
+            stageShip.set("address1", address.get("address1"));
+            stageShip.set("address2", address.get("address2"));
+            stageShip.set("directions", address.get("directions"));
+            stageShip.set("city", address.get("city"));
+            stageShip.set("postalCode", address.get("postalCode"));
+            stageShip.set("postalCodeExt", address.get("postalCodeExt"));
+            stageShip.set("countryGeoId", address.get("stateProvinceGeoId"));
+            stageShip.set("stateProvinceGeoId", address.get("stateProvinceGeoId"));
+            stageShip.set("numberOfPackages", new Integer(packages.size()));
+            stageShip.set("handlingInstructions", shipment.get("handlingInstructions"));
+            toStore.add(stageShip);
+
+
+            Iterator p = packages.iterator();
+            while (p.hasNext()) {
+                GenericValue shipmentPkg = (GenericValue) p.next();
+                GenericValue stagePkg = delegator.makeValue("OdbcPackageOut", null);
+                stagePkg.set("shipmentId", shipmentPkg.get("shipmentId"));
+                stagePkg.set("shipmentPackageSeqId", shipmentPkg.get("shipmentPackageSeqId"));
+                stagePkg.set("orderId", shipment.get("primaryOrderId"));
+                stagePkg.set("shipGroupSeqId", shipment.get("primaryShipGroupSeqId"));
+                stagePkg.set("shipmentBoxTypeId", shipmentPkg.get("shipmentBoxTypeId"));
+                stagePkg.set("weight", shipmentPkg.get("weight"));
+                toStore.add(stagePkg);
+            }
+
+            try {
+                delegator.storeAll(toStore);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        } else {
+            Debug.logWarning("Shipment #" + shipmentId + " is not available for shipment; not setting in staging tables.", module);
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map clearShipmentStagingInfo(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String shipmentId = (String) context.get("shipmentId");
+        try {
+            delegator.removeByAnd("OdbcPackageIn", UtilMisc.toMap("shipmentId", shipmentId));
+            delegator.removeByAnd("OdbcPackageOut", UtilMisc.toMap("shipmentId", shipmentId));
+            delegator.removeByAnd("OdbcShipmentOut", UtilMisc.toMap("shipmentId", shipmentId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
     }
 }

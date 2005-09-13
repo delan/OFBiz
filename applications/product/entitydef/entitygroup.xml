@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<entitygroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitygroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitygroup.xsd">
 
   <!-- ========================================================= -->
@@ -43,7 +43,7 @@
     <entity-group group="org.ofbiz" entity="ProductCategoryAttribute" />
     <entity-group group="org.ofbiz" entity="ProductCategoryContent" />
     <entity-group group="org.ofbiz" entity="ProductCategoryContentAndInfo" />
-    <entity-group group="org.ofbiz" entity="ProductCategoryContentType" />    
+    <entity-group group="org.ofbiz" entity="ProductCategoryContentType" />
     <entity-group group="org.ofbiz" entity="ProductCategoryMember" />
     <entity-group group="org.ofbiz" entity="ProductCategoryMemberAndRole" />
     <entity-group group="org.ofbiz" entity="ProductCategoryRole" />
@@ -295,6 +295,13 @@
     <entity-group group="org.ofbiz" entity="ShipmentType" />
     <entity-group group="org.ofbiz" entity="ShipmentTypeAttr" />
     <entity-group group="org.ofbiz" entity="ShippingDocument" />
-    
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.odbc.shipment -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.odbc" entity="OdbcPackageOut" />
+    <entity-group group="org.ofbiz.odbc" entity="OdbcShipmentOut" />
+    <entity-group group="org.ofbiz.odbc" entity="OdbcPackageIn" />
 </entitygroup>
 

@@ -29,7 +29,7 @@
  */
 -->
 
-<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
@@ -146,7 +146,7 @@
         <key-map field-name="statusId"/>
       </relation>
     </entity>
-    <view-entity entity-name="PicklistAndBinAndItem" 
+    <view-entity entity-name="PicklistAndBinAndItem"
             package-name="org.ofbiz.shipment.picklist"
             title="Picklist and PicklistBin and PicklistItem View Entity">
       <member-entity entity-alias="PL" entity-name="Picklist"/>
@@ -458,10 +458,12 @@
       <member-entity entity-alias="SRS" entity-name="ShipmentRouteSegment"/>
       <member-entity entity-alias="SPRS" entity-name="ShipmentPackageRouteSeg"/>
       <alias entity-alias="II" name="orderId"/>
+      <alias entity-alias="II" name="orderItemSeqId"/>
       <alias entity-alias="II" name="shipmentId"/>
       <alias entity-alias="II" name="shipGroupSeqId"/>
       <alias entity-alias="SRS" name="shipmentRouteSegmentId"/>
       <alias entity-alias="SRS" name="carrierPartyId"/>
+      <alias entity-alias="SRS" name="actualStartDate"/>
       <alias entity-alias="SRS" name="shipmentMethodTypeId"/>
       <alias entity-alias="SPRS" name="shipmentPackageSeqId"/>
       <alias entity-alias="SPRS" name="trackingCode"/>
@@ -473,6 +475,9 @@
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentRouteSegmentId"/>
       </view-link>
+      <relation type="one-nofk" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
     </view-entity>
     <entity entity-name="Shipment"
             package-name="org.ofbiz.shipment.shipment"

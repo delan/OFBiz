@@ -21,38 +21,38 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
     <description>Common Application Components Shipment Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
-    
+
     <!-- Shipment Services -->
     <service name="createCarrierShipmentMethod" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="createCarrierShipmentMethod" auth="true">
         <description>Creates A CarrierShipmentMethod</description>
         <auto-attributes entity-name="CarrierShipmentMethod" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="CarrierShipmentMethod" include="nonpk" mode="IN" optional="true"/>        
+        <auto-attributes entity-name="CarrierShipmentMethod" include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateCarrierShipmentMethod" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="updateCarrierShipmentMethod" auth="true">
         <description>Updates A CarrierShipmentMethod</description>
         <auto-attributes entity-name="CarrierShipmentMethod" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="CarrierShipmentMethod" include="nonpk" mode="IN" optional="true"/>        
-    </service>         
+        <auto-attributes entity-name="CarrierShipmentMethod" include="nonpk" mode="IN" optional="true"/>
+    </service>
     <service name="createShipmentMethodType" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="createShipmentMethodType" auth="true">
-        <description>Creates A ShipmentMethodType</description>      
+        <description>Creates A ShipmentMethodType</description>
         <auto-attributes entity-name="ShipmentMethodType" mode="IN" optional="false"/>
         <override name="sequenceNum" optional="true"/>
     </service>
     <service name="updateShipmentMethodType" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentMethodType" auth="true">
-        <description>Updates A ShipmentMethodType</description>      
+        <description>Updates A ShipmentMethodType</description>
         <auto-attributes entity-name="ShipmentMethodType" mode="IN" optional="false"/>
         <override name="sequenceNum" optional="true"/>
     </service>
-    
+
     <service name="quickShipEntireOrder" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipEntireOrder" auth="true">
         <description>Quick Ships An Entire Order Creating One Package Per Facility</description>
@@ -71,6 +71,12 @@
         <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
         <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="prepareShipmentStaging" engine="java"
+            location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="fillShipmentStagingTables" auth="true">
+        <description>Prepares the shipment ODBC staging tables</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="createShipment" default-entity-name="Shipment" engine="simple"
@@ -302,6 +308,63 @@
         <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="false"/>
         <attribute name="itemIssuanceId" type="String" mode="OUT" optional="false"/>
     </service>
+
+    <!-- Pack Order Services -->
+    <service name="packSingleItem" engine="java"
+            location="org.ofbiz.shipment.packing.PackingServices" invoke="addPackLine" auth="true">
+        <description>Pack Single Item</description>
+        <attribute name="packingSession" type="org.ofbiz.shipment.packing.PackingSession" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="packageSeq" type="Integer" mode="IN" optional="false"/>
+        <attribute name="handlingInstructions" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="packBulkItems" engine="java"
+            location="org.ofbiz.shipment.packing.PackingServices" invoke="packBulk" auth="true">
+        <description>Pack Multiple Items</description>
+        <attribute name="packingSession" type="org.ofbiz.shipment.packing.PackingSession" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="handlingInstructions" type="String" mode="IN" optional="true"/>
+        <attribute name="prdInfo" type="Map" string-map-prefix="prd_" mode="IN" optional="true"/>
+        <attribute name="qtyInfo" type="Map" string-map-prefix="qty_" mode="IN" optional="true"/>
+        <attribute name="pkgInfo" type="Map" string-map-prefix="pkg_" mode="IN" optional="true"/>
+        <attribute name="selInfo" type="Map" string-map-prefix="sel_" mode="IN" optional="true"/>
+    </service>
+
+    <service name="setNextPackageSeq" engine="java"
+            location="org.ofbiz.shipment.packing.PackingServices" invoke="incrementPackageSeq" auth="true">
+        <description>Increments the next package sequence</description>
+        <attribute name="packingSession" type="org.ofbiz.shipment.packing.PackingSession" mode="IN" optional="false"/>
+        <attribute name="nextPackageSeq" type="Integer" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="clearPackAll" engine="java"
+            location="org.ofbiz.shipment.packing.PackingServices" invoke="clearPackAll" auth="true">
+        <description>Clear the current packing session</description>
+        <attribute name="packingSession" type="org.ofbiz.shipment.packing.PackingSession" mode="IN" optional="false"/>
+    </service>
+    <service name="clearPackLine" engine="java"
+            location="org.ofbiz.shipment.packing.PackingServices" invoke="clearPackLine" auth="true">
+        <description>Clear a single line from the current packing session</description>
+        <attribute name="packingSession" type="org.ofbiz.shipment.packing.PackingSession" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="packageSeqId" type="Integer" mode="IN" optional="false"/>
+    </service>
+
+    <service name="completePack" engine="java"
+            location="org.ofbiz.shipment.packing.PackingServices" invoke="completePack" auth="true">
+        <description>Complete the packging set the shipment to PACKED</description>
+        <attribute name="packingSession" type="org.ofbiz.shipment.packing.PackingSession" mode="IN" optional="false"/>
+        <attribute name="handlingInstructions" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
+    </service>
+
     <!-- Shipment Plan Services -->
     <service name="addOrderShipmentToShipment" engine="simple" default-entity-name="OrderShipment"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="addOrderShipmentToShipment" auth="true">
@@ -329,15 +392,15 @@
         <override name="inventoryItemId" optional="false"/>
         <override name="productId" optional="false"/>
         <override name="quantityAccepted" optional="false"/>
-        <override name="quantityRejected" optional="false"/>        
+        <override name="quantityRejected" optional="false"/>
     </service>
     <service name="createShipmentReceipt" engine="simple"
             location="org/ofbiz/shipment/receipt/ShipmentReceiptServices.xml" invoke="createShipmentReceipt" auth="true">
         <description>Creates a ShipmentReceipt Record</description>
-        <implements service="interfaceShipmentReceipt"/>        
+        <implements service="interfaceShipmentReceipt"/>
         <attribute name="receiptId" type="String" mode="OUT" optional="false"/>
     </service>
-    
+
     <service name="prepareInventoryReceipt" engine="simple"
             location="org/ofbiz/shipment/receipt/ShipmentReceiptServices.xml" invoke="prepareInventoryReceipt" auth="true">
         <description>Prepare Receipt Form for Inventory Item</description>
@@ -359,7 +422,7 @@
         <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="interfaceShipmentReceiptRole" engine="interface" location="" invoke="">
         <description>Interface for ShipmentReceiptRole</description>
         <attribute name="receiptId" type="String" mode="IN" optional="false"/>
@@ -415,7 +478,7 @@
         <description>Remove Shipment Estimate</description>
         <attribute name="shipmentCostEstimateId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="calcShipmentEstimateInterface" engine="interface" location="" invoke="">
         <description>Interface for shipment estimate calc service</description>
         <attribute name="serviceConfigProps" type="String" mode="IN" optional="true"/>
@@ -425,7 +488,7 @@
         <attribute name="carrierPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="carrierRoleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
-        <attribute name="shippableItemInfo" type="List" mode="IN" optional="false"/>        
+        <attribute name="shippableItemInfo" type="List" mode="IN" optional="false"/>
         <attribute name="shippableWeight" type="Double" mode="IN" optional="false"/>
         <attribute name="shippableQuantity" type="Double" mode="IN" optional="false"/>
         <attribute name="shippableTotal" type="Double" mode="IN" optional="false"/>

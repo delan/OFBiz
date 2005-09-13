@@ -21,18 +21,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-eca.xsd">
     <!-- Inventory Transfer ECAs -->
-    <eca service="createInventoryTransfer" event="invoke">  
-        <condition field-name="statusId" operator="not-equals" value="IXF_CANCELLED"/>      
+    <eca service="createInventoryTransfer" event="invoke">
+        <condition field-name="statusId" operator="not-equals" value="IXF_CANCELLED"/>
         <action service="prepareInventoryTransfer" mode="sync"/>
     </eca>
     <eca service="createInventoryTransfer" event="commit">
         <condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
         <action service="completeInventoryTransfer" mode="sync"/>
     </eca>
-    
+
     <eca service="updateInventoryTransfer" event="invoke">
         <condition field-name="statusId" operator="equals" value="IXF_CANCELLED"/>
         <action service="cancelInventoryTransfer" mode="sync"/>
@@ -76,5 +76,12 @@
     <eca service="createProductContent" event="in-validate">
         <condition field-name="contentId" operator="is-empty"/>
         <action service="createContent" mode="sync"/>
+    </eca>
+
+    <!-- pick list ECAs -->
+    <eca service="createPicklistFromOrders" event="in-validate">
+        <condition field-name="orderHeaderList" operator="is-empty"/>
+        <condition field-name="orderIdList" operator="is-not-empty"/>
+        <action service="convertPickOrderIdListToHeaders" mode="sync"/>
     </eca>
 </service-eca>
