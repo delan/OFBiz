@@ -67,7 +67,7 @@ public class DispatchContext implements Serializable {
     protected static UtilCache modelService = new UtilCache("service.ModelServices", 0, 0, false);
 
     protected transient LocalDispatcher dispatcher;
-    protected ClassLoader loader;
+    protected transient ClassLoader loader;
     protected Collection readers;
     protected Map attributes;
     protected String name;

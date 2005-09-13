@@ -39,28 +39,29 @@
 
 <%boolean hasUtilCacheEdit=security.hasPermission("UTIL_CACHE_EDIT", session);%>
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
+<%long totalSize = 0;%>
 
 <h3>Cache Element Maintenance Page</h3>
 
-<%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
-  <%if(cacheName!=null){%>
+<%if (security.hasPermission("UTIL_CACHE_VIEW", session)) {%>
+  <%if (cacheName!=null) {%>
    <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
-   <%if(utilCache!=null){%>
+   <%if (utilCache!=null) {%>
     <div class="tabletext"><b>Cache Name:</b>&nbsp;<%=cacheName%> (<%=(new Date()).toString()%>)</div>
-    <a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
-    <TABLE border='0' cellpadding='2' cellspacing='2'>
+    <div style="margin-top: 4px; margin-bottom: 4px;"><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class="buttontext">Back to Cache Maintenance</a></div>
+    <table border="0" cellpadding="2" cellspacing="2">
     <%
       String rowColor1 = "viewManyTR2";
       String rowColor2 = "viewManyTR1";
       String rowColor = "";
     %>
-      <TR class='viewOneTR1'>
-        <TD>Cache&nbsp;Element&nbsp;Key</TD>
-        <%-- <TD>createTime</TD> --%>
-        <TD>expireTime</TD>
-        <TD>bytes</TD>
-        <TD></TD>
-      </TR>
+      <tr class="viewOneTR1">
+        <td>Cache&nbsp;Element&nbsp;Key</td>
+        <%-- <td>createTime</td> --%>
+        <td>expireTime</td>
+        <td>bytes</td>
+        <td></td>
+      </tr>
 
           <%Iterator iter = utilCache.cacheLineTable.keySet().iterator();%>
           <%if(iter!=null && iter.hasNext()){%>
@@ -70,40 +71,41 @@
               <%CacheLine line = (CacheLine) utilCache.cacheLineTable.get(key);%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
               <tr class="<%=rowColor%>">
-                <TD><%=key%></TD>
-                <TD>
+                <td><%=key%></td>
+                <td>
                   <%long expireTime = utilCache.getExpireTime();%>
                   <%if(line != null && line.loadTime > 0){%>
                     <%=(new Date(line.loadTime + expireTime)).toString()%>
                   <%}%>
                   &nbsp;
-                </TD>
-                <TD>
-                  <%=line.getSizeInBytes()%>
+                </td>
+                <td>
+                  <%long lineSize = line.getSizeInBytes(); totalSize += lineSize;%>
+                  <%=lineSize%>
                   &nbsp;
-                </TD>
-                <TD>
-                  <%if(hasUtilCacheEdit){%>
-                    <a href='<ofbiz:url>/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=<%=cacheName%>&UTIL_CACHE_ELEMENT_NUMBER=<%=keyNum%></ofbiz:url>' class="buttontext">Remove</a>
+                </td>
+                <td>
+                  <%if (hasUtilCacheEdit) {%>
+                    <a href="<ofbiz:url>/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=<%=cacheName%>&UTIL_CACHE_ELEMENT_NUMBER=<%=keyNum%></ofbiz:url>" class="buttontext">Remove</a>
                   <%}%>
-                </TD>
-              </TR>
+                </td>
+              </tr>
               <%keyNum++;%>
             <%}%>
-          <%}else{%>
+          <%} else {%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-                <TD colspan="5">No UtilCache elements found.</TD>
-              </TR>
+                <td colspan="5">No UtilCache elements found.</td>
+              </tr>
           <%}%>
-
-    </TABLE>
+    </table>
    <%}else{%>
     <H2>&nbsp;<%=cacheName%> Not Found</H2>
    <%}%>
   <%}else{%>
     <H2>&nbsp;No Cache Name Specified</H2>
   <%}%>
-  <a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
+  <div class="tabletext">&nbsp;Size Total: <%=totalSize%> bytes</div>
+  <div style="margin-top: 4px;"><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class="buttontext">Back to Cache Maintenance</a></div>
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_VIEW needed).</h3>
 <%}%>

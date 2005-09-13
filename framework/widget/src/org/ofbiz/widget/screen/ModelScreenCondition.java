@@ -23,6 +23,7 @@
  */
 package org.ofbiz.widget.screen;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -55,7 +56,7 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      3.1
  */
-public class ModelScreenCondition {
+public class ModelScreenCondition implements Serializable {
     public static final String module = ModelScreenCondition.class.getName();
 
     protected ModelScreen modelScreen;
@@ -74,7 +75,7 @@ public class ModelScreenCondition {
         return rootCondition.eval(context);
     }
     
-    public static abstract class ScreenCondition {
+    public static abstract class ScreenCondition implements Serializable {
         protected ModelScreen modelScreen;
 
         public ScreenCondition(ModelScreen modelScreen, Element conditionElement) {

@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +49,7 @@ import org.w3c.dom.Node;
  * @version    $Rev$
  * @since      2.0
  */
-public class ModelFieldTypeReader {
+public class ModelFieldTypeReader implements Serializable {
 
     public static final String module = ModelFieldTypeReader.class.getName();
     public static UtilCache readers = new UtilCache("entity.ModelFieldTypeReader", 0, 0);

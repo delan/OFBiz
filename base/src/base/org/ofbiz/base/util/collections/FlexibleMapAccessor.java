@@ -23,6 +23,7 @@
  */
 package org.ofbiz.base.util.collections;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,7 +43,7 @@ import org.ofbiz.base.util.UtilMisc;
  * @version    $Rev$
  * @since      2.1
  */
-public class FlexibleMapAccessor {
+public class FlexibleMapAccessor implements Serializable {
     public static final String module = FlexibleMapAccessor.class.getName();
 
     protected String original;
@@ -273,7 +274,7 @@ public class FlexibleMapAccessor {
         return this.original.hashCode();
     }
     
-    public class SubMapAccessor {
+    public class SubMapAccessor implements Serializable {
         protected String extName;
         protected boolean isListReference = false;
         protected int listIndex = -1;

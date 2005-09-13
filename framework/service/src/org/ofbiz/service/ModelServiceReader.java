@@ -25,6 +25,7 @@
 package org.ofbiz.service;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
@@ -66,7 +67,7 @@ import org.xml.sax.SAXException;
  * @since      2.0
  */
 
-public class ModelServiceReader {
+public class ModelServiceReader implements Serializable {
 
     public static final String module = ModelServiceReader.class.getName();
 

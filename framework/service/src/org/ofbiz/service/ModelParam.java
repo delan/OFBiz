@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,6 @@
  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 package org.ofbiz.service;
 
@@ -181,8 +180,7 @@ public class ModelParam implements Serializable {
         throw new WSDLException(WSDLException.OTHER_ERROR, "Service cannot be described with WSDL (" + this.name + " / " + this.type + ")");
     }
 
-    static class ModelParamValidator {
-
+    static class ModelParamValidator implements Serializable {
         protected String className;
         protected String methodName;
         protected String failMessage;
@@ -221,4 +219,3 @@ public class ModelParam implements Serializable {
         }
     }
 }
-

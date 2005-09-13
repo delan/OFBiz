@@ -49,6 +49,8 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.w3c.dom.Element;
+
+import java.io.Serializable;
 import java.sql.ResultSet;
 
 /**
@@ -58,7 +60,7 @@ import java.sql.ResultSet;
  * @version    $Rev$
  * @since      3.1
  */
-public class ByAndFinder {
+public class ByAndFinder implements Serializable {
     
     public static final String module = ByAndFinder.class.getName();         
     

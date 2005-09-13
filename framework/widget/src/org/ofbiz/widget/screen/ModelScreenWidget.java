@@ -24,6 +24,7 @@
 package org.ofbiz.widget.screen;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +66,7 @@ import org.xml.sax.SAXException;
  * @version    $Rev$
  * @since      3.1
  */
-public abstract class ModelScreenWidget {
+public abstract class ModelScreenWidget implements Serializable {
     public static final String module = ModelScreenWidget.class.getName();
 
     protected ModelScreen modelScreen;

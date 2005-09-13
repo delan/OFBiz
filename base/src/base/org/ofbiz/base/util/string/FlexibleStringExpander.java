@@ -23,6 +23,7 @@
  */
 package org.ofbiz.base.util.string;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +45,7 @@ import bsh.EvalError;
  * @version    $Rev$
  * @since      2.2
  */
-public class FlexibleStringExpander {
+public class FlexibleStringExpander implements Serializable {
     
     public static final String module = FlexibleStringExpander.class.getName();
     
@@ -208,7 +209,7 @@ public class FlexibleStringExpander {
         }
     }
 
-    public static interface StringElement {
+    public static interface StringElement extends Serializable {
         public void appendElement(StringBuffer buffer, Map context, Locale locale);
     }
     
@@ -261,7 +262,7 @@ public class FlexibleStringExpander {
         }
     }
 
-    public static interface ParseElementHandler {
+    public static interface ParseElementHandler extends Serializable {
         public void handleConstant(String original, int start); 
         public void handleConstant(String original, int start, int end); 
         public void handleVariable(String original, int start, int end); 

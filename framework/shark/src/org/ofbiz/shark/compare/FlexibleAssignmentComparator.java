@@ -24,6 +24,7 @@
  */
 package org.ofbiz.shark.compare;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.enhydra.shark.api.client.wfmodel.WfAssignment;
@@ -36,7 +37,7 @@ import org.enhydra.shark.api.client.wfbase.BaseException;
  * @version    $Rev$
  * @since      3.1
  */
-public class FlexibleAssignmentComparator implements Comparator {
+public class FlexibleAssignmentComparator implements Comparator, Serializable {
 
     public static final int ASCENDING_ORDER = 0;
     public static final int DESCENDING_ORDER = 1;
