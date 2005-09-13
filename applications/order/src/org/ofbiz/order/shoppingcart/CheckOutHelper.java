@@ -713,12 +713,15 @@ public class CheckOutHelper {
         List price = new ArrayList(totalItems);
         List shipAmt = new ArrayList(totalItems);
 
-        Iterator iter = csi.shipItemInfo.keySet().iterator();
         for (int i = 0; i < totalItems; i++) {
             ShoppingCartItem cartItem = (ShoppingCartItem) csi.shipItemInfo.get(i);
-            ShoppingCart.CartShipInfo.CartShipItemInfo itemInfo =
-                    (ShoppingCart.CartShipInfo.CartShipItemInfo) csi.shipItemInfo.get(cartItem);
 
+            ShoppingCart.CartShipInfo.CartShipItemInfo itemInfo =
+                    (ShoppingCart.CartShipInfo.CartShipItemInfo) csi.getShipItemInfo(cartItem);
+            
+            //Debug.logInfo("In makeTaxContext for item [" + i + "] in ship group [" + shipGroup + "] got cartItem: " + cartItem, module);
+            //Debug.logInfo("In makeTaxContext for item [" + i + "] in ship group [" + shipGroup + "] got itemInfo: " + itemInfo, module);
+            
             product.add(i, cartItem.getProduct());
             amount.add(i, new Double(cartItem.getItemSubTotal(itemInfo.quantity)));
             price.add(i, new Double(cartItem.getBasePrice()));
@@ -753,7 +756,6 @@ public class CheckOutHelper {
         serviceContext.put("shippingAddress", shipAddress);
 
         return serviceContext;
-
     }
 
     // Calc the tax adjustments.
