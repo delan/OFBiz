@@ -204,6 +204,10 @@ public class ShoppingCartItem implements java.io.Serializable {
     public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
         return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, true);
     }
+    
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException, ItemNotFoundException {
+        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, 0.00, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, triggerExternalOps, true);
+    }
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
      * NOTE: This method will get the product entity and check to make sure it can be purchased.
@@ -224,7 +228,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException, ItemNotFoundException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, double unitPrice, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean triggerProductPrice) throws CartItemModifyException, ItemNotFoundException {
     GenericDelegator delegator = cart.getDelegator();
     GenericValue product = null;
 
@@ -254,7 +258,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         throw new ItemNotFoundException(excMsg);
     }
 
-    return makeItem(cartLocation, product, selectedAmount, quantity, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, triggerExternalOps);
+    return makeItem(cartLocation, product, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, triggerExternalOps, triggerProductPrice);
 }
 
     /**
@@ -410,7 +414,8 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
+    //public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, double unitPrice, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean triggerPriceRules) throws CartItemModifyException {
             ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale());
 
         // check to see if product is virtual
@@ -498,6 +503,10 @@ public class ShoppingCartItem implements java.io.Serializable {
             }
         }
 
+        // set the product unit price as base price
+        // if triggerPriceRules is true this price will be overriden
+        newItem.setBasePrice(unitPrice);
+
         // add to cart before setting quantity so that we can get order total, etc
         if (cartLocation == null) {
             cart.addItemToEnd(newItem);
@@ -506,7 +515,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
 
         try {
-            newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps);
+            newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps, true, triggerPriceRules);
         } catch (CartItemModifyException e) {
             cart.removeCartItem(cart.getItemIndex(newItem), dispatcher);
             cart.clearItemShipInfo(newItem);
@@ -520,10 +529,16 @@ public class ShoppingCartItem implements java.io.Serializable {
         return newItem;
     }
 
+    // Calls makeItem(...) setting a default value, 0.00, for the selectedAmount
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
         return makeItem(cartLocation, product, 0.00, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart, triggerExternalOps);
     }
 
+    // Calls makeItem(...) setting a default value, 0.00, for unitPrice and setting the triggerProductPrice to true;
+    // in this way, the prices and price rules are automatically set by the updatePrice(...) method
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
+        return makeItem(cartLocation, product, selectedAmount, quantity, 0.0, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, triggerExternalOps, true);
+    }
     /**
      * Makes a non-product ShoppingCartItem and adds it to the cart.
      * NOTE: This is only for non-product items; items without a product entity (work items, bulk items, etc)
@@ -719,7 +734,12 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Sets the quantity for the item and validates the change in quantity, etc */
     public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean resetShipGroup) throws CartItemModifyException {
-        this.setQuantity((int) quantity, dispatcher, cart, triggerExternalOps, resetShipGroup);
+        this.setQuantity((int) quantity, dispatcher, cart, triggerExternalOps, resetShipGroup, !cart.getOrderType().equals("PURCHASE_ORDER"));
+    }
+
+    /** Sets the quantity for the item and validates the change in quantity, etc */
+    public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean resetShipGroup, boolean updateProductPrice) throws CartItemModifyException {
+        this.setQuantity((int) quantity, dispatcher, cart, triggerExternalOps, resetShipGroup, updateProductPrice);
     }
 
     /** returns "OK" when the product can be booked or returns a string with the dates the related fixed Asset is not available */
@@ -811,7 +831,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             return "I am sorry, not available at these dates: " + resultMessage + "item not added to the shopping cart.....";
     }
 
-    protected void setQuantity(int quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean resetShipGroup) throws CartItemModifyException {
+    protected void setQuantity(int quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean resetShipGroup, boolean updateProductPrice) throws CartItemModifyException {
         if (this.quantity == quantity) {
             return;
         }
@@ -844,7 +864,8 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // set quantity before promos so order total, etc will be updated
         this.quantity = quantity;
-        if (!cart.getOrderType().equals("PURCHASE_ORDER")) {
+
+        if (updateProductPrice) {
             this.updatePrice(dispatcher, cart);
         }
 

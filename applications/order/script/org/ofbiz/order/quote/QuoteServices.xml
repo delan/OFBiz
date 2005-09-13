@@ -483,6 +483,29 @@
             <call-object-method obj-field-name="item" method-name="getOrderItemSeqId" ret-field-name="newOrderItemSeqId"/>
             </if-empty>
         </iterate>
+        <!-- set the quoteUnitPrice from the item basePrice -->
+        <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
+        <iterate list-name="quoteItems" entry-name="quoteItem">
+            <if>
+                <condition>
+                    <or>
+                        <if-empty field-name="quoteItem.quoteUnitPrice"/>
+                        <if-compare field-name="quoteItem.quoteUnitPrice" value="0" operator="equals" type="Double"/>
+                    </or>
+                </condition>
+                <then>
+                    <call-object-method obj-field-name="cart" method-name="findCartItem" ret-field-name="item">
+                        <field field-name="quoteItem.quoteItemSeqId" type="String"/>
+                    </call-object-method>
+                    <clear-field field-name="updateQuoteItemInMap"/>
+                    <field-to-field field-name="quoteItem.quoteId" to-field-name="updateQuoteItemInMap.quoteId"/>
+                    <field-to-field field-name="quoteItem.quoteItemSeqId" to-field-name="updateQuoteItemInMap.quoteItemSeqId"/>
+                    <call-object-method obj-field-name="item" method-name="getBasePrice" ret-field-name="updateQuoteItemInMap.quoteUnitPrice"/>
+                    <call-service service-name="updateQuoteItem" in-map-name="updateQuoteItemInMap"/>
+                </then>
+            </if>
+        </iterate>
+
         <call-object-method obj-field-name="cart" method-name="makeAllQuoteAdjustments" ret-field-name="adjustments"/>
 
         <iterate list-name="adjustments" entry-name="adjustment">
