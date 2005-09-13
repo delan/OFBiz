@@ -675,6 +675,76 @@
         <response name="error" type="view" value="ListWorkEffortRequestItems"/>
     </request-map>
     
+    <!--  WorkEffort Quote request mappings -->
+    <request-map uri="ListWorkEffortQuotes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEffortQuotes"/>
+    </request-map>
+    
+    <request-map uri="AddWorkEffortQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddWorkEffortQuote"/>
+    </request-map>
+    
+    <request-map uri="EditWorkEffortQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortQuote"/>
+    </request-map>
+    
+    <request-map uri="createWorkEffortQuote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortQuote"/>
+        <response name="success" type="view" value="EditWorkEffortQuote"/>
+        <response name="error" type="view" value="AddWorkEffortQuote"/>
+    </request-map>
+    <request-map uri="updateWorkEffortQuote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateQuote"/>
+        <response name="success" type="view" value="EditWorkEffortQuote"/>
+        <response name="error" type="view" value="EditWorkEffortQuote"/>
+    </request-map>
+    <request-map uri="deleteWorkEffortQuote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteWorkEffortQuote"/>
+        <response name="success" type="view" value="ListWorkEffortQuotes"/>
+        <response name="error" type="view" value="ListWorkEffortQuotes"/>
+    </request-map>
+    
+   <!--  WorkEffort QuoteItem request mappings -->
+    <request-map uri="ListWorkEffortQuoteItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEffortQuoteItems"/>
+    </request-map>
+    
+    <request-map uri="AddWorkEffortQuoteItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddWorkEffortQuoteItem"/>
+    </request-map>
+    
+    <request-map uri="EditWorkEffortQuoteItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortQuoteItem"/>
+    </request-map>
+    
+    <request-map uri="createWorkEffortQuoteItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createQuoteItem"/>
+        <response name="success" type="view" value="EditWorkEffortQuoteItem"/>
+        <response name="error" type="view" value="AddWorkEffortQuoteItem"/>
+    </request-map>
+    <request-map uri="updateWorkEffortQuoteItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateQuoteItem"/>
+        <response name="success" type="view" value="EditWorkEffortQuoteItem"/>
+        <response name="error" type="view" value="EditWorkEffortQuoteItem"/>
+    </request-map>
+    <request-map uri="deleteWorkEffortQuoteItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeQuoteItem"/>
+        <response name="success" type="view" value="ListWorkEffortQuoteItems"/>
+        <response name="error" type="view" value="ListWorkEffortQuoteItems"/>
+    </request-map>
+    
     
     <!-- end of request mappings -->
 
@@ -742,6 +812,13 @@
     <view-map name="AddWorkEffortRequestItem" type="screen" page="component://workeffort/widget/WorkEffortRequestScreens.xml#AddWorkEffortRequestItem"/>
     <view-map name="EditWorkEffortRequestItem" type="screen" page="component://workeffort/widget/WorkEffortRequestScreens.xml#EditWorkEffortRequestItem"/>
     <view-map name="ListWorkEffortRequestItems" type="screen" page="component://workeffort/widget/WorkEffortRequestScreens.xml#ListWorkEffortRequestItems"/>
+
+    <view-map name="AddWorkEffortQuote" type="screen" page="component://workeffort/widget/WorkEffortQuoteScreens.xml#AddWorkEffortQuote"/>
+    <view-map name="EditWorkEffortQuote" type="screen" page="component://workeffort/widget/WorkEffortQuoteScreens.xml#EditWorkEffortQuote"/>
+    <view-map name="ListWorkEffortQuotes" type="screen" page="component://workeffort/widget/WorkEffortQuoteScreens.xml#ListWorkEffortQuotes"/>
+    <view-map name="AddWorkEffortQuoteItem" type="screen" page="component://workeffort/widget/WorkEffortQuoteScreens.xml#AddWorkEffortQuoteItem"/>
+    <view-map name="EditWorkEffortQuoteItem" type="screen" page="component://workeffort/widget/WorkEffortQuoteScreens.xml#EditWorkEffortQuoteItem"/>
+    <view-map name="ListWorkEffortQuoteItems" type="screen" page="component://workeffort/widget/WorkEffortQuoteScreens.xml#ListWorkEffortQuoteItems"/>
     
     <!-- end of view mappings -->
 </site-conf>
