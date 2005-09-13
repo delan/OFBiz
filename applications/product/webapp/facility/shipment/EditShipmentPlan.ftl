@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -28,8 +28,7 @@
     <br/>
     <#if addToShipmentPlanRows?has_content>
         ${addToShipmentPlanForm.renderFormString(context)}
-
-<SCRIPT language="javascript">
+<script language="javascript">
     function submitRows(rowCount) {
         var rowCountElement = document.createElement("input");
         rowCountElement.setAttribute("name", "_rowCount");
@@ -47,14 +46,13 @@
     }
 </script>
 <form><input type="submit" class="smallSubmit" onClick="submitRows('${rowCount?if_exists}');return false;" name="submitButton" value="${uiLabelMap.CommonAdd}"/></form>
-    <hr class="sepbar">
+    <hr class="sepbar"/>
 	<br/>
     </#if>
     ${listShipmentPlanForm.renderFormString(context)}
     <div class="head2">Total weight: ${totWeight}</div>
     <div class="head2">Total volume: ${totVolume}</div>
     ${shipmentPlanToOrderItemsForm.renderFormString(context)}
-
 <#else>
   <h3>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId?if_exists}]</h3>
 </#if>
