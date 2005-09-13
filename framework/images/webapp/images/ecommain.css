@@ -602,24 +602,25 @@ text-decoration: none;
 color: #CCCCCC;
 }
 
-A.buttontextbig {
+A.buttontextbig, .buttontextbigdisabled {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10pt;
+font-size: 15px;
 font-weight: bold;
 text-decoration: none;
+background: white;
+border: #999999 solid 1px;
+margin: 2px 2px 2px 2px;
+padding: 1px 4px 1px 4px;
+}
+A.buttontextbig {
 color: #000099;
 }
-
+.buttontextbigdisabled {
+color: #CCCCCC;
+}
 A.buttontextbig:hover {
 color: red;
-}
-
-.buttontextbigdisabled {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10pt;
-font-weight: bold;
-text-decoration: none;
-color: #CCCCCC;
+text-decoration: underline;
 }
 
 A IMG.imageborder {

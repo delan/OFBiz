@@ -90,10 +90,10 @@ function toggleBillingAccount(box) {
               <tr><td colspan="2">
                 <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
                 <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists>
-                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.AccountingCreditCard}]</a>
+                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">${uiLabelMap.AccountingCreditCard}</a>
                 </#if>
                 <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists>
-                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
+                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">${uiLabelMap.AccountingEftAccount}</a>
                 </#if>
               </td></tr>
               <tr><td colspan="3"><hr class="sepbar"/></td></tr>
@@ -177,7 +177,7 @@ function toggleBillingAccount(box) {
                     <td width="1%" nowrap>
                       <span class="tabletext">${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
                       <span class="tabletext" align="right">
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
                       </span>
                     </td>
                     <td>
@@ -198,7 +198,7 @@ function toggleBillingAccount(box) {
                     <td width="1%" nowrap>
                       <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
                       <span class="tabletext" align="right">
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
                       </span>
                     </td>
                     <td>
@@ -218,7 +218,7 @@ function toggleBillingAccount(box) {
                     </td>
                     <td width="1%" nowrap>
                       <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                      <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
                     </td>
                     <td>&nbsp;</td>
                   </tr>
@@ -315,9 +315,9 @@ function toggleBillingAccount(box) {
               <tr>
                 <td colspan="3">
                   <div class='tabletext' valign='middle'>
-                    <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseCreditCard}]</a>&nbsp;</#if>
-                    <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseGiftCard}]</a>&nbsp;</#if>
-                    <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseEFTAccount}]</a>&nbsp;</#if>
+                    <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseCreditCard}</a>&nbsp;</#if>
+                    <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseGiftCard}</a>&nbsp;</#if>
+                    <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseEFTAccount}</a>&nbsp;</#if>
                   </div>
                 </td>
               </tr>
@@ -330,10 +330,10 @@ function toggleBillingAccount(box) {
 <table width="100%">
   <tr valign="top">
     <td align="left">
-      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[${uiLabelMap.OrderBacktoShoppingCart}]</a>
+      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
     </td>
     <td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[${uiLabelMap.OrderContinueToFinalOrderReview}]</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
     </td>
   </tr>
 </table>

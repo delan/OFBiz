@@ -37,7 +37,7 @@
     <div class="screenlet">
         <div class="screenlet-header">
             <div style="float: right;">
-                <#if maySelectItems?default("N") == "Y" && returnLink?default("N") == "Y">
+                <#if maySelectItems?default("N") == "Y" && returnLink?default("N") == "Y" && (orderHeader.statusId)?if_exists == "ORDER_COMPLETED">
                     <a href="<@ofbizUrl>makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
                 </#if>
             </div>

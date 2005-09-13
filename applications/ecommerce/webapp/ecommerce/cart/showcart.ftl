@@ -258,7 +258,7 @@ function setAlternateGwp(field) {
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
                   <div class="tableheadtext">${uiLabelMap.OrderChooseFollowingForGift}:</div>
-                  <select name="dummyAlternateGwpSelect${cartLineIndex}" onchange="setAlternateGwp(this);">
+                  <select name="dummyAlternateGwpSelect${cartLineIndex}" onchange="setAlternateGwp(this);" class="selectBox">
                   <option value="">- ${uiLabelMap.OrderChooseAnotherGift} -</option>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(delegator, alternativeOptionProductId, requestAttributes.locale)>
