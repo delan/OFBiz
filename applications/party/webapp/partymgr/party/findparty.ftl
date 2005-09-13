@@ -187,7 +187,7 @@ function refreshInfo() {
               <td colspan="3" align="center">
                 <div class="tabletext">
                   <a href="javascript:document.lookupparty.submit();" class="buttontext">${uiLabelMap.PartyLookupParty}</a>
-                  <a href="<@ofbizUrl>findparty?showAll=Y&amp;lookupFlag=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonShowAllRecords}</a>
+                  <a href="<@ofbizUrl>findparty?showAll=Y&hideFields=Y&lookupFlag=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonShowAllRecords}</a>
                 </div>
               </td>
             </tr>
