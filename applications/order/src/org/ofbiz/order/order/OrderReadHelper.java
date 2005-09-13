@@ -503,7 +503,7 @@ public class OrderReadHelper {
     public GenericValue getBillToParty() {
         return this.getPartyFromRole("BILL_TO_CUSTOMER");
     }
-    
+
     public GenericValue getBillFromParty() {
         return this.getPartyFromRole("BILL_FROM_VENDOR");
     }
@@ -1379,6 +1379,29 @@ public class OrderReadHelper {
         return totalTaxNotReturned + totalShippingNotReturned + orderTaxNotReturned + orderShippingNotReturned;
     }
 
+    public double getOrderBackorderQuantity() {
+        double backorder = 0.0;
+        List items = this.getValidOrderItems();
+        if (items != null) {
+            Iterator ii = items.iterator();
+            while (ii.hasNext()) {
+                GenericValue item = (GenericValue) ii.next();
+                List reses = this.getOrderItemShipGrpInvResList(item);
+                if (reses != null) {
+                    Iterator ri = reses.iterator();
+                    while (ri.hasNext()) {
+                        GenericValue res = (GenericValue) ri.next();
+                        Double nav = res.getDouble("quantityNotAvailable");
+                        if (nav != null) {
+                            backorder += nav.doubleValue();
+                        }
+                    }
+                }
+            }
+        }
+        return backorder;
+    }
+
     public double getItemShippedQuantity(GenericValue orderItem) {
         double quantityShipped = 0.00;
         List issuance = getOrderItemIssuances(orderItem);
@@ -1541,7 +1564,7 @@ public class OrderReadHelper {
             return orderHeader.getString("statusId");
         }
     }
-    
+
     /** Fetches the set of order items with the given EntityCondition. */
     public List getOrderItemsByCondition(EntityCondition entityCondition) {
         return EntityUtil.filterByCondition(getOrderItems(), entityCondition);

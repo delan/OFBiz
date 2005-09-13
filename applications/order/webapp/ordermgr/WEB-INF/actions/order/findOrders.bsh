@@ -191,8 +191,16 @@ if (lookupFlag != null) {
     productId = request.getParameter("productId");
     if (productId != null && productId.length() > 0) {
         paramList = paramList + "&productId=" + productId;
-        entityName= "OrderHeaderItemAndRoles";
+        entityName = "OrderHeaderItemAndRoles";
         andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+    }
+
+    hasBackOrders = request.getParameter("hasBackOrders");
+    if (hasBackOrders != null && "Y".equals(hasBackOrders)) {
+        paramList = paramList + "&hasBackOrders=Y";
+        entityName = "OrderHeaderItemAndInvRoles";
+        andExprs.add(new EntityExpr("quantityNotAvailable", EntityOperator.NOT_EQUAL, null));
+        andExprs.add(new EntityExpr("quantityNotAvailable", EntityOperator.GREATER_THAN, new Double(0)));
     }
 
     // define the main condition
@@ -264,11 +272,11 @@ if (lookupFlag != null) {
 
     // do the lookup
     if (lookupErrorMessage == null && mainCond != null) {
-        // field we need to select; will be used to set distinct        
+        // field we need to select; will be used to set distinct
         List fieldsToSelect = UtilMisc.toList("orderId", "orderTypeId", "orderDate", "currencyUom", "grandTotal", "remainingSubTotal");
         fieldsToSelect.add("statusId");
         if (!"OrderHeader".equals(entityName)) {
-            if (partyId != null) {
+            if (partyId != null && partyId.length() > 0) {
                 fieldsToSelect.add("partyId");
             }
             if (!"ANY".equals(roleType)) {
@@ -277,7 +285,7 @@ if (lookupFlag != null) {
         }
 
         // sorting by order date newest first
-        List orderBy = UtilMisc.toList("-orderDate");
+        List orderBy = UtilMisc.toList("-orderDate", "-orderId");
 
         // set distinct on so we only get one row per order
         EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
@@ -288,18 +296,18 @@ if (lookupFlag != null) {
 
             // using list iterator
             EntityListIterator ohli = delegator.findListIteratorByCondition(entityName, mainCond, null, fieldsToSelect, orderBy, findOpts);
-    
+
             // get the indexes for the partial list
             lowIndex = (((viewIndex - 1) * viewSize) + 1);
             highIndex = viewIndex * viewSize;
-    
+
             // attempt to get the full size
             ohli.last();
             orderHeaderListSize = ohli.currentIndex();
             if (highIndex > orderHeaderListSize) {
                 highIndex = orderHeaderListSize;
             }
-    
+
             // get the partial list for this page
             ohli.first();
             if (orderHeaderListSize > 0) {
@@ -307,7 +315,7 @@ if (lookupFlag != null) {
             } else {
                 orderHeaderList = new ArrayList();
             }
-    
+
             // close the iterator
             ohli.close();
         } catch (GenericEntityException e) {
