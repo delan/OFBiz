@@ -23,7 +23,7 @@
  *  $Id$
 -->
 
-<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
     <screen name="FindShipment">
         <section>
@@ -67,7 +67,7 @@
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
-                        </section>                    
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -245,6 +245,24 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/facility/shipment/QuickShipOrder.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="PackOrder">
+        <section>
+            <actions>
+                <set field="title" value="Pack Order"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/PackOrder.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/facility/shipment/PackOrder.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

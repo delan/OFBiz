@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
     <description>Facility Manager Module Site Configuration File</description>
     <owner>The Open For Business Project Copyright (c) 2002</owner>
@@ -548,6 +548,48 @@
         <response name="error" type="view" value="PickMoveStock"/>
     </request-map>
 
+    <!-- ============= Packing Wizard Requests ============== -->
+    <request-map uri="PackOrder">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PackOrder"/>
+    </request-map>
+    <request-map uri="ProcessPackOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="packSingleItem"/>
+        <response name="success" type="view" value="PackOrder"/>
+        <response name="error" type="view" value="PackOrder"/>
+    </request-map>
+    <request-map uri="ProcessBulkPackOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="packBulkItems"/>
+        <response name="success" type="view" value="PackOrder"/>
+        <response name="error" type="view" value="PackOrder"/>
+    </request-map>
+    <request-map uri="SetNextPackageSeq">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setNextPackageSeq"/>
+        <response name="success" type="view" value="PackOrder"/>
+        <response name="error" type="view" value="PackOrder"/>
+    </request-map>
+    <request-map uri="ClearPackLine">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="clearPackLine"/>
+        <response name="success" type="view" value="PackOrder"/>
+        <response name="error" type="view" value="PackOrder"/>
+    </request-map>
+    <request-map uri="ClearPackAll">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="clearPackAll"/>
+        <response name="success" type="view" value="PackOrder"/>
+        <response name="error" type="view" value="PackOrder"/>
+    </request-map>
+    <request-map uri="CompletePack">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="completePack"/>
+        <response name="success" type="view" value="ViewShipment"/>
+        <response name="error" type="view" value="PackOrder"/>
+    </request-map>
+
     <!-- ================ Shipment Requests ================= -->
     <request-map uri="FindShipment">
         <security https="true" auth="true"/>
@@ -854,7 +896,7 @@
     <view-map name="LookupPurchaseOrderHeaderAndShipInfo" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupPurchaseOrderHeaderAndShipInfo"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>
-    
+
     <view-map name="FindFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
     <view-map name="EditFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacility"/>
     <view-map name="FindFacilityTransfers" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityTransfers"/>
@@ -882,6 +924,8 @@
     <view-map name="EditFacilityGroupMembers" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupMembers"/>
     <view-map name="EditFacilityGroupRollup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRollup"/>
     <view-map name="EditFacilityGroupRoles" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRoles"/>
+
+    <view-map name="PackOrder" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#PackOrder"/>
 
     <view-map name="FindShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#FindShipment"/>
     <view-map name="ViewShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#ViewShipment"/>

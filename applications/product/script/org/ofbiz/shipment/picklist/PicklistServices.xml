@@ -25,7 +25,7 @@
  * @since      2.2
  -->
 
-<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-method method-name="findOrdersToPickMove" short-description="Find Orders Ready to Pick or that need Stock Moves">
         <!-- filter on:
@@ -72,11 +72,13 @@
 
         <now-timestamp-to-env env-name="nowTimestamp"/>
 
-        <string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
-        <string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
-        <if-not-empty field-name="parameters.isRushOrder"><env-to-env env-name="parameters.isRushOrder" to-env-name="orderHeaderLkpMp.isRushOrder"/></if-not-empty>
-        <string-to-list string="+orderDate" list-name="orderHeaderOrdLst"/><!-- oldest first -->
-        <find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
+        <if-empty field-name="orderHeaderList" map-name="parameters">
+            <string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
+            <string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
+            <if-not-empty field-name="parameters.isRushOrder"><env-to-env env-name="parameters.isRushOrder" to-env-name="orderHeaderLkpMp.isRushOrder"/></if-not-empty>
+            <string-to-list string="+orderDate" list-name="orderHeaderOrdLst"/><!-- oldest first -->
+            <find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
+        </if-empty>
 
         <iterate entry-name="orderHeader" list-name="orderHeaderList">
             <!-- get all ship groups, and iterate over them for each order -->
@@ -87,7 +89,7 @@
 
             <iterate entry-name="orderItemShipGroup" list-name="orderItemShipGroupList">
                 <!-- get the order items and the order item inventory res entries -->
-                
+
                 <!-- if a shipmentMethodTypeId was not passed or is the same as the current, then process this order -->
                 <if>
                     <condition>
@@ -115,7 +117,7 @@
                             <field-map field-name="shipGroupSeqId" env-name="orderItemShipGroup.shipGroupSeqId"/>
                             <order-by field-name="+orderItemSeqId"/>
                         </entity-and>
-    
+
                         <!-- only add to picklist if inventory is not available (quantityNotAvailable on OISGIR greater than 0) when maySplit is N (wait until all available to ship) -->
                         <string-to-field string="Y" field-name="pickThisOrder"/>
                         <string-to-field string="N" field-name="needsStockMove"/>
@@ -133,12 +135,12 @@
                                         <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_CANCELLED"/>
                                     </condition-list>
                                 </entity-condition>
-                                
+
                                 <!-- if all picklistItemList are not empty, don't include order as a pick candidate; keep a flag to see -->
                                 <if-empty field-name="picklistItemList">
                                     <!-- note that this is separate because we can't really use it as a break condition, must check all of them before any useful information is to be had -->
                                     <string-to-field string="N" field-name="allPickStarted"/>
-    
+
                                     <if>
                                         <condition>
                                             <or>
@@ -163,7 +165,7 @@
                                                     <string-to-field string="Y" field-name="needsStockMove"/>
                                                 </if-compare>
                                             </if-not-empty>
-    
+
                                             <!-- make the orderItemShipGrpInvResInfo and add it to the orderItemShipGrpInvResInfoList -->
                                             <env-to-env env-name="orderItemShipGrpInvRes" to-env-name="orderItemShipGrpInvResInfo.orderItemShipGrpInvRes"/>
                                             <env-to-env env-name="inventoryItem" to-env-name="orderItemShipGrpInvResInfo.inventoryItem"/>
@@ -175,7 +177,7 @@
                                 </if-empty>
                             </if-compare>
                         </iterate>
-    
+
                         <if>
                             <condition>
                                 <and>
@@ -190,7 +192,7 @@
                                 <env-to-env env-name="orderItemAndShipGroupAssocList" to-env-name="orderHeaderInfo.orderItemAndShipGroupAssocList"/>
                                 <env-to-env env-name="orderItemShipGrpInvResList" to-env-name="orderHeaderInfo.orderItemShipGrpInvResList"/>
                                 <env-to-env env-name="orderItemShipGrpInvResInfoList" to-env-name="orderHeaderInfo.orderItemShipGrpInvResInfoList"/>
-    
+
                                 <!-- pick now, or needs stock move first? -->
                                 <!-- put in pick or move lists for the given shipmentMethodTypeId -->
                                 <env-to-env env-name="orderItemShipGroup.shipmentMethodTypeId" to-env-name="shipmentMethodTypeId"/>
@@ -212,7 +214,7 @@
                                 <clear-field field-name="orderHeaderInfo"/>
                             </then>
                         </if>
-    
+
                         <clear-field field-name="orderItemAndShipGroupAssocList"/>
                         <clear-field field-name="orderItemShipGrpInvResInfoList"/>
                     </then>
@@ -387,7 +389,7 @@
             </if>
         </iterate-map>
     </simple-method>
-    
+
     <!-- ========================================================= -->
     <!-- ======= Persisted Picklist Maintenance Services ========= -->
     <!-- ========================================================= -->
@@ -418,7 +420,7 @@
             </call-service>
             <field-to-result field-name="picklistId"/>
             <log level="info" message="Created Picklist with ID ${picklistId}"/>
-            
+
             <!-- iterate over the orderHeaderInfoList and create a PicklistBin for each order and a PicklistItem for each item -->
             <calculate field-name="binLocationNumber" type="Long"><number value="1"/></calculate>
             <iterate entry-name="orderHeaderInfo" list-name="orderHeaderInfoList">
@@ -433,7 +435,7 @@
                 </call-service>
 
                 <calculate field-name="binLocationNumber" type="Long"><calcop field-name="binLocationNumber" operator="add"/><number value="1"/></calculate>
-                
+
                 <iterate entry-name="orderItemInfo" list-name="orderHeaderInfo.orderItemInfoList">
                     <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemInfo.orderItemShipGrpInvResList">
                         <clear-field field-name="createPicklistItemMap"/>
@@ -464,12 +466,12 @@
 
         <sequenced-id-to-env sequence-name="Picklist" env-name="newEntity.picklistId"/>
         <field-to-result field-name="newEntity.picklistId" result-name="picklistId"/>
-        
+
         <if-empty field-name="newEntity.statusId">
             <string-to-field string="PICKLIST_INPUT" field-name="newEntity.statusId"/>
         </if-empty>
 
-        <!-- auto-set the picklistDate, this is not user-changeable -->        
+        <!-- auto-set the picklistDate, this is not user-changeable -->
         <now-timestamp-to-env env-name="newEntity.picklistDate"/>
 
         <!-- set the created and lastModified info -->
@@ -618,7 +620,7 @@
         <make-value value-name="newEntity" entity-name="PicklistRole"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <if-empty field-name="newEntity.fromDate">
             <now-timestamp-to-env env-name="newEntity.fromDate"/>
         </if-empty>
@@ -648,7 +650,7 @@
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- ========================================================= -->
     <!-- =========== Picklist Report/Display Services ============ -->
     <!-- ========================================================= -->
@@ -671,12 +673,12 @@
             <call-simple-method method-name="getPicklistSingleInfoInline"/>
             <field-to-list field-name="picklistInfo" list-name="picklistInfoList"/>
         </iterate>
-        
+
         <field-to-result field-name="picklistInfoList"/>
     </simple-method>
 
     <simple-method method-name="getPickAndPackReportInfo" short-description="getPickAndPackReportInfo">
-        <!-- 
+        <!--
             Creates:
               1. Standard picklistInfo Map from the getPicklistSingleInfoInline simple-method (see comment there for details)
               2. facilityLocationInfoList (facilityLocation, product, pickQuantity, picklistBinInfoList (picklistBin, quantity), picklistItemInfoList (picklistItem, picklistBin, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
@@ -691,15 +693,15 @@
         <entity-one entity-name="Picklist" value-name="picklist" auto-field-map="true"/>
         <call-simple-method method-name="getPicklistSingleInfoInline"/>
         <field-to-result field-name="picklistInfo"/>
-        
+
         <!-- Assemble the information per facility location for the pick sheet -->
         <iterate entry-name="picklistBinInfo" list-name="picklistInfo.picklistBinInfoList">
             <env-to-env env-name="picklistBinInfo.picklistBin" to-env-name="picklistBinByIdMap.${picklistBinInfo.picklistBin.picklistBinId}"/>
-            
+
             <iterate entry-name="picklistItemInfo" list-name="picklistBinInfo.picklistItemInfoList">
-                <!-- 
+                <!--
                     In this iteration through the items we want 2 things:
-                      1. A Map with all FacilityLocation records by locationSeqId, so that we have one unique of each 
+                      1. A Map with all FacilityLocation records by locationSeqId, so that we have one unique of each
                          instance per inventoryItem, this will be put into a list and sorted by facility location fields
                          AND
                          A Map containing a List of PicklistItemInfo records keyed by the locationSeqId
@@ -710,7 +712,7 @@
                 <if-not-empty field-name="picklistItemInfo.inventoryItemAndLocation.locationSeqId">
                     <make-value value-name="facilityLocation" entity-name="FacilityLocation" map-name="picklistItemInfo.inventoryItemAndLocation"/>
                     <env-to-env env-name="facilityLocation" to-env-name="facilityLocationByLocationSeqIdMap.${facilityLocation.locationSeqId}"/>
-    
+
                     <clear-field field-name="picklistItemInfoTempList"/>
                     <env-to-env env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}" to-env-name="picklistItemInfoTempList"/>
                     <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
@@ -722,7 +724,7 @@
                         <entity-one entity-name="Product" value-name="productByProductIdMap.${productId}" use-cache="true">
                             <field-map env-name="productId"/>
                         </entity-one>
-                        
+
                         <clear-field field-name="picklistItemInfoTempList"/>
                         <env-to-env env-name="picklistItemInfoListByProductIdMap.${productId}" to-env-name="picklistItemInfoTempList"/>
                         <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
@@ -748,13 +750,13 @@
         <string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
         <string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
         <order-value-list list-name="facilityLocationList" order-by-list-name="facilityLocsOrdLst"/>
-        
+
         <!-- Now we have an ordered list of FacilityLocations, create a facilityLocationInfoList -->
         <iterate entry-name="facilityLocation" list-name="facilityLocationList">
             <clear-field field-name="facilityLocationInfo"/>
             <env-to-env env-name="facilityLocation" to-env-name="facilityLocationInfo.facilityLocation"/>
             <env-to-env env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}" to-env-name="facilityLocationInfo.picklistItemInfoList"/>
-            
+
             <!-- make the pickQuantity and quantityByPicklistBinIdMap -->
             <iterate entry-name="picklistItemInfo" list-name="facilityLocationInfo.picklistItemInfoList">
                 <calculate field-name="facilityLocationInfo.pickQuantity" type="Double">
@@ -762,13 +764,13 @@
                         <calcop field-name="picklistItemInfo.picklistItem.quantity" operator="get"/>
                     </calcop>
                 </calculate>
-                
+
                 <calculate field-name="facilityLocationInfo.quantityByPicklistBinIdMap.${picklistItemInfo.picklistBin.picklistBinId}" type="Double">
                     <calcop field-name="facilityLocationInfo.quantityByPicklistBinIdMap.${picklistItemInfo.picklistBin.picklistBinId}" operator="add">
                         <calcop field-name="picklistItemInfo.picklistItem.quantity" operator="get"/>
                     </calcop>
                 </calculate>
-                
+
                 <!-- also put the product record in place -->
                 <if-empty field-name="facilityLocationInfo.product">
                     <env-to-env env-name="picklistItemInfo.product" to-env-name="facilityLocationInfo.product"/>
@@ -780,7 +782,7 @@
                 </else>
                 </if-empty>
             </iterate>
-            
+
             <!-- create the picklistBinInfoList from the quantityByPicklistBinIdMap -->
             <iterate-map key-name="picklistBinId" value-name="quantity" map-name="facilityLocationInfo.quantityByPicklistBinIdMap">
                 <clear-field field-name="picklistBinInfo"/>
@@ -789,10 +791,10 @@
                 <env-to-env env-name="picklistBinInfo" to-env-name="facilityLocationInfo.picklistBinInfoList[]"/>
             </iterate-map>
             <order-map-list list-name="facilityLocationInfo.picklistBinInfoList"><order-by field-name="picklistBin.binLocationNumber"/></order-map-list>
-            
+
             <env-to-env env-name="facilityLocationInfo" to-env-name="facilityLocationInfoList[]"/>
         </iterate>
-        
+
         <!-- === handle the ones by Product === -->
         <!-- make a productList from the productByProductIdMap, which was used to guarantee uniqueness of Products -->
         <iterate-map map-name="productByProductIdMap" key-name="productId" value-name="productList[]"/>
@@ -800,7 +802,7 @@
         <!-- order/sort the products -->
         <string-to-list string="+productId" list-name="productsOrdLst"/>
         <order-value-list list-name="productList" order-by-list-name="productsOrdLst"/>
-        
+
         <!-- Now we have an ordered list of Products, create a noLocationProductInfoList -->
         <iterate entry-name="product" list-name="productList">
             <clear-field field-name="productInfo"/>
@@ -814,14 +816,14 @@
                         <calcop field-name="picklistItemInfo.picklistItem.quantity" operator="get"/>
                     </calcop>
                 </calculate>
-                
+
                 <calculate field-name="productInfo.quantityByPicklistBinIdMap.${picklistItemInfo.picklistBin.picklistBinId}" type="Double">
                     <calcop field-name="productInfo.quantityByPicklistBinIdMap.${picklistItemInfo.picklistBin.picklistBinId}" operator="add">
                         <calcop field-name="picklistItemInfo.picklistItem.quantity" operator="get"/>
                     </calcop>
                 </calculate>
             </iterate>
-            
+
             <!-- create the picklistBinInfoList from the quantityByPicklistBinIdMap -->
             <iterate-map key-name="picklistBinId" value-name="quantity" map-name="productInfo.quantityByPicklistBinIdMap">
                 <clear-field field-name="picklistBinInfo"/>
@@ -830,10 +832,10 @@
                 <env-to-env env-name="picklistBinInfo" to-env-name="productInfo.picklistBinInfoList[]"/>
             </iterate-map>
             <order-map-list list-name="productInfo.picklistBinInfoList"><order-by field-name="picklistBin.binLocationNumber"/></order-map-list>
-            
+
             <env-to-env env-name="productInfo" to-env-name="noLocationProductInfoList[]"/>
         </iterate>
-        
+
         <field-to-result field-name="facilityLocationInfoList"/>
         <field-to-result field-name="noLocationProductInfoList"/>
     </simple-method>
@@ -852,7 +854,7 @@
                - picklistBin
                - primaryOrderHeader
                - primaryOrderItemShipGroup
-               - picklistItemInfoList (picklistItem, picklistBin, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) 
+               - picklistItemInfoList (picklistItem, picklistBin, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList)
         -->
         <!-- expects a picklist GenericValue to be in the context, and creates a picklistInfo Map -->
         <clear-field field-name="picklistRoleInfoList"/>
@@ -897,7 +899,7 @@
                 <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoList"/>
             </iterate>
             <env-to-env env-name="picklistItemInfoList" to-env-name="picklistBinInfo.picklistItemInfoList"/>
-            
+
             <env-to-env env-name="picklistBin" to-env-name="picklistBinInfo.picklistBin"/>
             <field-to-list field-name="picklistBinInfo" list-name="picklistBinInfoList"/>
         </iterate>
