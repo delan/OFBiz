@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -49,7 +49,7 @@
 		<td colspan="2"><div class="tabletext">${(product.internalName)?if_exists} [<a href="/catalog/control/EditProduct?productId=${shipmentItem.productId?if_exists}" class="buttontext">${shipmentItem.productId?if_exists}</a>]</div></td>
 		<td><div class="tabletext">${shipmentItem.quantity?default("&nbsp;")}</div></td>
 		<td colspan="2"><div class="tabletext">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</div></td>
-		<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItem?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentItem.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
+		<td><div class="tabletext"><a href="<@ofbizUrl>deleteShipmentItem?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentItem.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
 	</tr>
 	<#list orderShipments as orderShipment>
 		<tr>
@@ -59,18 +59,18 @@
 			<td><div class="tabletext">${orderShipment.quantity?if_exists}</div></td>
 			<td><div class="tabletext">&nbsp;</div></td>
 			<td><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext">&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>/deleteShipmentItemIssuance?shipmentId=${shipmentId}&itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a> --></div></td>
+			<td><div class="tabletext">&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a> --></div></td>
 		</tr>
 	</#list>
 	<#list itemIssuances as itemIssuance>
 		<tr>
 			<td><div class="tabletext">&nbsp;</div></td>
 			<td><div class="tabletext">${uiLabelMap.ProductOrderItem} :<a href="/ordermgr/control/orderview?order_id=${itemIssuance.orderId?if_exists}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
-			<td><div class="tabletext">${uiLabelMap.ProductInventory} :<a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
+			<td><div class="tabletext">${uiLabelMap.ProductInventory} :<a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
 			<td><div class="tabletext">${itemIssuance.quantity?if_exists}</div></td>
 			<td><div class="tabletext">${itemIssuance.issuedDateTime?if_exists}</div></td>
 			<td><div class="tabletext">${uiLabelMap.ProductFuturePartyRoleList}</div></td>
-			<td><div class="tabletext">&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>/deleteShipmentItemIssuance?shipmentId=${shipmentId}&itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a> --></div></td>
+			<td><div class="tabletext">&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a> --></div></td>
 		</tr>
 	</#list>
 	<#list shipmentPackageContents as shipmentPackageContent>
@@ -84,12 +84,12 @@
                         <#else>
 			<td colspan="2"><div class="tabletext">&nbsp;</div></td>
                         </#if>
-			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItemPackageContent?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
+			<td><div class="tabletext"><a href="<@ofbizUrl>deleteShipmentItemPackageContent?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
 		</tr>
 	</#list>
     <#if (totalQuantityToPackage > 0)>
         <tr>
-            <form action="<@ofbizUrl>/createShipmentItemPackageContent</@ofbizUrl>" name="createShipmentPackageContentForm${shipmentItemData_index}">
+            <form action="<@ofbizUrl>createShipmentItemPackageContent</@ofbizUrl>" name="createShipmentPackageContentForm${shipmentItemData_index}">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
             <td><div class="tabletext">&nbsp;</div></td>
@@ -116,7 +116,7 @@
     </#if>
 </#list>
 <tr>
-	<form action="<@ofbizUrl>/createShipmentItem</@ofbizUrl>" name="createShipmentItemForm">
+	<form action="<@ofbizUrl>createShipmentItem</@ofbizUrl>" name="createShipmentItemForm">
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<td><div class="tabletext">${uiLabelMap.ProductNewItem} :</div></td>
 	<td colspan="2"><div class="tabletext">${uiLabelMap.ProductProductId} :<input name="productId" size="15" maxlength="20" class="inputBox"/></div></td>
