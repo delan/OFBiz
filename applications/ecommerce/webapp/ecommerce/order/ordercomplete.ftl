@@ -33,10 +33,10 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-        <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderContinueShopping}]</a>
+        <a href="<@ofbizUrl>main</@ofbizUrl>" class="buttontextbig">${uiLabelMap.OrderContinueShopping}</a>
       </td>
       <td align="right">
-        <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderContinueShopping}]&nbsp;</a>
+        <a href="<@ofbizUrl>main</@ofbizUrl>" class="buttontextbig">${uiLabelMap.OrderContinueShopping}</a>
       </td>
     </tr>
   </table>    
