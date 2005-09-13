@@ -715,9 +715,7 @@ public class CheckOutHelper {
 
         for (int i = 0; i < totalItems; i++) {
             ShoppingCartItem cartItem = (ShoppingCartItem) csi.shipItemInfo.get(i);
-
-            ShoppingCart.CartShipInfo.CartShipItemInfo itemInfo =
-                    (ShoppingCart.CartShipInfo.CartShipItemInfo) csi.getShipItemInfo(cartItem);
+            ShoppingCart.CartShipInfo.CartShipItemInfo itemInfo = csi.getShipItemInfo(cartItem);
             
             //Debug.logInfo("In makeTaxContext for item [" + i + "] in ship group [" + shipGroup + "] got cartItem: " + cartItem, module);
             //Debug.logInfo("In makeTaxContext for item [" + i + "] in ship group [" + shipGroup + "] got itemInfo: " + itemInfo, module);
