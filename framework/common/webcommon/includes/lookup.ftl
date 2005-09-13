@@ -58,6 +58,19 @@
                 if (obj_caller.target2 == null) return;
                 obj_caller.target2.value = value2;
         }
+        function set_multivalues(value) {
+            obj_caller.target.value = value;
+            var thisForm = obj_caller.target.form;
+            var evalString = "";
+             
+    		if (arguments.length > 2 ) {
+        		for(var i=1; i < arguments.length; i=i+2) {
+        			evalString = "thisForm." + arguments[i] + ".value='" + arguments[i+1] + "'";
+        			eval(evalString);
+        		}
+    		}
+    		window.close();
+         }
     </script>
 </head>
 <body>
