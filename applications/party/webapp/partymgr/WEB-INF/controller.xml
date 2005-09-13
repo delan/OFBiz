@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
     <description>Party Manager Module Site Configuration File</description>
     <owner>The Open For Business Project (c) 2001 </owner>
@@ -356,9 +356,31 @@
     </request-map>
     <request-map uri="createCustomer">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <event type="simple" path="org/ofbiz/party/user/UserEvents.xml" invoke="createCustomer"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="NewCustomer"/>
+    </request-map>
+
+    <request-map uri="NewProspect">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewProspect"/>
+    </request-map>
+    <request-map uri="createProspect">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/party/user/UserEvents.xml" invoke="createProspect"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="NewProspect"/>
+    </request-map>
+
+    <request-map uri="NewEmployee">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewEmployee"/>
+    </request-map>
+    <request-map uri="createEmployee">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/party/user/UserEvents.xml" invoke="createEmployee"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="NewEmployee"/>
     </request-map>
 
     <request-map uri="editperson">
@@ -434,7 +456,7 @@
         <response name="success" type="view" value="EditPartyTaxInfos"/>
         <response name="error" type="view" value="EditPartyTaxInfos"/>
     </request-map>
-    
+
     <request-map uri="editlogin">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditUserLogin"/>
@@ -746,21 +768,21 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListPartyContactLists"/>
     </request-map>
-   
+
     <request-map uri="updateContactListParty">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateContactListParty"/>
         <response name="success" type="view" value="ListPartyContactLists"/>
         <response name="error" type="view" value="ListPartyContactLists"/>
     </request-map>
-   
+
     <request-map uri="createContactListParty">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createContactListParty"/>
         <response name="success" type="view" value="ListPartyContactLists"/>
         <response name="error" type="view" value="ListPartyContactLists"/>
     </request-map>
-   
+
     <!-- Lookup request mappings -->
     <request-map uri="LookupPartyName">
         <security https="true" auth="true"/>
@@ -871,7 +893,7 @@
         <response name="success" type="view" value="FindPartyClassificationGroups"/>
         <response name="error" type="view" value="FindPartyClassificationGroups"/>
     </request-map>
-    
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -880,7 +902,7 @@
     <view-map name="login" type="screen" page="component://party/widget/partymgr/CommonScreens.xml#login"/>
 
     <view-map name="findparty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#findparty"/>
-    
+
     <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
     <view-map name="viewroles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewroles"/>
     <view-map name="EditPartyRelationships" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyRelationships"/>
@@ -894,7 +916,7 @@
     <view-map name="createnewlogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateUserLogin"/>
     <view-map name="EditUserLoginSecurityGroups" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLoginSecurityGroups"/>
     <view-map name="AddPartyNote" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#AddPartyNote"/>
-    
+
     <view-map name="editcontactmech" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editcontactmech"/>
     <view-map name="editcreditcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editcreditcard"/>
     <view-map name="editgiftcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editgiftcard"/>
@@ -913,12 +935,14 @@
     <view-map name="EditCommCustRequest" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#EditCommCustRequest"/>
     <view-map name="ListCommWorkEfforts" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommWorkEfforts"/>
     <view-map name="ListCommCustRequests" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommCustRequests"/>
-    
+
     <view-map name="ListPartyContactLists" type="screen" page="component://party/widget/partymgr/PartyContactListScreens.xml#ListPartyContactLists"/>
-    
+
     <view-map name="CreateNewParty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateNewParty"/>
     <view-map name="NewCustomer" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewCustomer"/>
-    
+    <view-map name="NewProspect" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewProspect"/>
+    <view-map name="NewEmployee" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewEmployee"/>
+
     <view-map name="ViewSegmentRoles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#ViewSegmentRoles"/>
     <view-map name="EditPartyClassifications" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyClassifications"/>
     <view-map name="EditPartyClassificationGroupParties" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyClassificationGroupParties"/>

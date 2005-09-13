@@ -58,6 +58,8 @@
     <a href="/accounting/control/findPayment?lookupFlag=Y&hideFields=Y&fromPartyId=${partyId}${externalKeyParam}>" class="buttontext">${uiLabelMap.AccountingPaymentsReceived}</a>
   </#if>
 </div>
+<div>&nbsp;</div>
+        
 <div class="head1">${uiLabelMap.PartyTheProfileOf}
     <#if lookupPerson?has_content>
       ${lookupPerson.personalTitle?if_exists}

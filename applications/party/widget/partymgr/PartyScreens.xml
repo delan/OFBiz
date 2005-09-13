@@ -23,7 +23,7 @@
  *  $Id$
 -->
 
-<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
 
     <!-- Party Find Screen -->
@@ -33,8 +33,8 @@
                 <set field="titleProperty" value="PageTitleFindParty"/>
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="findparty"/>
-                
-                <service service-name="findParty" auto-field-map="parameters"/>                
+
+                <service service-name="findParty" auto-field-map="parameters"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
@@ -63,7 +63,7 @@
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
-                
+
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
                 <entity-one entity-name="Person" value-name="lookupPerson"/>
@@ -107,7 +107,7 @@
 
                 <set field="labelTitleProperty" value="PartyTaxInfos"/>
 
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>                
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator">
@@ -126,11 +126,11 @@
                 <set field="titleProperty" value="PageTitleViewPartyRole"/>
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="viewroles"/>
-                
+
                 <set field="labelTitleProperty" value="PartyMemberRoles"/>
-                
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.bsh"/>                
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewroles.bsh"/>                
+
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.bsh"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewroles.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator">
@@ -143,14 +143,14 @@
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="EditPartyRelationships">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyRelationships"/>
                 <set field="tabButtonItem" value="EditPartyRelationships"/>
                 <set field="labelTitleProperty" value="PartyRelationships"/>
-    
+
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
 
@@ -204,9 +204,9 @@
                 <set field="titleProperty" value="PageTitleViewVendorParty"/>
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="viewvendor"/>
-                
+
                 <set field="labelTitleProperty" value="PartyVendorInformation"/>
-                
+
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
                 <entity-one entity-name="Vendor" value-name="vendor"/>
@@ -234,7 +234,7 @@
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="EditPartyTaxInfos"/>
                 <set field="labelTitleProperty" value="PartyTaxInfos"/>
-                
+
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
                 <entity-and entity-name="PartyTaxInfo" list-name="partyTaxInfos">
@@ -259,10 +259,10 @@
                 <set field="titleProperty" value="PageTitleShoppingList"/>
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="editShoppingList"/>
-                
+
                 <set field="labelTitleProperty" value="PartyShoppingLists"/>
-                
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/editShoppingList.bsh"/>                
+
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/editShoppingList.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator">
@@ -275,17 +275,17 @@
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="editcontactmech">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactMech"/>
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="editcontactmech"/>
-                
+
                 <set field="labelTitleProperty" value="PageTitleEditContactMech"/>
-                
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/editcontactmech.bsh"/>                
+
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/editcontactmech.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
@@ -344,7 +344,7 @@
                 <set field="titleProperty" value="PageTitleEditGroupInformation"/>
                 <set field="tabButtonItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
-                
+
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyGroup" value-name="partyGroup"/>
@@ -364,7 +364,7 @@
                 <set field="titleProperty" value="PageTitleEditGroupInformation"/>
                 <set field="tabButtonItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
-                
+
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="userLoginId" from-field="parameters.userLoginId"/>
@@ -388,7 +388,7 @@
                 <set field="titleProperty" value="PartyCreateUserLogin"/>
                 <set field="tabButtonItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PartyCreateUserLogin"/>
-                
+
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
@@ -408,7 +408,7 @@
                 <set field="titleProperty" value="PageTitleEditUserLoginSecurityGroups"/>
                 <set field="tabButtonItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PageTitleEditUserLoginSecurityGroups"/>
-                
+
                 <set field="userLoginId" from-field="parameters.userLoginId"/>
                 <entity-one entity-name="UserLogin" value-name="editUserLogin"/>
                 <set field="partyId" from-field="parameters.partyId" default-value="${editUserLogin.partyId}"/>
@@ -432,7 +432,7 @@
                 <set field="titleProperty" value="PageTitleNewPartyNote"/>
                 <set field="tabButtonItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PageTitleNewPartyNote"/>
-                
+
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
@@ -446,7 +446,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <!-- Create New Party Screen -->
     <screen name="CreateNewParty">
         <section>
@@ -470,7 +470,8 @@
                                         <container><link target="editpartygroup?create_new=Y" style="buttontextbig" text="[*] ${uiLabelMap.PartyCreateNewPartyGroup}"></link></container>
                                         <container><link target="editperson?create_new=Y" style="buttontextbig" text="[*] ${uiLabelMap.PartyCreateNewPerson}"></link></container>
                                         <container><link target="NewCustomer" style="buttontextbig" text="[*] ${uiLabelMap.PartyCreateNewCustomer}"></link></container>
-                                        <!-- <container><link target="#" style="buttontextbigdisabled" text="[*] ${uiLabelMap.PartyCreateNewEmployee}"></link></container> -->
+                                        <container><link target="NewProspect" style="buttontextbig" text="[*] ${uiLabelMap.PartyCreateNewProspect}"></link></container>
+                                        <container><link target="NewEmployee" style="buttontextbig" text="[*] ${uiLabelMap.PartyCreateNewEmployee}"></link></container>
                                     </container>
                                 </container>
                             </widgets>
@@ -490,6 +491,7 @@
             <actions>
                 <set field="titleProperty" value="PartyCreateNewCustomer"/>
                 <set field="headerItem" value="create"/>
+                <set field="target" value="createCustomer"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
             </actions>
             <widgets>
@@ -501,7 +503,7 @@
                             </condition>
                             <widgets>
                                 <container><label text="${uiLabelMap.PartyCreateNewCustomer}" style="head2"/></container>
-                                <include-form name="NewCustomer" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                                <include-form name="NewUser" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
@@ -512,15 +514,78 @@
             </widgets>
         </section>
     </screen>
+
+    <!-- New Prospect Party Screen -->
+    <screen name="NewProspect">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PartyCreateNewProspect"/>
+                <set field="headerItem" value="create"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createProspect"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <container><label text="${uiLabelMap.PartyCreateNewProspect}" style="head2"/></container>
+                                <include-form name="NewUser" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- New Emplyee Party Screen -->
+    <screen name="NewEmployee">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PartyCreateNewCustomer"/>
+                <set field="headerItem" value="create"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createEmployee"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <container><label text="${uiLabelMap.PartyCreateNewEmployee}" style="head2"/></container>
+                                <include-form name="NewUser" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="ViewSegmentRoles">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySegmentRoles"/>
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="ViewPartySegmentRoles"/>
-                
+
                 <set field="labelTitleProperty" value="PartyViewSegmentRoles"/>
-                
+
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
             </actions>
@@ -547,9 +612,9 @@
                 <set field="titleProperty" value="PageTitleViewPartyClassifications"/>
                 <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="EditPartyClassifications"/>
-                
+
                 <set field="labelTitleProperty" value="PartyClassifications"/>
-                
+
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
             </actions>
@@ -576,9 +641,9 @@
                 <set field="titleProperty" value="PageTitleViewPartyClassificationGroupParties"/>
                 <set field="headerItem" value="classification"/>
                 <set field="tabButtonItem" value="EditPartyClassificationGroupParties"/>
-                
+
                 <set field="labelTitleProperty" value="PartyClassificationGroupParties"/>
-                
+
                 <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId"/>
                 <entity-one entity-name="PartyClassificationGroup" value-name="partyClassificationGroup"/>
             </actions>
@@ -608,9 +673,9 @@
                 <set field="titleProperty" value="PageTitleFindPartyClassificationGroups"/>
                 <set field="headerItem" value="classification"/>
                 <set field="tabButtonItem" value="FindPartyClassificationGroups"/>
-                
+
                 <set field="labelTitleProperty" value="PartyClassificationGroups"/>
-                
+
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
             </actions>
@@ -637,9 +702,9 @@
                 <set field="titleProperty" value="PageTitleEditPartyClassificationGroup"/>
                 <set field="headerItem" value="classification"/>
                 <set field="tabButtonItem" value="EditPartyClassificationGroup"/>
-                
+
                 <set field="labelTitleProperty" value="PartyClassificationGroup"/>
-                
+
                 <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId"/>
                 <set field="partyId" value="" />
                 <entity-one entity-name="PartyClassificationGroup" value-name="partyClassificationGroup"/>
@@ -654,7 +719,7 @@
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/ClassificationTabBar.ftl"/></html>
                             </platform-specific>
-                            
+
                             <container style="screenlet-body">
                                 <include-form name="EditPartyClassificationGroup" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                             </container>
@@ -665,4 +730,3 @@
         </section>
     </screen>
 </screens>
-    
