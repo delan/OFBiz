@@ -53,4 +53,8 @@
         <condition field-name="custRequestItemExists" operator="is-empty"/>
         <action service="createCustRequestItem" mode="sync" />
     </eca>
+    <eca service="createWorkEffortQuote" event="invoke">
+        <condition field-name="quoteId" operator="is-empty"/>
+        <action service="createQuote" mode="sync" />
+    </eca>
 </service-eca>

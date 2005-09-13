@@ -60,17 +60,17 @@
         <menu-item name="WorkEffortCommEvents" title="${uiLabelMap.WorkEffortCommEvent}">
             <link target="/ListWorkEffortCommEvents?workEffortId=${workEffortId}"/>
         </menu-item>
-        <menu-item name="WorkEffortRequestItems" title="${uiLabelMap.WorkEffortRequestItems}">
-            <link target="/ListWorkEffortRequestItems?workEffortId=${workEffortId}"/>
-        </menu-item>
         <menu-item name="WorkEffortRequests" title="${uiLabelMap.WorkEffortRequests}">
             <link target="/ListWorkEffortRequests?workEffortId=${workEffortId}"/>
         </menu-item>
-        <menu-item name="WorkEffortQuoteItems" title="${uiLabelMap.WorkEffortQuoteItems}">
-            <link target="/ListWorkEffortQuoteItems?workEffortId=${workEffortId}"/>
+        <menu-item name="WorkEffortRequestItems" title="${uiLabelMap.WorkEffortRequestItems}">
+            <link target="/ListWorkEffortRequestItems?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortQuotes" title="${uiLabelMap.WorkEffortQuotes}">
             <link target="/ListWorkEffortQuotes?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortQuoteItems" title="${uiLabelMap.WorkEffortQuoteItems}">
+            <link target="/ListWorkEffortQuoteItems?workEffortId=${workEffortId}"/>
         </menu-item>
     </menu>
 </menus>

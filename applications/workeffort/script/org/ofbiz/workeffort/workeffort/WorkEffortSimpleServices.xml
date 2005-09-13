@@ -648,11 +648,11 @@
             <add-error><fail-message message="ERROR: CustRequestWorkEffort [${parameters.custRequestId}][${parameters.workEffortId}] already exists."/></add-error>
             <check-errors/>
         </if-not-empty>
-        <if-not-empty field-name="custRequestId" map-name="custRequestWorkEffort">
+        <if-empty field-name="custRequestId" map-name="custRequestWorkEffort">
             <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
             <create-value value-name="lookupMap"/>
             <field-to-result field-name="custRequestId" map-name="lookupMap"/>
-        </if-not-empty>
+        </if-empty>
     </simple-method>
     <simple-method method-name="deleteWorkEffortRequest" short-description="Delete a CustRequestWorkEffort">
         <make-value entity-name="CustRequestWorkEffort" value-name="lookupMap"/>
@@ -662,9 +662,9 @@
             <add-error><fail-message message="ERROR: CustRequestWorkEffort [${parameters.custRequestId}][${parameters.workEffortId}] does not exist."/></add-error>
             <check-errors/>
         </if-empty>
-        <if-empty field-name="custRequestId" map-name="custRequestWorkEffort">
+        <if-not-empty field-name="custRequestId" map-name="custRequestWorkEffort">
             <remove-value value-name="lookupMap"/>
-        </if-empty>
+        </if-not-empty>
     </simple-method>
 
     <!-- CustRequestItem workeffort -->
@@ -703,4 +703,33 @@
         </if-not-empty>
     </simple-method>
 
+    <!--Quote workeffort -->
+    <simple-method method-name="createWorkEffortQuote" short-description="Create a QuoteWorkEffort">
+        <make-value entity-name="QuoteWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="QuoteWorkEffort" map-name="lookupMap" value-name="quoteWorkEffort"/>
+        <if-not-empty field-name="quoteId" map-name="quoteWorkEffort">
+            <add-error><fail-message message="ERROR: QuoteWorkEffort [${parameters.quoteId}][${parameters.workEffortId}] already exists."/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <if-empty field-name="quoteId" map-name="quoteWorkEffort">
+            <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
+            <create-value value-name="lookupMap"/>
+            <field-to-result field-name="quoteId" map-name="lookupMap"/>
+        </if-empty>
+    </simple-method>
+    <simple-method method-name="deleteWorkEffortQuote" short-description="Delete a QuoteWorkEffort">
+        <make-value entity-name="QuoteWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="QuoteWorkEffort" map-name="lookupMap" value-name="quoteWorkEffort"/>
+        <if-not-empty field-name="quoteId" map-name="quoteWorkEffort">
+            <add-error><fail-message message="ERROR: QuoteWorkEffort [${parameters.quoteId}][${parameters.workEffortId}] does not exist."/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <if-empty field-name="quoteId" map-name="quoteWorkEffort">
+            <remove-value value-name="lookupMap"/>
+        </if-empty>
+    </simple-method>
+
+ 
 </simple-methods>
