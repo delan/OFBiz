@@ -25,6 +25,7 @@ package org.ofbiz.base.util.collections;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -41,7 +42,7 @@ import org.ofbiz.base.util.Debug;
  * @version    $Revision
  * @since      1.0
  */
-public class FlexibleProperties extends Properties {
+public class FlexibleProperties extends Properties implements Serializable {
 
     public static final String module = FlexibleProperties.class.getName();
     

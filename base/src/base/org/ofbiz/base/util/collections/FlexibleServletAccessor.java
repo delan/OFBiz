@@ -23,6 +23,7 @@
  */
 package org.ofbiz.base.util.collections;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  * @version    $Rev$
  * @since      2.1
  */
-public class FlexibleServletAccessor {
+public class FlexibleServletAccessor implements Serializable {
 
     protected String name;
     protected String attributeName;
@@ -195,7 +196,7 @@ public class FlexibleServletAccessor {
         return this.name;
     }
     
-    protected static class AttributeAccessor {
+    protected static class AttributeAccessor implements Serializable {
         protected Map expandContext;
         protected String attributeName;
         protected FlexibleMapAccessor fma;

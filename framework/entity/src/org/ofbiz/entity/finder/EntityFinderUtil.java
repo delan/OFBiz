@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.finder;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -157,7 +158,7 @@ public class EntityFinderUtil {
         return orderByFields;
     }
     
-    public static interface Condition {
+    public static interface Condition extends Serializable {
         public EntityCondition createCondition(Map context, String entityName, GenericDelegator delegator);
     }
     public static class ConditionExpr implements Condition {
@@ -314,7 +315,7 @@ public class EntityFinderUtil {
         }
     }
     
-    public static interface OutputHandler {
+    public static interface OutputHandler extends Serializable {
         public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr);
         public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr);
     }

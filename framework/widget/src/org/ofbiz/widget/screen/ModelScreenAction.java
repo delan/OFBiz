@@ -23,6 +23,7 @@
  */
 package org.ofbiz.widget.screen;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -64,7 +65,7 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      3.1
  */
-public abstract class ModelScreenAction {
+public abstract class ModelScreenAction implements Serializable {
     public static final String module = ModelScreenAction.class.getName();
 
     protected ModelScreen modelScreen;
@@ -273,7 +274,6 @@ public abstract class ModelScreenAction {
             return newValue;
         }
     }
-    
     
     public static class PropertyMap extends ModelScreenAction {
         protected FlexibleStringExpander resourceExdr;

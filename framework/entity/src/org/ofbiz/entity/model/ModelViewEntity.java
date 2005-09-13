@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -642,7 +643,7 @@ public class ModelViewEntity extends ModelEntity {
         return "ModelViewEntity[" + getEntityName() + "]";
     }
 
-    public static class ModelMemberEntity {
+    public static class ModelMemberEntity implements Serializable {
         protected String entityAlias = "";
         protected String entityName = "";
 
@@ -660,7 +661,7 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
-    public static class ModelAliasAll {
+    public static class ModelAliasAll implements Serializable {
         protected String entityAlias = "";
         protected String prefix = "";
         protected Set fieldsToExclude = null;
@@ -705,7 +706,7 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
-    public static class ModelAlias {
+    public static class ModelAlias implements Serializable {
         protected String entityAlias = "";
         protected String name = "";
         protected String field = "";
@@ -802,7 +803,7 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
-    public static interface ComplexAliasMember {
+    public static interface ComplexAliasMember extends Serializable {
         public void makeAliasColName(StringBuffer colNameBuffer, StringBuffer fieldTypeBuffer, ModelViewEntity modelViewEntity, ModelReader modelReader);
     }
     
@@ -903,7 +904,7 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
-    public static class ModelViewLink {
+    public static class ModelViewLink implements Serializable {
         protected String entityAlias = "";
         protected String relEntityAlias = "";
         protected boolean relOptional = false;
@@ -964,7 +965,7 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
-    public class ModelConversion {
+    public class ModelConversion implements Serializable {
         protected String aliasName;
         protected ModelEntity fromModelEntity;
         protected Map fieldMap = new HashMap();

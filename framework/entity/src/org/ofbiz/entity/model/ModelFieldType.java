@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.*;
 import org.w3c.dom.*;
 
@@ -35,7 +36,7 @@ import org.ofbiz.base.util.*;
  * @version    $Rev$
  * @since      2.0
  */
-public class ModelFieldType {
+public class ModelFieldType implements Serializable {
 
     /** The type of the Field */
     protected String type = null;
@@ -124,7 +125,7 @@ public class ModelFieldType {
         return 20;
     }
 
-    class ModelFieldValidator {
+    class ModelFieldValidator implements Serializable {
 
         protected String validatorClass = null;
         protected String validatorMethod = null;

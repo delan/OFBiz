@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.finder;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -59,8 +60,7 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      3.1
  */
-public class ByConditionFinder {
-    
+public class ByConditionFinder implements Serializable {
     public static final String module = ByConditionFinder.class.getName();         
     
     protected FlexibleStringExpander entityNameExdr;

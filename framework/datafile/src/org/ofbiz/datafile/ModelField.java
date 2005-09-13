@@ -24,6 +24,8 @@
  */
 package org.ofbiz.datafile;
 
+import java.io.Serializable;
+
 /**
  * ModelField
  *
@@ -31,8 +33,7 @@ package org.ofbiz.datafile;
  * @version    $Rev$
  * @since      2.0
  */
-public class ModelField {
-
+public class ModelField implements Serializable {
     /** The name of the Field */
     public String name = "";
 
@@ -68,5 +69,4 @@ public class ModelField {
     
     /** Referenced field */
     public String refField = null;
-    
 }

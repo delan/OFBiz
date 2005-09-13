@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -56,7 +57,7 @@ import org.w3c.dom.Node;
  * @version    $Rev$
  * @since      2.0
  */
-public class ModelGroupReader {
+public class ModelGroupReader implements Serializable {
 
     public static final String module = ModelGroupReader.class.getName();
     public static UtilCache readers = new UtilCache("entity.ModelGroupReader", 0, 0);

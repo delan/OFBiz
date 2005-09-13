@@ -23,6 +23,8 @@
  */
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
+
 /**
  * Generic Entity - Entity model class
  *
@@ -31,7 +33,7 @@ package org.ofbiz.entity.model;
  * @version    $Rev$
  * @since      2.0
  */
-public abstract class ModelChild {
+public abstract class ModelChild implements Serializable {
 
     protected ModelEntity parentModelEntity;
 

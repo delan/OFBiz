@@ -23,6 +23,8 @@
  */
 package org.ofbiz.minilang.method.callops;
 
+import java.io.Serializable;
+
 import org.w3c.dom.*;
 import org.ofbiz.base.util.*;
 
@@ -35,7 +37,7 @@ import org.ofbiz.minilang.method.*;
  * @version    $Rev$
  * @since      2.0
  */
-public class FlexibleMessage {
+public class FlexibleMessage implements Serializable {
     
     public static final String module = FlexibleMessage.class.getName();
     

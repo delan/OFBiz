@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.finder;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,7 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      3.1
  */
-public class PrimaryKeyFinder {
-    
+public class PrimaryKeyFinder implements Serializable {
     public static final String module = PrimaryKeyFinder.class.getName();         
     
     protected FlexibleStringExpander entityNameExdr;

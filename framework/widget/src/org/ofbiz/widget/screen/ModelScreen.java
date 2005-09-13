@@ -23,6 +23,7 @@
  */
 package org.ofbiz.widget.screen;
 
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      3.1
  */
-public class ModelScreen {
+public class ModelScreen implements Serializable {
 
     public static final String module = ModelScreen.class.getName();
 

@@ -25,6 +25,7 @@
 package org.ofbiz.base.config;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 
 import org.w3c.dom.Document;
@@ -36,7 +37,7 @@ import org.w3c.dom.Document;
  * @version    $Rev$
  * @since      2.0
  */
-public interface ResourceHandler {
+public interface ResourceHandler extends Serializable {
     
     public String getLoaderName();
     

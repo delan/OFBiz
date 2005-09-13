@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +61,7 @@ import org.w3c.dom.Node;
  * @version    $Rev$
  * @since      2.0
  */
-public class ModelReader {
+public class ModelReader implements Serializable {
 
     public static final String module = ModelReader.class.getName();
     public static UtilCache readers = new UtilCache("entity.ModelReader", 0, 0);

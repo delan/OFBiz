@@ -23,6 +23,7 @@
  */
 package org.ofbiz.base.util.collections;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import org.ofbiz.base.util.UtilProperties;
  * @version    $Rev$
  * @since      3.1
  */
-public class ResourceBundleMapWrapper implements Map {
+public class ResourceBundleMapWrapper implements Map, Serializable {
     
     protected MapStack rbmwStack;
     protected ResourceBundle initialResourceBundle;
@@ -139,7 +140,7 @@ public class ResourceBundleMapWrapper implements Map {
         return this.rbmwStack.values();
     }
     
-    public static class InternalRbmWrapper implements Map {
+    public static class InternalRbmWrapper implements Map, Serializable {
         protected ResourceBundle resourceBundle;
         protected Map topLevelMap;
         

@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.jdbc;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -2853,7 +2854,7 @@ public class DatabaseUtil {
     
     /* ====================================================================== */
     /* ====================================================================== */
-    public static class ColumnCheckInfo {
+    public static class ColumnCheckInfo implements Serializable {
         public String tableName;
         public String columnName;
         public String typeName;
@@ -2881,8 +2882,7 @@ public class DatabaseUtil {
         }
     }
 
-
-    public static class ReferenceCheckInfo {
+    public static class ReferenceCheckInfo implements Serializable {
         public String pkTableName;
 
         /** Comma separated list of column names in the related tables primary key */
