@@ -146,9 +146,9 @@
     </service>
     <service name="getStatusValidChangeToDetails" engine="java"
             location="org.ofbiz.common.status.StatusServices" invoke="getStatusValidChangeToDetails" auth="false">
-        <description>Gets all StatusValidChangeToDetails entries for the supplied StatusTypeId</description>
-        <attribute name="statusTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="statusValidChangeToDetails" type="Collection" mode="OUT" optional="true"/>
+        <description>Gets all StatusValidChangeToDetails entries for the supplied statusId</description>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusValidChangeToDetails" type="List" mode="OUT" optional="true"/>
     </service>
 
     <!-- Lookup services -->

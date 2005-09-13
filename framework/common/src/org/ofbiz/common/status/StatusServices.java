@@ -72,22 +72,19 @@ public class StatusServices {
         return ret;
     }
 
-
     public static Map getStatusValidChangeToDetails(DispatchContext ctx, Map context) {
         GenericDelegator delegator = (GenericDelegator) ctx.getDelegator();
-        
-        Collection statusValidChangeToDetails = null;
-        String statusId = (String) context.get("statusTypeId");
-        
+        List statusValidChangeToDetails = null;
+        String statusId = (String) context.get("statusId");
         try {
             statusValidChangeToDetails = delegator.findByAndCache("StatusValidChangeToDetail", UtilMisc.toMap("statusId", statusId), UtilMisc.toList("sequenceId"));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
-
-        Map ret = new HashMap();
-        if(statusValidChangeToDetails != null)
-            ret.put("statusValidChangeToDetail",statusValidChangeToDetails);
+        Map ret = ServiceUtil.returnSuccess();
+        if (statusValidChangeToDetails != null) {
+            ret.put("statusValidChangeToDetails", statusValidChangeToDetails);
+        }
         return ret;        
     }
 }
