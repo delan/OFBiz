@@ -337,12 +337,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindQuoteForCart"/>
     </request-map>
-    <request-map uri="addQuoteToCart">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartFromQuote"/>
-        <response name="success" type="request" value="orderentry"/>
-        <response name="error" type="request" value="orderentry"/>
-    </request-map>
     <request-map uri="viewPartyShoppingLists">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="viewshoppinglists"/>

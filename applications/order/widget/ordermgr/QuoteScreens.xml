@@ -124,10 +124,9 @@
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
-                        <container>
-                            <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="buttontext"/>
-                            <link target="loadCartFromQuote?quoteId=${quoteId}" text="${uiLabelMap.OrderCreateOrder}" style="buttontext"/>
-                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/quote/CreateOrderQuote.ftl"/></html>
+                        </platform-specific>
                         <include-form name="EditQuote" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/quote/CopyQuote.ftl"/></html>

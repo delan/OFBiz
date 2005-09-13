@@ -430,30 +430,6 @@ public class ShoppingCartEvents {
         }
     }
 
-    /** Adds a set of requirements to the cart
-     */
-    public static String addToCartFromQuote(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = getCartObject(request);
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
-        String controlDirective;
-        Map result;
-
-        //Convert the params to a map to pass in
-        Map paramMap = UtilHttp.getParameterMap(request);
-        String catalogId = CatalogWorker.getCurrentCatalogId(request);
-        result = cartHelper.addToCartFromQuote(catalogId, request.getParameter("quoteId"));
-        controlDirective = processResult(result, request);
-
-        //Determine where to send the browser
-        if (controlDirective.equals(ERROR)) {
-            return "error";
-        } else {
-            return "success";
-        }
-    }
-
     /** Adds all products in a category according to default quantity on ProductCategoryMember
      * for each; if no default for a certain product in the category, or if
      * quantity is 0, do not add
