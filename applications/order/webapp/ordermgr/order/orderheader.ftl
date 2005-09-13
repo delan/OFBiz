@@ -99,7 +99,7 @@
                         <div class="tabletext">
                           <#if orderHeader.salesChannelEnumId?has_content>
                             <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration")>
-                            ${(channel.description)?default("N/A")}                            
+                            ${(channel.description)?default("N/A")}
                           <#else>
                             N/A
                           </#if>
@@ -229,7 +229,7 @@
         </div>
       </#if>
       <#-- end of order terms box -->
-      
+
       <#-- payment box -->
       <#if orderPaymentPreferences?has_content || billingAccount?has_content || invoices?has_content>
         <div class="screenlet">
@@ -292,9 +292,9 @@
                               <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp</#if>
                               ${creditCard.firstNameOnCard}&nbsp;
                               <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp</#if>
-                              ${creditCard.lastNameOnCard}
+                              ${creditCard.lastNameOnCard?default("N/A")}
                               <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
-                              <br/>                                  
+                              <br/>
 
                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                 ${creditCard.cardType}
@@ -323,7 +323,7 @@
                                 <#if gatewayResponse_has_next><hr /></#if>
                               </#list>
                             </div>
-                          </#if>                              
+                          </#if>
                         </td>
                       </tr>
                     <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
@@ -535,7 +535,7 @@
                       <#elseif contactMech.contactMechTypeId == "EMAIL_ADDRESS">
                         <div class="tabletext">
                           ${contactMech.infoString}
-                          <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>  
+                          <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
                              <br/>(<a href="<@ofbizUrl>/confirmationmailedit?orderId=${orderId}&partyId=${partyId}&sendTo=${contactMech.infoString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSendConfirmationEmail}</a>)
                           <#else>
                              <a href="mailto:${contactMech.infoString}" class="buttontext">(${uiLabelMap.OrderSendEmail})</a>
@@ -635,7 +635,7 @@
                             <div class="tabletext">
                               <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
                               Code: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
-                              <#if orderShipmentInfoSummary.boxNumber?has_content> Box #${orderShipmentInfoSummary.boxNumber}</#if> 
+                              <#if orderShipmentInfoSummary.boxNumber?has_content> Box #${orderShipmentInfoSummary.boxNumber}</#if>
                               <#if orderShipmentInfoSummary.carrierPartyId?has_content>(Carrier: ${orderShipmentInfoSummary.carrierPartyId})</#if>
                             </div>
                           </#if>
@@ -656,7 +656,7 @@
                         <#if shipGroup.maySplit?upper_case == "N">
                             ${uiLabelMap.FacilityWaitEntireOrderReady}
                             <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                              <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderAllowSplit}</a></#if>                                  
+                              <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderAllowSplit}</a></#if>
                             </#if>
                         <#else>
                             ${uiLabelMap.FacilityShipAvailable}

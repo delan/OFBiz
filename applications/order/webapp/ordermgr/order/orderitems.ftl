@@ -334,7 +334,12 @@
                     <td align="center">
                       <div class="tabletext" style="font-size: xx-small;">${orderItemShipGrpInvRes.quantity?string.number}&nbsp;</div>
                     </td>
-                    <td>&nbsp;</td>
+                    <td>
+                      <#if (orderItemShipGrpInvRes.quantityNotAvailable?has_content && orderItemShipGrpInvRes.quantityNotAvailable > 0)>
+                        <font color="red">[${orderItemShipGrpInvRes.quantityNotAvailable?string.number}&nbsp;Backordered]</font>
+                      </#if>
+                      &nbsp;
+                    </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                   </tr>
@@ -403,7 +408,7 @@
               </tr>
             </#if>
           </#list>
-          
+
           <#-- subtotal -->
           <tr><td colspan=1></td><td colspan="8"><hr class="sepbar"></td></tr>
           <tr>

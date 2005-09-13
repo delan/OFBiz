@@ -9,6 +9,7 @@ dispatcher = request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
 security = request.getAttribute("security");
 partyId = request.getParameter("partyId");
+facilityId = request.getParameter("facilityId");
 
 // checkboxes
 viewcompleted = request.getParameter("viewcompleted");
@@ -49,6 +50,11 @@ context.put("view_WORK_ORDER", view_WORK_ORDER);
 typeConditions = new ArrayList();       // list of order type conditions
 statusConditions = new ArrayList();     // list of order status conditions
 allConditions = new ArrayList();        // type and status conditions joined by AND
+
+// condition for facility Id
+if (facilityId != null) {
+    allConditions.add(new EntityExpr("originFacilityId", EntityOperator.EQUALS, facilityId));
+}
 
 // conditions for order status
 completedOrdersCondition = new EntityExpr("statusId", EntityOperator.EQUALS, "ORDER_COMPLETED");
@@ -118,7 +124,7 @@ if (workOrdersCondition != null) {
     typeConditions.add(workOrdersCondition);
 }
 
-// construct conditions and find orderheaders: select ORH where (status1 OR status2 OR ...) AND (type1 OR type2 OR ...) 
+// construct conditions and find orderheaders: select ORH where (status1 OR status2 OR ...) AND (type1 OR type2 OR ...)
 statusConditionsList = new EntityConditionList(statusConditions,  EntityOperator.OR);
 typeConditionsList = new EntityConditionList(typeConditions, EntityOperator.OR);
 if ((typeConditions.size() > 0) && (statusConditions.size() > 0)) {

@@ -187,6 +187,20 @@ function lookupOrders(click) {
                 </td>
               </tr>
               <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>Has BackOrders</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td>
+                  <select name='hasBackOrders' class='selectBox'>
+                    <#if requestParameters.hasBackOrders?has_content>
+                    <option value="Y">Yes</option>
+                    <option value="Y">---</option>
+                    </#if>
+                    <option value="N">No</option>
+                    <option value="Y">Yes</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
                 <td width='25%' align='right'>
                   <div class='tableheadtext'>${uiLabelMap.CommonDateFilter}</div>
                 </td>
@@ -275,6 +289,7 @@ document.lookuporder.order_id.focus();
           <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.PartyUserLoginId}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderSurvey}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsOrdered}</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsBackOrdered}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsReturned}</div></td>
           <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderRemainingSubTotal}</div></td>
           <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderOrderTotal}</div></td>
@@ -285,7 +300,7 @@ document.lookuporder.order_id.focus();
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan='13'><hr class='sepbar'></td>
+          <td colspan='14'><hr class='sepbar'></td>
         </tr>
         <#if orderHeaderList?has_content>
           <#assign rowClass = "viewManyTR2">
@@ -336,6 +351,7 @@ document.lookuporder.order_id.focus();
               </td>
               <td align="right"><div class="tabletext">${orh.hasSurvey()?string.number}</div></td>
               <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
+              <td align="right"><div class="tabletext">${orh.getOrderBackorderQuantity()?string.number}</div></td>
               <td align="right"><div class="tabletext">${orh.getOrderReturnedQuantity()?string.number}</div></td>
               <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderHeader.remainingSubTotal isoCode=orh.getCurrency()/></div></td>
               <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orh.getCurrency()/></div></td>
