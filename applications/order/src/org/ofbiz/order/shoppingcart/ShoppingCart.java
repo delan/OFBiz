@@ -1077,7 +1077,9 @@ public class ShoppingCart implements Serializable {
 
     public void setBillToCustomerPartyId(String billToCustomerPartyId) {
         this.billToCustomerPartyId = billToCustomerPartyId;
-        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = billToCustomerPartyId;
+        if ((UtilValidate.isEmpty(this.orderPartyId)) && !(orderType.equals("PURCHASE_ORDER"))) {
+            this.orderPartyId = billToCustomerPartyId;  // orderPartyId should be bill-to-customer when it is not a purchase order
+        }
     }
 
     public String getShipToCustomerPartyId() {
@@ -1108,7 +1110,10 @@ public class ShoppingCart implements Serializable {
 
     public void setBillFromVendorPartyId(String billFromVendorPartyId) {
         this.billFromVendorPartyId = billFromVendorPartyId;
-        if (UtilValidate.isEmpty(this.orderPartyId)) this.orderPartyId = billFromVendorPartyId;
+        if ((UtilValidate.isEmpty(this.orderPartyId)) && (orderType.equals("PURCHASE_ORDER"))) {
+            this.orderPartyId = billFromVendorPartyId;  // orderPartyId should be bill-from-vendor when it is a purchase order
+        }
+
     }
 
     public String getShipFromVendorPartyId() {

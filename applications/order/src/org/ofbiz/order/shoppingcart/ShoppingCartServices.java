@@ -190,6 +190,11 @@ public class ShoppingCartServices {
             cart.setPlacingCustomerPartyId(placingParty.getString("partyId"));
         }
 
+        GenericValue billFromParty = orh.getBillFromParty();
+        if (billFromParty != null) {
+            cart.setBillFromVendorPartyId(billFromParty.getString("partyId"));
+        }            
+
         GenericValue billToParty = orh.getBillToParty();
         if (billToParty != null) {
             cart.setBillToCustomerPartyId(billToParty.getString("partyId"));
