@@ -751,6 +751,7 @@
                      </td>
                      <td width="5">&nbsp;</td>
                      <td align="left" valign="top" width="80%">
+                       <div class="tabletext"><a href="/facility/control/PackOrder?facilityId=${orderHeader.originFacilityId?if_exists}&orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">Pack Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
                        <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
                      </td>
                    </tr>
