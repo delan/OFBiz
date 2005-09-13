@@ -799,6 +799,11 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Add an item to the shopping cart. */
+    public int addItemToEnd(String productId, double amount, double quantity,  double unitPrice, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, boolean triggerExternalOps, boolean triggerPriceRules) throws CartItemModifyException, ItemNotFoundException {
+        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, unitPrice, null, 0.00, 0.00, features, attributes, prodCatalogId, null, dispatcher, this, triggerExternalOps, triggerPriceRules));
+    }
+
+    /** Add an item to the shopping cart. */
     public int addItemToEnd(String productId, double amount, double quantity,  HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }

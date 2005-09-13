@@ -483,6 +483,10 @@ public class ShoppingCartServices {
                 if (quantity == null) {
                     quantity = new Double(0);
                 }
+                Double quoteUnitPrice = item.getDouble("quoteUnitPrice");
+                if (quoteUnitPrice == null) {
+                    quoteUnitPrice = new Double(0);
+                }
                 int itemIndex = -1;
                 if (item.get("productId") == null) {
                     // non-product item
@@ -500,8 +504,7 @@ public class ShoppingCartServices {
                     //String prodCatalogId = item.getString("prodCatalogId");
                     String productId = item.getString("productId");
                     try {
-                        //itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), null, null, prodCatalogId, dispatcher);
-                        itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), null, null, null, dispatcher, !applyQuoteAdjustments);
+                        itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), quoteUnitPrice.doubleValue(), null, null, null, dispatcher, !applyQuoteAdjustments, (quoteUnitPrice.doubleValue() == 0));
                     } catch (ItemNotFoundException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
