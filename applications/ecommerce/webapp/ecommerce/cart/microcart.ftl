@@ -29,7 +29,6 @@
 <#else>
     <#assign shoppingCartSize = 0>
 </#if>
-
 <div id="microcart">
     <div>
         <#if (shoppingCartSize > 0)>

@@ -109,14 +109,14 @@ function toggleBillingAccount(box) {
                   <tr>
                     <td colspan="2">
                       <span class="tabletext">${uiLabelMap.CommonAdd}:</span>
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
+                      <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">${uiLabelMap.PartyAddNewAddress}</a>
                     </td>
                   </tr>
                   <#if (shoppingCart.getTotalQuantity() > 1) && !shoppingCart.containAllWorkEffortCartItems()> <#-- no splitting when only rental items -->
                     <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                     <tr>
                       <td colspan="2" align="center">
-                        <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderSplitIntoMultipleShipments}]</a>
+                        <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSplitIntoMultipleShipments}</a>
                         <#if (shoppingCart.getShipGroupSize() > 1)>
                           <div class="tabletext" style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}.</div>
                         </#if>
@@ -141,7 +141,7 @@ function toggleBillingAccount(box) {
                              <#if shippingAddress.stateProvinceGeoId?has_content><br/>${shippingAddress.stateProvinceGeoId}</#if>
                              <#if shippingAddress.postalCode?has_content><br/>${shippingAddress.postalCode}</#if>
                              <#if shippingAddress.countryGeoId?has_content><br/>${shippingAddress.countryGeoId}</#if>
-                             <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                             <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
                            </div>
                          </td>
                        </tr>
@@ -310,17 +310,17 @@ function toggleBillingAccount(box) {
                     <td colspan="2">
                       <span class="tabletext">${uiLabelMap.CommonAdd}:</span>
                       <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.AccountingCreditCard}]</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">${uiLabelMap.AccountingCreditCard}</a>
                       </#if>
                       <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">${uiLabelMap.AccountingEftAccount}</a>
                       </#if>
                     </td>
                   </tr>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td colspan="2" align="center">
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">[${uiLabelMap.AccountingSplitPayment}]</a>
+                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">${uiLabelMap.AccountingSplitPayment}</a>
                     </td>
                   </tr>
                   <tr><td colspan="2"><hr class="sepbar"/></td></tr>
@@ -383,7 +383,7 @@ function toggleBillingAccount(box) {
                         </td>
                         <td width="50%">
                           <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
                         </td>
                       </tr>
                      </#if>
@@ -396,7 +396,7 @@ function toggleBillingAccount(box) {
                         </td>
                         <td width="50%">
                           <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
                         </td>
                       </tr>
                      </#if>

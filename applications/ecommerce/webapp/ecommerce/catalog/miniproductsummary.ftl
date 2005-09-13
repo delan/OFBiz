@@ -24,13 +24,14 @@
  *@since      2.1
 -->
 <#if miniProduct?exists>
-    <a href="<@ofbizUrl>product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProductContentWrapper.get("PRODUCT_NAME")?default("No Name Available")}</a>
+    <a href="<@ofbizUrl>product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="linktext">${miniProductContentWrapper.get("PRODUCT_NAME")?default("No Name Available")}</a>
     <div class="tabletext"><b>${miniProduct.productId}</b>
       <#if (priceResult.price?default(0) > 0 && miniProduct.requireAmount?default("N") == "N")>
         <#if "Y" = miniProduct.isVirtual?if_exists> ${uiLabelMap.CommonFrom} </#if><b><span class="<#if priceResult.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/></span></b>
       </#if>
     </div>
-        
+
+    <div style="margin-top: 4px;">
     <#if (miniProduct.introductionDate?exists) && (nowTimeLong < miniProduct.introductionDate.getTime())>
         <#-- check to see if introductionDate hasn't passed yet -->
         <div class="tabletext" style="color: red;">${uiLabelMap.ProductNotYetAvailable}</div>
@@ -38,9 +39,9 @@
         <#-- check to see if salesDiscontinuationDate has passed -->
         <div class="tabletext" style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
     <#elseif miniProduct.isVirtual?default("N") == "Y">
-        <a href="<@ofbizUrl>product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
+        <a href="<@ofbizUrl>product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>${uiLabelMap.EcommerceChooseVariations}...</nobr></a>
     <#elseif miniProduct.requireAmount?default("N") == "Y">
-        <a href="<@ofbizUrl>product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseAmount}...]</nobr></a>
+        <a href="<@ofbizUrl>product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>${uiLabelMap.EcommerceChooseAmount}...</nobr></a>
     <#else>
         <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
             <input type="hidden" name="add_product_id" value="${miniProduct.productId}"/>
@@ -51,7 +52,8 @@
             <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"/></#if>
             <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"/></#if>
             <input type="hidden" name="clearSearch" value="N"/>
-            <a href="javascript:document.${miniProdFormName}.submit()" class="buttontext"><nobr>[${uiLabelMap.CommonAdd} ${miniProdQuantity} ${uiLabelMap.EcommerceToCart}]</nobr></a>
+            <a href="javascript:document.${miniProdFormName}.submit()" class="buttontext"><nobr>${uiLabelMap.CommonAdd} ${miniProdQuantity} ${uiLabelMap.EcommerceToCart}</nobr></a>
         </form>
     </#if>
+    </div>
 </#if>

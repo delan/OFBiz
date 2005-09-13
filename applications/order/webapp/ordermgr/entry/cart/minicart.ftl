@@ -54,7 +54,7 @@
                 <td valign="top"><div class="tabletext">${cartLine.getQuantity()?string.number}</div></td>
                 <td valign="top">
                   <#if cartLine.getProductId()?exists>
-                    <div><a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getName()}</a></div>
+                    <div><a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="linktext">${cartLine.getName()}</a></div>
                   <#else>
                     <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
                   </#if>
@@ -73,7 +73,7 @@
           </table>
           <#if !hidebottomlinks?exists>
             <div><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceViewCart}</a>&nbsp;<a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceCheckout}</a></div>
-            <div><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceCheckoutQuick}</a></div>
+            <div style="margin-top: 4px;"><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceCheckoutQuick}</a></div>
           </#if>
         <#else>
           <div class="tabletext">${uiLabelMap.EcommerceShoppingCartEmpty}</div>

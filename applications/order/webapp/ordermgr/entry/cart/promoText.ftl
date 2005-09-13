@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,11 +26,6 @@
  *@version    $Rev$
  *@since      2.2
 -->
-
-<#if requestAttributes.uiLabelMap?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-
 <#if showPromoText?exists && showPromoText>
 <div class="screenlet">
     <div class="screenlet-header">
@@ -42,7 +37,7 @@
           <#list productPromos as productPromo>
             <tr>
               <td>
-                <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a> ${productPromo.promoText?if_exists}</div>
+                <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="linktext">${uiLabelMap.CommonDetails}</a> ${productPromo.promoText?if_exists}</div>
               </td>
             </tr>
             <#if productPromo_has_next>
