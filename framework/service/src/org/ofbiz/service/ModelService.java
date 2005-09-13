@@ -83,9 +83,9 @@ public class ModelService implements Serializable {
     public static final String ERROR_MESSAGE_MAP = "errorMessageMap";
     public static final String SUCCESS_MESSAGE = "successMessage";
     public static final String SUCCESS_MESSAGE_LIST = "successMessageList";
-    
+
     public static final String resource = "ServiceErrorUiLabels";
-          
+
     /** The name of this service */
     public String name;
 
@@ -103,16 +103,16 @@ public class ModelService implements Serializable {
 
     /** The method or function to invoke for this service */
     public String invoke;
-    
+
     /** The default Entity to use for auto-attributes */
     public String defaultEntityName;
-    
+
     /** Does this service require authorization */
     public boolean auth;
 
     /** Can this service be exported via RPC, RMI, SOAP, etc */
     public boolean export;
-    
+
     /** Enable verbose debugging when calling this service */
     public boolean debug;
 
@@ -121,10 +121,10 @@ public class ModelService implements Serializable {
 
     /** Create a transaction for this service (if one is not already in place...)? */
     public boolean useTransaction;
-    
+
     /** Require a new transaction for this service */
     public boolean requireNewTransaction;
-    
+
     /** Override the default transaction timeout, only works if we start the transaction */
     public int transactionTimeout;
 
@@ -132,8 +132,8 @@ public class ModelService implements Serializable {
     public int maxRetry = -1;
 
     /** Set of services this service implements */
-    public Set implServices = new ListOrderedSet();  
-    
+    public Set implServices = new ListOrderedSet();
+
     /** Set of override parameters */
     public Set overrideParameters = new ListOrderedSet();
 
@@ -145,12 +145,12 @@ public class ModelService implements Serializable {
 
     /** Context Information, a list of parameters used by the service, contains ModelParam objects */
     protected List contextParamList = new LinkedList();
-    
+
     /** Flag to say if we have pulled in our addition parameters from our implemented service(s) */
     protected boolean inheritedParameters = false;
-    
+
     public ModelService() {}
-    
+
     public ModelService(ModelService model) {
         this.name = model.name;
         this.description = model.description;
@@ -168,17 +168,17 @@ public class ModelService implements Serializable {
         this.implServices = model.implServices;
         this.overrideParameters = model.overrideParameters;
         this.inheritedParameters = model.inheritedParameters();
-        
+
         List modelParamList = model.getModelParamList();
         Iterator i = modelParamList.iterator();
-        while (i.hasNext()) {        
+        while (i.hasNext()) {
             this.addParamClone((ModelParam) i.next());
-        }                
+        }
     }
-    
+
     public String toString() {
         StringBuffer buf = new StringBuffer();
-        buf.append(name + "::");
+        buf.append(name).append("::");
         buf.append(description + "::");
         buf.append(engineName + "::");
         buf.append(nameSpace + "::");
@@ -195,7 +195,7 @@ public class ModelService implements Serializable {
         buf.append(overrideParameters + "::");
         buf.append(contextInfo + "::");
         buf.append(contextParamList + "::");
-        buf.append(inheritedParameters + "::");        
+        buf.append(inheritedParameters + "::");
         return buf.toString();
     }
 
@@ -213,13 +213,13 @@ public class ModelService implements Serializable {
     public boolean inheritedParameters() {
         return this.inheritedParameters;
     }
-    
-    /** 
+
+    /**
      * Gets the ModelParam by name
      * @param name The name of the parameter to get
      * @return ModelParam object with the specified name
      */
-    public ModelParam getParam(String name) {        
+    public ModelParam getParam(String name) {
         return (ModelParam) contextInfo.get(name);
     }
 
@@ -228,40 +228,40 @@ public class ModelService implements Serializable {
      * then sorts by order if specified.
      */
     public void addParam(ModelParam param) {
-        if (param != null) {        
+        if (param != null) {
             contextInfo.put(param.name, param);
             contextParamList.add(param);
-        }        
+        }
     }
-        
+
     private void copyParams(Collection params) {
         if (params != null) {
             Iterator i = params.iterator();
             while (i.hasNext()) {
-                ModelParam param = (ModelParam) i.next();       
+                ModelParam param = (ModelParam) i.next();
                 addParam(param);
             }
         }
     }
-    
+
     /**
-     * Adds a clone of a parameter definition to this service     
+     * Adds a clone of a parameter definition to this service
      */
     public void addParamClone(ModelParam param) {
-        if (param != null) {        
-            ModelParam newParam = new ModelParam(param);          
+        if (param != null) {
+            ModelParam newParam = new ModelParam(param);
             addParam(newParam);
         }
-    }   
-    
-    private void copyParamsAndClone(Collection params) {        
+    }
+
+    private void copyParamsAndClone(Collection params) {
         if (params != null) {
             Iterator i = params.iterator();
-            while (i.hasNext()) {            
+            while (i.hasNext()) {
                 ModelParam param = (ModelParam) i.next();
                 addParamClone(param);
-            }            
-        }        
+            }
+        }
     }
 
     public Set getAllParamNames() {
@@ -275,7 +275,7 @@ public class ModelService implements Serializable {
         return nameList;
     }
 
-    public Set getInParamNames() {        
+    public Set getInParamNames() {
         Set nameList = new OrderedSet();
         Iterator i = this.contextParamList.iterator();
 
@@ -287,7 +287,7 @@ public class ModelService implements Serializable {
         }
         return nameList;
     }
-    
+
     public Set getOutParamNames() {
         Set nameList = new OrderedSet();
         Iterator i = this.contextParamList.iterator();
@@ -298,7 +298,7 @@ public class ModelService implements Serializable {
             if ("IN".equals(p.mode)) continue;
             nameList.add(p.name);
         }
-        return nameList;        
+        return nameList;
     }
 
     /**
@@ -320,7 +320,7 @@ public class ModelService implements Serializable {
                 return;
             }
         }
-                               
+
         // get the info values
         Collection values = contextInfo.values();
         Iterator i = values.iterator();
@@ -342,7 +342,7 @@ public class ModelService implements Serializable {
 
         if (test == null) test = new HashMap();
         requiredTest.putAll(test);
-        
+
         List requiredButNull = new ArrayList();
         if (requiredTest != null) {
             List keyList = new ArrayList(requiredTest.keySet());
@@ -360,7 +360,7 @@ public class ModelService implements Serializable {
                 }
             }
         }
-        
+
         // check for requiredButNull fields and return an error since null values are not allowed for required fields
         if (requiredButNull.size() > 0) {
             List missingMsg = new ArrayList();
@@ -368,7 +368,7 @@ public class ModelService implements Serializable {
             while (rbni.hasNext()) {
                 String missingKey = (String) rbni.next();
                 String message = this.getParam(missingKey).getPrimaryFailMessage(locale);
-                if (message == null) {                    
+                if (message == null) {
                     String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale) + " ";
                     message = errMsg + missingKey + "\n";
                 }
@@ -380,14 +380,14 @@ public class ModelService implements Serializable {
         if (verboseOn) {
             String requiredNames = "";
             Iterator requiredIter = requiredInfo.keySet().iterator();
-            while (requiredIter.hasNext()) {            
+            while (requiredIter.hasNext()) {
                 requiredNames = requiredNames + requiredIter.next();
                 if (requiredIter.hasNext()) {
-                    requiredNames = requiredNames + ", ";                    
+                    requiredNames = requiredNames + ", ";
                 }
             }
             Debug.logVerbose("[ModelService.validate] : required fields - " + requiredNames, module);
-            
+
             Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Required - " +
                 requiredTest.size() + " / " + requiredInfo.size(), module);
             Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Optional - " +
@@ -513,7 +513,7 @@ public class ModelService implements Serializable {
                 }
             }
         }
-        
+
         if (typeFailMsgs.size() > 0) {
             throw new ServiceValidationException(typeFailMsgs, model, mode);
         }
@@ -581,7 +581,7 @@ public class ModelService implements Serializable {
     }
 
     /**
-     * Gets the parameter names of the specified mode (IN/OUT/INOUT). The 
+     * Gets the parameter names of the specified mode (IN/OUT/INOUT). The
      * parameters will be returned in the order specified in the file.
      * Note: IN and OUT will also contains INOUT parameters.
      * @param mode The mode (IN/OUT/INOUT)
@@ -619,7 +619,7 @@ public class ModelService implements Serializable {
     }
 
     /**
-     * Creates a new Map based from an existing map with just valid parameters. 
+     * Creates a new Map based from an existing map with just valid parameters.
      * Tries to convert parameters to required type.
      * @param source The source map
      * @param mode The mode which to build the new map
@@ -627,9 +627,9 @@ public class ModelService implements Serializable {
     public Map makeValid(Map source, String mode) {
         return makeValid(source, mode, true, null, null);
     }
-    
+
     /**
-     * Creates a new Map based from an existing map with just valid parameters. 
+     * Creates a new Map based from an existing map with just valid parameters.
      * Tries to convert parameters to required type.
      * @param source The source map
      * @param mode The mode which to build the new map
@@ -638,15 +638,15 @@ public class ModelService implements Serializable {
     public Map makeValid(Map source, String mode, boolean includeInternal, List errorMessages) {
         return makeValid(source, mode, includeInternal, errorMessages, null);
     }
-    
+
     /**
-     * Creates a new Map based from an existing map with just valid parameters. 
+     * Creates a new Map based from an existing map with just valid parameters.
      * Tries to convert parameters to required type.
      * @param source The source map
      * @param mode The mode which to build the new map
      * @param includeInternal When false will exclude internal fields
      * @param locale locale to use to do some type conversion
-     */    
+     */
     public Map makeValid(Map source, String mode, boolean includeInternal, List errorMessages, Locale locale) {
         Map target = new HashMap();
 
@@ -685,7 +685,7 @@ public class ModelService implements Serializable {
                     if (source.containsKey(key)) {
                         if ((param.internal && includeInternal) || (!param.internal)) {
                             Object value = source.get(key);
-    
+
                             try {
                                 // no need to fail on type conversion; the validator will catch this
                                 value = ObjectType.simpleTypeConvert(value, param.type, null, locale, false);
@@ -789,16 +789,16 @@ public class ModelService implements Serializable {
         return target;
     }
 
-    /** 
-     * Returns a list of ModelParam objects in the order they were defined when 
+    /**
+     * Returns a list of ModelParam objects in the order they were defined when
      * the service was created.
      */
     public List getModelParamList() {
         return new LinkedList(this.contextParamList);
     }
 
-    /** 
-     * Returns a list of ModelParam objects in the order they were defined when 
+    /**
+     * Returns a list of ModelParam objects in the order they were defined when
      * the service was created.
      */
     public List getInModelParamList() {
@@ -814,13 +814,13 @@ public class ModelService implements Serializable {
         }
         return inList;
     }
-        
+
     /**
      * Run the interface update and inherit all interface parameters
      * @param dctx The DispatchContext to use for service lookups
      */
-    public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {                       
-        if (!inheritedParameters) {            
+    public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {
+        if (!inheritedParameters) {
             // services w/ engine 'group' auto-implement the grouped services
             if (this.engineName.equals("group") && implServices.size() == 0) {
                 GroupModel group = ServiceGroupReader.getGroupModel(this.location);
@@ -829,50 +829,50 @@ public class ModelService implements Serializable {
                     Iterator i = groupedServices.iterator();
                     while (i.hasNext()) {
                         GroupServiceModel sm = (GroupServiceModel) i.next();
-                        implServices.add(sm.getName());                        
+                        implServices.add(sm.getName());
                         if (Debug.verboseOn()) Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
                     }
-                }                
+                }
             }
-            
+
             // handle interfaces
-            if (implServices != null && implServices.size() > 0 && dctx != null) {                 
-                // backup the old info                 
+            if (implServices != null && implServices.size() > 0 && dctx != null) {
+                // backup the old info
                 List oldParams = this.contextParamList;
-                              
+
                 // reset the fields
                 this.contextInfo = new HashMap();
                 this.contextParamList = new LinkedList();
-                                              
+
                 Iterator implIter = implServices.iterator();
                 while (implIter.hasNext()) {
                     String serviceName = (String) implIter.next();
                     ModelService model = dctx.getModelService(serviceName);
-                    if (model != null) {                                                                                                                                             
-                        copyParamsAndClone(model.contextInfo.values());                                                                           
+                    if (model != null) {
+                        copyParamsAndClone(model.contextInfo.values());
                     } else {
                         Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                     }
-                }                          
-                
+                }
+
                 // put the old values back on top
                 copyParams(oldParams);
-            }                           
-                  
+            }
+
             // handle any override parameters
-            if (overrideParameters != null && overrideParameters.size() > 0) {                                                                   
+            if (overrideParameters != null && overrideParameters.size() > 0) {
                 Iterator keySetIter = overrideParameters.iterator();
-                while (keySetIter.hasNext()) {                    
-                    ModelParam overrideParam = (ModelParam) keySetIter.next();                    
+                while (keySetIter.hasNext()) {
+                    ModelParam overrideParam = (ModelParam) keySetIter.next();
                     ModelParam existingParam = (ModelParam) contextInfo.get(overrideParam.name);
-                                                           
+
                     // keep the list clean, remove it then add it back
-                    contextParamList.remove(existingParam);                  
-                    
-                    if (existingParam != null) {                                                
+                    contextParamList.remove(existingParam);
+
+                    if (existingParam != null) {
                         // now re-write the parameters
                         if (overrideParam.type != null && overrideParam.type.length() > 0) {
-                            existingParam.type = overrideParam.type;                                   
+                            existingParam.type = overrideParam.type;
                         }
                         if (overrideParam.mode != null && overrideParam.mode.length() > 0) {
                             existingParam.mode = overrideParam.mode;
@@ -891,14 +891,14 @@ public class ModelService implements Serializable {
                         }
                         if (overrideParam.overrideOptional) {
                             existingParam.optional = overrideParam.optional;
-                        }                        
-                        addParam(existingParam);                        
+                        }
+                        addParam(existingParam);
                     } else {
-                        Debug.logWarning("Override param found but no parameter existing; ignoring: " + overrideParam.name, module);                   
+                        Debug.logWarning("Override param found but no parameter existing; ignoring: " + overrideParam.name, module);
                     }
-                }                                                       
+                }
             }
-            
+
             // set the flag so we don't do this again
             this.inheritedParameters = true;
         }
