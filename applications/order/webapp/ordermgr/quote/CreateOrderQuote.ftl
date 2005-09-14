@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2005-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -28,6 +28,8 @@
     <#if quote?exists>
         <#if quote.statusId == "QUO_APPROVED">
             <a href="<@ofbizUrl>/loadCartFromQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateOrder}</a>
+        <#else/>
+            <span class="buttontextdisabled">${uiLabelMap.OrderCreateOrder}</span>
         </#if>
     </#if>
 </div>
