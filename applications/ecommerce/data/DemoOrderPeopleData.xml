@@ -30,7 +30,8 @@
     <UserLogin partyId="DemoCustCompany" userLoginId="DemoCustCompany" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
     <PartyRole partyId="DemoCustCompany" roleTypeId="CUSTOMER"/>
     <PartyRole partyId="DemoCustCompany" roleTypeId="BILL_TO_CUSTOMER"/>
-
+    <PartyRole partyId="DemoCustCompany" roleTypeId="_NA_"/>
+    
     <ContactMech contactMechId="9010" contactMechTypeId="POSTAL_ADDRESS"/>
     <PostalAddress contactMechId="9010" toName="Demo Customer Company" address1="2004 Factory Blvd" city="Orem" stateProvinceGeoId="UT" postalCode="84057" countryGeoId="USA"/>
     <PartyContactMech partyId="DemoCustCompany" contactMechId="9010" fromDate="2001-05-13 00:00:00.000" allowSolicitation="Y"/>
@@ -65,6 +66,7 @@
     <UserLogin partyId="DemoCustAgent" userLoginId="DemoCustAgent" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
     <PartyRole partyId="DemoCustAgent" roleTypeId="CUSTOMER"/>
     <PartyRole partyId="DemoCustAgent" roleTypeId="AGENT"/>
+    <PartyRole partyId="DemoCustAgent" roleTypeId="_NA_"/>
     <ContactMech contactMechId="9011" contactMechTypeId="POSTAL_ADDRESS"/>
     <PostalAddress contactMechId="9011" toName="Demo Customer Agent" address1="2004 Factory Blvd" city="Orem" stateProvinceGeoId="UT" postalCode="84057" countryGeoId="USA"/>
     <PartyContactMech partyId="DemoCustAgent" contactMechId="9011" fromDate="2001-05-13 00:00:00.000" allowSolicitation="Y"/>
@@ -80,7 +82,9 @@
     
     <PartyRelationship partyIdFrom="DemoCustAgent" partyIdTo="DemoCustCompany" roleTypeIdFrom="AGENT" roleTypeIdTo="CUSTOMER" 
         fromDate="2001-05-13 00:00:00.000" partyRelationshipTypeId="AGENT" comments="Allows the DemoCustAgent to purchase on behalf of DemoCustCompany, ie purchase against BillingAccount"/>
-        
+    <PartyRelationship partyIdFrom="DemoCustAgent" partyIdTo="DemoCustCompany" roleTypeIdFrom="_NA_" roleTypeIdTo="_NA_" 
+        fromDate="2001-05-13 00:00:00.000" partyRelationshipTypeId="GROUP_ROLLUP" comments="Specifies the DemoCustAgent is a member of the DemoCustCompany, for Price Rules, Promos, etc"/>
+    
     <!-- DemoCustomer -->
     <Party partyId="DemoCustomer" partyTypeId="PERSON"/>
     <Person partyId="DemoCustomer" firstName="Demo" lastName="Customer"/>
