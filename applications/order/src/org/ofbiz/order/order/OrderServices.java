@@ -2551,7 +2551,7 @@ public class OrderServices {
                 sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
                 sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
                 sendMap.put("sendTo", emailAddress);
-    
+
                 sendMap.put("userLogin", userLogin);
 
                 Map sendResp = null;
@@ -4270,7 +4270,7 @@ public class OrderServices {
 
     /**
      * Service to create a payment using an order payment preference.
-     * @return Map   
+     * @return Map
      */
     public static Map createPaymentFromPreference(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -4338,23 +4338,22 @@ public class OrderServices {
             return(ServiceUtil.returnError(ex.getMessage()));
         }
     }
-    
+
 
   /**
    * Explodes MARKET_PKG_AUTO item by replacing it with the underlying items (productIdTo in ProductAssoc.)
    * Also pro-rates the adjustments (sales tax, promotions, etc.) among the underlying items.
-   * If there is a price difference between the MARKET_PKG_AUTO parent item and the sum of the underlying items, 
+   * If there is a price difference between the MARKET_PKG_AUTO parent item and the sum of the underlying items,
    * a new OrderAdjustment, "MKTG_PKG_AUTO_ADJUST" is created, to record the difference.
-   * 
+   *
    * @param orderItems
    * @param orderAdjustments
    * @param orderItemShipGroupInfo
    * @param orderTypeId
    * @param delegator
-   * @param dispatcher
-   * @return
+   * @param dispatcher   
    */
-  public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, String orderTypeId, 
+  public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, String orderTypeId,
       GenericDelegator delegator, LocalDispatcher dispatcher) throws Exception {
 
     List newOrderItems = new ArrayList();
@@ -4386,7 +4385,7 @@ public class OrderServices {
     	      }//if
     	    }//for
        }//if
-    	          
+
       //deal with the item ship group without orderItemSeqId.  Similarly, just keep these
       if (orderItemShipGroupInfo != null && orderItemShipGroupInfo.size() > 0) {
     	   Iterator osiInfos = orderItemShipGroupInfo.iterator();
@@ -4452,7 +4451,7 @@ public class OrderServices {
                  throw e;
              }// try
              Debug.logInfo("The product [" + productIdTo + "] Price [" + basePrice + "]", module);
-             
+
              // used to tally up total price of component items, so as to calculate correct adjustment later
              sumSubItemsPrice = sumSubItemsPrice + newQuantity.doubleValue() * basePrice.doubleValue();
              sumAssocQty = sumAssocQty + productToQuantity.intValue();
@@ -4469,8 +4468,8 @@ public class OrderServices {
              assocOrderItems.add(newOrderItem);
              Debug.logInfo("explode OrderItem [" + orderItem.toString() + "] to [" + newOrderItem + "]", module);
            }// for
-          
-          // If there were a difference between the price of the parent item and the sum of the prices of the marketing package components, 
+
+          // If there were a difference between the price of the parent item and the sum of the prices of the marketing package components,
           // then create an OrderAdjustment for each new order item and pro-rate the difference based on its quantity and the total quantity of all
           // the component items.
           double originalItemPrice = quantity.doubleValue() * unitPrice.doubleValue();
@@ -4480,7 +4479,7 @@ public class OrderServices {
                 GenericValue assocOrderItem = (GenericValue) assocOrderItems.get(a);
                 String assocOrderItemSeqId = assocOrderItem.getString("orderItemSeqId");
                 Double productToQuantity = assocOrderItem.getDouble("cancelQuantity");
-              
+
                 Double percentage = new Double(productToQuantity.doubleValue()/sumAssocQty);
                 Double amount = new Double(adjustmentPrice*percentage.doubleValue());
                 GenericValue newOrderAdjustment = delegator.makeValue("OrderAdjustment",UtilMisc.toMap("orderAdjustmentTypeId", "MKTG_PKG_AUTO_ADJUST"));
@@ -4490,7 +4489,7 @@ public class OrderServices {
                 Debug.logInfo("Add new Order Adjustment [" + newOrderAdjustment.toString() + "] for Order Item [" + assocOrderItem.toString() + "]", module);
             }//for
           }//if
-          
+
           // similarly prop-rate each order adjustment for the parent item to all the marketing package components
           if (orderAdjustments != null && orderAdjustments.size() > 0) {
              for(int a =0; orderAdjustments.size()>a; a++) {
@@ -4502,7 +4501,7 @@ public class OrderServices {
                       String assocOrderItemSeqId = assocOrderItem.getString("orderItemSeqId");
                       Double productToQuantity = assocOrderItem.getDouble("cancelQuantity");
                       Double amount = orderAdjustment.getDouble("amount");
-                  
+
                       Double percentage = new Double(productToQuantity.doubleValue()/sumAssocQty);
                       amount = new Double(amount.doubleValue() * percentage.doubleValue());
                       GenericValue newOrderAdjustment = GenericValue.create(orderAdjustment);
@@ -4514,7 +4513,7 @@ public class OrderServices {
                 }//if
             }//for
           }//if
-          
+
           // assign the new order items to the same ship group as the parent item
           if (orderItemShipGroupInfo != null && orderItemShipGroupInfo.size() > 0) {
               Iterator osiInfos = orderItemShipGroupInfo.iterator();
@@ -4529,10 +4528,10 @@ public class OrderServices {
                            String assocOrderItemSeqId = assocOrderItem.getString("orderItemSeqId");
                            GenericValue newValueObj = GenericValue.create(valueObj);
                            newValueObj.put("orderItemSeqId", assocOrderItemSeqId);
-                           newValueObj.put("quantity", assocOrderItem.getDouble("quantity"));        
+                           newValueObj.put("quantity", assocOrderItem.getDouble("quantity"));
                            newOrderItemShipGroupInfo.add(newValueObj);
                            Debug.log("Create new  OrderItemShipGroupAssoc [" + newValueObj.toString() + "]", module);
-                         }//for  
+                         }//for
                       }//if
                     } else if ("OrderAdjustment".equals(valueObj.getEntityName())) {
                         // orderItemShipGroupInfo might also contain an order adjustment for tax adjustments to this ship group.  In that case,
@@ -4546,18 +4545,18 @@ public class OrderServices {
 
                              Double productToQuantity = assocOrderItem.getDouble("cancelQuantity");
                              Double amount = valueObj.getDouble("amount");
-                         
+
                              Double percentage = new Double(productToQuantity.doubleValue()/sumAssocQty);
                              amount = new Double(amount.doubleValue() * percentage.doubleValue());
                              GenericValue newValueObj = GenericValue.create(valueObj);
-                             Double itemQuantity = assocOrderItem.getDouble("quantity"); 
+                             Double itemQuantity = assocOrderItem.getDouble("quantity");
                              newValueObj.put("sourcePercentage", new Double(amount.doubleValue()/itemQuantity.doubleValue()));
                              newValueObj.put("orderItemSeqId", assocOrderItemSeqId);
                              newValueObj.put("amount", amount);
                              newOrderItemShipGroupInfo.add(newValueObj);
                              Debug.log("Create new  Order Adjustment [" + newValueObj.toString() + "]", module);
-                           }//for  
-                      }//if 
+                           }//for
+                      }//if
                    }//if
               }//while
            }//if
@@ -4590,20 +4589,20 @@ public class OrderServices {
                       }//if
                   }//if
               }//while
-           }//if  
+           }//if
          } // if
       } catch (Exception e) {
         Debug.logWarning(e, "There was an error in the [explodeMarketingPkgAutoItem]: " + e.getMessage(), module);
         throw e;
       }// try
     }// while
-        
+
     orderItems.clear();
     orderItems.addAll(newOrderItems);
     orderAdjustments.clear();
     orderAdjustments.addAll(newOrderAdjustments);
     orderItemShipGroupInfo.clear();
-    orderItemShipGroupInfo.addAll(newOrderItemShipGroupInfo);   
+    orderItemShipGroupInfo.addAll(newOrderItemShipGroupInfo);
   }// explodeMarketingPkgAutoItem
 
 }
