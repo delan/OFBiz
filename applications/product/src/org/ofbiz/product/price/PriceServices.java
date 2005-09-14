@@ -891,9 +891,9 @@ public class PriceServices {
             compare = productId.compareTo(productPriceCond.getString("condValue"));
         } else if ("PRIP_PROD_CAT_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
             // if a ProductCategoryMember exists for this productId and the specified productCategoryId
+            String productCategoryId = productPriceCond.getString("condValue");
             List productCategoryMembers = delegator.findByAndCache("ProductCategoryMember",
-                    UtilMisc.toMap("productId", productId, "productCategoryId", productPriceCond.getString("condValue")));
-
+                    UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
             // and from/thru date within range
             productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
             // then 0 (equals), otherwise 1 (not equals)
@@ -930,11 +930,36 @@ public class PriceServices {
             } else {
                 compare = 1;
             }
-
-            /* These aren't supported yet, ie TODO
-             } else if ("PRIP_PARTY_GRP_MEM".equals(productPriceCond.getString("inputParamEnumId"))) {
-             } else if ("PRIP_PARTY_CLASS".equals(productPriceCond.getString("inputParamEnumId"))) {
-             */
+        } else if ("PRIP_PARTY_GRP_MEM".equals(productPriceCond.getString("inputParamEnumId"))) {
+            String groupPartyId = productPriceCond.getString("condValue");
+            if (partyId.equals(groupPartyId)) {
+                compare = 0;
+            } else {
+                // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, use partyId and groupPartyId in either direction
+                List partyRelationshipList = FastList.newInstance();
+                partyRelationshipList.addAll(delegator.findByAndCache("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyId, "partyIdTo", groupPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")));
+                partyRelationshipList.addAll(delegator.findByAndCache("PartyRelationship", UtilMisc.toMap("partyIdTo", partyId, "partyIdFrom", groupPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")));
+                // and from/thru date within range
+                partyRelationshipList = EntityUtil.filterByDate(partyRelationshipList, true);
+                // then 0 (equals), otherwise 1 (not equals)
+                if (partyRelationshipList != null && partyRelationshipList.size() > 0) {
+                    compare = 0;
+                } else {
+                    compare = 1;
+                }
+            }
+        } else if ("PRIP_PARTY_CLASS".equals(productPriceCond.getString("inputParamEnumId"))) {
+            String partyClassificationGroupId = productPriceCond.getString("condValue");
+            // find any PartyClassification
+            List partyClassificationList = delegator.findByAndCache("PartyClassification", UtilMisc.toMap("partyId", partyId, "partyClassificationGroupId", partyClassificationGroupId));
+            // and from/thru date within range
+            partyClassificationList = EntityUtil.filterByDate(partyClassificationList, true);
+            // then 0 (equals), otherwise 1 (not equals)
+            if (partyClassificationList != null && partyClassificationList.size() > 0) {
+                compare = 0;
+            } else {
+                compare = 1;
+            }
         } else if ("PRIP_ROLE_TYPE".equals(productPriceCond.getString("inputParamEnumId"))) {
             if (partyId != null) {
                 // if a PartyRole exists for this partyId and the specified roleTypeId
