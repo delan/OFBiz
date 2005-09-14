@@ -57,4 +57,8 @@
         <condition field-name="quoteId" operator="is-empty"/>
         <action service="createQuote" mode="sync" />
     </eca>
+    <eca service="createWorkRequirementFulfillment" event="invoke">
+        <condition field-name="requirementId" operator="is-empty"/>
+        <action service="createRequirement" mode="sync" />
+    </eca>
 </service-eca>
