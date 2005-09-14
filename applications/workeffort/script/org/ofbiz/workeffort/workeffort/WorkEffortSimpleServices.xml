@@ -722,13 +722,41 @@
         <make-value entity-name="QuoteWorkEffort" value-name="lookupMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupMap"/>
         <find-by-primary-key entity-name="QuoteWorkEffort" map-name="lookupMap" value-name="quoteWorkEffort"/>
-        <if-not-empty field-name="quoteId" map-name="quoteWorkEffort">
+        <if-empty field-name="quoteId" map-name="quoteWorkEffort">
             <add-error><fail-message message="ERROR: QuoteWorkEffort [${parameters.quoteId}][${parameters.workEffortId}] does not exist."/></add-error>
             <check-errors/>
-        </if-not-empty>
-        <if-empty field-name="quoteId" map-name="quoteWorkEffort">
-            <remove-value value-name="lookupMap"/>
         </if-empty>
+        <if-not-empty field-name="quoteId" map-name="quoteWorkEffort">
+            <remove-value value-name="quoteWorkEffort"/>
+        </if-not-empty>
+    </simple-method>
+
+    <!--Requirement workeffort -->
+    <simple-method method-name="createWorkRequirementFulfillment" short-description="Create a WorkRequirementFulfillment">
+        <make-value entity-name="WorkRequirementFulfillment" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="WorkRequirementFulfillment" map-name="lookupMap" value-name="workRequirementFulfillment"/>
+        <if-not-empty field-name="requirementId" map-name="workRequirementFulfillment">
+            <add-error><fail-message message="ERROR: WorkRequirementFulfillment [${parameters.requirementId}][${parameters.workEffortId}] already exists."/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <if-empty field-name="requirementId" map-name="workRequirementFulfillment">
+            <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
+            <create-value value-name="lookupMap"/>
+            <field-to-result field-name="requirementId" map-name="lookupMap"/>
+        </if-empty>
+    </simple-method>
+    <simple-method method-name="deleteWorkRequirementFulfillment" short-description="Delete a WorkRequirementFulfillment">
+        <make-value entity-name="WorkRequirementFulfillment" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="WorkRequirementFulfillment" map-name="lookupMap" value-name="workRequirementFulfillment"/>
+        <if-empty field-name="requirementId" map-name="workRequirementFulfillment">
+            <add-error><fail-message message="ERROR: WorkRequirementFulfillment [${parameters.requirementId}][${parameters.workEffortId}] does not exist."/></add-error>
+            <check-errors/>
+        </if-empty>
+        <if-not-empty field-name="requirementId" map-name="workRequirementFulfillment">
+            <remove-value value-name="workRequirementFulfillment"/>
+        </if-not-empty>
     </simple-method>
 
  

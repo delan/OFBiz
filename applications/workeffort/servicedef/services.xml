@@ -310,16 +310,16 @@
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="QuoteWorkEffort"/>
     </service>
 
-    <!-- 
-    <service name="createWorkEffortQuoteItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortQuote" auth="true"  >
-        <description>Creates a QuoteItem</description>
-        <auto-attributes include="all" mode="IN" optional="true" entity-name="QuoteItem"/>
-        <override name="quoteId" optional="true" mode="INOUT"/>
+    <service name="createWorkRequirementFulfillment" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkRequirementFulfillment" auth="true"  >
+        <description>Creates a WorkRequirementFulfillment</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="WorkRequirementFulfillment"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkRequirementFulfillment"/>
+        <auto-attributes include="all" mode="IN" optional="true" entity-name="Requirement"/>
+        <override name="requirementId" optional="true" mode="INOUT"/>
     </service>
-    <service name="deleteWorkEffortQuoteItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortQuote" auth="true"  >
-        <description>Deletes a QuoteItem</description>
-        <auto-attributes include="pk" mode="IN" optional="false" entity-name="QuoteItem"/>
+    <service name="deleteWorkRequirementFulfillment" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkRequirementFulfillment" auth="true"  >
+        <description>Deletes a WorkRequirementFulfillment</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="WorkRequirementFulfillment"/>
     </service>
-    -->
 
 </services>
