@@ -23,7 +23,7 @@
 </div>
     ${id}
 <br/>
-    ${dataResource.dataResourceName}
+    ${dataResource.dataResourceName?if_exists}
 </td>
 <td valign="top">
 <#if dataResource.dataResourceTypeId == "ELECTRONIC_TEXT" >
