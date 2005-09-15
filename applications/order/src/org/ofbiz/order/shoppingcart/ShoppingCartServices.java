@@ -318,7 +318,10 @@ public class ShoppingCartServices {
                 cartItem.setProductCategoryId(item.getString("productCategoryId"));
                 cartItem.setDesiredDeliveryDate(item.getTimestamp("estimatedDeliveryDate"));
                 cartItem.setShoppingList(item.getString("shoppingListId"), item.getString("shoppingListItemSeqId"));
-
+                cartItem.setIsModifiedPrice(new String("Y").equals(item.getString("isModifiedPrice")) ? true : false);
+                if(cartItem.getIsModifiedPrice())
+                    cartItem.setBasePrice(item.getDouble("unitPrice").doubleValue());
+                
                 // set the PO number on the cart
                 cart.setPoNumber(item.getString("correspondingPoId"));
 

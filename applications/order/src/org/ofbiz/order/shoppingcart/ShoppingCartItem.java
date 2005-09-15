@@ -98,6 +98,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double reserv2ndPPPerc = 0.0;    // for reservations: extra % 2nd person
     private double reservNthPPPerc = 0.0;    // for reservations: extra % Nth person
     private double listPrice = 0.0;
+    private boolean isModifiedPrice=false; //flag to know if the price have been modified
     private double selectedAmount = 0.0;
     private String requirementId = null;
     private String quoteId = null;
@@ -892,7 +893,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public void updatePrice(LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         // set basePrice using the calculateProductPrice service
-        if (_product != null) {
+        if (_product != null && isModifiedPrice==false) {
             try {
                 Map priceContext = new HashMap();
                 priceContext.put("currencyUomId", cart.getCurrency());
@@ -1488,7 +1489,17 @@ public class ShoppingCartItem implements java.io.Serializable {
     public double getListPrice() {
         return listPrice;
     }
-
+    
+    /** Returns isModifiedPrice */
+    public boolean getIsModifiedPrice() {
+        return isModifiedPrice;
+    }
+    
+    /** Set isModifiedPrice */
+    public void setIsModifiedPrice(boolean isModifiedPrice) {
+        this.isModifiedPrice=isModifiedPrice;
+    }
+    
     /** get the percentage for the second person */
     public double getReserv2ndPPPerc() {
         return reserv2ndPPPerc;

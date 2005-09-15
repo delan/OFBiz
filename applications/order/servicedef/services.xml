@@ -245,6 +245,7 @@
         <attribute name="basePrice" type="Double" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
         <attribute name="amount" type="Double" mode="IN" optional="true"/>
+        <attribute name="overridePrice" type="Boolean" mode="IN" optional="true"/>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="OUT" optional="false"/>
     </service>
 
