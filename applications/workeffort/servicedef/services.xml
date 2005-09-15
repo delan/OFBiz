@@ -333,5 +333,16 @@
         <description>Deletes a ShoppingListWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="ShoppingListWorkEffort"/>
     </service>
+    <service name="createOrderHeaderWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createOrderHeaderWorkEffort" auth="true"  >
+        <description>Creates a OrderHeaderWorkEffort</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="OrderHeaderWorkEffort"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="OrderHeaderWorkEffort"/>
+        <auto-attributes include="all" mode="IN" optional="true" entity-name="OrderHeader"/>
+        <override name="orderId" optional="true" mode="INOUT"/>
+    </service>
+    <service name="deleteOrderHeaderWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteOrderHeaderWorkEffort" auth="true"  >
+        <description>Deletes a OrderHeaderWorkEffort</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="OrderHeaderWorkEffort"/>
+    </service>
 
 </services>

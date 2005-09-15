@@ -816,6 +816,41 @@
     </request-map>
     
     
+    <!--  WorkEffort OrderHeader request mappings -->
+    <request-map uri="ListWorkEffortOrderHeaders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEffortOrderHeaders"/>
+    </request-map>
+    
+    <request-map uri="AddWorkEffortOrderHeader">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddWorkEffortOrderHeader"/>
+    </request-map>
+    
+    <request-map uri="EditWorkEffortOrderHeader">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortOrderHeader"/>
+    </request-map>
+    
+    <request-map uri="createWorkEffortOrderHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrderHeaderWorkEffort"/>
+        <response name="success" type="view" value="EditWorkEffortOrderHeader"/>
+        <response name="error" type="view" value="AddWorkEffortOrderHeader"/>
+    </request-map>
+    <request-map uri="updateOrderHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateOrderHeader"/>
+        <response name="success" type="view" value="EditWorkEffortOrderHeader"/>
+        <response name="error" type="view" value="EditWorkEffortOrderHeader"/>
+    </request-map>
+    <request-map uri="deleteWorkEffortOrderHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteOrderHeaderWorkEffort"/>
+        <response name="success" type="view" value="ListWorkEffortOrderHeaders"/>
+        <response name="error" type="view" value="ListWorkEffortOrderHeaders"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -897,6 +932,10 @@
     <view-map name="AddWorkEffortShopList" type="screen" page="component://workeffort/widget/WorkEffortShopListScreens.xml#AddWorkEffortShopList"/>
     <view-map name="EditWorkEffortShopList" type="screen" page="component://workeffort/widget/WorkEffortShopListScreens.xml#EditWorkEffortShopList"/>
     <view-map name="ListWorkEffortShopLists" type="screen" page="component://workeffort/widget/WorkEffortShopListScreens.xml#ListWorkEffortShopLists"/>
+
+    <view-map name="AddWorkEffortOrderHeader" type="screen" page="component://workeffort/widget/WorkEffortOrderHeaderScreens.xml#AddWorkEffortOrderHeader"/>
+    <view-map name="EditWorkEffortOrderHeader" type="screen" page="component://workeffort/widget/WorkEffortOrderHeaderScreens.xml#EditWorkEffortOrderHeader"/>
+    <view-map name="ListWorkEffortOrderHeaders" type="screen" page="component://workeffort/widget/WorkEffortOrderHeaderScreens.xml#ListWorkEffortOrderHeaders"/>
     
     <!-- end of view mappings -->
 </site-conf>

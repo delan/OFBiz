@@ -542,9 +542,6 @@
         <field name="requirementStartDate"><display/></field>
         <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
-        <field name="deleteLink" widget-style="buttontext">
-            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteRequirement?requirementId=${requirementId}"/>
-        </field>
     </form>
 
     <form name="lookupShoppingList" 
@@ -582,8 +579,48 @@
         <field name="shoppingListTypeId">
             <display-entity entity-name="ShoppingListType" also-hidden="true"/>
         </field>
-        <field name="deleteLink" widget-style="buttontext">
-            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteShoppingList?shoppingListId=${shoppingListId}"/>
+    </form>
+
+    <form name="lookupOrderHeader" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupOrderHeader" title="" type="single">
+        <actions>
+            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+        </actions>
+         <auto-fields-entity entity-name="OrderHeader" default-field-type="find"/>
+        <field name="orderHeaderId" title="${uiLabelMap.OrderOrderHeaderId}"><text-find default-value="equals"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="equals" value="ORDER_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="productStoreId">
+            <lookup target-form-name="/marketing/control/LookupProductStore"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="listLookupOrderHeader" 
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
+        paginate-target="LookupOrderHeader" 
+        title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="OrderHeader" default-field-type="display"/>
+        <field name="orderHeaderId" widget-style="buttontext">
+            <hyperlink target-type="plain" also-hidden="true" description="${orderHeaderId}" target="javascript:set_value('${orderHeaderId}')"/>
+        </field>
+        <field name="orderHeaderTypeId">
+            <display-entity entity-name="OrderHeaderType" also-hidden="true"/>
         </field>
     </form>
 

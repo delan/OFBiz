@@ -78,7 +78,7 @@
         <menu-item name="WorkEffortShopLists" title="${uiLabelMap.WorkEffortShopLists}">
             <link target="/ListWorkEffortShopLists?workEffortId=${workEffortId}"/>
         </menu-item>
-        <menu-item name="WorkEffortOrderHeader" title="${uiLabelMap.WorkEffortOrderHeaders}">
+        <menu-item name="WorkEffortOrderHeaders" title="${uiLabelMap.WorkEffortOrderHeaders}">
             <link target="/ListWorkEffortOrderHeaders?workEffortId=${workEffortId}"/>
         </menu-item>
     </menu>

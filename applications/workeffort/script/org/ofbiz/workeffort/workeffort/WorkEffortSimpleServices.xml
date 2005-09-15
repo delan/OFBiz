@@ -759,7 +759,7 @@
         </if-not-empty>
     </simple-method>
 
-    <!--Requirement workeffort -->
+    <!--ShoppingList workeffort -->
     <simple-method method-name="createShoppingListWorkEffort" short-description="Create a ShoppingListWorkEffort">
         <make-value entity-name="ShoppingListWorkEffort" value-name="lookupMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupMap"/>
@@ -784,6 +784,34 @@
         </if-empty>
         <if-not-empty field-name="shoppingListId" map-name="shoppingListWorkEffort">
             <remove-value value-name="shoppingListWorkEffort"/>
+        </if-not-empty>
+    </simple-method>
+
+    <!--OrderHeader workeffort -->
+    <simple-method method-name="createOrderHeaderWorkEffort" short-description="Create a OrderHeaderWorkEffort">
+        <make-value entity-name="OrderHeaderWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="OrderHeaderWorkEffort" map-name="lookupMap" value-name="orderWorkEffort"/>
+        <if-not-empty field-name="orderId" map-name="orderWorkEffort">
+            <add-error><fail-message message="ERROR: OrderHeaderWorkEffort [${parameters.orderId}][${parameters.workEffortId}] already exists."/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <if-empty field-name="orderId" map-name="orderWorkEffort">
+            <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
+            <create-value value-name="lookupMap"/>
+            <field-to-result field-name="orderId" map-name="lookupMap"/>
+        </if-empty>
+    </simple-method>
+    <simple-method method-name="deleteOrderHeaderWorkEffort" short-description="Delete a OrderHeaderWorkEffort">
+        <make-value entity-name="OrderHeaderWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="OrderHeaderWorkEffort" map-name="lookupMap" value-name="orderWorkEffort"/>
+        <if-empty field-name="orderId" map-name="orderWorkEffort">
+            <add-error><fail-message message="ERROR: OrderHeaderWorkEffort [${parameters.orderId}][${parameters.workEffortId}] does not exist."/></add-error>
+            <check-errors/>
+        </if-empty>
+        <if-not-empty field-name="orderId" map-name="orderWorkEffort">
+            <remove-value value-name="orderWorkEffort"/>
         </if-not-empty>
     </simple-method>
 

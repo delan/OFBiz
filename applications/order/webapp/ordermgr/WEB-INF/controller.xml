@@ -1085,6 +1085,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupShoppingList"/>
     </request-map>
+    <request-map uri="LookupOrderHeader">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupOrderHeader"/>
+    </request-map>
 
     <!-- PDFs -->
     <request-map uri="order.pdf">
@@ -1200,6 +1204,7 @@
     <view-map name="LookupQuoteItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuoteItem"/>
     <view-map name="LookupRequirement" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupRequirement"/>
     <view-map name="LookupShoppingList" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupShoppingList"/>
+    <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
 
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
