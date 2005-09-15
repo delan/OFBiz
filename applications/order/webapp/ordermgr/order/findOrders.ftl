@@ -31,6 +31,7 @@ function lookupOrders(click) {
     orderIdValue = document.lookuporder.order_id.value;
     if (orderIdValue.length > 1) {
         document.lookuporder.action = "<@ofbizUrl>/orderview</@ofbizUrl>";
+        document.lookuporder.method = "get";
     } else {
         document.lookuporder.action = "<@ofbizUrl>/findorders</@ofbizUrl>";
     }
@@ -39,6 +40,31 @@ function lookupOrders(click) {
         document.lookuporder.submit();
     }
     return true;
+}
+function toggleOrderId(master) {
+    var form = document.massOrderChangeForm;
+    var orders = form.elements.length;
+    for (var i = 0; i < orders; i++) {
+        var element = form.elements[i];
+        if (element.name == "orderIdList") {
+            element.checked = master.checked;
+            element.disabled = !element.disabled;
+        }
+    }
+}
+function setServiceName(selection) {
+    document.massOrderChangeForm.action = selection.value;
+}
+function runAction() {
+    var form = document.massOrderChangeForm;
+    var orders = form.elements.length;
+    for (var i = 0; i < orders; i++) {
+        var element = form.elements[i];
+        if (element.name == "orderIdList") {
+            element.disabled = false;
+        }
+    }
+    form.submit();
 }
 // -->
 </script>
@@ -187,16 +213,16 @@ function lookupOrders(click) {
                 </td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Has BackOrders</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>Contains BackOrders</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='hasBackOrders' class='selectBox'>
                     <#if requestParameters.hasBackOrders?has_content>
-                    <option value="Y">Yes</option>
+                    <option value="Y">Backorders</option>
                     <option value="Y">---</option>
                     </#if>
-                    <option value="N">No</option>
-                    <option value="Y">Yes</option>
+                    <option value="">Show All</option>
+                    <option value="Y">Only</option>
                   </select>
                 </td>
               </tr>
@@ -254,6 +280,7 @@ document.lookuporder.order_id.focus();
 
 <#if orderHeaderList?exists>
 <br/>
+<form name="massOrderChangeForm" method="post" action="javascript:void();">
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -282,8 +309,23 @@ document.lookuporder.order_id.focus();
           </td>
         </tr>
       </table>
+
+      <div>&nbsp;</div>
+      <div align="right" class="tabletext">
+        <input type="hidden" name="orderIdList" value=""/>
+        <select name="serviceName" class="selectBox" onchange="javascript:setServiceName(this);">
+           <option value="javascript:void();"></option>
+           <option value="<@ofbizUrl>/massApproveOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Approve Orders</option>
+           <option value="<@ofbizUrl>/massPickOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Pack Orders</option>
+        </select>
+        <a href="javascript:runAction();" class="buttontext">Run Action</a>
+      </div>
+
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
+          <td width="1%" align="left">
+            <input type="checkbox" name="checkAllOrders" value="1" onchange="javascript:toggleOrderId(this);">
+          </td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderType}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderId}</div></td>
           <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.PartyUserLoginId}</div></td>
@@ -300,7 +342,7 @@ document.lookuporder.order_id.focus();
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan='14'><hr class='sepbar'></td>
+          <td colspan='15'><hr class='sepbar'></td>
         </tr>
         <#if orderHeaderList?has_content>
           <#assign rowClass = "viewManyTR2">
@@ -315,6 +357,9 @@ document.lookuporder.order_id.focus();
             </#if>
             <#assign partyId = displayParty.partyId?default("_NA_")>
             <tr class='${rowClass}'>
+              <td>
+                 <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}"</td>
+              </td>
               <td><div class='tabletext'>${orderType.description?default(orderType.orderTypeId?default(""))}</div></td>
               <td><a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
               <td>
@@ -391,6 +436,7 @@ document.lookuporder.order_id.focus();
     </td>
   </tr>
 </table>
+</form>
 
 </#if>
 <#else>
