@@ -2776,6 +2776,7 @@ public class ShoppingCart implements Serializable {
                 orderItem.set("selectedAmount", new Double(item.getSelectedAmount()));
                 orderItem.set("unitPrice", new Double(item.getBasePrice()));
                 orderItem.set("unitListPrice", new Double(item.getListPrice()));
+                orderItem.set("isModifiedPrice",item.getIsModifiedPrice() ? "Y" : "N");
                 orderItem.set("isPromo", item.getIsPromo() ? "Y" : "N");
 
                 orderItem.set("shoppingListId", item.getShoppingListId());

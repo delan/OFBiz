@@ -3765,6 +3765,8 @@ public class OrderServices {
         Double basePrice = (Double) context.get("basePrice");
         Double quantity = (Double) context.get("quantity");
         Double amount = (Double) context.get("amount");
+        Boolean overridePrice = (Boolean) context.get("overridePrice");
+
         if (amount == null) {
             amount = new Double(0.00);
         }
@@ -3795,12 +3797,15 @@ public class OrderServices {
         // add in the new product
         try {
             ShoppingCartItem item = ShoppingCartItem.makeItem(null, productId, 0.00, quantity.doubleValue(), null, null, null, dispatcher, cart);
-            if (basePrice != null) {
+            if (basePrice != null&&overridePrice!=null) {
                 item.setBasePrice(basePrice.doubleValue());
                 // special hack to make sure we re-calc the promos after a price change
                 item.setQuantity(quantity.doubleValue() + 1, dispatcher, cart, false);
                 item.setQuantity(quantity.doubleValue(), dispatcher, cart, false);
+                item.setBasePrice(basePrice.doubleValue());
+                item.setIsModifiedPrice(true);
             }
+            
 
             // set the item in the selected ship group
             cart.setItemShipGroupQty(item, item.getQuantity(), shipGroupIdx);
@@ -3881,8 +3886,9 @@ public class OrderServices {
             ShoppingCartItem cartItem = cart.findCartItem(itemSeqId);
 
             if (cartItem != null) {
-                // set quantity
                 Double qty = (Double) itemTotals.get(itemSeqId);
+                double priceSave = cartItem.getBasePrice();
+                // set quantity
                 try {
                     cartItem.setQuantity(qty.doubleValue(), dispatcher, cart, true, false);
                 } catch (CartItemModifyException e) {
@@ -3891,7 +3897,10 @@ public class OrderServices {
                 }
                 Debug.log("Set item quantity: [" + itemSeqId + "] " + qty, module);
 
+                if(cartItem.getIsModifiedPrice())
+                    cartItem.setBasePrice(priceSave);
                 // set price
+                
                 if (overridePriceMap.containsKey(itemSeqId)) {
                     String priceStr = (String) itemPriceMap.get(itemSeqId);
                     if (UtilValidate.isNotEmpty(priceStr)) {
@@ -3903,8 +3912,10 @@ public class OrderServices {
                             return ServiceUtil.returnError(e.getMessage());
                         }
                         cartItem.setBasePrice(price);
+                        cartItem.setIsModifiedPrice(true);
                         Debug.log("Set item price: [" + itemSeqId + "] " + price, module);
                     }
+                     
                 }
             } else {
                 Debug.logInfo("Unable to locate shopping cart item for seqId #" + itemSeqId, module);
