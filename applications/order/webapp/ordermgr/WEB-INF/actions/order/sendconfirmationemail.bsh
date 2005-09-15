@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Tim Chen (timchen_sh@hotmail.com)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      1.0
 */
 import org.ofbiz.base.util.UtilMisc;

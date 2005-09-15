@@ -759,5 +759,33 @@
         </if-not-empty>
     </simple-method>
 
+    <!--Requirement workeffort -->
+    <simple-method method-name="createShoppingListWorkEffort" short-description="Create a ShoppingListWorkEffort">
+        <make-value entity-name="ShoppingListWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="ShoppingListWorkEffort" map-name="lookupMap" value-name="shoppingListWorkEffort"/>
+        <if-not-empty field-name="shoppingListId" map-name="shoppingListWorkEffort">
+            <add-error><fail-message message="ERROR: ShoppingListWorkEffort [${parameters.shoppingListId}][${parameters.workEffortId}] already exists."/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <if-empty field-name="shoppingListId" map-name="shoppingListWorkEffort">
+            <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
+            <create-value value-name="lookupMap"/>
+            <field-to-result field-name="shoppingListId" map-name="lookupMap"/>
+        </if-empty>
+    </simple-method>
+    <simple-method method-name="deleteShoppingListWorkEffort" short-description="Delete a ShoppingListWorkEffort">
+        <make-value entity-name="ShoppingListWorkEffort" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="ShoppingListWorkEffort" map-name="lookupMap" value-name="shoppingListWorkEffort"/>
+        <if-empty field-name="shoppingListId" map-name="shoppingListWorkEffort">
+            <add-error><fail-message message="ERROR: ShoppingListWorkEffort [${parameters.shoppingListId}][${parameters.workEffortId}] does not exist."/></add-error>
+            <check-errors/>
+        </if-empty>
+        <if-not-empty field-name="shoppingListId" map-name="shoppingListWorkEffort">
+            <remove-value value-name="shoppingListWorkEffort"/>
+        </if-not-empty>
+    </simple-method>
+
  
 </simple-methods>

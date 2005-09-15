@@ -322,4 +322,16 @@
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="WorkRequirementFulfillment"/>
     </service>
 
+    <service name="createShoppingListWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createShoppingListWorkEffort" auth="true"  >
+        <description>Creates a ShoppingListWorkEffort</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="ShoppingListWorkEffort"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="ShoppingListWorkEffort"/>
+        <auto-attributes include="all" mode="IN" optional="true" entity-name="ShoppingList"/>
+        <override name="shoppingListId" optional="true" mode="INOUT"/>
+    </service>
+    <service name="deleteShoppingListWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteShoppingListWorkEffort" auth="true"  >
+        <description>Deletes a ShoppingListWorkEffort</description>
+        <auto-attributes include="pk" mode="IN" optional="false" entity-name="ShoppingListWorkEffort"/>
+    </service>
+
 </services>
