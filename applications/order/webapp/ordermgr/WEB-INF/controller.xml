@@ -1035,6 +1035,42 @@
         <event type="service" path="" invoke="removeQuoteAdjustment"/>
         <response name="success" type="view" value="ListQuoteAdjustments"/>
     </request-map>
+    
+    <!--  WorkEffort Quote request mappings -->
+    <request-map uri="ListQuoteWorkEfforts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListQuoteWorkEfforts"/>
+    </request-map>
+    
+    <request-map uri="AddQuoteWorkEffort">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddQuoteWorkEffort"/>
+    </request-map>
+    
+    <request-map uri="EditQuoteWorkEffort">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuoteWorkEffort"/>
+    </request-map>
+    
+    <request-map uri="createQuoteWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createQuoteWorkEffort"/>
+        <response name="success" type="view" value="EditQuoteWorkEffort"/>
+        <response name="error" type="view" value="AddQuoteWorkEffort"/>
+    </request-map>
+    <request-map uri="updateQuoteWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffort"/>
+        <response name="success" type="view" value="EditQuoteWorkEffort"/>
+        <response name="error" type="view" value="EditQuoteWorkEffort"/>
+    </request-map>
+    <request-map uri="deleteQuoteWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteQuoteWorkEffort"/>
+        <response name="success" type="view" value="ListQuoteWorkEfforts"/>
+        <response name="error" type="view" value="ListQuoteWorkEfforts"/>
+    </request-map>
+    
 
     <!-- Lookup request mappings -->
     <request-map uri="LookupPerson">
@@ -1205,6 +1241,9 @@
     <view-map name="LookupRequirement" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupRequirement"/>
     <view-map name="LookupShoppingList" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupShoppingList"/>
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
+    <view-map name="AddQuoteWorkEffort" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#AddQuoteWorkEffort"/>
+    <view-map name="EditQuoteWorkEffort" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#EditQuoteWorkEffort"/>
+    <view-map name="ListQuoteWorkEfforts" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#ListQuoteWorkEfforts"/>
 
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
