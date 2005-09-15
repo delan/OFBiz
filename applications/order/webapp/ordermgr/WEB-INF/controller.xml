@@ -139,6 +139,20 @@
         <response name="error" type="view" value="SendConfirmationMail"/>
     </request-map>
 
+    <!-- Order Manager Mass Change Requests -->
+    <request-map uri="massApproveOrders">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="massChangeOrderApproved"/>
+        <response name="success" type="request-redirect" value="findorders"/>
+        <response name="error" type="request-redirect" value="findorders"/>
+    </request-map>
+    <request-map uri="massPickOrders">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="massPickOrders"/>
+        <response name="success" type="request-redirect" value="findorders"/>
+        <response name="error" type="request-redirect" value="findorders"/>
+    </request-map>
+
     <!-- Order Manager Task List Requests -->
     <request-map uri="acceptassignment">
         <security https="true" auth="true"/>
@@ -243,8 +257,8 @@
     <request-map uri="quickShipOrder">
         <security https="true" auth="true"/>
         <event type="service" invoke="quickShipEntireOrder"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
+        <response name="success" type="request-redirect" value="orderview"/>
+        <response name="error" type="request-redirect" value="orderview"/>
     </request-map>
     <request-map uri="editOrderItems">
         <security https="true" auth="true"/>
@@ -1078,7 +1092,7 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderListView"/> 
+    <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderListView"/>
     <view-map name="login" type="screen" page="component://order/widget/ordermgr/CommonScreens.xml#login"/>
 
     <view-map name="orderstats" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderStats"/>
