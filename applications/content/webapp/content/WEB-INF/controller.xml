@@ -47,13 +47,13 @@
 
     
     <preprocessor>
-    	<!-- Events to run on every request before security (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
-    	<event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
+        <!-- Events to run on every request before security (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
-    	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <!-- Events to run on every request after all other processing (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
     <!-- Security Mappings -->
@@ -94,8 +94,8 @@
     </request-map>
 
     <request-map uri="main">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindWebSite"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindWebSite"/>
     </request-map>
     
     <request-map uri="fonts.pdf">
@@ -110,49 +110,49 @@
 
     <!-- ================ WebSite Requests ================= -->
     <request-map uri="FindWebSite">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindWebSite"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindWebSite"/>
     </request-map>
 
     <request-map uri="EditWebSite">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditWebSite"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWebSite"/>
     </request-map>
     <request-map uri="createWebSite">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" path="" invoke="createWebSite"/>
-    	<response name="success" type="view" value="EditWebSite"/>
-    	<response name="error" type="view" value="EditWebSite"/>
+        <response name="success" type="view" value="EditWebSite"/>
+        <response name="error" type="view" value="EditWebSite"/>
     </request-map>
     <request-map uri="updateWebSite">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateWebSite"/>
-    	<response name="success" type="view" value="EditWebSite"/>
-    	<response name="error" type="view" value="EditWebSite"/>
+        <response name="success" type="view" value="EditWebSite"/>
+        <response name="error" type="view" value="EditWebSite"/>
     </request-map>
 
     <!-- ================ WebSite Parties Requests ================= -->
     <request-map uri="EditWebSiteParties">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditWebSiteParties"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWebSiteParties"/>
     </request-map>
     <request-map uri="addWebSiteRole">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" path="" invoke="addWebSiteRole"/>
-    	<response name="success" type="view" value="EditWebSiteParties"/>
-    	<response name="error" type="view" value="EditWebSiteParties"/>
+        <response name="success" type="view" value="EditWebSiteParties"/>
+        <response name="error" type="view" value="EditWebSiteParties"/>
     </request-map>
     <request-map uri="updateWebSiteRole">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateWebSiteRole"/>
-    	<response name="success" type="view" value="EditWebSiteParties"/>
-    	<response name="error" type="view" value="EditWebSiteParties"/>
+        <response name="success" type="view" value="EditWebSiteParties"/>
+        <response name="error" type="view" value="EditWebSiteParties"/>
     </request-map>
     <request-map uri="removeWebSiteRole">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeWebSiteRole"/>
-    	<response name="success" type="view" value="EditWebSiteParties"/>
-    	<response name="error" type="view" value="EditWebSiteParties"/>
+        <response name="success" type="view" value="EditWebSiteParties"/>
+        <response name="error" type="view" value="EditWebSiteParties"/>
     </request-map>
 
     <!-- ================ ContentType Requests ================= -->
@@ -469,7 +469,7 @@
         <security auth="true" https="true"/>
         <event invoke="removeProductFeatureDataResource" path="" type="service"/>
         <response name="success" type="view" value="EditDataResourceProductFeatures"/>
-        <response name="error" type="view" value="EditDataResourceProductFeature"/>
+        <response name="error" type="view" value="EditDataResourceProductFeatures"/>
     </request-map>
 
     <!-- ================ DataResourceTypeAttr Requests ================= -->
@@ -650,7 +650,7 @@
         <response name="success" type="view" value="CMSMenu"/>
     </request-map>
 
-	<!-- Content requests -->
+    <!-- Content requests -->
     <request-map uri="EditContent">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditContent"/>
@@ -684,7 +684,7 @@
         <response name="error" type="view" value="EditContent"/>
     </request-map>
 
-	<!-- Content Assoc requests -->
+    <!-- Content Assoc requests -->
     <request-map uri="EditContentAssoc">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditContentAssoc"/>
@@ -709,7 +709,7 @@
         <response name="error" type="view" value="EditContentAssoc"/>
     </request-map>
 
-	<!-- DataResource requests -->
+    <!-- DataResource requests -->
     <request-map uri="BrowseDataResource">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="BrowseDataResource"/>
@@ -1094,36 +1094,31 @@
     </request-map>
     <request-map uri="updateLayout">
         <security auth="true" https="true"/>
-        <event invoke="updateLayout"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="updateLayout" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayout"/>
         <response name="error" type="view" value="EditLayout"/>
     </request-map>
     <request-map uri="createLayoutSubContent">
         <security auth="true" https="true"/>
-        <event invoke="createLayoutSubContent"
-            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <event invoke="createLayoutSubContent" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayoutSubContent"/>
         <response name="error" type="view" value="EditLayoutSubContent"/>
     </request-map>
     <request-map uri="updateLayoutSubContent">
         <security auth="true" https="true"/>
-        <event invoke="updateLayoutSubContent"
-            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <event invoke="updateLayoutSubContent" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayoutSubContent"/>
         <response name="error" type="view" value="EditLayoutSubContent"/>
     </request-map>
     <request-map uri="replaceSubContent">
         <security auth="true" https="true"/>
-        <event invoke="replaceSubContent"
-            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <event invoke="replaceSubContent" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayout"/>
         <response name="error" type="view" value="EditLayout"/>
     </request-map>
     <request-map uri="pasteSubContent">
         <security auth="true" https="true"/>
-        <event invoke="pasteSubContent"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="pasteSubContent" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayout"/>
         <response name="error" type="view" value="EditLayout"/>
     </request-map>
@@ -1151,8 +1146,7 @@
     </request-map>
     <request-map uri="createLayoutText">
         <security auth="true" https="true"/>
-        <event invoke="createLayoutText"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="createLayoutText" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayoutText"/>
         <response name="error" type="view" value="EditLayoutText"/>
     </request-map>
@@ -1163,64 +1157,55 @@
     </request-map>
     <request-map uri="updateLayoutText">
         <security auth="true" https="true"/>
-        <event invoke="updateLayoutText"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="updateLayoutText" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayoutText"/>
         <response name="error" type="view" value="EditLayoutText"/>
     </request-map>
     <request-map uri="createLayoutHtml">
         <security auth="true" https="true"/>
-        <event invoke="createLayoutText"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="createLayoutText" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayoutHtml"/>
         <response name="error" type="view" value="EditLayoutHtml"/>
     </request-map>
     <request-map uri="updateLayoutHtml">
         <security auth="true" https="true"/>
-        <event invoke="updateLayoutText"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="updateLayoutText" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayoutHtml"/>
         <response name="error" type="view" value="EditLayoutHtml"/>
     </request-map>
     <request-map uri="createLayoutUrl">
         <security auth="true" https="true"/>
-        <event invoke="createLayoutUrl"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="createLayoutUrl" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayoutUrl"/>
         <response name="error" type="view" value="EditLayoutUrl"/>
     </request-map>
     <request-map uri="updateLayoutUrl">
         <security auth="true" https="true"/>
-        <event invoke="updateLayoutUrl"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="updateLayoutUrl" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayoutUrl"/>
         <response name="error" type="view" value="EditLayoutUrl"/>
     </request-map>
     <request-map uri="createLayoutImage">
         <security auth="true" https="true"/>
-        <event invoke="createLayoutImage"
-            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <event invoke="createLayoutImage" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayoutImage"/>
         <response name="error" type="view" value="EditLayoutImage"/>
     </request-map>
     <request-map uri="updateLayoutImage">
         <security auth="true" https="true"/>
-        <event invoke="updateLayoutImage"
-            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <event invoke="updateLayoutImage" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayoutImage"/>
         <response name="error" type="view" value="EditLayoutImage"/>
     </request-map>
     <request-map uri="updateLayoutImageOnly">
         <security auth="true" https="true"/>
-        <event invoke="updateLayoutImageOnly"
-            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <event invoke="updateLayoutImageOnly" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayoutImage"/>
         <response name="error" type="view" value="EditLayoutImage"/>
     </request-map>
     <request-map uri="cloneLayout">
         <security auth="true" https="true"/>
-        <event invoke="cloneLayout"
-            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <event invoke="cloneLayout" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayout"/>
         <response name="error" type="view" value="EditLayout"/>
     </request-map>
@@ -1387,23 +1372,26 @@
     <view-map name="EditContentAssocPredicate" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentAssocPredicate" type="screen"/>
     <view-map name="EditContentOperation" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentOperation" type="screen"/>
     <view-map name="EditContentPurposeOperation"  page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentPurposeOperation" type="screen"/>
-    
-    <view-map name="UploadImage" page="/data/UploadImage.ftl" type="jpublish"/>
-    <view-map name="FindDataResource" page="/data/FindDataResource.ftl" type="jpublish"/>
-    <view-map name="EditDataResource" page="/data/EditDataResource.ftl" type="jpublish"/>
+
+    <view-map name="FindDataResource"  page="component://content/widget/content/DataResourceScreens.xml#FindDataResource" type="screen"/>
+    <view-map name="UploadImage"  page="component://content/widget/content/DataResourceScreens.xml#UploadImage" type="screen"/>
+    <view-map name="EditDataResource"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResource" type="screen"/>
+    <view-map name="AddDataResource"  page="component://content/widget/content/DataResourceScreens.xml#AddDataResource" type="screen"/>
+    <view-map name="AddDataResourceText"  page="component://content/widget/content/DataResourceScreens.xml#AddDataResourceText" type="screen"/>
+    <view-map name="AddDataResourceUrl"  page="component://content/widget/content/DataResourceScreens.xml#AddDataResourceUrl" type="screen"/>
+    <view-map name="AddDataResourceUpload"  page="component://content/widget/content/DataResourceScreens.xml#AddDataResourceUpload" type="screen"/>
+    <view-map name="EditDataResourceText"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceText" type="screen"/>
+    <view-map name="EditDataResourceUrl"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceUrl" type="screen"/>
+    <view-map name="EditDataResourceUpload"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceUpload" type="screen"/>
+    <view-map name="EditElectronicText"  page="component://content/widget/content/DataResourceScreens.xml#EditElectronicText" type="screen"/>
+    <view-map name="EditDataResourceAttribute"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceAttribute" type="screen"/>
+    <view-map name="EditDataResourceRole"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceRole" type="screen"/>
+    <view-map name="EditDataResourceProductFeatures"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceProductFeatures" type="screen"/>
+    <view-map name="EditHtmlText"  page="component://content/widget/content/DataResourceScreens.xml#EditHtmlText" type="screen"/>
+    <view-map name="DataMenu"  page="component://content/widget/content/DataResourceScreens.xml#DataMenu" type="screen"/>
+
     <view-map name="BrowseDataResource" page="/data/BrowseDataResource.ftl" type="jpublish"/>
-    <view-map name="AddDataResource" page="/data/AddDataResource.ftl" type="jpublish"/>
-    <view-map name="AddDataResourceText" page="/data/AddDataResourceText.ftl" type="jpublish"/>
-    <view-map name="AddDataResourceUrl" page="/data/AddDataResourceUrl.ftl" type="jpublish"/>
-    <view-map name="AddDataResourceUpload" page="/data/AddDataResourceUpload.ftl" type="jpublish"/>
-    <view-map name="EditDataResourceText" page="/data/EditDataResourceText.ftl" type="jpublish"/>
-    <view-map name="EditDataResourceUrl" page="/data/EditDataResourceUrl.ftl" type="jpublish"/>
-    <view-map name="EditDataResourceUpload" page="/data/EditDataResourceUpload.ftl" type="jpublish"/>
-    <view-map name="EditElectronicText" page="/data/EditElectronicText.ftl" type="jpublish"/>
-    <view-map name="EditDataResourceAttribute" page="/data/EditDataResourceAttribute.ftl" type="jpublish"/>
-    <view-map name="EditDataResourceRole" page="/data/EditDataResourceRole.ftl" type="jpublish"/>
-    <view-map name="EditDataResourceProductFeatures" page="/data/EditDataResourceProductFeatures.ftl" type="jpublish"/>
-    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
+ 
     <view-map name="EditDataResourceType" page="/datasetup/EditDataResourceType.ftl" type="jpublish"/>
     <view-map name="EditDataResourceTypeAttr" page="/datasetup/EditDataResourceTypeAttr.ftl" type="jpublish"/>
     <view-map name="EditDataCategory" page="/datasetup/EditDataCategory.ftl" type="jpublish"/>
@@ -1411,7 +1399,6 @@
     <view-map name="EditCharacterSet" page="/datasetup/EditCharacterSet.ftl" type="jpublish"/>
     <view-map name="EditFileExtension" page="/datasetup/EditFileExtension.ftl" type="jpublish"/>
     <view-map name="EditMimeType" page="/datasetup/EditMimeType.ftl" type="jpublish"/>
-    <view-map name="EditHtmlText" page="/data/EditHtmlText.ftl" type="jpublish"/>
 
     <view-map name="ListLayout" page="/layout/ListLayout.ftl" type="jpublish"/>
     <view-map name="FindLayout" page="/layout/FindLayout.ftl" type="jpublish"/>
@@ -1427,7 +1414,6 @@
 
     <view-map name="ContentMenu"  page="component://content/widget/content/ContentScreens.xml#ContentMenu" type="screen"/>
     <view-map name="ContentSetupMenu" page="/cms/ContentSetupMenu.ftl" type="jpublish"/>
-    <view-map name="DataMenu" page="/data/DataMenu.ftl" type="jpublish"/>
     <view-map name="DataSetupMenu" page="/datasetup/DataSetupMenu.ftl" type="jpublish"/>
     <view-map name="LayoutMenu" page="/layout/LayoutMenu.ftl" type="jpublish"/>
     <view-map name="subcontent" page="/subcontent.ftl" type="jpublish"/>
@@ -1460,5 +1446,6 @@
     <view-map name="LookupDataResource" page="component://content/widget/data/DataScreens.xml#LookupDataResource" type="screen"/>
     <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
     <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>

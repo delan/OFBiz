@@ -46,15 +46,18 @@
         <field name="submitButton" title="Find" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Create New" target="AddDataResource"/>
-        </field>
     </form>
     <form name="listFindDataResource"
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" paginate-target="/FindDataResource" 
         title="" type="list">
+        <actions>
+          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <field-map field-name="inputFields" env-name="requestParameters"/>
+            <field-map field-name="entityName" env-name="entityName" value="DataResource"/>
+          </service>
+        </actions>
         <auto-fields-entity entity-name="DataResource" default-field-type="display"/>
         <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${dataResourceId}" target="gotoDataResource?dataResourceId=${dataResourceId}"/>
@@ -96,11 +99,14 @@
     </form>
     <form name="EditDataResource" target="UpdateDataResource" title="" type="single" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox" extends="DataResourceMaster">
+        <actions>
+            <service service-name="performFind" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName" value="DataResource"/>
+            </service>
+        </actions>
         <field name="dataResourceId"><display/></field>
         <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
-            <hyperlink also-hidden="false" description="Create New" target="AddDataResource"/>
-        </field>
         <field name="createContent" title="&amp;nbsp;" widget-style="buttontext" position="2">
             <hyperlink also-hidden="false" description="Create New Content" target="AddContent?dataResourceId=${currentValue.dataResourceId}"/>
         </field>
@@ -239,7 +245,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="dataResourceId" >
-            <display description="${currentValue.dataResourceId}" />
+            <display />
         </field>
         <field name="objectInfo" title="Image File Name">
             <display description="${currentValue.objectInfo}" />
@@ -258,7 +264,7 @@
         target="addDataResourceAttribute" title="" type="single">
         <auto-fields-service service-name="createDataResourceAttribute"/>
         <field name="dataResourceId" title="" widget-style="buttontext" map-name="currentValue"> 
-        <display description="${currentValue.dataResourceId}"/>
+            <display />
         </field>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
@@ -275,6 +281,12 @@
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceAttribute?dataResourceId=${dataResourceId}&amp;attrName=${attrName}"/>
         </field>
+        <actions>
+            <service service-name="performFind" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName" value="DataResourceAttribute"/>
+            </service>
+        </actions>
     </form>
     
 
@@ -284,7 +296,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addDataResourceRole" title="" type="single">
         <auto-fields-entity entity-name="DataResourceRole"/>
-        <field name="dataResourceId" title="" widget-style="buttontext" map-name="currentValue"><display description="${currentValue.dataResourceId}"/></field>
+        <field name="dataResourceId" title="" widget-style="buttontext" map-name="currentValue"><display /></field>
         <field name="partyId" title="" widget-style="buttontext"><lookup target-form-name="LookupPerson"/></field>
         <field name="roleTypeId">
             <drop-down allow-empty="true">
@@ -306,6 +318,12 @@
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceRole?dataResourceId=${dataResourceId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"/>
         </field>
+        <actions>
+            <service service-name="performFind" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName" value="DataResourceAttribute"/>
+            </service>
+        </actions>
     </form>
 
     <!-- DataResourceProductFeature forms -->
@@ -314,7 +332,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="createDataResourceProductFeature" title="" type="single">
         <auto-fields-service service-name="createProductFeatureDataResource"/>
-        <field name="dataResourceId" title="" widget-style="buttontext" map-name="currentValue"><display description="${currentValue.dataResourceId}"/></field>
+        <field name="dataResourceId" title="" widget-style="buttontext" map-name="currentValue"><display /></field>
         <field name="productFeatureId" title="" widget-style="buttontext"><lookup target-form-name="LookupProductFeature"/></field>
         <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
@@ -328,6 +346,12 @@
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceProductFeature?dataResourceId=${dataResourceId}&amp;productFeatureId=${productFeatureId}"/>
         </field>
+        <actions>
+            <service service-name="performFind" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName" value="ProductFeature"/>
+            </service>
+        </actions>
     </form>
     <form name="lookupProductFeature"
         default-title-style="tableheadtext"
