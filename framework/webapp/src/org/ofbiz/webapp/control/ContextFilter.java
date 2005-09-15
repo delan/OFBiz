@@ -24,6 +24,15 @@
  */
 package org.ofbiz.webapp.control;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -33,14 +42,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 
 import org.ofbiz.base.container.ContainerLoader;
 import org.ofbiz.base.start.StartupException;
@@ -48,6 +49,8 @@ import org.ofbiz.base.util.CachedClassLoader;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
@@ -80,7 +83,7 @@ public class ContextFilter implements Filter {
 
         // puts all init-parameters in ServletContext attributes for easier parameterization without code changes
         this.putAllInitParametersInAttributes();
-        
+
         // initialize the cached class loader for this application
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, (String) config.getServletContext().getAttribute("webSiteId"));
@@ -131,6 +134,21 @@ public class ContextFilter implements Filter {
         // set the server root url
         StringBuffer serverRootUrl = UtilHttp.getServerRootUrl(httpRequest);
         request.setAttribute("_SERVER_ROOT_URL_", serverRootUrl.toString());
+
+        // request attributes from redirect call
+        String reqAttrMapHex = (String) httpRequest.getSession().getAttribute("_REQ_ATTR_MAP_");
+        if (UtilValidate.isNotEmpty(reqAttrMapHex)) {
+            byte[] reqAttrMapBytes = StringUtil.fromHexString(reqAttrMapHex);
+            Map reqAttrMap = (Map) UtilObject.getObject(reqAttrMapBytes);
+            if (reqAttrMap != null) {
+                Iterator i = reqAttrMap.keySet().iterator();
+                while (i.hasNext()) {
+                    String key = (String) i.next();
+                    request.setAttribute(key, reqAttrMap.get(key));
+                }
+            }
+            httpRequest.getSession().removeAttribute("_REQ_ATTR_MAP_");
+        }
 
         // ----- Context Security -----
         // check if we are disabled
@@ -204,7 +222,7 @@ public class ContextFilter implements Filter {
             // Verbose Debugging
             if (Debug.verboseOn()) {
                 for (int i = 0; i < allowList.size(); i++) {
-                    Debug.logVerbose("[Allow]: " + ((String) allowList.get(i)), module);
+                    Debug.logVerbose("[Allow]: " + allowList.get(i), module);
                 }
                 Debug.logVerbose("[Request path]: " + requestPath, module);
                 Debug.logVerbose("[Request info]: " + requestInfo, module);
@@ -221,7 +239,6 @@ public class ContextFilter implements Filter {
                         error = Integer.parseInt(errorCode);
                     } catch (NumberFormatException nfe) {
                         Debug.logWarning(nfe, "Error code specified would not parse to Integer : " + errorCode, module);
-                        error = 404;
                     }
                     filterMessage = filterMessage + " (" + error + ")";
                     wrapper.sendError(error, contextUri);
@@ -340,7 +357,7 @@ public class ContextFilter implements Filter {
             config.getServletContext().setAttribute(initParamName, initParamValue);
         }
     }
-    
+
     protected String getServerId() {
         String serverId = (String) config.getServletContext().getAttribute("_serverId");
         if (serverId == null) {
