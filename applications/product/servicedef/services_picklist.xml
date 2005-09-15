@@ -28,11 +28,11 @@
     <version>1.0</version>
 
     <!-- Picking Related Services -->
-    <service name="convertPickOrderIdListToHeaders" engine="simple"
-            location="org.ofbiz.shipment.picklist.PicklistServices" invoke="convertOrderIdListToHeaders">
+    <service name="convertPickOrderIdListToHeaders" engine="java"
+            location="org.ofbiz.shipment.picklist.PickListServices" invoke="convertOrderIdListToHeaders">
         <description>Convert a list of order IDs to a list of headers</description>
         <attribute name="orderIdList" type="List" mode="IN" optional="true"/>
-        <attribute name="orderHeaderList" type="List" mode="INOUT" optional="true"/>        
+        <attribute name="orderHeaderList" type="List" mode="INOUT" optional="true"/>
     </service>
 
     <service name="findOrdersToPickMove" engine="simple"
