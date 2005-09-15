@@ -30,15 +30,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.ofbiz.entity.*;
-import org.ofbiz.entity.config.DelegatorInfo;
+import org.ofbiz.entity.model.ModelGroupReader;
 
 String resultMessage = "";
 ResultSet rs = null;
 ArrayList columns = new ArrayList();
 ArrayList records = new ArrayList();
 ArrayList groups = new ArrayList();
-DelegatorInfo di = delegator.getDelegatorInfo();
-Iterator groupMapIt = di.groupMap.keySet().iterator();
+ModelGroupReader mgr = delegator.getModelGroupReader();
+Iterator groupMapIt = mgr.getGroupNames().iterator();
 
 while (groupMapIt.hasNext()) {
     groups.add(groupMapIt.next());
