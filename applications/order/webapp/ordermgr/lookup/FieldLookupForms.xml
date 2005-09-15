@@ -314,16 +314,6 @@
         </field>
     </form>
 
-    <form name="listLookupQuote" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupQuote" 
-        title="" type="list">
-        <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
-            </service>
-        </actions>
     <form name="lookupQuote" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupQuote" title="" type="single">
@@ -400,24 +390,7 @@
         <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
     </form>
-        <field name="quoteId" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${quoteId}" target="javascript:set_value('${quoteId}')"/>
-        </field>
-        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
-            <display-entity entity-name="QuoteType"/>
-        </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
-            <display-entity also-hidden="false" entity-name="StatusItem"/>
-        </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
-        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"></field>
-        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}"></field>
-        <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}"></field>
-        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
-        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
-    </form>
+
     
     
     <form name="lookupQuoteItem" 
@@ -511,5 +484,107 @@
             <display/>
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
-   </form>
+    </form>
+   
+   
+    <form name="lookupRequirement" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupRequirement" title="" type="single">
+        <actions>
+            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+        </actions>
+         <auto-fields-entity entity-name="Requirement" default-field-type="find"/>
+        <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find default-value="equals"/></field>
+        <field name="requirementTypeId" title="${uiLabelMap.OrderRequirementTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RequirementType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.OrderRequirementStatusId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="REQUIREMENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
+        <field name="requirementStartDate" title="${uiLabelMap.OrderRequirementStartDate}"><date-find type="date"/></field>
+        <field name="requiredByDate" title="${uiLabelMap.OrderRequirementByDate}"><date-find type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="listLookupRequirement" 
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
+        list-name="entityList" paginate-target="LookupRequirement" 
+        title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="Requirement" default-field-type="hidden"/>
+        <field name="requirementId" widget-style="buttontext">
+            <hyperlink target-type="plain" also-hidden="true" description="${requirementId}" target="javascript:set_value('${requirementId}')"/>
+        </field>
+        <field name="requirementTypeId">
+            <display-entity entity-name="RequirementType" also-hidden="true"/>
+        </field>
+        <field name="productId">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
+        </field>
+        <field name="requirementStartDate"><display/></field>
+        <field name="requiredByDate"><display/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+        <field name="deleteLink" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteRequirement?requirementId=${requirementId}"/>
+        </field>
+    </form>
+
+    <form name="lookupShoppingList" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupShoppingList" title="" type="single">
+        <actions>
+            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+        </actions>
+         <auto-fields-entity entity-name="ShoppingList" default-field-type="find"/>
+        <field name="shoppingListId" title="${uiLabelMap.OrderShoppingListId}"><text-find default-value="equals"/></field>
+        <field name="shoppingListTypeId" title="${uiLabelMap.OrderShoppingListTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ShoppingListType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="listLookupShoppingList" 
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
+        list-name="entityList" paginate-target="LookupShoppingList" 
+        title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="ShoppingList" default-field-type="hidden"/>
+        <field name="shoppingListId" widget-style="buttontext">
+            <hyperlink target-type="plain" also-hidden="true" description="${shoppingListId}" target="javascript:set_value('${shoppingListId}')"/>
+        </field>
+        <field name="shoppingListTypeId">
+            <display-entity entity-name="ShoppingListType" also-hidden="true"/>
+        </field>
+        <field name="deleteLink" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteShoppingList?shoppingListId=${shoppingListId}"/>
+        </field>
+    </form>
+
 </forms>

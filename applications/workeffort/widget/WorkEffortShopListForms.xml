@@ -22,60 +22,53 @@
 -->
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
   
-    <form name="ListWorkEffortRequirements" separate-columns="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-    default-widget-style="tabletext" target="" title="" type="list" >
+    <form name="ListWorkEffortShopLists" separate-columns="true" default-title-style="tableheadtext" 
+        default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list" >
         <actions>
-            <entity-condition entity-name="WorkRequirementFulfillment" >
+            <entity-condition entity-name="ShoppingListWorkEffort" >
                 <condition-list combine="and">
                     <condition-expr field-name="workEffortId" operator="equals" env-name="workEffortId"/>
                 </condition-list>
-                <order-by field-name="requirementId"/>
+                <order-by field-name="shoppingListId"/>
             </entity-condition>
         </actions>
         <field name="workEffortId">
-            <hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" />
+            <display-entity entity-name="WorkEffort" description="${workEffortName}">
+                <sub-hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" link-style="linktext"/>
+            </display-entity>
         </field>
-        <field name="requirementId" title="${uiLabelMap.WorkEffortRequirementId}" widget-style="buttontext">
-            <hyperlink target="/ordermgr/control/EditRequirement?requirementId=${requirementId}" target-type="inter-app" description="${requirementId}"/>
+        <field name="shoppingListId" title="${uiLabelMap.WorkEffortShopListId}" widget-style="buttontext">
+            <display-entity entity-name="ShoppingList" description="${listName} - ${description}">
+                <sub-hyperlink target="EditWorkEffortShopList?shoppingListId=${shoppingListId}&amp;workEffortId=${workEffortId}" target-type="inter-app"   description="[${shoppingListId}]" link-style="linktext"/>
+            </display-entity>
         </field>
-        <field name="workReqFulfTypeId">
-            <display-entity entity-name="WorkReqFulfType"/>
-        </field>
-        <field name="description" > <display/> </field>
-        <field name="editLink" title=" " widget-style="buttontext"><hyperlink target="EditWorkEffortRequirement?workEffortId=${workEffortId}&amp;requirementId=${requirementId}" also-hidden="false" description="[${uiLabelMap.CommonEdit}]" /></field>
-        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteWorkEffortRequirement?workEffortId=${workEffortId}&amp;requirementId=${requirementId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteShoppingListWorkEffort?workEffortId=${workEffortId}&amp;shoppingListId=${shoppingListId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]"/></field>
     </form>
   
-    <form name="AddWorkEffortRequirement" default-map-name="workRequirementFulfillment" 
+    <form name="AddWorkEffortShopList" 
             default-title-style="tableheadtext" default-tooltip-style="tabletext" 
             default-widget-style="inputBox" 
-            extends="EditRequirement" extends-resource="component://order/webapp/ordermgr/requirement/RequirementForms.xml"
-            target="createWorkEffortRequirement" title="" type="single">
+            extends="EditShopList" extends-resource="component://order/webapp/ordermgr/order/OrderShopListForms.xml"
+            target="createShoppingListWorkEffort" title="" type="single">
         <sort-order>
             <sort-field name="workEffortId"/>
-            <sort-field name="requirementId"/>
-            <sort-field name="workReqFulfTypeId"/>
+            <sort-field name="shoppingListId"/>
         </sort-order>
-        <field name="workEffortId" > <display/> </field>
-        <field name="requirementId" ><lookup target-form-name="/ordermgr/control/LookupRequirement"/></field>
-        <field name="workReqFulfTypeId">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="WorkReqFulfType" description="${description}"/>
-            </drop-down>
-        </field>
+        <field name="workEffortId" map-name="parameters"> <display/> </field>
+        <field name="shoppingListId" ><lookup target-form-name="/ordermgr/control/LookupShoppingList"/></field>
        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
     </form>
   
-    <form name="EditWorkEffortRequirement" default-map-name="requirement" 
+    <form name="EditWorkEffortShopList" default-map-name="shoppingList" 
             default-title-style="tableheadtext" default-tooltip-style="tabletext" 
             default-widget-style="inputBox" 
-            extends="EditRequirement" extends-resource="component://order/webapp/ordermgr/requirement/RequirementForms.xml"
-            target="updateRequirement" title="" type="single">
+            extends="EditShopList" extends-resource="component://order/webapp/ordermgr/order/OrderShopListForms.xml"
+            target="updateShoppingList" title="" type="single">
         <sort-order>
             <sort-field name="workEffortId"/>
         </sort-order>
         <field name="workEffortId" map-name="parameters"> <display /> </field>
-        <field name="requirementId" ><display/></field>
+        <field name="shoppingListId" ><display/></field>
        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
     </form>
 </forms>

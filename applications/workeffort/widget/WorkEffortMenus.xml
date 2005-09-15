@@ -57,7 +57,7 @@
         <menu-item name="WorkEffortPartyAssigns" title="${uiLabelMap.WorkEffortParties}">
             <link target="/ListWorkEffortPartyAssigns?workEffortId=${workEffortId}"/>
         </menu-item>
-        <menu-item name="WorkEffortCommEvents" title="${uiLabelMap.WorkEffortCommEvent}">
+        <menu-item name="WorkEffortCommEvents" title="${uiLabelMap.WorkEffortCommEvents}">
             <link target="/ListWorkEffortCommEvents?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortRequests" title="${uiLabelMap.WorkEffortRequests}">
@@ -74,6 +74,12 @@
         </menu-item>
         <menu-item name="WorkEffortRequirements" title="${uiLabelMap.WorkEffortRequirements}">
             <link target="/ListWorkEffortRequirements?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortShopLists" title="${uiLabelMap.WorkEffortShopLists}">
+            <link target="/ListWorkEffortShopLists?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortOrderHeader" title="${uiLabelMap.WorkEffortOrderHeaders}">
+            <link target="/ListWorkEffortOrderHeaders?workEffortId=${workEffortId}"/>
         </menu-item>
     </menu>
 </menus>

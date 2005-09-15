@@ -780,6 +780,41 @@
         <response name="error" type="view" value="ListWorkEffortRequirements"/>
     </request-map>
     
+    <!--  WorkEffort ShopList request mappings -->
+    <request-map uri="ListWorkEffortShopLists">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEffortShopLists"/>
+    </request-map>
+    
+    <request-map uri="AddWorkEffortShopList">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddWorkEffortShopList"/>
+    </request-map>
+    
+    <request-map uri="EditWorkEffortShopList">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditWorkEffortShopList"/>
+    </request-map>
+    
+    <request-map uri="createShoppingListWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createShoppingListWorkEffort"/>
+        <response name="success" type="view" value="EditWorkEffortShopList"/>
+        <response name="error" type="view" value="AddWorkEffortShopList"/>
+    </request-map>
+    <request-map uri="updateShoppingList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateShoppingList"/>
+        <response name="success" type="view" value="EditWorkEffortShopList"/>
+        <response name="error" type="view" value="EditWorkEffortShopList"/>
+    </request-map>
+    <request-map uri="deleteShoppingListWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteShoppingListWorkEffort"/>
+        <response name="success" type="view" value="ListWorkEffortShopLists"/>
+        <response name="error" type="view" value="ListWorkEffortShopLists"/>
+    </request-map>
+    
     
     <!-- end of request mappings -->
 
@@ -858,6 +893,10 @@
     <view-map name="AddWorkEffortRequirement" type="screen" page="component://workeffort/widget/WorkEffortRequirementScreens.xml#AddWorkEffortRequirement"/>
     <view-map name="EditWorkEffortRequirement" type="screen" page="component://workeffort/widget/WorkEffortRequirementScreens.xml#EditWorkEffortRequirement"/>
     <view-map name="ListWorkEffortRequirements" type="screen" page="component://workeffort/widget/WorkEffortRequirementScreens.xml#ListWorkEffortRequirements"/>
+
+    <view-map name="AddWorkEffortShopList" type="screen" page="component://workeffort/widget/WorkEffortShopListScreens.xml#AddWorkEffortShopList"/>
+    <view-map name="EditWorkEffortShopList" type="screen" page="component://workeffort/widget/WorkEffortShopListScreens.xml#EditWorkEffortShopList"/>
+    <view-map name="ListWorkEffortShopLists" type="screen" page="component://workeffort/widget/WorkEffortShopListScreens.xml#ListWorkEffortShopLists"/>
     
     <!-- end of view mappings -->
 </site-conf>
