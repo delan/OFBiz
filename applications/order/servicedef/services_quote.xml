@@ -172,5 +172,19 @@
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="createQuoteWorkEffort" default-entity-name="QuoteWorkEffort" engine="simple" auth="true"
+            location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteWorkEffort">
+        <description>Creates a new QuoteWorkEffort record and WorkEffort record</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <override name="quoteId" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true" entity-name="WorkEffort"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true" entity-name="WorkEffort"/>
+    </service>
+    <service name="deleteQuoteWorkEffort" default-entity-name="QuoteWorkEffort" engine="simple" auth="true"
+            location="org/ofbiz/order/quote/QuoteServices.xml" invoke="deleteQuoteWorkEffort">
+        <description>Creates a new QuoteWorkEffort record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 
 </services>

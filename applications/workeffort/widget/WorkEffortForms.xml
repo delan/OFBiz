@@ -21,9 +21,16 @@
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
     <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="EditWorkEffort" default-map-name="workEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  target="updateWorkEffort" title="" type="single">
+    <form name="EditWorkEffort" default-map-name="workEffort" default-title-style="tableheadtext" 
+        default-tooltip-style="tabletext" default-widget-style="inputBox"  
+        target="updateWorkEffort" title="" type="single">
         <auto-fields-entity entity-name="WorkEffort"/>
         <alt-target target="createWorkEffort" use-when="workEffort==null"/>
+        <sort-order>
+            <sort-field name="workEffortId"/>
+            <sort-field name="workEffortName"/>
+            <sort-field name="description"/>
+        </sort-order>
         <field name="workEffortId" use-when="workEffort!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId==null" title="${uiLabelMap.WorkEffortWorkEffortId}"><ignored/></field>
         <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${workEffortId}]"><display/></field>

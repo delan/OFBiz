@@ -223,4 +223,9 @@
         	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
         	<action service="createRequirementFromItemATP" mode="sync"/>
     </eca>
+    <!-- WorkEffort -->
+    <eca service="createQuoteWorkEffort" event="invoke">
+        	<condition field-name="workEffotId" operator="is-empty" />
+        	<action service="createWorkEffort" mode="sync"/>
+    </eca>
 </service-eca>
