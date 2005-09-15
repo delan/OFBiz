@@ -25,22 +25,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-	<screen name="cmsCommon">
-		<section>
-		<actions>
-            <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
-		    <set field="headerItem" value="CMS"/>
-		</actions>
-                  <widgets>
-                       <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml" >
-                         <decorator-section name="body">
-                           <include-menu name="cms" location="component://content/webapp/content/cms/CMSMenus.xml" />
-                           <decorator-section-include name="body"/>
-                          </decorator-section>
-                        </decorator-screen>
-                  </widgets>
-		</section>
-	</screen>
 
 	<screen name="CMSContentFind">
 		<section>
@@ -60,7 +44,7 @@
             <set field="currentCMSMenuItemName" value="contentfind" to-scope="user"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                            <include-form name="findContent" location="component://content/webapp/content/cms/CMSForms.xml" />
                            <include-form name="listFindContent" location="component://content/webapp/content/cms/CMSForms.xml" />
@@ -94,7 +78,7 @@
             <set field="menuContext.contentTarget" value="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${dataResourceId}"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                     		<platform-specific>
                          		<html>
@@ -118,7 +102,7 @@
                     <set field="titleProperty" value="PageTitleEditContent"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                            <include-form name="AddContent" location="component://content/webapp/content/cms/CMSForms.xml" />
                           </decorator-section>
@@ -160,7 +144,7 @@
                 <set field="enableEdit" value="true" />
 			</actions>
 	    	<widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                            <link  text="Goto Find" target="/CMSContentFind?VIEW_INDEX=${CMSContentFindViewIndex}&amp;${CMSContentFindQueryString}" style="tabletext"/>
                            <include-form name="EditAddContentStuff" location="component://content/webapp/content/cms/CMSForms.xml" />
@@ -198,7 +182,7 @@
                 <set field="CMSContentFindViewIndex" from-field="CMSContentFindViewIndex" from-scope="user"/>
 			</actions>
 	    	<widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                            <link  text="Goto Find" target="/CMSContentFind?VIEW_INDEX=${CMSContentFindViewIndex}&amp;${CMSContentFindQueryString}" style="tabletext"/>
                            <include-form name="EditAddSubContentStuff" location="component://content/webapp/content/cms/CMSForms.xml" />
@@ -221,7 +205,7 @@
                     <set field="titleProperty" value="PageTitleSearchContent"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                     		<platform-specific>
                          		<html>
@@ -247,7 +231,7 @@
                     <set field="titleProperty" value="PageTitleSearchContent"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                            <include-form name="AdminIndex" location="component://content/webapp/content/cms/CMSForms.xml" />
                            <include-form name="AdminIndexAll" location="component://content/webapp/content/cms/CMSForms.xml" />
@@ -271,7 +255,7 @@
 		    <script location="component://content/widget/cms/userpermprep.bsh"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                     <platform-specific>
                          <html>
@@ -296,7 +280,7 @@
                     <set field="titleProperty" value="PageTitleSearchContent"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                     <platform-specific>
                          <html>
@@ -319,7 +303,7 @@
                     <set field="titleProperty" value="Test Permission"/>
 		</actions>
                   <widgets>
-                       <decorator-screen name="cmsCommon" >
+                       <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">
                          <decorator-section name="body">
                            <include-form name="TestPermission" location="component://content/webapp/content/cms/CMSForms.xml" />
                           </decorator-section>

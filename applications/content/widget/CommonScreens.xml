@@ -25,7 +25,7 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="main-decorator">
+    <screen name="mainContentDecorator">
         <section>
             <actions>
                 <!-- base/top/specific map first, then more common map added for shared labels --> 
@@ -67,10 +67,60 @@
         </section>
     </screen>
 
+    <screen name="commonCmsDecorator">
+        <section>
+            <actions>
+                <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
+                <set field="headerItem" value="CMS"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainContentDecorator">
+                    <decorator-section name="body">
+                        <include-menu name="cms" location="component://content/webapp/content/cms/CMSMenus.xml" />
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="commonContentDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="Content"/>
+                <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainContentDecorator">
+                    <decorator-section name="body">
+                        <include-menu name="content" location="component://content/webapp/content/content/ContentMenus.xml"/>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="commonContentSetupDecorator">
+        <section>
+            <actions>
+                <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainContentDecorator" location="component://content/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-menu name="contentsetup" location="component://content/webapp/content/contentsetup/ContentSetupMenus.xml"/>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="main">
         <section>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="mainContentDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="screenlet">
                             <container style="screenlet-header">
@@ -88,7 +138,7 @@
     <screen name="login">
         <section>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="mainContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://common/webcommon/login.ftl"/></html>
