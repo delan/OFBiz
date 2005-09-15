@@ -65,4 +65,8 @@
         <condition field-name="shoppingListId" operator="is-empty"/>
         <action service="createShoppingList" mode="sync" />
     </eca>
+    <eca service="createOrderHeaderWorkEffort" event="invoke">
+        <condition field-name="shoppingListId" operator="is-empty"/>
+        <action service="createOrderHeader" mode="sync" />
+    </eca>
 </service-eca>

@@ -132,7 +132,7 @@
                 </or>
             </condition>
             <actions>
-                <set field="title" value="Lookup Customer Request"/>
+                <set field="title" value="Lookup Quote"/>
                 <set field="entityName" value="Quote"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
@@ -156,7 +156,7 @@
                 </or>
             </condition>
             <actions>
-                <set field="title" value="Lookup Customer Request Item"/>
+                <set field="title" value="Lookup Quote Item"/>
                 <set field="entityName" value="QuoteItem"/>
                 <set field="quoteId" from-field="parameters.quoteId" default-value="${parameters.parm0}"/>
                 <set field="queryString" from-field="result.queryString"/>
@@ -181,7 +181,7 @@
                 </or>
             </condition>
             <actions>
-                <set field="title" value="Lookup Customer Request"/>
+                <set field="title" value="Lookup Requirement"/>
                 <set field="entityName" value="Requirement"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
@@ -205,7 +205,7 @@
                 </or>
             </condition>
             <actions>
-                <set field="title" value="Lookup Customer Request"/>
+                <set field="title" value="Lookup Shopping List"/>
                 <set field="entityName" value="ShoppingList"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
@@ -216,6 +216,30 @@
                     <decorator-section name="body">
                         <include-form name="lookupShoppingList" location="component://order/webapp/ordermgr/lookup/FieldLookupForms.xml" />
                         <include-form name="listLookupShoppingList" location="component://order/webapp/ordermgr/lookup/FieldLookupForms.xml" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LookupOrderHeader">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <set field="title" value="Lookup Order Header"/>
+                <set field="entityName" value="OrderHeader"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupOrderHeader" location="component://order/webapp/ordermgr/lookup/FieldLookupForms.xml" />
+                        <include-form name="listLookupOrderHeader" location="component://order/webapp/ordermgr/lookup/FieldLookupForms.xml" />
                     </decorator-section>
                 </decorator-screen>
             </widgets>

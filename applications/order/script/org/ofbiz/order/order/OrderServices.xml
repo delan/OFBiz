@@ -312,5 +312,38 @@
             </if-compare-field>
         </if-compare>
     </simple-method>
+    <simple-method method-name="createOrderHeader" short-description="Create OrderHeader">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateOrderShipment"/>
+        </check-permission>
+        <string-to-field string="Create OrderHeader" field-name="operationName"/>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="OrderHeader"/>
+        <sequenced-id-to-env sequence-name="OrderHeader" env-name="orderId"/>
+        <to-string field-name="orderId"/>
+        <env-to-field env-name="orderId" map-name="newEntity"/>
+        <field-to-result field-name="orderId" result-name="orderId"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateOrderHeader" short-description="Update OrderHeader">
+        <check-permission permission="ORDERMGR" action="_UPDATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateOrderShipment"/>
+        </check-permission>
+        <string-to-field string="Update OrderHeader" field-name="operationName"/>
+        <check-errors/>
+
+        <make-value value-name="lookupMap" entity-name="OrderHeader"/>
+        <set-pk-fields value-name="lookupMap" map-name="parameters"/>
+        <find-by-primary-key entity-name="OrderHeader" map-name="lookupMap" value-name="orderHeader"/>
+        <if-empty field-name="orderHeader">
+            <add-error><fail-message message="ERROR: Cannot update specified contact info because it does not correspond to the specified work effort"/></add-error>
+        </if-empty>
+        <check-errors/>
+        <set-nonpk-fields value-name="orderHeader" map-name="parameters"/>
+        <store-value value-name="orderHeader"/>  
+    </simple-method>
 </simple-methods>
 

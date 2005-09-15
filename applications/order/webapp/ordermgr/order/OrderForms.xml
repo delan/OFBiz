@@ -26,32 +26,43 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="EditShopList" type="single" target="" title=""
+    <form name="EditOrderHeader" type="single" target="" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" 
             default-tooltip-style="tabletext" >
-        <auto-fields-entity entity-name="ShoppingList" />
-        <field name="shoppingListTypeId">
-            <drop-down >
-                <entity-options entity-name="ShoppingListType">
-                    <entity-order-by field-name="description"/>
+        <auto-fields-entity entity-name="OrderHeader" />
+        <actions>
+            <entity-one entity-name="StatusItem" value-name="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" env-name="communicationEvent.statusId"/>
+            </entity-one>
+        </actions>
+        
+        <field name="statusId" use-when="orderHeader==null" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="equals" value="ORDER_STATUS"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="statusId" use-when="orderHeader!=null" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
+            <drop-down allow-empty="false" current-description="${currentStatus.description}">
+                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
+                    <entity-constraint name="statusId" value="${orderHeader.statusId}"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
         <field name="productStoreId">
             <lookup target-form-name="/marketing/control/LookupProductStore"/>
         </field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListShopLists" type="single" target="" title=""
+    <form name="ListOrderHeaders" type="single" target="" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" 
             default-tooltip-style="tabletext" >
-        <auto-fields-entity entity-name="ShoppingList" default-field-type="display"/>
-        <field name="shoppingListTypeId">
-            <display-entity entity-name="ShoppingListType"/>
-        </field>
-        <field name="productStoreId">
-            <display-entity entity-name="ProductStore"/>
-        </field>
+        <auto-fields-entity entity-name="OrderHeader" default-field-type="display"/>
+        <field name="statusId"> <display-entity entity-name="StatusItem"/> </field>
+        <field name="productStoreId"> <display-entity entity-name="ProductStore"/> </field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
