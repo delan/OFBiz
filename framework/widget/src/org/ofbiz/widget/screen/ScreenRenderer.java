@@ -183,16 +183,24 @@ public class ScreenRenderer {
         while (sessionAttrNames.hasMoreElements()) {
             String attrName = (String) sessionAttrNames.nextElement();
             if (attrNamesToSkip.contains(attrName)) continue;
-            Object param = parameterMap.get(attrName);
             Object attrValue = session.getAttribute(attrName);
-            if (param == null) {
-                parameterMap.put(attrName, attrValue);
-            } else if (param instanceof String && ((String) param).length() == 0) {
-                // also put the attribute value in if the parameter is empty
-                parameterMap.put(attrName, attrValue);
+
+            // NOTE: this is being set to false by default now 
+            //this change came after the realization that it is common to want a request attribute to override a request parameter, but I can't think of even ONE reason why a request parameter should override a request attribute...
+            final boolean preserveRequestParameters = false;
+            if (preserveRequestParameters) {
+                Object param = parameterMap.get(attrName);
+                if (param == null) {
+                    parameterMap.put(attrName, attrValue);
+                } else if (param instanceof String && ((String) param).length() == 0) {
+                    // also put the attribute value in if the parameter is empty
+                    parameterMap.put(attrName, attrValue);
+                } else {
+                    // do nothing, just log something
+                    Debug.logInfo("Found session attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
+                }
             } else {
-                // do nothing, just log something
-                Debug.logInfo("Found session attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
+                parameterMap.put(attrName, attrValue);
             }
         }
 
