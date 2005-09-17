@@ -29,7 +29,7 @@
                 <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="mainContentDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-menu name="contentsetup" location="component://content/widget/content/DataResourceMenus.xml"/>
                         <decorator-section-include name="body"/>
