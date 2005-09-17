@@ -486,7 +486,6 @@ public class ShoppingCartServices {
                 if (amount == null) {
                     amount = new Double(0);
                 }
-                //Double quantity = OrderReadHelper.getOrderItemQuantity(item);
                 Double quantity = item.getDouble("quantity");
                 if (quantity == null) {
                     quantity = new Double(0);
@@ -498,10 +497,8 @@ public class ShoppingCartServices {
                 int itemIndex = -1;
                 if (item.get("productId") == null) {
                     // non-product item
-                    //String itemType = item.getString("orderItemTypeId");
                     String desc = item.getString("description");
                     try {
-                        //itemIndex = cart.addNonProductItem(itemType, desc, null, 0.00, quantity.doubleValue(), null, null, dispatcher);
                         itemIndex = cart.addNonProductItem(null, desc, null, 0.00, quantity.doubleValue(), null, null, dispatcher);
                     } catch (CartItemModifyException e) {
                         Debug.logError(e, module);
@@ -509,7 +506,6 @@ public class ShoppingCartServices {
                     }
                 } else {
                     // product item
-                    //String prodCatalogId = item.getString("prodCatalogId");
                     String productId = item.getString("productId");
                     try {
                         itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), quoteUnitPrice.doubleValue(), null, null, null, dispatcher, !applyQuoteAdjustments, (quoteUnitPrice.doubleValue() == 0));
@@ -525,18 +521,16 @@ public class ShoppingCartServices {
                 // flag the item w/ the orderItemSeqId so we can reference it
                 ShoppingCartItem cartItem = cart.findCartItem(itemIndex);
                 cartItem.setOrderItemSeqId(orderItemSeqId);
-                // attach addition item information
-                //cartItem.setStatusId(item.getString("statusId"));
-                //cartItem.setItemType(item.getString("orderItemTypeId"));
+                // attach additional item information
                 cartItem.setItemComment(item.getString("comments"));
                 cartItem.setQuoteId(item.getString("quoteId"));
                 cartItem.setQuoteItemSeqId(item.getString("quoteItemSeqId"));
                 cartItem.setIsPromo(isPromo);
-                //cartItem.setProductCategoryId(item.getString("productCategoryId"));
-                // TODO: impostare una data?
                 //cartItem.setDesiredDeliveryDate(item.getTimestamp("estimatedDeliveryDate"));
+                //cartItem.setStatusId(item.getString("statusId"));
+                //cartItem.setItemType(item.getString("orderItemTypeId"));
+                //cartItem.setProductCategoryId(item.getString("productCategoryId"));
                 //cartItem.setShoppingList(item.getString("shoppingListId"), item.getString("shoppingListItemSeqId"));
-
             }
 
         }

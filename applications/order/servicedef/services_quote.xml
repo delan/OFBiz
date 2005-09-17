@@ -186,5 +186,11 @@
         <description>Creates a new QuoteWorkEffort record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    <service name="createQuoteFromCart" engine="simple" auth="true"
+            location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteFromCart">
+        <description>Creates a new quote from a shopping cart</description>
+        <attribute name="cart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
+        <attribute name="quoteId" type="String" mode="OUT" optional="false"/>
+    </service>
 
 </services>
