@@ -176,8 +176,10 @@ public class EmailServices {
             trans.sendMessage(mail, mail.getAllRecipients());
             trans.close();
         } catch (Exception e) {
-            Debug.logError(e, "Cannot send mail message", module);
-            return ServiceUtil.returnError("Cannot send mail; see logs");
+            String errMsg = "Cannot send email message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]";
+            Debug.logError(e, errMsg, module);
+            Debug.logError(e, "Email message that could not be sent to [" + sendTo + "] had context: " + context, module);
+            return ServiceUtil.returnError(errMsg);
         }
         return results;
     }
