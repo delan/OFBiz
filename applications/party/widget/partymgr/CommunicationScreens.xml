@@ -45,9 +45,7 @@
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="partyId"/>
-                                        </not>
+                                        <not><if-empty field-name="partyId"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
@@ -55,7 +53,7 @@
                                 </section>
                                 <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommFindTabBar"/>
                                 <container><label style="head1" text="${uiLabelMap.PartyPendingCommunicationEvents}"/></container>
-                                <container><link style="buttontext" target="/viewCommunicationEvent?partyId=${partyId}" text="[${uiLabelMap.PartyNewCommunication}]"/></container>
+                                <container><link style="buttontext" target="/viewCommunicationEvent?partyId=${partyId}" text="${uiLabelMap.PartyNewCommunication}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="listPendingCommEvents"/>
                             </widgets>
                             <fail-widgets>
@@ -91,9 +89,7 @@
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="partyId"/>
-                                        </not>
+                                        <not><if-empty field-name="partyId"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
@@ -101,7 +97,7 @@
                                 </section>
                                 <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
                                 <container><label style="head1" text="${uiLabelMap.PartyFoundCommunicationEvents}"/></container>
-                                <container><link style="tabletext" target="/EditCommunicationEvent" text="[${uiLabelMap.PartyNewCommunication}]"/></container>
+                                <container><link style="buttontext" target="EditCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListPartyCommEvents"/>
                             </widgets>
                             <fail-widgets>
@@ -137,16 +133,14 @@
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="partyId"/>
-                                        </not>
+                                        <not><if-empty field-name="partyId"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
                                 <container><label style="head1" text="${uiLabelMap.PartyFoundCommunicationEvents}"/></container>
-                                <container><link style="tabletext" target="/EditCommunicationEvent" text="&lt;br/&gt;[${uiLabelMap.PartyNewCommunication}]"/></container>
+                                <container><link style="buttontext" target="/EditCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListLookupCommEvents"/>
                             </widgets>
                             <fail-widgets>
@@ -179,9 +173,7 @@
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="partyId"/>
-                                        </not>
+                                        <not><if-empty field-name="partyId"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
@@ -189,7 +181,7 @@
                                 </section>
                                 <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommFindTabBar"/>
                                 <label style="head1" text="${uiLabelMap.PartyFindCommunicationEvents}"/>
-                                <link style="tabletext" target="/viewCommunicationEvent" text="&lt;br/&gt;[${uiLabelMap.PartyNewCommunication}]"/>
+                                <link style="buttontext" target="viewCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}"/>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="findCommEvents"/>
                             </widgets>
                             <fail-widgets>
@@ -264,9 +256,7 @@
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="partyId"/>
-                                        </not>
+                                        <not><if-empty field-name="partyId"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
@@ -274,9 +264,7 @@
                                 </section>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="communicationEvent"/>
-                                        </not>
+                                        <not><if-empty field-name="communicationEvent"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
@@ -315,28 +303,10 @@
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdTo" value="${parameters.partyId}"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/party/control/ListPartyCommEvents"/>
+
                 <entity-one entity-name="Party" use-cache="true" value-name="party"/>
                 <entity-one entity-name="Person" use-cache="true" value-name="lookupPerson"/>
                 <entity-one entity-name="CommunicationEvent" value-name="communicationEvent"/>
-                <entity-one entity-name="CommunicationEvent" value-name="parentEvent">
-                    <field-map env-name="parentCommEventId" field-name="communicationEventId"/>
-                </entity-one>
-                <entity-one entity-name="StatusItem" value-name="commEventStatusItem">
-                    <field-map env-name="communicationEvent.statusId" field-name="statusId"/>
-                </entity-one>
-                <set field="COMM_EVENT" value="COM_EVENT_STATUS"/>
-                <entity-one entity-name="ContactMechType" value-name="commEventContactMechType">
-                    <field-map env-name="communicationEvent.contactMechTypeId" field-name="contactMechTypeId"/>
-                </entity-one>
-                <entity-one entity-name="ContactMechType" value-name="parentEventContactMechType">
-                    <field-map env-name="parentEvent.contactMechTypeId" field-name="contactMechTypeId"/>
-                </entity-one>
-                <entity-one entity-name="RoleType" value-name="fromRoleType">
-                    <field-map env-name="communicationEvent.roleTypeIdFrom" field-name="roleTypeId"/>
-                </entity-one>
-                <entity-one entity-name="RoleType" value-name="toRoleType">
-                    <field-map env-name="communicationEvent.roleTypeIdTo" field-name="roleTypeId"/>
-                </entity-one>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/editCommunication.bsh"/>
                 <set field="okayToUpdate" global="false" to-scope="screen" type="Boolean" value="true"/>
             </actions>
@@ -369,9 +339,7 @@
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="partyId"/>
-                                        </not>
+                                        <not><if-empty field-name="partyId"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
@@ -379,9 +347,7 @@
                                 </section>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="communicationEvent"/>
-                                        </not>
+                                        <not><if-empty field-name="communicationEvent"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
@@ -393,9 +359,10 @@
                                 </section>
                                 <section>
                                     <widgets>
-                                        <link style="tabletext" target="/EditCommunicationEvent?partyId=${partyId}&amp;partyIdFrom=${partyId}" text="&lt;br/&gt;[${uiLabelMap.PartyNewCommunication}]"/>
-                                        <link style="tabletext" target="/EditCommunicationEvent?partyId=${partyId}&amp;partyIdTo=${partyId}" text="&lt;br/&gt;[${uiLabelMap.PartyReply}]"/>
-                                        <label text="&lt;br/&gt;"/>
+                                        <container>
+                                            <link style="buttontext" target="EditCommunicationEvent?partyId=${partyId}&amp;partyIdFrom=${partyId}" text="${uiLabelMap.PartyNewCommunication}"/>
+                                            <link style="buttontext" target="EditCommunicationEvent?partyId=${partyId}&amp;partyIdTo=${partyId}" text="${uiLabelMap.PartyReply}"/>
+                                        </container>
                                     </widgets>
                                 </section>
                                 <section>
@@ -408,9 +375,7 @@
                                 </section>
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/>
-                                        </not>
+                                        <not><if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/></not>
                                     </condition>
                                     <widgets>
                                         <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ViewCommEvent"/>
@@ -448,9 +413,7 @@
                 <section>
                     <condition>
                         <and>
-                            <not>
-                                <if-empty field-name="communicationEvent.statusId"/>
-                            </not>
+                            <not><if-empty field-name="communicationEvent.statusId"/></not>
                             <or>
                                 <if-compare field-name="communicationEvent.statusId" operator="equals" type="String" value="COM_COMPLETE"/>
                                 <if-compare field-name="communicationEvent.statusId" operator="equals" type="String" value="COM_RESOLVED"/>
@@ -474,9 +437,7 @@
                                 <!-- 
                                 <section>
                                     <condition>
-                                        <not>
-                                            <if-empty field-name="partyId"/>
-                                        </not>
+                                        <not><if-empty field-name="partyId"/></not>
                                     </condition>
                                     <widgets>
                                         <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
@@ -484,26 +445,14 @@
                                 </section>
                                 -->
                                 <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
-                                <label style="head1" text="&lt;br/&gt;${uiLabelMap.PartyListCommRoles}"/>
+                                <container><label style="head1" text="Communication Event Roles"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListCommRoles"/>
-                                 <section>
+                                <section>
                                     <condition>
                                         <if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <condition>
-                                                <not>
-                                                    <if-empty field-name="communicationEvent"/>
-                                                </not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="head1" text="&lt;br/&gt;${uiLabelMap.PartyEditCommRole}"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="head1" text="&lt;br/&gt;${uiLabelMap.PartyNewCommRole}"/>
-                                            </fail-widgets>
-                                        </section>
+                                        <container><label style="head1" text="Add Communication Event Role"/></container>
                                         <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="AddEventRole"/>
                                     </widgets>
                                 </section>
@@ -538,9 +487,7 @@
                 <section>
                     <condition>
                         <and>
-                            <not>
-                                <if-empty field-name="communicationEvent.statusId"/>
-                            </not>
+                            <not><if-empty field-name="communicationEvent.statusId"/></not>
                             <or>
                                 <if-compare field-name="communicationEvent.statusId" operator="equals" type="String" value="COM_COMPLETE"/>
                                 <if-compare field-name="communicationEvent.statusId" operator="equals" type="String" value="COM_RESOLVED"/>
@@ -574,26 +521,14 @@
                                 </section>
                                 -->
                                 <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
-                                <label style="head1" text="&lt;br/&gt;${uiLabelMap.PartyListCommPurposes}"/>
+                                <container><label style="head1" text="Communication Event Purposes"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListCommPurposes"/>
                                  <section>
                                     <condition>
                                         <if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <condition>
-                                                <not>
-                                                    <if-empty field-name="communicationEvent"/>
-                                                </not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="head1" text="&lt;br/&gt;${uiLabelMap.PartyEditCommPurpose}"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="head1" text="&lt;br/&gt;${uiLabelMap.PartyNewCommPurpose}"/>
-                                            </fail-widgets>
-                                        </section>
+                                        <container><label style="head1" text="Add Communication Event Purpose"/></container>
                                         <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="AddEventPurpose"/>
                                     </widgets>
                                 </section>
