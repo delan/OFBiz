@@ -60,20 +60,6 @@
     <menu name="CommEventTabBar" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" 
             default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
             orientation="horizontal" type="simple"  selected-menuitem-context-field-name="subTabButtonItem">
-            <!-- 
-        <menu-item name="task" title="${uiLabelMap.PartyNewTask}">
-            <link target="/workeffort/control/task?communicationEventId=${communicationEventId}" url-mode="inter-app"/>
-        </menu-item>
-        <menu-item name="event" title="${uiLabelMap.PartyNewEvent}">
-            <link target="/workeffort/control/event?communicationEventId=${communicationEventId}" url-mode="inter-app"/>
-        </menu-item>
-        <menu-item name="viewCommunicationEvent" title="${uiLabelMap.PartyNewCommunication}">
-            <link target="/viewCommunicationEvent?partyId=${partyId}&amp;partyIdFrom=${partyId}"/>
-        </menu-item>
-        <menu-item name="viewReply" title="[Reply]">
-            <link target="/viewCommunicationEvent?partyId=${partyId}&amp;partyIdTo=${partyId}&amp;parentCommEventId=${communicationEvent.communicationEventId}&amp;origCommEventId=${communicationEvent.origCommEventId}"/>
-        </menu-item>
-        -->
         <menu-item name="CommunicationEvent" title="CommEvent">
             <link target="/EditCommunicationEvent?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </menu-item>
@@ -86,9 +72,11 @@
         <menu-item name="ListCommWorkEfforts" title="WorkEfforts">
             <link target="/ListCommWorkEfforts?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </menu-item>
+        <!-- TODO! 
         <menu-item name="ListCommCustRequests" title="CustRequests">
             <link target="/ListCommCustRequests?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </menu-item>
+        -->
     </menu>
     <menu name="CommFindTabBar" default-menu-item-name="find" default-selected-style="tabButtonSelected" default-title-style="tabButton" 
             default-tooltip-style="tabletext" default-widget-style="tabButton" orientation="horizontal" type="simple">
