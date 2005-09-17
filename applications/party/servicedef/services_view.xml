@@ -117,13 +117,13 @@
         <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
         <override name="partyIdFrom" optional="false"/>
     </service>
-
     <service name="getRelatedParties" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="getRelatedParties">
         <description>
             Get Parties Related to a Party
             - The relatedPartyIdList coming out will include the original partyIdFrom
-            - The includeFromToSwitched and recurse attributes default to N.
+            - The includeFromToSwitched and recurse attributes should by "Y" or "N" and default to N.
+            - The useCache attribute should be "true" or "false", defaults to "false"
         </description>
         <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
         <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
@@ -133,6 +133,7 @@
         <attribute name="roleTypeIdToIncludeAllChildTypes" type="String" mode="IN" optional="true"/>
         <attribute name="includeFromToSwitched" type="String" mode="IN" optional="true"/>
         <attribute name="recurse" type="String" mode="IN" optional="true"/>
+        <attribute name="useCache" type="String" mode="IN" optional="true"/>
         <attribute name="relatedPartyIdList" type="List" mode="OUT" optional="false"/>
     </service>
 

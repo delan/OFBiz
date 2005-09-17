@@ -341,6 +341,7 @@
         <env-to-env env-name="parameters.roleTypeIdToIncludeAllChildTypes" to-env-name="roleTypeIdToIncludeAllChildTypes"/>
         <env-to-env env-name="parameters.includeFromToSwitched" to-env-name="includeFromToSwitched"/>
         <env-to-env env-name="parameters.recurse" to-env-name="recurse"/>
+        <env-to-env env-name="parameters.useCache" to-env-name="useCache"/>
         
         <call-simple-method method-name="followPartyRelationshipsInline"/>
 
@@ -358,6 +359,7 @@
              - roleTypeIdToIncludeAllChildTypes
              - includeFromToSwitched
              - recurse
+             - useCache (should be "true" or "false")
         -->
         
         <if-empty field-name="nowTimestamp"><now-timestamp-to-env env-name="nowTimestamp"/></if-empty>
@@ -390,7 +392,7 @@
                     <field-to-list field-name="relatedPartyId" list-name="_inline_relatedPartyIdAlreadySearchedList"/>
                     
                     <clear-field field-name="_inline_PartyRelationshipList"/>
-                    <entity-condition entity-name="PartyRelationship" list-name="_inline_PartyRelationshipList">
+                    <entity-condition entity-name="PartyRelationship" list-name="_inline_PartyRelationshipList" use-cache="${useCache}">
                         <condition-list combine="and">
                             <condition-expr field-name="partyIdFrom" env-name="relatedPartyId"/>
                             <condition-expr field-name="roleTypeIdFrom" operator="in" env-name="_inline_roleTypeIdFromList" ignore-if-empty="true"/>
@@ -423,7 +425,7 @@
                     
                     <if-compare field-name="includeFromToSwitched" operator="equals" value="Y">
                         <clear-field field-name="_inline_PartyRelationshipList"/>
-                        <entity-condition entity-name="PartyRelationship" list-name="_inline_PartyRelationshipList">
+                        <entity-condition entity-name="PartyRelationship" list-name="_inline_PartyRelationshipList" use-cache="${useCache}">
                             <condition-list combine="and">
                                 <condition-expr field-name="partyIdTo" env-name="relatedPartyId"/>
                                 <condition-expr field-name="roleTypeIdTo" operator="in" env-name="_inline_roleTypeIdFromList" ignore-if-empty="true"/>
