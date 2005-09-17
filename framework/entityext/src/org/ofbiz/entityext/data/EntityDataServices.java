@@ -397,7 +397,7 @@ public class EntityDataServices {
         if (fixSizes.booleanValue()) {
             Debug.logImportant("Updating column field size changes", module);
             List fieldsWrongSize = new LinkedList();
-            dbUtil.checkDb(modelEntities, fieldsWrongSize, messages, true, true, true);
+            dbUtil.checkDb(modelEntities, fieldsWrongSize, messages, true, true, true, true);
             if (fieldsWrongSize.size() > 0) {
                 dbUtil.repairColumnSizeChanges(modelEntities, fieldsWrongSize, messages);
             } else {

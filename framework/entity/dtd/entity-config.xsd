@@ -242,6 +242,14 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="check-pks-on-start" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute type="xs:nonNegativeInteger" name="constraint-name-clip-length" default="30"/>
         <xs:attribute name="use-proxy-cursor" default="false">
             <xs:simpleType>

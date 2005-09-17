@@ -95,12 +95,10 @@ public class DatabaseUtil {
     /* ====================================================================== */
 
     public void checkDb(Map modelEntities, List messages, boolean addMissing) {
-        checkDb(modelEntities, null, messages, (datasourceInfo.useFks && datasourceInfo.checkForeignKeysOnStart), (datasourceInfo.useFkIndices && datasourceInfo.checkFkIndicesOnStart), addMissing);
-        //checkDb(modelEntities, null, messages, false, addMissing);
+        checkDb(modelEntities, null, messages, datasourceInfo.checkPrimaryKeysOnStart, (datasourceInfo.useFks && datasourceInfo.checkForeignKeysOnStart), (datasourceInfo.useFkIndices && datasourceInfo.checkFkIndicesOnStart), addMissing);
     }
 
-    public void checkDb(Map modelEntities, List colWrongSize, List messages, boolean checkFks, boolean checkFkIdx, boolean addMissing) {
-    //public void checkDb(Map modelEntities, List colWrongSize, List messages, boolean justColumns, boolean addMissing) {
+    public void checkDb(Map modelEntities, List colWrongSize, List messages, boolean checkPks, boolean checkFks, boolean checkFkIdx, boolean addMissing) {
         UtilTimer timer = new UtilTimer();
         timer.timerString("Start - Before Get Database Meta Data");
 
@@ -118,7 +116,7 @@ public class DatabaseUtil {
         timer.timerString("After Get All Table Names");
 
         // get ALL column info, put into hashmap by table name
-        Map colInfo = this.getColumnInfo(tableNames, messages);
+        Map colInfo = this.getColumnInfo(tableNames, checkPks, messages);
         if (colInfo == null) {
             String message = "Could not get column information from the database, aborting.";
             if (messages != null) messages.add(message);
@@ -259,13 +257,13 @@ public class DatabaseUtil {
                                     }
 
                                     // do primary key matching check
-                                    if (ccInfo.isPk && !field.getIsPk()) {
+                                    if (checkPks && ccInfo.isPk && !field.getIsPk()) {
                                         String message = "WARNING: Column [" + ccInfo.columnName + "] of table [" + entity.getTableName(datasourceInfo) + "] of entity [" +
                                             entity.getEntityName() + "] IS a primary key in the database, but IS NOT a primary key in the entity definition. The primary key for this table needs to be re-created or modified so that this column is NOT party of the primary key.";
                                         Debug.logError(message, module);
                                         if (messages != null) messages.add(message);
                                     }
-                                    if (!ccInfo.isPk && field.getIsPk()) {
+                                    if (checkPks && !ccInfo.isPk && field.getIsPk()) {
                                         String message = "WARNING: Column [" + ccInfo.columnName + "] of table [" + entity.getTableName(datasourceInfo) + "] of entity [" +
                                             entity.getEntityName() + "] IS NOT a primary key in the database, but IS a primary key in the entity definition. The primary key for this table needs to be re-created or modified to add this column to the primary key. Note that data may need to be added first as a primary key column cannot have an null values.";
                                         Debug.logError(message, module);
@@ -278,7 +276,7 @@ public class DatabaseUtil {
                                     if (messages != null) messages.add(message);
                                 }
                             } else {
-                                String message = "Column [" + ccInfo.columnName + "] of table [" + entity.getTableName(datasourceInfo) + "] of entity [" + entity.getEntityName() + "] exists in the database but has no corresponding field" + (ccInfo.isPk ? " (and it is a PRIMARY KEY COLUMN)" : "");
+                                String message = "Column [" + ccInfo.columnName + "] of table [" + entity.getTableName(datasourceInfo) + "] of entity [" + entity.getEntityName() + "] exists in the database but has no corresponding field" + ((checkPks && ccInfo.isPk) ? " (and it is a PRIMARY KEY COLUMN)" : "");
                                 Debug.logWarning(message, module);
                                 if (messages != null) messages.add(message);
                             }
@@ -447,19 +445,23 @@ public class DatabaseUtil {
                             rcInfoMap.remove(relConstraintName);
                         } else {
                             // if not, create one
-                            if (Debug.verboseOn()) Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in entity " + entityName, module);
-                            String errMsg = createForeignKey(entity, modelRelation, relModelEntity, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred);
+                            String noFkMessage = "No Foreign Key Constraint [" + relConstraintName + "] found for entity [" + entityName + "]";
+                            if (messages != null) messages.add(noFkMessage);
+                            if (Debug.infoOn()) Debug.logInfo(noFkMessage, module);
 
-                            if (errMsg != null && errMsg.length() > 0) {
-                                String message = "Could not create foreign key " + relConstraintName + " for entity [" + entity.getEntityName() + "]: " + errMsg;
-                                Debug.logError(message, module);
-                                if (messages != null) messages.add(message);
-                            } else {
-                                String message = "Created foreign key " + relConstraintName + " for entity [" + entity.getEntityName() + "]";
-                                Debug.logVerbose(message, module);
-                                if (messages != null) messages.add(message);
-                                createdConstraints = true;
-                                numFksCreated++;
+                            if (addMissing) {
+                                String errMsg = createForeignKey(entity, modelRelation, relModelEntity, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred);
+                                if (errMsg != null && errMsg.length() > 0) {
+                                    String message = "Could not create foreign key " + relConstraintName + " for entity [" + entity.getEntityName() + "]: " + errMsg;
+                                    Debug.logError(message, module);
+                                    if (messages != null) messages.add(message);
+                                } else {
+                                    String message = "Created foreign key " + relConstraintName + " for entity [" + entity.getEntityName() + "]";
+                                    Debug.logVerbose(message, module);
+                                    if (messages != null) messages.add(message);
+                                    createdConstraints = true;
+                                    numFksCreated++;
+                                }
                             }
                         }
                     }
@@ -536,18 +538,23 @@ public class DatabaseUtil {
                                 tableIndexList.remove(relConstraintName);
                             } else {
                                 // if not, create one
-                                if (Debug.verboseOn()) Debug.logVerbose("No Index " + relConstraintName + " found for entity " + entityName, module);
-                                String errMsg = createForeignKeyIndex(entity, modelRelation, datasourceInfo.constraintNameClipLength);
-                                if (errMsg != null && errMsg.length() > 0) {
-                                    String message = "Could not create foreign key index " + relConstraintName + " for entity [" + entity.getEntityName() + "]: " + errMsg;
-                                    Debug.logError(message, module);
-                                    if (messages != null) messages.add(message);
-                                } else {
-                                    String message = "Created foreign key index " + relConstraintName + " for entity [" + entity.getEntityName() + "]";
-                                    Debug.logVerbose(message, module);
-                                    if (messages != null) messages.add(message);
-                                    createdConstraints = true;
-                                    numIndicesCreated++;
+                                String noIdxMessage = "No Index [" + relConstraintName + "] found for entity [" + entityName + "]";
+                                if (messages != null) messages.add(noIdxMessage);
+                                if (Debug.infoOn()) Debug.logInfo(noIdxMessage, module);
+
+                                if (addMissing) {
+                                    String errMsg = createForeignKeyIndex(entity, modelRelation, datasourceInfo.constraintNameClipLength);
+                                    if (errMsg != null && errMsg.length() > 0) {
+                                        String message = "Could not create foreign key index " + relConstraintName + " for entity [" + entity.getEntityName() + "]: " + errMsg;
+                                        Debug.logError(message, module);
+                                        if (messages != null) messages.add(message);
+                                    } else {
+                                        String message = "Created foreign key index " + relConstraintName + " for entity [" + entity.getEntityName() + "]";
+                                        Debug.logVerbose(message, module);
+                                        if (messages != null) messages.add(message);
+                                        createdConstraints = true;
+                                        numIndicesCreated++;
+                                    }
                                 }
                             }
                         }
@@ -582,7 +589,7 @@ public class DatabaseUtil {
         TreeSet tableNames = this.getTableNames(messages);
 
         // get ALL column info, put into hashmap by table name
-        Map colInfo = this.getColumnInfo(tableNames, messages);
+        Map colInfo = this.getColumnInfo(tableNames, true, messages);
 
         // go through each table and make a ModelEntity object, add to list
         // for each entity make corresponding ModelField objects
@@ -849,7 +856,7 @@ public class DatabaseUtil {
         return tableNames;
     }
 
-    public Map getColumnInfo(Set tableNames, Collection messages) {
+    public Map getColumnInfo(Set tableNames, boolean getPks, Collection messages) {
         // if there are no tableNames, don't even try to get the columns
         if (tableNames.size() == 0) {
             return FastMap.newInstance();
@@ -955,47 +962,49 @@ public class DatabaseUtil {
                     if (messages != null) messages.add(message);
                 }
 
-                ResultSet rsPks = dbData.getPrimaryKeys(null, lookupSchemaName, null);
-                while (rsPks.next()) {
+                if (getPks) {
+                    ResultSet rsPks = dbData.getPrimaryKeys(null, lookupSchemaName, null);
+                    while (rsPks.next()) {
+                        try {
+                            String tableName = ColumnCheckInfo.fixupTableName(rsPks.getString("TABLE_NAME"), lookupSchemaName, needsUpperCase);
+                            String columnName = rsPks.getString("COLUMN_NAME");
+                            if (needsUpperCase && columnName != null) {
+                                columnName = columnName.toUpperCase();
+                            }
+                            Map tableColInfo = (Map) colInfo.get(tableName);
+                            if (tableColInfo == null) {
+                                // not looking for info on this table
+                                continue;
+                            }
+                            ColumnCheckInfo ccInfo = (ColumnCheckInfo) tableColInfo.get(columnName);
+                            if (ccInfo == null) {
+                                // this isn't good, what to do?
+                                Debug.logWarning("Got primary key information for a column that we didn't get column information for: tableName=[" + tableName + "], columnName=[" + columnName + "]", module);
+                                continue;
+                            }
+                            
+                            /*
+                            KEY_SEQ short => sequence number within primary key
+                            PK_NAME String => primary key name (may be null)
+                            */
+                            ccInfo.isPk = true;
+                            ccInfo.pkSeq = rsPks.getShort("KEY_SEQ");
+                            ccInfo.pkName = rsPks.getString("PK_NAME");
+                        } catch (SQLException sqle) {
+                            String message = "Error getting primary key info for column. Error was:" + sqle.toString();
+                            Debug.logError(message, module);
+                            if (messages != null) messages.add(message);
+                            continue;
+                        }
+                    }
+
                     try {
-                        String tableName = ColumnCheckInfo.fixupTableName(rsPks.getString("TABLE_NAME"), lookupSchemaName, needsUpperCase);
-                        String columnName = rsPks.getString("COLUMN_NAME");
-                        if (needsUpperCase && columnName != null) {
-                            columnName = columnName.toUpperCase();
-                        }
-                        Map tableColInfo = (Map) colInfo.get(tableName);
-                        if (tableColInfo == null) {
-                            // not looking for info on this table
-                            continue;
-                        }
-                        ColumnCheckInfo ccInfo = (ColumnCheckInfo) tableColInfo.get(columnName);
-                        if (ccInfo == null) {
-                            // this isn't good, what to do?
-                            Debug.logWarning("Got primary key information for a column that we didn't get column information for: tableName=[" + tableName + "], columnName=[" + columnName + "]", module);
-                            continue;
-                        }
-                        
-                        /*
-                        KEY_SEQ short => sequence number within primary key
-                        PK_NAME String => primary key name (may be null)
-                        */
-                        ccInfo.isPk = true;
-                        ccInfo.pkSeq = rsPks.getShort("KEY_SEQ");
-                        ccInfo.pkName = rsPks.getString("PK_NAME");
+                        rsPks.close();
                     } catch (SQLException sqle) {
-                        String message = "Error getting primary key info for column. Error was:" + sqle.toString();
+                        String message = "Unable to close ResultSet for primary key list, continuing anyway... Error was:" + sqle.toString();
                         Debug.logError(message, module);
                         if (messages != null) messages.add(message);
-                        continue;
                     }
-                }
-
-                try {
-                    rsPks.close();
-                } catch (SQLException sqle) {
-                    String message = "Unable to close ResultSet for primary key list, continuing anyway... Error was:" + sqle.toString();
-                    Debug.logError(message, module);
-                    if (messages != null) messages.add(message);
                 }
             } catch (SQLException sqle) {
                 String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";

@@ -59,6 +59,7 @@
             <br/>
             <div class="tabletext">This application is primarily intended for developers and system administrators.</div>
             <ul>
+              <%if (security.hasPermission("UTIL_CACHE_VIEW", session) || security.hasPermission("UTIL_DEBUG_VIEW", session)) {%>
                 <li><div class="tabletext">Cache &amp; Debug Tools</div>
                 <ul>
                   <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
@@ -68,6 +69,7 @@
                     <li><a href="<ofbiz:url>/debuglevels</ofbiz:url>" class="linktext">Adjust Debugging Levels</a>
                   <%}%>
                 </ul>
+              <%}%>
               <%if(security.hasPermission("ENTITY_MAINT", session)){%>
                 <li><div class="tabletext">Entity Engine Tools</div>
                 <ul>
