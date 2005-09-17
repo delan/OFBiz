@@ -1010,7 +1010,7 @@ public class ModelForm {
         } else if (obj instanceof List) {
             items = (List) obj;
             iter = items.listIterator();
-            setPaginate(false);
+            setPaginate(true);
         }
         // set low and high index
 
