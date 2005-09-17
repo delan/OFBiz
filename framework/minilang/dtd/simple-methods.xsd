@@ -766,14 +766,7 @@
         <xs:attribute type="xs:string" name="entity-name"/>
         <xs:attribute type="xs:string" name="map-name" use="required"/>
         <xs:attribute type="xs:string" name="value-name" use="required"/>
-        <xs:attribute name="use-cache" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute type="xs:string" name="use-cache" default="false"/>
         <xs:attribute type="xs:string" name="fields-to-select-list"/>
         <xs:attribute type="xs:string" name="delegator-name"/>
     </xs:attributeGroup>
@@ -787,14 +780,7 @@
         <xs:attribute type="xs:string" name="map-name" use="required"/>
         <xs:attribute type="xs:string" name="order-by-list-name"/>
         <xs:attribute type="xs:string" name="delegator-name"/>
-        <xs:attribute name="use-cache" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute type="xs:string" name="use-cache" default="false"/>
         <xs:attribute name="use-iterator" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -817,14 +803,7 @@
     <xs:attributeGroup name="attlist.entity-one">
         <xs:attribute name="entity-name" type="xs:string" use="required"/>
         <xs:attribute name="value-name" type="xs:string" use="required"/>
-        <xs:attribute name="use-cache" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute type="xs:string" name="use-cache" default="false"/>
         <xs:attribute name="auto-field-map" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -851,14 +830,7 @@
     </xs:element>
     <xs:attributeGroup name="attlist.entity-and">
         <xs:attribute name="entity-name" type="xs:string" use="required"/>
-        <xs:attribute name="use-cache" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute type="xs:string" name="use-cache" default="false"/>
         <xs:attribute name="filter-by-date" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -892,14 +864,7 @@
     </xs:element>
     <xs:attributeGroup name="attlist.entity-condition">
         <xs:attribute name="entity-name" type="xs:string" use="required"/>
-        <xs:attribute name="use-cache" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute type="xs:string" name="use-cache" default="false"/>
         <xs:attribute name="filter-by-date" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1082,14 +1047,7 @@
     <xs:attributeGroup name="attlist.get-related-one">
         <xs:attribute name="value-name" type="xs:string" use="required"/>
         <xs:attribute name="relation-name" type="xs:string" use="required"/>
-        <xs:attribute name="use-cache" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute type="xs:string" name="use-cache" default="false"/>
         <xs:attribute type="xs:string" name="to-value-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="get-related" substitutionGroup="EntityFindOperations">
@@ -1102,14 +1060,7 @@
         <xs:attribute type="xs:string" name="relation-name" use="required"/>
         <xs:attribute type="xs:string" name="map-name"/>
         <xs:attribute type="xs:string" name="order-by-list-name"/>
-        <xs:attribute name="use-cache" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute type="xs:string" name="use-cache" default="false"/>
         <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="order-value-list" substitutionGroup="EntityFindOperations">
