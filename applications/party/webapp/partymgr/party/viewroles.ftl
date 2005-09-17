@@ -55,7 +55,7 @@
                 <td align="left" valign="top" width="70%"><div class="tabletext">${userRole.description} [${userRole.roleTypeId}]</div></td>
                 <#if hasDeletePermission>
                 <td align="right" valign="top" width="20%">
-                  <a href="<@ofbizUrl>/deleterole?partyId=${partyId}&roleTypeId=${userRole.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>&nbsp;
+                  <a href="<@ofbizUrl>/deleterole?partyId=${partyId}&roleTypeId=${userRole.roleTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>&nbsp;
                 </td>
                 </#if>
               </tr>
@@ -88,7 +88,7 @@
             </select>
           </td>
           <td>
-            <a href="javascript:document.addPartyRole.submit()" class="buttontext">[${uiLabelMap.CommonAdd}]</a>&nbsp;&nbsp;
+            <a href="javascript:document.addPartyRole.submit()" class="buttontext">${uiLabelMap.CommonAdd}</a>&nbsp;&nbsp;
           </td>
         </tr>
         </form>
@@ -129,7 +129,7 @@
           <td width="16%"><div class="tabletext">${uiLabelMap.CommonDescription}</div></td>
           <td width="84%">
             <input type="text" name="description" size="30" class="inputBox">*
-            &nbsp;&nbsp;<a href="javascript:document.createroleform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
+            &nbsp;&nbsp;<a href="javascript:document.createroleform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
           </td>
         </tr>
         </form>

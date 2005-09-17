@@ -76,7 +76,7 @@ function submitForm(form, mode, value) {
                   <td>
                     <div>
                       <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
-                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
+                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="buttontext">${uiLabelMap.PartyAddNewAddress}</a>
                     </div>
                     <div>
                       <#assign selectedContactMechId = cart.getShippingContactMechId(groupIdx)?default("")>
@@ -259,10 +259,10 @@ function submitForm(form, mode, value) {
 <table>
   <tr valign="top">
     <td align="left">
-      &nbsp;<a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderBacktoShoppingCart}]</a>
+      &nbsp;<a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
     </td>
     <td align="right">
-      <a href="<@ofbizUrl>/view/checkoutpayment</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonContinue}]</a>
+      <a href="<@ofbizUrl>/view/checkoutpayment</@ofbizUrl>" class="buttontextbig">${uiLabelMap.CommonContinue}</a>
     </td>
   </tr>
 </table>
