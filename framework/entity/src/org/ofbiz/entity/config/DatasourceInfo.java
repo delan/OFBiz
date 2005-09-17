@@ -64,6 +64,7 @@ public class DatasourceInfo {
     public boolean addMissingOnStart = false;
     public boolean useFks = true;
     public boolean useFkIndices = true;
+    public boolean checkPrimaryKeysOnStart = false;
     public boolean checkForeignKeysOnStart = false;
     public boolean checkFkIndicesOnStart = false;
     public boolean usePkConstraintNames = true;
@@ -97,6 +98,7 @@ public class DatasourceInfo {
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-schemas (true)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-on-start (true)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for add-missing-on-start (false)", module);
+            Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-pks-on-start (true)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-foreign-keys (true)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default use-foreign-key-indices (true)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-fks-on-start (false)", module);
@@ -114,57 +116,59 @@ public class DatasourceInfo {
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for character-set (none)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for collate (none)", module);
         } else {
-            schemaName = datasourceElement.getAttribute("schema-name");
+            this.schemaName = datasourceElement.getAttribute("schema-name");
             // anything but false is true
-            useSchemas = !"false".equals(datasourceElement.getAttribute("use-schemas"));
+            this.useSchemas = !"false".equals(datasourceElement.getAttribute("use-schemas"));
             // anything but false is true
-            checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
+            this.checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
+            // anything but false is true
+            this.checkPrimaryKeysOnStart = !"false".equals(datasourceElement.getAttribute("check-pks-on-start"));
             // anything but true is false
-            addMissingOnStart = "true".equals(datasourceElement.getAttribute("add-missing-on-start"));
+            this.addMissingOnStart = "true".equals(datasourceElement.getAttribute("add-missing-on-start"));
             // anything but false is true
-            useFks = !"false".equals(datasourceElement.getAttribute("use-foreign-keys"));
+            this.useFks = !"false".equals(datasourceElement.getAttribute("use-foreign-keys"));
             // anything but false is true
-            useFkIndices = !"false".equals(datasourceElement.getAttribute("use-foreign-key-indices"));
+            this.useFkIndices = !"false".equals(datasourceElement.getAttribute("use-foreign-key-indices"));
             // anything but true is false
-            checkForeignKeysOnStart = "true".equals(datasourceElement.getAttribute("check-fks-on-start"));
+            this.checkForeignKeysOnStart = "true".equals(datasourceElement.getAttribute("check-fks-on-start"));
             // anything but true is false
-            checkFkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-fk-indices-on-start"));
+            this.checkFkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-fk-indices-on-start"));
             // anything but false is true
-            usePkConstraintNames = !"false".equals(datasourceElement.getAttribute("use-pk-constraint-names"));
+            this.usePkConstraintNames = !"false".equals(datasourceElement.getAttribute("use-pk-constraint-names"));
             try {
-                constraintNameClipLength = Integer.parseInt(datasourceElement.getAttribute("constraint-name-clip-length"));
+                this.constraintNameClipLength = Integer.parseInt(datasourceElement.getAttribute("constraint-name-clip-length"));
             } catch (Exception e) {
                 Debug.logError("Could not parse constraint-name-clip-length value for datasource with name " + this.name + ", using default value of 30", module);
             }
-            useProxyCursor = "true".equalsIgnoreCase(datasourceElement.getAttribute("use-proxy-cursor"));
-            cursorName = datasourceElement.getAttribute("proxy-cursor-name");
+            this.useProxyCursor = "true".equalsIgnoreCase(datasourceElement.getAttribute("use-proxy-cursor"));
+            this.cursorName = datasourceElement.getAttribute("proxy-cursor-name");
             try {
-                resultFetchSize = Integer.parseInt(datasourceElement.getAttribute("result-fetch-size"));
+                this.resultFetchSize = Integer.parseInt(datasourceElement.getAttribute("result-fetch-size"));
             } catch (Exception e) {
                 Debug.logWarning("Could not parse result-fetch-size value for datasource with name " + this.name + ", using JDBC driver default value", module);
             }
-            fkStyle = datasourceElement.getAttribute("fk-style");
+            this.fkStyle = datasourceElement.getAttribute("fk-style");
             // anything but true is false
-            useFkInitiallyDeferred = "true".equals(datasourceElement.getAttribute("use-fk-initially-deferred"));
+            this.useFkInitiallyDeferred = "true".equals(datasourceElement.getAttribute("use-fk-initially-deferred"));
             // anything but false is true
-            useIndices = !"false".equals(datasourceElement.getAttribute("use-indices"));
+            this.useIndices = !"false".equals(datasourceElement.getAttribute("use-indices"));
             // anything but true is false
-            checkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-indices-on-start"));
-            joinStyle = datasourceElement.getAttribute("join-style");
-            aliasViews = !"false".equals(datasourceElement.getAttribute("alias-view-columns"));
+            this.checkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-indices-on-start"));
+            this.joinStyle = datasourceElement.getAttribute("join-style");
+            this.aliasViews = !"false".equals(datasourceElement.getAttribute("alias-view-columns"));
             // anything but true is false
-            alwaysUseConstraintKeyword = "true".equals(datasourceElement.getAttribute("always-use-constraint-keyword"));
-            dropFkUseForeignKeyKeyword = "true".equals(datasourceElement.getAttribute("drop-fk-use-foreign-key-keyword"));
+            this.alwaysUseConstraintKeyword = "true".equals(datasourceElement.getAttribute("always-use-constraint-keyword"));
+            this.dropFkUseForeignKeyKeyword = "true".equals(datasourceElement.getAttribute("drop-fk-use-foreign-key-keyword"));
             
             this.tableType = datasourceElement.getAttribute("table-type");
             this.characterSet = datasourceElement.getAttribute("character-set");
             this.collate = datasourceElement.getAttribute("collate");
         }
-        if (fkStyle == null || fkStyle.length() == 0) fkStyle = "name_constraint";
-        if (joinStyle == null || joinStyle.length() == 0) joinStyle = "ansi";
+        if (this.fkStyle == null || this.fkStyle.length() == 0) this.fkStyle = "name_constraint";
+        if (this.joinStyle == null || this.joinStyle.length() == 0) this.joinStyle = "ansi";
 
-        jndiJdbcElement = UtilXml.firstChildElement(datasourceElement, "jndi-jdbc");
-        tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
-        inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
+        this.jndiJdbcElement = UtilXml.firstChildElement(datasourceElement, "jndi-jdbc");
+        this.tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
+        this.inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
     }
 }
