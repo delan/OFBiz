@@ -82,30 +82,32 @@ public class WidgetWorker {
     }
 
     public static void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description, HttpServletRequest request, HttpServletResponse response, Map context, String targetWindow) {
-        buffer.append("<a");
+        if (UtilValidate.isNotEmpty(description)) {
+            buffer.append("<a");
 
-        if (UtilValidate.isNotEmpty(linkStyle)) {
-            buffer.append(" class=\"");
-            buffer.append(linkStyle);
+            if (UtilValidate.isNotEmpty(linkStyle)) {
+                buffer.append(" class=\"");
+                buffer.append(linkStyle);
+                buffer.append("\"");
+            }
+
+            buffer.append(" href=\"");
+
+            WidgetWorker.buildHyperlinkUrl(buffer, target, targetType, request, response, context);
+
             buffer.append("\"");
+            
+            if (UtilValidate.isNotEmpty(targetWindow)) {
+                buffer.append(" target=\"");
+                buffer.append(targetWindow);
+                buffer.append("\"");
+            }
+
+
+            buffer.append('>');
+
+            buffer.append(description);
+            buffer.append("</a>");
         }
-
-        buffer.append(" href=\"");
-
-        WidgetWorker.buildHyperlinkUrl(buffer, target, targetType, request, response, context);
-
-        buffer.append("\"");
-        
-        if (UtilValidate.isNotEmpty(targetWindow)) {
-            buffer.append(" target=\"");
-            buffer.append(targetWindow);
-            buffer.append("\"");
-        }
-
-
-        buffer.append('>');
-
-        buffer.append(description);
-        buffer.append("</a>");
     }
 }
