@@ -51,6 +51,9 @@
         <menu-item name="WorkEffort" title="${uiLabelMap.WorkEffort}">
             <link target="/EditWorkEffort?workEffortId=${workEffortId}"/>
         </menu-item>
+        <menu-item name="WorkEffortRelatedSummary" title="${uiLabelMap.WorkEffortRelatedSummary}">
+            <link target="/ListWorkEffortRelatedSummary?workEffortId=${workEffortId}"/>
+        </menu-item>
         <menu-item name="WorkEffortAssocs" title="${uiLabelMap.WorkEffortRelated}">
             <link target="/ChildWorkEfforts?trail=${workEffortId}"/>
         </menu-item>

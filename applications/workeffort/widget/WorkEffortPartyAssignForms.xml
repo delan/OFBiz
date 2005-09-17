@@ -34,8 +34,8 @@
             <hyperlink also-hidden="false" description="[${workEffortId}]" target="EditWorkEffortPartyAssign?workEffortId=${workEffortId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}&amp;fromDate=${fromDate}"  link-style="linktext"/>
         </field>
         <field name="partyId" title="${uiLabelMap.WorkEffortParty}" widget-style="buttontext">
-            <display-entity entity-name="Person">
-                <sub-hyperlink target="/party/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${first_name} ${last_name}" link-style="linktext"/>
+            <display-entity entity-name="Person" description="${firstName} ${lastName}">
+                <sub-hyperlink target="/party/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" link-style="linktext"/>
             </display-entity>
         </field>
         <field name="fromDate"> <display/> </field>

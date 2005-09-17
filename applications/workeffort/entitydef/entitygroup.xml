@@ -76,5 +76,10 @@
     <entity-group group="org.ofbiz" entity="WorkEffortAndGoods" />
     <entity-group group="org.ofbiz" entity="WorkEffortAndInventoryAssign" />
     <entity-group group="org.ofbiz" entity="WorkEffortAndInventoryProduced" />
+    <entity-group group="org.ofbiz" entity="WorkEffortPartyAssignView" />
+    <entity-group group="org.ofbiz" entity="WorkEffortCommunicationEventView" />
+    <entity-group group="org.ofbiz" entity="WorkEffortShoppingListView" />
+    <entity-group group="org.ofbiz" entity="WorkEffortQuoteView" />
+    <entity-group group="org.ofbiz" entity="WorkEffortOrderHeaderView" />
 </entitygroup>
 
