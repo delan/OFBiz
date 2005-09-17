@@ -898,6 +898,33 @@ public class ShoppingCartEvents {
       return "success";
   }
 
+    public static String createQuoteFromCart(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        
+        ShoppingCart cart = getCartObject(request);
+        Map result = null;
+        String quoteId = null;
+        try {
+            result = dispatcher.runSync("createQuoteFromCart", 
+                                             UtilMisc.toMap("cart", cart,
+                                                            "userLogin", userLogin));
+            quoteId = (String)result.get("quoteId");
+        } catch(Exception exc) {
+            request.setAttribute("_ERROR_MESSAGE_", exc.getMessage());
+            return "error";
+        }
+        if (ServiceUtil.isError(result)) {
+           request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+           return "error";
+        }
+        request.setAttribute("quoteId", quoteId);
+        ShoppingCartEvents.destroyCart(request, response);
+        
+        return "success";
+    }
+
   /** Initialize order entry **/
   public static String initializeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
       GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");

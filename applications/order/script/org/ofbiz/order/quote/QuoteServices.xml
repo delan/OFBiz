@@ -554,6 +554,59 @@
         <store-value value-name="quoteAdjustment"/>
         <check-errors/>
     </simple-method>
+    
+    <simple-method method-name="createQuoteFromCart" short-description="Create a Quote from a Cart">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunAutoUpdateQuotePrice"/>
+        </check-permission>
+        <check-errors/>
+
+        <call-object-method obj-field-name="parameters.cart" method-name="getCurrency" ret-field-name="createQuoteInMap.currencyUomId"/>
+        <call-object-method obj-field-name="parameters.cart" method-name="getProductStoreId" ret-field-name="createQuoteInMap.productStoreId"/>
+        <call-object-method obj-field-name="parameters.cart" method-name="getPartyId" ret-field-name="createQuoteInMap.partyId"/>
+        <string-to-field string="PRODUCT_QUOTE" field-name="createQuoteInMap.quoteTypeId"/>
+        <string-to-field string="QUO_CREATED" field-name="createQuoteInMap.statusId"/>
+        <call-service service-name="createQuote" in-map-name="createQuoteInMap">
+            <result-to-field result-name="quoteId" field-name="quoteId"/>
+        </call-service>
+        <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+
+        <!-- create, for every cart item, a quote item -->
+        <call-object-method obj-field-name="parameters.cart" method-name="items" ret-field-name="items"/>
+        <iterate list-name="items" entry-name="item">
+            <!-- a new quote item is created -->
+            <clear-field field-name="createQuoteItemInMap"/>
+            <field-to-field field-name="quote.quoteId" to-field-name="createQuoteItemInMap.quoteId"/>
+            <call-object-method obj-field-name="item" method-name="getProductId" ret-field-name="createQuoteItemInMap.productId"/>
+            <call-object-method obj-field-name="item" method-name="getQuantity" ret-field-name="createQuoteItemInMap.quantity"/>
+            <call-object-method obj-field-name="item" method-name="getSelectedAmount" ret-field-name="createQuoteItemInMap.selectedAmount"/>
+            <call-object-method obj-field-name="item" method-name="getBasePrice" ret-field-name="createQuoteItemInMap.quoteUnitPrice"/>
+            <call-object-method obj-field-name="item" method-name="getItemComment" ret-field-name="createQuoteItemInMap.comments"/>
+            <call-object-method obj-field-name="item" method-name="getIsPromo" ret-field-name="isPromo"/>
+            <if-compare field-name="isPromo" value="true" operator="equals" type="Boolean">
+                <string-to-field string="Y" field-name="createQuoteItemInMap.isPromo"/>
+            </if-compare>
+            <call-service service-name="createQuoteItem" in-map-name="createQuoteItemInMap">
+                <result-to-field result-name="quoteItemSeqId" field-name="quoteItemSeqId"/>
+            </call-service>
+            <!-- and the quoteItemSeqId is assigned to the shopping cart item (as orderItemSeqId) -->
+            <call-object-method obj-field-name="item" method-name="setOrderItemSeqId">
+                <field field-name="quoteItemSeqId" type="String"/>
+            </call-object-method>
+        </iterate>
+
+        <call-object-method obj-field-name="parameters.cart" method-name="makeAllQuoteAdjustments" ret-field-name="adjustments"/>
+
+        <iterate list-name="adjustments" entry-name="adjustment">
+            <field-to-field field-name="quote.quoteId" to-field-name="adjustment.quoteId"/>
+            <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="quoteAdjustmentId"/>
+            <field-to-field field-name="quoteAdjustmentId" to-field-name="adjustment.quoteAdjustmentId"/>
+            <create-value value-name="adjustment"/>
+        </iterate>
+        
+        <field-to-result field-name="quote.quoteId" result-name="quoteId"/>
+    </simple-method>
+
     <!--Quote workeffort -->
     <simple-method method-name="createQuoteWorkEffort" short-description="Create a QuoteWorkEffort">
         <make-value entity-name="QuoteWorkEffort" value-name="lookupMap"/>
