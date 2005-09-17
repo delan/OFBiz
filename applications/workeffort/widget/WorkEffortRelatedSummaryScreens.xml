@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: CommonScreens.xml 5462 2005-08-05 18:35:48Z jonesde $
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="ListWorkEffortRelatedSummary">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleWorkEffortRelatedSummary"/>
+                <set field="tabButtonItem" value="WorkEffortRelatedSummary"/>
+                <set field="labelTitleProperty" value="PageTitleWorkEffortRelatedSummary"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <entity-and entity-name="WorkEffortPartyAssignView" list-name="relatedPartyAssigns">
+                    <field-map field-name="workEffortId"/>
+                </entity-and>
+                <entity-and entity-name="WorkEffortCommunicationEventView" list-name="commEvents">
+                    <field-map field-name="workEffortId"/>
+                </entity-and>
+                <entity-and entity-name="WorkEffortShoppingListView" list-name="shoppingLists">
+                    <field-map field-name="workEffortId"/>
+                </entity-and>
+                <entity-and entity-name="WorkEffortQuoteView" list-name="quotes">
+                    <field-map field-name="workEffortId"/>
+                </entity-and>
+                <entity-and entity-name="WorkEffortOrderHeaderView" list-name="orderHeaders">
+                    <field-map field-name="workEffortId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                    <decorator-section name="body">
+                        <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} for workEffortId=${workEffortId}</label>
+                        <container><label style="head1">${uiLabelMap.PartyAssignments}</label></container>
+                        <iterate-section list-name="relatedPartyAssigns" entry-name="partyAssign">
+                            <section>
+                                <condition>
+                                    <if-compare field-name="partyAssign.partyTypeId" operator="equals" value="PERSON"/>
+                                </condition>
+                                <widgets>
+                                    <container style="treeWrapper">
+                                        <link target="/EditWorkEffortPartyAssign?workEffortId=${partyAssign.workEffortId}&amp;partyId=${partyAssign.partyId}" text="[${partyAssign.partyId}]" style="linktext"/>
+                                        <label text="${partyAssign.firstName} ${partyAssign.lastName}"/>
+                                    </container>
+                                </widgets>
+                            </section>
+                            <section>
+                                <condition>
+                                    <if-compare field-name="partyAssign.partyTypeId" operator="equals" value="PARTY_GROUP"/>
+                                </condition>
+                                <widgets>
+                                    <container style="treeWrapper">
+                                        <link target="/EditWorkEffortPartyAssign?workEffortId=${partyAssign.workEffortId}&amp;partyId=${partyAssign.partyId}" text="[${partyAssign.partyId}]" style="linktext"/>
+                                        <label text="${partyAssign.groupName}"/>
+                                    </container>
+                                </widgets>
+                            </section>
+                        </iterate-section>
+                        
+                        <container><label style="head1">${uiLabelMap.CommunicationEvents}</label></container>
+                        <iterate-section list-name="commEvents" entry-name="commEvent">
+                            <section>
+                                <widgets>
+                                    <container style="treeWrapper">
+                                        <link target="/EditWorkEffortCommEvent?workEffortId=${commEvent.workEffortId}&amp;communicationEventId=${commEvent.communicationEventId}" text="[${commEvent.communicationEventId}]" style="linktext"/>
+                                        <label text="${commEvent.subject} ${commEvent.content}"/>
+                                    </container>
+                                </widgets>
+                            </section>
+                        </iterate-section>
+                        
+                        <container><label style="head1">${uiLabelMap.ShoppingLists}</label></container>
+                        <iterate-section list-name="shoppingLists" entry-name="shopList">
+                            <section>
+                                <widgets>
+                                    <container style="treeWrapper">
+                                        <link target="/EditWorkEffortShopList?workEffortId=${shopList.workEffortId}&amp;shoppingListId=${shopList.shoppingListId}" text="[${shopList.shoppingListId}]" style="linktext"/>
+                                        <label text="${shopList.listName} ${shopList.description}"/>
+                                    </container>
+                                </widgets>
+                            </section>
+                        </iterate-section>
+                        
+                        <container><label style="head1">${uiLabelMap.Quotes}</label></container>
+                        <iterate-section list-name="quotes" entry-name="quote">
+                            <section>
+                                <widgets>
+                                    <container style="treeWrapper">
+                                        <link target="/EditWorkEffortQuote?workEffortId=${quote.workEffortId}&amp;quoteId=${quote.quoteId}" text="[${quote.quoteId}]" style="linktext"/>
+                                        <label text="${quote.quoteName} ${quote.description}"/>
+                                    </container>
+                                </widgets>
+                            </section>
+                        </iterate-section>
+                        
+                        <container><label style="head1">${uiLabelMap.OrderHeaders}</label></container>
+                        <iterate-section list-name="orderHeaders" entry-name="orderHeader">
+                            <section>
+                                <widgets>
+                                    <container style="treeWrapper">
+                                        <link target="/EditWorkEffortOrderHeader?workEffortId=${orderHeader.workEffortId}&amp;orderId=${orderHeader.orderId}" text="[${orderHeader.orderId}]" style="linktext"/>
+                                    </container>
+                                </widgets>
+                            </section>
+                        </iterate-section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>
+

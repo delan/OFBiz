@@ -851,6 +851,12 @@
         <response name="error" type="view" value="ListWorkEffortOrderHeaders"/>
     </request-map>
     
+    
+    <!--  WorkEffort Related Summary request mappings -->
+    <request-map uri="ListWorkEffortRelatedSummary">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListWorkEffortRelatedSummary"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -936,6 +942,8 @@
     <view-map name="AddWorkEffortOrderHeader" type="screen" page="component://workeffort/widget/WorkEffortOrderHeaderScreens.xml#AddWorkEffortOrderHeader"/>
     <view-map name="EditWorkEffortOrderHeader" type="screen" page="component://workeffort/widget/WorkEffortOrderHeaderScreens.xml#EditWorkEffortOrderHeader"/>
     <view-map name="ListWorkEffortOrderHeaders" type="screen" page="component://workeffort/widget/WorkEffortOrderHeaderScreens.xml#ListWorkEffortOrderHeaders"/>
+
+    <view-map name="ListWorkEffortRelatedSummary" type="screen" page="component://workeffort/widget/WorkEffortRelatedSummaryScreens.xml#ListWorkEffortRelatedSummary"/>
     
     <!-- end of view mappings -->
 </site-conf>

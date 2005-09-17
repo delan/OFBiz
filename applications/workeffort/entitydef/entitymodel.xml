@@ -1115,4 +1115,110 @@
         <key-map field-name="inventoryItemId"></key-map>
       </view-link>
     </view-entity>
+    <view-entity entity-name="WorkEffortPartyAssignView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort And Party Assignment and PartyNameView">
+      <description>Ties WEPA to the party info.</description>
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
+      <member-entity entity-alias="PNV" entity-name="PartyNameView"/>
+      <alias-all entity-alias="PNV"/>
+      <alias-all entity-alias="WEPA"/>
+      <view-link entity-alias="WEPA" rel-entity-alias="PNV">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="workEffortId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyNameView">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="WorkEffortCommunicationEventView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort And CommunicationEvent">
+      <description>Ties WECommEvent to CommunicationEvent.</description>
+      <member-entity entity-alias="CEWE" entity-name="CommunicationEventWorkEff"/>
+      <member-entity entity-alias="CE" entity-name="CommunicationEvent"/>
+      <alias-all entity-alias="CEWE"/>
+      <alias-all entity-alias="CE"/>
+      <view-link entity-alias="CEWE" rel-entity-alias="CE">
+        <key-map field-name="communicationEventId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CommunicationEvent">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="WorkEffortShoppingListView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort And ShoppingList">
+      <description>Ties ShoppingListWE to ShoppingList.</description>
+      <member-entity entity-alias="SLWE" entity-name="ShoppingListWorkEffort"/>
+      <member-entity entity-alias="SL" entity-name="ShoppingList"/>
+      <alias-all entity-alias="SLWE"/>
+      <alias-all entity-alias="SL"/>
+      <view-link entity-alias="SLWE" rel-entity-alias="SL">
+        <key-map field-name="shoppingListId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ShoppingList">
+        <key-map field-name="shoppingListId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="WorkEffortQuoteView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort And Quote">
+      <description>Ties QuoteWE to Quote.</description>
+      <member-entity entity-alias="QWE" entity-name="QuoteWorkEffort"/>
+      <member-entity entity-alias="Q" entity-name="Quote"/>
+      <alias-all entity-alias="QWE"/>
+      <alias-all entity-alias="Q"/>
+      <view-link entity-alias="QWE" rel-entity-alias="Q">
+        <key-map field-name="quoteId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Quote">
+        <key-map field-name="quoteId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="WorkEffortOrderHeaderView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort And OrderHeader">
+      <description>Ties OrderHeaderWE to OrderHeader.</description>
+      <member-entity entity-alias="OHWE" entity-name="OrderHeaderWorkEffort"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <alias-all entity-alias="OHWE"/>
+      <alias-all entity-alias="OH"/>
+      <view-link entity-alias="OHWE" rel-entity-alias="OH">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+    </view-entity>
 </entitymodel>
