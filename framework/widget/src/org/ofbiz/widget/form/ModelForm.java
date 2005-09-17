@@ -586,6 +586,9 @@ public class ModelForm {
             if (curPos > positions) {
                 positions = curPos;
             }
+            ModelFormField.FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
+            ModelFormField fieldInfoFormField = currentFieldInfo.getModelFormField();
+            fieldInfoFormField.setModelForm(this);
        }
 
         if ("single".equals(this.type)) {
