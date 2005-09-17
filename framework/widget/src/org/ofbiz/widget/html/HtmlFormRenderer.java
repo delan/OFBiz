@@ -200,7 +200,6 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     public void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description, String targetWindow) {
-
         Map context = null;
         WidgetWorker.makeHyperlinkString(buffer, linkStyle, targetType, target, description, this.request, this.response, context, targetWindow);
     }
