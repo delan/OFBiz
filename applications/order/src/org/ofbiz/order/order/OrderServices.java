@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -2438,8 +2439,19 @@ public class OrderServices {
 
                     // check to see if this party has a tax ID for this, and if the party is tax exempt in the primary (most-local) jurisdiction
                     if (UtilValidate.isNotEmpty(billToPartyId) && primaryGeoId != null) {
+                        // see if partyId is a member of any groups , if so honor their tax exemptions
+                        // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, the partyIdTo is the group member, so the partyIdFrom is the groupPartyId
+                        Set billToPartyIdSet = FastSet.newInstance();
+                        billToPartyIdSet.add(billToPartyId);
+                        List partyRelationshipList = EntityUtil.filterByDate(delegator.findByAndCache("PartyRelationship", UtilMisc.toMap("partyIdTo", billToPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")), true);
+                        Iterator partyRelationshipIter = partyRelationshipList.iterator();
+                        while (partyRelationshipIter.hasNext()) {
+                            GenericValue partyRelationship = (GenericValue) partyRelationshipIter.next();
+                            billToPartyIdSet.add(partyRelationship.get("partyIdFrom"));
+                        }
+                        
                         List ptiConditionList = UtilMisc.toList(
-                                new EntityExpr("partyId", EntityOperator.EQUALS, billToPartyId),
+                                new EntityExpr("partyId", EntityOperator.IN, billToPartyIdSet),
                                 new EntityExpr("geoId", EntityOperator.EQUALS, primaryGeoId));
                         ptiConditionList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
                         ptiConditionList.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
@@ -3474,6 +3486,7 @@ public class OrderServices {
                         // cancel the order item(s)
                         Map svcCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
                         try {
+                            // TODO: looks like result is ignored here, but we should be looking for errors
                             Map ores = dispatcher.runSync("changeOrderItemStatus", svcCtx);
                         } catch (GenericServiceException e) {
                             Debug.logError(e, "Problem calling change item status service : " + svcCtx, module);

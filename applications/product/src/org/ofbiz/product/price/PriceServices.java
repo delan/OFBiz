@@ -935,10 +935,8 @@ public class PriceServices {
             if (partyId.equals(groupPartyId)) {
                 compare = 0;
             } else {
-                // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, use partyId and groupPartyId in either direction
-                List partyRelationshipList = FastList.newInstance();
-                partyRelationshipList.addAll(delegator.findByAndCache("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyId, "partyIdTo", groupPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")));
-                partyRelationshipList.addAll(delegator.findByAndCache("PartyRelationship", UtilMisc.toMap("partyIdTo", partyId, "partyIdFrom", groupPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")));
+                // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, the partyIdTo is the group member, so the partyIdFrom is the groupPartyId
+                List partyRelationshipList = delegator.findByAndCache("PartyRelationship", UtilMisc.toMap("partyIdFrom", groupPartyId, "partyIdTo", partyId, "partyRelationshipTypeId", "GROUP_ROLLUP"));
                 // and from/thru date within range
                 partyRelationshipList = EntityUtil.filterByDate(partyRelationshipList, true);
                 // then 0 (equals), otherwise 1 (not equals)
