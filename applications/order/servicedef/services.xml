@@ -590,6 +590,18 @@
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="note" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="createCustRequestFromCart" engine="simple" auth="true"
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestFromCart">
+        <description>Creates a new request from a shopping cart</description>
+        <attribute name="cart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
+        <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="createCustRequestFromShoppingList" engine="simple" auth="true"
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestFromShoppingList">
+        <description>Creates a new quote from a shopping list</description>
+        <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
+    </service>
 
     <!-- Services for finding Associated CustRequests -->
     <service name="getCustRequestsByRole" engine="simple"

@@ -58,7 +58,7 @@
                   </#list>
                 </select>
                 &nbsp;&nbsp;
-                <a href="javascript:document.selectShoppingList.submit();" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+                <a href="javascript:document.selectShoppingList.submit();" class="buttontext">${uiLabelMap.CommonEdit}</a>
               </form>
             <#else>
               <div class="tabletext">${uiLabelMap.PartyNoShoppingListsParty}.</div>
@@ -81,7 +81,10 @@
             <div class="boxhead">&nbsp;${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
-            <a href="javascript:document.updateList.submit();" class="submenutextright">${uiLabelMap.CommonSave}</a>            
+            <a href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId?if_exists}" class="submenutext">${uiLabelMap.OrderNewOrder}</a>
+            <a href="/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId?if_exists}" class="submenutext">${uiLabelMap.PartyCreateNewCustRequest}</a>
+            <a href="/ordermgr/control/createQuoteFromShoppingList?shoppingListId=${shoppingList.shoppingListId?if_exists}&applyStorePromotions=N" class="submenutext">${uiLabelMap.PartyCreateNewQuote}</a>
+            <a href="javascript:document.updateList.submit();" class="submenutextright">${uiLabelMap.CommonSave}</a>
           </td>
         </tr>
       </table>
@@ -150,7 +153,7 @@
                   <tr>
                     <td><div class="tableheadtext">&nbsp;</div></td>
                     <td align="left">
-                      <a href="javascript:document.updateList.submit();" class="buttontext">[${uiLabelMap.CommonSave}]</a>         
+                      <a href="javascript:document.updateList.submit();" class="buttontext">${uiLabelMap.CommonSave}</a>         
                     </td>
                   </tr>
                   </#if>
@@ -198,8 +201,8 @@
                   <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
 		  </td>                                        
 		  <td align="right">
-                    <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyGotoList}]</a>
-                    <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyAddListToCart}]</a>
+                    <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyGotoList}</a>
+                    <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyAddListToCart}</a>
 	          </td>                      
 		</tr>
 	      </#list>
@@ -279,8 +282,8 @@
                           <div class="tabletext"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/></div>
                         </td>
                         <td align="right" nowrap>
-                        	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
-                        	<a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
+                        	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a>
+                        	<a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
                         </td>
                       </tr>
                   </#list>

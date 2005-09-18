@@ -568,4 +568,113 @@ public class ShoppingCartServices {
         result.put("shoppingCart", cart);
         return result;
     }
+
+    public static Map loadCartFromShoppingList(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String shoppingListId = (String) context.get("shoppingListId");
+        Locale locale = (Locale) context.get("locale");
+
+        // get the shopping list header
+        GenericValue shoppingList = null;
+        try {
+            shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // initial required cart info
+        String productStoreId = shoppingList.getString("productStoreId");
+        String currency = shoppingList.getString("currencyUom");
+
+        // create the cart
+        ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, currency);
+
+        try {
+            cart.setUserLogin(userLogin, dispatcher);
+        } catch (CartItemModifyException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // set the role information
+        cart.setOrderPartyId(shoppingList.getString("partyId"));
+
+        List shoppingListItems = null;
+        try {
+            shoppingListItems = shoppingList.getRelated("ShoppingListItem");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        long nextItemSeq = 0;
+        if (shoppingListItems != null) {
+            Iterator i = shoppingListItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+
+                // get the next item sequence id
+                String orderItemSeqId = item.getString("shoppingListItemSeqId");
+                try {
+                    long seq = Long.parseLong(orderItemSeqId);
+                    if (seq > nextItemSeq) {
+                        nextItemSeq = seq;
+                    }
+                } catch (NumberFormatException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+                /*
+                Double amount = item.getDouble("selectedAmount");
+                if (amount == null) {
+                    amount = new Double(0);
+                }
+                 */
+                Double quantity = item.getDouble("quantity");
+                if (quantity == null) {
+                    quantity = new Double(0);
+                }
+                int itemIndex = -1;
+                if (item.get("productId") != null) {
+                    // product item
+                    String productId = item.getString("productId");
+                    try {
+                        itemIndex = cart.addItemToEnd(productId, 0.0, quantity.doubleValue(), null, new HashMap(), null, dispatcher);
+                    } catch (ItemNotFoundException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    } catch (CartItemModifyException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                }
+
+                // flag the item w/ the orderItemSeqId so we can reference it
+                ShoppingCartItem cartItem = cart.findCartItem(itemIndex);
+                cartItem.setOrderItemSeqId(orderItemSeqId);
+                // attach additional item information
+                cartItem.setShoppingList(item.getString("shoppingListId"), item.getString("shoppingListItemSeqId"));
+            }
+
+        }
+
+        // set the item seq in the cart
+        if (nextItemSeq > 0) {
+            try {
+                cart.setNextItemSeq(nextItemSeq);
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+
+        Map result = ServiceUtil.returnSuccess();
+        result.put("shoppingCart", cart);
+        return result;
+    }
+
 }
