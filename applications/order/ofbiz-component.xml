@@ -41,7 +41,11 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="data/OrderProcessWorkflow.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_cart.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_shoppinglist.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_request.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_quote.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_requirement.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_return.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <webapp name="order"
         title="Order"
