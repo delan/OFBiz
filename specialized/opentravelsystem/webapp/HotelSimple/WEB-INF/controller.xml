@@ -388,7 +388,7 @@
     </request-map>
     <request-map uri="onePageCheckoutUpdate">
         <security https="true" auth="false"/>
-        <event type="simple" path="org/ofbiz/ecommerce/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <event type="simple" path="org/ofbiz/opentravelsystem/CustomerEvents.xml" invoke="createCustomer"/>
         <response name="error" type="view" value="onePageCheckout"/>
         <response name="success" type="view" value="checkoutreview"/>
     </request-map>
