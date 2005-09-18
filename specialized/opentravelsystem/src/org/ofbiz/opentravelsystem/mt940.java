@@ -189,7 +189,7 @@ public class mt940 {
 	 * @return "error" when not ok...
 	 */
 	private static String createParty(GenericDelegator delegator)	{
-		if (accountNr.compareTo(eftAccount.getString("accountNumber")) != 0  || routingNr.compareTo(eftAccount.getString("routingNumber")) != 0)		{		// the company own account number should be added to the existing party " company"
+		if (accountNr.compareTo(eftAccount.getString("accountNumber")) != 0)	{ //  || routingNr.compareTo(eftAccount.getString("routingNumber")) != 0)		{		// the company own account number should be added to the existing party " company"
 			party.set("partyId",delegator.getNextSeqId("Party"));
 			party.set("partyTypeId","PARTY_GROUP");
 			try { delegator.create(party); }
