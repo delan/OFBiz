@@ -61,6 +61,11 @@
                       <a href="<@ofbizUrl>createQuoteFromCart</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateQuoteFromCart}</a>
                     </td>
                   </tr>
+                  <tr>
+                    <td>
+                      <a href="<@ofbizUrl>createCustRequestFromCart</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateCustRequestFromCart}</a>
+                    </td>
+                  </tr>
                 </#if>
                 <tr>
                   <td>

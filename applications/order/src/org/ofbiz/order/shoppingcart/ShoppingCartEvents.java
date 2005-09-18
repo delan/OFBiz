@@ -867,6 +867,34 @@ public class ShoppingCartEvents {
       }
       return "success";
   }
+  
+    /** Initialize order entry from a shopping list **/
+    public static String loadCartFromShoppingList(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        Locale locale = UtilHttp.getLocale(request);
+        
+        String shoppingListId = request.getParameter("shoppingListId");
+        
+        ShoppingCart cart = null;
+        try {
+            Map outMap = dispatcher.runSync("loadCartFromShoppingList",
+                    UtilMisc.toMap("shoppingListId", shoppingListId,
+                    "userLogin", userLogin));
+            cart = (ShoppingCart)outMap.get("shoppingCart");
+        } catch(Exception exc) {
+            request.setAttribute("_ERROR_MESSAGE_", exc.getMessage());
+            return "error";
+        }
+        
+        session.setAttribute("shoppingCart", cart);
+        session.setAttribute("productStoreId", cart.getProductStoreId());
+        session.setAttribute("orderMode", cart.getOrderType());
+        session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        
+        return "success";
+    }
 
   /** Initialize order entry from a quote **/
   public static String loadCartFromQuote(HttpServletRequest request, HttpServletResponse response) {
@@ -920,6 +948,33 @@ public class ShoppingCartEvents {
            return "error";
         }
         request.setAttribute("quoteId", quoteId);
+        ShoppingCartEvents.destroyCart(request, response);
+        
+        return "success";
+    }
+
+    public static String createCustRequestFromCart(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        
+        ShoppingCart cart = getCartObject(request);
+        Map result = null;
+        String custRequestId = null;
+        try {
+            result = dispatcher.runSync("createCustRequestFromCart", 
+                                             UtilMisc.toMap("cart", cart,
+                                                            "userLogin", userLogin));
+            custRequestId = (String)result.get("custRequestId");
+        } catch(Exception exc) {
+            request.setAttribute("_ERROR_MESSAGE_", exc.getMessage());
+            return "error";
+        }
+        if (ServiceUtil.isError(result)) {
+           request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+           return "error";
+        }
+        request.setAttribute("custRequestId", custRequestId);
         ShoppingCartEvents.destroyCart(request, response);
         
         return "success";

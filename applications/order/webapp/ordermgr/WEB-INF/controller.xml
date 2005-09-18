@@ -357,6 +357,24 @@
         <response name="success" type="request" value="EditQuote"/>
         <response name="error" type="request" value="orderentry"/>
     </request-map>
+    <request-map uri="createCustRequestFromCart">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createCustRequestFromCart"/>
+        <response name="success" type="request" value="request"/>
+        <response name="error" type="request" value="orderentry"/>
+    </request-map>
+    <request-map uri="createQuoteFromShoppingList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createQuoteFromShoppingList"/>
+        <response name="success" type="request" value="EditQuote"/>
+        <response name="error" type="request" value="orderentry"/>
+    </request-map>
+    <request-map uri="createCustRequestFromShoppingList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCustRequestFromShoppingList"/>
+        <response name="success" type="request" value="request"/>
+        <response name="error" type="request" value="orderentry"/>
+    </request-map>
     <request-map uri="viewPartyShoppingLists">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="viewshoppinglists"/>
@@ -377,6 +395,12 @@
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addBulkFromCart"/>
         <response name="success" type="request" value="addFromShoppingList"/>
+        <response name="error" type="view" value="checkinits"/>
+    </request-map>
+    <request-map uri="loadCartFromShoppingList">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="loadCartFromShoppingList"/>
+        <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="checkinits"/>
     </request-map>
     <request-map uri="addseperator">

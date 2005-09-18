@@ -576,35 +576,69 @@
         <iterate list-name="items" entry-name="item">
             <!-- a new quote item is created -->
             <clear-field field-name="createQuoteItemInMap"/>
-            <field-to-field field-name="quote.quoteId" to-field-name="createQuoteItemInMap.quoteId"/>
-            <call-object-method obj-field-name="item" method-name="getProductId" ret-field-name="createQuoteItemInMap.productId"/>
-            <call-object-method obj-field-name="item" method-name="getQuantity" ret-field-name="createQuoteItemInMap.quantity"/>
-            <call-object-method obj-field-name="item" method-name="getSelectedAmount" ret-field-name="createQuoteItemInMap.selectedAmount"/>
-            <call-object-method obj-field-name="item" method-name="getBasePrice" ret-field-name="createQuoteItemInMap.quoteUnitPrice"/>
-            <call-object-method obj-field-name="item" method-name="getItemComment" ret-field-name="createQuoteItemInMap.comments"/>
             <call-object-method obj-field-name="item" method-name="getIsPromo" ret-field-name="isPromo"/>
             <if-compare field-name="isPromo" value="true" operator="equals" type="Boolean">
                 <string-to-field string="Y" field-name="createQuoteItemInMap.isPromo"/>
             </if-compare>
-            <call-service service-name="createQuoteItem" in-map-name="createQuoteItemInMap">
-                <result-to-field result-name="quoteItemSeqId" field-name="quoteItemSeqId"/>
-            </call-service>
-            <!-- and the quoteItemSeqId is assigned to the shopping cart item (as orderItemSeqId) -->
-            <call-object-method obj-field-name="item" method-name="setOrderItemSeqId">
-                <field field-name="quoteItemSeqId" type="String"/>
-            </call-object-method>
+            <if>
+                <condition>
+                    <or>
+                        <if-compare field-name="parameters.applyStorePromotions" value="N" operator="not-equals" type="String"/>
+                        <if-compare field-name="createQuoteItemInMap.isPromo" value="Y" operator="not-equals" type="String"/>
+                    </or>
+                </condition>
+                <then>
+                    <field-to-field field-name="quote.quoteId" to-field-name="createQuoteItemInMap.quoteId"/>
+                    <call-object-method obj-field-name="item" method-name="getProductId" ret-field-name="createQuoteItemInMap.productId"/>
+                    <call-object-method obj-field-name="item" method-name="getQuantity" ret-field-name="createQuoteItemInMap.quantity"/>
+                    <call-object-method obj-field-name="item" method-name="getSelectedAmount" ret-field-name="createQuoteItemInMap.selectedAmount"/>
+                    <call-object-method obj-field-name="item" method-name="getBasePrice" ret-field-name="createQuoteItemInMap.quoteUnitPrice"/>
+                    <call-object-method obj-field-name="item" method-name="getItemComment" ret-field-name="createQuoteItemInMap.comments"/>
+                    <call-service service-name="createQuoteItem" in-map-name="createQuoteItemInMap">
+                        <result-to-field result-name="quoteItemSeqId" field-name="quoteItemSeqId"/>
+                    </call-service>
+                    <!-- and the quoteItemSeqId is assigned to the shopping cart item (as orderItemSeqId) -->
+                    <call-object-method obj-field-name="item" method-name="setOrderItemSeqId">
+                        <field field-name="quoteItemSeqId" type="String"/>
+                    </call-object-method>
+                </then>
+            </if>
         </iterate>
 
-        <call-object-method obj-field-name="parameters.cart" method-name="makeAllQuoteAdjustments" ret-field-name="adjustments"/>
-
-        <iterate list-name="adjustments" entry-name="adjustment">
-            <field-to-field field-name="quote.quoteId" to-field-name="adjustment.quoteId"/>
-            <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="quoteAdjustmentId"/>
-            <field-to-field field-name="quoteAdjustmentId" to-field-name="adjustment.quoteAdjustmentId"/>
-            <create-value value-name="adjustment"/>
-        </iterate>
+        <if>
+            <condition>
+                <if-compare field-name="parameters.applyStorePromotions" value="N" operator="not-equals" type="String"/>
+            </condition>
+            <then>
+                <call-object-method obj-field-name="parameters.cart" method-name="makeAllQuoteAdjustments" ret-field-name="adjustments"/>
+                <iterate list-name="adjustments" entry-name="adjustment">
+                    <field-to-field field-name="quote.quoteId" to-field-name="adjustment.quoteId"/>
+                    <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="quoteAdjustmentId"/>
+                    <field-to-field field-name="quoteAdjustmentId" to-field-name="adjustment.quoteAdjustmentId"/>
+                    <create-value value-name="adjustment"/>
+                </iterate>
+            </then>
+        </if>
         
         <field-to-result field-name="quote.quoteId" result-name="quoteId"/>
+    </simple-method>
+
+    <simple-method method-name="createQuoteFromShoppingList" short-description="Create a Quote from a Shopping List">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteFromShoppingList"/>
+        </check-permission>
+        <check-errors/>
+
+        <call-service service-name="loadCartFromShoppingList" in-map-name="parameters">
+            <result-to-field result-name="shoppingCart" field-name="cart"/>
+        </call-service>
+        <field-to-field field-name="cart" to-field-name="createQuoteFromCartInMap.cart"/>
+        <field-to-field field-name="parameters.applyStorePromotions" to-field-name="createQuoteFromCartInMap.applyStorePromotions"/>
+        <call-service service-name="createQuoteFromCart" in-map-name="createQuoteFromCartInMap">
+            <result-to-field result-name="quoteId" field-name="quoteId"/>
+        </call-service>
+     
+        <field-to-result field-name="quoteId" result-name="quoteId"/>
     </simple-method>
 
     <!--Quote workeffort -->
