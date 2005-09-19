@@ -787,6 +787,7 @@ function setAssocFields(select) {
       <form name="editcarr" method="post" action="<@ofbizUrl>EditProductStoreShipSetup</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
+
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductSelectToEdit}</span></td>
           <td>
@@ -808,9 +809,8 @@ function setAssocFields(select) {
       </#if>
       <form name="addcarr" method="post" action="<@ofbizUrl>${webRequest}</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
-        <#if carrierShipmentMethod?has_content>
-          <input type="hidden" name="newShipMethod" value="Y">
-        <#else>
+        <input type="hidden" name="newShipMethod" value="Y">
+        <#if !carrierShipmentMethod?has_content>                  
           <input type="hidden" name="createNew" value="Y">
         </#if>
         <tr>
