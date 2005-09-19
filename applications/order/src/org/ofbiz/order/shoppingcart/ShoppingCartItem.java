@@ -1862,22 +1862,8 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new IllegalStateException("Bad product id");
         }
 
-        try {
-            List virtualProductAssocs = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate"));
-            virtualProductAssocs = EntityUtil.filterByDate(virtualProductAssocs, true);
-            if (virtualProductAssocs == null || virtualProductAssocs.size() == 0) {
-                //okay, not a variant, try a UNIQUE_ITEM
-                virtualProductAssocs = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "UNIQUE_ITEM"), UtilMisc.toList("-fromDate"));
-                virtualProductAssocs = EntityUtil.filterByDate(virtualProductAssocs, true);
-            }
-            if (virtualProductAssocs != null && virtualProductAssocs.size() > 0) {
-                //found one, set this first as the parent product
-                GenericValue productAssoc = EntityUtil.getFirst(virtualProductAssocs);
-                this._parentProduct = productAssoc.getRelatedOneCache("MainProduct");
-            }
-        } catch (GenericEntityException e) {
-            throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
-        }
+      	this._parentProduct = ProductWorker.getParentProduct(productId, this.getDelegator());
+     
         return this._parentProduct;
     }
 
