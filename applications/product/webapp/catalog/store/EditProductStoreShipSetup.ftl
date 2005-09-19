@@ -810,9 +810,7 @@ function setAssocFields(select) {
       <form name="addcarr" method="post" action="<@ofbizUrl>${webRequest}</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
-        <#if !carrierShipmentMethod?has_content>                  
-          <input type="hidden" name="createNew" value="Y">
-        </#if>
+       
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductShipmentMethod}</span></td>
           <td>
