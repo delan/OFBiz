@@ -24,6 +24,7 @@
 package org.ofbiz.product.product;
 
 import java.util.*;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
@@ -595,6 +596,32 @@ public class ProductWorker {
             Debug.logError(e, module);
         }
         return categories;
+    }
+    
+    //get parent product
+    public static GenericValue getParentProduct(String productId, GenericDelegator delegator) {
+  	  GenericValue _parentProduct = null;
+  	  if (productId == null) {
+            Debug.logWarning("Bad product id", module);
+        }
+
+        try {
+            List virtualProductAssocs = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate"));
+            virtualProductAssocs = EntityUtil.filterByDate(virtualProductAssocs, true);
+            if (virtualProductAssocs == null || virtualProductAssocs.size() == 0) {
+                //okay, not a variant, try a UNIQUE_ITEM
+                virtualProductAssocs = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "UNIQUE_ITEM"), UtilMisc.toList("-fromDate"));
+                virtualProductAssocs = EntityUtil.filterByDate(virtualProductAssocs, true);
+            }
+            if (virtualProductAssocs != null && virtualProductAssocs.size() > 0) {
+                //found one, set this first as the parent product
+                GenericValue productAssoc = EntityUtil.getFirst(virtualProductAssocs);
+                _parentProduct = productAssoc.getRelatedOneCache("MainProduct");
+            }
+        } catch (GenericEntityException e) {
+            throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
+        }
+        return _parentProduct;
     }
 }
 
