@@ -235,7 +235,7 @@
             </#if>
             <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session)>
             <td align="right" valign="top" width="1%">
-              <div><a href="<@ofbizUrl>/deleteContactMech/viewprofile?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}&partyId=${partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonExpire}</a>&nbsp;&nbsp;</div>
+              <div><a href="<@ofbizUrl>/deleteContactMech/viewprofile?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonExpire}</a>&nbsp;&nbsp;</div>
             </td>
             </#if>
           </tr>
