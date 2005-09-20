@@ -494,6 +494,11 @@ public class ShoppingCartServices {
                 if (quoteUnitPrice == null) {
                     quoteUnitPrice = new Double(0);
                 }
+                if (amount.doubleValue() > 0) {
+                    // If, in the quote, an amount is set, we need to
+                    // pass to the cart the quoteUnitPrice/amount value.
+                    quoteUnitPrice = new Double(quoteUnitPrice.doubleValue() / amount.doubleValue());
+                }
                 int itemIndex = -1;
                 if (item.get("productId") == null) {
                     // non-product item
