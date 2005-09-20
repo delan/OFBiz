@@ -913,11 +913,12 @@ public class ShoppingCartEvents {
                                                          "userLogin", userLogin));
           cart = (ShoppingCart)outMap.get("shoppingCart");
       } catch(Exception exc) {
-          //request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderUnableToInitializeCart", locale));
           request.setAttribute("_ERROR_MESSAGE_", exc.getMessage());
           return "error";
       }
-      
+
+      cart.setDefaultCheckoutOptions(dispatcher);
+
       session.setAttribute("shoppingCart", cart);
       session.setAttribute("productStoreId", cart.getProductStoreId());
       session.setAttribute("orderMode", cart.getOrderType());
