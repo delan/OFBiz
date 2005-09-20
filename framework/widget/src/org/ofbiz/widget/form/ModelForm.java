@@ -569,9 +569,26 @@ public class ModelForm {
      *   use the same form definitions for many types of form UIs
      */
     public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
- 
         ModelFormAction.runSubActions(this.actions, context);
         
+        // Check to see if there is a field, same name and same use-when (could come from extended form)
+        for (int j = 0; j < this.fieldList.size(); j++) {
+            ModelFormField modelFormField = (ModelFormField) this.fieldList.get(j);
+            if (!modelFormField.isUseWhenEmpty()) {
+                boolean shouldUse1 = modelFormField.shouldUse(context);
+                for (int i = j+1; i < this.fieldList.size(); i++) {
+                    ModelFormField curField = (ModelFormField) this.fieldList.get(i);
+                    if (curField.getName() != null && curField.getName().equals(modelFormField.getName())) {
+                        boolean shouldUse2 = curField.shouldUse(context);
+                        if (shouldUse1 == shouldUse2) {
+                            this.fieldList.remove(i--);
+                        }
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
         // if this is a list form, don't useRequestParameters
         if ("list".equals(this.type) || "multi".equals(this.type)) {
             context.put("useRequestParameters", Boolean.FALSE);
@@ -824,7 +841,7 @@ public class ModelForm {
 
         // ===== render header row =====
         if (!getHideHeader()) {
-        	this.renderHeaderRow(buffer, context, formStringRenderer);
+            this.renderHeaderRow(buffer, context, formStringRenderer);
         }
 
         // ===== render the item rows =====
@@ -1582,11 +1599,12 @@ public class ModelForm {
      * @return
      */
     public String getPaginateTarget(Map context) {
-    	String targ = this.paginateTarget.expandString(context);
-    	if (UtilValidate.isEmpty(targ))
-    		targ = getTarget(context);
-    	
-    	return targ;
+        String targ = this.paginateTarget.expandString(context);
+        if (UtilValidate.isEmpty(targ)) {
+            targ = getTarget(context);
+        }
+        
+        return targ;
     }
     
     public String getTargetWindow(Map context) {
