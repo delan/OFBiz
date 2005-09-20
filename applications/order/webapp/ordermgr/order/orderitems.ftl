@@ -194,7 +194,7 @@
                     <td colspan="9">
                       <div class="tabletext">
                         <b><i>Linked to requirement</i>:</b>
-                        <a href="/manufacturing/control/EditRequirement?requirementId=${linkedRequirement.requirementId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${linkedRequirement.requirementId}</a>&nbsp;
+                        <a href="<@ofbizUrl>EditRequirement?requirementId=${linkedRequirement.requirementId}</@ofbizUrl>" class="buttontext" style="font-size: xx-small;">${linkedRequirement.requirementId}</a>&nbsp;
                       </div>
                     </td>
                   </tr>
