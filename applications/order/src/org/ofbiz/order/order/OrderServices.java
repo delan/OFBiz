@@ -43,6 +43,7 @@ import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
@@ -69,6 +70,8 @@ import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
+import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
@@ -200,7 +203,7 @@ public class OrderServices {
         // explode items which are MKTG_PKG_AUTO
         if (!orderTypeId.equals("PURCHASE_ORDER")) {
             try {
-               explodeMarketingPkgAutoItem(orderItems, orderAdjustments, orderItemShipGroupInfo, orderTypeId, delegator, dispatcher);
+                explodeMarketingPkgAutoItem(orderItems, orderAdjustments, orderItemShipGroupInfo, orderTypeId, delegator, dispatcher, locale);
             } catch (Exception e) {
                Debug.logError(e, "Error calling explodeMarketingPkgAutoItem " + e.getMessage(), module);
                return ServiceUtil.returnError("Error on exploding marketing_pkg_auto item.[" + e.toString() + "]");
@@ -4376,9 +4379,11 @@ public class OrderServices {
      * @param orderTypeId
      * @param delegator
      * @param dispatcher
+     * @param locale
+     * @return
      */
     public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, String orderTypeId,
-        GenericDelegator delegator, LocalDispatcher dispatcher) throws Exception {
+        GenericDelegator delegator, LocalDispatcher dispatcher, Locale locale) throws Exception {
 
         List newOrderItems = new ArrayList();
         List newOrderAdjustments = new ArrayList();
@@ -4442,12 +4447,25 @@ public class OrderServices {
                         GenericValue productAssoc = (GenericValue) productAssocList.get(i);
                         GenericValue productTo = productAssoc.getRelatedOne("AssocProduct");
                         String productIdTo = productTo.getString("productId");
-                        String itemDescription = productTo.getString("internalName");
+                        String itemDescription = "";
                         Double productToQuantity = productAssoc.getDouble("quantity");
                         Double newQuantity = new Double(productToQuantity.doubleValue() * quantity.doubleValue());
 
                         Double listPrice = new Double(0);
                         Double basePrice = new Double(0);
+
+                        // get the product name
+                        if (productTo != null) {
+            	           itemDescription = ProductContentWrapper.getProductContentAsText(productTo, "PRODUCT_NAME", locale);
+                           // if the product name is null or empty, see if there is an associated virtual product and get the productName of that product
+                           if (UtilValidate.isEmpty(itemDescription)) {
+                              GenericValue parentProduct = ProductWorker.getParentProduct(productIdTo, delegator);
+                              if (parentProduct != null) {
+                                itemDescription = ProductContentWrapper.getProductContentAsText(parentProduct, "PRODUCT_NAME", locale);
+                              }//if
+                           }//if
+                        }//if
+
                         // calculate price of the associated (component) product using calculateProductPrice
                         try {
                             Map priceContext = new HashMap();
