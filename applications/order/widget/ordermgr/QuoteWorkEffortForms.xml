@@ -56,7 +56,7 @@
             <banner left-text-style="tabletext" left-text="OR add new WorkEffort data below to create new entity (leave WorkEffort Id empty)"/>
         </sort-order>
         <field name="quoteId" map-name="parameters" title="Quote ID"><display/></field>
-        <field name="workEffortId" use-when="workEffort==null">
+        <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId!=null">
             <lookup target-form-name="/workeffort/control/LookupWorkEffort"/>
         </field>
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext">
