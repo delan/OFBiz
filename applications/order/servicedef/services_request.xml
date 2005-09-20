@@ -36,7 +36,7 @@
         <attribute name="priority" type="Long" mode="IN" optional="true"/>
         <attribute name="custRequestDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="responseRequiredDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="custRequestName" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="maximumAmountUomId" type="String" mode="IN" optional="true"/>
     </service>
