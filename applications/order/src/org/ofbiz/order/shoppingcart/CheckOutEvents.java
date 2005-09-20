@@ -712,40 +712,33 @@ public class CheckOutEvents {
         }
 
         // determine where to direct the browser
-        String requireCustomer = null;
-        String requireShipping = null;
-        String requireOptions = null;
-        String requirePayment = null;
-        String requireTerm = null;
-        String requireAdditionalParty = null;
+        // these are the default values
+        boolean requireCustomer = true;
+        boolean requireShipping = true;
+        boolean requireOptions = true;
+        boolean requirePayment = !cart.getOrderType().equals("PURCHASE_ORDER");
+        boolean requireTerm = cart.getOrderType().equals("PURCHASE_ORDER");
+        boolean requireAdditionalParty = isAnonymousCheckout;
 
         // these options are not available to anonymous shoppers (security)
         if (userLogin != null && !"anonymous".equals(userLogin.getString("userLoginId"))) {
-            requireCustomer = request.getParameter("finalizeReqCustInfo");
-            requireShipping = request.getParameter("finalizeReqShipInfo");
-            requireOptions = request.getParameter("finalizeReqOptions");
-            requirePayment = request.getParameter("finalizeReqPayInfo");
-            requireTerm = request.getParameter("finalizeReqTermInfo");
-            requireAdditionalParty = request.getParameter("finalizeReqAdditionalParty");
+            String requireCustomerStr = request.getParameter("finalizeReqCustInfo");
+            String requireShippingStr = request.getParameter("finalizeReqShipInfo");
+            String requireOptionsStr = request.getParameter("finalizeReqOptions");
+            String requirePaymentStr = request.getParameter("finalizeReqPayInfo");
+            String requireTermStr = request.getParameter("finalizeReqTermInfo");
+            String requireAdditionalPartyStr = request.getParameter("finalizeReqAdditionalParty");
+            requireCustomer = requireCustomerStr == null || requireCustomerStr.equalsIgnoreCase("true");
+            requireShipping = requireShippingStr == null || requireShippingStr.equalsIgnoreCase("true");
+            requireOptions = requireOptionsStr == null || requireOptionsStr.equalsIgnoreCase("true");
+            if (requirePayment) {
+                requirePayment = requirePaymentStr == null || requirePaymentStr.equalsIgnoreCase("true");
+            }
+            if (requireTerm) {
+                requireTerm = requireTermStr == null || requireTermStr.equalsIgnoreCase("true");
+            }
+            requireAdditionalParty = requireAdditionalPartyStr == null || requireAdditionalPartyStr.equalsIgnoreCase("true");
         }
-
-        // these are the default values
-        if (requireCustomer == null)
-            requireCustomer = "true";
-        if (requireShipping == null)
-            requireShipping = "true";
-        if (requireOptions == null)
-            requireOptions = "true";
-        if (cart.getOrderType().equals("PURCHASE_ORDER")) {
-           if (requireTerm == null) {
-              requireTerm = "true";
-           }
-        } else {
-        if (requirePayment == null)
-            requirePayment = "true";
-        }
-        if (requireAdditionalParty == null)
-            requireAdditionalParty = isAnonymousCheckout ? "false" : "true";
 
         String shipContactMechId = cart.getShippingContactMechId();
         String customerPartyId = cart.getPartyId();
@@ -753,34 +746,26 @@ public class CheckOutEvents {
         List paymentMethodIds = cart.getPaymentMethodIds();
         List paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 
-        if (requireCustomer.equalsIgnoreCase("true") && (customerPartyId == null || customerPartyId.equals("_NA_"))) {
+        if (requireCustomer && (customerPartyId == null || customerPartyId.equals("_NA_"))) {
             return "customer";
         }
 
-        if (requireShipping.equalsIgnoreCase("true") && shipContactMechId == null) {
+        if (requireShipping && shipContactMechId == null) {
             return "shipping";
         }
 
-        if (requireOptions.equalsIgnoreCase("true") && shipmentMethodTypeId == null) {
+        if (requireOptions && shipmentMethodTypeId == null) {
             return "options";
         }
-
-        if (cart.getOrderType().equals("PURCHASE_ORDER")) {
-          if (requireTerm.equalsIgnoreCase("true")) {
-            if (!cart.isOrderTermSet())
-               return "term";
-          }
-        } else {
-        if (requirePayment.equalsIgnoreCase("true")) {
-            if (paymentMethodIds == null || paymentMethodIds.size() == 0) {
-                if (paymentMethodTypeIds == null || paymentMethodTypeIds.size() == 0) {
-                    return "payment";
-                }
-            }
-          }
+        
+        if (requireTerm && !cart.isOrderTermSet()) {
+            return "term";
+        }
+        if (requirePayment && (paymentMethodIds == null || paymentMethodIds.size() == 0) && (paymentMethodTypeIds == null || paymentMethodTypeIds.size() == 0)) {
+            return "payment";
         }
 
-        if (requireAdditionalParty.equalsIgnoreCase("true") && cart.getAttribute("addpty") == null) {
+        if (requireAdditionalParty && cart.getAttribute("addpty") == null) {
             return "addparty";
         }
 
