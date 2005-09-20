@@ -51,8 +51,10 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -2049,6 +2051,32 @@ public class ShoppingCart implements Serializable {
 
     public GenericValue getShippingAddress() {
         return this.getShippingAddress(0);
+    }
+
+    // Preset with default values some of the checkout options to get a quicker checkout process.
+    public void setDefaultCheckoutOptions(LocalDispatcher dispatcher) {
+        // skip the add party screen
+        this.setAttribute("addpty", "Y");
+        // set as the default shipping location the first from the list of available shipping locations
+        if (this.getPartyId() != null && !this.getPartyId().equals("_NA_")) {
+            try {
+                GenericValue orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", this.getPartyId()));
+                Collection shippingContactMechList = ContactHelper.getContactMech(orderParty, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
+                if (shippingContactMechList != null && shippingContactMechList.size() > 0) {
+                    GenericValue shippingContactMech = (GenericValue)(shippingContactMechList.iterator()).next();
+                    this.setShippingContactMechId(shippingContactMech.getString("contactMechId"));
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error setting shippingContactMechId in setDefaultCheckoutOptions() method.", module);
+            }
+        }
+        // set the default shipment method
+        ShippingEstimateWrapper shipEstimateWrapper = org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper.getWrapper(dispatcher, this, 0);
+        GenericValue carrierShipmentMethod = EntityUtil.getFirst(shipEstimateWrapper.getShippingMethods());
+        if (carrierShipmentMethod != null) {
+            this.setShipmentMethodTypeId(carrierShipmentMethod.getString("shipmentMethodTypeId"));
+            this.setCarrierPartyId(carrierShipmentMethod.getString("partyId"));
+        }
     }
 
     // Returns the tax amount for a ship group. */
