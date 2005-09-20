@@ -589,6 +589,22 @@
         </actions>
          <auto-fields-entity entity-name="OrderHeader" default-field-type="find"/>
         <field name="orderHeaderId" title="${uiLabelMap.OrderOrderHeaderId}"><text-find default-value="equals"/></field>
+        <field name="orderTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="salesChannelEnumId" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
         <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
             <drop-down>
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
@@ -600,6 +616,15 @@
         <field name="productStoreId">
             <lookup target-form-name="/marketing/control/LookupProductStore"/>
         </field>
+        <field name="currencyUom" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -616,11 +641,11 @@
             </service>
         </actions>
         <auto-fields-entity entity-name="OrderHeader" default-field-type="display"/>
-        <field name="orderHeaderId" widget-style="buttontext">
-            <hyperlink target-type="plain" also-hidden="true" description="${orderHeaderId}" target="javascript:set_value('${orderHeaderId}')"/>
+        <field name="orderId" widget-style="buttontext">
+            <hyperlink target-type="plain" also-hidden="true" description="${orderId}" target="javascript:set_value('${orderId}')"/>
         </field>
-        <field name="orderHeaderTypeId">
-            <display-entity entity-name="OrderHeaderType" also-hidden="true"/>
+        <field name="orderTypeId">
+            <display-entity entity-name="OrderType" also-hidden="true"/>
         </field>
     </form>
 

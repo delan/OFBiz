@@ -1209,16 +1209,32 @@
       <description>Ties OrderHeaderWE to OrderHeader.</description>
       <member-entity entity-alias="OHWE" entity-name="OrderHeaderWorkEffort"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OT" entity-name="OrderType"/>
+      <member-entity entity-alias="SI" entity-name="StatusItem"/>
       <alias-all entity-alias="OHWE"/>
       <alias-all entity-alias="OH"/>
+      <alias name="orderTypeDescription" field="description" entity-alias="OT"/>
+      <alias name="statusItemDescription" field="description" entity-alias="SI"/>
       <view-link entity-alias="OHWE" rel-entity-alias="OH">
         <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OT">
+        <key-map field-name="orderTypeId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="SI">
+        <key-map field-name="statusId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" rel-entity-name="OrderType">
+        <key-map field-name="orderTypeId"/>
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </view-entity>
 </entitymodel>

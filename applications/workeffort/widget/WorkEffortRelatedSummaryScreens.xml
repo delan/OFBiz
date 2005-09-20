@@ -121,7 +121,8 @@
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="/EditWorkEffortOrderHeader?workEffortId=${orderHeader.workEffortId}&amp;orderId=${orderHeader.orderId}" text="[${orderHeader.orderId}]" style="linktext"/>
+                                        <link target="/EditWorkEffortOrderHeader?workEffortId=${orderHeader.workEffortId}&amp;orderId=${orderHeader.orderId}" 
+                                            text="[${orderHeader.orderId}] orderType: ${orderHeader.orderTypeDescription},  status: ${orderHeader.statusItemDescription}, orderDate: ${orderHeader.orderDate}" style="linktext"/>
                                     </container>
                                 </widgets>
                             </section>

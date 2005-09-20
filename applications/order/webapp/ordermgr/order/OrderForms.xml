@@ -36,6 +36,13 @@
             </entity-one>
         </actions>
         
+        <field name="orderTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                </entity-options>
+            </drop-down>
+        </field>
+        
         <field name="statusId" use-when="orderHeader==null" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
             <drop-down>
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
@@ -52,6 +59,25 @@
             </drop-down>
         </field>
         
+        <field name="salesChannelEnumId" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="currencyUom" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="firstAttemptOrderId" ><lookup target-form-name="/ordermgr/control/LookupOrderHeader"/></field>
         <field name="productStoreId">
             <lookup target-form-name="/marketing/control/LookupProductStore"/>
         </field>
