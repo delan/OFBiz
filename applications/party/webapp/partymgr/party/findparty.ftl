@@ -86,7 +86,7 @@ function refreshInfo() {
             <tr>
               <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyUserLogin} :</div></td>
               <td width="5%">&nbsp;</td>
-              <td><input type="text" class="inputBox" name="userloginId" value="${parameters.userLoginId?if_exists}"/></td>
+              <td><input type="text" class="inputBox" name="userLoginId" value="${parameters.userLoginId?if_exists}"/></td>
             </tr>
             <tr>
               <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyLastName} :</div></td>
