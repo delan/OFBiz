@@ -352,7 +352,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         if ("date".equals(dateTimeField.getType())) {
             size = 10;
-            maxlength = 12;
+            maxlength = 10;
         } else if ("time".equals(dateTimeField.getType())) {
             size = 12;
             maxlength = 15;
@@ -378,7 +378,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         // add calendar pop-up button and seed data IF this is not a "time" type date-time
         if (!"time".equals(dateTimeField.getType())) {
-            buffer.append("<a href=\"javascript:call_cal(document.");
+            if ("date".equals(dateTimeField.getType())) {
+                buffer.append("<a href=\"javascript:call_cal_notime(document.");
+            } else {
+                buffer.append("<a href=\"javascript:call_cal(document.");
+            }
             buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
             buffer.append('.');
             buffer.append(modelFormField.getParameterName(context));
