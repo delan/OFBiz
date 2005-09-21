@@ -129,7 +129,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
     public int getTransactionTimeout() {
         return this.transactionTimeout;
     }
-    
+
     public void setUseTryInsertMethod(boolean value) {
         this.useTryInsertMethod = value;
     }
@@ -205,7 +205,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
             throw new IllegalStateException("Failed to get a SAX XML parser");
         }
         */
-        
+
         RealtimeParser parser = new RealtimeParser(16384);
 
         parser.setContentHandler(this);
@@ -254,7 +254,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
             }
             return;
         }
-        
+
         if (currentValue != null && currentFieldName != null) {
             Text value = Text.valueOf(values, offset, count);
 
@@ -278,26 +278,26 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         if ("entity-engine-transform-xml".equals(fullNameString)) {
             // transform file & parse it, then return
             URL templateUrl = UtilURL.fromResource(templatePath.toString());
-            
+
             if (templateUrl == null) {
                 throw new SAXException("Could not find transform template with resource path: " + templatePath);
             } else {
                 try {
                     Reader templateReader = new InputStreamReader(templateUrl.openStream());
-                    
+
                     StringWriter outWriter = new StringWriter();
-                    Configuration config = new Configuration();            
+                    Configuration config = new Configuration();
                     config.setObjectWrapper(BeansWrapper.getDefaultInstance());
                     config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
-                    
+
                     Template template = new Template("FMImportFilter", templateReader, config);
                     NodeModel nodeModel = NodeModel.wrap(this.rootNodeForTemplate);
-                        
+
                     Map context = FastMap.newInstance();
                     BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
                     TemplateHashModel staticModels = wrapper.getStaticModels();
                     context.put("Static", staticModels);
-                    
+
                     context.put("doc", nodeModel);
                     template.process(context, outWriter);
                     String s = outWriter.toString();
@@ -310,7 +310,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                     } catch (GenericTransactionException e1) {
                         // couldn't set tx timeout, shouldn't be a big deal
                     }
-                    
+
                     numberRead += reader.parse(s);
                 } catch (TemplateException e) {
                     throw new SAXException("Error storing value", e);
@@ -318,7 +318,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                     throw new SAXException("Error storing value", e);
                 }
             }
-            
+
             return;
         }
 
@@ -360,7 +360,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                         throw new SAXException("Cannot store value with incomplete primary key with more than 1 primary key field: " + currentValue);
                     }
                 }
-                
+
                 try {
                     if (useTryInsertMethod) {
                         // this technique is faster for data sets where most, if not all, values do not already exist in the database
@@ -412,16 +412,21 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         if (Debug.verboseOn()) Debug.logVerbose("startElement: localName=" + localName + ", fullName=" + fullName + ", attributes=" + attributes, module);
         String fullNameString = fullName.toString();
         if ("entity-engine-xml".equals(fullNameString)) {
+            CharSequence ecaDisable = attributes.getValue("disable-eeca");
+            if (ecaDisable != null && "true".equalsIgnoreCase(ecaDisable.toString())) {
+                this.delegator = this.delegator.cloneDelegator();
+                this.delegator.setEntityEcaHandler(null);
+            }
             return;
         }
-        
+
         if ("entity-engine-transform-xml".equals(fullNameString)) {
             templatePath = attributes.getValue("template");
             isParseForTemplate = true;
             documentForTemplate = UtilXml.makeEmptyXmlDocument();
             return;
         }
-        
+
         if (isParseForTemplate) {
             Element newElement = this.documentForTemplate.createElement(fullNameString);
             int length = attributes.getLength();
@@ -434,7 +439,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                 }
                 newElement.setAttribute(name.toString(), value.toString());
             }
-            
+
             if (this.currentNodeForTemplate == null) {
                 this.currentNodeForTemplate = newElement;
                 this.rootNodeForTemplate = newElement;
@@ -444,7 +449,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
             }
             return;
         }
-        
+
         if (currentValue != null) {
             // we have a nested value/CDATA element
             currentFieldName = fullName;
@@ -461,12 +466,12 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
 
             try {
                 currentValue = delegator.makeValue(entityName, null);
-                // TODO: do we really want this? it makes it so none of the values imported have create/update timestamps set 
+                // TODO: do we really want this? it makes it so none of the values imported have create/update timestamps set
                 // DEJ 10/16/04 I think they should all be stamped, so commenting this out
                 // JAZ 12/10/04 I think it should be specified when creating the reader
                 if (this.maintainTxStamps) {
                     currentValue.setIsFromEntitySync(true);
-                }                
+                }
             } catch (Exception e) {
                 Debug.logError(e, module);
             }
