@@ -151,7 +151,7 @@
 <b><%=modelEntity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br/>
 <b><%=modelEntity.getEntityName()%>s curFindString: <%=curFindString%></b><br/>
 <%if (hasCreatePermission) {%>
-  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=modelEntity.getEntityName()%>]</a>
+  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">Create New <%=modelEntity.getEntityName()%></a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if (arraySize > 0) { %>
@@ -159,13 +159,13 @@
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex-1)%></ofbiz:url>' class="buttontext">[Previous]</a> |
+          <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex-1)%></ofbiz:url>' class="buttontext">Previous</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex+1)%></ofbiz:url>' class="buttontext">[Next]</a>
+          | <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex+1)%></ofbiz:url>' class="buttontext">Next</a>
         <% } %>
         </b>
       </td>
@@ -201,11 +201,11 @@
             findString += "&" + pkField.getName() + "=" + value.get(pkField.getName());
           }
         %>
-        <a href='<ofbiz:url>/ViewGeneric?<%=findString%></ofbiz:url>' class="buttontext">[View]</a>
+        <a href='<ofbiz:url>/ViewGeneric?<%=findString%></ofbiz:url>' class="buttontext">View</a>
       </td>
       <%if (hasDeletePermission) {%>
         <td>
-          <a href='<ofbiz:url>/UpdateGeneric?<%=findString%>&UPDATE_MODE=DELETE&<%=curFindString%></ofbiz:url>' class="buttontext">[Delete]</a>
+          <a href='<ofbiz:url>/UpdateGeneric?<%=findString%>&UPDATE_MODE=DELETE&<%=curFindString%></ofbiz:url>' class="buttontext">Delete</a>
         </td>
       <%}%>
     <%for (int fnum = 0; fnum < modelEntity.getFieldsSize(); fnum++) {%>
@@ -254,13 +254,13 @@
       <td align="left">
         <b>
         <% if (viewIndex > 0) { %>
-          <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex-1)%></ofbiz:url>' class="buttontext">[Previous]</a> |
+          <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex-1)%></ofbiz:url>' class="buttontext">Previous</a> |
         <% } %>
         <% if (arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if (arraySize>highIndex) { %>
-          | <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex+1)%></ofbiz:url>' class="buttontext">[Next]</a>
+          | <a href='<ofbiz:url>/FindGeneric?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=(viewIndex+1)%></ofbiz:url>' class="buttontext">Next</a>
         <% } %>
         </b>
       </td>
@@ -268,7 +268,7 @@
 <%}%>
 </table>
 <%if (hasCreatePermission){%>
-  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=modelEntity.getEntityName()%>]</a>
+  <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">Create New <%=modelEntity.getEntityName()%></a>
 <%}%>
 <%} else {%>
   <h3>You do not have permission to view this page (<%=modelEntity.getPlainTableName()%>_ADMIN, or <%=modelEntity.getPlainTableName()%>_VIEW needed).</h3>
