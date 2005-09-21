@@ -84,11 +84,11 @@
 
 <div class="head1">${uiLabelMap.ProductInventoryItems} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
 <#if productId?has_content>
-    <a href="/facility/control/EditInventoryItem?productId=${productId}${externalKeyParam}" class="buttontext">[${uiLabelMap.ProductCreateNewInventoryItemProduct}]</a>
+    <a href="/facility/control/EditInventoryItem?productId=${productId}${externalKeyParam}" class="buttontext">${uiLabelMap.ProductCreateNewInventoryItemProduct}</a>
     <#if showEmpty>
-        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductHideEmptyItems}]</a>
+        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductHideEmptyItems}</a>
     <#else>
-        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}&showEmpty=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowEmptyItems}]</a>
+        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}&showEmpty=true</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductShowEmptyItems}</a>
     </#if>
 </#if>
 <br/>
@@ -116,7 +116,7 @@
     </tr>
     <#list productInventoryItems as inventoryItem>
        <#if showEmpty || (inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM" && inventoryItem.statusId?if_exists != "INV_DELIVERED")
-                       || (inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromiseTotal?exists && inventoryItem.availableToPromiseTotal != 0) || (inventoryItem.quantityOnHandTotal?exists && inventoryItem.quantityOnHandTotal != 0)))>
+                      || (inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromiseTotal?exists && inventoryItem.availableToPromiseTotal != 0) || (inventoryItem.quantityOnHandTotal?exists && inventoryItem.quantityOnHandTotal != 0)))>
             <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType")>
             <#if inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                 <#assign curStatusItem = inventoryItem.getRelatedOneCache("StatusItem")?if_exists>
@@ -148,15 +148,13 @@
                         <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId})
                             ${uiLabelMap.ProductAndContainer} (${inventoryItem.containerId}) ${uiLabelMap.CommonSpecified}</div></td>
                     <#elseif inventoryItem.facilityId?exists>
-                        <td><span class="tabletext">${uiLabelMap.ProductFacilityLetter}:&nbsp;</span><a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${externalKeyParam}" class="buttontext">
-                            ${inventoryItem.facilityId}</a></td>
+                        <td><span class="tabletext">${uiLabelMap.ProductFacilityLetter}:&nbsp;</span><a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${externalKeyParam}" class="linktext">${inventoryItem.facilityId}</a></td>
                     <#elseif (inventoryItem.containerId)?exists>
-                        <td><span class="tabletext">${uiLabelMap.ProductContainerLetter}:&nbsp;</span><a href="<@ofbizUrl>/EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="buttontext">
-                            ${inventoryItem.containerId}</a></td>
+                        <td><span class="tabletext">${uiLabelMap.ProductContainerLetter}:&nbsp;</span><a href="<@ofbizUrl>/EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="linktext">${inventoryItem.containerId}</a></td>
                     <#else>
                         <td>&nbsp;</td>
                     </#if>
-                    <td><div class="tabletext"><a href="/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)?if_exists}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}${externalKeyParam}" class="buttontext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.description})</#if> [${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
+                    <td><div class="tabletext"><a href="/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)?if_exists}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}${externalKeyParam}" class="linktext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.description})</#if> [${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
                     <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>
                     <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
                     <#if inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM">
@@ -172,12 +170,10 @@
                         <td>&nbsp;</td>
                     </#if>
                     <td>
-                    <a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">
-                    [${uiLabelMap.CommonEdit}]</a>
+                    <a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">${uiLabelMap.CommonEdit}</a>
                     </td>
                     <td>
-                    <a href="<@ofbizUrl>/DeleteProductInventoryItem?productId=${productId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">
-                    [${uiLabelMap.CommonDelete}]</a>
+                    <a href="<@ofbizUrl>/DeleteProductInventoryItem?productId=${productId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
                     </td>
                 </tr>
             </#if>
