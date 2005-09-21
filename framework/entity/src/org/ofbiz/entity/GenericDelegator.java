@@ -2457,6 +2457,10 @@ public class GenericDelegator implements DelegatorInterface {
         }
     }
 
+    public void setDistributedCacheClear(DistributedCacheClear distributedCacheClear) {
+        this.distributedCacheClear = distributedCacheClear;
+    }
+
     // ======= XML Related Methods ========
     public List readXmlDocument(URL url) throws SAXException, ParserConfigurationException, java.io.IOException {
         if (url == null) return null;
@@ -2553,6 +2557,9 @@ public class GenericDelegator implements DelegatorInterface {
         this.entityEcaHandler.evalRules(currentOperation, eventMap, event, value, isError);
     }
 
+    public void setEntityEcaHandler(EntityEcaHandler entityEcaHandler) {
+        this.entityEcaHandler = entityEcaHandler;
+    }
 
     /** Get the next guaranteed unique seq id from the sequence with the given sequence name;
      * if the named sequence doesn't exist, it will be created
@@ -2794,6 +2801,10 @@ public class GenericDelegator implements DelegatorInterface {
         }
     }
 
+    public void setEntityCrypto(EntityCrypto crypto) {
+        this.crypto = crypto;
+    }
+
     protected void absorbList(List lst) {
         if (lst == null) return;
         Iterator iter = lst.iterator();
@@ -2808,4 +2819,25 @@ public class GenericDelegator implements DelegatorInterface {
     public Cache getCache() {
         return cache;
     }
+
+    public GenericDelegator cloneDelegator() {
+        // creates an exact clone of the delegator; except for the sequencer
+        // note that this will not be cached and should be used only when
+        // needed to change something for single instance (use).
+        GenericDelegator newDelegator = new GenericDelegator();
+        newDelegator.modelReader = this.modelReader;
+        newDelegator.modelGroupReader = this.modelGroupReader;
+        newDelegator.delegatorName = this.delegatorName;
+        newDelegator.delegatorInfo = this.delegatorInfo;
+        newDelegator.cache = this.cache;
+        newDelegator.andCacheFieldSets = this.andCacheFieldSets;
+        newDelegator.distributedCacheClear = this.distributedCacheClear;
+        newDelegator.entityEcaHandler = this.entityEcaHandler;
+        newDelegator.crypto = this.crypto;
+        // not setting the sequencer so that we have unique sequences.
+
+        return newDelegator;
+    }
+
+
 }
