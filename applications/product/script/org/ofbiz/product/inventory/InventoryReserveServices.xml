@@ -323,14 +323,12 @@
             <create-value value-name="newOisgirEntity"/>
         <else>
             <calculate field-name="checkOisgirEntity.quantity">
-                <calcop operator="add" field-name="checkOisgirEntity.quantity">
-                    <calcop operator="get" field-name="parameters.quantity"/>
-                </calcop>
+                <calcop operator="add" field-name="checkOisgirEntity.quantity"/>
+                <calcop operator="add" field-name="parameters.quantity"/>
             </calculate>
             <calculate field-name="checkOisgirEntity.quantityNotAvailable">
-                <calcop operator="add" field-name="checkOisgirEntity">
-                    <calcop operator="get" field-name="parameters"/>
-                </calcop>
+                <calcop operator="add" field-name="checkOisgirEntity.quantityNotAvailable"/>
+                <calcop operator="add" field-name="parameters.quantityNotAvailable"/>
             </calculate>
             <store-value value-name="checkOisgirEntity"/>
         </else>
