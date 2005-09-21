@@ -547,7 +547,6 @@ public class CheckOutHelper {
                     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
                     if ("AGGREGATED".equals(product.getString("productTypeId"))) {
                         org.ofbiz.product.config.ProductConfigWrapper config = this.cart.findCartItem(counter).getConfigWrapper();
-                        Map prunResult = null;
                         Map inputMap = new HashMap();
                         inputMap.put("config", config);
                         inputMap.put("facilityId", productStore.getString("inventoryFacilityId"));
@@ -555,7 +554,7 @@ public class CheckOutHelper {
                         inputMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                         inputMap.put("quantity", orderItem.getDouble("quantity"));
                         inputMap.put("userLogin", userLogin);
-                        prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
+                        Map prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
                     }
                 } catch (Exception e) {
                     String service = e.getMessage();
@@ -832,13 +831,13 @@ public class CheckOutHelper {
                 // approve the order
                 OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
 
-                if (productStore.get("manualAuthIsCapture") != null &&
-                        "Y".equalsIgnoreCase(productStore.getString("manualAuthIsCapture"))) {
+                if ("Y".equalsIgnoreCase(productStore.getString("manualAuthIsCapture"))) {
                     Map captCtx = new HashMap();
                     captCtx.put("orderPaymentPreference", opp);
                     if (opp.get("paymentMethodId") == null) {
                         captCtx.put("serviceTypeEnum", "PRDS_PAY_EXTERNAL");
                     }
+                    captCtx.put("payToPartyId", productStore.get("payToPartyId"));
                     captCtx.put("captureResult", Boolean.TRUE);
                     captCtx.put("captureAmount", opp.getDouble("maxAmount"));
                     captCtx.put("captureRefNum", opp.getString("manualRefNum"));
