@@ -32,10 +32,9 @@ var mx, my;
 
 function moveobj(evt) {
     if (NS4 || NS6) {
-	    mx=evt.screenX;
+    mx=evt.screenX;
     	my=evt.screenY;
-    }
-    else if (IE5 || IE4) {
+    } else if (IE5 || IE4) {
     	mx=event.screenX;
     	my=event.screenY;
     }
@@ -48,6 +47,13 @@ function call_cal(target, datetime) {
     var cal3 = new calendar1(target);
     cal3.year_scroll = true;
     cal3.time_comp = true;    
+    cal3.popup(datetime);
+}
+
+function call_cal_notime(target, datetime) {   
+    var cal3 = new calendar1(target);
+    cal3.year_scroll = true;
+    cal3.time_comp = false;    
     cal3.popup(datetime);
 }
 
