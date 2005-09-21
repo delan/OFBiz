@@ -320,22 +320,22 @@
 
         <!-- first check if this item is a MARKETING_PKG_AUTO and, if so, call another service to get the results -->
         <if-not-empty field-name="productId" map-name="parameters">
-        	<!-- find components of the MARKETING_PKG_AUTO for this product -->
-        	<field-to-field field-name="productId" map-name="parameters" to-map-name="lookupMktgPkgParams"/>
-        	<string-to-field string="MARKETING_PKG_AUTO" field-name="type" map-name="lookupMktgPkgParams"/>
-        	<call-service service-name="getAssociatedProducts" in-map-name="lookupMktgPkgParams">
-        		<result-to-field result-name="assocProducts"/>
-        	</call-service>
-        	<!-- if there are any MARKETING_PKG_AUTO components, then the ATP and QOH are based on the quantities of those component
-        		products and found with another service -->
-        	<if-not-empty field-name="assocProducts">
-        		<env-to-field env-name="assocProducts" field-name="assocProducts" map-name="inventoryByAssocProductsParams"/>
-        		<call-service service-name="getProductInventoryAvailablefromAssocProducts" in-map-name="inventoryByAssocProductsParams">
-        			<result-to-result result-name="quantityOnHandTotal"/>
-        			<result-to-result result-name="availableToPromiseTotal"/>
-        		</call-service>
-        		<return response-code="success"/>  <!-- all done -->
-        	</if-not-empty>
+            <!-- find components of the MARKETING_PKG_AUTO for this product -->
+            <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupMktgPkgParams"/>
+            <string-to-field string="MARKETING_PKG_AUTO" field-name="type" map-name="lookupMktgPkgParams"/>
+            <call-service service-name="getAssociatedProducts" in-map-name="lookupMktgPkgParams">
+                <result-to-field result-name="assocProducts"/>
+            </call-service>
+            <!-- if there are any MARKETING_PKG_AUTO components, then the ATP and QOH are based on the quantities of those component
+                products and found with another service -->
+            <if-not-empty field-name="assocProducts">
+                <env-to-field env-name="assocProducts" field-name="assocProducts" map-name="inventoryByAssocProductsParams"/>
+                <call-service service-name="getProductInventoryAvailablefromAssocProducts" in-map-name="inventoryByAssocProductsParams">
+                    <result-to-result result-name="quantityOnHandTotal"/>
+                    <result-to-result result-name="availableToPromiseTotal"/>
+                </call-service>
+                <return response-code="success"/>  <!-- all done -->
+            </if-not-empty>
         </if-not-empty>
 
         <calculate field-name="parameters.availableToPromiseTotal" type="Double"><number value="0"/></calculate>
@@ -345,7 +345,7 @@
                 <calculate field-name="parameters.quantityOnHandTotal" type="Double">
                     <calcop field-name="parameters.quantityOnHandTotal" operator="add"><number value="1.0"/></calcop>
                 </calculate>
-                <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
+                <if-compare value="INV_AVAILABLE" operator="equals" field-name="inventoryItem.statusId">
                     <calculate field-name="parameters.availableToPromiseTotal" type="Double">
                         <calcop field-name="parameters.availableToPromiseTotal" operator="add"><number value="1.0"/></calcop>
                     </calculate>
