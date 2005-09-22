@@ -1460,6 +1460,7 @@
       <field name="requiredByDate" type="date-time"></field>
       <field name="productId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="selectedAmount" type="floating-point"></field>
       <field name="maximumAmount" type="currency-amount"></field>
       <field name="description" type="description"></field>
       <field name="story" type="very-long"></field>
