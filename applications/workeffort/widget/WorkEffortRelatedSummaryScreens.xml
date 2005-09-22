@@ -54,7 +54,7 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} for workEffortId=${workEffortId}</label>
-                        <container><label style="head1">${uiLabelMap.PartyAssignments}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.PartyAssignments}</label></container>
                         <iterate-section list-name="relatedPartyAssigns" entry-name="partyAssign">
                             <section>
                                 <condition>
@@ -80,7 +80,7 @@
                             </section>
                         </iterate-section>
                         
-                        <container><label style="head1">${uiLabelMap.CommunicationEvents}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.CommunicationEvents}</label></container>
                         <iterate-section list-name="commEvents" entry-name="commEvent">
                             <section>
                                 <widgets>
@@ -92,7 +92,7 @@
                             </section>
                         </iterate-section>
                         
-                        <container><label style="head1">${uiLabelMap.ShoppingLists}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.ShoppingLists}</label></container>
                         <iterate-section list-name="shoppingLists" entry-name="shopList">
                             <section>
                                 <widgets>
@@ -104,7 +104,7 @@
                             </section>
                         </iterate-section>
                         
-                        <container><label style="head1">${uiLabelMap.Quotes}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.Quotes}</label></container>
                         <iterate-section list-name="quotes" entry-name="quote">
                             <section>
                                 <widgets>
@@ -116,7 +116,7 @@
                             </section>
                         </iterate-section>
                         
-                        <container><label style="head1">${uiLabelMap.OrderHeaders}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.OrderHeaders}</label></container>
                         <iterate-section list-name="orderHeaders" entry-name="orderHeader">
                             <section>
                                 <widgets>

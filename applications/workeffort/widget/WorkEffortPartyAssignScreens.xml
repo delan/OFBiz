@@ -39,7 +39,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortPartyAssign} for workEffortId=${workEffortId}</label>
+                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortPartyAssign}</label>
                         <include-form name="EditWorkEffortPartyAssign" location="component://workeffort/widget/WorkEffortPartyAssignForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -85,7 +85,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortPartyAssigns} for workEffortId=${workEffortId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortPartyAssigns}</label></container>
                         <container><link target="/AddWorkEffortPartyAssign?workEffortId=${workEffortId}" text="[Create New PartyAssign]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortPartyAssigns" location="component://workeffort/widget/WorkEffortPartyAssignForms.xml"/>
                     </decorator-section>

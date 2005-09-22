@@ -39,7 +39,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortCommEvent} for workEffortId=${workEffortId}</label>
+                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortCommEvent}</label>
                         <include-form name="AddWorkEffortCommEvent" location="component://workeffort/widget/WorkEffortCommEventForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -83,7 +83,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortCommEvents} for workEffortId=${workEffortId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortCommEvents}</label></container>
                         <container><link target="/AddWorkEffortCommEvent?workEffortId=${workEffortId}" text="[Create New CommEvent]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortCommEvents" location="component://workeffort/widget/WorkEffortCommEventForms.xml"/>
                     </decorator-section>

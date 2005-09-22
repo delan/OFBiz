@@ -39,7 +39,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortRequirement} for workEffortId=${workEffortId}</label>
+                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortRequirement}</label>
                         <include-form name="AddWorkEffortRequirement" location="component://workeffort/widget/WorkEffortRequirementForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -62,7 +62,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditWorkEffortRequirement} for workEffortId=${workEffortId}</label>
+                        <label style="head1">${uiLabelMap.PageTitleEditWorkEffortRequirement}</label>
                         <include-form name="EditWorkEffortRequirement" location="component://workeffort/widget/WorkEffortRequirementForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -83,7 +83,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortRequirements} for workEffortId=${workEffortId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortRequirements}</label></container>
                         <container><link target="/AddWorkEffortRequirement?workEffortId=${workEffortId}" text="[Create New Requirement]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortRequirements" location="component://workeffort/widget/WorkEffortRequirementForms.xml"/>
                     </decorator-section>
