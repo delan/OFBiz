@@ -285,6 +285,7 @@
             </drop-down>
         </field>
         <field name="quantity" map-name="parameters" use-when="quoteItem==null"><text/></field>
+        <field name="selectedAmount" map-name="parameters" use-when="quoteItem==null"><text/></field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>

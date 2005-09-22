@@ -320,6 +320,7 @@
                 <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
                 <entity-one entity-name="QuoteItem" value-name="quoteItem"/>
                 <set field="parameters.quantity" from-field="custRequestItem.quantity"/>
+                <set field="parameters.selectedAmount" from-field="custRequestItem.selectedAmount"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
@@ -348,6 +349,7 @@
                 <entity-one entity-name="CustRequestItem" value-name="custRequestItem"/>
                 <entity-one entity-name="QuoteItem" value-name="quoteItem"/>
                 <set field="parameters.quantity" from-field="custRequestItem.quantity"/>
+                <set field="parameters.selectedAmount" from-field="custRequestItem.selectedAmount"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
