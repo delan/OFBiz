@@ -39,7 +39,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortQuote} for workEffortId=${workEffortId}</label>
+                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortQuote}</label>
                         <include-form name="AddWorkEffortQuote" location="component://workeffort/widget/WorkEffortQuoteForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -83,7 +83,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortQuotes} for workEffortId=${workEffortId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortQuotes}</label></container>
                         <container><link target="/AddWorkEffortQuote?workEffortId=${workEffortId}" text="[Create New Quote]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortQuotes" location="component://workeffort/widget/WorkEffortQuoteForms.xml"/>
                     </decorator-section>
@@ -106,7 +106,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortQuoteItem} for workEffortId=${workEffortId}</label>
+                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortQuoteItem}</label>
                         <include-form name="AddWorkEffortQuoteItem" location="component://workeffort/widget/WorkEffortQuoteForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -130,7 +130,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleEditWorkEffortQuoteItems} for workEffortId=${workEffortId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditWorkEffortQuoteItems}</label></container>
                         <include-form name="EditWorkEffortQuoteItem" location="component://workeffort/widget/WorkEffortQuoteForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -151,7 +151,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortQuoteItems} for workEffortId=${workEffortId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortQuoteItems}</label></container>
                         <container><link target="/AddWorkEffortQuoteItem?workEffortId=${workEffortId}" text="[Create New QuoteItem]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortQuoteItems" location="component://workeffort/widget/WorkEffortQuoteForms.xml"/>
                     </decorator-section>

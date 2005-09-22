@@ -39,7 +39,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortOrderHeader} for workEffortId=${workEffortId}</label>
+                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortOrderHeader}</label>
                         <include-form name="AddWorkEffortOrderHeader" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -62,7 +62,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditWorkEffortOrderHeader} for workEffortId=${workEffortId}</label>
+                        <label style="head1">${uiLabelMap.PageTitleEditWorkEffortOrderHeader}</label>
                         <include-form name="EditWorkEffortOrderHeader" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -83,7 +83,7 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortOrderHeaders} for workEffortId=${workEffortId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortOrderHeaders}</label></container>
                         <container><link target="/AddWorkEffortOrderHeader?workEffortId=${workEffortId}" text="[Create New OrderHeader]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortOrderHeaders" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
                     </decorator-section>

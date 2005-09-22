@@ -170,6 +170,7 @@
     <WorkEffortType description="Available" hasTable="N" parentTypeId="" workEffortTypeId="AVAILABLE"/>
     <WorkEffortType description="Program" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
     <WorkEffortType description="Project" hasTable="N" parentTypeId="" workEffortTypeId="PROJECT"/>
+    <WorkEffortType description="SubProject" hasTable="N" parentTypeId="" workEffortTypeId="SUB_PROJECT"/>
     <WorkEffortType description="Phase" hasTable="N" parentTypeId="" workEffortTypeId="PHASE"/>
 
     <WorkflowSpecification specificationId="XPDL" currentVersion="0.03"/>

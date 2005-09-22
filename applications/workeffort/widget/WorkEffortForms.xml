@@ -55,11 +55,23 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="DONE_PAGE"><hidden value="${donePage}"/></field>
-        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]" target="${donePage}" target-type="inter-app"/>
+        <field name="workEffortParentId"><lookup target-form-name="LookupWorkEffort"/></field>
+        <field name="facilityId"><lookup target-form-name="/LookupWorkEffort"/></field>
+        <field name="scopeEnumId">
+            <drop-down>
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+                    <entity-constraint name="enumTypeId" value="WORK_EFF_SCOPE"/>
+                </entity-options>
+            </drop-down>
         </field>
+        <field name="moneyUomId" title="${uiLabelMap.AccountingCurrency}">
+            <drop-down allow-empty="true">
+                <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
   
     <form name="AddWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" 
@@ -97,6 +109,7 @@
         <alt-target target="createWorkEffortAndAssoc" use-when="workEffortAssoc==null"/>
         <sort-order>
             <sort-field name="workEffortIdTo"/>
+            <sort-field name="editToLink"/>
             <sort-field name="workEffortAssocTypeId"/>
             <sort-field name="fromDate"/>
             <sort-field name="sequenceNum"/>
@@ -105,9 +118,12 @@
             <sort-field name="workEffortName"/>
             <sort-field name="description"/>
         </sort-order>
-        <field name="workEffortIdTo" field-name="workEffortIdTo" map-name="workEffortAssoc"> <display/> </field>
+        <field name="workEffortIdTo" field-name="workEffortIdTo" map-name="workEffortAssoc" > <display/> </field>
+        <field name="editToLink" title="&amp;nbsp;" widget-style="buttontext" position="2">
+            <hyperlink also-hidden="false" description="[Edit]" target="EditWorkEffort?workEffortId=${workEffortIdTo}"/>
+        </field>
         <field name="workEffortIdFrom" field-name="workEffortIdTo" map-name="workEffortAssoc" > <display/> </field>
-        <field name="workEffortId" > <display/> </field>
+        <field name="workEffortId" > <hidden/> </field>
         <field name="workEffortAssocTypeId" field-name="workEffortAssocTypeId" map-name="workEffortAssoc">
             <display-entity entity-name="WorkEffortAssocType" />
         </field>
