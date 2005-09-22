@@ -44,12 +44,12 @@
 
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="createInventoryItemCheckSetAtpQoh" short-description="createInventoryItemCheckSetAtpQoh" login-required="false">
+    <simple-method method-name="createInventoryItemCheckSetAtpQoh" short-description="createInventoryItemCheckSetAtpQoh" login-required="false">        
         <if>
             <condition>
                 <or>
-                    <not><if-empty field-name="availableToPromiseTotal"/></not>
-                    <not><if-empty field-name="quantityOnHandTotal"/></not>
+                    <not><if-empty field-name="parameters.availableToPromiseTotal"/></not>
+                    <not><if-empty field-name="parameters.quantityOnHandTotal"/></not>
                 </or>
             </condition>
             <then>
