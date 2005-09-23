@@ -26,7 +26,6 @@ package org.ofbiz.content.email;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -345,6 +344,7 @@ public class EmailServices {
                 screenContextAtt.putAll(bodyParameters);
                 screensAtt.render(xslfoAttachScreenLocation);
                 
+                /*
                 try { // save generated fo file for debugging
                     String buf = writer.toString();
                     java.io.FileWriter fw = new java.io.FileWriter(new java.io.File("/tmp/file1.xml"));
@@ -352,7 +352,8 @@ public class EmailServices {
                     fw.close();
                 } catch (IOException e) {
                     Debug.logError(e, "Couldn't save xsl-fo xml debug file: " + e.toString(), module);
-                }                             
+                }
+                */
                 
                 // configure logging for the FOP
                 Logger logger = new Log4JLogger(Debug.getLogger(module));
@@ -377,13 +378,15 @@ public class EmailServices {
                 baos.flush();
                 baos.close();
 
+                /*
                 try {    // save generated pdf file for debugging
                     FileOutputStream fos = new FileOutputStream(new java.io.File("/tmp/file2.pdf"));
                     baos.writeTo(fos);
                     fos.close();
                 } catch (IOException e) {
                     Debug.logError(e, "Couldn't save xsl-fo pdf debug file: " + e.toString(), module);
-                }                             
+                }
+                */
 
                 // store in the list of maps for sendmail....
                 List bodyParts = FastList.newInstance();
