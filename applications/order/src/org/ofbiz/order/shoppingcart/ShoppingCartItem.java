@@ -897,48 +897,58 @@ public class ShoppingCartItem implements java.io.Serializable {
             try {
                 Map priceContext = new HashMap();
                 priceContext.put("currencyUomId", cart.getCurrency());
-                priceContext.put("product", this.getProduct());
-                priceContext.put("prodCatalogId", this.getProdCatalogId());
-                priceContext.put("webSiteId", cart.getWebSiteId());
-                priceContext.put("productStoreId", cart.getProductStoreId());
 
                 String partyId = cart.getPartyId();
                 if (partyId != null) {
                     priceContext.put("partyId", partyId);
                 }
-
                 priceContext.put("quantity", new Double(this.getQuantity()));
-                Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
-                if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
-                    throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
-                }
-
-                Boolean validPriceFound = (Boolean) priceResult.get("validPriceFound");
-                if (!validPriceFound.booleanValue()) {
-                    throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "], not adding to cart.");
-                }
-
-                if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
                 if (cart.getOrderType().equals("PURCHASE_ORDER")) {
-                    if (priceResult.get("averageCost") != null) {
-                        this.basePrice = ((Double) priceResult.get("averageCost")).doubleValue();
+                    // TODO: If there's ever a calculatePurchasePrice service, this should be re-factored to use it
+                    priceContext.put("productId", this.getProduct().get("productId"));
+                    Map priceResult = dispatcher.runSync("getSuppliersForProduct", priceContext);
+                    if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                        throw new CartItemModifyException("There was an error when retreive Supplier for product: " + priceResult.get(ModelService.ERROR_MESSAGE));
                     }
+                    List productSuppliers = (List) priceResult.get("supplierProducts");
+                    if ((productSuppliers != null) && (productSuppliers.size() > 0)) {
+                        this.basePrice = ((Double) ((GenericValue) productSuppliers.get(0)).get("lastPrice")).doubleValue();
+                    } else throw new CartItemModifyException("There was an error when retreive Supplier for product: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                    
                 } else {
+                    priceContext.put("product", this.getProduct());
+                    priceContext.put("prodCatalogId", this.getProdCatalogId());
+                    priceContext.put("webSiteId", cart.getWebSiteId());
+                    priceContext.put("productStoreId", cart.getProductStoreId());
+                    Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
+                    if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                        throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                    }
+
+                    Boolean validPriceFound = (Boolean) priceResult.get("validPriceFound");
+                    if (!validPriceFound.booleanValue()) {
+                        throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "], not adding to cart.");
+                    }
+
+                    if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
+
                     if (priceResult.get("price") != null) {
                         this.basePrice = ((Double) priceResult.get("price")).doubleValue();
                     }
-                }
 
-                this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
 
-                // If product is configurable, the price is taken from the configWrapper.
-                if (configWrapper != null) {
-                    this.basePrice = configWrapper.getTotalPrice();
+                    this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
+
+                    // If product is configurable, the price is taken from the configWrapper.
+                    if (configWrapper != null) {
+                        this.basePrice = configWrapper.getTotalPrice();
+                    }
                 }
             } catch (GenericServiceException e) {
                 throw new CartItemModifyException("There was an error while calculating the price", e);
             }
         }
+
     }
 
     /** Returns the quantity. */
