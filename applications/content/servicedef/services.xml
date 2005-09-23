@@ -48,6 +48,16 @@
         <attribute name="body" type="String" mode="INOUT" optional="false"/>
         <attribute name="subject" type="String" mode="INOUT" optional="false"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <override name="contentType" mode="INOUT"/>
+    </service>
+    <service name="sendMailMultiPart" engine="java"
+            location="org.ofbiz.content.email.EmailServices" invoke="sendMail">
+        <description>Send Multi-Part E-Mail Service</description>
+        <implements service="sendMailInterface"/>
+        <attribute name="bodyParts" type="java.util.List" mode="INOUT" optional="false"/>
+        <attribute name="subject" type="String" mode="INOUT" optional="false"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <override name="contentType" mode="INOUT"/>
     </service>
     <service name="sendMailFromUrl" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="sendMailFromUrl">
@@ -62,6 +72,7 @@
         <description>Send E-Mail From Screen Widget Service</description>
         <implements service="sendMailInterface"/>
         <attribute name="bodyScreenUri" type="String" mode="IN" optional="false"/>
+        <attribute name="xslfoAttachScreenLocation" type="String" mode="IN" optional="true"/>
         <attribute name="bodyParameters" type="Map" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="body" type="String" mode="OUT" optional="false"/>
