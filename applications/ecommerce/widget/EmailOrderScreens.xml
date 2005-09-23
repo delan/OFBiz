@@ -26,6 +26,23 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
 
+    <screen name="OrderConfirmNoticePdf">
+        <section>
+            <actions>
+                <set field="title" value="Order Confirmation Notice"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>
+                <set field="title" value="Order"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/order/orderView.fo.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="OrderConfirmNotice">
         <section>
             <actions>

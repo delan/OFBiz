@@ -44,6 +44,7 @@
                 <set field="title" value="View Order"/>
                 <set field="headerItem" value="findorders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderviewwebsecure.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderViewDecorator">
@@ -88,6 +89,7 @@
                 <set field="title" value="Edit Order Item"/>
                 <set field="headerItem" value="orderlist"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderviewwebsecure.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderViewDecorator">

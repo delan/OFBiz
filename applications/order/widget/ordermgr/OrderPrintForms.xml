@@ -38,7 +38,7 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 
-               <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
             </actions>
             <widgets>
                 <platform-specific>
@@ -73,5 +73,4 @@
             </widgets>
         </section>
     </screen>
-
 </screens>

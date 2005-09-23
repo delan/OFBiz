@@ -24,38 +24,60 @@
  */
 package org.ofbiz.content.email;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.xml.parsers.ParserConfigurationException;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
+import org.apache.avalon.framework.logger.Log4JLogger;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.fop.apps.Driver;
+import org.apache.fop.apps.FOPException;
+import org.apache.fop.image.FopImageFactory;
+import org.apache.fop.messaging.MessageHandler;
+import org.apache.fop.tools.DocumentInputSource;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 import org.ofbiz.widget.screen.ScreenRenderer;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.service.LocalDispatcher;
-
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -63,7 +85,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev$
+ * @author     <a href="mailto:h.bakker@antwebsystems.com">Hans Bakker</a>
  * @since      2.0
  */
 public class EmailServices {
@@ -79,15 +101,17 @@ public class EmailServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map sendMail(DispatchContext ctx, Map context) {
-      	Map results = ServiceUtil.returnSuccess();
+          Map results = ServiceUtil.returnSuccess();
         String subject = (String) context.get("subject");
         String partyId = (String) context.get("partyId");
         String body = (String) context.get("body");
+        List bodyParts = (List) context.get("bodyParts");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         results.put("partyId", partyId);
         results.put("subject", subject);
-        results.put("body", body);
+        if (UtilValidate.isNotEmpty(body)) results.put("body", body);
+        if (UtilValidate.isNotEmpty(bodyParts)) results.put("bodyParts", bodyParts);
         results.put("userLogin", userLogin);
 
         // first check to see if sending mail is enabled
@@ -139,9 +163,15 @@ public class EmailServices {
             return ServiceUtil.returnError("Parameter sendVia is required when sendType is not mail.smtp.host");
         }
 
+
         if (contentType == null) {
             contentType = "text/html";
         }
+        
+        if (UtilValidate.isNotEmpty(bodyParts)) {
+            contentType = "multipart/mixed";
+        }
+        results.put("contentType", contentType);
 
         try {
             Properties props = System.getProperties();
@@ -163,9 +193,43 @@ public class EmailServices {
             if (UtilValidate.isNotEmpty(sendBcc)) {
                 mail.addRecipients(Message.RecipientType.BCC, sendBcc);
             }
+            
+            if (UtilValidate.isNotEmpty(bodyParts)) {
+                // check for multipart message (with attachments)
+                // BodyParts contain a list of Maps items containing content(String) and type(String) of the attachement
+                MimeMultipart mp = new MimeMultipart();
+                Debug.logInfo(bodyParts.size() + " multiparts found",module);
+                Iterator bodyPartIter = bodyParts.iterator();
+                while (bodyPartIter.hasNext()) {
+                    Map bodyPart = (Map) bodyPartIter.next();
+                    Object bodyPartContent = bodyPart.get("content");
+                    MimeBodyPart mbp = new MimeBodyPart(); 
 
-            mail.setContent(body, contentType);
-            mail.saveChanges();
+                    if (bodyPartContent instanceof String) {
+                        StringDataSource sdr = new StringDataSource((String) bodyPartContent, (String) bodyPart.get("type"));
+                        Debug.logInfo("part of type: " + bodyPart.get("type") + " and size: " + bodyPart.get("content").toString().length() , module);
+                        mbp.setDataHandler(new DataHandler(sdr));
+                    } else if (bodyPartContent instanceof byte[]) {
+                        ByteArrayDataSource bads = new ByteArrayDataSource((byte[]) bodyPartContent, (String) bodyPart.get("type"));
+                        Debug.logInfo("part of type: " + bodyPart.get("type") + " and size: " + ((byte[]) bodyPartContent).length , module);
+                        mbp.setDataHandler(new DataHandler(bads));
+                    } else {
+                        mbp.setDataHandler(new DataHandler(bodyPartContent, (String) bodyPart.get("type")));
+                    }
+
+                    String fileName = (String) bodyPart.get("filename");
+                    if (fileName != null) {
+                        mbp.setFileName(fileName);
+                    }
+                    mp.addBodyPart(mbp);
+                }
+                mail.setContent(mp);
+                mail.saveChanges();
+            } else {
+                // create the singelpart message
+                mail.setContent(body, contentType);
+                mail.saveChanges();
+            }
 
             Transport trans = session.getTransport("smtp");
             if (!useSmtpAuth) {
@@ -223,6 +287,7 @@ public class EmailServices {
 
     /**
      * JavaMail Service that gets body content from a Screen Widget
+     * defined in the product store record and if available as attachment also.
      *@param dctx The DispatchContext that this service is operating in
      *@param serviceContext Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -231,6 +296,7 @@ public class EmailServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String webSiteId = (String) serviceContext.remove("webSiteId");
         String bodyScreenUri = (String) serviceContext.remove("bodyScreenUri");
+        String xslfoAttachScreenLocation = (String) serviceContext.remove("xslfoAttachScreenLocation");
         Map bodyParameters = (Map) serviceContext.remove("bodyParameters");
         String partyId = (String) bodyParameters.get("partyId");
         if (UtilValidate.isNotEmpty(webSiteId)) {
@@ -263,10 +329,95 @@ public class EmailServices {
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
+        
+        boolean isMultiPart = false;
+        
+        // check if attachement screen location passed in
+        if (UtilValidate.isNotEmpty(xslfoAttachScreenLocation)) {
+            isMultiPart = true;
+            // start processing fo pdf attachment
+            try {
+                Writer writer = new StringWriter();
+                MapStack screenContextAtt = MapStack.create();
+                // substitute the freemarker variables...
+                ScreenRenderer screensAtt = new ScreenRenderer(writer, screenContext, htmlScreenRenderer);
+                screensAtt.populateContextForService(dctx, bodyParameters);
+                screenContextAtt.putAll(bodyParameters);
+                screensAtt.render(xslfoAttachScreenLocation);
+                
+                try { // save generated fo file for debugging
+                    String buf = writer.toString();
+                    java.io.FileWriter fw = new java.io.FileWriter(new java.io.File("/tmp/file1.xml"));
+                    fw.write(buf.toString());
+                    fw.close();
+                } catch (IOException e) {
+                    Debug.logError(e, "Couldn't save xsl-fo xml debug file: " + e.toString(), module);
+                }                             
+                
+                // configure logging for the FOP
+                Logger logger = new Log4JLogger(Debug.getLogger(module));
+                MessageHandler.setScreenLogger(logger);        
+                
+                // load the FOP driver
+                Driver driver = new Driver();
+                driver.setRenderer(Driver.RENDER_PDF);
+                driver.setLogger(logger);
+                
+                // read the XSL-FO XML into the W3 Document
+                Document xslfo = UtilXml.readXmlDocument(writer.toString());
 
-        String body = bodyWriter.toString();
-        serviceContext.put("body", body);
+                // create the in/output stream for the generation
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                driver.setOutputStream(baos);     
+                driver.setInputSource(new DocumentInputSource(xslfo));        
+                
+                // and generate the PDF
+                driver.run();
+                FopImageFactory.resetCache();
+                baos.flush();
+                baos.close();
 
+                try {    // save generated pdf file for debugging
+                    FileOutputStream fos = new FileOutputStream(new java.io.File("/tmp/file2.pdf"));
+                    baos.writeTo(fos);
+                    fos.close();
+                } catch (IOException e) {
+                    Debug.logError(e, "Couldn't save xsl-fo pdf debug file: " + e.toString(), module);
+                }                             
+
+                // store in the list of maps for sendmail....
+                List bodyParts = FastList.newInstance();
+                bodyParts.add(UtilMisc.toMap("content", bodyWriter.toString(), "type", "text/html"));
+                bodyParts.add(UtilMisc.toMap("content", baos.toByteArray(), "type", "application/pdf", "filename", "Details.pdf"));
+                serviceContext.put("bodyParts", bodyParts);
+            } catch (GeneralException ge) {
+                String errMsg = "Error rendering PDF attachment for email: " + ge.toString();
+                Debug.logError(ge, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } catch (IOException ie) {
+                String errMsg = "Error rendering PDF attachment for email: " + ie.toString();
+                Debug.logError(ie, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } catch (FOPException fe) {
+                String errMsg = "Error rendering PDF attachment for email: " + fe.toString();
+                Debug.logError(fe, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } catch (SAXException se) {
+                String errMsg = "Error rendering PDF attachment for email: " + se.toString();
+                Debug.logError(se, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } catch (ParserConfigurationException pe) {
+                String errMsg = "Error rendering PDF attachment for email: " + pe.toString();
+                Debug.logError(pe, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+        } else {
+            isMultiPart = false;
+            // store body and type for single part message in the context.
+            serviceContext.put("body", bodyWriter.toString());
+            serviceContext.put("contentType", "text/html");
+        }
+        
         // also expand the subject at this point, just in case it has the FlexibleStringExpander syntax in it...
         String subject = (String) serviceContext.remove("subject");
         subject = FlexibleStringExpander.expandString(subject, screenContext, (Locale) screenContext.get("locale"));
@@ -277,13 +428,17 @@ public class EmailServices {
         Map result = ServiceUtil.returnSuccess();
       
         try {
-            dispatcher.runSync("sendMail", serviceContext);
+            if (isMultiPart) {
+                dispatcher.runSync("sendMailMultiPart", serviceContext);
+            } else {
+                dispatcher.runSync("sendMail", serviceContext);
+            }
         } catch (Exception e) {
             String errMsg = "Error send email :" + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         } 
-        result.put("body", body);
+        result.put("body", bodyWriter.toString());
         return result;
     }
     
@@ -294,8 +449,8 @@ public class EmailServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map storeEmailAsCommunication(DispatchContext dctx, Map serviceContext) {
-      	LocalDispatcher dispatcher = dctx.getDispatcher();
-      	String subject = (String) serviceContext.get("subject");
+          LocalDispatcher dispatcher = dctx.getDispatcher();
+          String subject = (String) serviceContext.get("subject");
         String body = (String) serviceContext.get("body");
         String partyId = (String) serviceContext.get("partyId");
       
@@ -311,11 +466,68 @@ public class EmailServices {
         commEventMap.put("content", body);
         commEventMap.put("userLogin", userLogin);
         try {
-        	dispatcher.runSync("createCommunicationEvent", commEventMap);
+            dispatcher.runSync("createCommunicationEvent", commEventMap);
         } catch (Exception e) {
             Debug.logError(e, "Cannot store email as communication event", module);
             return ServiceUtil.returnError("Cannot store email as communication event; see logs");
         }
         return ServiceUtil.returnSuccess();
+    }
+
+    /** class to create a file in memory required for sending as an attachment */
+    public static class StringDataSource implements DataSource {
+        private String contentType;
+        private ByteArrayOutputStream contentArray;
+        
+        public StringDataSource(String content, String contentType) throws IOException {
+            this.contentType = contentType;
+            contentArray = new ByteArrayOutputStream();
+            contentArray.write(content.getBytes("iso-8859-1"));
+            contentArray.flush();
+            contentArray.close();
+        }
+        
+        public String getContentType() {
+            return contentType == null ? "application/octet-stream" : contentType;
+        }
+ 
+        public InputStream getInputStream() throws IOException {
+            return new ByteArrayInputStream(contentArray.toByteArray());
+        }
+ 
+        public String getName() {
+            return "stringDatasource";
+        }
+ 
+        public OutputStream getOutputStream() throws IOException {
+            throw new IOException("Cannot write to this read-only resource");
+        }
+    }
+
+    /** class to create a file in memory required for sending as an attachment */
+    public static class ByteArrayDataSource implements DataSource {
+        private String contentType;
+        private byte[] contentArray;
+        
+        public ByteArrayDataSource(byte[] content, String contentType) throws IOException {
+            this.contentType = contentType;
+            this.contentArray = content;
+        }
+        
+        public String getContentType() {
+            return contentType == null ? "application/octet-stream" : contentType;
+        }
+ 
+        public InputStream getInputStream() throws IOException {
+            return new ByteArrayInputStream(contentArray);
+        }
+ 
+        public String getName() {
+            return "ByteArrayDataSource";
+        }
+ 
+        public OutputStream getOutputStream() throws IOException {
+            throw new IOException("Cannot write to this read-only resource");
+        }
     }
 }

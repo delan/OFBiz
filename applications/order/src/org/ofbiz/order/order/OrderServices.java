@@ -1938,6 +1938,8 @@ public class OrderServices {
             bodyScreenLocation = (String) defaultProductStoreEmailScreenLocation.get(emailType);
         }
         sendMap.put("bodyScreenUri", bodyScreenLocation);
+        String xslfoAttachScreenLocation = productStoreEmail.getString("xslfoAttachScreenLocation");
+        sendMap.put("xslfoAttachScreenLocation", xslfoAttachScreenLocation);
         sendMap.put("webSiteId", orderHeader.get("webSiteId"));
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
