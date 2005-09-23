@@ -25,18 +25,24 @@
     <form name="ListWorkEffortCommEvents" separate-columns="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
     default-widget-style="tabletext" target="updateCommunicationEventWorkEff" title="" type="list" >
         <actions>
-            <entity-condition entity-name="CommunicationEventWorkEff" >
+            <entity-condition entity-name="WorkEffortCommunicationEventView" >
                 <condition-list combine="and">
                     <condition-expr field-name="workEffortId" operator="equals" env-name="workEffortId"/>
                 </condition-list>
                 <order-by field-name="communicationEventId"/>
             </entity-condition>
         </actions>
-        <field name="workEffortId">
-            <hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" link-style="linktext"/>
+        <field name="workEffortId" widget-style="buttontext">
+            <hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" />
         </field>
-        <field name="communicationEventId" title="${uiLabelMap.WorkEffortCommEventId}" widget-style="buttontext">
+        <field name="communicationEventId"  widget-style="buttontext">
             <hyperlink target="/partymgr/control/EditCommunicationEvent?communicationEventId=${communicationEventId}" target-type="inter-app" description="${communicationEventId}"/>
+        </field>
+        <field name="statusId">
+            <display-entity entity-name="StatusItem"/>
+        </field>
+        <field name="contactMechTypeId">
+            <display-entity entity-name="ContactMechType"/>
         </field>
         <field name="description" > <textarea rows="2" cols="30"/> </field>
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
@@ -50,25 +56,14 @@
             target="createWorkEffortCommEvent" title="" type="single">
         <sort-order>
             <sort-field name="workEffortId"/>
+            <banner left-text-style="tabletext" left-text="Enter existing CommunicationEvent Id below"/>
+            <sort-field name="communicationEventId"/>
+            <banner left-text-style="tabletext" left-text="OR add new CommunicationEvent data below to create new entity (leave CommunicationEvent Id empty)"/>
             <sort-field name="description"/>
         </sort-order>
         <field name="workEffortId" > <display/> </field>
         <field name="description" > <textarea/> </field>
-        <field name="communicationEventId" ><ignored/></field>
-        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
-    </form>
-    <form name="EditWorkEffortCommEvent" default-map-name="communicationEvent" 
-            default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-            default-widget-style="inputBox" 
-            target="updateWorkEffortCommEvent" title="" type="single">
-        <sort-order>
-            <sort-field name="workEffortId"/>
-            <sort-field name="communicationEventId"/>
-            <sort-field name="description"/>
-        </sort-order>
-        <field name="workEffortId" > <display/> </field>
-        <field name="communicationEventId" > <display/> </field>
-        <field name="description" map-name="communicationEventWorkEff"> <textarea/> </field>
+        <field name="communicationEventId" ><lookup target-form-name="/marketing/control/LookupCommEvent"/></field>
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
     </form>
 </forms>
