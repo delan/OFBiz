@@ -3904,9 +3904,10 @@ public class OrderServices {
             if (cartItem != null) {
                 Double qty = (Double) itemTotals.get(itemSeqId);
                 double priceSave = cartItem.getBasePrice();
+
                 // set quantity
                 try {
-                    cartItem.setQuantity(qty.doubleValue(), dispatcher, cart, true, false);
+                    cartItem.setQuantity(qty.doubleValue(), dispatcher, cart, true, false, true); // trigger external ops, don't reset ship groups, and update prices for both PO and SO items
                 } catch (CartItemModifyException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(e.getMessage());
