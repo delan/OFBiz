@@ -589,7 +589,7 @@
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventWorkEff"/>
         <response name="success" type="view" value="EditWorkEffortCommEvent"/>
-        <response name="error" type="view" value="EditWorkEffortCommEvent"/>
+        <response name="error" type="view" value="AddWorkEffortCommEvent"/>
     </request-map>
     <request-map uri="updateCommunicationEventWorkEff">
         <security https="true" auth="true"/>
