@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Copyright (c) 2001-2005 The Open Travel System project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
+ * @version 1.0
+ -->
+ 
+ <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+     
+     <!-- ================================================================ -->
+     <!-- Opentravelsystem Utilities -->
+     <!-- ================================================================ -->
+     
+     <!-- create an invoice from a payment and apply the payment -->
+     <simple-method method-name="CreateInvoicesFromPayments" 
+         short-description="--Create an Invoice header and detail records from a payment">
+         <!--check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/-->
+         
+         <entity-condition entity-name="Payment" list-name="payments">
+             <condition-list combine="or">
+                 <condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+                 <condition-expr field-name="partyIdTo" operator="equals" value="Company"/>
+             </condition-list>
+         </entity-condition>
+         <calculate field-name="invoicesCreated"><number value="0"/></calculate>
+         <iterate entry-name="payment" list-name="payments">
+             <!-- only select payments which do not have been (partly) applied -->
+             <get-related value-name="payment" relation-name="PaymentApplication" list-name="paymentApplications"/>
+             <if-empty field-name="paymentApplications">     
+                 <!--  create invoice header -->
+                 <field-to-field field-name="payment.partyIdFrom" to-field-name="invoice.partyId"/>
+                 <field-to-field field-name="payment.partyIdTo" to-field-name="invoice.partyIdFrom"/>
+                 <field-to-field field-name="payment.currencyUomId" to-field-name="invoice.currencyUomId"/>
+                 <field-to-field field-name="payment.effectiveDate" to-field-name="invoice.invoiceDate"/>
+                 <string-to-field string="Generated from Payment ${payment.paymentId}" field-name="invoice.description"/>
+                 <string-to-field string="INVOICE_IN_PROCESS" field-name="invoice.statusId"/>
+                 <if-compare field-name="payment.partyIdFrom" operator="equals" value="Company">
+                     <string-to-field string="PURCHASE_INVOICE" field-name="invoice.invoiceTypeId"/>
+                     <else>
+                         <string-to-field string="SALES_INVOICE" field-name="invoice.invoiceTypeId"/>
+                     </else>
+                 </if-compare>
+                 <sequenced-id-to-env sequence-name="InvoiceId" env-name="InvoiceId"/>
+                 <env-to-field env-name="InvoiceId" field-name="invoiceId" map-name="invoice"/>
+                 <call-service service-name="createInvoice" in-map-name="invoice"/>
+                 <calculate field-name="invoicesCreated">
+                     <calcop operator="add">
+                         <calcop operator="get" field-name="invoicesCreated"/>
+                         <number value="1"/>
+                     </calcop>
+                 </calculate>
+                 
+                 <!-- first invoiceItem -->
+                 <env-to-field env-name="InvoiceId" field-name="invoiceId" map-name="invoiceItem"/>
+                 <string-to-field string="Y" field-name="invoiceItem.taxableFlag"/>
+                 <calculate field-name="invoiceItem.amount" rounding-mode="HalfUp" >
+                     <calcop operator="divide">
+                         <calcop operator="multiply">
+                             <calcop operator="get" field-name="payment.amount"/>
+                             <number value="100"/>
+                         </calcop>
+                         <number value="119"/>
+                     </calcop>
+                 </calculate>
+                 <string-to-field string="Amount ex. VAT" field-name="invoiceItem.description"/>
+                 <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
+                 
+                 <!-- second record: create VAT record -->            
+                 <calculate field-name="invoiceItem.amount" rounding-mode="HalfUp" >
+                     <calcop operator="divide">
+                         <calcop operator="multiply">
+                             <calcop operator="get" field-name="payment.amount"/>
+                             <number value="19"/>
+                         </calcop>
+                         <number value="119"/>
+                     </calcop>
+                 </calculate>
+                 <string-to-field string="VAT 19%" field-name="invoiceItem.description"/>
+                 <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
+                 
+                 <!-- apply the payment to the invoice -->
+                 <field-to-field field-name="invoice.invoiceId" to-field-name="application.invoiceId"/>
+                 <field-to-field field-name="payment.paymentId" to-field-name="application.paymentId"/>
+                 <call-service service-name="updatePaymentApplication" in-map-name="application"/>
+             </if-empty>
+         </iterate>
+         <to-string field-name="invoicesCreated"/>
+         <string-append field-name="invoicesCreated" string=" invoices created"/>
+         <field-to-field field-name="invoicesCreated" to-field-name="_event_message_"/>
+     </simple-method>
+ </simple-methods>

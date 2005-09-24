@@ -23,15 +23,10 @@
  */
 package org.ofbiz.opentravelsystem;
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +55,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.base.util.*;
 
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
@@ -78,7 +74,7 @@ public class mt940 {
 	static boolean debug = false;	// to show error messages or not.....
 	
 	static String module = mt940.class.getName();
-	// these variables are used by the getFile and getLine routines independant f the format 
+	// these variables are used by the getFile and getLine routines independant of the format 
 	static String localFile = null;
 	static int start;
 	static int end;
@@ -90,6 +86,7 @@ public class mt940 {
 	static String routingNr;					// the routing number of the bankaccountnumber the file was downloaded from
 	//  These genericValues are used to update the Database  and are filled by the getPayment routine
 	static boolean debet; 					// if it was a debet (true) or credit (false) transaction
+	static String defaultCurrency = null;
 	static GenericValue payment;		
 	static GenericValue party;    				
 	static GenericValue partyGroup;    				
@@ -125,7 +122,7 @@ public class mt940 {
 		
 		if (debug) Debug.logInfo("Start processing payments...", module);
 		while (getPayment(request) != null) {
-			if (debet  == true)	{
+			if (debet  == false)	{
 				payment.set("statusId","PMNT_RECEIVED");
 				payment.set("partyIdFrom",getParty(delegator));
 				payment.set("partyIdTo", accountPartyId);    		}
@@ -137,7 +134,7 @@ public class mt940 {
 			// check to see if the parties where found, when not create
 			if (payment.getString("partyIdTo") == null || payment.getString("partyIdFrom") == null)	{ 
 				if (createParty(delegator) == null) 	return "error"; // party creation error
-				if (debet == true)	{ 
+				if (debet == false)	{ 
 					payment.set("partyIdFrom",party.getString("partyId"));
 				}
 				else {	
@@ -157,7 +154,7 @@ public class mt940 {
 			}
 			else	{
 				// finally create payment record.
-				try	{	delegator.create(payment);	} catch(GenericEntityException e2) {
+				try	{	payment.create();	} catch(GenericEntityException e2) {
 					request.setAttribute("_ERROR_MESSAGE_", "Unable to ceate payment record : "+ e2.getMessage());
 					return "error";
 				}
@@ -185,17 +182,18 @@ public class mt940 {
 	}
 	/**
 	 *  create party with payment method and eftAccount for an eftAccount that was not found.
+	 *  create roles for customer or supplier...
 	 * @param delegator
 	 * @return "error" when not ok...
 	 */
 	private static String createParty(GenericDelegator delegator)	{
-		if (accountNr.compareTo(eftAccount.getString("accountNumber")) != 0)	{ //  || routingNr.compareTo(eftAccount.getString("routingNumber")) != 0)		{		// the company own account number should be added to the existing party " company"
+		if (accountNr.compareTo(eftAccount.getString("accountNumber")) != 0 || routingNr.compareTo(eftAccount.getString("routingNumber")) != 0)		{		// the company own account number should be added to the existing party " company"
 			party.set("partyId",delegator.getNextSeqId("Party"));
 			party.set("partyTypeId","PARTY_GROUP");
-			try { delegator.create(party); }
+			try { party.create(); }
 			catch (GenericEntityException e) {	Debug.logError("Create Party  exception:" + e.getMessage(), module); }
 			partyGroup.set("partyId",party.getString("partyId"));
-			try { delegator.create(partyGroup); }
+			try { partyGroup.create(); }
 			catch (GenericEntityException e) {	Debug.logError("Create Person exception:" + e.getMessage(), module); }
 			paymentMethod.set("partyId",party.getString("partyId"));
 			partiesCreated++;
@@ -207,43 +205,94 @@ public class mt940 {
 			eftAccount.set("nameOnAccount","Company");
 			party.set("partyId","Company");
 		}
+		// create payment method
 		paymentMethod.set("paymentMethodId",delegator.getNextSeqId("PaymentMethod"));
 		paymentMethod.set("paymentMethodTypeId","EFT_ACCOUNT");
 		paymentMethod.set("fromDate",  UtilDateTime.nowTimestamp());
-		try { delegator.create(paymentMethod); }
+		try { paymentMethod.create(); }
 		catch (GenericEntityException e) {	Debug.logError("Create paymentMethod exception:" + e.getMessage(), module); }
+		
+		// create bank account
 		eftAccount.set("paymentMethodId",paymentMethod.getString("paymentMethodId"));
-		try { delegator.create(eftAccount, true); }
+		try { eftAccount.create(); }
 		catch (GenericEntityException e) {	Debug.logError("Create EftAccount exception:" + e.getMessage(), module); }
-		if (debug) Debug.logInfo("Party Created:" + party.getString("partyId"), module);
+		
+		// create roles
+		if (debet == false)	{	// customer
+			GenericValue partyRole = (GenericValue) delegator.makeValue("PartyRole",
+					UtilMisc.toMap("partyId",party.getString("partyId"),"roleTypeId","CUSTOMER"));
+			try { partyRole.create(); }
+			catch (GenericEntityException e) {	Debug.logError("Create PartyRole exception:" + e.getMessage(), module); }
+			partyRole = (GenericValue) delegator.makeValue("PartyRole",
+					UtilMisc.toMap("partyId",party.getString("partyId"),"roleTypeId","BILL_TO_CUSTOMER"));
+			try { partyRole.create(); }
+			catch (GenericEntityException e) {	Debug.logError("Create PartyRole exception:" + e.getMessage(), module); }
+		}
+		else	{	// vendor
+			GenericValue partyRole = (GenericValue) delegator.makeValue("PartyRole",
+					UtilMisc.toMap("partyId",party.getString("partyId"),"roleTypeId","VENDOR"));
+			try { partyRole.create(); }
+			catch (GenericEntityException e) {	Debug.logError("Create PartyRole exception:" + e.getMessage(), module); }
+			partyRole = (GenericValue) delegator.makeValue("PartyRole",
+					UtilMisc.toMap("partyId",party.getString("partyId"),"roleTypeId","BILL_FROM_VENDOR"));
+			try { partyRole.create(); }
+			catch (GenericEntityException e) {	Debug.logError("Create PartyRole exception:" + e.getMessage(), module); }
+		}
+		
+		Debug.logInfo("Party Created:" + party.getString("partyId"), module);
 		accountsCreated++;
 		return party.getString("partyId");
 	}
 	/**
-	 *    find parties by routing account number in the eftAccount table --> paymentMethod for the partyId
+	 *    find parties by account number in the eftAccount table --> paymentMethod for the partyId
 	 * @param delegator
-	 * @param accountNumber
-	 * @return partyId
+	 * @param accountNumber in the eftAccount record
+	 * @return partyId if found, when not null
 	 */
 	private static String getParty(GenericDelegator delegator)	{
-		if (debug) Debug.logInfo("eftAccount searching: accountNumber:" + eftAccount.getString("accountNumber") + " Routing Number:" + eftAccount.getString("routingNumber"), module);
+		if (debug) Debug.logInfo("eftAccount searching: accountNumber:" + eftAccount.getString("accountNumber") + 
+				" Routing Number:" + eftAccount.getString("routingNumber"), module);
+		
 		List eftAccounts = null; 
-		GenericValue eftAccountSearch = null;
-		try { eftAccounts = delegator.findByAnd("EftAccount", UtilMisc.toMap("accountNumber", eftAccount.getString("accountNumber"), "routingNumber", eftAccount.getString("routingNumber"))); }
-		catch (GenericEntityException e) {	Debug.logError("Find account/routing Number exception:" + e.getMessage(), module); }
-		if (eftAccounts == null || eftAccounts.size() == 0)	{
-			if (debug) Debug.logInfo("Account: " + eftAccount.getString("accountNumber") + " Routing number:" + eftAccount.getString("routingNumber") + "  not found...try to find with account number only.", module);
+		
+		if (UtilValidate.isNotEmpty(eftAccount.getString("routingNumber")))	{ // only use if routing number available
+			try { 
+				eftAccounts = delegator.findByAnd("EftAccount", 
+						UtilMisc.toMap("accountNumber", eftAccount.getString("accountNumber"), 
+								"routingNumber", eftAccount.getString("routingNumber"))); 
+			}
+			catch (GenericEntityException e) {	
+				Debug.logError("Find account/routing Number exception:" + e.getMessage(), module); 
+			}
+		}
+		
+		if (UtilValidate.isEmpty(eftAccounts))	{
+			if (debug) Debug.logInfo("Account: " + eftAccount.getString("accountNumber") + 
+					" Routing number:" + eftAccount.getString("routingNumber") + 
+					"  not specified or not found...try to find with account number only.", module);
+			
 			// try to find only with only the account number
-			try { eftAccounts = delegator.findByAnd("EftAccount", UtilMisc.toMap("accountNumber", eftAccount.getString("accountNumber"))); }
-			catch (GenericEntityException e) {	Debug.logError("Find account number exception:" + e.getMessage(), module); }
-			if(eftAccounts == null || eftAccounts.size() == 0)	{
+			try { 
+				eftAccounts = delegator.findByAnd("EftAccount", 
+						UtilMisc.toMap("accountNumber", eftAccount.getString("accountNumber"))); 
+			}
+			catch (GenericEntityException e) {	
+				Debug.logError("Find account number exception:" + e.getMessage(), module); 
+			}
+			if(UtilValidate.isEmpty(eftAccounts))	{
 				if (debug) Debug.logInfo("Account: " + eftAccount.getString("accountNumber") + " not found....", module);
 				return null;     		// account number not found.
 			}
 		}
-		eftAccountSearch = (GenericValue) eftAccounts.iterator().next(); // get first found record
-		try { paymentMethod = eftAccountSearch.getRelatedOne("PaymentMethod"); }
-		catch (GenericEntityException e) {	Debug.logError("Find paymentmethod exception:" + e.getMessage(), module);}
+		
+		eftAccount = (GenericValue) eftAccounts.iterator().next(); // get first found record
+		
+		try { 
+			paymentMethod = eftAccount.getRelatedOne("PaymentMethod"); 
+		}
+		catch (GenericEntityException e) {	
+			Debug.logError("Find paymentmethod exception:" + e.getMessage(), module);
+		}
 		if (paymentMethod != null)	{
 			if (debug) Debug.logInfo("Party found::" + paymentMethod.getString("partyId"), module);
 			return paymentMethod.getString("partyId");
@@ -405,10 +454,11 @@ public class mt940 {
 						return "error";
 					}
 					if (uom == null)	{
-						request.setAttribute("_ERROR_MESSAGE_","Could not currency code " + curr + " in the currency table");
+						request.setAttribute("_ERROR_MESSAGE_","Could not find currency code " + curr + " in the currency table");
 						return "error";
 					}
 					payment.set("currencyUomId", curr );
+					defaultCurrency = curr;
 					break;
 				case 61:  //content of the transaction
 					payment.set("paymentRefNum", routingNr.concat("-").concat(accountNr).concat("-").concat(bankSeqNr).concat("-").concat(String.valueOf(seqNr++))); //create payment number
@@ -472,6 +522,10 @@ public class mt940 {
 					return "ok";
 				}
 			}
+			if (payment.get("currencyUomId") == null)	{
+				payment.set("currencyUomId", defaultCurrency);
+			}
+				
 			if (fileLine.charAt(0) == '-') 	{ // end of transaction
 				bankSeqNr = null;
 				seqNr = 0;

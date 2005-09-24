@@ -173,7 +173,7 @@
         </section>
     </screen>
     
-    <screen name="AccountingDecorator">
+    <screen name="mainAccountingDecorator">
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Accounting"/>
@@ -277,7 +277,7 @@
                 <set field="headerItem" value="payments"/>
             </actions>
             <widgets>
-                <decorator-screen name="AccountingDecorator">
+                <decorator-screen name="mainAccountingDecorator">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ACCOUNTING, _VIEW permission -->
@@ -291,7 +291,41 @@
                                         <platform-specific>
                                             <html><html-template location="component://accountingext/webapp/accountingext/payment/PaymentTabBar.ftl"/></html>
                                         </platform-specific>
-                                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${uiLabelMap.CommonId}:${invoiceId}  ${${extraFunctionName}}</label>
+                                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${uiLabelMap.CommonId}:${paymentId}  ${${extraFunctionName}}</label>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonInvoiceDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="invoices"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="ACCOUNTING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field-name="invoiceId"/></not></condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html><html-template location="component://accountingext/webapp/accountingext/invoice/InvoiceTabBar.ftl"/></html>
+                                        </platform-specific>
+                                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
