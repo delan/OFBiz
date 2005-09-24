@@ -2260,6 +2260,26 @@
         <event type="java" path="org.ofbiz.opentravelsystem.mt940" invoke="importData"/>
         <response name="success" type="view" value="DataExchange"/>
     </request-map>    
+    <!-- =============== Data exchange =================-->
+    <request-map uri="Utilities">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Utilities"/>
+    </request-map>    
+    <request-map uri="CreateInvoicesFromPayments">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="CreateInvoicesFromPayments"/>
+        <response name="success" type="view" value="Utilities"/>
+    </request-map>    
+    <!-- =============== Accounting Reports =================-->
+    <request-map uri="AccountingReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AccountingReports"/>
+    </request-map>  
+    
+    <request-map uri="VatReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="VatReport"/>
+    </request-map>    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -2325,7 +2345,7 @@
     <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
     <!-- invoices -->
     <view-map name="invoiceOverview" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#invoiceOverview"/>
-    <view-map name="findInvoices" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#FindInvoices"/>
+    <view-map name="findInvoices" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#FindInvoices"/>
     <view-map name="editInvoice" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoice"/>
     <view-map name="listInvoiceItems" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceItems"/>
     <view-map name="editInvoiceItem" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceItem"/>
@@ -2333,11 +2353,16 @@
     <view-map name="editInvoiceApplications" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceApplications"/>
     <view-map name="invoiceRoles" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#InvoiceRoles"/>
     <!-- payments -->
-    <view-map name="findPayments" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#FindPayments"/>
+    <view-map name="findPayments" type="screen" page="component://accountingext/widget/PaymentScreens.xml#FindPayments"/>
     <view-map name="paymentOverview" type="screen" page="component://accountingext/widget/PaymentScreens.xml#PaymentOverview"/>
     <view-map name="editPayment" type="screen" page="component://accountingext/widget/PaymentScreens.xml#EditPayment"/>
     <view-map name="editPaymentApplications" type="screen" page="component://accountingext/widget/PaymentScreens.xml#EditPaymentApplications"/>
     <!-- data exchange -->
     <view-map name="DataExchange" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#DataExchange"/>
+    <!-- Utilities -->
+    <view-map name="Utilities" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#Utilities"/>
+    <!-- accounting reports -->
+    <view-map name="AccountingReports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#reports"/>
+    <view-map name="VatReport" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#VatReport" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>
