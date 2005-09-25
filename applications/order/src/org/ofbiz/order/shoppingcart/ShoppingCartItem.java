@@ -417,7 +417,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      */
     //public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, double unitPrice, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean triggerPriceRules) throws CartItemModifyException {
-            ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale());
+        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale());
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -515,6 +515,13 @@ public class ShoppingCartItem implements java.io.Serializable {
             cart.addItem(cartLocation.intValue(), newItem);
         }
 
+        // We have to set the selectedAmount before calling setQuantity because
+        // selectedAmount changes the item's base price (used in the updatePrice
+        // method called inside the setQuantity method)
+        if (selectedAmount > 0) {
+            newItem.setSelectedAmount(selectedAmount);
+        }
+
         try {
             newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps, true, triggerPriceRules);
         } catch (CartItemModifyException e) {
@@ -524,9 +531,6 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw e;
         }
 
-        if (selectedAmount > 0) {
-            newItem.setSelectedAmount(selectedAmount);
-        }
         return newItem;
     }
 
@@ -735,7 +739,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Sets the quantity for the item and validates the change in quantity, etc */
     public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean resetShipGroup) throws CartItemModifyException {
-        this.setQuantity((int) quantity, dispatcher, cart, triggerExternalOps, resetShipGroup, !cart.getOrderType().equals("PURCHASE_ORDER"));
+        this.setQuantity((int) quantity, dispatcher, cart, triggerExternalOps, resetShipGroup, true);
     }
 
     /** Sets the quantity for the item and validates the change in quantity, etc */
