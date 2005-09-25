@@ -62,8 +62,6 @@ public class FieldToEnv extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        Debug.logInfo("The env-to-env operation has been deprecated in favor of the set operation; found use of this in [" + this.simpleMethod.getShortDescription() + "]: " + this.rawString(), module);
-
         Object fieldVal = null;
 
         if (!mapAcsr.isEmpty()) {
