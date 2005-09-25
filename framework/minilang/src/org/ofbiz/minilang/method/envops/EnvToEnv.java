@@ -23,6 +23,7 @@
  */
 package org.ofbiz.minilang.method.envops;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.ContextAccessor;
 import org.ofbiz.minilang.method.MethodContext;
@@ -38,6 +39,8 @@ import org.w3c.dom.Element;
  */
 public class EnvToEnv extends MethodOperation {
     
+    public static final String module = EnvToEnv.class.getName();
+
     protected ContextAccessor envAcsr;
     protected ContextAccessor toEnvAcsr;
 
@@ -48,6 +51,8 @@ public class EnvToEnv extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
+        Debug.logInfo("The env-to-env operation has been deprecated in favor of the set operation; found use of this in [" + this.simpleMethod.getShortDescription() + "]: " + this.rawString(), module);
+
         toEnvAcsr.put(methodContext, envAcsr.get(methodContext));
         return true;
     }

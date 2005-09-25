@@ -98,7 +98,7 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
         //right now only supports one method per file, so get all methods and just run the first...
         Map simpleMethods = null;
         try {
-            simpleMethods = SimpleMethod.getDirectSimpleMethods(source, (String) expr);
+            simpleMethods = SimpleMethod.getDirectSimpleMethods(source, (String) expr, "<bsf source>");
         } catch (MiniLangException e) {
             throw new BSFException("Error loading/parsing simple-method XML source: " + e.getMessage());
         }
