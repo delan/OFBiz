@@ -49,6 +49,8 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.finder.ByAndFinder;
 import org.ofbiz.entity.finder.ByConditionFinder;
 import org.ofbiz.entity.finder.EntityFinderUtil;
@@ -100,6 +102,10 @@ public abstract class ModelScreenAction implements Serializable {
                 actions.add(new EntityAnd(modelScreen, actionElement));
             } else if ("entity-condition".equals(actionElement.getNodeName())) {
                 actions.add(new EntityCondition(modelScreen, actionElement));
+            } else if ("get-related-one".equals(actionElement.getNodeName())) {
+                actions.add(new GetRelatedOne(modelScreen, actionElement));
+            } else if ("get-related".equals(actionElement.getNodeName())) {
+                actions.add(new GetRelated(modelScreen, actionElement));
             } else {
                 throw new IllegalArgumentException("Action element not supported with name: " + actionElement.getNodeName());
             }
@@ -521,4 +527,98 @@ public abstract class ModelScreenAction implements Serializable {
             }
         }
     }
+
+    public static class GetRelatedOne extends ModelScreenAction {
+        protected FlexibleMapAccessor valueNameAcsr;
+        protected FlexibleMapAccessor toValueNameAcsr;
+        protected String relationName;
+        protected boolean useCache;
+        
+        public GetRelatedOne(ModelScreen modelScreen, Element getRelatedOneElement) {
+            super (modelScreen, getRelatedOneElement);
+            this.valueNameAcsr = new FlexibleMapAccessor(getRelatedOneElement.getAttribute("value-name"));
+            this.toValueNameAcsr = new FlexibleMapAccessor(getRelatedOneElement.getAttribute("to-value-name"));
+            this.relationName = getRelatedOneElement.getAttribute("relation-name");
+            this.useCache = "true".equals(getRelatedOneElement.getAttribute("use-cache"));
+        }
+
+        public void runAction(Map context) {
+            Object valueObject = valueNameAcsr.get(context);
+            if (!(valueObject instanceof GenericValue)) {
+                String errMsg = "Env variable for value-name " + valueNameAcsr.toString() + " is not a GenericValue object; for the relation-name: " + relationName + "]";
+                Debug.logError(errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+            GenericValue value = (GenericValue) valueObject;
+            if (value == null) {
+                Debug.logWarning("Value not found with name: " + valueNameAcsr + ", not getting related...", module);
+                return;
+            }
+            try {
+                if (useCache) {
+                    toValueNameAcsr.put(context, value.getRelatedOneCache(relationName));
+                } else {
+                    toValueNameAcsr.put(context, value.getRelatedOne(relationName));
+                }
+            } catch (GenericEntityException e) {
+                String errMsg = "Problem getting related one from entity with name " + value.getEntityName() + " for the relation-name: " + relationName + ": " + e.getMessage();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+        }
+        
+    }
+
+    public static class GetRelated extends ModelScreenAction {
+        protected FlexibleMapAccessor valueNameAcsr;
+        protected FlexibleMapAccessor listNameAcsr;
+        protected FlexibleMapAccessor mapAcsr;
+        protected FlexibleMapAccessor orderByListAcsr;
+        protected String relationName;
+        protected boolean useCache;
+        
+        public GetRelated(ModelScreen modelScreen, Element getRelatedElement) {
+            super (modelScreen, getRelatedElement);
+            this.valueNameAcsr = new FlexibleMapAccessor(getRelatedElement.getAttribute("value-name"));
+            this.listNameAcsr = new FlexibleMapAccessor(getRelatedElement.getAttribute("list-name"));
+            this.relationName = getRelatedElement.getAttribute("relation-name");
+            this.mapAcsr = new FlexibleMapAccessor(getRelatedElement.getAttribute("map-name"));
+            this.orderByListAcsr = new FlexibleMapAccessor(getRelatedElement.getAttribute("order-by-list-name"));
+            this.useCache = "true".equals(getRelatedElement.getAttribute("use-cache"));
+        }
+
+        public void runAction(Map context) {
+            Object valueObject = valueNameAcsr.get(context);
+            if (!(valueObject instanceof GenericValue)) {
+                String errMsg = "Env variable for value-name " + valueNameAcsr.toString() + " is not a GenericValue object; for the relation-name: " + relationName + "]";
+                Debug.logError(errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+            GenericValue value = (GenericValue) valueObject;
+            if (value == null) {
+                Debug.logWarning("Value not found with name: " + valueNameAcsr + ", not getting related...", module);
+                return;
+            }
+            List orderByNames = null;
+            if (!orderByListAcsr.isEmpty()) {
+                orderByNames = (List) orderByListAcsr.get(context);
+            }
+            Map constraintMap = null;
+            if (!mapAcsr.isEmpty()) {
+                constraintMap = (Map) mapAcsr.get(context);
+            }
+            try {
+                if (useCache) {
+                    listNameAcsr.put(context, value.getRelatedCache(relationName, constraintMap, orderByNames));
+                } else {
+                    listNameAcsr.put(context, value.getRelated(relationName, constraintMap, orderByNames));
+                }
+            } catch (GenericEntityException e) {
+                String errMsg = "Problem getting related from entity with name " + value.getEntityName() + " for the relation-name: " + relationName + ": " + e.getMessage();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+        }
+    }
+
 }
