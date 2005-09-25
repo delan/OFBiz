@@ -138,14 +138,14 @@ public abstract class ModelScreenAction implements Serializable {
         public SetField(ModelScreen modelScreen, Element setElement) {
             super (modelScreen, setElement);
             this.field = new FlexibleMapAccessor(setElement.getAttribute("field"));
-            this.fromField = UtilValidate.isNotEmpty(setElement.getAttribute("from-field")) ? new FlexibleMapAccessor(setElement.getAttribute("from-field")) : null;
-            this.valueExdr = UtilValidate.isNotEmpty(setElement.getAttribute("value")) ? new FlexibleStringExpander(setElement.getAttribute("value")) : null;
-            this.defaultExdr = UtilValidate.isNotEmpty(setElement.getAttribute("default-value")) ? new FlexibleStringExpander(setElement.getAttribute("default-value")) : null;
+            this.fromField = new FlexibleMapAccessor(setElement.getAttribute("from-field"));
+            this.valueExdr = new FlexibleStringExpander(setElement.getAttribute("value"));
+            this.defaultExdr = new FlexibleStringExpander(setElement.getAttribute("default-value"));
             this.globalExdr = new FlexibleStringExpander(setElement.getAttribute("global"));
             this.type = setElement.getAttribute("type");
             this.toScope = setElement.getAttribute("to-scope");
             this.fromScope = setElement.getAttribute("from-scope");
-            if (this.fromField != null && this.valueExdr != null) {
+            if (!this.fromField.isEmpty() && !this.valueExdr.isEmpty()) {
                 throw new IllegalArgumentException("Cannot specify a from-field [" + setElement.getAttribute("from-field") + "] and a value [" + setElement.getAttribute("value") + "] on the set action in a screen widget");
             }
         }
@@ -157,38 +157,33 @@ public abstract class ModelScreenAction implements Serializable {
             
             Object newValue = null;
             if (this.fromScope != null && this.fromScope.equals("user")) {
-                if (this.fromField != null) {
-                    HttpSession session = (HttpSession)context.get("session");
+                if (!this.fromField.isEmpty()) {
+                    HttpSession session = (HttpSession) context.get("session");
                     newValue = getInMemoryPersistedFromField(session, context);
                     if (Debug.verboseOn()) Debug.logVerbose("In user getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
-                } else if (this.valueExdr != null) {
+                } else if (!this.valueExdr.isEmpty()) {
                     newValue = this.valueExdr.expandString(context);
                 }
-                
             } else if (this.fromScope != null && this.fromScope.equals("application")) {
-                if (this.fromField != null) {
-                    ServletContext servletContext = (ServletContext)context.get("application");
-                     newValue = getInMemoryPersistedFromField(servletContext, context);
+                if (!this.fromField.isEmpty()) {
+                    ServletContext servletContext = (ServletContext) context.get("application");
+                    newValue = getInMemoryPersistedFromField(servletContext, context);
                     if (Debug.verboseOn()) Debug.logVerbose("In application getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
-                } else if (this.valueExdr != null) {
+                } else if (!this.valueExdr.isEmpty()) {
                     newValue = this.valueExdr.expandString(context);
                 }
             } else {
-                if (this.fromField != null) {
+                if (!this.fromField.isEmpty()) {
                     newValue = this.fromField.get(context);
                     if (Debug.verboseOn()) Debug.logVerbose("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
-                } else if (this.valueExdr != null) {
+                } else if (!this.valueExdr.isEmpty()) {
                     newValue = this.valueExdr.expandString(context);
                 }
             }
 
             // If newValue is still empty, use the default value
-            if (UtilValidate.isEmpty(newValue)) {
-                if (this.defaultExdr != null) {
-                    if (ObjectType.isEmpty(newValue)) {
-                        newValue = this.defaultExdr.expandString(context);
-                    }
-                }
+            if (ObjectType.isEmpty(newValue) && !this.defaultExdr.isEmpty()) {
+                newValue = this.defaultExdr.expandString(context);
             }
             
             if (UtilValidate.isNotEmpty(this.type)) {
@@ -205,10 +200,12 @@ public abstract class ModelScreenAction implements Serializable {
                     String originalName = this.field.getOriginalName();
                     List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");
                     String newKey = "";
-                    if (currentWidgetTrail != null)
+                    if (currentWidgetTrail != null) {
                         newKey = StringUtil.join(currentWidgetTrail, "|");
-                    if (UtilValidate.isNotEmpty(newKey))
+                    }
+                    if (UtilValidate.isNotEmpty(newKey)) {
                         newKey += "|";
+                    }
                     newKey += originalName;
                     HttpSession session = (HttpSession)context.get("session");
                     session.setAttribute(newKey, newValue);
@@ -251,7 +248,7 @@ public abstract class ModelScreenAction implements Serializable {
             }
         }
         
-        public Object getInMemoryPersistedFromField( Object storeAgent, Map context) {
+        public Object getInMemoryPersistedFromField(Object storeAgent, Map context) {
             Object newValue = null;
             String originalName = this.fromField.getOriginalName();
             List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");

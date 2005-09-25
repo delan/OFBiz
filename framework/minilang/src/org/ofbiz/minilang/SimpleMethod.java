@@ -759,6 +759,9 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.ListToList(curOperElem, simpleMethod));
                 } else if ("order-map-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.OrderMapList(curOperElem, simpleMethod));
+
+                } else if ("set".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.envops.SetOperation(curOperElem, simpleMethod));
                 } else if ("env-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.EnvToEnv(curOperElem, simpleMethod));
                 } else if ("env-to-field".equals(nodeName)) {
