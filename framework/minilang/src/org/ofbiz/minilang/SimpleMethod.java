@@ -40,6 +40,7 @@ import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericEntity;
@@ -175,7 +176,6 @@ public class SimpleMethod {
 
         // read in the file
         Document document = null;
-
         try {
             document = UtilXml.readXmlDocument(xmlURL, true);
         } catch (java.io.IOException e) {
@@ -197,21 +197,21 @@ public class SimpleMethod {
 
         while (simpleMethodIter.hasNext()) {
             Element simpleMethodElement = (Element) simpleMethodIter.next();
-            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement, simpleMethods);
+            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement, simpleMethods, xmlURL.toString());
             simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
         }
 
         return simpleMethods;
     }
 
-    public static Map getDirectSimpleMethods(String name, String content) throws MiniLangException {
+    public static Map getDirectSimpleMethods(String name, String content, String fromLocation) throws MiniLangException {
         Map simpleMethods = (Map) simpleMethodsDirectCache.get(name);
 
         if (simpleMethods == null) {
             synchronized (SimpleMethod.class) {
                 simpleMethods = (Map) simpleMethodsDirectCache.get(name);
                 if (simpleMethods == null) {
-                    simpleMethods = getAllDirectSimpleMethods(name, content);
+                    simpleMethods = getAllDirectSimpleMethods(name, content, fromLocation);
 
                     // put it in the cache
                     simpleMethodsDirectCache.put(name, simpleMethods);
@@ -222,7 +222,11 @@ public class SimpleMethod {
         return simpleMethods;
     }
 
-    protected static Map getAllDirectSimpleMethods(String name, String content) throws MiniLangException {
+    protected static Map getAllDirectSimpleMethods(String name, String content, String fromLocation) throws MiniLangException {
+        if (UtilValidate.isEmpty(fromLocation)) {
+            fromLocation = "<location not known>";
+        }
+        
         Map simpleMethods = FastMap.newInstance();
 
         // read in the file
@@ -251,7 +255,7 @@ public class SimpleMethod {
 
         while (simpleMethodIter.hasNext()) {
             Element simpleMethodElement = (Element) simpleMethodIter.next();
-            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement, simpleMethods);
+            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement, simpleMethods, fromLocation);
             simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
         }
 
@@ -261,6 +265,7 @@ public class SimpleMethod {
     // Member fields begin here...
     protected List methodOperations = FastList.newInstance();
     protected Map parentSimpleMethodsMap;
+    protected String fromLocation;
     protected String methodName;
     protected String shortDescription;
     protected String defaultErrorCode;
@@ -294,8 +299,9 @@ public class SimpleMethod {
     protected String dispatcherName;
     protected String userLoginName;
 
-    public SimpleMethod(Element simpleMethodElement, Map parentSimpleMethodsMap) {
+    public SimpleMethod(Element simpleMethodElement, Map parentSimpleMethodsMap, String fromLocation) {
         this.parentSimpleMethodsMap = parentSimpleMethodsMap;
+        this.fromLocation = fromLocation;
         this.methodName = simpleMethodElement.getAttribute("method-name");
         this.shortDescription = simpleMethodElement.getAttribute("short-description");
 
@@ -395,6 +401,9 @@ public class SimpleMethod {
         readOperations(simpleMethodElement, this.methodOperations, this);
     }
 
+    public String getFromLocation() {
+        return this.fromLocation;
+    }
     public String getMethodName() {
         return this.methodName;
     }
@@ -405,7 +414,7 @@ public class SimpleMethod {
     }
 
     public String getShortDescription() {
-        return this.shortDescription + " [" + this.methodName + "]";
+        return this.shortDescription + " [" + this.fromLocation + "#" + this.methodName + "]";
     }
 
     public String getDefaultErrorCode() {
