@@ -97,6 +97,7 @@ public class SetOperation extends MethodOperation {
                 + (this.valueExdr.isEmpty() ? "" : "\" value=\"" + this.valueExdr.getOriginal()) 
                 + (this.fromField.isEmpty() ? "" : "\" from-field=\"" + this.fromField) 
                 + (this.defaultExdr.isEmpty() ? "" : "\" default-value=\"" + this.defaultExdr.getOriginal()) 
+                + (this.type == null || this.type.length() == 0 ? "" : "\" type=\"" + this.type) 
                 + "\"/>";
     }
     public String expandedString(MethodContext methodContext) {
