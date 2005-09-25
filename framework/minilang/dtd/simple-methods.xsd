@@ -584,7 +584,7 @@
         <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
 
-    <xs:element name="set" substitutionGroup="AllActions">
+    <xs:element name="set" substitutionGroup="EnvOperations">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.set"/>
         </xs:complexType>
