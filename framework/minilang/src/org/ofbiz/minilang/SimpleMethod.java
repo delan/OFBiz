@@ -760,8 +760,6 @@ public class SimpleMethod {
 
                 } else if ("map-to-map".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.MapToMap(curOperElem, simpleMethod));
-                } else if ("field-to-field".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.minilang.method.envops.FieldToField(curOperElem, simpleMethod));
                 } else if ("field-to-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.FieldToList(curOperElem, simpleMethod));
                 } else if ("list-to-list".equals(nodeName)) {
@@ -772,11 +770,22 @@ public class SimpleMethod {
                 } else if ("set".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.SetOperation(curOperElem, simpleMethod));
                 } else if ("env-to-env".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.minilang.method.envops.EnvToEnv(curOperElem, simpleMethod));
+                    MethodOperation mop = new org.ofbiz.minilang.method.envops.EnvToEnv(curOperElem, simpleMethod);
+                    methodOperations.add(mop);
+                    Debug.logInfo("The env-to-env operation has been deprecated in favor of the set operation; found use of this in [" + simpleMethod.getShortDescription() + "]: " + mop.rawString(), module);
                 } else if ("env-to-field".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.minilang.method.envops.EnvToField(curOperElem, simpleMethod));
+                    MethodOperation mop = new org.ofbiz.minilang.method.envops.EnvToField(curOperElem, simpleMethod);
+                    methodOperations.add(mop);
+                    Debug.logInfo("The env-to-field operation has been deprecated in favor of the set operation; found use of this in [" + simpleMethod.getShortDescription() + "]: " + mop.rawString(), module);
                 } else if ("field-to-env".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.minilang.method.envops.FieldToEnv(curOperElem, simpleMethod));
+                    MethodOperation mop = new org.ofbiz.minilang.method.envops.FieldToEnv(curOperElem, simpleMethod);
+                    methodOperations.add(mop);
+                    Debug.logInfo("The field-to-env operation has been deprecated in favor of the set operation; found use of this in [" + simpleMethod.getShortDescription() + "]: " + mop.rawString(), module);
+                } else if ("field-to-field".equals(nodeName)) {
+                    MethodOperation mop = new org.ofbiz.minilang.method.envops.FieldToField(curOperElem, simpleMethod);
+                    methodOperations.add(mop);
+                    Debug.logInfo("The field-to-field operation has been deprecated in favor of the set operation; found use of this in [" + simpleMethod.getShortDescription() + "]: " + mop.rawString(), module);
+
                 } else if ("string-append".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.StringAppend(curOperElem, simpleMethod));
                 } else if ("string-to-field".equals(nodeName)) {
