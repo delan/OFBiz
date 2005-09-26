@@ -49,6 +49,8 @@ public class SetOperation extends MethodOperation {
     protected FlexibleStringExpander valueExdr;
     protected FlexibleStringExpander defaultExdr;
     protected String type;
+    protected boolean setIfNull; // default to false
+    protected boolean setIfEmpty; // default to true
 
     public SetOperation(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
@@ -57,6 +59,11 @@ public class SetOperation extends MethodOperation {
         this.valueExdr = new FlexibleStringExpander(element.getAttribute("value"));
         this.defaultExdr = new FlexibleStringExpander(element.getAttribute("default-value"));
         this.type = element.getAttribute("type");
+        // default to false, anything but true is false
+        this.setIfNull = "true".equals(element.getAttribute("set-if-null"));
+        // default to true, anything but false is true
+        this.setIfEmpty = !"false".equals(element.getAttribute("set-if-empty"));
+
         if (!this.fromField.isEmpty() && !this.valueExdr.isEmpty()) {
             throw new IllegalArgumentException("Cannot specify a from-field [" + element.getAttribute("from-field") + "] and a value [" + element.getAttribute("value") + "] on the set action in a screen widget");
         }
@@ -75,7 +82,16 @@ public class SetOperation extends MethodOperation {
         if (ObjectType.isEmpty(newValue) && !this.defaultExdr.isEmpty()) {
             newValue = methodContext.expandString(this.defaultExdr);
         }
-        
+
+        if (!setIfNull && newValue == null) {
+            if (Debug.verboseOn()) Debug.logVerbose("Field value not found (null) with name [" + fromField + "] and value [" + valueExdr + "], and there was not default value, not setting field", module);
+            return true;
+        }
+        if (!setIfEmpty && ObjectType.isEmpty(newValue)) {
+            if (Debug.verboseOn()) Debug.logVerbose("Field value not found (empty) with name [" + fromField + "] and value [" + valueExdr + "], and there was not default value, not setting field", module);
+            return true;
+        }
+
         if (UtilValidate.isNotEmpty(this.type)) {
             try {
                 newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, null);
