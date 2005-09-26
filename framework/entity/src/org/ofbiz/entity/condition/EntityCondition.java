@@ -76,6 +76,8 @@ public abstract class EntityCondition extends EntityConditionBase {
 
     abstract public EntityCondition freeze();
 
+    abstract public void encryptConditionFields(ModelEntity modelEntity, GenericDelegator delegator);
+    
     public void visit(EntityConditionVisitor visitor) {
         throw new IllegalArgumentException(getClass().getName() + ".visit not implemented");
     }
