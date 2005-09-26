@@ -81,5 +81,9 @@
     <entity-group group="org.ofbiz" entity="WorkEffortShoppingListView" />
     <entity-group group="org.ofbiz" entity="WorkEffortQuoteView" />
     <entity-group group="org.ofbiz" entity="WorkEffortOrderHeaderView" />
+    <entity-group group="org.ofbiz" entity="WorkEffortCustRequestItemView" />
+    <entity-group group="org.ofbiz" entity="WorkEffortCustRequestView" />
+    <entity-group group="org.ofbiz" entity="WorkEffortRequirementView" />
+    
 </entitygroup>
 

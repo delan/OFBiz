@@ -32,7 +32,6 @@
                 <set field="tabButtonItem" value="WorkEffortQuotes"/>
                 <set field="labelTitleProperty" value="PageTitleAddWorkEffortQuote"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="Quote" value-name="quote"/>
             </actions>

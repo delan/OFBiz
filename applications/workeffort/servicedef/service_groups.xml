@@ -34,7 +34,7 @@
         <service name="updateWorkEffortAssoc" mode="sync"/>
     </group>
     <group name="createWorkEffortRequestItemAndRequestItem" send-mode="all"  >
-        <service name="checkCustRequestItemExists" mode="sync" />
+        <service name="checkCustRequestItemExists" mode="sync"  result-to-context="true"/>
         <service name="createWorkEffortRequestItem" mode="sync"/>
     </group>
 </service-group>

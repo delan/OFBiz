@@ -283,11 +283,13 @@
         <description>Creates a CustRequestItem entity and CustRequestItemWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestItemWorkEffort"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="CustRequestItem"/>
+        <attribute name="custRequestItemExists" type="java.lang.String" mode="OUT" optional="true"/>
     </service>
     <service name="createWorkEffortRequestItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequestItem" auth="true"  >
         <description>Creates a CustRequestItemWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestItemWorkEffort"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="CustRequestItem"/>
+        <attribute name="custRequestItemExists" type="java.lang.String" mode="IN" optional="true"/>
     </service>
     <service name="deleteWorkEffortRequestItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortRequestItem" auth="true"  >
         <description>Deletes a CustRequestItemWorkEffort</description>

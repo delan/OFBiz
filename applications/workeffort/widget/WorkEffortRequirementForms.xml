@@ -25,23 +25,20 @@
     <form name="ListWorkEffortRequirements" separate-columns="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
     default-widget-style="tabletext" target="" title="" type="list" >
         <actions>
-            <entity-condition entity-name="WorkRequirementFulfillment" >
-                <condition-list combine="and">
-                    <condition-expr field-name="workEffortId" operator="equals" env-name="workEffortId"/>
-                </condition-list>
+            <entity-and entity-name="WorkEffortRequirementView" >
+                <field-map field-name="workEffortId"/>
                 <order-by field-name="requirementId"/>
-            </entity-condition>
+            </entity-and>
         </actions>
-        <field name="workEffortId">
+        <field name="workEffortId" widget-style="linktext">
             <hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" />
         </field>
-        <field name="requirementId" title="${uiLabelMap.WorkEffortRequirementId}" widget-style="buttontext">
+        <field name="requirementId" title="${uiLabelMap.WorkEffortRequirementId}" widget-style="linktext">
             <hyperlink target="/ordermgr/control/EditRequirement?requirementId=${requirementId}" target-type="inter-app" description="${requirementId}"/>
         </field>
-        <field name="workReqFulfTypeId">
-            <display-entity entity-name="WorkReqFulfType"/>
-        </field>
-        <field name="description" > <display/> </field>
+        <field name="workReqFulfTypeDescription"><display/></field>
+        <field name="statusItemDescription"><display/></field>
+        <field name="requirementDescription" > <display/> </field>
         <field name="editLink" title=" " widget-style="buttontext"><hyperlink target="EditWorkEffortRequirement?workEffortId=${workEffortId}&amp;requirementId=${requirementId}" also-hidden="false" description="[${uiLabelMap.CommonEdit}]" /></field>
         <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteWorkEffortRequirement?workEffortId=${workEffortId}&amp;requirementId=${requirementId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]"/></field>
     </form>
@@ -53,7 +50,9 @@
             target="createWorkEffortRequirement" title="" type="single">
         <sort-order>
             <sort-field name="workEffortId"/>
+            <banner left-text-style="tabletext" left-text="Enter existing Requirement Id below"/>
             <sort-field name="requirementId"/>
+            <banner left-text-style="tabletext" left-text="OR add new Requirement data below to create new entity (leave Requirement Id empty)"/>
             <sort-field name="workReqFulfTypeId"/>
         </sort-order>
         <field name="workEffortId" > <display/> </field>
@@ -65,7 +64,8 @@
                 </entity-options>
             </drop-down>
         </field>
-       <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
+        <field name="facilityId" ><lookup target-form-name="LookupFacility"/></field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
     </form>
   
     <form name="EditWorkEffortRequirement" default-map-name="requirement" 
@@ -78,6 +78,7 @@
         </sort-order>
         <field name="workEffortId" map-name="parameters"> <display /> </field>
         <field name="requirementId" ><display/></field>
-       <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
+        <field name="facilityId" ><lookup target-form-name="LookupFacility"/></field>
+        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
     </form>
 </forms>

@@ -93,6 +93,9 @@
     <form name="EditQuote" type="single"
             target="updateQuote" title="" default-map-name="quote"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <alt-target use-when="quote==null" target="createQuote"/>
         <auto-fields-entity entity-name="Quote" default-field-type="edit"/>
         <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"><display/></field>
@@ -202,6 +205,9 @@
     <form name="EditQuoteItem" type="single"
             target="updateQuoteItem" title="" default-map-name="quoteItem"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <alt-target use-when="quoteItem==null" target="createQuoteItem"/>
         <auto-fields-entity entity-name="QuoteItem" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>

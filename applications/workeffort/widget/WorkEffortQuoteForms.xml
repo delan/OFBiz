@@ -25,17 +25,25 @@
     <form name="ListWorkEffortQuotes" separate-columns="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
         default-widget-style="tabletext" target="ListWorkEffortQuotes" title="" type="list" >
         <actions>
-            <entity-and entity-name="QuoteWorkEffort">
+            <entity-and entity-name="WorkEffortQuoteView">
                 <field-map field-name="workEffortId"/>
             </entity-and>
         </actions>
-        <field name="quoteId" widget-style="buttontext">
-            <display-entity entity-name="Quote" description="${quoteName}" >
-                <sub-hyperlink description="[${quoteId}]" target="EditWorkEffortQuote?workEffortId=${workEffortId}&amp;quoteId=${quoteId}" link-style="linktext"/>
-            </display-entity>
+        <field name="workEffortId" widget-style="buttontext" >
+            <hyperlink description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" />
+        </field>
+        <field name="quoteId" widget-style="buttontext" >
+            <hyperlink description="[${quoteId}]" target="/ordermgr/control/EditQuote?quoteId=${quoteId}" target-type="inter-app" />
+        </field>
+        <field name="quoteName"><display/></field>
+        <field name="description"><display/></field>
+        <field name="statusItemDescription"><display/></field>
+        <field name="issueDate"><display/></field>
+        <field name="editLink" widget-style="buttontext" title="&amp;nbsp;" >
+                <hyperlink description="[${uiLabelMap.CommonEdit}]" target="EditWorkEffortQuote?workEffortId=${workEffortId}&amp;quoteId=${quoteId}" link-style="linktext"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="linktext">
-            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeWorkEffortQuote?workEffortId=${workEffortId}&amp;quoteId=${quoteId}"/>
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="deleteWorkEffortQuote?workEffortId=${workEffortId}&amp;quoteId=${quoteId}"/>
         </field>
     </form>
   
@@ -52,6 +60,7 @@
         </sort-order>
         <field name="workEffortId"><display/></field>
         <field name="quoteId"><lookup target-form-name="/ordermgr/control/LookupQuote"/></field>
+        <field name="quoteName" title="Quote Name"><text/></field>
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext">
             <submit button-type="text-link"/>
         </field>
@@ -83,7 +92,14 @@
         </actions>
         <field name="workEffortId" widget-style="buttontext" field-name="workEffortId" map-name="parameters"><display /></field>
         <field name="quoteId" widget-style="buttontext"><display/></field>
-        <field name="quoteItemSeqId" widget-style="buttontext"><display/></field>
+        <field name="quoteItemSeqId" widget-style="buttontext">
+            <hyperlink description="[${quoteItemSeqId}]" target="/ordermgr/control/EditQuoteItem?workEffortId=${workEffortId}&amp;quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}" target-type="inter-app"/>
+        </field>
+        <field name="productId"><display/></field>
+        <field name="custRequestId"><display /></field>
+        <field name="custRequestItemSeqId"><display /></field>
+        <field name="estimatedDeliveryDate"><display/></field>
+        <field name="comments"><display/></field>
         <field name="editLink" title="&amp;nbsp;" widget-style="linktext">
             <hyperlink also-hidden="false" description="[${uiLabelMap.CommonEdit}]" target="EditWorkEffortQuoteItem?workEffortId=${workEffortId}&amp;quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
@@ -97,6 +113,9 @@
             default-widget-style="inputBox" 
             extends="EditQuoteItem" extends-resource="component://order/webapp/ordermgr/quote/QuoteForms.xml"
             target="createWorkEffortQuoteItem" title="" type="single">
+        <actions>
+            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <sort-order>
             <sort-field name="workEffortId"/>
             <sort-field name="quoteId"/>

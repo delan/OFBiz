@@ -25,23 +25,21 @@
     <form name="ListWorkEffortShopLists" separate-columns="true" default-title-style="tableheadtext" 
         default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list" >
         <actions>
-            <entity-condition entity-name="ShoppingListWorkEffort" >
-                <condition-list combine="and">
-                    <condition-expr field-name="workEffortId" operator="equals" env-name="workEffortId"/>
-                </condition-list>
+            <entity-and entity-name="WorkEffortShoppingListView" >
+                <field-map field-name="workEffortId" />
                 <order-by field-name="shoppingListId"/>
-            </entity-condition>
+            </entity-and>
         </actions>
-        <field name="workEffortId">
-            <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" link-style="linktext"/>
-            </display-entity>
+        <field name="workEffortId" widget-style="linktext">
+            <hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" />
         </field>
-        <field name="shoppingListId" title="${uiLabelMap.WorkEffortShopListId}" widget-style="buttontext">
-            <display-entity entity-name="ShoppingList" description="${listName} - ${description}">
-                <sub-hyperlink target="EditWorkEffortShopList?shoppingListId=${shoppingListId}&amp;workEffortId=${workEffortId}" target-type="inter-app"   description="[${shoppingListId}]" link-style="linktext"/>
-            </display-entity>
+        <field name="shoppingListId" title="${uiLabelMap.WorkEffortShopListId}" widget-style="linktext">
+            <hyperlink target="EditWorkEffortShopList?shoppingListId=${shoppingListId}&amp;workEffortId=${workEffortId}" target-type="inter-app"   description="[${shoppingListId}]"/>
         </field>
+        <field name="listName"><display/></field>
+        <field name="description"><display/></field>
+        <field name="shoppingListTypeDescription"><display/></field>
+        <field name="partyId"><display/></field>
         <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteShoppingListWorkEffort?workEffortId=${workEffortId}&amp;shoppingListId=${shoppingListId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]"/></field>
     </form>
   
@@ -52,7 +50,9 @@
             target="createShoppingListWorkEffort" title="" type="single">
         <sort-order>
             <sort-field name="workEffortId"/>
+            <banner left-text-style="tabletext" left-text="Enter existing ShoppingList Id below"/>
             <sort-field name="shoppingListId"/>
+            <banner left-text-style="tabletext" left-text="OR add new ShoppingList data below to create new entity (leave ShoppingList Id empty)"/>
         </sort-order>
         <field name="workEffortId" map-name="parameters"> <display/> </field>
         <field name="shoppingListId" ><lookup target-form-name="/ordermgr/control/LookupShoppingList"/></field>
