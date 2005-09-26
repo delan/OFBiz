@@ -32,7 +32,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align="left" width='70%' >
-            <div class='boxhead'>&nbsp;Order Statistics Page</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.OrderOrderStatisticsPage}</div>
           </TD>          
         </tr>
       </table>
@@ -49,21 +49,21 @@
               <TR>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
-                <td><div class="tableheadtext">Today</div></td>
-                <td><div class="tableheadtext">WTD</div></td>
-                <TD><div class="tableheadtext">MTD</div></td>
-                <TD><div class="tableheadtext">YTD</div></td>              
+                <td><div class="tableheadtext">${uiLabelMap.CommonToday}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.OrderWTD}</div></td>
+                <TD><div class="tableheadtext">${uiLabelMap.OrderMTD}</div></td>
+                <TD><div class="tableheadtext">${uiLabelMap.OrderYTD}</div></td>              
               </TR>
               
               <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
               <tr>
                 <td colspan="7">
-                  <div class="tableheadtext">Orders Totals</div>
+                  <div class="tableheadtext">${uiLabelMap.OrderOrdersTotals}</div>
                 </td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Gross Dollar Amounts (includes adjustments and pending orders)</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderGrossDollarAmountsIncludesAdjustmentsAndPendingOrders}</div></td>
                 <td><div class="tabletext">${dayItemTotal}</ofbiz:format></div></td>
                 <td><div class="tabletext">${weekItemTotal}</ofbiz:format></div></td>
                 <td><div class="tabletext">${monthItemTotal}</ofbiz:format></div></td>
@@ -71,7 +71,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Paid Dollar Amounts (includes adjustments)</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderPaidDollarAmountsIncludesAdjustments}</div></td>
                 <td><div class="tabletext">${dayItemTotalPaid}</ofbiz:format></div></td>
                 <td><div class="tabletext">${weekItemTotalPaid}</ofbiz:format></div></td>
                 <td><div class="tabletext">${monthItemTotalPaid}</ofbiz:format></div></td>
@@ -80,7 +80,7 @@
 
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Pending Payment Dollar Amounts (includes adjustments)</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderPendingPaymentDollarAmountsIncludesAdjustments}</div></td>
                 <td><div class="tabletext">${dayItemTotalPending}</ofbiz:format></div></td>
                 <td><div class="tabletext">${weekItemTotalPending}</ofbiz:format></div></td>
                 <td><div class="tabletext">${monthItemTotalPending}</ofbiz:format></div></td>
@@ -90,12 +90,12 @@
               <TR><TD colspan='8'><HR class='sepbar'></TD></TR>  
               <tr>
                 <td colspan="7">
-                  <div class="tableheadtext">Orders Item Counts</div>
+                  <div class="tableheadtext">${uiLabelMap.OrderOrdersItemCounts}</div>
                 </td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Gross Items Sold (includes promotions and pending orders)</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderGrossItemsSoldIncludesPromotionsAndPendingOrders}</div></td>
                 <td><div class="tabletext">${dayItemCount?string.number}</div></td>
                 <td><div class="tabletext">${weekItemCount?string.number}</div></td>
                 <td><div class="tabletext">${monthItemCount?string.number}</div></td>
@@ -103,7 +103,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Paid Items Sold (includes promotions)</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderPaidItemsSoldIncludesPromotions}</div></td>
                 <td><div class="tabletext">${dayItemCountPaid?string.number}</div></td>
                 <td><div class="tabletext">${weekItemCountPaid?string.number}</div></td>
                 <td><div class="tabletext">${monthItemCountPaid?string.number}</div></td>
@@ -111,7 +111,7 @@
               </tr>              
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Pending Payment Items Sold (includes promotions)</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderPendingPaymentItemsSoldIncludesPromotions}</div></td>
                 <td><div class="tabletext">${dayItemCountPending?string.number}</div></td>
                 <td><div class="tabletext">${weekItemCountPending?string.number}</div></td>
                 <td><div class="tabletext">${monthItemCountPending?string.number}</div></td>
@@ -120,12 +120,12 @@
               <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
               <tr>
                 <td colspan="7">
-                  <div class="tableheadtext">Orders Pending</div>
+                  <div class="tableheadtext">${uiLabelMap.OrderOrdersPending}</div>
                 </td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Waiting Payment</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderWaitingPayment}</div></td>
                 <td><div class="tabletext">${waitingPayment?default(0)?string.number}</div></td>
                 <td><div class="tabletext">--</div></td>
                 <td><div class="tabletext">--</div></td>
@@ -133,7 +133,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Waiting Approval</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderWaitingApproval}</div></td>
                 <td><div class="tabletext">${waitingApproval?default(0)?string.number}</div></td>
                 <td><div class="tabletext">--</div></td>
                 <td><div class="tabletext">--</div></td>
@@ -141,7 +141,7 @@
               </tr> 
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Waiting Completion</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderWaitingCompletion}</div></td>
                 <td><div class="tabletext">${waitingComplete?default(0)?string.number}</div></td>
                 <td><div class="tabletext">--</div></td>
                 <td><div class="tabletext">--</div></td>
@@ -151,12 +151,12 @@
               <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
               <tr>
                 <td colspan="7">
-                  <div class="tableheadtext">Status Changes</div>
+                  <div class="tableheadtext">${uiLabelMap.OrderStatusChanges}</div>
                 </td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Ordered</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderOrdered}</div></td>
                 <td><div class="tabletext">${dayOrder?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${weekOrder?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${monthOrder?size?default(0)?string.number}</div></td>
@@ -164,7 +164,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Approved</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderApproved}</div></td>
                 <td><div class="tabletext">${dayApprove?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${weekApprove?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${monthApprove?size?default(0)?string.number}</div></td>
@@ -172,7 +172,7 @@
               </tr>              
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Completed</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderCompleted}</div></td>
                 <td><div class="tabletext">${dayComplete?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${weekComplete?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${monthComplete?size?default(0)?string.number}</div></td>
@@ -180,7 +180,7 @@
               </tr>      
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Cancelled</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderCancelled}</div></td>
                 <td><div class="tabletext">${dayCancelled?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${weekCancelled?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${monthCancelled?size?default(0)?string.number}</div></td>
@@ -188,7 +188,7 @@
               </tr>  
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Rejected</div></td>
+                <td><div class="tabletext">${uiLabelMap.OrderRejected}</div></td>
                 <td><div class="tabletext">${dayRejected?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${weekRejected?size?default(0)?string.number}</div></td>
                 <td><div class="tabletext">${monthRejected?size?default(0)?string.number}</div></td>
@@ -205,5 +205,5 @@
 
 <br/>
 <#else>
-  <h3>You do not have permission to view this page.</h3>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

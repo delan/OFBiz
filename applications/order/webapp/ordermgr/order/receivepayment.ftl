@@ -25,10 +25,10 @@
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-  <p class="head1">Receive Offline Payment(s)</p>
+  <p class="head1">${uiLabelMap.OrderReceiveOfflinePayments}</p>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">Go&nbsp;Back</a>
-  &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">Save</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
+  &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
   <form method="post" action="<@ofbizUrl>/receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">    
     <input type="hidden" name="orderId" value="${requestParameters.order_id}">
@@ -37,11 +37,11 @@
     </#if>
     <table width="100%" cellpadding="1" cellspacing="0" border="0">
       <tr>
-        <td width="30%" align="right"><div class="tableheadtext"><u>Payment Type</u></div></td>
+        <td width="30%" align="right"><div class="tableheadtext"><u>${uiLabelMap.OrderPaymentType}</u></div></td>
         <td width="1">&nbsp;&nbsp;&nbsp;</td>
-        <td width="1" align="left"><div class="tableheadtext"><u>Amount</u></div></td>
+        <td width="1" align="left"><div class="tableheadtext"><u>${uiLabelMap.OrderAmount}</u></div></td>
         <td width="1">&nbsp;&nbsp;&nbsp;</td>
-        <td width="70%" align="left"><div class="tableheadtext"><u>Reference</u></div></td>
+        <td width="70%" align="left"><div class="tableheadtext"><u>${uiLabelMap.OrderReference}</u></div></td>
       </tr>    
       <#list paymentMethodTypes as payType>
       <tr>
@@ -55,10 +55,10 @@
     </table>
   </form>
   
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">Go&nbsp;Back</a>
-  &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">Save</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
+  &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
    
 <br/>
 <#else>
-  <h3>You do not have permission to view this page. ("ORDERMGR_UPDATE" or "ORDERMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>
