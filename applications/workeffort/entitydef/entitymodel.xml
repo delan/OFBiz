@@ -1173,10 +1173,15 @@
       <description>Ties ShoppingListWE to ShoppingList.</description>
       <member-entity entity-alias="SLWE" entity-name="ShoppingListWorkEffort"/>
       <member-entity entity-alias="SL" entity-name="ShoppingList"/>
+      <member-entity entity-alias="SLT" entity-name="ShoppingListType"/>
       <alias-all entity-alias="SLWE"/>
       <alias-all entity-alias="SL"/>
+      <alias name="shoppingListTypeDescription" field="description" entity-alias="SLT"/>
       <view-link entity-alias="SLWE" rel-entity-alias="SL">
         <key-map field-name="shoppingListId"/>
+      </view-link>
+      <view-link entity-alias="SL" rel-entity-alias="SLT" rel-optional="true">
+        <key-map field-name="shoppingListTypeId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
@@ -1191,10 +1196,15 @@
       <description>Ties QuoteWE to Quote.</description>
       <member-entity entity-alias="QWE" entity-name="QuoteWorkEffort"/>
       <member-entity entity-alias="Q" entity-name="Quote"/>
+      <member-entity entity-alias="SI" entity-name="StatusItem"/>
       <alias-all entity-alias="QWE"/>
       <alias-all entity-alias="Q"/>
+      <alias name="statusItemDescription" field="description" entity-alias="SI"/>
       <view-link entity-alias="QWE" rel-entity-alias="Q">
         <key-map field-name="quoteId"/>
+      </view-link>
+      <view-link entity-alias="Q" rel-entity-alias="SI" rel-optional="true">
+        <key-map field-name="statusId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
@@ -1218,10 +1228,10 @@
       <view-link entity-alias="OHWE" rel-entity-alias="OH">
         <key-map field-name="orderId"/>
       </view-link>
-      <view-link entity-alias="OH" rel-entity-alias="OT">
+      <view-link entity-alias="OH" rel-entity-alias="OT" rel-optional="true" >
         <key-map field-name="orderTypeId"/>
       </view-link>
-      <view-link entity-alias="OH" rel-entity-alias="SI">
+      <view-link entity-alias="OH" rel-entity-alias="SI" rel-optional="true">
         <key-map field-name="statusId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="WorkEffort">
@@ -1235,6 +1245,103 @@
       </relation>
       <relation type="one" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="WorkEffortCustRequestView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort And CustRequest">
+      <description>Ties CustRequestWE to CustRequest.</description>
+      <member-entity entity-alias="CRWE" entity-name="CustRequestWorkEffort"/>
+      <member-entity entity-alias="CR" entity-name="CustRequest"/>
+      <member-entity entity-alias="CRT" entity-name="CustRequestType"/>
+      <member-entity entity-alias="SI" entity-name="StatusItem"/>
+      <alias-all entity-alias="CRWE"/>
+      <alias-all entity-alias="CR"/>
+      <alias name="custRequestTypeDescription" field="description" entity-alias="CRT"/>
+      <alias name="statusItemDescription" field="description" entity-alias="SI"/>
+      <view-link entity-alias="CRWE" rel-entity-alias="CR">
+        <key-map field-name="custRequestId"/>
+      </view-link>
+      <view-link entity-alias="CR" rel-entity-alias="CRT" rel-optional="true">
+        <key-map field-name="custRequestTypeId"/>
+      </view-link>
+      <view-link entity-alias="CR" rel-entity-alias="SI" rel-optional="true">
+        <key-map field-name="statusId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="one" rel-entity-name="CustRequestType">
+        <key-map field-name="custRequestTypeId"/>
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="WorkEffortCustRequestItemView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort And CustRequest">
+      <description>Ties CustRequestWE to CustRequest.</description>
+      <member-entity entity-alias="CRIWE" entity-name="CustRequestItemWorkEffort"/>
+      <member-entity entity-alias="CRI" entity-name="CustRequestItem"/>
+      <member-entity entity-alias="SI" entity-name="StatusItem"/>
+      <alias-all entity-alias="CRIWE"/>
+      <alias-all entity-alias="CRI"/>
+      <alias name="statusItemDescription" field="description" entity-alias="SI"/>
+      <view-link entity-alias="CRIWE" rel-entity-alias="CRI">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </view-link>
+      <view-link entity-alias="CRI" rel-entity-alias="SI" rel-optional="true">
+        <key-map field-name="statusId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CustRequestItem">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="WorkEffortRequirementView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="WorkRequirementFulfillment And Requirement">
+      <description>Ties WorkRequirementFulfillment to Requirement.</description>
+      <member-entity entity-alias="WRF" entity-name="WorkRequirementFulfillment"/>
+      <member-entity entity-alias="R" entity-name="Requirement"/>
+      <member-entity entity-alias="SI" entity-name="StatusItem"/>
+      <member-entity entity-alias="WRFT" entity-name="WorkReqFulfType"/>
+      <alias-all entity-alias="WRF"/>
+      <alias-all entity-alias="R"/>
+      <alias name="statusItemDescription" field="description" entity-alias="SI"/>
+      <alias name="workReqFulfTypeDescription" field="description" entity-alias="WRFT"/>
+      <alias name="requirementDescription" field="description" entity-alias="R"/>
+      <view-link entity-alias="WRF" rel-entity-alias="R">
+        <key-map field-name="requirementId"/>
+      </view-link>
+      <view-link entity-alias="R" rel-entity-alias="SI" rel-optional="true">
+        <key-map field-name="statusId"/>
+      </view-link>
+      <view-link entity-alias="WRF" rel-entity-alias="WRFT" rel-optional="true">
+        <key-map field-name="workReqFulfTypeId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Requirement">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" rel-entity-name="WorkReqFulfType">
+        <key-map field-name="workReqFulfTypeId"/>
       </relation>
     </view-entity>
 </entitymodel>

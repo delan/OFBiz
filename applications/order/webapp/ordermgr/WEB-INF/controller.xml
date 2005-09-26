@@ -1105,6 +1105,42 @@
         <response name="error" type="view" value="ListQuoteWorkEfforts"/>
     </request-map>
     
+    
+    <!--  OrderHeader request mappings -->
+    <request-map uri="ListOrderHeaders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListOrderHeaders"/>
+    </request-map>
+    
+    <request-map uri="AddOrderHeader">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditOrderHeader"/>
+    </request-map>
+    
+    <request-map uri="EditOrderHeader">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditOrderHeader"/>
+    </request-map>
+    
+    <request-map uri="createOrderHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrderHeader"/>
+        <response name="success" type="view" value="EditOrderHeader"/>
+        <response name="error" type="view" value="AddOrderHeader"/>
+    </request-map>
+    <request-map uri="updateOrderHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateOrderHeader"/>
+        <response name="success" type="view" value="EditOrderHeader"/>
+        <response name="error" type="view" value="EditOrderHeader"/>
+    </request-map>
+    <request-map uri="deleteOrderHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteOrderHeader"/>
+        <response name="success" type="view" value="ListOrderHeaders"/>
+        <response name="error" type="view" value="ListOrderHeaders"/>
+    </request-map>
+    
 
     <!-- Lookup request mappings -->
     <request-map uri="LookupPerson">
@@ -1278,6 +1314,8 @@
     <view-map name="AddQuoteWorkEffort" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#AddQuoteWorkEffort"/>
     <view-map name="EditQuoteWorkEffort" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#EditQuoteWorkEffort"/>
     <view-map name="ListQuoteWorkEfforts" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#ListQuoteWorkEfforts"/>
+    <view-map name="EditOrderHeader" type="screen" page="component://order/widget/ordermgr/OrderHeaderScreens.xml#EditOrderHeader"/>
+    <view-map name="ListOrderHeaders" type="screen" page="component://order/widget/ordermgr/OrderHeaderScreens.xml#ListOrderHeaders"/>
 
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>

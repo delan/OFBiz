@@ -120,6 +120,7 @@
                 
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <entity-one entity-name="Quote" value-name="quote"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator">

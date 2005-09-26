@@ -700,6 +700,10 @@
         <if-not-empty field-name="custRequestItem">
             <string-to-field field-name="custRequestItemExists" string="true"/>
             <field-to-result field-name="custRequestItemExists"/>
+            <log level="always" message="custRequestItemExists: ${custRequestItemExists}" />
+            <else>
+                <log level="always" message="custRequestItemExists: empty" />
+            </else>
         </if-not-empty>
     </simple-method>
 
