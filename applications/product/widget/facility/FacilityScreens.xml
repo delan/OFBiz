@@ -379,7 +379,7 @@
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <service service-name="findOrdersToPickMove">
-                    <field-map env-name="facilityId"/>
+                    <field-map field-name="facilityId"/>
                 </service>
 
                 <entity-condition entity-name="Picklist" list-name="picklistActiveList">
@@ -411,7 +411,7 @@
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <service service-name="getPicklistDisplayInfo">
-                    <field-map env-name="facilityId"/>
+                    <field-map field-name="facilityId"/>
                 </service>
                 
                 <entity-condition entity-name="PartyRoleAndPartyDetail" list-name="partyRoleAndPartyDetailList" use-cache="true">
@@ -446,12 +446,12 @@
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <service service-name="findStockMovesNeeded">
-                    <field-map env-name="facilityId"/>
+                    <field-map field-name="facilityId"/>
                 </service>
                 <set field="oiirWarningMessageList" from-field="warningMessageList"/>
                 <service service-name="findStockMovesRecommended">
-                    <field-map env-name="facilityId"/>
-                    <field-map env-name="stockMoveHandled"/>
+                    <field-map field-name="facilityId"/>
+                    <field-map field-name="stockMoveHandled"/>
                 </service>
                 <set field="pflWarningMessageList" from-field="warningMessageList"/>
             </actions>
@@ -476,7 +476,7 @@
 
                 <set field="picklistId" from-field="parameters.picklistId"/>
                 <service service-name="getPickAndPackReportInfo">
-                    <field-map env-name="picklistId"/>
+                    <field-map field-name="picklistId"/>
                 </service>
             </actions>
             <widgets>
@@ -487,4 +487,3 @@
         </section>
     </screen>
 </screens>
-

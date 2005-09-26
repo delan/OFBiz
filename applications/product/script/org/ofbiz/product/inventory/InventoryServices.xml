@@ -54,9 +54,9 @@
             </condition>
             <then>
                 <log level="info" message="Got an InventoryItem with ATP/QOH Total with ID ${parameters.inventoryItemId}, creating InventoryItemDetail"/>
-                <env-to-env env-name="parameters.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
-                <env-to-env env-name="parameters.availableToPromiseTotal" to-env-name="createDetailMap.availableToPromiseDiff"/>
-                <env-to-env env-name="parameters.quantityOnHandTotal" to-env-name="createDetailMap.quantityOnHandDiff"/>
+                <set from-field="parameters.inventoryItemId" field="createDetailMap.inventoryItemId"/>
+                <set from-field="parameters.availableToPromiseTotal" field="createDetailMap.availableToPromiseDiff"/>
+                <set from-field="parameters.quantityOnHandTotal" field="createDetailMap.quantityOnHandDiff"/>
                 <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
             </then>
         </if>
@@ -78,7 +78,7 @@
     <simple-method method-name="createInventoryItemDetail" short-description="Create an InventoryItemDetail">
         <make-value value-name="newEntity" entity-name="InventoryItemDetail"/>
 
-        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="newEntity"/>
+        <set from-field="parameters.inventoryItemId" field="newEntity.inventoryItemId"/>
         <make-next-seq-id seq-field-name="inventoryItemDetailSeqId" value-name="newEntity" increment-by="1" numeric-padding="4"/>
         <field-to-result field-name="newEntity.inventoryItemDetailSeqId" result-name="inventoryItemDetailSeqId"/>
 
@@ -90,8 +90,8 @@
         <entity-one entity-name="InventoryItem" value-name="inventoryItem"/>
         <entity-one entity-name="InventoryItemDetailSummary" value-name="inventoryItemDetailSummary"/>
 
-        <env-to-env env-name="inventoryItemDetailSummary.availableToPromiseTotal" to-env-name="inventoryItem.availableToPromiseTotal"/>
-        <env-to-env env-name="inventoryItemDetailSummary.quantityOnHandTotal" to-env-name="inventoryItem.quantityOnHandTotal"/>
+        <set from-field="inventoryItemDetailSummary.availableToPromiseTotal" field="inventoryItem.availableToPromiseTotal"/>
+        <set from-field="inventoryItemDetailSummary.quantityOnHandTotal" field="inventoryItem.quantityOnHandTotal"/>
         <store-value value-name="inventoryItem"/>
     </simple-method>
     <simple-method method-name="updateOldInventoryToDetailAll" short-description="Update Old Inventory To Detail All">
@@ -103,16 +103,16 @@
             </condition-list>
         </entity-condition>
         <iterate list-name="inventoryItemList" entry-name="inventoryItem">
-            <env-to-env env-name="inventoryItem" to-env-name="callServiceMap.inventoryItem"/>
+            <set from-field="inventoryItem" field="callServiceMap.inventoryItem"/>
             <call-service service-name="updateOldInventoryToDetailSingle" in-map-name="callServiceMap"/>
             <clear-field field-name="callServiceMap.inventoryItem"/>
         </iterate>
     </simple-method>
     <simple-method method-name="updateOldInventoryToDetailSingle" short-description="Update Old Inventory To Detail Single">
         <!-- for each create an InventoryItemDetail representing the old QOH or ATP value, then null those fields -->
-        <env-to-env env-name="parameters.inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
-        <env-to-env env-name="parameters.inventoryItem.oldAvailableToPromise" to-env-name="createDetailMap.availableToPromiseDiff"/>
-        <env-to-env env-name="parameters.inventoryItem.oldQuantityOnHand" to-env-name="createDetailMap.quantityOnHandDiff"/>
+        <set from-field="parameters.inventoryItem.inventoryItemId" field="createDetailMap.inventoryItemId"/>
+        <set from-field="parameters.inventoryItem.oldAvailableToPromise" field="createDetailMap.availableToPromiseDiff"/>
+        <set from-field="parameters.inventoryItem.oldQuantityOnHand" field="createDetailMap.quantityOnHandDiff"/>
         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
 
         <clear-field field-name="parameters.inventoryItem.oldAvailableToPromise"/>
@@ -121,7 +121,7 @@
     </simple-method>
 
     <simple-method method-name="checkProductInventoryDiscontinuation" short-description="Check Product Inventory Discontinuation" login-required="false">
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="productIdMap"/>
+        <set from-field="parameters.productId" field="productIdMap.productId"/>
         <find-by-primary-key entity-name="Product" map-name="productIdMap" value-name="product"/>
         <now-timestamp-to-env env-name="nowTimestamp"/>
         <!-- before checking inventory availability see if the product is already discontinued, and discontinued in the past (if in the future, still check availability and discontinue now if necessary) -->
@@ -141,7 +141,7 @@
                     <result-to-field result-name="availableToPromiseTotal"/>
                 </call-service>
                 <if-compare field-name="availableToPromiseTotal" operator="less-equals" value="0" type="Double">
-                    <field-to-field field-name="productId" map-name="parameters" to-map-name="discontinueProductSalesMap"/>
+                    <set from-field="parameters.productId" field="discontinueProductSalesMap.productId"/>
                     <call-service service-name="discontinueProductSales" in-map-name="discontinueProductSalesMap"/>
                 </if-compare>
             </then>
@@ -166,10 +166,10 @@
         <check-errors/>
 
         <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
-        <env-to-env env-name="parameters.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
-        <env-to-env env-name="parameters.physicalInventoryId" to-env-name="createDetailMap.physicalInventoryId"/>
-        <env-to-env env-name="parameters.availableToPromiseVar" to-env-name="createDetailMap.availableToPromiseDiff"/>
-        <env-to-env env-name="parameters.quantityOnHandVar" to-env-name="createDetailMap.quantityOnHandDiff"/>
+        <set from-field="parameters.inventoryItemId" field="createDetailMap.inventoryItemId"/>
+        <set from-field="parameters.physicalInventoryId" field="createDetailMap.physicalInventoryId"/>
+        <set from-field="parameters.availableToPromiseVar" field="createDetailMap.availableToPromiseDiff"/>
+        <set from-field="parameters.quantityOnHandVar" field="createDetailMap.quantityOnHandDiff"/>
         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
 
         <make-value value-name="newEntity" entity-name="InventoryItemVariance"/>
@@ -194,11 +194,11 @@
             <now-timestamp-to-env env-name="newEntity.physicalInventoryDate"/>
         </if-empty>
         <if-empty field-name="newEntity.partyId">
-            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newEntity"/>
+            <set from-field="userLogin.partyId" field="newEntity.partyId"/>
         </if-empty>
 
         <sequenced-id-to-env sequence-name="PhysicalInventory" env-name="physicalInventoryId"/>
-        <env-to-field env-name="physicalInventoryId" map-name="newEntity"/>
+        <set from-field="physicalInventoryId" field="newEntity.physicalInventoryId"/>
         <field-to-result field-name="physicalInventoryId" result-name="physicalInventoryId"/>
 
         <create-value value-name="newEntity"/>
@@ -215,9 +215,9 @@
 
     <!-- ProductFacility methods -->
     <simple-method method-name="createProductFacility" short-description="Create a ProductFacility">
-        <string-to-field string="createProductFacility" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
-        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <set value="createProductFacility" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
+        <set value="FACILITY" field="alternatePermissionRoot"/>
         <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
@@ -227,9 +227,9 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductFacility" short-description="Update a ProductFacility">
-        <string-to-field string="updateProductFacility" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
-        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <set value="updateProductFacility" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
+        <set value="FACILITY" field="alternatePermissionRoot"/>
         <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
@@ -240,9 +240,9 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductFacility" short-description="Delete a ProductFacility">
-        <string-to-field string="deleteProductFacility" field-name="callingMethodName"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
-        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <set value="deleteProductFacility" field="callingMethodName"/>
+        <set value="DELETE" field="checkAction"/>
+        <set value="FACILITY" field="alternatePermissionRoot"/>
         <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
@@ -254,9 +254,9 @@
 
     <!-- ProductFacilityLocation methods -->
     <simple-method method-name="createProductFacilityLocation" short-description="Create a ProductFacilityLocation">
-        <string-to-field string="createProductFacilityLocation" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
-        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <set value="createProductFacilityLocation" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
+        <set value="FACILITY" field="alternatePermissionRoot"/>
         <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
@@ -266,9 +266,9 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductFacilityLocation" short-description="Update a ProductFacilityLocation">
-        <string-to-field string="updateProductFacilityLocation" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
-        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <set value="updateProductFacilityLocation" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
+        <set value="FACILITY" field="alternatePermissionRoot"/>
         <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
@@ -279,9 +279,9 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductFacilityLocation" short-description="Delete a ProductFacilityLocation">
-        <string-to-field string="deleteProductFacilityLocation" field-name="callingMethodName"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
-        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <set value="deleteProductFacilityLocation" field="callingMethodName"/>
+        <set value="DELETE" field="checkAction"/>
+        <set value="FACILITY" field="alternatePermissionRoot"/>
         <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
@@ -310,26 +310,26 @@
         <log level="info" message="foo foo: "><string value="Getting inventory available to promise count; productId is: "/><field field-name="productId" map-name="parameters"/></log>
         -->
 
-        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupFieldMap"/>
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
-        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
-        <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
-
+        <set from-field="parameters.inventoryItemId" field="lookupFieldMap.inventoryItemId"/>
+        <set from-field="parameters.productId" field="lookupFieldMap.productId"/>
+        <set from-field="parameters.facilityId" field="lookupFieldMap.facilityId"/>
+        <set from-field="parameters.containerId" field="lookupFieldMap.containerId"/>
+        
         <!-- we might get away with a cache here since real serious errors will occur during the reservation service... but only if we need the speed -->
         <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems"/> <!-- use-cache="true" -->
-
+        
         <!-- first check if this item is a MARKETING_PKG_AUTO and, if so, call another service to get the results -->
         <if-not-empty field-name="productId" map-name="parameters">
             <!-- find components of the MARKETING_PKG_AUTO for this product -->
-            <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupMktgPkgParams"/>
-            <string-to-field string="MARKETING_PKG_AUTO" field-name="type" map-name="lookupMktgPkgParams"/>
+            <set from-field="parameters.productId" field="lookupMktgPkgParams.productId"/>
+            <set value="MARKETING_PKG_AUTO" field="lookupMktgPkgParams.type"/>
             <call-service service-name="getAssociatedProducts" in-map-name="lookupMktgPkgParams">
                 <result-to-field result-name="assocProducts"/>
             </call-service>
             <!-- if there are any MARKETING_PKG_AUTO components, then the ATP and QOH are based on the quantities of those component
                 products and found with another service -->
             <if-not-empty field-name="assocProducts">
-                <env-to-field env-name="assocProducts" field-name="assocProducts" map-name="inventoryByAssocProductsParams"/>
+                <set from-field="assocProducts" field="inventoryByAssocProductsParams.assocProducts"/>
                 <call-service service-name="getProductInventoryAvailablefromAssocProducts" in-map-name="inventoryByAssocProductsParams">
                     <result-to-result result-name="quantityOnHandTotal"/>
                     <result-to-result result-name="availableToPromiseTotal"/>
@@ -338,8 +338,8 @@
             </if-not-empty>
         </if-not-empty>
 
-        <calculate field-name="parameters.availableToPromiseTotal" type="Double"><number value="0"/></calculate>
-        <calculate field-name="parameters.quantityOnHandTotal" type="Double"><number value="0"/></calculate>
+        <set field="parameters.availableToPromiseTotal" value="0" type="Double"/>
+        <set field="parameters.quantityOnHandTotal" value="0" type="Double"/>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="SERIALIZED_INV_ITEM">
                 <calculate field-name="parameters.quantityOnHandTotal" type="Double">
@@ -372,16 +372,16 @@
     </simple-method>
 
     <simple-method method-name="getInventoryAlerts" short-description="getInventoryAlerts" login-required="false">
-        <field-to-field field-name="catalogId" map-name="parameters" to-map-name="lookupFieldMap"/>
+        <set from-field="parameters.catalogId" field="lookupFieldMap.catalogId"/>
         <find-by-and entity-name="InventoryAlert" map-name="lookupFieldMap" list-name="inventoryAlerts" />
         <iterate entry-name="inventoryAlert" list-name="inventoryAlerts">
-            <field-to-field map-name="inventoryAlert" field-name="productId" to-map-name="inventoryLookup" />
+            <set from-field="inventoryAlert.productId" field="inventoryLookup.productId"/>
             <call-service service-name="getProductInventoryAvailable" in-map-name="inventoryLookup">
                 <result-to-field result-name="availableToPromiseTotal" map-name="getInventoryResults" />
             </call-service>
             <if-compare-field field-name="availableToPromiseTotal" map-name="getInventoryResults" operator="less" to-map-name="inventoryAlert" to-field-name="inventoryLevel" type="Double" >
-                <field-to-field map-name="inventoryAlert" field-name="productId" to-map-name="alertResult" />
-                <field-to-field map-name="getInventoryResults" field-name="availableToPromiseTotal" to-map-name="alertResult" />
+                <set from-field="inventoryAlert.productId" field="alertResult.productId"/>
+                <set from-field="getInventoryResults.availableToPromiseTotal" field="alertResult.availableToPromiseTotal"/>
                 <field-to-list field-name="alertResult" list-name="alertResults" />
             </if-compare-field>
         </iterate>
@@ -390,9 +390,9 @@
     </simple-method>
 
     <simple-method method-name="emailInventoryAlerts" short-description="Email Inventory Alerts" login-required="false">
-        <field-to-field map-name="parameters" field-name="catalogId" to-map-name="urlParams" />
-        <field-to-field field-name="urlParams" to-map-name="emailParams" to-field-name="bodyUrlParameters" />
-        <string-to-field string="mail.smtp.host" field-name="sendType" map-name="emailParams" />
+        <set from-field="parameters.catalogId" field="urlParams.catalogId"/>
+        <set from-field="urlParams" field="emailParams.bodyUrlParameters"/>
+        <set value="mail.smtp.host" field="emailParams.sendType"/>
 
         <property-to-field resource="inventoryalerts" property="mailhost" field-name="sendVia" map-name="emailParams"/>
         <property-to-field resource="inventoryalerts" property="sendTo" field-name="sendTo" map-name="emailParams"/>
@@ -413,9 +413,9 @@
         <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
         <if-compare field-name="inventoryItemTypeId" map-name="inventoryItem" operator="equals" value="NON_SERIAL_INV_ITEM">
             <!-- now find all items related by product/facility -->
-            <field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="lookupMap"/>
-            <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="lookupMap"/>
-            <string-to-field field-name="inventoryItemTypeId" map-name="lookupMap" string="NON_SERIAL_INV_ITEM"/>
+            <set from-field="inventoryItem.facilityId" field="lookupMap.facilityId"/>
+            <set from-field="inventoryItem.productId" field="lookupMap.productId"/>
+            <set value="NON_SERIAL_INV_ITEM" field="lookupMap.inventoryItemTypeId"/>
             <find-by-and entity-name="InventoryItem" map-name="lookupMap" list-name="inventoryItems"/>
 
             <!-- find all items which have a negative ATP; find their current reservations -->
@@ -459,23 +459,23 @@
 
             <iterate list-name="allReservations" entry-name="oisgir">
                 <!-- cancel the reservation -->
-                <field-to-field field-name="orderId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
-                <field-to-field field-name="orderItemSeqId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
-                <field-to-field field-name="inventoryItemId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
-                <field-to-field field-name="shipGroupSeqId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+                <set from-field="oisgir.orderId" field="cancelOisgirMap"/>
+                <set from-field="oisgir.orderItemSeqId" field="cancelOisgirMap.orderItemSeqId"/>
+                <set from-field="oisgir.inventoryItemId" field="cancelOisgirMap.inventoryItemId"/>
+                <set from-field="oisgir.shipGroupSeqId" field="cancelOisgirMap.shipGroupSeqId"/>
                 <call-service service-name="cancelOrderItemShipGrpInvRes" in-map-name="cancelOisgirMap"/>
                 <clear-field field-name="cancelOisgirMap"/>
 
                 <!-- re-reserve the cancelled item -->
                 <!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
-                <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="resMap"/>
-                <field-to-field field-name="orderId" map-name="oisgir" to-map-name="resMap"/>
-                <field-to-field field-name="orderItemSeqId" map-name="oisgir" to-map-name="resMap"/>
-                <field-to-field field-name="quantity" map-name="oisgir" to-map-name="resMap"/>
-                <field-to-field field-name="reservedDatetime" map-name="oisgir" to-map-name="resMap"/>
-                <field-to-field field-name="reserveOrderEnumId" map-name="oisgir" to-map-name="resMap"/>
-                <string-to-field field-name="requireInventory" map-name="resMap" string="N"/>
-                <field-to-field field-name="shipGroupSeqId" map-name="oisgir" to-map-name="resMap"/>
+                <set from-field="inventoryItem.productId" field="resMap.productId"/>
+                <set from-field="oisgir.orderId" field="resMap.orderId"/>
+                <set from-field="oisgir.orderItemSeqId" field="resMap.orderItemSeqId"/>
+                <set from-field="oisgir.quantity" field="resMap.quantity"/>
+                <set from-field="oisgir.reservedDatetime" field="resMap.reservedDatetime"/>
+                <set from-field="oisgir.reserveOrderEnumId" field="resMap.reserveOrderEnumId"/>
+                <set field="resMap.requireInventory" value="N"/>
+                <set from-field="oisgir.shipGroupSeqId" field="resMap.shipGroupSeqId"/>
                 <call-service service-name="reserveProductInventory" in-map-name="resMap"/>
                 <clear-field field-name="resMap"/>
             </iterate>
@@ -498,10 +498,9 @@
         <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="Security Error: to run updateInventoryTransfer you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="inventoryTransferId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set from-field="parameters.inventoryTransferId" field="lookupPKMap.inventoryTransferId"/>
         <find-by-primary-key entity-name="InventoryTransfer" map-name="lookupPKMap" value-name="inventoryTransfer"/>
         <set-nonpk-fields map-name="parameters" value-name="inventoryTransfer"/>
         <store-value value-name="inventoryTransfer"/>
     </simple-method>
 </simple-methods>
-
