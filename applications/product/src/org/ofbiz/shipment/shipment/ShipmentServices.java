@@ -41,10 +41,14 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.common.geo.GeoWorker;
+import javolution.util.FastMap;
 
 /**
  * ShipmentServices
@@ -135,7 +139,7 @@ public class ShipmentServices {
     }
 
     private static boolean applyQuantityBreak(Map context, Map result, List storeAll, GenericDelegator delegator,
-    		GenericValue estimate, String prefix, String breakType, String breakTypeString) {
+                                              GenericValue estimate, String prefix, String breakType, String breakTypeString) {
         Double min = (Double) context.get(prefix + "min");
         Double max = (Double) context.get(prefix + "max");
         if (min != null || max != null) {
@@ -609,6 +613,163 @@ public class ShipmentServices {
             }
         } else {
             Debug.logWarning("Shipment #" + shipmentId + " is not available for shipment; not setting in staging tables.", module);
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map updateShipmentsFromStaging(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        List orderBy = UtilMisc.toList("shipmentId", "shipmentPackageSeqId", "voidIndicator");
+        Map shipmentMap = FastMap.newInstance();
+
+        EntityListIterator eli = null;
+        try {
+            eli = delegator.findListIteratorByCondition("OdbcPackageIn", null, null, orderBy);
+            GenericValue pkgInfo;
+            while ((pkgInfo = (GenericValue) eli.next()) != null) {
+                String packageSeqId = pkgInfo.getString("shipmentPackageSeqId");
+                String shipmentId = pkgInfo.getString("shipmentId");
+
+                if ("00001".equals(packageSeqId)) {
+                    // only need to do this for the first package
+                    GenericValue rtSeg = null;
+                    try {
+                        rtSeg = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", "00001"));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+
+                    if (rtSeg == null) {
+                        rtSeg = delegator.makeValue("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", "00001"));
+                        try {
+                            delegator.create(rtSeg);
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, module);
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+                    }
+
+                    rtSeg.set("actualStartDate", pkgInfo.get("shippedDate"));
+                    rtSeg.set("billingWeight", pkgInfo.get("billingWeight"));
+                    rtSeg.set("actualCost", pkgInfo.get("shippingTotal"));
+                    rtSeg.set("trackingIdNumber", pkgInfo.get("externalShipmentId"));
+                    try {
+                        delegator.store(rtSeg);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                }
+
+                Map pkgCtx = FastMap.newInstance();
+                pkgCtx.put("shipmentId", shipmentId);
+                pkgCtx.put("shipmentPackageSeqId", packageSeqId);
+
+                // first update the weight of the package
+                GenericValue pkg = null;
+                try {
+                    pkg = delegator.findByPrimaryKey("ShipmentPackage", pkgCtx);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+
+                if (pkg == null) {
+                    return ServiceUtil.returnError("Package not found! - " + pkgCtx);
+                }
+
+                pkg.set("weight", pkgInfo.get("packageWeight"));
+                try {
+                    delegator.store(pkg);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+
+                // need if we are the first package (only) update the route seg info
+                pkgCtx.put("shipmentRouteSegmentId", "00001");
+                GenericValue pkgRtSeg = null;
+                try {
+                    pkgRtSeg = delegator.findByPrimaryKey("ShipmentPackageRouteSeg", pkgCtx);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+
+                if (pkgRtSeg == null) {
+                    pkgRtSeg = delegator.makeValue("ShipmentPackageRouteSeg", pkgCtx);
+                    try {
+                        delegator.create(pkgRtSeg);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                }
+
+                pkgRtSeg.set("trackingCode", pkgInfo.get("trackingNumber"));
+                pkgRtSeg.set("boxNumber", pkgInfo.get("shipmentPackageSeqId"));
+                pkgRtSeg.set("packageServiceCost", pkgInfo.get("packageTotal"));
+                try {
+                    delegator.store(pkgRtSeg);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+                shipmentMap.put(shipmentId, pkgInfo.get("voidIndicator"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } finally {
+            if (eli != null) {
+                try {
+                    eli.close();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+
+        // update the status of each shipment
+        Iterator i = shipmentMap.keySet().iterator();
+        while (i.hasNext()) {
+            String shipmentId = (String) i.next();
+            String voidInd = (String) shipmentMap.get(shipmentId);
+            Map shipCtx = FastMap.newInstance();
+            shipCtx.put("shipmentId", shipmentId);
+            if ("Y".equals(voidInd)) {
+                shipCtx.put("statusId", "SHIPMENT_CANCELLED");
+            } else {
+                shipCtx.put("statusId", "SHIPMENT_SHIPPED");
+            }
+            shipCtx.put("userLogin", userLogin);
+            Map shipResp = null;
+            try {
+                shipResp = dispatcher.runSync("updateShipment", shipCtx);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+            if (ServiceUtil.isError(shipResp)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(shipResp));
+            }
+
+            // remove the shipment info
+            Map clearResp = null;
+            try {
+                clearResp = dispatcher.runSync("clearShipmentStaging", UtilMisc.toMap("shipmentId", shipmentId, "userLogin", userLogin));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+            if (ServiceUtil.isError(clearResp)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(clearResp));
+            }
         }
 
         return ServiceUtil.returnSuccess();

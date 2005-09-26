@@ -23,7 +23,7 @@
  *  $Id$
 -->
 
-<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
     <screen name="FindFacility">
         <section>
@@ -60,13 +60,13 @@
                                 <platform-specific>
                                     <html><html-template location="component://product/webapp/facility/facility/FacilityTabBar.ftl"/></html>
                                 </platform-specific>
-            
+
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
-                        </section>                    
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -186,7 +186,7 @@
                 <set field="productTypeId" from-field="parameters.productTypeId"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="offsetQty" from-field="parameters.offsetQty"/>
-                
+
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/ViewFacilityInventoryByProduct.bsh"/>
             </actions>
             <widgets>
@@ -413,7 +413,7 @@
                 <service service-name="getPicklistDisplayInfo">
                     <field-map field-name="facilityId"/>
                 </service>
-                
+
                 <entity-condition entity-name="PartyRoleAndPartyDetail" list-name="partyRoleAndPartyDetailList" use-cache="true">
                     <condition-expr field-name="roleTypeId" value="PICKER"/>
                 </entity-condition>
@@ -470,7 +470,7 @@
     <screen name="PicklistReport.fo">
         <section>
             <actions>
-                <!-- base/top/specific map first, then more common map added for shared labels --> 
+                <!-- base/top/specific map first, then more common map added for shared labels -->
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 

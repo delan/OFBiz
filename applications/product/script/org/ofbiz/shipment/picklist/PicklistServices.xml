@@ -73,11 +73,16 @@
         <now-timestamp-to-env env-name="nowTimestamp"/>
 
         <if-empty field-name="orderHeaderList" map-name="parameters">
+            <log level="always" message="No order header list found in parameters; finding orders to pick."/>
             <string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
             <string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
             <if-not-empty field-name="parameters.isRushOrder"><env-to-env env-name="parameters.isRushOrder" to-env-name="orderHeaderLkpMp.isRushOrder"/></if-not-empty>
             <string-to-list string="+orderDate" list-name="orderHeaderOrdLst"/><!-- oldest first -->
             <find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
+        <else>
+            <field-to-env field-name="orderHeaderList" map-name="parameters" env-name="orderHeaderList"/>
+            <log level="info" message="Found orderHeaderList in parameters; using: ${orderHeaderList}"/>
+        </else>
         </if-empty>
 
         <iterate entry-name="orderHeader" list-name="orderHeaderList">
@@ -720,15 +725,29 @@
                 <else>
                     <!-- handle case where an InventoryItem is not associated with a location -->
                     <if-not-empty field-name="picklistItemInfo.orderItem.productId">
+                        <clear-field field-name="productValueTemp"/>
                         <env-to-env env-name="picklistItemInfo.orderItem.productId" to-env-name="productId"/>
-                        <entity-one entity-name="Product" value-name="productByProductIdMap.${productId}" use-cache="true">
-                            <field-map env-name="productId"/>
+                        <entity-one entity-name="Product" value-name="productValueTemp" use-cache="true">
+                            <field-map field-name="productId"/>
                         </entity-one>
+                        <env-to-env to-env-name="productByProductIdMap.${productId}" env-name="productValueTemp"/>
+
+                        <!--
+                        <call-bsh><![CDATA[
+                        org.ofbiz.base.util.Debug.log("Added " + productId + " to product by product Map, now: " + productByProductIdMap.size());
+                        ]]></call-bsh>
+                        -->
 
                         <clear-field field-name="picklistItemInfoTempList"/>
                         <env-to-env env-name="picklistItemInfoListByProductIdMap.${productId}" to-env-name="picklistItemInfoTempList"/>
                         <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
                         <env-to-env env-name="picklistItemInfoTempList" to-env-name="picklistItemInfoListByProductIdMap.${productId}"/>
+
+                        <!--
+                        <call-bsh><![CDATA[
+                        org.ofbiz.base.util.Debug.log("Added " + productId + " to pick item info list, now: " + picklistItemInfoListByProductIdMap.size());
+                        ]]></call-bsh>
+                        -->
                     <else>
                         <!-- Uh oh, no productId, how did this happen? -->
                         <log level="warning" message="No productId and no FacilityLocation, not showing in Picklist for PicklistItem: ${picklistItemInfo.picklistItem}"/>

@@ -78,6 +78,15 @@
         <description>Prepares the shipment ODBC staging tables</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="updateShipmentFromStaging" engine="java" use-transaction="false"
+            location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="updateShipmentsFromStaging" auth="true">
+        <description>Prepares the shipment ODBC staging tables</description>
+    </service>
+    <service name="clearShipmentStaging" engine="java"
+            location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="clearShipmentStagingInfo" auth="true">
+        <description>Clears the shipment ODBC staging tables</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <service name="createShipment" default-entity-name="Shipment" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="createShipment" auth="true">

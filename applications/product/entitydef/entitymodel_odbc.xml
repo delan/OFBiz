@@ -94,12 +94,15 @@
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentPackageSeqId" type="id-ne"></field>
       <field name="shipmentMethodTypeId" type="id-ne"></field>
+      <field name="externalShipmentId" type="id-ne"></field>
+      <field name="packageType" type="long-varchar"></field>
+      <field name="voidIndicator" type="short-varchar"></field>
       <field name="trackingNumber" type="short-varchar"></field>
       <field name="shippedDate" type="date-time"></field>
+      <field name="packageTotal" type="currency-amount"></field>
       <field name="shippingTotal" type="currency-amount"></field>
       <field name="billingWeight" type="floating-point"></field>
       <field name="actualWeight" type="floating-point"></field>
-      <prim-key field="shipmentId"/>
-      <prim-key field="shipmentPackageSeqId"/>
+      <field name="packageWeight" type="floating-point"></field>     
     </entity>
 </entitymodel>

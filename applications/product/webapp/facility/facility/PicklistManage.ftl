@@ -1,22 +1,22 @@
 <#--
  *    Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
- *    Permission is hereby granted, free of charge, to any person obtaining a 
- *    copy of this software and associated documentation files (the "Software"), 
- *    to deal in the Software without restriction, including without limitation 
- *    the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *    and/or sell copies of the Software, and to permit persons to whom the 
+ *    Permission is hereby granted, free of charge, to any person obtaining a
+ *    copy of this software and associated documentation files (the "Software"),
+ *    to deal in the Software without restriction, including without limitation
+ *    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *    and/or sell copies of the Software, and to permit persons to whom the
  *    Software is furnished to do so, subject to the following conditions:
  *
- *    The above copyright notice and this permission notice shall be included 
+ *    The above copyright notice and this permission notice shall be included
  *    in all copies or substantial portions of the Software.
  *
- *    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *    OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *    OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *    THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
@@ -37,7 +37,7 @@
         <#if picklistInfoList?has_content>
             <#list picklistInfoList as picklistInfo>
                 <#assign picklist = picklistInfo.picklist>
-                
+
                 <#-- Picklist -->
                 <div class="tabletext">
                     <b>Picklist</b> <span class="head2">${picklist.picklistId}</span>
@@ -55,14 +55,14 @@
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
                     </form>
                     <b>created/modified by</b> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
-                    <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" class="buttontext">[Pick/Pack Report]</a>
+                    <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="buttontext">[Pick/Pack Report]</a>
                 </div>
                 <#if picklistInfo.shipmentMethodType?has_content>
                     <div class="tabletext" style="margin-left: 15px;">
                         <b>for Shipment Method Type</b> ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}
                     </div>
                 </#if>
-                
+
                 <#-- PicklistRole -->
                 <#list picklistInfo.picklistRoleInfoList?if_exists as picklistRoleInfo>
                     <div class="tabletext" style="margin-left: 15px;">
@@ -86,17 +86,17 @@
                         <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallSubmit"/>
                     </form>
                 </div>
-                
+
                 <#-- PicklistStatusHistory -->
                 <#list picklistInfo.picklistStatusHistoryInfoList?if_exists as picklistStatusHistoryInfo>
                     <div class="tabletext" style="margin-left: 15px;">
-                        <b>Status</b> change from ${picklistStatusHistoryInfo.statusItem.get("description",locale)} 
-                        to ${picklistStatusHistoryInfo.statusItemTo.description} 
-                        on ${picklistStatusHistoryInfo.picklistStatusHistory.changeDate} 
+                        <b>Status</b> change from ${picklistStatusHistoryInfo.statusItem.get("description",locale)}
+                        to ${picklistStatusHistoryInfo.statusItemTo.description}
+                        on ${picklistStatusHistoryInfo.picklistStatusHistory.changeDate}
                         by ${picklistStatusHistoryInfo.picklistStatusHistory.changeUserLoginId}
                     </div>
                 </#list>
- 
+
                 <#-- PicklistBin -->
                 <#list picklistInfo.picklistBinInfoList?if_exists as picklistBinInfo>
                     <div class="tabletext" style="margin-left: 15px;">
@@ -142,7 +142,7 @@
                         </#list>
                     </#list>
                 </#list>
-                
+
                 <#if picklistInfo_has_next>
                    <hr class="sepbar"/>
                 </#if>
