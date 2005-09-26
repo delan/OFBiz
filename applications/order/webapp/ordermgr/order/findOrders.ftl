@@ -316,7 +316,7 @@ document.lookuporder.order_id.focus();
         <select name="serviceName" class="selectBox" onchange="javascript:setServiceName(this);">
            <option value="javascript:void();"></option>
            <option value="<@ofbizUrl>/massApproveOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Approve Orders</option>
-           <option value="<@ofbizUrl>/massPickOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Pack Orders</option>
+           <option value="<@ofbizUrl>/massPickOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Pick Orders</option>
         </select>
         <a href="javascript:runAction();" class="buttontext">Run Action</a>
       </div>
