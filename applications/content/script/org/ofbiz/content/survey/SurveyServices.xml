@@ -314,7 +314,7 @@
         </if-empty>
 
         <!-- look up the applied questions -->
-        <field-to-field field-name="surveyId" map-name="survey" to-map-name="questionApplLookup"/>
+        <set from-field="survey.surveyId" field="questionApplLookup.surveyId"/>
         <find-by-and list-name="questions" entity-name="SurveyQuestionAndAppl" map-name="questionApplLookup"/>
         <if-empty field-name="questions">
             <add-error><fail-message message="No questions found for survey ID: ${survey.surveyId}"/></add-error>
@@ -332,8 +332,8 @@
         <!-- if this is a single use and we have a partyId check for existing responses -->
         <if-compare field-name="allowMultiple" map-name="survey" operator="not-equals" value="Y">
             <if-not-empty field-name="partyId" map-name="parameters">
-                <field-to-field field-name="partyId" map-name="parameters" to-map-name="responseLookup"/>
-                <field-to-field field-name="surveyId" map-name="survey" to-map-name="responseLookup"/>
+                <set from-field="parameters.partyId" field="responseLookup.partyId"/>
+                <set from-field="survey.surveyId" field="responseLookup.surveyId"/>
                 <find-by-and list-name="existingResponses" entity-name="SurveyResponse" map-name="responseLookup"/>
                 <if-not-empty field-name="existingResponses">
                     <add-error><fail-message message="You have already responded to this survey; multiple responses are not allowed"/></add-error>
@@ -360,56 +360,56 @@
             <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="CREDIT_CARD">
                 <if-validate-method field-name="answers.${question.surveyQuestionId}" method="isCreditCard">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid credit-card number"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid credit-card number"/></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
             <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="GIFT_CARD">
                 <if-validate-method field-name="answers.${question.surveyQuestionId}" method="isGiftCard">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid gift-card number"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid gift-card number"/></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
             <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="DATE">
                 <if-validate-method field-name="answers.${question.surveyQuestionId}" method="isDate">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid date string (mm/dd/yyyy)"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid date string (mm/dd/yyyy)"/></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
             <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="EMAIL">
                 <if-validate-method field-name="answers.${question.surveyQuestionId}" method="isEmail">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid email address"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid email address"/></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
             <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="NUMBER_CURRENCY">
                 <if-validate-method field-name="answers.${question.surveyQuestionId}" method="isSignedDouble">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid currency amount"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid currency amount"/></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
             <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="NUMBER_FLOAT">
                 <if-validate-method field-name="answers.${question.surveyQuestionId}" method="isSignedDouble">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid decimal number"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid decimal number"/></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
             <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="NUMBER_LONG">
                 <if-validate-method field-name="answers.${question.surveyQuestionId}" method="isSignedLong">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid whole number"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid whole number"/></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
             <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="URL">
                 <if-validate-method field-name="answers.${question.surveyQuestionId}" method="isUrl">
                 <else>
-                    <add-error><fail-message message="${question.question} requires a valid URL"></fail-message></add-error>
+                    <add-error><fail-message message="${question.question} requires a valid URL"/></add-error>
                 </else>
                 </if-validate-method>
             </if-compare>
@@ -420,10 +420,10 @@
 
         <!-- create/update the response -->
         <if-compare field-name="allowUpdate" map-name="survey" operator="equals" value="Y">
-          <if-not-empty field-name="surveyResponseId" map-name="parameters">
-              <field-to-field field-name="surveyResponseId" map-name="parameters" to-map-name="lookupRespMap"/>
-              <find-by-primary-key entity-name="SurveyResponse" map-name="lookupRespMap" value-name="surveyResponse"/>
-          </if-not-empty>
+            <if-not-empty field-name="parameters.surveyResponseId">
+                <set from-field="parameters.surveyResponseId" field="lookupRespMap.surveyResponseId"/>
+                <find-by-primary-key entity-name="SurveyResponse" map-name="lookupRespMap" value-name="surveyResponse"/>
+            </if-not-empty>
         </if-compare>
 
         <if-empty field-name="surveyResponse">
@@ -434,64 +434,64 @@
             <create-value value-name="surveyResponse"/>
         </if-empty>
 
-        <if-empty field-name="responseDate" map-name="surveyResponse">
-            <env-to-field env-name="nowTimestamp" field-name="responseDate" map-name="surveyResponse"/>
+        <if-empty field-name="surveyResponse.responseDate">
+            <set from-field="nowTimestamp" field="surveyResponse.responseDate"/>
         </if-empty>
-        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="surveyResponse"/>
+        <set from-field="nowTimestamp" field="surveyResponse.lastModifiedDate"/>
 
         <store-value value-name="surveyResponse"/>
         <field-to-result field-name="surveyResponseId" map-name="surveyResponse" result-name="surveyResponseId"/>
 
         <!-- lookup any existing response answers -->
-        <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="lookupRespAns"/>
+        <set from-field="surveyResponse.surveyResponseId" field="lookupRespAns.surveyResponseId"/>
         <find-by-and list-name="existingAnswers" entity-name="SurveyResponseAnswer" map-name="lookupRespAns"/>
         <iterate entry-name="existingAnswer" list-name="existingAnswers">
-            <field-to-field field-name="existingAnswer" to-field-name="${existingAnswer.surveyQuestionId}" to-map-name="currentAnswers"/>
+            <set from-field="existingAnswer" field="currentAnswers.${existingAnswer.surveyQuestionId}"/>
         </iterate>
 
         <!-- create the response answers -->
         <iterate entry-name="question" list-name="questions">
             <if-not-empty field-name="currentAnswers">
-                <field-to-env field-name="${question.surveyQuestionId}" map-name="currentAnswers" env-name="responseAnswer"/>
+                <set from-field="currentAnswers.${question.surveyQuestionId}" field="responseAnswer"/>
             </if-not-empty>
 
             <if-compare-field field-name="surveyQuestionId" map-name="responseAnswer"  operator="not-equals" to-field-name="surveyQuestionId" to-map-name="question">
                 <make-value value-name="responseAnswer" entity-name="SurveyResponseAnswer"/>
-                <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="responseAnswer"/>
-                <field-to-field field-name="surveyQuestionId" map-name="question" to-map-name="responseAnswer"/>
+                <set from-field="surveyResponse.surveyResponseId" field="responseAnswer.surveyResponseId"/>
+                <set from-field="question.surveyQuestionId" field="responseAnswer.surveyQuestionId"/>
                 <create-value value-name="responseAnswer"/>
             </if-compare-field>
 
             <if-not-empty field-name="answers.${question.surveyQuestionId}">
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="BOOLEAN">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="booleanResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.booleanResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="EMAIL">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="DATE">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="URL">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="CREDIT_CARD">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="GIFT_CARD">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="PASSWORD">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="TEXT_SHORT">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="TEXT_LONG">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="TEXTAREA">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.textResponse"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="NUMBER_CURRENCY">
                     <set field="responseAnswer.currencyResponse" from-field="answers.${question.surveyQuestionId}" type="Double"/>
@@ -503,33 +503,33 @@
                     <set field="responseAnswer.numericResponse" from-field="answers.${question.surveyQuestionId}" type="Long"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="OPTION">
-                    <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="surveyOptionSeqId" to-map-name="responseAnswer"/>
+                    <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.surveyOptionSeqId"/>
                 </if-compare>
                 <if-compare field-name="question.surveyQuestionTypeId" operator="equals" value="CONTENT">
                     <log level="always" message="Found CONTENT type question"/>
                     <if-instance-of field-name="answers.${question.surveyQuestionId}" class="org.ofbiz.entity.util.ByteWrapper">
-                        <field-to-field field-name="_${question.surveyQuestionId}_contentType" map-name="answers" to-field-name="_uploadedFile_contentType" to-map-name="partyContent"/>
-                        <field-to-field field-name="_${question.surveyQuestionId}_fileName" map-name="answers" to-field-name="_uploadedFile_fileName" to-map-name="partyContent"/>
-                        <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="uploadedFile" to-map-name="partyContent"/>
-                        <string-to-field string="DOCUMENT" field-name="contentTypeId" map-name="partyContent"/>
-                        <string-to-field string="PERSONAL" field-name="dataCategoryId" map-name="partyContent"/>
-                        <string-to-field string="CTNT_PUBLISHED" field-name="statusId" map-name="partyContent"/>
+                        <set from-field="answers._${question.surveyQuestionId}_contentType" field="partyContent._uploadedFile_contentType"/>
+                        <set from-field="answers._${question.surveyQuestionId}_fileName" field="partyContent._uploadedFile_fileName"/>
+                        <set from-field="answers.${question.surveyQuestionId}" field="partyContent.uploadedFile"/>
+                        <set value="DOCUMENT" field="partyContent.contentTypeId"/>
+                        <set value="PERSONAL" field="partyContent.dataCategoryId"/>
+                        <set value="CTNT_PUBLISHED" field="partyContent.statusId"/>
                         <call-service service-name="createPartyContent" in-map-name="partyContent">
-                            <result-to-field result-name="contentId" field-name="contentId" map-name="responseAnswer"/>
+                            <result-to-field result-name="contentId" field-name="responseAnswer.contentId"/>
                         </call-service>
                     <else>                        
-                        <field-to-field field-name="answers.${question.surveyQuestionId}" to-field-name="contentId" to-map-name="responseAnswer"/>
+                        <set from-field="answers.${question.surveyQuestionId}" field="responseAnswer.contentId"/>
                     </else>
                     </if-instance-of>
                 </if-compare>
 
-                <env-to-field env-name="nowTimestamp" field-name="answeredDate" map-name="responseAnswer"/>
+                <set from-field="nowTimestamp" field="responseAnswer.answeredDate"/>
                 <store-value value-name="responseAnswer"/>
             </if-not-empty>
         </iterate>
 
         <!-- run the survey response service (async) -->
-        <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="respServiceCtx"/>
+        <set from-field="surveyResponse.surveyResponseId" field="respServiceCtx.surveyResponseId"/>
         <if-not-empty field-name="responseService" map-name="survey">
             <call-service-asynch service-name="${survey.responseService}" in-map-name="respServiceCtx" include-user-login="true"/>  
         </if-not-empty>

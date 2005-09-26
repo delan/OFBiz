@@ -35,7 +35,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <sequenced-id-to-env sequence-name="ProductStore" env-name="productStoreId" />
-        <env-to-field env-name="productStoreId" map-name="newEntity"/>
+        <set from-field="productStoreId" field="newEntity.productStoreId"/>
 
         <field-to-result field-name="productStoreId" result-name="productStoreId"/>
         <create-value value-name="newEntity"/>
@@ -45,9 +45,9 @@
 
         <if-not-empty field-name="inventoryFacilityId" map-name="newEntity">
             <make-value value-name="storeFacility" entity-name="ProductStoreFacility"/>
-            <field-to-field field-name="inventoryFacilityId" map-name="newEntity" to-field-name="facilityId" to-map-name="storeFacility"/>
-            <field-to-field field-name="productStoreId" map-name="newEntity" to-map-name="storeFacility"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="storeFacility"/>
+            <set from-field="newEntity.inventoryFacilityId" field="storeFacility.facilityId"/>
+            <set from-field="newEntity.productStoreId" field="storeFacility.productStoreId"/>
+            <set from-field="nowTimestamp" field="storeFacility.fromDate"/>
             <create-value value-name="storeFacility"/>
         </if-not-empty>
     </simple-method>
@@ -55,9 +55,9 @@
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductStore you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set from-field="parameters.productStoreId" field="lookupPKMap.productStoreId"/>
         <find-by-primary-key entity-name="ProductStore" map-name="lookupPKMap" value-name="store"/>
-        <env-to-env env-name="store.inventoryFacilityId" to-env-name="oldFacilityId"/>
+        <set from-field="store.inventoryFacilityId" field="oldFacilityId"/>
         <set-nonpk-fields map-name="parameters" value-name="store"/>
         <store-value value-name="store"/>
 
@@ -66,19 +66,19 @@
         <if-compare-field field-name="inventoryFacilityId" map-name="store" operator="not-equals" to-field-name="oldFacilityId">
             <if-compare field-name="oneInventoryFacility" map-name="store" operator="equals" value="Y">
                 <!-- expire all the facilities -->
-                <field-to-field field-name="productStoreId" map-name="store" to-map-name="lookupPFMap"/>
+                <set from-field="store.productStoreId" field="lookupPFMap.productStoreId"/>
                 <find-by-and entity-name="ProductStoreFacility" map-name="lookupPFMap" list-name="storeFacilities"/>
                 <filter-list-by-date list-name="storeFacilities"/>
                 <iterate list-name="storeFacilities" entry-name="facility">
-                    <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="facility"/>
+                    <set from-field="nowTimestamp" field="facility.thruDate"/>
                     <store-value value-name="facility"/>
                 </iterate>
             </if-compare>
             <!-- create the new entry -->
             <make-value value-name="storeFacility" entity-name="ProductStoreFacility"/>
-            <field-to-field field-name="inventoryFacilityId" map-name="store" to-field-name="facilityId" to-map-name="storeFacility"/>
-            <field-to-field field-name="productStoreId" map-name="store" to-map-name="storeFacility"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="storeFacility"/>
+            <set from-field="store.inventoryFacilityId" field="storeFacility.facilityId"/>
+            <set from-field="store.productStoreId" field="storeFacility.productStoreId"/>
+            <set from-field="nowTimestamp" field="storeFacility.fromDate"/>
             <create-value value-name="storeFacility"/>
         </if-compare-field>
     </simple-method>
@@ -94,7 +94,7 @@
 
         <if-empty field-name="fromDate" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+            <set from-field="nowTimestamp" field="newEntity.fromDate"/>
         </if-empty>
 
         <create-value value-name="newEntity"/>
@@ -235,7 +235,7 @@
 
         <if-empty field-name="fromDate" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+            <set from-field="nowTimestamp" field="newEntity.fromDate"/>
         </if-empty>
 
         <create-value value-name="newEntity"/>
@@ -251,7 +251,7 @@
 
         <if-empty field-name="thruDate" map-name="lookedUpValue">
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="lookedUpValue"/>
+            <set from-field="nowTimestamp" field="lookedUpValue.thruDate"/>
         </if-empty>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -267,7 +267,7 @@
 
         <if-empty field-name="fromDate" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+            <set from-field="nowTimestamp" field="newEntity.fromDate"/>
         </if-empty>
 
         <!-- make sure the keyword is lower cased -->
@@ -302,13 +302,13 @@
 
         <make-value value-name="newEntity" entity-name="ProductStoreSurveyAppl"/>
         <sequenced-id-to-env sequence-name="ProductStoreSurveyAppl" env-name="productStoreSurveyId"/>
-        <env-to-field env-name="productStoreSurveyId" map-name="newEntity"/>
+        <set from-field="productStoreSurveyId" field="newEntity.productStoreSurveyId"/>
         <field-to-result field-name="productStoreSurveyId" result-name="productStoreSurveyId"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <if-empty field-name="fromDate" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+            <set from-field="nowTimestamp" field="newEntity.fromDate"/>
         </if-empty>
 
         <create-value value-name="newEntity"/>
@@ -324,7 +324,7 @@
 
         <if-empty field-name="thruDate" map-name="lookedUpValue">
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="lookedUpValue"/>
+            <set from-field="nowTimestamp" field="lookedUpValue.thruDate"/>
         </if-empty>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -355,9 +355,9 @@
             </if-empty>
 
             <set-service-fields map-name="parameters" to-map-name="callServiceMap" service-name="reserveProductInventoryByFacility"/>
-            <env-to-env env-name="productStore.inventoryFacilityId" to-env-name="callServiceMap.facilityId"/>
-            <env-to-env env-name="requireInventory" to-env-name="callServiceMap.requireInventory"/>
-            <env-to-env env-name="productStore.reserveOrderEnumId" to-env-name="callServiceMap.reserveOrderEnumId"/>
+            <set from-field="productStore.inventoryFacilityId" field="callServiceMap.facilityId"/>
+            <set from-field="requireInventory" field="callServiceMap.requireInventory"/>
+            <set from-field="productStore.reserveOrderEnumId" field="callServiceMap.reserveOrderEnumId"/>
             <call-service service-name="reserveProductInventoryByFacility" in-map-name="callServiceMap">
                 <result-to-field result-name="quantityNotReserved"/>
             </call-service>
@@ -379,8 +379,8 @@
                 <if-empty field-name="quantityNotReserved">
                     <!-- TODO: must entire quantity be available in one location? -->
                     <!-- Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order. -->
-                    <env-to-env env-name="parameters.productId" to-env-name="callServiceMap.productId"/>
-                    <env-to-env env-name="productStoreFacility.facilityId" to-env-name="callServiceMap.facilityId"/>
+                    <set from-field="parameters.productId" field="callServiceMap.productId"/>
+                    <set from-field="productStoreFacility.facilityId" field="callServiceMap.facilityId"/>
                     <call-service service-name="getInventoryAvailableByFacility" in-map-name="callServiceMap">
                         <result-to-field result-name="availableToPromiseTotal"/>
                     </call-service>
@@ -388,9 +388,9 @@
                     
                     <if-compare-field field-name="availableToPromiseTotal" operator="greater-equals" to-field-name="parameters.quantity" type="Double">
                         <set-service-fields map-name="parameters" to-map-name="callServiceMap" service-name="reserveProductInventoryByFacility"/>
-                        <env-to-env env-name="productStoreFacility.facilityId" to-env-name="callServiceMap.facilityId"/>
-                        <env-to-env env-name="requireInventory" to-env-name="callServiceMap.requireInventory"/>
-                        <env-to-env env-name="productStore.reserveOrderEnumId" to-env-name="callServiceMap.reserveOrderEnumId"/>
+                        <set from-field="productStoreFacility.facilityId" field="callServiceMap.facilityId"/>
+                        <set from-field="requireInventory" field="callServiceMap.requireInventory"/>
+                        <set from-field="productStore.reserveOrderEnumId" field="callServiceMap.reserveOrderEnumId"/>
                         <call-service service-name="reserveProductInventoryByFacility" in-map-name="callServiceMap">
                             <result-to-field result-name="quantityNotReserved"/>
                         </call-service>
@@ -402,7 +402,7 @@
             </iterate>
             <!-- didn't find anything? couldn't reserve the quantity so return the whole thing... -->
             <if-empty field-name="quantityNotReserved">
-                <env-to-env env-name="parameters.quantity" to-env-name="quantityNotReserved"/>
+                <set from-field="parameters.quantity" field="quantityNotReserved"/>
             </if-empty>
         </else>
         </if-compare>
@@ -414,13 +414,13 @@
         <if-empty field-name="parameters.productStore">
             <entity-one entity-name="ProductStore" value-name="productStore" use-cache="true"/>
         <else>
-            <env-to-env env-name="parameters.productStore" to-env-name="productStore"/>
+            <set from-field="parameters.productStore" field="productStore"/>
         </else>
         </if-empty>
         <if-empty field-name="parameters.product">
             <entity-one entity-name="Product" value-name="product" use-cache="true"/>
         <else>
-            <env-to-env env-name="parameters.product" to-env-name="product"/>
+            <set from-field="parameters.product" field="product"/>
         </else>
         </if-empty>
         
@@ -428,12 +428,12 @@
         <field-to-result field-name="requireInventory"/>
     </simple-method>
     <simple-method method-name="isStoreInventoryRequiredInline" short-description="Is Store Inventory Required" login-required="false">
-        <env-to-env env-name="product.requireInventory" to-env-name="requireInventory"/>
+        <set from-field="product.requireInventory" field="requireInventory"/>
         <if-empty field-name="requireInventory">
-            <env-to-env env-name="productStore.requireInventory" to-env-name="requireInventory"/>
+            <set from-field="productStore.requireInventory" field="requireInventory"/>
         </if-empty>
         <if-empty field-name="requireInventory">
-            <string-to-field string="Y" field-name="requireInventory"/>
+            <set value="Y" field="requireInventory"/>
         </if-empty>
     </simple-method>
 
@@ -441,13 +441,13 @@
         <if-empty field-name="parameters.productStore">
             <entity-one entity-name="ProductStore" value-name="productStore" use-cache="true"/>
         <else>
-            <env-to-env env-name="parameters.productStore" to-env-name="productStore"/>
+            <set from-field="parameters.productStore" field="productStore"/>
         </else>
         </if-empty>
         <if-empty field-name="parameters.product">
             <entity-one entity-name="Product" value-name="product" use-cache="true"/>
         <else>
-            <env-to-env env-name="parameters.product" to-env-name="product"/>
+            <set from-field="parameters.product" field="product"/>
         </else>
         </if-empty>
 
@@ -461,7 +461,7 @@
             </condition>
             <then>
                 <log level="verbose" message="Product with id ${product.productId}, is of type ${product.productTypeId}, returning true for inventory available check"/>
-                <string-to-field string="Y" field-name="available"/>
+                <set value="Y" field="available"/>
                 <field-to-result field-name="available"/>
                 <return/>
             </then>
@@ -473,7 +473,7 @@
         <if-compare value="N" field-name="productStore.checkInventory" operator="equals">
             <!-- note: if not set, defaults to yes, check inventory -->
             <log level="verbose" message="ProductStore with id ${productStore.productStoreId}, is set to NOT check inventory, returning true for inventory available check"/>
-            <string-to-field string="Y" field-name="available"/>
+            <set value="Y" field="available"/>
             <field-to-result field-name="available"/>
             <return/>
         </if-compare>
@@ -484,18 +484,18 @@
                 <check-errors/>
             </if-empty>
 
-            <env-to-env env-name="parameters.productId" to-env-name="callServiceMap.productId"/>
-            <env-to-env env-name="productStore.inventoryFacilityId" to-env-name="callServiceMap.facilityId"/>
+            <set from-field="parameters.productId" field="callServiceMap.productId"/>
+            <set from-field="productStore.inventoryFacilityId" field="callServiceMap.facilityId"/>
             <call-service service-name="getInventoryAvailableByFacility" in-map-name="callServiceMap">
                 <result-to-field result-name="availableToPromiseTotal"/>
             </call-service>
 
             <!-- check to see if we got enough back... -->
             <if-compare-field field-name="availableToPromiseTotal" operator="greater-equals" to-field-name="parameters.quantity" type="Double">
-                <string-to-field string="Y" field-name="available"/>
+                <set value="Y" field="available"/>
                 <log level="info" message="Inventory IS available in facility with id ${productStore.inventoryFacilityId} for product id ${parameters.productId}; desired quantity is ${parameters.quantity}, available quantity is ${availableToPromiseTotal}"/>
             <else>
-                <string-to-field string="N" field-name="available"/>
+                <set value="N" field="available"/>
                 <log level="info" message="Returning false because there is insufficient inventory available in facility with id ${productStore.inventoryFacilityId} for product id ${parameters.productId}; desired quantity is ${parameters.quantity}, available quantity is ${availableToPromiseTotal}"/>
             </else>
             </if-compare-field>
@@ -505,20 +505,20 @@
                 <order-by field-name="sequenceNum"/>
             </entity-and>
 
-            <string-to-field string="N" field-name="available"/>
+            <set value="N" field="available"/>
             <iterate list-name="productStoreFacilities" entry-name="productStoreFacility">
                 <if-compare value="N" field-name="available" operator="equals">
                     <!-- TODO: must entire quantity be available in one location? -->
                     <!-- Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order. -->
-                    <env-to-env env-name="parameters.productId" to-env-name="callServiceMap.productId"/>
-                    <env-to-env env-name="productStoreFacility.facilityId" to-env-name="callServiceMap.facilityId"/>
+                    <set from-field="parameters.productId" field="callServiceMap.productId"/>
+                    <set from-field="productStoreFacility.facilityId" field="callServiceMap.facilityId"/>
                     <call-service service-name="getInventoryAvailableByFacility" in-map-name="callServiceMap">
                         <result-to-field result-name="availableToPromiseTotal"/>
                     </call-service>
                     <clear-field field-name="callServiceMap"/>
                     
                     <if-compare-field field-name="availableToPromiseTotal" operator="greater-equals" to-field-name="parameters.quantity" type="Double">
-                        <string-to-field string="Y" field-name="available"/>
+                        <set value="Y" field="available"/>
                         <log level="info" message="Inventory IS available in facility with id ${productStoreFacility.facilityId} for product id ${parameters.productId}; desired quantity is ${parameters.quantity}, available quantity is ${availableToPromiseTotal}"/>
                     </if-compare-field>
                     <clear-field field-name="availableToPromiseTotal"/>
@@ -548,20 +548,20 @@
         <if-empty field-name="parameters.productStore">
             <entity-one entity-name="ProductStore" value-name="productStore" use-cache="true"/>
         <else>
-            <env-to-env env-name="parameters.productStore" to-env-name="productStore"/>
+            <set from-field="parameters.productStore" field="productStore"/>
         </else>
         </if-empty>
         <if-empty field-name="parameters.product">
             <entity-one entity-name="Product" value-name="product" use-cache="true"/>
         <else>
-            <env-to-env env-name="parameters.product" to-env-name="product"/>
+            <set from-field="parameters.product" field="product"/>
         </else>
         </if-empty>
         
         <call-simple-method method-name="isStoreInventoryRequiredInline"/>
         
         <if-compare field-name="requireInventory" operator="not-equals" value="Y">
-            <string-to-field string="Y" field-name="availableOrNotRequired"/>
+            <set value="Y" field="availableOrNotRequired"/>
             <field-to-result field-name="availableOrNotRequired"/>
         <else>
             <set-service-fields map-name="parameters" to-map-name="callServiceMap" service-name="isStoreInventoryAvailable"/>
