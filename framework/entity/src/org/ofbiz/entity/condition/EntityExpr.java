@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.EntityCryptoException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -179,6 +180,21 @@ public class EntityExpr extends EntityCondition {
         return operator.freeze(lhs, rhs);
     }
 
+    public void encryptConditionFields(ModelEntity modelEntity, GenericDelegator delegator) {
+        if (this.lhs instanceof String) {
+            ModelField modelField = modelEntity.getField((String) this.lhs);
+            if (modelField != null && modelField.getEncrypt()) {
+                if (!(rhs instanceof EntityConditionValue)) {
+                    try {
+                        this.rhs = delegator.encryptFieldValue(modelEntity.getEntityName(), this.rhs);
+                    } catch (EntityCryptoException e) {
+                        Debug.logWarning(e, "Error encrypting field [" + modelEntity.getEntityName() + "." + modelField.getName() + "] with value: " + this.rhs, module);
+                    }
+                }
+            }
+        }
+    }
+    
     public void visit(EntityConditionVisitor visitor) {
         visitor.acceptEntityOperator(operator, lhs, rhs);
     }

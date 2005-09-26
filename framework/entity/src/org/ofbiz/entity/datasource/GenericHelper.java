@@ -83,24 +83,6 @@ public interface GenericHelper {
      */
     public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException;
 
-    /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param fields The fields of the named entity to query by with their corresponging values
-     *@param orderBy The fields of the named entity to order the query by;
-     *       optionally add a " ASC" for ascending or " DESC" for descending
-     *@return List of GenericValue instances that match the query
-     */
-    public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
-
-    /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param fields The fields of the named entity to query by with their corresponging values
-     *@param orderBy The fields of the named entity to order the query by;
-     *       optionally add a " ASC" for ascending or " DESC" for descending
-     *@return List of GenericValue instances that match the query
-     */
-    public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
-
     public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,
         ModelRelation modelRelationTwo, ModelEntity modelEntityTwo, List orderBy) throws GenericEntityException;
 
@@ -119,13 +101,6 @@ public interface GenericHelper {
         throws GenericEntityException;
 
     public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException;
-
-    /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param fields The fields of the named entity to query by with their corresponging values
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException;
 
     /** Removes/deletes Generic Entity records found by all the specified condition
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file

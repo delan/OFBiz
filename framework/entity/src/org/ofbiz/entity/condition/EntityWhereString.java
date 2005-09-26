@@ -27,10 +27,13 @@ package org.ofbiz.entity.condition;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.EntityCryptoException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
 
 /**
  * <p>Encapsulates SQL expressions used for where clause snippets.
@@ -77,6 +80,10 @@ public class EntityWhereString extends EntityCondition {
 
     public EntityCondition freeze() {
         return this;
+    }
+
+    public void encryptConditionFields(ModelEntity modelEntity, GenericDelegator delegator) {
+        // nothing to do here...
     }
 
     public void visit(EntityConditionVisitor visitor) {

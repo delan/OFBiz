@@ -137,26 +137,6 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.delete(primaryKey);
     }
 
-    /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param fields The fields of the named entity to query by with their corresponging values
-     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return List of GenericValue instances that match the query
-     */
-    public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        return genericDAO.selectByAnd(modelEntity, fields, orderBy);
-    }
-
-    /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param fields The fields of the named entity to query by with their corresponging values
-     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return List of GenericValue instances that match the query
-     */
-    public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        return genericDAO.selectByOr(modelEntity, fields, orderBy);
-    }
-
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param whereEntityCondition The EntityCondition object that specifies how to constrain this query before any groupings are done (if this is a view entity with group-by aliases)
@@ -180,18 +160,6 @@ public class GenericHelperDAO implements GenericHelper {
 
     public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException {
         return genericDAO.selectCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition);
-    }
-
-    /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param fields The fields of the named entity to query by with their corresponging values
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
-        if (modelEntity == null || fields == null) {
-            return 0;
-        }
-        return genericDAO.deleteByAnd(modelEntity, fields);
     }
 
     /** Removes/deletes Generic Entity records found by all the specified condition

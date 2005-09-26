@@ -637,52 +637,6 @@ public class GenericDAO {
         }
     }
 
-    public List selectByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        if (modelEntity == null) {
-            return null;
-        }
-
-        EntityCondition entityCondition = null;
-
-        if (fields != null) {
-            entityCondition = new EntityFieldMap(fields, EntityOperator.AND);
-        }
-
-        EntityListIterator entityListIterator = null;
-
-        try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
-            return entityListIterator.getCompleteList();
-        } finally {
-            if (entityListIterator != null) {
-                entityListIterator.close();
-            }
-        }
-    }
-
-    public List selectByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        if (modelEntity == null) {
-            return null;
-        }
-
-        EntityCondition entityCondition = null;
-
-        if (fields != null) {
-            entityCondition = new EntityFieldMap(fields, EntityOperator.OR);
-        }
-
-        EntityListIterator entityListIterator = null;
-
-        try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
-            return entityListIterator.getCompleteList();
-        } finally {
-            if (entityListIterator != null) {
-                entityListIterator.close();
-            }
-        }
-    }
-
     /* ====================================================================== */
     /* ====================================================================== */
 
@@ -1112,56 +1066,6 @@ public class GenericDAO {
             sqlP.close();
         }
         return retVal;
-    }
-
-    public int deleteByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor(helperName);
-
-        try {
-            return deleteByAnd(modelEntity, fields, sqlP);
-        } catch (GenericDataSourceException e) {
-            sqlP.rollback();
-            throw new GenericDataSourceException("Generic Entity Exception occurred in deleteByAnd", e);
-        } finally {
-            sqlP.close();
-        }
-    }
-
-    public int deleteByAnd(ModelEntity modelEntity, Map fields, SQLProcessor sqlP) throws GenericEntityException {
-        if (modelEntity == null || fields == null) return 0;
-        if (modelEntity instanceof ModelViewEntity) {
-            throw new org.ofbiz.entity.GenericNotImplementedException("Operation deleteByAnd not supported yet for view entities");
-        }
-
-        List whereFields = FastList.newInstance();
-        if (fields != null && fields.size() > 0) {
-            Iterator fieldIter = modelEntity.getFieldsIterator();
-            while (fieldIter.hasNext()) {
-                ModelField curField = (ModelField) fieldIter.next();
-
-                if (fields.containsKey(curField.getName())) {
-                    whereFields.add(curField);
-                }
-            }
-        }
-
-        GenericValue dummyValue = GenericValue.create(modelEntity, fields);
-        String sql = "DELETE FROM " + modelEntity.getTableName(datasourceInfo);
-        if (fields != null && fields.size() > 0) {
-            sql += " WHERE " + SqlJdbcUtil.makeWhereStringFromFields(whereFields, dummyValue, "AND");
-        }
-
-        try {
-            sqlP.prepareStatement(sql);
-
-            if (fields != null && fields.size() > 0) {
-                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
-            }
-
-            return sqlP.executeUpdate();
-        } finally {
-            sqlP.close();
-        }
     }
 
     public int deleteByCondition(ModelEntity modelEntity, EntityCondition condition) throws GenericEntityException {

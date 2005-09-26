@@ -28,9 +28,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.EntityCryptoException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
 
 /**
  * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
@@ -92,6 +95,14 @@ public abstract class EntityConditionListBase extends EntityCondition {
         return operator.freeze(conditionList);
     }
 
+    public void encryptConditionFields(ModelEntity modelEntity, GenericDelegator delegator) {
+        Iterator conditionIter = this.conditionList.iterator();
+        while (conditionIter.hasNext()) {
+            EntityCondition cond = (EntityCondition) conditionIter.next();
+            cond.encryptConditionFields(modelEntity, delegator);
+        }
+    }
+    
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityConditionListBase)) return false;
         EntityConditionListBase other = (EntityConditionListBase) obj;

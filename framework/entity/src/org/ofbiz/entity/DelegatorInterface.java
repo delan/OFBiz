@@ -133,7 +133,7 @@ public interface DelegatorInterface {
 
     List findByAnd(String entityName, Map fields, List orderBy) throws GenericEntityException;
 
-    List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
+    //List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
 
     List findByOr(String entityName, Map fields, List orderBy) throws GenericEntityException;
 

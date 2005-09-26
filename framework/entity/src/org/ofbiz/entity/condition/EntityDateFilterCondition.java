@@ -80,6 +80,10 @@ public class EntityDateFilterCondition extends EntityCondition {
         return this;
     }
 
+    public void encryptConditionFields(ModelEntity modelEntity, GenericDelegator delegator) {
+        // nothing to do here...
+    }
+
     protected EntityCondition makeCondition() {
         return makeCondition(UtilDateTime.nowTimestamp(), fromDateName, thruDateName);
     }
