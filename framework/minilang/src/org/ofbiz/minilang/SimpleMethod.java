@@ -785,11 +785,13 @@ public class SimpleMethod {
                     MethodOperation mop = new org.ofbiz.minilang.method.envops.FieldToField(curOperElem, simpleMethod);
                     methodOperations.add(mop);
                     Debug.logInfo("The field-to-field operation has been deprecated in favor of the set operation; found use of this in [" + simpleMethod.getShortDescription() + "]: " + mop.rawString(), module);
+                } else if ("string-to-field".equals(nodeName)) {
+                    MethodOperation mop = new org.ofbiz.minilang.method.envops.StringToField(curOperElem, simpleMethod);
+                    methodOperations.add(mop);
+                    Debug.logInfo("The string-to-field operation has been deprecated in favor of the set operation; found use of this in [" + simpleMethod.getShortDescription() + "]: " + mop.rawString(), module);
 
                 } else if ("string-append".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.StringAppend(curOperElem, simpleMethod));
-                } else if ("string-to-field".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.minilang.method.envops.StringToField(curOperElem, simpleMethod));
                 } else if ("string-to-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.StringToList(curOperElem, simpleMethod));
                 } else if ("to-string".equals(nodeName)) {
