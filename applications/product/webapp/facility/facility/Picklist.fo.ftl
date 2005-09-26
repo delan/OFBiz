@@ -4,22 +4,22 @@
 <#--
  *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
@@ -39,7 +39,7 @@
         </fo:table-cell>
         <fo:table-cell padding="2pt" background-color="${rowColor}">
             <#if product?has_content>
-                <fo:block>${product.internalName} [${product.productId}]</fo:block>
+                <fo:block>${product.internalName?default("Internal Name Not Set!")} [${product.productId}]</fo:block>
             <#else>
                 <fo:block> </fo:block>
             </#if>
@@ -74,7 +74,7 @@
         </fo:table-cell>
         <fo:table-cell padding="2pt" background-color="${rowColor}">
             <#if product?has_content>
-                <fo:block>${product.internalName} [${product.productId}]</fo:block>
+                <fo:block>${product.internalName?default("Internal Name Not Set!")} [${product.productId}]</fo:block>
             <#else>
                 <fo:block> </fo:block>
             </#if>
@@ -110,7 +110,7 @@
        - picklistBin
        - primaryOrderHeader
        - primaryOrderItemShipGroup
-       - picklistItemInfoList (picklistItem, picklistBin, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) 
+       - picklistItemInfoList (picklistItem, picklistBin, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList)
 -->
 <fo:layout-master-set>
     <fo:simple-page-master master-name="main" page-height="11in" page-width="8.5in"
@@ -131,6 +131,7 @@
         <#if picklistInfo.shipmentMethodType?has_content>
             <fo:block font-size="10pt">for Shipment Method Type ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}</fo:block>
         </#if>
+        <fo:block><fo:leader/></fo:block>
     </#if>
 
     <fo:block space-after.optimum="10pt" font-size="10pt">
@@ -145,7 +146,7 @@
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductProductId}</fo:block></fo:table-cell>
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductToPick}</fo:block></fo:table-cell>
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>Quantity to Bin#</fo:block></fo:table-cell>
-                
+
               <#-- Not display details here, just the summary info for the bins
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.OrderOrderItems}</fo:block></fo:table-cell>
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductInventoryItems}</fo:block></fo:table-cell>
@@ -198,7 +199,21 @@
         <#assign picklistItemInfoList = picklistBinInfo.picklistItemInfoList>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+            <fo:block text-align="right">
+                <fo:instream-foreign-object>
+                    <barcode:barcode xmlns:barcode="http://barcode4j.krysalis.org/ns"
+                            message="${picklistBinInfo.primaryOrderHeader.orderId}/${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}">
+                        <barcode:code39>
+                            <barcode:height>8mm</barcode:height>
+                        </barcode:code39>
+                    </barcode:barcode>
+                </fo:instream-foreign-object>
+            </fo:block>
+            <fo:block><fo:leader/></fo:block>
+
             <fo:block font-size="14pt">Bin ${picklistBin.binLocationNumber} to Pack, Order ID: ${picklistBinInfo.primaryOrderHeader.orderId}, Ship Group ID: ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</fo:block>
+            <fo:block><fo:leader/></fo:block>
+
             <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table>
                 <fo:table-column column-width="60pt"/>
@@ -225,7 +240,7 @@
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if product?has_content>
-                                    <fo:block>${product.internalName} [${product.productId}]</fo:block>
+                                    <fo:block>${product.internalName?default("Internal Name Not Set!")} [${product.productId}]</fo:block>
                                 <#else/>
                                     <fo:block>&nbsp;</fo:block>
                                 </#if>
@@ -242,14 +257,14 @@
                             <#assign rowColor = "#D4D0C8">
                         <#else>
                             <#assign rowColor = "white">
-                        </#if>        
+                        </#if>
                     </#list>
                 </fo:table-body>
             </fo:table>
             </fo:block>
         </fo:flow>
         </fo:page-sequence>
-    </#list>          
+    </#list>
 </#if>
 
     <#else>

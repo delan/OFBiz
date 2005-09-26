@@ -77,6 +77,7 @@ public class PickListServices {
                 // create the conditions
                 EntityCondition idCond = new EntityConditionList(conditionList1, EntityOperator.OR);
                 conditionList2.add(idCond);
+
                 EntityCondition cond = new EntityConditionList(conditionList2, EntityOperator.AND);
 
                 // run the query
@@ -86,6 +87,8 @@ public class PickListServices {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(e.getMessage());
                 }
+                Debug.log("Recieved orderIdList  - " + orderIdList, module);
+                Debug.log("Found orderHeaderList - " + orderHeaderList, module);
             }
         }
 
