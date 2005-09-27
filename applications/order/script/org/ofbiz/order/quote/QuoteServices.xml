@@ -134,6 +134,17 @@
 
         <check-errors/>
     </simple-method>
+    <simple-method method-name="checkUpdateQuoteStatus" short-description="Set the Quote status to ordered.">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCheckUpdateQuoteStatus"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+        <check-errors/>
+        <set field="quote.statusId" value="QUO_ORDERED"/>
+        <store-value value-name="quote"/>
+        <check-errors/>
+    </simple-method>
 
     <!-- create a new QuoteRole -->
     <simple-method method-name="createQuoteRole" short-description="Create a QuoteRole">

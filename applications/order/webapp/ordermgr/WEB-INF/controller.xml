@@ -918,6 +918,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindQuote"/>
     </request-map>
+    <request-map uri="ViewQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewQuote"/>
+    </request-map>
     <request-map uri="EditQuote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditQuote"/>
@@ -1273,6 +1277,7 @@
     <view-map name="FindQuoteForCart" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindQuoteForCart"/>
 
     <view-map name="FindQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#FindQuote"/>
+    <view-map name="ViewQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuote"/>
     <view-map name="EditQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuote"/>
     <view-map name="ListQuoteRoles" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteRoles"/>
     <view-map name="EditQuoteRole" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteRole"/>

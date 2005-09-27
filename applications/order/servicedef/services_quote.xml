@@ -50,6 +50,11 @@
         <attribute name="copyQuoteItems" type="String" mode="IN" optional="true"/>
         <attribute name="copyQuoteAdjustments" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="checkUpdateQuoteStatus" default-entity-name="Quote" engine="simple"
+                location="org/ofbiz/order/quote/QuoteServices.xml" invoke="checkUpdateQuoteStatus" auth="true">
+        <description>Set the Quote status to ordered.</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     <!-- QuoteRole  -->
     <service name="createQuoteRole" default-entity-name="QuoteRole" engine="simple"
                 location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteRole" auth="true">
