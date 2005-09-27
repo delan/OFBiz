@@ -1117,6 +1117,26 @@
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
+
+    <request-map uri="choosecatalog">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+
+    <request-map uri="ListQuotes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListQuotes"/>
+    </request-map>
+    <request-map uri="ViewQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewQuote"/>
+    </request-map>
+    <request-map uri="loadCartFromQuote">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="loadCartFromQuote"/>
+        <response name="success" type="request" value="finalizeOrder"/>
+        <response name="error" type="view" value="ViewQuote"/>
+    </request-map>
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
@@ -1140,6 +1160,7 @@
 
     <view-map name="keywordsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#keywordsearch"/>
     <view-map name="advancedsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#advancedsearch"/>
+
     <view-map name="tellafriend" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#tellafriend"/>
 
     <!-- Order Views -->
@@ -1201,6 +1222,10 @@
     <view-map name="editaddforumdata" type="screen" page="component://ecommerce/widget/ForumScreens.xml#editaddforumdata"/>
     <view-map name="editaddimage" type="screen" page="component://ecommerce/widget/ForumScreens.xml#editaddimage"/>
     <!-- Is this used? DEJ20050113 <view-map name="mostrecent" type="screen" page="component://ecommerce/widget/ForumScreens.xml#mostrecent"/> -->
+
+    <!-- Quote Views -->
+    <view-map name="ListQuotes" type="screen" page="component://ecommerce/widget/QuoteScreens.xml#ListQuotes"/>
+    <view-map name="ViewQuote" type="screen" page="component://ecommerce/widget/QuoteScreens.xml#ViewQuote"/>
 
     <!-- End of View Mappings -->
 </site-conf>
