@@ -2373,7 +2373,9 @@
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>
         <field name="requireTaxIdForOrder" type="indicator"></field>
+        <field name="taxIdFormatPattern" type="long-varchar"></field>
         <field name="includeTaxInPrice" type="indicator"><!-- this is mainly for VAT tax authorities --></field>
+        <field name="useMainItemRate" type="indicator"><!-- in some places it is required to use the rate for the "main" item for all items on an invoice --></field>
         <prim-key field="taxAuthGeoId"/>
         <prim-key field="taxAuthPartyId"/>
         <relation type="one" fk-name="TAXAUTH_TAGEO" title="TaxAuth" rel-entity-name="Geo">
@@ -2424,6 +2426,7 @@
     <entity entity-name="TaxAuthorityRateProduct"
         package-name="org.ofbiz.accounting.tax"
         title="Tax Authority Rate Entity">
+        <field name="taxAuthorityRateSeqId" type="id-ne"></field>
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>
         <field name="taxAuthorityRateTypeId" type="id-ne"></field>
@@ -2436,14 +2439,7 @@
         <field name="description" type="description"></field>
         <field name="taxShipping" type="indicator"></field>
         <field name="taxPercentage" type="floating-point"></field>
-        <prim-key field="taxAuthGeoId"/>
-        <prim-key field="taxAuthPartyId"/>
-        <prim-key field="taxAuthorityRateTypeId"/>
-        <prim-key field="productStoreId"/>
-        <prim-key field="productCategoryId"/>
-        <prim-key field="minItemPrice"/>
-        <prim-key field="minPurchase"/>
-        <prim-key field="fromDate"/>
+        <prim-key field="taxAuthorityRateSeqId"/>
         <relation type="one" fk-name="TAXAUTHRTEP_TXA" rel-entity-name="TaxAuthority">
             <key-map field-name="taxAuthGeoId"/>
             <key-map field-name="taxAuthPartyId"/>
