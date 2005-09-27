@@ -40,15 +40,16 @@
     <author>None</author>
     <version>1.0</version>
 
-  <!-- ========================================================= -->
-  <!-- ======================== Data Model ===================== -->
-  <!-- The modules in this file are as follows:                  -->
-  <!--  - org.ofbiz.accounting.budget -->
-  <!--  - org.ofbiz.accounting.fixedasset -->
-  <!--  - org.ofbiz.accounting.invoice -->
-  <!--  - org.ofbiz.accounting.ledger -->
-  <!--  - org.ofbiz.accounting.payment -->
-  <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- ======================== Data Model ===================== -->
+    <!-- The modules in this file are as follows:                  -->
+    <!--  - org.ofbiz.accounting.budget -->
+    <!--  - org.ofbiz.accounting.fixedasset -->
+    <!--  - org.ofbiz.accounting.invoice -->
+    <!--  - org.ofbiz.accounting.ledger -->
+    <!--  - org.ofbiz.accounting.payment -->
+    <!--  - org.ofbiz.accounting.tax -->
+    <!-- ========================================================= -->
 
 
   <!-- ========================================================= -->
@@ -2334,5 +2335,180 @@
       <field name="lastModifiedByTerminal" type="short-varchar"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="merchantId"/>
+    </entity>
+    
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.accounting.tax -->
+    <!-- ========================================================= -->
+    
+    <entity entity-name="SimpleSalesTaxLookup"
+        package-name="org.ofbiz.accounting.tax"
+        title="Simple Sales Tax Lookup Entity">
+        <description>NOTE: this entity is deprecated by TaxAuthorityRateProduct</description>
+        <field name="productStoreId" type="id-ne"></field>
+        <field name="countryGeoId" type="id-ne"></field>
+        <field name="stateProvinceGeoId" type="id-ne"></field>
+        <field name="taxCategory" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="description" type="description"></field>
+        <field name="minItemPrice" type="currency-amount"></field>
+        <field name="minPurchase" type="currency-amount"></field>
+        <field name="taxShipping" type="indicator"></field>
+        <field name="salesTaxPercentage" type="floating-point"></field>
+        <prim-key field="productStoreId"/>
+        <prim-key field="countryGeoId"/>
+        <prim-key field="stateProvinceGeoId"/>
+        <prim-key field="taxCategory"/>
+        <prim-key field="minItemPrice"/>
+        <prim-key field="minPurchase"/>
+        <prim-key field="fromDate"/>
+        <relation type="many" rel-entity-name="Product">
+            <key-map field-name="taxCategory"/>
+        </relation>
+    </entity>
+    <entity entity-name="TaxAuthority"
+        package-name="org.ofbiz.accounting.tax"
+        title="Tax Authority Entity">
+        <field name="taxAuthGeoId" type="id-ne"></field>
+        <field name="taxAuthPartyId" type="id-ne"></field>
+        <field name="requireTaxIdForOrder" type="indicator"></field>
+        <field name="includeTaxInPrice" type="indicator"><!-- this is mainly for VAT tax authorities --></field>
+        <prim-key field="taxAuthGeoId"/>
+        <prim-key field="taxAuthPartyId"/>
+        <relation type="one" fk-name="TAXAUTH_TAGEO" title="TaxAuth" rel-entity-name="Geo">
+            <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTH_TAPARTY" title="TaxAuth" rel-entity-name="Party">
+            <key-map field-name="taxAuthPartyId" rel-field-name="partyId"/>
+        </relation>
+    </entity>
+    <entity entity-name="TaxAuthorityCategory"
+        package-name="org.ofbiz.accounting.tax"
+        title="Tax Authority Product Category Entity">
+        <field name="taxAuthGeoId" type="id-ne"></field>
+        <field name="taxAuthPartyId" type="id-ne"></field>
+        <field name="productCategoryId" type="id-ne"></field>
+        <prim-key field="taxAuthGeoId"/>
+        <prim-key field="taxAuthPartyId"/>
+        <prim-key field="productCategoryId"/>
+        <relation type="one" fk-name="TAXAUTHCAT_TXA" rel-entity-name="TaxAuthority">
+            <key-map field-name="taxAuthGeoId"/>
+            <key-map field-name="taxAuthPartyId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTHCAT_CAT" rel-entity-name="ProductCategory">
+            <key-map field-name="productCategoryId"/>
+        </relation>
+    </entity>
+    <entity entity-name="TaxAuthorityGlAccount"
+        package-name="org.ofbiz.accounting.tax"
+        title="Tax Authority GL Account Entity">
+        <field name="taxAuthGeoId" type="id-ne"></field>
+        <field name="taxAuthPartyId" type="id-ne"></field>
+        <field name="organizationPartyId" type="id-ne"></field>
+        <field name="glAccountId" type="id-ne"></field>
+        <prim-key field="taxAuthGeoId"/>
+        <prim-key field="taxAuthPartyId"/>
+        <prim-key field="organizationPartyId"/>
+        <relation type="one" fk-name="TAXAUTHGLA_TXA" rel-entity-name="TaxAuthority">
+            <key-map field-name="taxAuthGeoId"/>
+            <key-map field-name="taxAuthPartyId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTHGLA_OPTY" title="Organization" rel-entity-name="Party">
+            <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTHGLA_GLA" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
+        </relation>
+    </entity>
+    <entity entity-name="TaxAuthorityRateProduct"
+        package-name="org.ofbiz.accounting.tax"
+        title="Tax Authority Rate Entity">
+        <field name="taxAuthGeoId" type="id-ne"></field>
+        <field name="taxAuthPartyId" type="id-ne"></field>
+        <field name="taxAuthorityRateTypeId" type="id-ne"></field>
+        <field name="productStoreId" type="id-ne"></field>
+        <field name="productCategoryId" type="id-ne"></field>
+        <field name="minItemPrice" type="currency-amount"></field>
+        <field name="minPurchase" type="currency-amount"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="description" type="description"></field>
+        <field name="taxShipping" type="indicator"></field>
+        <field name="taxPercentage" type="floating-point"></field>
+        <prim-key field="taxAuthGeoId"/>
+        <prim-key field="taxAuthPartyId"/>
+        <prim-key field="taxAuthorityRateTypeId"/>
+        <prim-key field="productStoreId"/>
+        <prim-key field="productCategoryId"/>
+        <prim-key field="minItemPrice"/>
+        <prim-key field="minPurchase"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="TAXAUTHRTEP_TXA" rel-entity-name="TaxAuthority">
+            <key-map field-name="taxAuthGeoId"/>
+            <key-map field-name="taxAuthPartyId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTHRTEP_RTTP" rel-entity-name="TaxAuthorityRateType">
+            <key-map field-name="taxAuthorityRateTypeId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTHRTEP_PSTR" rel-entity-name="ProductStore">
+            <key-map field-name="productStoreId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTHRTEP_PCAT" rel-entity-name="ProductCategory">
+            <key-map field-name="productCategoryId"/>
+        </relation>
+    </entity>
+    <entity entity-name="TaxAuthorityRateType"
+        package-name="org.ofbiz.accounting.tax"
+        title="Tax Authority Rate Type Entity">
+        <field name="taxAuthorityRateTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="taxAuthorityRateTypeId"/>
+    </entity>
+    <entity entity-name="ZipSalesRuleLookup"
+        package-name="org.ofbiz.accounting.tax"
+        title="Zip Sales Tax Lookup Entity">
+        <field name="stateCode" type="short-varchar"></field>
+        <field name="city" type="short-varchar"></field>
+        <field name="county" type="short-varchar"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="idCode" type="short-varchar"></field>
+        <field name="taxable" type="short-varchar"></field>
+        <field name="shipCond" type="long-varchar"></field>
+        <prim-key field="stateCode"/>
+        <prim-key field="city"/>
+        <prim-key field="county"/>
+        <prim-key field="fromDate"/>
+    </entity>
+    <entity entity-name="ZipSalesTaxLookup"
+        package-name="org.ofbiz.accounting.tax"
+        title="Zip Sales Tax Lookup Entity">
+        <field name="zipCode" type="short-varchar"></field>
+        <field name="stateCode" type="short-varchar"></field>
+        <field name="city" type="short-varchar"></field>
+        <field name="county" type="short-varchar"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="countyFips" type="short-varchar"></field>
+        <field name="countyDefault" type="indicator"></field>
+        <field name="generalDefault" type="indicator"></field>
+        <field name="insideCity" type="indicator"></field>
+        <field name="geoCode" type="short-varchar"></field>
+        <field name="stateSalesTax" type="floating-point"></field>
+        <field name="citySalesTax" type="floating-point"></field>
+        <field name="cityLocalSalesTax" type="floating-point"></field>
+        <field name="countySalesTax" type="floating-point"></field>
+        <field name="countyLocalSalesTax" type="floating-point"></field>
+        <field name="comboSalesTax" type="floating-point"></field>
+        <field name="stateUseTax" type="floating-point"></field>
+        <field name="cityUseTax" type="floating-point"></field>
+        <field name="cityLocalUseTax" type="floating-point"></field>
+        <field name="countyUseTax" type="floating-point"></field>
+        <field name="countyLocalUseTax" type="floating-point"></field>
+        <field name="comboUseTax" type="floating-point"></field>
+        <prim-key field="zipCode"/>
+        <prim-key field="stateCode"/>
+        <prim-key field="city"/>
+        <prim-key field="county"/>
+        <prim-key field="fromDate"/>
     </entity>
 </entitymodel>
