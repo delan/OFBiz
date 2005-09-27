@@ -29,6 +29,7 @@
 
 <#if quote?has_content>
     <div class='tabContainer'>
+        <a href="<@ofbizUrl>/ViewQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ViewQuote?default(unselectedClassName)}">${uiLabelMap.OrderViewQuote}</a>
         <a href="<@ofbizUrl>/EditQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.EditQuote?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuote}</a>
         <a href="<@ofbizUrl>/ListQuoteRoles?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteRoles?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteRoles}</a>
         <a href="<@ofbizUrl>/ListQuoteItems?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteItems?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteItems}</a>

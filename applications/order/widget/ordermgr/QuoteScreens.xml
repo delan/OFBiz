@@ -110,6 +110,51 @@
             </widgets>
          </section>
     </screen>
+    <screen name="ViewQuote">
+        <section>
+            <actions>
+                <set field="title" value="View Quote"/>
+                <set field="titleProperty" value="PageTitleViewQuote"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="ViewQuote"/>
+                
+                <set field="showQuoteManagementLinks" value="Y"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-one entity-name="Quote" value-name="quote"/>
+                <get-related-one value-name="quote" relation-name="QuoteType" to-value-name="quoteType"/>
+                <get-related-one value-name="quote" relation-name="StatusItem" to-value-name="statusItem"/>
+                <get-related-one value-name="quote" relation-name="Uom" to-value-name="currency"/>
+                <get-related-one value-name="quote" relation-name="ProductStore" to-value-name="store"/>
+                
+                <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
+                <get-related value-name="quote" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
+                <!--
+                <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
+                <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
+                <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
+                -->
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonQuoteDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/quote/CreateOrderQuote.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/quote/ViewQuoteInfo.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/quote/ViewQuoteItemInfo.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/quote/CopyQuote.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditQuote">
         <section>
             <actions>
@@ -120,18 +165,11 @@
                 
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <entity-one entity-name="Quote" value-name="quote"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/quote/CreateOrderQuote.ftl"/></html>
-                        </platform-specific>
                         <include-form name="EditQuote" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/quote/CopyQuote.ftl"/></html>
-                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
