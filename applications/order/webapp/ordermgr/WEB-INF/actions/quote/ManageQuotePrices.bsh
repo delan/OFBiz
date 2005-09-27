@@ -51,8 +51,12 @@ while (quoteItemsIt.hasNext()) {
     double averageCost = 0.0;
     double unitPrice = 0.0;
     double quantity = 1.0;
+    double selectedAmount = 1.0;
     if (quoteItem.get("quantity") != null) {
         quantity = (quoteItem.getDouble("quantity")).doubleValue();
+    }
+    if (quoteItem.get("selectedAmount") != null) {
+        selectedAmount = (quoteItem.getDouble("selectedAmount")).doubleValue();
     }
     if (quoteItem.get("quoteUnitPrice") != null) {
         unitPrice = (quoteItem.getDouble("quoteUnitPrice")).doubleValue();
@@ -69,7 +73,7 @@ while (quoteItemsIt.hasNext()) {
                 averageCost = (productPrice.getDouble("price")).doubleValue();
             }
         }
-        defaultQuoteUnitPrice = averageCost * costToPriceMult;
+        defaultQuoteUnitPrice = averageCost * costToPriceMult * selectedAmount;
         totalCost += (averageCost * quantity);
         totalPrice += (unitPrice * quantity);
     } catch(Exception exc) {
