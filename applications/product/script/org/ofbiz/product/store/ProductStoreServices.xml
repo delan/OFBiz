@@ -450,7 +450,7 @@
             <set from-field="parameters.product" field="product"/>
         </else>
         </if-empty>
-
+        
         <!-- If the given product is a SERVICE or DIGITAL_GOOD -->
         <if>
             <condition>
@@ -478,7 +478,7 @@
             <return/>
         </if-compare>
         
-        <if-compare value="Y" field-name="productStore.oneInventoryFacility" operator="equals">
+        <if-compare value="Y" operator="equals" field-name="productStore.oneInventoryFacility">
             <if-empty field-name="productStore.inventoryFacilityId">
                 <add-error><fail-message message="ProductStore with id ${productStoreId} has Y for oneInventoryFacility but inventoryFacilityId is empty, not checking available inventory."/></add-error>
                 <check-errors/>
