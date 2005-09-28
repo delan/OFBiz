@@ -332,4 +332,7 @@
     <!-- Standard Industrial Cost Types -->
     <FixedAssetStdCostType description="Standard Setup Cost" hasTable="N" parentTypeId="" fixedAssetStdCostTypeId="SETUP_COST"/>
     <FixedAssetStdCostType description="Standard Usage Cost" hasTable="N" parentTypeId="" fixedAssetStdCostTypeId="USAGE_COST"/>
+    
+    <TaxAuthorityRateType taxAuthorityRateTypeId="SALES_TAX" description="Sales Tax"/>
+    <TaxAuthorityRateType taxAuthorityRateTypeId="USE_TAX" description="Use Tax"/>
 </entity-engine-xml>

@@ -1291,6 +1291,7 @@
             title="Party Data Object Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="contentId" type="id-ne"></field>
+      <field name="contentPurposeEnumId" type="id-ne"></field>
       <prim-key field="partyId"/>
       <prim-key field="contentId"/>
       <relation type="one" fk-name="PARTY_CNT_PARTY" rel-entity-name="Party">
@@ -1298,6 +1299,9 @@
       </relation>
       <relation type="one" fk-name="PARTY_CNT_CNT" rel-entity-name="Content">
         <key-map field-name="contentId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_CNT_PENUM" rel-entity-name="Enumeration">
+        <key-map field-name="contentPurposeEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
     <entity entity-name="PartyDataSource"
@@ -1329,6 +1333,7 @@
       <field name="groupName" type="name"></field>
       <!-- DEJ20050628 getting rid of this, deprecated by PartyTaxInfo <field name="federalTaxId" type="long-varchar" encrypt="true"></field> -->
       <field name="comments" type="comment"></field>
+      <field name="logoImageUrl" type="url"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PARTY_GRP_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>

@@ -80,6 +80,9 @@
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_PAYMENT" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_PHONE" contactMechTypeId="TELECOM_NUMBER"/>
     
+    <EnumerationType description="Party Content Purpose" enumTypeId="PTYCNT_PRP" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Logo Image URL" enumCode="LGOIMGURL" enumId="PCPRP_LGOIMGURL" sequenceId="01" enumTypeId="PTYCNT_PRP"/>
+
     <!-- top level role types -->
     <RoleType description="Administrator" hasTable="N" parentTypeId="" roleTypeId="ADMIN"/>
     <RoleType description="Agent" hasTable="N" parentTypeId="" roleTypeId="AGENT"/>
