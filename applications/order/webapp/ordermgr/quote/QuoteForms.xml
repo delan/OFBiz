@@ -258,7 +258,9 @@
             default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="quoteAttributes"
             target="" paginate-target="ListQuoteAttributes" title="" type="list">
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="display"/>
-        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}"></field>
+        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${attrName}" target="EditQuoteAttribute?quoteId=${quoteId}&amp;attrName=${attrName}"/>
+        </field>
         <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -271,6 +273,7 @@
         <alt-target use-when="quoteAttribute==null" target="createQuoteAttribute"/>
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="edit"/>
         <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}"></field>
+        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" use-when="quoteAttribute!=null"><display/></field>
         <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
@@ -282,7 +285,9 @@
             default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="quoteCoefficients"
             target="" paginate-target="ListQuoteCoefficients" title="" type="list">
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="display"/>
-        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}"></field>
+        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${coeffName}" target="EditQuoteCoefficient?quoteId=${quoteId}&amp;coeffName=${coeffName}"/>
+        </field>
         <field name="coeffValue" title="${uiLabelMap.OrderOrderQuoteCoeffValue}"></field>
         <field name="quoteId"><hidden/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -295,6 +300,7 @@
         <alt-target use-when="quoteCoefficient==null" target="createQuoteCoefficient"/>
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
+        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoefficientName}" use-when="quoteCoefficient!=null"><display/></field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
