@@ -424,7 +424,7 @@ public class ShoppingCartHelper {
                             }
                         }
                         if (requirementAlreadyInCart) {
-                        	if (Debug.warningOn()) Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderTheRequirementIsAlreadyInTheCartNotAdding", UtilMisc.toMap("requirementId",requirementId), cart.getLocale()), module);
+                            if (Debug.warningOn()) Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderTheRequirementIsAlreadyInTheCartNotAdding", UtilMisc.toMap("requirementId",requirementId), cart.getLocale()), module);
                             continue;
                         }
                         try {
@@ -559,6 +559,13 @@ public class ShoppingCartHelper {
         double oldQuantity = -1;
         String oldDescription = "";
         double oldPrice = -1;
+
+        if (this.cart.isReadOnlyCart()) {
+            String errMsg = UtilProperties.getMessage(resource, "cart.cart_is_in_read_only_mode", this.cart.getLocale());
+            errorMsgs.add(errMsg);
+            result = ServiceUtil.returnError(errorMsgs);
+            return result;
+        }
 
         while (i.hasNext()) {
             String o = (String) i.next();

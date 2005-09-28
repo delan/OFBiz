@@ -917,7 +917,10 @@ public class ShoppingCartEvents {
           return "error";
       }
 
+      // Set the cart's default checkout options for a quick checkout
       cart.setDefaultCheckoutOptions(dispatcher);
+      // Make the cart read-only
+      cart.setReadOnlyCart(true);
 
       session.setAttribute("shoppingCart", cart);
       session.setAttribute("productStoreId", cart.getProductStoreId());
