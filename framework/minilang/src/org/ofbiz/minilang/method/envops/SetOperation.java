@@ -27,9 +27,9 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.minilang.SimpleMethod;
+import org.ofbiz.minilang.method.ContextAccessor;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
 import org.w3c.dom.Element;
@@ -44,8 +44,8 @@ import org.w3c.dom.Element;
 public class SetOperation extends MethodOperation {
     public static final String module = SetOperation.class.getName();
     
-    protected FlexibleMapAccessor field;
-    protected FlexibleMapAccessor fromField;
+    protected ContextAccessor field;
+    protected ContextAccessor fromField;
     protected FlexibleStringExpander valueExdr;
     protected FlexibleStringExpander defaultExdr;
     protected String type;
@@ -54,8 +54,8 @@ public class SetOperation extends MethodOperation {
 
     public SetOperation(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.field = new FlexibleMapAccessor(element.getAttribute("field"));
-        this.fromField = new FlexibleMapAccessor(element.getAttribute("from-field"));
+        this.field = new ContextAccessor(element.getAttribute("field"));
+        this.fromField = new ContextAccessor(element.getAttribute("from-field"));
         this.valueExdr = new FlexibleStringExpander(element.getAttribute("value"));
         this.defaultExdr = new FlexibleStringExpander(element.getAttribute("default-value"));
         this.type = element.getAttribute("type");
@@ -72,8 +72,8 @@ public class SetOperation extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         Object newValue = null;
         if (!this.fromField.isEmpty()) {
-            newValue = methodContext.getEnv(this.fromField);
-            if (Debug.verboseOn()) Debug.logVerbose("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+            newValue = this.fromField.get(methodContext);
+            if (Debug.verboseOn()) Debug.logVerbose("In screen getting value for field from [" + this.fromField.toString() + "]: " + newValue, module);
         } else if (!this.valueExdr.isEmpty()) {
             newValue = methodContext.expandString(this.valueExdr);
         }
@@ -96,15 +96,15 @@ public class SetOperation extends MethodOperation {
             try {
                 newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, null);
             } catch (GeneralException e) {
-                String errMsg = "Could not convert field value for the field: [" + this.field.getOriginalName() + "] to the [" + this.type + "] type for the value [" + newValue + "]: " + e.toString();
+                String errMsg = "Could not convert field value for the field: [" + this.field.toString() + "] to the [" + this.type + "] type for the value [" + newValue + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             }
         }
         
-        if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
-        methodContext.putEnv(this.field, newValue);
+        if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.toString() + "] to value: " + newValue, module);
+        this.field.put(methodContext, newValue);
         return true;
     }
 
