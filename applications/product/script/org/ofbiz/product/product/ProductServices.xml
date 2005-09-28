@@ -38,7 +38,7 @@
         <make-value value-name="newEntity" entity-name="Product"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="newEntity"/>
+        <set from-field="parameters.productId" field="newEntity.productId"/>
         <if-empty field-name="newEntity.productId">
             <sequenced-id-to-env sequence-name="Product" env-name="newEntity.productId"/>
         <else>
@@ -49,10 +49,10 @@
         <field-to-result field-name="productId" map-name="newEntity" result-name="productId"/>
 
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.createdDate"/>
-        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.lastModifiedDate"/>
-        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.lastModifiedByUserLogin"/>
-        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.createdByUserLogin"/>
+        <set from-field="nowTimestamp" field="newEntity.createdDate"/>
+        <set from-field="nowTimestamp" field="newEntity.lastModifiedDate"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
 
         <create-value value-name="newEntity"/>
 
@@ -60,44 +60,45 @@
         <!-- THIS IS REMOVED BECAUSE IT CAUSES PROBLEMS FOR WORKING ON PRODUCTION SITES
         <if-not-empty field-name="primaryProductCategoryId" map-name="newEntity">
             <make-value entity-name="ProductCategoryMember" value-name="newMember"/>
-            <field-to-field field-name="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
-            <field-to-field field-name="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
+            <set from-field="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
+            <set from-field="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
             <now-timestamp-to-env env-name="nowStamp"/>
-            <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newMember"/>
+            <set from-field="nowStamp" field="newMember.fromDate"/>
             <create-value value-name="newMember"/>
         </if-not-empty>
         -->
 
         <!-- if the user has the role limited position, add this product to the limit category/ies -->
         <if-has-permission permission="CATALOG_ROLE" action="_CREATE">
-            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupCategoryRolesMap"/>
-            <string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupCategoryRolesMap"/>
-            <find-by-and entity-name="ProductCategoryRole" map-name="lookupCategoryRolesMap" list-name="productCategoryRoles"/>
+            <entity-and entity-name="ProductCategoryRole" list-name="productCategoryRoles">
+                <field-map field-name="partyId" env-name="userLogin.partyId"/>
+                <field-map field-name="roleTypeId" value="LTD_ADMIN"/>
+            </entity-and>
+            
             <filter-list-by-date list-name="productCategoryRoles" valid-date-name="nowTimestamp"/>
             <iterate entry-name="productCategoryRole" list-name="productCategoryRoles">
                 <!-- add this new product to the category -->
                 <make-value value-name="newLimitMember" entity-name="ProductCategoryMember"/>
-                <field-to-field field-name="productId" map-name="newEntity" to-map-name="newLimitMember"/>
-                <field-to-field field-name="productCategoryId" map-name="productCategoryRole" to-map-name="newLimitMember"/>
-                <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newLimitMember"/>
+                <set from-field="newEntity.productId" field="newLimitMember.productId"/>
+                <set from-field="productCategoryRole.productCategoryId" field="newLimitMember.productCategoryId"/>
+                <set from-field="nowTimestamp" field="newLimitMember.fromDate"/>
                 <create-value value-name="newLimitMember"/>
             </iterate>
         </if-has-permission>
     </simple-method>
     <simple-method method-name="updateProduct" short-description="Update an Product">
-        <string-to-field string="updateProduct" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <set value="updateProduct" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="Product" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="Product" value-name="lookedUpValue"/>
         <!-- save this value before overwriting it so we can compare it later -->
-        <field-to-field field-name="primaryProductCategoryId" map-name="lookedUpValue" to-map-name="saveIdMap"/>
+        <set from-field="lookedUpValue.primaryProductCategoryId" field="saveIdMap.primaryProductCategoryId"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
 
         <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
-        <env-to-env env-name="userLogin.userLoginId" to-env-name="lookedUpValue.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="lookedUpValue.lastModifiedByUserLogin"/>
 
         <store-value value-name="lookedUpValue"/>
 
@@ -106,8 +107,8 @@
         <if-not-empty field-name="primaryProductCategoryId" map-name="lookedUpValue">
             <if-compare-field field-name="primaryProductCategoryId" map-name="lookedUpValue" operator="equals" to-map-name="saveIdMap">
                 <make-value entity-name="ProductCategoryMember" value-name="newMember"/>
-                <field-to-field field-name="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
-                <field-to-field field-name="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
+                <set from-field="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
+                <set from-field="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
                 <now-timestamp-to-env env-name="newMember.fromDate"/>
                 <create-value value-name="newMember"/>
             </if-compare-field>
@@ -117,58 +118,59 @@
 
     <!-- update the name of a product - handles real , virtual and variant products -->
     <simple-method method-name="updateProductQuickAdminName" short-description="Update a Product Name from quick admin">
-        <string-to-field string="updateProductQuickAdminName" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <set value="updateProductQuickAdminName" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="Product" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <field-to-field field-name="productName" map-name="parameters" to-map-name="lookedUpValue"/>
+        <entity-one entity-name="Product" value-name="lookedUpValue"/>
+        <set from-field="parameters.productName" field="lookedUpValue.productName"/>
         <if-compare field-name="lookedUpValue.isVirtual" operator="equals" value="Y">
-            <field-to-field field-name="lookedUpValue.productName" to-field-name="lookedUpValue.internalName"/>
+            <set from-field="lookedUpValue.productName" field="lookedUpValue.internalName"/>
         </if-compare>
 
         <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
-        <env-to-env env-name="userLogin.userLoginId" to-env-name="lookedUpValue.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="lookedUpValue.lastModifiedByUserLogin"/>
 
         <store-value value-name="lookedUpValue"/>
 
         <if-compare field-name="lookedUpValue.isVirtual" operator="equals" value="Y">
             <!-- get all variant products, to update their productNames -->
-            <field-to-field field-name="productId" map-name="parameters" to-map-name="variantProductAssocMap"/>
-            <string-to-field string="PRODUCT_VARIANT" field-name="productAssocTypeId" map-name="variantProductAssocMap" />
+            <set from-field="parameters.productId" field="variantProductAssocMap.productId"/>
+            <set value="PRODUCT_VARIANT" field="variantProductAssocMap.productAssocTypeId"/>
 
             <!-- get all productAssocs, then get the actual product to update -->
             <find-by-and entity-name="ProductAssoc" map-name="variantProductAssocMap" list-name="variantProductAssocs"/>
             <iterate entry-name="variantProductAssoc" list-name="variantProductAssocs">
                 <clear-field field-name="variantProduct"/>
-                <field-to-field field-name="productIdTo" map-name="variantProductAssoc" to-field-name="productId" to-map-name="variantProduct"/>
-                <find-by-primary-key entity-name="Product" map-name="variantProduct" value-name="variantProduct" />
+                <entity-one entity-name="Product" value-name="variantProduct" auto-field-map="false">
+                    <field-map field-name="productId" env-name="variantProductAssoc.productIdTo"/>
+                </entity-one>
 
-                <field-to-field field-name="productName" map-name="parameters" to-map-name="variantProduct"/>
+                <set from-field="parameters.productName" field="variantProduct.productName"/>
                 <now-timestamp-to-env env-name="variantProduct.lastModifiedDate"/>
-                <env-to-env env-name="userLogin.userLoginId" to-env-name="variantProduct.lastModifiedByUserLogin"/>
+                <set from-field="userLogin.userLoginId" field="variantProduct.lastModifiedByUserLogin"/>
                 <store-value value-name="variantProduct"/>
             </iterate>
         </if-compare>
     </simple-method>
 
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
-        <string-to-field string="duplicateProduct" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
+        <set value="duplicateProduct" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
+        <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <!-- look up the old product and clone it -->
-        <field-to-field field-name="oldProductId" map-name="parameters" to-field-name="productId" to-map-name="productFindContext"/>
-        <find-by-primary-key entity-name="Product" map-name="productFindContext" value-name="oldProduct"/>
+        <entity-one entity-name="Product" value-name="oldProduct" auto-field-map="false">
+            <field-map field-name="productId" env-name="parameters.oldProductId"/>
+        </entity-one>
         <clone-value value-name="oldProduct" new-value-name="newProduct"/>
 
         <!-- set the productId, and write it to the datasource -->
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="newProduct"/>
+        <set from-field="parameters.productId" field="newProduct.productId"/>
         <create-value value-name="newProduct"/>
 
         <!-- if requested, duplicate related data as well -->
@@ -176,7 +178,7 @@
             <find-by-and entity-name="ProductPrice" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -184,7 +186,7 @@
             <find-by-and entity-name="GoodIdentification" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -192,7 +194,7 @@
             <find-by-and entity-name="ProductContent" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -200,7 +202,7 @@
             <find-by-and entity-name="ProductCategoryMember" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -208,16 +210,17 @@
             <find-by-and entity-name="ProductAssoc" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
 
             <!-- small difference here, also do the reverse assocs... -->
-            <field-to-field field-name="oldProductId" map-name="parameters" to-field-name="productIdTo" to-map-name="reverseProductFindContext"/>
-            <find-by-and entity-name="ProductAssoc" map-name="reverseProductFindContext" list-name="foundValues"/>
+            <entity-and entity-name="ProductAssoc" list-name="foundValues">
+                <field-map field-name="productIdTo" env-name="parameters.oldProductId"/>
+            </entity-and>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-field-name="productIdTo" to-map-name="newTempValue"/>
+                <set from-field="parameters.productId" field="newTempValue.productIdTo"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -225,7 +228,7 @@
             <find-by-and entity-name="ProductAttribute" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -233,7 +236,7 @@
             <find-by-and entity-name="ProductFeatureAppl" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -241,12 +244,9 @@
             <find-by-and entity-name="InventoryItem" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
-
+                <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <!-- this one is slightly different because it needs a new sequenced inventoryItemId -->
-                <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
-                <env-to-field env-name="inventoryItemId" map-name="newTempValue"/>
-
+                <sequenced-id-to-env sequence-name="InventoryItem" env-name="newTempValue.inventoryItemId"/>
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
@@ -267,7 +267,7 @@
         <if-not-empty field-name="removeAssocs" map-name="parameters">
             <remove-by-and entity-name="ProductAssoc" map-name="productFindContext"/>
             <!-- small difference here, also do the reverse assocs... -->
-            <field-to-field field-name="oldProductId" map-name="parameters" to-field-name="productIdTo" to-map-name="reverseProductFindContext"/>
+            <set from-field="parameters.oldProductId" field="reverseProductFindContext.productIdTo"/>
             <remove-by-and entity-name="ProductAssoc" map-name="reverseProductFindContext"/>
         </if-not-empty>
         <if-not-empty field-name="removeAttributes" map-name="parameters">
@@ -285,9 +285,9 @@
         <!-- this service is meant to be called from an entity ECA for entities that include a productId -->
         <!-- if it is the Product entity itself triggering this action, then a [productInstance] parameter
             will be passed and we can save a few cycles looking that up -->
-        <field-to-env field-name="productInstance" map-name="parameters" env-name="productInstance"/>
+        <set from-field="parameters.productInstance" field="productInstance"/>
         <if-empty field-name="productInstance">
-            <field-to-field field-name="productId" map-name="parameters" to-map-name="findProductMap"/>
+            <set from-field="parameters.productId" field="findProductMap.productId"/>
             <find-by-primary-key entity-name="Product" map-name="findProductMap" value-name="productInstance"/>
         </if-empty>
 
@@ -310,15 +310,14 @@
     <simple-method method-name="discontinueProductSales" short-description="Discontinue Product Sales" login-required="false">
         <!-- set sales discontinuation date to now -->
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="productIdMap"/>
-        <find-by-primary-key entity-name="Product" map-name="productIdMap" value-name="product"/>
-        <env-to-env env-name="nowTimestamp" to-env-name="product.salesDiscontinuationDate"/>
+        <entity-one entity-name="Product" value-name="product"/>
+        <set from-field="nowTimestamp" field="product.salesDiscontinuationDate"/>
         <store-value value-name="product"/>
         <!-- expire product from all categories -->
         <get-related value-name="product" relation-name="ProductCategoryMember" list-name="productCategoryMembers"/>
         <iterate entry-name="productCategoryMember" list-name="productCategoryMembers">
             <if-empty field-name="productCategoryMember.thruDate">
-                <env-to-env env-name="nowTimestamp" to-env-name="productCategoryMember.thruDate"/>
+                <set from-field="nowTimestamp" field="productCategoryMember.thruDate"/>
                 <store-value value-name="productCategoryMember"/>
             </if-empty>
         </iterate>
@@ -326,7 +325,7 @@
         <get-related value-name="product" relation-name="AssocProductAssoc" list-name="assocProductAssocs"/>
         <iterate entry-name="assocProductAssoc" list-name="assocProductAssocs">
             <if-empty field-name="assocProductAssoc.thruDate">
-                <env-to-env env-name="nowTimestamp" to-env-name="assocProductAssoc.thruDate"/>
+                <set from-field="nowTimestamp" field="assocProductAssoc.thruDate"/>
                 <store-value value-name="assocProductAssoc"/>
             </if-empty>
         </iterate>
@@ -340,8 +339,8 @@
         <if-empty field-name="productCalculatedInfo">
             <!-- go ahead and create it -->
             <make-value value-name="productCalculatedInfo" entity-name="ProductCalculatedInfo"/>
-            <env-to-env env-name="parameters.productId" to-env-name="productCalculatedInfo.productId"/>
-            <env-to-env env-name="parameters.weight" to-env-name="productCalculatedInfo.totalTimesViewed"/>
+            <set from-field="parameters.productId" field="productCalculatedInfo.productId"/>
+            <set from-field="parameters.weight" field="productCalculatedInfo.totalTimesViewed"/>
             <create-value value-name="productCalculatedInfo"/>
         <else>
             <calculate field-name="productCalculatedInfo.totalTimesViewed" type="Long">
@@ -359,8 +358,8 @@
             <field field-name="product" type="GenericValue"/>
         </call-class-method>
         <if-not-empty field-name="virtualProductId">
-            <env-to-env env-name="virtualProductId" to-env-name="callSubMap.productId"/>
-            <env-to-env env-name="parameters.weight" to-env-name="callSubMap.weight"/>
+            <set from-field="virtualProductId" field="callSubMap.productId"/>
+            <set from-field="parameters.weight" field="callSubMap.weight"/>
             <call-service service-name="countProductView" in-map-name="callSubMap"></call-service>
         </if-not-empty>
     </simple-method>
@@ -372,8 +371,8 @@
         <if-empty field-name="productCalculatedInfo">
             <!-- go ahead and create it -->
             <make-value value-name="productCalculatedInfo" entity-name="ProductCalculatedInfo"/>
-            <env-to-env env-name="parameters.productId" to-env-name="productCalculatedInfo.productId"/>
-            <env-to-env env-name="parameters.quantity" to-env-name="productCalculatedInfo.totalQuantityOrdered"/>
+            <set from-field="parameters.productId" field="productCalculatedInfo.productId"/>
+            <set from-field="parameters.quantity" field="productCalculatedInfo.totalQuantityOrdered"/>
             <create-value value-name="productCalculatedInfo"/>
         <else>
             <calculate field-name="productCalculatedInfo.totalQuantityOrdered" type="Double">
@@ -391,16 +390,16 @@
             <field field-name="product" type="GenericValue"/>
         </call-class-method>
         <if-not-empty field-name="virtualProductId">
-            <env-to-env env-name="virtualProductId" to-env-name="callSubMap.productId"/>
-            <env-to-env env-name="parameters.quantity" to-env-name="callSubMap.quantity"/>
+            <set from-field="virtualProductId" field="callSubMap.productId"/>
+            <set from-field="parameters.quantity" field="callSubMap.quantity"/>
             <call-service service-name="countProductQuantityOrdered" in-map-name="callSubMap"></call-service>
         </if-not-empty>
     </simple-method>
 
     <!-- GoodIdentification methods -->
     <simple-method method-name="createGoodIdentification" short-description="Create an GoodIdentification">
-        <string-to-field string="createGoodIdentification" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
+        <set value="createGoodIdentification" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -410,8 +409,8 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateGoodIdentification" short-description="Update an GoodIdentification">
-        <string-to-field string="updateGoodIdentification" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <set value="updateGoodIdentification" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -422,8 +421,8 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteGoodIdentification" short-description="Delete an GoodIdentification">
-        <string-to-field string="deleteGoodIdentification" field-name="callingMethodName"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
+        <set value="deleteGoodIdentification" field="callingMethodName"/>
+        <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -435,8 +434,8 @@
 
     <!-- ProductGlAccount methods -->
     <simple-method method-name="createProductGlAccount" short-description="Create an ProductGlAccount">
-        <string-to-field string="createProductGlAccount" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
+        <set value="createProductGlAccount" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -446,8 +445,8 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductGlAccount" short-description="Update an ProductGlAccount">
-        <string-to-field string="updateProductGlAccount" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <set value="updateProductGlAccount" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -458,8 +457,8 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductGlAccount" short-description="Delete an ProductGlAccount">
-        <string-to-field string="deleteProductGlAccount" field-name="callingMethodName"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
+        <set value="deleteProductGlAccount" field="callingMethodName"/>
+        <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -473,10 +472,10 @@
         call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkProductRelatedPermission" short-description="Check Product Related Permission">
         <if-empty field-name="callingMethodName">
-            <string-to-field string="this operation" field-name="callingMethodName"/>
+            <set value="this operation" field="callingMethodName"/>
         </if-empty>
         <if-empty field-name="checkAction">
-            <string-to-field string="UPDATE" field-name="checkAction"/>
+            <set value="UPDATE" field="checkAction"/>
         </if-empty>
 
         <!-- find all role-categories that this product is a member of -->
@@ -485,9 +484,9 @@
                 <not><if-has-permission permission="CATALOG" action="_${checkAction}"/></not>
             </condition>
             <then>
-                <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupRoleCategoriesMap"/>
-                <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
-                <string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
+                <set from-field="parameters.productId" field="lookupRoleCategoriesMap.productId"/>
+                <set from-field="userLogin.partyId" field="lookupRoleCategoriesMap.partyId"/>
+                <set value="LTD_ADMIN" field="lookupRoleCategoriesMap.roleTypeId"/>
                 <find-by-and entity-name="ProductCategoryMemberAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
                 <filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
                 <filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
@@ -518,27 +517,26 @@
     <simple-method method-name="createProductReview" short-description="Create a ProductReview">
         <make-value value-name="newEntity" entity-name="ProductReview"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="newEntity"/>
-        <string-to-field string="PRR_PENDING" field-name="statusId" map-name="newEntity"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.userLoginId"/>
+        <set value="PRR_PENDING" field="newEntity.statusId"/>
 
         <!-- code to check for auto-approved reviews (store setting) -->
-        <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="storeLookup"/>
-        <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+        <entity-one entity-name="ProductStore" value-name="productStore"/>
+        
         <if-not-empty field-name="productStore">
             <if-compare field-name="productStore.autoApproveReviews" operator="equals" value="Y">
-                <string-to-field string="PRR_APPROVED" field-name="newEntity.statusId"/>
+                <set value="PRR_APPROVED" field="newEntity.statusId"/>
             </if-compare>
         </if-not-empty>
         
         <!-- auto approve the review if it is just a rating and has no review text -->
         <if-empty field-name="parameters.productReview">
-            <string-to-field string="PRR_APPROVED" field-name="newEntity.statusId"/>
+            <set value="PRR_APPROVED" field="newEntity.statusId"/>
         </if-empty>
 
         <!-- create the new ProductReview -->
-        <sequenced-id-to-env sequence-name="ProductReview" env-name="productReviewId"/>
-        <env-to-field env-name="productReviewId" map-name="newEntity"/>
-        <field-to-result field-name="productReviewId" result-name="productReviewId"/>
+        <sequenced-id-to-env sequence-name="ProductReview" env-name="newEntity.productReviewId"/>
+        <field-to-result field-name="newEntity.productReviewId" result-name="productReviewId"/>
 
         <if-empty field-name="postedDateTime" map-name="newEntity">
             <now-timestamp-to-env env-name="newEntity.postedDateTime"/>
@@ -546,7 +544,7 @@
 
         <create-value value-name="newEntity"/>
 
-        <env-to-env env-name="newEntity.productId" to-env-name="productId"/>
+        <set from-field="newEntity.productId" field="productId"/>
         <call-simple-method method-name="updateProductWithReviewRatingAvg"/>
     </simple-method>
     <simple-method method-name="updateProductReview" short-description="Update ProductReview">
@@ -559,11 +557,11 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
 
-        <env-to-env env-name="lookedUpValue.productId" to-env-name="productId"/>
+        <set from-field="lookedUpValue.productId" field="productId"/>
         <call-simple-method method-name="updateProductWithReviewRatingAvg"/>
     </simple-method>
     <simple-method method-name="updateProductWithReviewRatingAvg" short-description="Update Product with new Review Rating Avg">
-    	<!-- this method is meant to be called in-line and depends in a productId parameter -->
+        <!-- this method is meant to be called in-line and depends in a productId parameter -->
         <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getAverageProductRating" ret-field-name="averageCustomerRating">
             <field field-name="delegator" type="org.ofbiz.entity.GenericDelegator"/>
             <field field-name="productId" type="java.lang.String"/>
@@ -575,31 +573,31 @@
         <if-empty field-name="productCalculatedInfo">
             <!-- go ahead and create it -->
             <make-value value-name="productCalculatedInfo" entity-name="ProductCalculatedInfo"/>
-            <env-to-env env-name="parameters.productId" to-env-name="productCalculatedInfo.productId"/>
-            <env-to-env env-name="averageCustomerRating" to-env-name="productCalculatedInfo.averageCustomerRating"/>
+            <set from-field="parameters.productId" field="productCalculatedInfo.productId"/>
+            <set from-field="averageCustomerRating" field="productCalculatedInfo.averageCustomerRating"/>
             <create-value value-name="productCalculatedInfo"/>
         <else>
-            <env-to-env env-name="averageCustomerRating" to-env-name="productCalculatedInfo.averageCustomerRating"/>
+            <set from-field="averageCustomerRating" field="productCalculatedInfo.averageCustomerRating"/>
             <store-value value-name="productCalculatedInfo"/>
         </else>
         </if-empty>
     </simple-method>
     <simple-method method-name="copyToProductVariants" short-description="Updates the Product's Variants">
-        <string-to-field string="copyToProductVariants" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
+        <set value="copyToProductVariants" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
+        <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <env-to-env env-name="parameters.virtualProductId" to-env-name="productFindContext.productId"/>
+        <set from-field="parameters.virtualProductId" field="productFindContext.productId"/>
         <find-by-primary-key entity-name="Product" map-name="productFindContext" value-name="oldProduct"/>
         
-        <env-to-env env-name="parameters.virtualProductId" to-env-name="variantsFindContext.productId"/>
-        <string-to-field string="PRODUCT_VARIANT" field-name="variantsFindContext.productAssocTypeId"/>
+        <set from-field="parameters.virtualProductId" field="variantsFindContext.productId"/>
+        <set value="PRODUCT_VARIANT" field="variantsFindContext.productAssocTypeId"/>
         <find-by-and entity-name="ProductAssoc" map-name="variantsFindContext" list-name="variants"/>
         <iterate entry-name="newProduct" list-name="variants">
-            <field-to-field field-name="productIdTo" map-name="newProduct" to-field-name="productId" to-map-name="productVariantContext"/>
+            <set from-field="newProduct.productIdTo" field="productVariantContext.productId"/>
             <!-- if requested, duplicate related data -->
             <if-not-empty field-name="duplicatePrices" map-name="parameters">
                 <if-not-empty field-name="removeBefore" map-name="parameters">
@@ -611,7 +609,7 @@
                 <find-by-and entity-name="ProductPrice" map-name="productFindContext" list-name="foundValues"/>
                 <iterate entry-name="foundValue" list-name="foundValues">
                     <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-name="newTempValue"/>
                 </iterate>
             </if-not-empty>
@@ -625,7 +623,7 @@
                 <find-by-and entity-name="GoodIdentification" map-name="productFindContext" list-name="foundValues"/>
                 <iterate entry-name="foundValue" list-name="foundValues">
                     <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-name="newTempValue"/>
                 </iterate>
             </if-not-empty>
@@ -639,7 +637,7 @@
                 <find-by-and entity-name="ProductContent" map-name="productFindContext" list-name="foundValues"/>
                 <iterate entry-name="foundValue" list-name="foundValues">
                     <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-name="newTempValue"/>
                 </iterate>
             </if-not-empty>
@@ -653,7 +651,7 @@
                 <find-by-and entity-name="ProductCategoryMember" map-name="productFindContext" list-name="foundValues"/>
                 <iterate entry-name="foundValue" list-name="foundValues">
                     <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-name="newTempValue"/>
                 </iterate>
             </if-not-empty>
@@ -667,7 +665,7 @@
                 <find-by-and entity-name="ProductAttribute" map-name="productFindContext" list-name="foundValues"/>
                 <iterate entry-name="foundValue" list-name="foundValues">
                     <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-name="newTempValue"/>
                 </iterate>
             </if-not-empty>
@@ -681,18 +679,17 @@
                 <find-by-and entity-name="ProductFacility" map-name="productFindContext" list-name="foundValues"/>
                 <iterate entry-name="foundValue" list-name="foundValues">
                     <clone-value value-name="foundValue" new-value-name="newTempValue"/>
-                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-name="newTempValue"/>
                 </iterate>
             </if-not-empty>
         </iterate>
     </simple-method>
 
-	<!-- for managing product to product associations -->
-	    <simple-method method-name="createProductAssoc" 
-    	short-description="Create an association between two products"> 
+    <!-- for managing product to product associations -->
+    <simple-method method-name="createProductAssoc" short-description="Create an association between two products"> 
         <check-permission permission="CATALOG" action="_CREATE">
-        	<fail-message message="Security Error: to create a product association requires the CATALOG_CREATE or CATALOG_ADMIN permission"/>
+            <fail-message message="Security Error: to create a product association requires the CATALOG_CREATE or CATALOG_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -702,11 +699,10 @@
         
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateProductAssoc" 
-		short-description="Update an association between two products">
+    <simple-method method-name="updateProductAssoc" short-description="Update an association between two products">
         <check-permission permission="CATALOG" action="_UPDATE">
-        	<fail-message message="Security Error: to update a product association requires the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
-      	</check-permission>
+            <fail-message message="Security Error: to update a product association requires the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
+        </check-permission>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
@@ -715,11 +711,10 @@
         <set-nonpk-fields map-name="parameters" value-name="productAssocInstance"/>
         <store-value value-name="productAssocInstance"/>
     </simple-method>
-    <simple-method method-name="deleteProductAssoc" 
-    	short-description="Delete an association between two products">
+    <simple-method method-name="deleteProductAssoc" short-description="Delete an association between two products">
         <check-permission permission="CATALOG" action="_DELETE">
-        	<fail-message message="Security Error: to delete a product association requires the CATALOG_DELETE or CATALOG_ADMIN permission"/>
-       	</check-permission>
+            <fail-message message="Security Error: to delete a product association requires the CATALOG_DELETE or CATALOG_ADMIN permission"/>
+        </check-permission>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
@@ -727,6 +722,4 @@
         <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="productAssocInstance"/>
         <remove-value value-name="productAssocInstance"/>
     </simple-method>
-    
-	
 </simple-methods>
