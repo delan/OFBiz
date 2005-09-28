@@ -94,6 +94,7 @@
                 <set field="page.headerItem" value="Reports"/>
                 <set field="title" value="Accounting Report Options"/>
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <!-- <set field="titleProperty" value=""/> -->
             </actions>
             <widgets>
@@ -110,6 +111,12 @@
                             <label style="head2" text="Open Sales invoices."/>
                             <include-form name="OpenSalesInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
+                        <container>
+                            <label style="head2" text="Reports from accounting module."/>
+                            <platform-specific>
+                                <html><html-template location="component://accountingext/webapp/accountingext/reports/reportsAvailable.ftl"/></html>
+                            </platform-specific>                    
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -119,29 +126,21 @@
     <screen name="VatReport">
         <section>
             <actions>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="Order Purchase Report Payment"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="Vat Report"/>
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
-                <entity-condition entity-name="OrderPurchasePaymentSummary" list-name="orderPurchasePaymentSummaryList">
-                    <condition-list combine="and">
-                        <condition-expr field-name="productStoreId" operator="equals" env-name="productStoreId" ignore-if-empty="true"/>
-                        <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-empty="true"/>
-                        <condition-expr field-name="terminalId" operator="equals" env-name="parameters.terminalId" ignore-if-empty="true"/>
-                        <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId" ignore-if-empty="true"/>
-                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromOrderDate" ignore-if-null="true"/>
-                        <condition-expr field-name="orderDate" operator="less" env-name="parameters.thruOrderDate" ignore-if-null="true"/>
+                <entity-condition entity-name="Invoice" list-name="invoices">
+                    <condition-list combine="or">
+                        <condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+                        <condition-expr field-name="partyId" operator="equals" value="Company"/>
                     </condition-list>
-                    <select-field field-name="productStoreId"/>
-                    <select-field field-name="originFacilityId"/>
-                    <select-field field-name="terminalId"/>
-                    <select-field field-name="statusId"/>
-                    <select-field field-name="paymentMethodTypeId"/>
+                    <select-field field-name="invoiceId" />
                     <select-field field-name="description"/>
-                    <select-field field-name="maxAmount"/>
-                    <order-by field-name="productStoreId"/>
-                    <order-by field-name="originFacilityId"/>
-                    <order-by field-name="terminalId"/>
-                    <order-by field-name="paymentMethodTypeId"/>
+                    <!--select-field name="invoiceDate"><display/></select-field>
+                    <select-field name="currencyUomId" title="Curr."><display/></select-field>
+                    <select-field name="total"><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)}" also-hidden="false"/></select-field>
+                    <select-field name="applied"><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceExtWorker.getInvoiceApplied(delegator,invoiceId)}" also-hidden="false"/></select-field-->
+                    <order-by field-name="paymentId"/>
                 </entity-condition>
             </actions>
             <widgets>
@@ -152,5 +151,95 @@
             </widgets>
         </section>
     </screen>
+    <screen name="AdminMain">
+        <section>
+            <actions>
+                <set field="title" value="Administrative Options"/>
+                <set field="headerItem" value="companies"/>
+                <set field="labelTitleProperty" value="Administrative Options"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <!--set field="organizationPartyId" from-field="parameters.organizationPartyId"/-->
+                <entity-condition entity-name="CustomTimePeriod" list-name="openTimePeriods">
+                    <condition-list>
+                        <condition-expr field-name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
+                        <condition-expr field-name="isClosed" operator="equals" value="N"/>
+                    </condition-list>
+                    <order-by field-name="thruDate"/>
+                </entity-condition>
+                <entity-condition entity-name="CustomTimePeriod" list-name="closedTimePeriods">
+                    <condition-list>
+                        <condition-expr field-name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
+                        <condition-expr field-name="isClosed" operator="equals" value="Y"/>
+                    </condition-list>
+                    <order-by field-name="periodTypeId"/>
+                    <order-by field-name="periodNum"/>
+                    <order-by field-name="thruDate"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://accountingext/webapp/accountingext/admin/adminMain.ftl"/></html>
+                        </platform-specific>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
- </screens>
+    <screen name="GListGlAccountEntries">
+        <section>
+            <actions>
+                <set field="title" value="View GL Account Entries"/>
+                <set field="tabButtonItem" value="ListGlAccountOrganization"/>
+                <set field="glAccountId" from-field="requestParameters.glAccountId"/>
+                <entity-and entity-name="AcctgTransEntry" list-name="entries">
+                    <field-map field-name="glAccountId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="column-left-wide">
+                            <include-tree name="GlAccountTree" location="component://accountingext/widget/AccountingTrees.xml" /> 
+                        </container>
+                        <include-form name="ListAcctgTransEntries" location="component://accountingext/webapp/accountingext/chartofaccounts/GlAccountForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ListGlAccountOrganization">
+        <section>
+            <actions>
+                <set field="title" value="List GlAccountOrganization"/>
+                <set field="titleProperty" value="List GlAccountOrganization"/>
+                <set field="tabButtonItem" value="Ledger"/>
+                <set field="labelTitleProperty" value="ListGlAccountOrganization"/>
+                <set field="requestParameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <set field="requestParameters.glAccountId" value=""/> <!-- make sure a list is shown and not a single account. -->
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <!--set field="organizationPartyId" from-field="requestParameters.organizationPartyId"/-->
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">General ledger accounts for ${organizationPartyId}</label>
+                        </container>
+                        <container>
+                        <include-form name="ListGlAccountOrganization" location="component://accountingext/webapp/accountingext/chartofaccounts/GlAccountForms.xml"/>
+                        </container>
+                        <container>
+                            <label style="head1">&lt;br/&gt;Add another GL account</label>
+                        </container>
+                        <include-form name="AssignGlAccount" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

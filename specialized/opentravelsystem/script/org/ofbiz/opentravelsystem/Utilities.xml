@@ -55,6 +55,7 @@
                  <field-to-field field-name="payment.partyIdTo" to-field-name="invoice.partyIdFrom"/>
                  <field-to-field field-name="payment.currencyUomId" to-field-name="invoice.currencyUomId"/>
                  <field-to-field field-name="payment.effectiveDate" to-field-name="invoice.invoiceDate"/>
+                 <field-to-field field-name="payment.effectiveDate" to-field-name="invoice.dueDate"/>
                  <string-to-field string="Generated from Payment ${payment.paymentId}" field-name="invoice.description"/>
                  <string-to-field string="INVOICE_IN_PROCESS" field-name="invoice.statusId"/>
                  <if-compare field-name="payment.partyIdFrom" operator="equals" value="Company">
@@ -85,6 +86,7 @@
                          <number value="119"/>
                      </calcop>
                  </calculate>
+                 <string-to-field string="PINV_SPROD_ITEM" field-name="invoiceItem.invoiceItemTypeId"/>
                  <string-to-field string="Amount ex. VAT" field-name="invoiceItem.description"/>
                  <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
                  
@@ -98,6 +100,7 @@
                          <number value="119"/>
                      </calcop>
                  </calculate>
+                 <string-to-field string="ITM_SALES_TAX" field-name="invoiceItem.invoiceItemTypeId"/>
                  <string-to-field string="VAT 19%" field-name="invoiceItem.description"/>
                  <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
                  

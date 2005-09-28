@@ -711,4 +711,42 @@
             </widgets>
         </section>
     </screen>
+    <screen name="selectStore">
+        <section> 
+            <actions>
+                <set field="page.headerItem" value="selectStore"/>
+                <set field="nowTimestamp" value="${UtilDateTime.nowTimestamp()}"/>
+                <entity-condition entity-name="ProductStoreRole" list-name="stores"><!-- filter-by-date="nowTimestamp"-->
+                    <condition-list>
+                        <condition-expr field-name="partyId"  operator="equals" value="${userLogin.partyId}" />
+                        <condition-expr field-name="roleTypeId"  operator="equals" value="ADMIN" />
+                    </condition-list>
+                </entity-condition>
+                <entity-condition entity-name="ProductStore" list-name="storesAdmin">
+                    <!--condition-list>
+                           <condition-expr field-name="productStoreId"  operator="not-equals" value="${userLogin.userLoginId}" />
+                       </condition-list-->
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition> 
+                                <if-compare field-name="userLogin.partyId" operator="not-equals" value="admin"></if-compare>
+                            </condition>
+                            <widgets>
+                                <label style="head1">Select a store to work on for login: ${userLogin.partyId}</label>
+                                <include-form name="selectStore" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head1">Select a store to work on.</label>
+                                <include-form name="selectStoreAdmin" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

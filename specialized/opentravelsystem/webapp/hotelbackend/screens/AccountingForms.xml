@@ -41,5 +41,31 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="AssignGlAccount" type="single"
+        target="createGlAccountOrganization" title="" default-map-name="account"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <!-- field name="glAccountId" title="Edit" widget-style="buttontext" -->
+        
+        <field name="glAccountId" title="GlAccount" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="GlAccount" description="${accountName}"> 
+                    <entity-order-by field-name="accountName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <!--field name="partyId" parameter-name="organizationPartyId" title="Party" widget-style="selectBox"> 
+            <drop-down>
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${partyId}" --> 
+                    <!-- entity-options entity-name="PartyRoleAndPartyDetail" description="${organizationPartyId}" --> 
+                    <!--entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                    <entity-order-by field-name="partyId"/>
+                </entity-options>
+            </drop-down>
+        </field-->
+        <field name="submitButton" title="Create Assignment" widget-style="standardSubmit"><submit button-type="button"/></field>
+        
+    </form>
     
 </forms>
