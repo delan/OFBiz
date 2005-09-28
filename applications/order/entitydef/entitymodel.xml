@@ -311,10 +311,10 @@
       <relation type="one" fk-name="ORDER_HDR_BACCT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="ProductStore">
+      <relation type="one" fk-name="ORDER_HDR_PDSTR" rel-entity-name="ProductStore">
         <key-map field-name="productStoreId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="UserLogin">
+      <relation type="one" fk-name="ORDER_HDR_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdBy" rel-field-name="userLoginId"/>
       </relation>
       <relation type="one" fk-name="ORDER_HDR_STTS" rel-entity-name="StatusItem">
