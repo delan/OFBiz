@@ -684,6 +684,18 @@
         <response name="success" type="view" value="EditCommunicationEvent"/>
         <response name="success" type="view" value="EditCommunicationEvent"/>
     </request-map>
+    <request-map uri="deleteCommunicationEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCommunicationEvent"/>
+        <response name="success" type="view" value="ListLookupCommEvents"/>
+        <response name="success" type="view" value="ListLookupCommEvents"/>
+    </request-map>
+    <request-map uri="deletePartyCommunicationEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCommunicationEvent"/>
+        <response name="success" type="view" value="ListPartyCommEvents"/>
+        <response name="success" type="view" value="ListPartyCommEvents"/>
+    </request-map>
     <request-map uri="UpdateCommPurposes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="UpdateCommPurposes"/>
@@ -728,39 +740,9 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListLookupCommEvents"/>
     </request-map>
-    <request-map uri="ListCommWorkEfforts">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListCommWorkEfforts"/>
-    </request-map>
     <request-map uri="ListCommCustRequests">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListCommCustRequests"/>
-    </request-map>
-    <request-map uri="ListCommWorkEfforts">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListCommWorkEfforts"/>
-    </request-map>
-    <request-map uri="EditCommWorkEffort">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCommWorkEffort"/>
-    </request-map>
-    <request-map uri="createCommWorkEffort">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createCommWorkEffort"/>
-        <response name="success" type="view" value="EditCommWorkEffort"/>
-        <response name="success" type="view" value="EditCommWorkEffort"/>
-    </request-map>
-    <request-map uri="updateCommWorkEffort">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateCommWorkEffort"/>
-        <response name="success" type="view" value="EditCommWorkEffort"/>
-        <response name="success" type="view" value="EditCommWorkEffort"/>
-    </request-map>
-    <request-map uri="deleteCommWorkEffort">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deleteCommWorkEffort"/>
-        <response name="success" type="view" value="ListCommWorkEfforts"/>
-        <response name="success" type="view" value="ListCommWorkEfforts"/>
     </request-map>
 
     <!-- ContactList request mappings -->
@@ -894,6 +876,42 @@
         <response name="error" type="view" value="FindPartyClassificationGroups"/>
     </request-map>
 
+    <!--  WorkEffort CommunicationEvents requests -->
+    <request-map uri="ListCommWorkEfforts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListCommWorkEfforts"/>
+    </request-map>
+    
+    <request-map uri="AddCommEventWorkEffort">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddCommEventWorkEffort"/>
+    </request-map>
+    
+    <request-map uri="EditCommEventWorkEffort">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCommEventWorkEffort"/>
+    </request-map>
+    
+    <request-map uri="createCommEventWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommEventWorkEffort"/>
+        <response name="success" type="view" value="EditCommEventWorkEffort"/>
+        <response name="error" type="view" value="AddCommEventWorkEffort"/>
+    </request-map>
+    <request-map uri="updateCommEventWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCommunicationEventWorkEff"/>
+        <response name="success" type="view" value="ListCommWorkEfforts"/>
+        <response name="error" type="view" value="ListCommWorkEfforts"/>
+    </request-map>
+    
+    <request-map uri="deleteCommEventWorkEffort">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCommunicationEventWorkEff"/>
+        <response name="success" type="view" value="ListCommWorkEfforts"/>
+        <response name="error" type="view" value="ListCommWorkEfforts"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -933,8 +951,10 @@
     <view-map name="UpdateCommRoles" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#UpdateCommRoles"/>
     <view-map name="EditCommWorkEffort" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#EditCommWorkEffort"/>
     <view-map name="EditCommCustRequest" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#EditCommCustRequest"/>
-    <view-map name="ListCommWorkEfforts" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommWorkEfforts"/>
     <view-map name="ListCommCustRequests" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommCustRequests"/>
+    <view-map name="ListCommWorkEfforts" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListCommWorkEfforts"/>
+    <view-map name="AddCommEventWorkEffort" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#AddCommEventWorkEffort"/>
+    <view-map name="EditCommEventWorkEffort" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#EditCommEventWorkEffort"/>
 
     <view-map name="ListPartyContactLists" type="screen" page="component://party/widget/partymgr/PartyContactListScreens.xml#ListPartyContactLists"/>
 

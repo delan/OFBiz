@@ -60,4 +60,8 @@
         <condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
         <action service="createPartyContactMechPurpose" mode="sync"/>
     </eca>
+    <eca service="createCommEventWorkEffort" event="invoke">
+        <condition field-name="workEffortId" operator="is-empty"/>
+        <action service="createWorkEffort" mode="sync" />
+    </eca>
 </service-eca>

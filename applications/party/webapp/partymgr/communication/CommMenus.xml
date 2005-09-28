@@ -69,7 +69,7 @@
         <menu-item name="UpdateCommRoles" title="Roles">
             <link target="/UpdateCommRoles?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </menu-item>
-        <menu-item name="ListCommWorkEfforts" title="WorkEfforts">
+        <menu-item name="UpdateCommWorkEfforts" title="WorkEfforts">
             <link target="/ListCommWorkEfforts?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </menu-item>
         <!-- TODO! 
