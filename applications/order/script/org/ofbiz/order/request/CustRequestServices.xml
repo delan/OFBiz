@@ -28,6 +28,19 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-method method-name="createCustRequest" short-description="Create Customer Request">
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field-name="parameters.requestPartyId"/></not>
+                    <not><if-compare-field field-name="parameters.requestPartyId" operator="equals" to-field-name="userLogin.partyId"/></not>
+                    <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+                </and>
+            </condition>
+            <then>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateCustRequest"/></add-error>
+            </then>
+        </if>
+        <check-errors/>
         <make-value value-name="newEntity" entity-name="CustRequest"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
@@ -38,7 +51,7 @@
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>   
         
         <if-empty field-name="statusId" map-name="parameters">
-        	<string-to-field string="CRQ_SUBMITTED" field-name="statusId" map-name="newEntity"/>
+            <string-to-field string="CRQ_SUBMITTED" field-name="statusId" map-name="newEntity"/>
         </if-empty>
 
         <sequenced-id-to-env sequence-name="CustRequest" env-name="custRequestId"/>
@@ -152,11 +165,6 @@
     </simple-method>
 
     <simple-method method-name="createCustRequestFromCart" short-description="Create a CustRequest from a ShoppingCart">
-        <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToCreateCustRequestFromCart"/>
-        </check-permission>
-        <check-errors/>
-
         <call-object-method obj-field-name="parameters.cart" method-name="getPartyId" ret-field-name="createCustRequestInMap.requestPartyId"/>
         <string-to-field string="RF_QUOTE" field-name="createCustRequestInMap.custRequestTypeId"/>
         <string-to-field string="CRQ_SUBMITTED" field-name="createCustRequestInMap.statusId"/>
@@ -166,6 +174,7 @@
         <call-service service-name="createCustRequest" in-map-name="createCustRequestInMap">
             <result-to-field result-name="custRequestId" field-name="custRequestId"/>
         </call-service>
+        <check-errors/>
         <entity-one entity-name="CustRequest" value-name="custRequest" auto-field-map="true"/>
 
         <!-- create, for every cart item, a request item -->
@@ -190,11 +199,6 @@
     </simple-method>
 
     <simple-method method-name="createCustRequestFromShoppingList" short-description="Create a CustRequest from a Shopping List">
-        <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateCustRequestFromShoppingList"/>
-        </check-permission>
-        <check-errors/>
-
         <call-service service-name="loadCartFromShoppingList" in-map-name="parameters">
             <result-to-field result-name="shoppingCart" field-name="cart"/>
         </call-service>
@@ -202,7 +206,7 @@
         <call-service service-name="createCustRequestFromCart" in-map-name="createCustRequestFromCartInMap">
             <result-to-field result-name="custRequestId" field-name="custRequestId"/>
         </call-service>
-     
+        <check-errors/>
         <field-to-result field-name="custRequestId" result-name="custRequestId"/>
     </simple-method>
 
