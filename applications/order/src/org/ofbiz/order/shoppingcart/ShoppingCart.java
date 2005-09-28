@@ -90,6 +90,7 @@ public class ShoppingCart implements Serializable {
 
     private String orderAdditionalEmails = null;
     private boolean viewCartOnAdd = false;
+    private boolean readOnlyCart = false;
 
     private Timestamp lastListRestore = null;
     private String autoSaveListId = null;
@@ -673,6 +674,9 @@ public class ShoppingCart implements Serializable {
 
     /** Sets the currency for the cart. */
     public void setCurrency(LocalDispatcher dispatcher, String currencyUom) throws CartItemModifyException {
+        if (isReadOnlyCart()) {
+           throw new CartItemModifyException("Cart items cannot be changed");
+        }
         String previousCurrency = this.currencyUom;
         this.currencyUom = currencyUom;
         if (!previousCurrency.equals(this.currencyUom)) {
@@ -726,7 +730,9 @@ public class ShoppingCart implements Serializable {
      * @throws CartItemModifyException
      */
     public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
+        if (isReadOnlyCart()) {
+           throw new CartItemModifyException("Cart items cannot be changed");
+        }
         GenericValue supplierProduct = null;
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
@@ -786,7 +792,10 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItem(int index, ShoppingCartItem item) {
+    public int addItem(int index, ShoppingCartItem item) throws CartItemModifyException {
+        if (isReadOnlyCart()) {
+           throw new CartItemModifyException("Cart items cannot be changed");
+        }
         if (!cartLines.contains(item)) {
             cartLines.add(index, item);
             return index;
@@ -811,7 +820,10 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItemToEnd(ShoppingCartItem item) {
+    public int addItemToEnd(ShoppingCartItem item) throws CartItemModifyException {
+        if (isReadOnlyCart()) {
+           throw new CartItemModifyException("Cart items cannot be changed");
+        }
         if (!cartLines.contains(item)) {
             cartLines.add(item);
             return cartLines.size() - 1;
@@ -917,6 +929,9 @@ public class ShoppingCart implements Serializable {
 
     /** Remove an item from the cart object. */
     public void removeCartItem(int index, LocalDispatcher dispatcher) throws CartItemModifyException {
+        if (isReadOnlyCart()) {
+           throw new CartItemModifyException("Cart items cannot be changed");
+        }
         if (index < 0) return;
         if (cartLines.size() <= index) return;
         ShoppingCartItem item = (ShoppingCartItem) cartLines.remove(index);
@@ -1208,6 +1223,7 @@ public class ShoppingCart implements Serializable {
         this.orderAdditionalEmails = null;
 
         //this.viewCartOnAdd = false;
+        this.readOnlyCart = false;
 
         this.lastListRestore = null;
         this.autoSaveListId = null;
@@ -2228,6 +2244,14 @@ public class ShoppingCart implements Serializable {
 
     public void setOrderTermSet(boolean orderTermSet){
          this.orderTermSet = orderTermSet;
+     }
+
+    public boolean isReadOnlyCart(){
+       return readOnlyCart;
+    }
+
+    public void setReadOnlyCart(boolean readOnlyCart){
+         this.readOnlyCart = readOnlyCart;
      }
 
     /** go through the order adjustments and remove all adjustments with the given type */
