@@ -1239,25 +1239,31 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append('"');
         }
         buffer.append('>');
-        buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
+
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"equals\" checked=\"checked\"/>");
+        buffer.append(opEquals);
 
-        buffer.append(" " + opBeginsWith + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"like\"/>");
+        buffer.append(opBeginsWith);
 
-        buffer.append(" " + opContains + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"contains\"/>");
+        buffer.append(opContains);
 
-        buffer.append(" " + opIsEmpty + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"empty\"/>");
+        buffer.append(opIsEmpty);
         
-        buffer.append(" " + ignoreCase + " <input type=\"checkbox\" name=\"");
+        buffer.append(" <input type=\"checkbox\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_ic\" value=\"Y\"/>");
+        buffer.append(ignoreCase);
         
         buffer.append("</span>");
 
@@ -1326,17 +1332,20 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append('>');
 
-        buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"equals\" checked=\"checked\"/>");
+        buffer.append(opEquals);
 
-        buffer.append(" " + opGreaterThan + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"greaterThan\"/>");
+        buffer.append(opGreaterThan);
 
-        buffer.append(" " + opGreaterThanEquals + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"greaterThanEqualTo\"/>");
+        buffer.append(opGreaterThanEquals);
 
         buffer.append("</span>");
 
@@ -1387,19 +1396,22 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append('>');
 
-        buffer.append(" " + opLessThan+ " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"lessThan\"/>");
+        buffer.append(opLessThan);
 
-        buffer.append(" " + opLessThanEquals + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(" Less than equals<input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"lessThanEqualTo\"/>");
+        buffer.append(opLessThanEquals);
 
-        buffer.append(" " + opIsEmpty+ " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(" Is Empty<input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"empty\"/>");
+        buffer.append(opIsEmpty);
 
         buffer.append("</span>");
 
@@ -1484,21 +1496,25 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append('>');
 
-        buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"equals\" checked=\"checked\"/>");
+        buffer.append(opEquals);
 
-        buffer.append(" " + opSameDay +  " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"sameDay\" checked=\"checked\"/>");
+        buffer.append(opSameDay);
 
-        buffer.append(" " + opGreaterThanFromDayStart + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"greaterThanFromDayStart\"/>");
+        buffer.append(opGreaterThanFromDayStart);
 
-        buffer.append(" " + opGreaterThan + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"greaterThan\"/>");
+        buffer.append(opGreaterThan);
 
         buffer.append(" <span");
 
@@ -1558,21 +1574,25 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append('>');
 
-        buffer.append(" " + opLessThan + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"lessThan\"/>");
+        buffer.append(opLessThan);
 
-        buffer.append(" " + opUpToDay + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"upToDay\"/>");
+        buffer.append(opUpToDay);
 
-        buffer.append(" " + opUpThruDay + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"upThruDay\"/>");
+        buffer.append(opUpThruDay);
 
-        buffer.append(" " + opIsEmpty + " <input type=\"radio\" name=\"");
+        buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"empty\"/>");
+        buffer.append(opIsEmpty);
 
         buffer.append("</span>");
 
@@ -1744,7 +1764,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
             // make the link
             buffer.append(rh.makeLink(request, response, linkText, false, false, false));
-            buffer.append(" class=\"buttontext\">[Previous]</a>\n");
+            buffer.append(" class=\"buttontext\">Previous</a>\n");
 
         }
         if (listSize > 0) {
@@ -1759,7 +1779,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
             // make the link
             buffer.append(rh.makeLink(request, response, linkText, false, false, false));
-            buffer.append(" class=\"buttontext\">[Next]</a>\n");
+            buffer.append(" class=\"buttontext\">Next</a>\n");
 
         }
         buffer.append("      </b>\n");

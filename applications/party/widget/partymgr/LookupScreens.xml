@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -33,10 +33,7 @@
             </condition>
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-                
                 <set field="title" value="Lookup Party by Name"/>
-                <set field="entityName" value="PartyNameView"/>
-                <set field="orderBy" value="partyId"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>

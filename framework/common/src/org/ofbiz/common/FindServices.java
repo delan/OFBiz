@@ -360,10 +360,14 @@ public class FindServices {
      * to indicate their purpose in formulating an SQL query statement.
      */
     public static Map performFind(DispatchContext dctx, Map context) {
-
         String entityName = (String) context.get("entityName");
         String orderBy = (String) context.get("orderBy");
         Map inputFields = (Map) context.get("inputFields"); // Input
+        String noConditionFind = (String) context.get("noConditionFind");
+        if (UtilValidate.isEmpty(noConditionFind)) {
+            // try finding in inputFields Map
+            noConditionFind = (String) inputFields.get("noConditionFind");
+        }
 
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -378,7 +382,7 @@ public class FindServices {
         
         Map executeResult = null;
         try {
-            executeResult = dispatcher.runSync("executeFind", UtilMisc.toMap("entityName", entityName, "orderByList", orderByList, "entityConditionList", exprList));
+            executeResult = dispatcher.runSync("executeFind", UtilMisc.toMap("entityName", entityName, "orderByList", orderByList, "entityConditionList", exprList, "noConditionFind", noConditionFind));
         } catch (GenericServiceException gse) {
             return ServiceUtil.returnError("Error finding iterator: " + gse.getMessage());
         }
@@ -397,10 +401,14 @@ public class FindServices {
      * to indicate their purpose in formulating an SQL query statement.
      */
     public static Map prepareFind(DispatchContext dctx, Map context) {
-
         String entityName = (String) context.get("entityName");
         String orderBy = (String) context.get("orderBy");
         Map inputFields = (Map) context.get("inputFields"); // Input
+        String noConditionFind = (String) context.get("noConditionFind");
+        if (UtilValidate.isEmpty(noConditionFind)) {
+            // try finding in inputFields Map
+            noConditionFind = (String) inputFields.get("noConditionFind");
+        }
         
         // parameters run thru UtilHttp.getParameterMap
         Map queryStringMap = new HashMap();
@@ -429,6 +437,7 @@ public class FindServices {
 
         Map results = ServiceUtil.returnSuccess();
         Map reducedQueryStringMap = buildReducedQueryString(inputFields, entityName, delegator);
+        reducedQueryStringMap.put("noConditionFind", noConditionFind);
         String queryString = UtilHttp.urlEncodeArgs(reducedQueryStringMap);
         results.put("queryString", queryString);
         results.put("queryStringMap", reducedQueryStringMap);
@@ -444,17 +453,20 @@ public class FindServices {
      * This is a generic method that returns an EntityListIterator.
      */
     public static Map executeFind(DispatchContext dctx, Map context) {
-        String entityName = (String)context.get("entityName");
-        EntityConditionList exprList = (EntityConditionList)context.get("entityConditionList");
-        List orderByList = (List)context.get("orderByList");
+        String entityName = (String) context.get("entityName");
+        EntityConditionList entityConditionList = (EntityConditionList) context.get("entityConditionList");
+        List orderByList = (List) context.get("orderByList");
+        boolean noConditionFind = "Y".equals((String) context.get("noConditionFind"));
         
         GenericDelegator delegator = dctx.getDelegator();
         
         // Retrieve entities  - an iterator over all the values
         EntityListIterator listIt = null;
         try {
-            listIt = delegator.findListIteratorByCondition(entityName, exprList,
-                    null, null, orderByList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
+            if (noConditionFind || (entityConditionList != null && entityConditionList.getConditionListSize() > 0)) {
+                listIt = delegator.findListIteratorByCondition(entityName, entityConditionList,
+                        null, null, orderByList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
+            }
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Error running Find on the [" + entityName + "] entity: " + e.getMessage());
         }
@@ -498,7 +510,7 @@ public class FindServices {
         // Note that "normalizedFields" will contain values other than those
         // Contained in the associated entity.
         // Those extra fields will be ignored in the second half of this method.
-    	ModelEntity modelEntity = delegator.getModelEntity(entityName);
+        ModelEntity modelEntity = delegator.getModelEntity(entityName);
         HashMap normalizedFields = new HashMap();
         Iterator ifIter = inputFields.keySet().iterator();
         //StringBuffer queryStringBuf = new StringBuffer();
@@ -546,7 +558,7 @@ public class FindServices {
                 fieldNameRoot = fieldNameRaw.substring(0, iPos);
             }
             if (modelEntity.isField(fieldNameRoot)) {
-            	normalizedFields.put(fieldNameRaw, fieldValue);
+                normalizedFields.put(fieldNameRaw, fieldValue);
             }
         }
         return normalizedFields;

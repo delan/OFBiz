@@ -29,9 +29,9 @@ function lookupParty(click) {
     partyIdValue = document.lookupparty.partyId.value;
     userLoginIdValue = document.lookupparty.userlogin_id.value;
     if (partyIdValue.length > 1 || userLoginIdValue.length > 1) {
-        document.lookupparty.action = "<@ofbizUrl>/viewprofile</@ofbizUrl>";
+        document.lookupparty.action = "<@ofbizUrl>viewprofile</@ofbizUrl>";
     } else {
-        document.lookupparty.action = "<@ofbizUrl>/findparty</@ofbizUrl>";
+        document.lookupparty.action = "<@ofbizUrl>findparty</@ofbizUrl>";
     }
 
     if (click) {
@@ -52,9 +52,9 @@ function refreshInfo() {
         <div style="float: right;">
             <div class="tabletext">
               <#if parameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
+                <a href="<@ofbizUrl>findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
               <#else>
-                <#if partyList?exists><a href="<@ofbizUrl>/findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
+                <#if partyList?exists><a href="<@ofbizUrl>findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
                 <a href="javascript:document.lookupparty.submit();" class="submenutextright">${uiLabelMap.PartyLookupParty}</a>
               </#if>
             </div>
@@ -63,19 +63,19 @@ function refreshInfo() {
     </div>
   <#if parameters.hideFields?default("N") != "Y">
     <div class="screenlet-body">
-      <form method="post" name="lookupparty" action="<@ofbizUrl>/findparty</@ofbizUrl>" onsubmit="javascript:lookupParty();">
-          <input type="hidden" name="lookupFlag" value="Y">
-          <input type="hidden" name="hideFields" value="Y">
+      <form method="post" name="lookupparty" action="<@ofbizUrl>findparty</@ofbizUrl>" onsubmit="javascript:lookupParty();">
+          <input type="hidden" name="lookupFlag" value="Y"/>
+          <input type="hidden" name="hideFields" value="Y"/>
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
               <td width="25%" align="right" nowrap><div class="tableheadtext">${uiLabelMap.PartyContactInformation} :</div></td>
               <td width="5%">&nbsp;</td>
               <td nowrap>
                 <div class="tabletext">
-                  <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked</#if>>${uiLabelMap.CommonNone}&nbsp;
-                  <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked</#if>>${uiLabelMap.PartyPostal}&nbsp;
-                  <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked</#if>>${uiLabelMap.PartyTelecom}&nbsp;
-                  <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked</#if>>${uiLabelMap.CommonOther}&nbsp;
+                  <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked="checked"</#if>/>${uiLabelMap.CommonNone}&nbsp;
+                  <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked="checked"</#if>/>${uiLabelMap.PartyPostal}&nbsp;
+                  <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked="checked"</#if>/>${uiLabelMap.PartyTelecom}&nbsp;
+                  <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked="checked"</#if>/>${uiLabelMap.CommonOther}&nbsp;
               </td>
             </tr>
             <tr>
@@ -124,17 +124,17 @@ function refreshInfo() {
               <tr>
                 <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonAddress1} :</div></td>
                 <td width="5%">&nbsp;</td>
-                <td><input type="text" class="inputBox" name="address1" value="${parameters.address1?if_exists}"></td>
+                <td><input type="text" class="inputBox" name="address1" value="${parameters.address1?if_exists}"/></td>
               </tr>
               <tr>
                 <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonAddress2} :</div></td>
                 <td width="5%">&nbsp;</td>
-                <td><input type="text" class="inputBox" name="address2" value="${parameters.address2?if_exists}"></td>
+                <td><input type="text" class="inputBox" name="address2" value="${parameters.address2?if_exists}"/></td>
               </tr>
               <tr>
                 <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonCity} :</div></td>
                 <td width="5%">&nbsp;</td>
-                <td><input type="text" class="inputBox" name="city" value="${parameters.city?if_exists}"></td>
+                <td><input type="text" class="inputBox" name="city" value="${parameters.city?if_exists}"/></td>
               </tr>
               <tr>
                 <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonStateProvince} :</div></td>
@@ -217,7 +217,7 @@ function refreshInfo() {
                  <div class="boxhead" align="right">
                   <#if (partyListSize > 0)>
                     <#if (viewIndex > 1)>
-                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
+                      <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                     <#else>
                       <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                     </#if>
@@ -225,7 +225,7 @@ function refreshInfo() {
                       <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${partyListSize}</span>
                     </#if>
                     <#if (partyListSize > highIndex)>
-                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                      <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                     <#else>
                       <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                     </#if>
@@ -256,7 +256,7 @@ function refreshInfo() {
               <#list partyList as partyRow>
                 <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
                 <tr class="${rowClass}">
-                  <td><a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="linktext">${partyRow.partyId}</a></td>
+                  <td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="linktext">${partyRow.partyId}</a></td>
                   <td>
                     <div class="tabletext">
                       <#if partyRow.containsKey("userLoginId")>
@@ -305,7 +305,7 @@ function refreshInfo() {
                   <td align="right">
                     <!-- this is all on one line so that no break will be inserted -->
                     <div class="tabletext"><nobr>
-                      <a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a>&nbsp;
+                      <a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a>&nbsp;
                       <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
                         <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyRow.partyId + externalKeyParam}" class="buttontext">${uiLabelMap.OrderOrders}</a>&nbsp;
                       </#if>
@@ -326,7 +326,7 @@ function refreshInfo() {
               <tr>
                 <td colspan="5">
                   <span class="head3">${uiLabelMap.PartyNoPartiesFound}</span>
-                  &nbsp;&nbsp;<a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="buttontext">Create New</a>
+                  &nbsp;&nbsp;<a href="<@ofbizUrl>createnew</@ofbizUrl>" class="buttontext">Create New</a>
                 </td>
               </tr>
             </#if>

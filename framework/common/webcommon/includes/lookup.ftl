@@ -73,7 +73,7 @@
          }
     </script>
 </head>
-<body>
+<body style="background-color: WHITE;">
 ${sections.render("body")}
 </body>
 </html>
