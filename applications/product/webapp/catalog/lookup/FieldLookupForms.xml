@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,6 +19,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  *@author     Olivier.Heintz@nereide.biz
  *@version    $Rev$
  *@since      3.0
@@ -29,22 +30,15 @@
     <form name="lookupProduct" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProduct" title="" type="single">
-        <actions>
-            <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-        </actions>
-        <auto-fields-entity entity-name="Product" default-field-type="hidden" />
+        <!-- <auto-fields-entity entity-name="Product" default-field-type="hidden" /> -->
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find default-value="equals"/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find default-value="equals"/></field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
-            <drop-down>
-                <option key="" description=""/>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="ProductType" description="${description}">
-                    <entity-constraint name="parentTypeId" value="GOOD"/>
+                    <entity-order-by field-name="description"/>
                 </entity-options>
              </drop-down>
-        </field>
-        <field name="productTypeId_op">
-            <hidden value="equals"/>
         </field>
         <field name="primaryProductCategoryId">
             <drop-down allow-empty="true">
@@ -53,9 +47,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProduct" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
@@ -63,8 +56,8 @@
         title="" type="list">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
         <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
@@ -76,13 +69,11 @@
             <hyperlink also-hidden="false" target-type="plain" description="Variants" target="LookupVariantProduct?productId=${productId}"/>
         </field>
     </form>
+    
     <form name="lookupVirtualProduct" extends="lookupProduct"
         default-map-name= "inputFields" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupVirtualProduct" title="" type="single">
-        <actions>
-            <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-        </actions>
     </form>
     <form name="listLookupVirtualProduct" extends="listLookupProduct"
         default-title-style="tableheadtext"
@@ -92,7 +83,7 @@
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
         <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
@@ -138,5 +129,4 @@
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
         </field>
     </form>
-
 </forms>
