@@ -168,9 +168,8 @@
         <call-object-method obj-field-name="parameters.cart" method-name="getPartyId" ret-field-name="createCustRequestInMap.requestPartyId"/>
         <string-to-field string="RF_QUOTE" field-name="createCustRequestInMap.custRequestTypeId"/>
         <string-to-field string="CRQ_SUBMITTED" field-name="createCustRequestInMap.statusId"/>
-        <string-to-field string="From cart" field-name="createCustRequestInMap.custRequestName"/>
+        <set field="createCustRequestInMap.custRequestName" from-field="parameters.custRequestName"/>
         <call-object-method obj-field-name="parameters.cart" method-name="getCurrency" ret-field-name="createCustRequestInMap.maximumAmountUomId"/>
-        <!--<field-to-field field-name="From cart" to-field-name="createCustRequestInMap.custRequestName"/>-->
         <call-service service-name="createCustRequest" in-map-name="createCustRequestInMap">
             <result-to-field result-name="custRequestId" field-name="custRequestId"/>
         </call-service>
@@ -199,10 +198,12 @@
     </simple-method>
 
     <simple-method method-name="createCustRequestFromShoppingList" short-description="Create a CustRequest from a Shopping List">
+        <entity-one entity-name="ShoppingList" value-name="shoppingList" auto-field-map="true"/>
         <call-service service-name="loadCartFromShoppingList" in-map-name="parameters">
             <result-to-field result-name="shoppingCart" field-name="cart"/>
         </call-service>
         <field-to-field field-name="cart" to-field-name="createCustRequestFromCartInMap.cart"/>
+        <set field="createCustRequestFromCartInMap.custRequestName" from-field="shoppingList.listName"/>
         <call-service service-name="createCustRequestFromCart" in-map-name="createCustRequestFromCartInMap">
             <result-to-field result-name="custRequestId" field-name="custRequestId"/>
         </call-service>
