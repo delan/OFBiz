@@ -87,7 +87,7 @@ public class mt940 {
 	//  These genericValues are used to update the Database  and are filled by the getPayment routine
 	static boolean debet; 					// if it was a debet (true) or credit (false) transaction
 	static String defaultCurrency = null;
-	static GenericValue payment;		
+	static Map payment;		
 	static GenericValue party;    				
 	static GenericValue partyGroup;    				
 	static GenericValue paymentMethod;
@@ -101,7 +101,12 @@ public class mt940 {
 	/* event to import bankstatement mt940 records */
 	public static String importData(HttpServletRequest request, HttpServletResponse response) {
 		GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-		
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin"); 
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
+        if (loc == null) 
+            loc = Locale.getDefault();
+	       
 		boolean debug = true;
 		
 		if (getFile(request).compareTo("error") == 0 || localFile.length() == 0) { // get the content of the uploaded file...
@@ -123,41 +128,44 @@ public class mt940 {
 		if (debug) Debug.logInfo("Start processing payments...", module);
 		while (getPayment(request) != null) {
 			if (debet  == false)	{
-				payment.set("statusId","PMNT_RECEIVED");
-				payment.set("partyIdFrom",getParty(delegator));
-				payment.set("partyIdTo", accountPartyId);    		}
+				payment.put("statusId","PMNT_RECEIVED");
+				payment.put("partyIdFrom",getParty(delegator));
+				payment.put("partyIdTo", accountPartyId);    		}
 			else	{ // credit
-				payment.set("statusId","PMNT_SENT");
-				payment.set("partyIdTo",getParty(delegator));
-				payment.set("partyIdFrom", accountPartyId);    		}
+				payment.put("statusId","PMNT_SENT");
+				payment.put("partyIdTo",getParty(delegator));
+				payment.put("partyIdFrom", accountPartyId);    		}
 			
 			// check to see if the parties where found, when not create
-			if (payment.getString("partyIdTo") == null || payment.getString("partyIdFrom") == null)	{ 
+			if (payment.get("partyIdTo") == null || payment.get("partyIdFrom") == null)	{ 
 				if (createParty(delegator) == null) 	return "error"; // party creation error
 				if (debet == false)	{ 
-					payment.set("partyIdFrom",party.getString("partyId"));
+					payment.put("partyIdFrom",party.getString("partyId"));
 				}
 				else {	
-					payment.set("partyIdTo",party.getString("partyId"));
+					payment.put("partyIdTo",party.getString("partyId"));
 				}
 			}
 			// set other fields in payment record
-			payment.set("paymentTypeId","RECEIPT");
-			payment.set("paymentMethodId", paymentMethod.get("paymentMethodId"));
-			payment.set("paymentMethodTypeId","EFT_ACCOUNT");
-			payment.set("paymentId",delegator.getNextSeqId("Payment"));
+			payment.put("paymentTypeId","RECEIPT");
+			payment.put("paymentMethodId", paymentMethod.get("paymentMethodId"));
+			payment.put("paymentMethodTypeId","EFT_ACCOUNT");
 			// check if the payment was already uploaded.....
-			if (debug) Debug.logInfo("Creating payment with reference number: " + payment.getString("paymentRefNum"),module);
+			if (debug) Debug.logInfo("Creating payment with reference number: " + payment.get("paymentRefNum"),module);
 			if (checkPayment(delegator) == true)	{
 				paymentAlreadyUploaded++;
 				if (debug) Debug.logInfo("Payment already exists....",module);
 			}
 			else	{
 				// finally create payment record.
-				try	{	payment.create();	} catch(GenericEntityException e2) {
-					request.setAttribute("_ERROR_MESSAGE_", "Unable to ceate payment record : "+ e2.getMessage());
-					return "error";
-				}
+				// TODO use services here in order to trigger ledger routines....
+				payment.put("userLogin",userLogin);
+				payment.put("locale", loc);
+                try {
+                    dispatcher.runSync("createPayment", payment);
+                } catch (GenericServiceException e1) {
+                    Debug.logError(e1, "Error creating payment", module);
+                }
 				paymentsCreated++;
 			}
 		}
@@ -173,7 +181,7 @@ public class mt940 {
 	 */
 	private static boolean checkPayment(GenericDelegator delegator)	{
 		List payments = null;
-		try { payments = delegator.findByAnd("Payment", UtilMisc.toMap("paymentRefNum",payment.getString("paymentRefNum"))); }
+		try { payments = delegator.findByAnd("Payment", UtilMisc.toMap("paymentRefNum",payment.get("paymentRefNum"))); }
 		catch (GenericEntityException e) {	Debug.logError("Find payment exception:" + e.getMessage(), module); }
 		if (payments == null || payments.size() == 0)	
 			return false;
@@ -400,7 +408,8 @@ public class mt940 {
 	private static String getPayment(HttpServletRequest request) {
 		GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 		// structurees to create the records in the database (filled by the getPayment routine)
-		payment = (GenericValue) delegator.makeValue("Payment",null);
+		payment = new HashMap();
+		payment.put("paymentMethodTypeId","EFT_ACCOUNT");  // all payment are bank transfers....
 		party = (GenericValue) delegator.makeValue("Party",null);
 		partyGroup = (GenericValue) delegator.makeValue("PartyGroup",null);
 		paymentMethod = (GenericValue) delegator.makeValue("PaymentMethod",null);
@@ -457,24 +466,24 @@ public class mt940 {
 						request.setAttribute("_ERROR_MESSAGE_","Could not find currency code " + curr + " in the currency table");
 						return "error";
 					}
-					payment.set("currencyUomId", curr );
+					payment.put("currencyUomId", curr );
 					defaultCurrency = curr;
 					break;
 				case 61:  //content of the transaction
-					payment.set("paymentRefNum", routingNr.concat("-").concat(accountNr).concat("-").concat(bankSeqNr).concat("-").concat(String.valueOf(seqNr++))); //create payment number
-					if (debug) Debug.logInfo("Line: " + lineNumber + "  Payment reference: " + payment.getString("paymentRefNum"), module);
-					payment.set("effectiveDate",UtilDateTime.toTimestamp(tagData.substring(2,4),tagData.substring(4,6), "20" + tagData.substring(0,2), "00","00","00"));
+					payment.put("paymentRefNum", routingNr.concat("-").concat(accountNr).concat("-").concat(bankSeqNr).concat("-").concat(String.valueOf(seqNr++))); //create payment number
+					if (debug) Debug.logInfo("Line: " + lineNumber + "  Payment reference: " + payment.get("paymentRefNum"), module);
+					payment.put("effectiveDate",UtilDateTime.toTimestamp(tagData.substring(2,4),tagData.substring(4,6), "20" + tagData.substring(0,2), "00","00","00"));
 					if (tagData.charAt(10) == 'D')	debet = true; else debet = false;
 					int x=11; while( x < 19 && tagData.charAt(x) != ',' && tagData.charAt(x) != '.')  x++;	// find end of amount string
 					if (x < 19)		{
-						payment.set("amount",new Double(tagData.substring(11,x).concat(".").
+						payment.put("amount",new Double(tagData.substring(11,x).concat(".").
 								concat( tagData.charAt(x+1) == 'N'? "0": tagData.substring(x+1,x+2)).
 								concat( tagData.charAt(x+2) == 'N'? "0": tagData.substring(x+2,x+3))));
 					}
-					else payment.set("amount",new Double("00.00"));
+					else payment.put("amount",new Double("00.00"));
 					break;
 				case 86:  // more information. For ABN-AMRO account info other party.
-					payment.set("comments","");
+					payment.put("comments","");
 					if (tagData.substring(0,4).compareTo("GIRO") == 0)	{ // GIRO number
 						x = 4; while (tagData.charAt(x) == ' ')  x++;	// find first nonblank character
 						int y = x; while (y< tagData.length() && tagData.charAt(y) != ' ')  y++;	// find end of account number
@@ -495,35 +504,35 @@ public class mt940 {
 					}
 					else if (tagData.substring(0,2).compareTo("EM") == 0)	{  // international payment
 						eftAccount.set("accountNumber", tagData.substring(2,15));
-						payment.set("comments",tagData.substring(15));
-						payment.set("comments",payment.getString("comments").concat(getLine()).concat(getLine()));
+						payment.put("comments",tagData.substring(15));
+						payment.put("comments",payment.get("comments") + getLine() + getLine());
 						eftAccount.set("nameOnAccount", getLine());
 						partyGroup.set("groupName", eftAccount.getString("nameOnAccount"));
 					}
 					else if (tagData.substring(0,3).compareTo("BEA") == 0)	{  // paying with pincode
 						eftAccount.set("accountNumber", "BEA" + tagData.substring(9,15));
-						payment.set("comments",tagData.substring(18));
+						payment.put("comments",tagData.substring(18));
 						if((fileLine = getLine()) == null) return null;
 						x = 0; while (fileLine.charAt(x) != ',')  x++;	// find first comma 
 						eftAccount.set("nameOnAccount", fileLine.substring(0,x));
 						partyGroup.set("groupName", eftAccount.getString("nameOnAccount"));
-						payment.set("comments",payment.getString("comments").concat(" ").concat(fileLine.substring(x+1)));
+						payment.put("comments",payment.get("comments") + " " + fileLine.substring(x+1));
 					}
 					else	{ // bank charges
-						payment.set("comments",tagData);
+						payment.put("comments",tagData);
 						eftAccount.set("accountNumber", "ABNAMRO");
 						eftAccount.set("nameOnAccount", "ABN AMRO Bank");
 						partyGroup.set("groupName", eftAccount.getString("nameOnAccount"));
 					}
 					// read lines until the next 'tag' line and add to payment comments
 					while (localFile.charAt(start) != ':') // start is pointing at the first character of next  line
-						payment.set("comments",payment.getString("comments").concat(" ").concat(getLine()));
-					if (debug) Debug.logInfo("Payment Comments:"  + payment.getString("comments"), module);
+						payment.put("comments",payment.get("comments") + " " + getLine());
+					if (debug) Debug.logInfo("Payment Comments:"  + payment.get("comments"), module);
 					return "ok";
 				}
 			}
 			if (payment.get("currencyUomId") == null)	{
-				payment.set("currencyUomId", defaultCurrency);
+				payment.put("currencyUomId", defaultCurrency);
 			}
 				
 			if (fileLine.charAt(0) == '-') 	{ // end of transaction

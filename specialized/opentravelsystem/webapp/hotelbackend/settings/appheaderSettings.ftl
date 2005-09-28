@@ -37,8 +37,6 @@
 <div class="apptitle"> ${uiLabelMap.opentravelsystemSettings}</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
-  <div class="col"><a href="<@ofbizUrl>/selectStore</@ofbizUrl>" class="${selectedLeftClassMap.selectStore?default(unselectedLeftClassName)}">${uiLabelMap.selectStore}</a></div>  
-  <div class="col"><a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemStore}</a></div>  
   <!--div class="col"><a href="<@ofbizUrl>/findparty?partyGroup=${productStoreId?if_exists}</@ofbizUrl>" class="${selectedLeftClassMap.users?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemUsers}</a></div-->  
   <!--div class="col"><a href="<@ofbizUrl>/unLoad</@ofbizUrl>" class="${selectedLeftClassMap.unload?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemUnload}</a></div-->  
 

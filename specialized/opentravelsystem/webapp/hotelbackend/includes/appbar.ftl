@@ -40,7 +40,6 @@
 		,{"title":"Reservations",		"url":"findorders"}
 		,{"title":"Customers",			"url":"findparty"}
 		,{"title":"Accounting",			"url":"mainAccounting"}
-		,{"title":"Settings",			"url":"mainSettings"}
 		,{"title":"Website", 			"url":"/${productStoreId?if_exists}"}
 		,{"title":"Logout", 				"url":"logout"}
 		]>

@@ -34,14 +34,16 @@
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 
-<div class="apptitle">Customers</div>
+<div class="apptitle">&nbsp;Accounting</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/mainAccounting</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
   <div class="col"><a href="<@ofbizUrl>/findInvoices</@ofbizUrl>" class="${selectedLeftClassMap.invoices?default(unselectedLeftClassName)}">${uiLabelMap.AccountingInvoicesMenu}</a></div>
   <div class="col"><a href="<@ofbizUrl>/findPayments</@ofbizUrl>" class="${selectedLeftClassMap.payments?default(unselectedLeftClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a></div>
+  <div class="col"><a href="<@ofbizUrl>/Ledger</@ofbizUrl>" class="${selectedLeftClassMap.Ledger?default(unselectedLeftClassName)}">Gen.Ledger</a></div>
   <div class="col"><a href="<@ofbizUrl>/AccountingReports</@ofbizUrl>" class="${selectedLeftClassMap.Reports?default(unselectedLeftClassName)}">Reports</a></div>
   <div class="col"><a href="<@ofbizUrl>/DataExchange</@ofbizUrl>" class="${selectedLeftClassMap.DataExchange?default(unselectedLeftClassName)}">Bank Upload</a></div>
   <div class="col"><a href="<@ofbizUrl>/Utilities</@ofbizUrl>" class="${selectedLeftClassMap.Utilities?default(unselectedLeftClassName)}">Utilities</a></div>
+  <div class="col"><a href="<@ofbizUrl>/AdminMain</@ofbizUrl>" class="${selectedLeftClassMap.Setup?default(unselectedLeftClassName)}">Setup</a></div>
 
   <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>

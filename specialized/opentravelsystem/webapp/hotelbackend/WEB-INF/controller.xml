@@ -281,10 +281,6 @@
         <response name="success" type="view" value="statistics"/>
     </request-map>
     
-    <request-map uri="reports">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="reports"/>
-    </request-map>
     
     <request-map uri="OrderPurchaseReportPayment.pdf"><security https="true" auth="true"/>
         <response name="success" type="view" value="OrderPurchaseReportPayment"/>
@@ -2270,8 +2266,55 @@
         <event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="CreateInvoicesFromPayments"/>
         <response name="success" type="view" value="Utilities"/>
     </request-map>    
+    <!-- Accounting Setup -->
+    <!-- ================ Administratvie Requests ================ -->
+    <request-map uri="AdminMain">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdminMain"/>
+    </request-map>
+    <request-map uri="PartyAcctgPreference">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyAcctgPreference"/>
+    </request-map>
+    <request-map uri="ListUnpostedAcctgTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListUnpostedAcctgTrans"/>
+    </request-map>
+    <request-map uri="postAcctgTrans">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="postAcctgTrans"/>
+        <response name="success" type="view" value="ListUnpostedAcctgTrans"/>
+        <response name="error" type="view" value="ListUnpostedAcctgTrans"/>
+    </request-map>
+    <request-map uri="createPartyAcctgPreference">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyAcctgPreference"/>
+        <response name="success" type="view" value="AdminMain"/>
+        <response name="error" type="view" value="PartyAcctgPreference"/>
+    </request-map>
+    <request-map uri="closeAllTimePeriods">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="closeAllTimePeriods"/>
+        <response name="success" type="view" value="AdminMain"/>
+        <response name="error" type="view" value="AdminMain"/>
+    </request-map>
+    
+    <request-map uri="viewFXConversions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewFXConversions"/>
+    </request-map>
+    <request-map uri="updateFXConversion">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateFXConversion"/>
+        <response name="success" type="view" value="ViewFXConversions"/>
+        <response name="error" type="view" value="ViewFXConversions"/>
+    </request-map>
     <!-- =============== Accounting Reports =================-->
     <request-map uri="AccountingReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AccountingReports"/>
+    </request-map>  
+    <request-map uri="ReportsAvailable">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AccountingReports"/>
     </request-map>  
@@ -2279,7 +2322,53 @@
     <request-map uri="VatReport.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="VatReport"/>
-    </request-map>    
+    </request-map>
+    <!-- from the accounting component -->    
+    <request-map uri="IncomeStatement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IncomeStatement"/>
+    </request-map>
+    <request-map uri="BalanceSheet">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BalanceSheet"/>
+    </request-map>
+    <request-map uri="TrialBalance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TrialBalance"/>
+    </request-map>
+    <request-map uri="TaxSummary">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TaxSummary"/>
+    </request-map>
+    <request-map uri="AccountActivitiesDetail">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AccountActivitiesDetail"/>
+    </request-map>
+    <!-- GL account organisation -->
+    <request-map uri="AssignGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AssignGlAccount"/>
+    </request-map>
+    <!-- GL account actions -->    
+    <request-map uri="GlAccountNavigate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountNavigate"/>
+    </request-map>
+    <request-map uri="ListGlAccountOrganization">
+        <!-- security https="true" auth="true"/ -->
+        <response name="success" type="view" value="ListGlAccountOrganization"/>
+    </request-map>
+    <request-map uri="Ledger">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListGlAccountOrganization"/>
+    </request-map>
+    <request-map uri="createGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountOrganization"/>
+        <response name="success" type="view" value="ListGlAccountOrganization"/>
+        <response name="error" type="view" value="ListGlAccountOrganization"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -2303,6 +2392,12 @@
     <view-map name="EditCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategory"/>
     <view-map name="EditProdCatalogCategories" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProdCatalogCategories"/>
     <view-map name="EditCategoryRollup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryRollup"/>
+    <view-map name="EditProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStore"/>
+    <view-map name="EditProductStoreRoles" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreRoles"/>
+    <view-map name="EditProductStoreEmails" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreEmails"/>
+    <view-map name="EditProductStoreTaxSetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreTaxSetup"/>
+    <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
+    <view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#selectStore"/>
     <!--view-map name="EditProductCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/-->
     <view-map name="EditProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProducts"/>
     <view-map name="EditCategoryProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryProducts"/>
@@ -2317,12 +2412,6 @@
     <view-map name="ListFixedAssetCalendar" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssetCalendar"/> 
     <!-- Settings  screens -->
     <view-map name="mainSettings" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#main"/>
-    <view-map name="EditProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStore"/>
-    <view-map name="EditProductStoreRoles" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreRoles"/>
-    <view-map name="EditProductStoreEmails" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreEmails"/>
-    <view-map name="EditProductStoreTaxSetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreTaxSetup"/>
-    <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
-    <view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#selectStore"/>
     <!-- reservations /orders -->
     <view-map name="findorders" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#main"/>
     <view-map name="orderview" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#orderview"/>
@@ -2364,5 +2453,18 @@
     <!-- accounting reports -->
     <view-map name="AccountingReports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#reports"/>
     <view-map name="VatReport" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#VatReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="IncomeStatement" type="screen" page="component://accountingext/widget/AccountingScreens.xml#IncomeStatement"/>
+    <view-map name="BalanceSheet" type="screen" page="component://accountingext/widget/AccountingScreens.xml#BalanceSheet"/>
+    <view-map name="TrialBalance" type="screen" page="component://accountingext/widget/AccountingScreens.xml#TrialBalance"/>
+    <view-map name="TaxSummary" type="screen" page="component://accountingext/widget/AccountingScreens.xml#TaxSummary"/>
+    <view-map name="AccountActivitiesDetail" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
+    <!-- Accounting administrative pages -->
+    <view-map name="AdminMain" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#AdminMain"/>
+    <view-map name="PartyAcctgPreference" type="screen" page="component://accountingext/widget/AccountingScreens.xml#PartyAcctgPreference"/>
+    <view-map name="ViewFXConversions" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ViewFXConversions"/>
+    <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListUnpostedAcctgTrans"/>
+    <!-- GL organisation -->
+    <view-map name="ListGlAccountOrganization" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#ListGlAccountOrganization"/>
+    <view-map name="AssignGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AssignGlAccount"/>
     <!-- end of view mappings -->
 </site-conf>
