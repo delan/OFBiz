@@ -404,6 +404,20 @@ function setAlternateGwp(field) {
         </tr>
         <tr><td>&nbsp;</td><td colspan="6"><hr class="sepbar"/></td></tr>
         <tr>
+          <td colspan="7" align="right" valign="bottom">
+            <div class="tabletext">
+              <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
+              &nbsp;&nbsp;
+              <a href="<@ofbizUrl>/createCustRequestFromCart</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateCustRequestFromCart}</a>&nbsp;&nbsp;
+              <#else>
+               ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
+                ${uiLabelMap.EcommerceToOrderCreateCustRequestFromCart}.&nbsp;
+              </#if>
+            </div>
+          </td>
+        </tr>
+        <tr><td>&nbsp;</td><td colspan="6"><hr class="sepbar"/></td></tr>
+        <tr>
           <td colspan="7" align="center" valign="bottom">
             <div class="tabletext"><input type="checkbox" onClick="javascript:document.cartform.submit()" name="alwaysShowcart" <#if shoppingCart.viewCartOnAdd()>checked</#if>>&nbsp;${uiLabelMap.EcommerceAlwaysViewCartAfterAddingAnItem}.</div>
           </td>

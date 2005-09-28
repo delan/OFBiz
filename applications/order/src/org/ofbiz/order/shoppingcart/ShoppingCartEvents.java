@@ -934,6 +934,7 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        String destroyCart = (String) request.getAttribute("destroyCart");
         
         ShoppingCart cart = getCartObject(request);
         Map result = null;
@@ -952,8 +953,10 @@ public class ShoppingCartEvents {
            return "error";
         }
         request.setAttribute("quoteId", quoteId);
-        ShoppingCartEvents.destroyCart(request, response);
-        
+        if (destroyCart != null && destroyCart.equals("Y")) {
+            ShoppingCartEvents.destroyCart(request, response);
+        }
+
         return "success";
     }
 
@@ -961,6 +964,7 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        String destroyCart = (String) request.getAttribute("destroyCart");
         
         ShoppingCart cart = getCartObject(request);
         Map result = null;
@@ -979,8 +983,10 @@ public class ShoppingCartEvents {
            return "error";
         }
         request.setAttribute("custRequestId", custRequestId);
-        ShoppingCartEvents.destroyCart(request, response);
-        
+        if (destroyCart != null && destroyCart.equals("Y")) {
+            ShoppingCartEvents.destroyCart(request, response);
+        }
+
         return "success";
     }
 
