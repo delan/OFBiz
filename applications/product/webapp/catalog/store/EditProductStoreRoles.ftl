@@ -61,7 +61,7 @@
   
   <br/>
   <div class="head2">${uiLabelMap.ProductCreateProductStoreRole}:</div>
-  <form name="addRole" action="<@ofbizUrl>/storeCreateRole</@ofbizUrl>" method="post">
+  <form name="addProductStoreRole" action="<@ofbizUrl>/storeCreateRole</@ofbizUrl>" method="post">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <table cellspacing="2" cellpadding="2">
       <tr>
@@ -76,13 +76,16 @@
       </tr>
       <tr>
         <td><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
-        <td><input type="text" class="inputBox" name="partyId" size="20"></td>
+        <td>
+          <input type="text" class="inputBox" name="partyId" size="20">
+          <a href="javascript:call_fieldlookup2(document.addProductStoreRole.partyId,'LookupPartyName');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a>
+        </td>
       </tr>
       <tr>
         <td><span class="tableheadtext">${uiLabelMap.CommonFromDate}</span></td>
         <td>
           <input type="text" class="inputBox" name="fromDate" size="25">
-          <a href="javascript:call_cal(document.addRole.fromDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>                   
+          <a href="javascript:call_cal(document.addProductStoreRole.fromDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>                   
         </td>
       </tr>
       <tr>
