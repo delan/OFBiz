@@ -60,17 +60,27 @@
 		<field-to-result field-name="communicationEventId" result-name="communicationEventId"/>
 		<create-value value-name="newEntity"/>	
 	</simple-method>
-	<simple-method method-name="updateCommunicationEvent" short-description="Update a CommunicationEvent">
-		<check-permission permission="PARTYMGR" action="_UPDATE">
-			<fail-property resource="PartyUiLabels" property="PartyUpdateCommunicationEventPermissionError"/>
-		</check-permission>
-		<check-errors/>
-		
-		<field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
-		<find-by-primary-key entity-name="CommunicationEvent" map-name="lookupPKMap" value-name="event"/>
-		<set-nonpk-fields map-name="parameters" value-name="event"/>
-		<store-value value-name="event"/>
-	</simple-method>
+    <simple-method method-name="updateCommunicationEvent" short-description="Update a CommunicationEvent">
+        <check-permission permission="PARTYMGR" action="_UPDATE">
+            <fail-property resource="PartyUiLabels" property="PartyUpdateCommunicationEventPermissionError"/>
+        </check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="CommunicationEvent" map-name="lookupPKMap" value-name="event"/>
+        <set-nonpk-fields map-name="parameters" value-name="event"/>
+        <store-value value-name="event"/>
+    </simple-method>
+    <simple-method method-name="deleteCommunicationEvent" short-description="Delete a CommunicationEvent">
+        <check-permission permission="PARTYMGR" action="_DELETE">
+            <fail-property resource="PartyUiLabels" property="PartyUpdateCommunicationEventPermissionError"/>
+        </check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="CommunicationEvent" map-name="lookupPKMap" value-name="event"/>
+        <remove-value value-name="event"/>
+    </simple-method>
 	<simple-method method-name="createCommunicationEventPurpose" short-description="Create a CommunicationEventPurpose">
 		<check-permission permission="PARTYMGR" action="_CREATE">
 			<fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPurposePermissionError"/>
