@@ -1381,6 +1381,7 @@
       <field name="custRequestTypeId" type="id"></field>
       <field name="custRequestCategoryId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="fromPartyId" type="id"></field>
       <field name="priority" type="numeric"></field>
       <field name="custRequestDate" type="date-time"></field>
       <field name="responseRequiredDate" type="date-time"></field>
@@ -1400,6 +1401,9 @@
       </relation>
       <relation type="one" fk-name="CUST_REQ_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQ_FRMPTY" title="From" rel-entity-name="Party">
+        <key-map field-name="fromPartyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="CUST_REQ_CUOM" rel-entity-name="Uom">
         <key-map field-name="maximumAmountUomId" rel-field-name="uomId"/>
