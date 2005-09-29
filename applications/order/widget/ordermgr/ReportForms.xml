@@ -58,13 +58,13 @@
         <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
 
-        <field name="submitButton" title="Run Product Report" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Run Product Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="OrderPurchasePaymentOptions" type="single" target="OrderPurchaseReportPayment.pdf" title=""
             extends="OrderPurchaseReportOptions">
         <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
 
-        <field name="submitButton" title="Run Payment Report" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Run Payment Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

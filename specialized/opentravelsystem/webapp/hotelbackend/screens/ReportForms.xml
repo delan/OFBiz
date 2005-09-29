@@ -61,17 +61,17 @@
         <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
 
-        <field name="submitButton" title="Run Product Report" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Run Product Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="VatReportOptions" type="single" target="VatReport.pdf" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
-        <field name="submitButton" title="Run Report" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="OpenSalesInvoices" type="single" target="OpenSalesInvoices.pdf" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <field name="submitButton" title="Run Report" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

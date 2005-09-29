@@ -30,7 +30,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentType" title="" type="single">
         <auto-fields-service service-name="createContentType"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -47,7 +47,7 @@
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -68,7 +68,7 @@
                     entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -100,7 +100,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentAssocType" title="" type="single">
         <auto-fields-service service-name="createContentAssocType"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -117,7 +117,7 @@
         <field name="contentAssocTypeId" title="ContentAssocTypeId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -132,7 +132,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentPurposeType" title="" type="single">
         <auto-fields-service service-name="createContentPurposeType"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -149,7 +149,7 @@
         <field name="contentPurposeTypeId" title="ContentPurposeTypeId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -165,7 +165,7 @@
         name="AddContentAssocPredicate" target="addContentAssocPredicate"
         title="" type="single">
         <auto-fields-service service-name="createContentAssocPredicate"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -183,7 +183,7 @@
             title="ContentAssocPredicateId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -198,7 +198,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentOperation" title="" type="single">
         <auto-fields-service service-name="createContentOperation"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -215,7 +215,7 @@
         <field name="contentOperationId" title="ContentOperationId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -247,7 +247,7 @@
                     entity-name="RoleType" key-field-name="roleTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

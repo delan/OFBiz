@@ -229,7 +229,7 @@ function insertImageName(type,nameValue) {
         <span class="tabletext">Duplicate Selected with New ID:</span>
         <input type=hidden name="oldProductCategoryId" value="${productCategoryId}">
         <div>
-            <input type="text" class="inputBox" size="20" maxlength="20" name="productCategoryId" >&nbsp;<INPUT type=submit class="standardSubmit" value="Go!">
+            <input type="text" class="inputBox" size="20" maxlength="20" name="productCategoryId" >&nbsp;<INPUT type=submit class="smallSubmit" value="Go!">
         </div>
         <div class="tabletext">
             <b>Duplicate:</b>

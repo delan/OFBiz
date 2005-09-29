@@ -40,7 +40,7 @@
 			</drop-down>
 		</field>
 		<field name="comments" title="Item Comments"/>
-		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	<form name="ViewPhysicalInventoryAndVariance" type="list"
 		target="" title="" list-name="physicalInventoryAndVarianceDatas"

@@ -129,7 +129,7 @@
             <td colspan="3">
                 <div class="tabletext">
                     ${uiLabelMap.ProductNewProductId}: <input type="text" name="productId" value="" class="inputBox"/>
-                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="standardSubmit"/>
+                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="smallSubmit"/>
                 </div>
             </td>
         </tr>

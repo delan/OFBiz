@@ -39,7 +39,7 @@
         <field name="contentId" title="Content Id" ><text-find/></field>
         <field name="dataResourceId" title="Data Resource Id" ><text-find/></field>
         <field name="contentName" title="Name" ><text-find/></field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="createBlog" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="New Blog"  target="EditBlogArticle"/>
         </field>
@@ -115,7 +115,7 @@
              <option key="BLOG_DRAFT" description="PREVIEW"/>
            </radio> 
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
        <field name="deactivateExisting" >
@@ -159,7 +159,7 @@
              <option key="BLOG_DRAFT" description="PREVIEW"/>
            </radio> 
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
        <field name="deactivateExisting" >
@@ -219,7 +219,7 @@
         skip-start="true"
         skip-end="true"
         default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <field name="submitButton" title="Submit" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="editFormEnd" target="" title="" type="single"

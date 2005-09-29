@@ -31,7 +31,7 @@
         <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><text-find default-value="equals"/></field>
         <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><text-find default-value="equals"/></field>
         <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><text-find default-value="equals"/></field>
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
    <form name="listLookupSegmentGroup" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
@@ -77,7 +77,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProductStore" title="" type="single">
         <auto-fields-entity entity-name="ProductStore" default-field-type="find" />
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductStore" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
@@ -137,7 +137,7 @@
         <field name="geoCode" title="${uiLabelMap.SegmentGroupGeoCode}"><text-find default-value="equals"/></field>
         <field name="geoSecCode" title="${uiLabelMap.SegmentGroupGeoSecCode}"><text-find default-value="equals"/></field>
         <field name="geoAbbr" title="${uiLabelMap.SegmentGroupGeoAbbr}"><text-find default-value="equals"/></field>
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
    <form name="listLookupGeo" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"

@@ -76,7 +76,7 @@
         <field name="lastName" title="${uiLabelMap.PartyLastName}"><text-find default-value="equals"/></field>
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find default-value="equals"/></field>
         <field name="createdDate" title="${uiLabelMap.PartyCreatedDate}"><date-find/></field>
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
@@ -101,7 +101,7 @@
         <!--<auto-fields-entity entity-name="PartyGroup" default-field-type="find"/>-->
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find default-value="equals"/></field>
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find default-value="equals"/></field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit">
+        <field name="submitButton" title="Find" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -134,7 +134,7 @@
         <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find default-value="equals"/></field>
         <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find default-value="equals"/></field>
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find default-value="equals"/></field> 
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyName" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" paginate-target="LookupPartyName" title="" type="list">

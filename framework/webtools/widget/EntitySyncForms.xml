@@ -52,6 +52,6 @@
 
     <form name="EntitySyncLoadOffline" type="single" target="loadOfflineEntitySyncData" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="loadOfflineEntitySyncData"/>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit"><submit button-type="button"/></field> 
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field> 
     </form>
 </forms>

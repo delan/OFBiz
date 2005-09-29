@@ -66,7 +66,7 @@ function clickAll(e) {
             <input type="hidden" name="productId" value="${productId}"/>
             <div><span class="tabletext">Variant Product IDs:</span></div>
             <div><textarea name="variantProductIdsBag" rows="6" cols="20"></textarea></div>
-            <div><input type="submit" class="standardSubmit" value="Add Variant Products"/></div>
+            <div><input type="submit" class="smallSubmit" value="Add Variant Products"/></div>
         </form>
     </div>
     

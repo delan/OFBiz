@@ -105,7 +105,7 @@
         </field>
         <field name="custRequestId" map-name="parameters"><text/></field>
         <field name="custRequestItemSeqId" map-name="parameters"><text/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

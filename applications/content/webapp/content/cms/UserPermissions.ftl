@@ -104,7 +104,7 @@ ${menuWrapper.renderMenuString()}
         </#list>
           <tr>
             <td>
-<div class="standardSubmit" ><a href="javascript:submitRows('${rowCount?if_exists}')">Update</a></div>
+<div class="smallSubmit" ><a href="javascript:submitRows('${rowCount?if_exists}')">Update</a></div>
             </td>
           </tr>
       </table>

@@ -34,7 +34,7 @@
         <field name="contentId" title="Content Id" ><text-find/></field>
         <field name="dataResourceId" title="Data Resource Id" ><text-find/></field>
         <field name="contentName" title="Name" ><text-find/></field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create New"  target="EditAddContent"/>
         </field>
@@ -129,7 +129,7 @@
             <hyperlink also-hidden="false" target="createTopic${pageName}?mode=restore" description="Create Topic"/>
         </field>
         -->
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="Upload" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="ftlContentId" >
@@ -225,7 +225,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -254,7 +254,7 @@
         <field name="privilegeEnumId" >
             <hidden/>
         </field>
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="Upload" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="statusId"  map-name="currentValue">
@@ -326,7 +326,7 @@
         <field name="contentName" title="Title" map-name="currentValue">
             <hidden/>
         </field>
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="Upload" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="statusId"  map-name="currentValue">
@@ -386,21 +386,21 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="AdminIndex" title="" type="single">
         <field name="indexContentIds" title="Content ids to index (separate ids with a space)" position="1"><text size="50"/></field>
-        <field name="submitButton" title="Index Entered Ids" widget-style="standardSubmit" position="2"><submit button-type="button"/></field>
+        <field name="submitButton" title="Index Entered Ids" widget-style="smallSubmit" position="2"><submit button-type="button"/></field>
     </form>
 
     <form name="AdminIndexAll" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="indexTree" title="" type="single">
         <field name="contentId" title=" " position="1"><text size="50" default-value="WebStoreCONTENT"/></field>
-        <field name="submitButton" title="Index All Content Under" widget-style="standardSubmit" position="2"><submit button-type="button"/></field>
+        <field name="submitButton" title="Index All Content Under" widget-style="smallSubmit" position="2"><submit button-type="button"/></field>
     </form>
 
     <form name="searchQuery" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="AdminSearch" title="" type="single">
         <field name="queryLine" title="Enter query parameters"><text size="60"/></field>
-        <field name="submitButton" title="Query" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Query" widget-style="smallSubmit"><submit button-type="button"/></field>
 
     </form>
     <form name="searchList" type="list" target="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" paginate-target="/AdminSearch" list-name="queryResults" >
@@ -600,7 +600,7 @@
         <field name="createdDate" title="Data Create Date" position="2"><display/></field>
         <field name="lastModifiedByUserLogin" title="Data Modified By User" position="1"><display/></field>
         <field name="lastModifiedDate" title="Data Modified Date" position="2"><display/></field>
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="Upload" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         
@@ -658,7 +658,7 @@
             </drop-down>
         </field>
             -->
-        <field name="submitButton" title="Check" widget-style="standardSubmit">
+        <field name="submitButton" title="Check" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

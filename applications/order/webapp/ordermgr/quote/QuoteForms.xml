@@ -57,7 +57,7 @@
         <field name="description"><hidden/></field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -132,7 +132,7 @@
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
         <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -164,7 +164,7 @@
         <field name="partyId" title="${uiLabelMap.PartyParty}">
             <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -249,7 +249,7 @@
             </drop-down>
         </field>
          -->
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -276,7 +276,7 @@
         <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" use-when="quoteAttribute!=null"><display/></field>
         <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -301,7 +301,7 @@
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
         <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoefficientName}" use-when="quoteCoefficient!=null"><display/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -386,7 +386,7 @@
                 <entity-options description="${description}" entity-name="OrderAdjustmentType" key-field-name="orderAdjustmentTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

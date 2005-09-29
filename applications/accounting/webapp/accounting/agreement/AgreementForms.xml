@@ -48,7 +48,7 @@
         <field name="description" title="${uiLabelMap.AccountingDescription}"><hidden/></field>
         <field name="textData" title="${uiLabelMap.AccountingTextData}"><hidden/></field>
         <field name="thruDate" title="${uiLabelMap.AccountingThruDate}"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -112,7 +112,7 @@
             <lookup target-form-name="LookupPartyName"/>
         </field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -152,7 +152,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -186,7 +186,7 @@
         </field>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

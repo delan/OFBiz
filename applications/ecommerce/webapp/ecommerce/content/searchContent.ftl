@@ -69,7 +69,7 @@
 &nbsp;</td>
 <td>&nbsp;</td>
 <td width="80%" align="left" colspan="4">
-<input type="submit" class="standardSubmit" name="submitButton" value="Query"/>
+<input type="submit" class="smallSubmit" name="submitButton" value="Query"/>
 </td>
 
 </tr>

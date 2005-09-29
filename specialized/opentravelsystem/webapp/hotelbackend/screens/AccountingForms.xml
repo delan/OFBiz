@@ -29,7 +29,7 @@
         <field name="localFile" title="Local file name">
             <file />
         </field>
-        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+        <field name="submitButton" title="Upload" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -37,7 +37,7 @@
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <!--field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field-->
-        <field name="submitButton" title="Copy" widget-style="standardSubmit">
+        <field name="submitButton" title="Copy" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -64,7 +64,7 @@
                 </entity-options>
             </drop-down>
         </field-->
-        <field name="submitButton" title="Create Assignment" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Create Assignment" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
     

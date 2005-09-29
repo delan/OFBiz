@@ -34,7 +34,7 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="workEffort==null" target="createworkeffort"/>
         <auto-fields-entity entity-name="WorkEffort" default-field-type="edit" />
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -80,7 +80,7 @@
         <field name="createdByUserLogin"><hidden/></field>
         <field name="lastModifiedDate"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit">
+        <field name="submitButton" title="Find" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -207,7 +207,7 @@
         
         <field name="requestPartyId" use-when="custRequest==null" title="Requesting Party"><lookup target-form-name="LookupPartyName"/></field>
 
-        <field name="submitButton" title="Submit" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditCustRequestItem" type="single"
             target="updaterequestitem" title="" default-map-name="custRequestItem"
@@ -247,7 +247,7 @@
             </drop-down>
         </field>
         <field name="productId"><lookup target-form-name="LookupProduct"/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -286,7 +286,7 @@
         </field>
         <field name="quantity" map-name="parameters" use-when="quoteItem==null"><text/></field>
         <field name="selectedAmount" map-name="parameters" use-when="quoteItem==null"><text/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -319,7 +319,7 @@
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="note"><textarea/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -356,7 +356,7 @@
                 <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

@@ -36,7 +36,7 @@
         <field name="PASSWORD" title="${uiLabelMap.CommonPassword}" >
             <password size="20"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonLogin}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLogin}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <!--

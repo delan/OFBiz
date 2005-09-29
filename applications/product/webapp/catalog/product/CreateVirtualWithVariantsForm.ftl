@@ -38,6 +38,6 @@
                 <option value="${hazmatFeature.productFeatureId}">${hazmatFeature.description}</option>
             </#list>
         </select>
-        <input type="submit" class="standardSubmit" value="Create Virtual Product"/>
+        <input type="submit" class="smallSubmit" value="Create Virtual Product"/>
     </div>
 </form>
