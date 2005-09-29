@@ -51,7 +51,7 @@
         <field name="lastModifiedDate">
             <date-find/>
         </field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit">
+        <field name="submitButton" title="Find" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -90,7 +90,7 @@
         <field name="lastModifiedDate">
             <date-find/>
         </field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit">
+        <field name="submitButton" title="Find" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="contentIdTo">
@@ -144,7 +144,7 @@
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
@@ -202,7 +202,7 @@
         <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
 		<textarea rows="24" cols="80" />
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -349,7 +349,7 @@
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -376,7 +376,7 @@
         <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
 		<textarea rows="24" cols="80" />
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -410,7 +410,7 @@
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -437,7 +437,7 @@
         <field name="textData" title="Text" > 
 		<textarea rows="24" cols="80" />
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -479,7 +479,7 @@
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -511,7 +511,7 @@
         <field name="imageData" entity-name="ImageDataResource">
             <file />
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -545,7 +545,7 @@
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -566,7 +566,7 @@
         <field name="drObjectInfo" title="Url">
             <text />
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -645,7 +645,7 @@
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -699,7 +699,7 @@
         <field name="textData" title="Text"  id-name="textData"> 
 		<textarea rows="24" cols="80" />
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="paste" title="&amp;nbsp;" widget-style="buttontext"

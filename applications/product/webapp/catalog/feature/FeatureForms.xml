@@ -64,7 +64,7 @@
         <field name="idCode" title="${uiLabelMap.ProductIdCode}"/>
         <field name="abbrev" title="${uiLabelMap.ProductAbbreviation}"/>
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="CreateSupplierProductFeature" type="single"
@@ -107,7 +107,7 @@
                 <entity-options entity-name="Uom" description="${uomId}"/>
             </drop-down>
         </field>
-		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeSupplierProductFeature?productFeatureId=${productFeatureId}&amp;partyId=${partyId}"
                 description="[${uiLabelMap.CommonDelete}]"/>
@@ -142,7 +142,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 </forms>

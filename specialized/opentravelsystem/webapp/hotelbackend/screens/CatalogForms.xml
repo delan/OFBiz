@@ -30,8 +30,8 @@
         </field>
         <field name="description"><text/></field>
         <field name="fromDate" use-when="productCategoryId==null" ><date-time/></field>
-        <field name="Add" use-when="productCategoryId==null" widget-style="standardSubmit"><submit button-type="button"/></field>    
-        <field name="Update" use-when="productCategoryId!=null" widget-style="standardSubmit"><submit button-type="button"/></field>    
+        <field name="Add" use-when="productCategoryId==null" widget-style="smallSubmit"><submit button-type="button"/></field>    
+        <field name="Update" use-when="productCategoryId!=null" widget-style="smallSubmit"><submit button-type="button"/></field>    
        
     </form>
     
@@ -60,7 +60,7 @@
         <field name="fromDate"><display/></field>
         <field name="sequenceNum" widget-style="inputBox" title="Seq Number"><text size="2" maxlength="2"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"> <date-time/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeCategoryProductMember" description="[Remove Product from Category]" also-hidden="false"/>
         </field>
@@ -71,7 +71,7 @@
         <field name="productId"><lookup target-form-name="LookupProduct"></lookup></field>        
         <field name="productCategoryId"><hidden/></field>
         <field name="fromDate"><date-time/></field>
-        <field name="submitButton" widget-style="standardSubmit"><submit button-type="button"/></field>    
+        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>    
     </form>  
     <!-- Edit/Create a product --> 
     <form name="EditProduct" type="single"
@@ -224,7 +224,7 @@
         <field name="detailTemplate"><text size="60" maxlength="250"/></field>
         -->
 
-        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <field use-when="product!=null" position="1" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
             <display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
@@ -248,7 +248,7 @@
         <field name="quantity"><hidden/></field>
         <field name="sequenceNum"><hidden/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeProductFromCategory?productId=${productId}&amp;productCategoryId=${productCategoryId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -282,7 +282,7 @@
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="selectStore" type="list" list-name="stores" 
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="setStore">
@@ -290,13 +290,13 @@
         <field name="roleTypeId" title="${uiLabelMap.CommonRoleType}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"> <display/></field>
-        <field name="submitButton" title="Select" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Select" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="selectStoreAdmin" type="list" list-name="storesAdmin" 
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="setStore">
         <field name="productStoreId" title="${uiLabelMap.productStoreId}"><display/></field>
         <field name="storeName" title="${uiLabelMap.StoreName}"><display/></field>
-        <field name="submitButton" title="Select" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Select" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

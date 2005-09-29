@@ -34,6 +34,6 @@
         ${uiLabelMap.OrderOrderQuoteAttributes}&nbsp;<input type="checkbox" class="checkBox" name="copyQuoteAttributes" value="Y" checked/>
         ${uiLabelMap.OrderOrderQuoteCoefficients}&nbsp;<input type="checkbox" class="checkBox" name="copyQuoteCoefficients" value="Y" checked/>
     </div>
-    <input type="submit" class="standardSubmit" value="Copy"/>
+    <input type="submit" class="smallSubmit" value="Copy"/>
 </form>
 </#if>

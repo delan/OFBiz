@@ -32,7 +32,7 @@
             <input type="hidden" name="oldProductId" value="${productId}"/>
             <div>
                 <span class="tabletext">${uiLabelMap.ProductDuplicateRemoveSelectedWithNewId}:</span>
-                <input type="text" class="inputBox" size="20" maxlength="20" name="productId"/>&nbsp;<input type="submit" class="standardSubmit" value="Go!"/>
+                <input type="text" class="inputBox" size="20" maxlength="20" name="productId"/>&nbsp;<input type="submit" class="smallSubmit" value="Go!"/>
             </div>
             <div class="tabletext">
                 <b>${uiLabelMap.CommonDuplicate}:</b>
@@ -72,7 +72,7 @@
                 ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" class="checkBox" name="duplicateAttributes" value="Y" checked="checked"/>
                 ${uiLabelMap.ProductFacilities}&nbsp;<input type="checkbox" class="checkBox" name="duplicateFacilities" value="Y" checked="checked"/>
             </div>
-            <input type="submit" class="standardSubmit" value="Go!"/>
+            <input type="submit" class="smallSubmit" value="Go!"/>
         </form>
         </#if>
         <br/>

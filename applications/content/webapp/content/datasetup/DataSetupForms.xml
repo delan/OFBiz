@@ -30,7 +30,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addDataResourceType" title="" type="single">
         <auto-fields-service service-name="createDataResourceType"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -44,7 +44,7 @@
         <field name="dataResourceTypeId" title="DataResourceTypeId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -66,7 +66,7 @@
                     entity-name="DataResourceType" key-field-name="dataResourceTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -95,7 +95,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addCharacterSet" title="" type="single">
         <auto-fields-service service-name="createCharacterSet"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -109,7 +109,7 @@
         <field name="characterSetId" title="CharacterSetId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -131,7 +131,7 @@
                     />
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -152,7 +152,7 @@
                     />
             </drop-down>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -173,7 +173,7 @@
                     entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -193,7 +193,7 @@
                     entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -208,7 +208,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addMetaDataPredicate" title="" type="single">
         <auto-fields-service service-name="createMetaDataPredicate"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -222,7 +222,7 @@
         <field name="metaDataPredicateId" title="MetaDataPredicateId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -237,7 +237,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addMimeType" title="" type="single">
         <auto-fields-service service-name="createMimeType"/>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -251,7 +251,7 @@
         <field name="mimeTypeId" title="MimeTypeId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">

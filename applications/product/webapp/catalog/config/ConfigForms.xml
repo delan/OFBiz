@@ -102,7 +102,7 @@
         </field>
          <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="PrepareAddProductConfigItemContentAssoc" type="single"
             target="prepareAddContentToProductConfigItem" title="Add ProdConfItemContent (select Content Id, enter From Date):"
@@ -120,7 +120,7 @@
             </drop-down>
         </field>
         <!-- <field name="description"><text size="40"/></field> -->
-        <field name="submitButton" title="${uiLabelMap.ProductPrepareCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductPrepareCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductConfigItemContentAssoc" type="list"
             target="updateContentToProductConfigItem" title="" list-name="productContentDatas"
@@ -139,7 +139,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -160,8 +160,8 @@
         <field name="textDataResourceId" title="${uiLabelMap.ProductTextDataResourceId}" map-name="textData"><hidden/></field>
         <field name="configItemId"><hidden/></field>
         <field name="confItemContentTypeId"><hidden/></field>
-        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 </forms>

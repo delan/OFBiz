@@ -50,7 +50,7 @@
         <field name="createdDate"><date-find/></field>
         <field name="lastModifiedByUserLogin"><lookup target-form-name="LookupParty"/></field>
         <field name="lastModifiedDate"><date-find/></field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
         </field>
@@ -114,7 +114,7 @@
         <field name="createdDate" position="2"><display/></field>
         <field name="lastModifiedByUserLogin" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
             <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
         </field>
@@ -139,7 +139,7 @@
                 -->
             </drop-down>
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="contentTypeId">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
@@ -176,7 +176,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupContent" title="" type="single">
         <auto-fields-entity entity-name="Content" default-field-type="find" />
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
@@ -227,7 +227,7 @@
         <field name="contentIdTo" title="" widget-style="buttontext"><display/></field>
         <field name="contentAssocTypeId" title="" widget-style="buttontext"><display/></field>
         <field name="fromDate" title="" widget-style="buttontext"><display/></field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddContentAssoc" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
@@ -247,7 +247,7 @@
                 <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="createdDate"><hidden/></field>
@@ -317,7 +317,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
+        <field name="submitButton" title="Add" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -325,7 +325,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="updateContentRole" title="" type="single">
         <auto-fields-service service-name="createContentRole"/>
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContentRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
@@ -338,7 +338,7 @@
         <auto-fields-service service-name="updateContentRole" default-field-type="display" />
         <field name="thruDate" widget-style="buttontext"><date-time/></field>
         <field name="thruDate" widget-style="buttontext"><date-time/></field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
+        <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -358,7 +358,7 @@
                 <entity-options description="${description}" entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContentPurpose" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
@@ -369,7 +369,7 @@
           </entity-and>
         </actions>
         <auto-fields-service service-name="updateContentPurpose" default-field-type="display" />
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurpose?contentId=${contentId}&amp;contentPurposeTypeId=${contentPurposeTypeId}"/>
         </field>
@@ -382,7 +382,7 @@
         <field name="contentId" title="" widget-style="buttontext" > 
             <lookup target-form-name="LookupContent" />
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         name="ListContentAttribute"
@@ -394,7 +394,7 @@
         </actions>
         <auto-fields-service service-name="updateContentAttribute" default-field-type="display" />
         <field name="attrValue" widget-style="buttontext"><text/></field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAttribute?contentId=${contentId}&amp;attrName=${attrName}"/>
         </field>
@@ -413,7 +413,7 @@
                 <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContentMetaData" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="inputBox"
@@ -426,7 +426,7 @@
         <auto-fields-service service-name="updateContentMetaData" default-field-type="edit" />
         <field name="contentId" title="ContentId" widget-style="buttontext"><display/></field>
         <field name="metaDataPredicateId" title="MetaDataPredicateId" widget-style="buttontext"><display/></field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentMetaData?contentId=${contentId}&amp;metaDataPredicateId=${metaDataPredicateId}"/>
         </field>

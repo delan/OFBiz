@@ -68,7 +68,7 @@
              </drop-down>
         </field>
         <field name="grandTotal"><range-find/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -139,7 +139,7 @@
              </drop-down>
         </field>
         <field name="grandTotal"><range-find/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -188,7 +188,7 @@
         <field name="createdByUserLogin"><hidden/></field>
         <field name="lastModifiedDate"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -241,7 +241,7 @@
             </drop-down>
         </field>
         <field name="priority"><text-find></text-find></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -309,7 +309,7 @@
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
         <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -355,7 +355,7 @@
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
         <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -439,7 +439,7 @@
             </drop-down>
         </field>
          -->
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -514,7 +514,7 @@
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="requirementStartDate" title="${uiLabelMap.OrderRequirementStartDate}"><date-find type="date"/></field>
         <field name="requiredByDate" title="${uiLabelMap.OrderRequirementByDate}"><date-find type="date"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -557,7 +557,7 @@
                 <entity-options entity-name="ShoppingListType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -625,7 +625,7 @@
             </drop-down>
         </field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

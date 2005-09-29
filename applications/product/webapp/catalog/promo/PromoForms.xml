@@ -46,7 +46,7 @@
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="N"/><option key="Y"/></drop-down>
         </field>
 
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <field use-when="productPromo!=null" name="lastUpdatedByText" title="Last Modified By:" widget-style="tabletext">
             <display description="[${productPromo.lastModifiedByUserLogin}] on ${productPromo.lastModifiedDate}" also-hidden="false"/>
@@ -74,7 +74,7 @@
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="N"/><option key="Y"/></drop-down>
         </field>
 
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <field use-when="productPromoCode!=null" name="lastUpdatedByText" title="Last Modified By:" widget-style="tabletext">
             <display description="[${productPromoCode.lastModifiedByUserLogin}] on ${productPromoCode.lastModifiedDate}" also-hidden="false"/>

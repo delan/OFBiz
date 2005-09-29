@@ -76,7 +76,7 @@
              <option key="BLOG_DRAFT" description="PREVIEW"/>
            </radio> 
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
        <field name="deactivateExisting" >
@@ -117,7 +117,7 @@
              <option key="BLOG_DRAFT" description="PREVIEW"/>
            </radio> 
         </field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
        <field name="deactivateExisting" >

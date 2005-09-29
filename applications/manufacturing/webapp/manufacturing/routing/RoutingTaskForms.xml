@@ -69,7 +69,7 @@
         <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}"><text/></field>
         <field name="description"><text/></field>
         <field name="quantityToProduce"><text/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -145,7 +145,7 @@
         </field>
         <field name="estimatedSetupMillis"><text/></field>
         <field name="estimatedMilliSeconds"><text/></field>
-        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

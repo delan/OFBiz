@@ -60,7 +60,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- ExampleFeatureAppl -->
@@ -89,7 +89,7 @@
             </drop-down>
         </field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="feature_deleteExampleFeatureAppl?exampleId=${exampleId}&amp;exampleFeatureId=${exampleFeatureId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
@@ -115,7 +115,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="LookupFindExampleFeature" default-title-style="tableheadtext"
@@ -132,7 +132,7 @@
             </drop-down>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"/>
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="LookupListExampleFeature" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" paginate-target="LookupExampleFeature" title="" type="list">

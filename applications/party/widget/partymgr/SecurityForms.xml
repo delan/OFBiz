@@ -47,7 +47,7 @@
         <field use-when="securityGroup==null&amp;&amp;groupId!=null" name="groupId" title="${uiLabelMap.PartySecurityGroupId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${groupId}]"><text size="20" maxlength="20"/></field>
 
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="60" maxlength="250"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- SecurityGroupPermission -->
@@ -80,7 +80,7 @@
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddSecurityGroupPermissionManual" type="single" 
         target="addSecurityPermissionToSecurityGroup" title=""
@@ -89,7 +89,7 @@
         
         <field name="groupId"><hidden/></field>
         <field name="permissionId" title="${uiLabelMap.PartyPermissionId}"/>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- SecurityGroupUserLogin -->    
@@ -111,7 +111,7 @@
                 <sub-hyperlink target="viewprofile?partyId=${partyId}" description="[${partyId}]" link-style="buttontext"/>
             </display-entity>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink description="[${uiLabelMap.CommonRemove}]" target="removeUserLoginFromSecurityGroup?userLoginId=${userLoginId}&amp;groupId=${groupId}&amp;fromDate=${fromDate}" also-hidden="false"/>
         </field>
@@ -124,7 +124,7 @@
         <field name="groupId"><hidden/></field>
         <field name="userLoginId" title="${uiLabelMap.PartyUserLoginId}"><lookup target-form-name="LookupPartyAndUserLoginAndPerson" size="30"></lookup></field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListUserLoginSecurityGroups" type="list" extends="ListSecurityGroupUserLogins"
@@ -145,7 +145,7 @@
         <field name="userLoginId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"><date-time/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink description="[${uiLabelMap.CommonRemove}]" target="userLogin_removeUserLoginFromSecurityGroup?partyId=${partyId}&amp;userLoginId=${userLoginId}&amp;groupId=${groupId}&amp;fromDate=${fromDate}" also-hidden="false"/>
         </field>
@@ -164,6 +164,6 @@
             </drop-down>
         </field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

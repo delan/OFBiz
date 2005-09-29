@@ -42,7 +42,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

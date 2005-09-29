@@ -50,7 +50,7 @@
             </drop-down>
         </field>
 
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddWebSiteRole" type="single" 
         target="addWebSiteRole" title=""
@@ -64,7 +64,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateWebSiteRole" type="list" 
         target="updateWebSiteRole" title="" list-name="webSiteRoleDatas"
@@ -81,7 +81,7 @@
         </field>
         <field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="Thru Date &amp;amp; Time"></field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeWebSiteRole?webSiteId=${webSiteRole.webSiteId}&amp;partyId=${webSiteRole.partyId}&amp;roleTypeId=${webSiteRole.roleTypeId}&amp;fromDate=${webSiteRole.fromDate}"
                 description="[Delete]" also-hidden="false"/>

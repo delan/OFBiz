@@ -35,7 +35,7 @@
         <field name="fixedAssetId"><hidden value=""/>
         </field> 
         <field name="fixedAssetId_op"><hidden value="equals"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -72,7 +72,7 @@
              </drop-down>
         </field>
         <field name="fixedAssetId_op"><hidden value="equals"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

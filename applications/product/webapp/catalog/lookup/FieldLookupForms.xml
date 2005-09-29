@@ -109,7 +109,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit">
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

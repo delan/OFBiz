@@ -170,7 +170,7 @@
         <field name="detailScreen"><text size="60" maxlength="250"/></field>
         -->
 
-        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <field use-when="product!=null" position="1" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
             <display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
@@ -222,7 +222,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Create Assignment" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Create Assignment" widget-style="smallSubmit"><submit button-type="button"/></field>
 
     </form>
 
@@ -294,7 +294,7 @@
         <field name="postedBalance"><display/></field>
 
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 
@@ -312,7 +312,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductStoreCatalog" type="list"
             target="updateGlAccountStore" title="" list-name="productStoreCatalogDatas"
@@ -325,7 +325,7 @@
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="deleteGlAccountStore?glAccountId=${productStoreCatalog.glAccountId}&amp;productStoreId=${productStoreCatalog.productStoreId}&amp;fromDate=${productStoreCatalog.fromDate}"
                 description="[Delete]" also-hidden="false"/>

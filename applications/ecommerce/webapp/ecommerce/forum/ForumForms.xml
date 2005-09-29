@@ -89,7 +89,7 @@
             <hyperlink also-hidden="false" target="createTopic${pageName}?mode=restore" description="Create Topic"/>
         </field>
         -->
-        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="ftlContentId" >
@@ -169,7 +169,7 @@
         <field name="contentId" title="Content Id" ><text-find/></field>
         <field name="dataResourceId" title="Data Resource Id" ><text-find/></field>
         <field name="contentName" title="Name" ><text-find/></field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
 <!--
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
@@ -261,7 +261,7 @@
             <hyperlink also-hidden="false" target="createTopic${pageName}?mode=restore" description="Create Topic"/>
         </field>
         -->
-        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="ftlContentId" >
@@ -346,7 +346,7 @@
         <field name="createdDate" position="2"><display/></field>
         <field name="lastModifiedByUserLogin" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}"  target="AddContent"/>
         </field>
@@ -414,7 +414,7 @@
             <display description="ELECTRONIC_TEXT" also-hidden="false" />
         </field>
         <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="120"/> </field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ImageUpload" target="uploadImage" title="" type="upload"
         default-title-style="tableheadtext"
@@ -428,7 +428,7 @@
         <field name="imageData" entity-name="ImageDataResource">
             <file />
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -461,7 +461,7 @@
         </field>
 
         <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="80"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="statusId" >
@@ -599,7 +599,7 @@
         <field name="privilegeEnumId" >
             <hidden/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="statusId"  map-name="currentValue">
@@ -668,7 +668,7 @@
         <field name="contentName" title="${uiLabelMap.CommonTitle}" map-name="currentValue">
             <hidden/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="statusId"  map-name="currentValue">
