@@ -32,15 +32,14 @@
     <simple-method method-name="createPostalAddressBoundary" short-description="Create Postal Address Boundary">
         <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePostalAddressBoundaryPermissionError"/></check-permission>
         <check-errors/>
-        <make-value value-name="newEntity" entity-name="PostalAddressBoundary"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <find-by-primary-key entity-name="PostalAddressBoundary" map-name="newEntity" value-name="PostalAddressBoundaryValue"/>
-        <if-empty map-name="PostalAddressBoundaryValue" field-name="geoId">
+        
+        <entity-one entity-name="PostalAddressBoundary" value-name="postalAddressBoundaryValue"/>
+        <if-empty map-name="postalAddressBoundaryValue" field-name="geoId">
             <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
             <create-value value-name="newEntity"/>
         <else>
-            <string-to-field field-name="respond_code" string="error"/>
-            <string-to-field field-name="error_message" string="The Boundary already exists, cannot create."/>
+            <set field="respond_code" value="error"/>
+            <set field="error_message" value="The Boundary already exists, cannot create."/>
             <field-to-list field-name="error_message" list-name="error_list"/>
             <check-errors/>
         </else>
@@ -49,23 +48,26 @@
     <simple-method method-name="deletePostalAddressBoundary" short-description="Delete a  Postal Address Boundary">
         <check-permission permission="PARTYMGR" action="_DELETE"><fail-property resource="PartyUiLabels" property="PartyRemovePostalAddressBoundaryPermissionError"/></check-permission>
         <check-errors/>
-        <make-value entity-name="PostalAddressBoundary" value-name="PostalAddressBoundaryValue"/>
-        <set-pk-fields value-name="PostalAddressBoundaryValue" map-name="parameters"/>
-        <set-nonpk-fields value-name="PostalAddressBoundaryValue" map-name="parameters"/>
-        <remove-by-and entity-name="PostalAddressBoundary" map-name="PostalAddressBoundaryValue"/>
+        <!-- DEJ20050928: why is this a remove-by-and, shouldn't it be a remove-value? -->
+        <make-value entity-name="PostalAddressBoundary" value-name="postalAddressBoundaryValue"/>
+        <set-pk-fields value-name="postalAddressBoundaryValue" map-name="parameters"/>
+        <set-nonpk-fields value-name="postalAddressBoundaryValue" map-name="parameters"/>
+        <remove-by-and entity-name="PostalAddressBoundary" map-name="postalAddressBoundaryValue"/>
     </simple-method>
     <simple-method method-name="getPostalAddressBoundary" short-description="Get Postal Address Boundary">
         <check-permission permission="PARTYMGR" action="_VIEW"><fail-property resource="PartyUiLabels" property="PartyViewPostalAddressBoundaryPermissionError"/></check-permission>
         <check-errors/>
         <!-- search for all Boundary associations from a PostalAddress--> 
-        <make-value entity-name="PostalAddressBoundary" value-name="PostalAddressBoundaryValue"/>
-        <set-pk-fields value-name="PostalAddressBoundaryValue" map-name="parameters"/>
-        <find-by-and entity-name="PostalAddressBoundary" map-name="PostalAddressBoundaryValue" list-name="resultSet"/>
-        <iterate entry-name="registro" list-name="resultSet">
+        <make-value entity-name="PostalAddressBoundary" value-name="postalAddressBoundaryValue"/>
+        <set-pk-fields value-name="postalAddressBoundaryValue" map-name="parameters"/>
+        <find-by-and entity-name="PostalAddressBoundary" map-name="postalAddressBoundaryValue" list-name="postalAddressBoundaryList"/>
+        
+        <iterate entry-name="postalAddressBoundary" list-name="postalAddressBoundaryList">
             <!-- Search the Geo of the association -->
-            <make-value entity-name="Geo" value-name="geoValue" />
-            <set-pk-fields value-name="geoValue" map-name="registro"/>
-            <find-by-primary-key entity-name="Geo" map-name="geoValue" value-name="geoValue"/>
+            <entity-one entity-name="Geo" value-name="geoValue" auto-field-map="false">
+                <field-map field-name="geoId" env-name="postalAddressBoundary.geoId"/>
+            </entity-one>
+            
             <!--make-value entity-name="GeoType" value-name="geoTypeValue" />
             <set-pk-fields value-name="geoTypeValue" map-name="geoValue"/>
             <find-by-primary-key entity-name="GeoType" map-name="geoTypeValue" value-name="geoTypeValue"/>
@@ -75,7 +77,7 @@
             ]]></call-bsh>
             <field-to-field map-name="geoTypeValue" field-name="description" to-map-name="geoContext"/-->
 
-            <field-to-list field-name="geoValue" list-name="geoList" />
+            <field-to-list field-name="geoValue" list-name="geoList"/>
         </iterate>       
         <if-not-empty field-name="geoList">   
             <field-to-result field-name="geoList"  result-name="geos"/>
@@ -161,9 +163,7 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="Vendor"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="Vendor" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="Vendor" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -173,9 +173,7 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="Vendor"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="Vendor" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="Vendor" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
@@ -183,7 +181,7 @@
     <simple-method method-name="setPartyProfileDefaults" short-description="Sets Party Profile Defaults">
         <!-- check make sure we have permission to set this -->
         <if-empty map-name="parameters" field-name="partyId">
-            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
+            <set from-field="userLogin.partyId" field="parameters.userLogin"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_UPDATE">
@@ -192,17 +190,16 @@
         </if-compare-field>
 
         <!-- lookup existing value -->
-        <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="defLookup"/>
-        <field-to-field field-name="partyId" map-name="parameters" to-map-name="defLookup"/>
-        <find-by-primary-key map-name="defLookup" value-name="ppDefs" entity-name="PartyProfileDefault"/>
-        <if-empty field-name="ppDefs">
-            <make-value value-name="ppDefs" entity-name="PartyProfileDefault" map-name="defLookup"/>
-            <create-value value-name="ppDefs"/>
+        <entity-one entity-name="PartyProfileDefault" value-name="partyProfileDefault"/>
+        <if-empty field-name="partyProfileDefault">
+            <make-value value-name="partyProfileDefault" entity-name="PartyProfileDefault"/>
+            <set-pk-fields value-name="partyProfileDefault" map-name="parameters"/>
+            <create-value value-name="partyProfileDefault"/>
         </if-empty>
 
         <!-- update the fields -->
-        <set-nonpk-fields value-name="ppDefs" map-name="parameters" set-if-null="false"/>
-        <store-value value-name="ppDefs"/>
+        <set-nonpk-fields value-name="partyProfileDefault" map-name="parameters" set-if-null="false"/>
+        <store-value value-name="partyProfileDefault"/>
     </simple-method>
     
     <!-- create party content -->
@@ -218,7 +215,7 @@
         <!-- check permission when creating content on behalf of another party -->
         <if-empty field-name="partyId" map-name="parameters">
             <if-not-empty field-name="userLogin" map-name="parameters">
-                <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
+                <set from-field="userLogin.partyId" field="parameters.partyId"/>
                 <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
                     <check-permission permission="PARTYMGR" action="_UPDATE">
                         <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
@@ -227,53 +224,52 @@
             </if-not-empty>
         </if-empty>
 
-
         <!-- find the sub directory file location -->
         <call-class-method class-name="org.ofbiz.content.data.DataResourceWorker" method-name="getDataResourceContentUploadPath" ret-field-name="uploadPath"/>
         <log level="always" message="[createPartyContent] - Found Subdir : ${uploadPath}"/>
 
         <!-- locate the file extension to use based on mime-type -->
-        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="extenLookup"/>
+        <set from-field="parameters._uploadedFile_contentType" field="extenLookup.mimeTypeId"/>
         <find-by-and entity-name="FileExtension" map-name="extenLookup" list-name="extensions"/>
         <first-from-list entry-name="extension" list-name="extensions"/>
 
         <!-- create the data resource object -->
         <sequenced-id-to-env sequence-name="DataResource" env-name="dataResourceId"/>
         <make-value value-name="dataResource" entity-name="DataResource"/>
-        <env-to-field env-name="dataResourceId" map-name="dataResource"/>
-        <field-to-field field-name="_uploadedFile_fileName" map-name="parameters" to-field-name="dataResourceName" to-map-name="dataResource"/>
-        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="dataResource"/>
-        <field-to-field field-name="dataCategoryId" map-name="parameters" to-map-name="dataResource"/>
-        <field-to-field field-name="statusId" map-name="parameters" to-map-name="dataResource"/>
+        <set from-field="dataResourceId" field="dataResource.dataResourceId"/>
+        <set from-field="parameters._uploadedFile_fileName" field="dataResource.dataResourceName"/>
+        <set from-field="parameters._uploadedFile_contentType" field="dataResource.mimeTypeId"/>
+        <set from-field="parameters.dataCategoryId" field="dataResource.dataCategoryId"/>
+        <set from-field="parameters.statusId" field="dataResource.statusId"/>
 
-        <string-to-field string="${uploadPath}/${dataResource.dataResourceId}" field-name="objectInfo" map-name="dataResource"/>
+        <set value="${uploadPath}/${dataResource.dataResourceId}" field="dataResource.objectInfo"/>
         <if-not-empty field-name="extension">
-            <string-to-field string="${uploadPath}/${dataResource.dataResourceId}.${extension.fileExtensionId}" field-name="objectInfo" map-name="dataResource"/>
+            <set value="${uploadPath}/${dataResource.dataResourceId}.${extension.fileExtensionId}" field="dataResource.objectInfo"/>
         </if-not-empty>
 
-        <string-to-field string="LOCAL_FILE" field-name="dataResourceTypeId" map-name="dataResource"/>
+        <set value="LOCAL_FILE" field="dataResource.dataResourceTypeId"/>
         <create-value value-name="dataResource"/>
 
         <!-- create content record -->
         <sequenced-id-to-env sequence-name="Content" env-name="contentId"/>
         <make-value value-name="content" entity-name="Content"/>
-        <env-to-field env-name="contentId" map-name="content"/>
-        <field-to-field field-name="_uploadedFile_fileName" map-name="parameters" to-field-name="contentName" to-map-name="content"/>
-        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="content"/>
-        <field-to-field field-name="dataResourceId" map-name="dataResource" to-map-name="content"/>
-        <field-to-field field-name="contentTypeId" map-name="parameters" to-map-name="content"/>
-        <field-to-field field-name="statusId" map-name="parameters" to-map-name="content"/>
-        <string-to-field string="${parameters.locale}" field-name="localeString" map-name="content"/>
+        <set from-field="contentId" field="content.contentId"/>
+        <set from-field="parameters._uploadedFile_fileName" field="content.contentName"/>
+        <set from-field="parameters._uploadedFile_contentType" field="content.mimeTypeId"/>
+        <set from-field="parameters.dataResourceId" field="content.dataResourceId"/>
+        <set from-field="parameters.contentTypeId" field="content.contentTypeId"/>
+        <set from-field="parameters.statusId" field="content.statusId"/>
+        <set value="${parameters.locale}" field="content.localeString"/>
         <create-value value-name="content"/>
 
         <!-- create the content role -->
         <if-not-empty field-name="partyId" map-name="parameters">
             <now-timestamp-to-env env-name="nowTimestamp"/>
             <make-value value-name="contentRole" entity-name="ContentRole"/>
-            <field-to-field field-name="contentId" map-name="content" to-map-name="contentRole"/>
-            <field-to-field field-name="partyId" map-name="parameters" to-map-name="contentRole"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="contentRole"/>
-            <string-to-field string="OWNER" field-name="roleTypeId" map-name="contentRole"/>
+            <set from-field="content.contentId" field="contentRole.contentId"/>
+            <set from-field="parameters.partyId" field="contentRole.partyId"/>
+            <set from-field="nowTimestamp" field="contentRolefromDate"/>
+            <set value="OWNER" field="contentRole.roleTypeId"/>
 
             <!-- check party role -->
             <make-value value-name="partyRole" entity-name="PartyRole"/>
@@ -287,8 +283,8 @@
         
         <!-- store the file -->
         <set-service-fields service-name="createAnonFile" map-name="dataResource" to-map-name="fileCtx"/>
-        <field-to-field field-name="parameters.uploadedFile" to-field-name="fileCtx.binData"/>
-        <field-to-field field-name="dataResource" to-field-name="fileCtx.dataResource"/>
+        <set from-field="parameters.uploadedFile" field="fileCtx.binData"/>
+        <set from-field="dataResource" field="fileCtx.dataResource"/>
         <call-service service-name="createAnonFile" in-map-name="fileCtx" include-user-login="true"/>
 
         <field-to-result field-name="contentId" map-name="content"/>
@@ -297,13 +293,13 @@
     <!-- get parties based on PartyRelationship -->
     <simple-method method-name="getPartiesByRelationship" 
             short-description="Gets all parties related to partyIdFrom using the PartyRelationship entity" login-required="false">
-        <field-to-field field-name="partyIdFrom" map-name="parameters" to-map-name="lookupMap"/>
-        <field-to-field field-name="partyIdTo" map-name="parameters" to-map-name="lookupMap"/>
-        <field-to-field field-name="roleTypeIdFrom" map-name="parameters" to-map-name="lookupMap"/>
-        <field-to-field field-name="roleTypeIdTo" map-name="parameters" to-map-name="lookupMap"/>
-        <field-to-field field-name="statusId" map-name="parameters" to-map-name="lookupMap"/>
-        <field-to-field field-name="priorityTypeId" map-name="parameters" to-map-name="lookupMap"/>
-        <field-to-field field-name="partyRelationshipTypeId" map-name="parameters" to-map-name="lookupMap"/>
+        <set from-field="parameters.partyIdFrom" field="lookupMap.partyIdFrom"/>
+        <set from-field="parameters.partyIdTo" field="lookupMap.partyIdTo"/>
+        <set from-field="parameters.roleTypeIdFrom" field="lookupMap.roleTypeIdFrom"/>
+        <set from-field="parameters.roleTypeIdTo" field="lookupMap.roleTypeIdTo"/>
+        <set from-field="parameters.statusId" field="lookupMap.statusId"/>
+        <set from-field="parameters.priorityTypeId" field="lookupMap.priorityTypeId"/>
+        <set from-field="parameters.partyRelationshipTypeId" field="lookupMap.partyRelationshipTypeId"/>
         
         <find-by-and entity-name="PartyRelationship" map-name="lookupMap" list-name="partyRelationships"/>
         <iterate list-name="partyRelationships" entry-name="partyRelationship">
@@ -316,16 +312,16 @@
     </simple-method>    
 
     <simple-method method-name="getParentOrganizations" short-description="Gets Parent Organizations for an Organization Party">
-        <env-to-env env-name="parameters.organizationPartyId" to-env-name="relatedPartyIdList[]"/>
-        <env-to-env env-name="parameters.getParentsOfParents" to-env-name="recurse"/>
-        <if-empty field-name="recurse"><string-to-field string="Y" field-name="recurse"/></if-empty>
+        <set from-field="parameters.organizationPartyId" field="relatedPartyIdList[]"/>
+        <set from-field="parameters.getParentsOfParents" field="recurse"/>
+        <if-empty field-name="recurse"><set value="Y" field="recurse"/></if-empty>
         
-        <string-to-field string="GROUP_ROLLUP" field-name="partyRelationshipTypeId"/>
-        <string-to-field string="ORGANIZATION_UNIT" field-name="roleTypeIdFrom"/>
-        <string-to-field string="PARENT_ORGANIZATION" field-name="roleTypeIdTo"/>
-        <string-to-field string="Y" field-name="roleTypeIdFromInclueAllChildTypes"/>
+        <set value="GROUP_ROLLUP" field="partyRelationshipTypeId"/>
+        <set value="ORGANIZATION_UNIT" field="roleTypeIdFrom"/>
+        <set value="PARENT_ORGANIZATION" field="roleTypeIdTo"/>
+        <set value="Y" field="roleTypeIdFromInclueAllChildTypes"/>
 
-        <string-to-field string="Y" field-name="includeFromToSwitched"/>
+        <set value="Y" field="includeFromToSwitched"/>
         
         <call-simple-method method-name="followPartyRelationshipsInline"/>
         
@@ -333,15 +329,15 @@
     </simple-method>    
 
     <simple-method method-name="getRelatedParties" short-description="Get Parties Related to a Party">
-        <env-to-env env-name="parameters.partyIdFrom" to-env-name="relatedPartyIdList[]"/>
-        <env-to-env env-name="parameters.partyRelationshipTypeId" to-env-name="partyRelationshipTypeId"/>
-        <env-to-env env-name="parameters.roleTypeIdFrom" to-env-name="roleTypeIdFrom"/>
-        <env-to-env env-name="parameters.roleTypeIdFromInclueAllChildTypes" to-env-name="roleTypeIdFromInclueAllChildTypes"/>
-        <env-to-env env-name="parameters.roleTypeIdTo" to-env-name="roleTypeIdTo"/>
-        <env-to-env env-name="parameters.roleTypeIdToIncludeAllChildTypes" to-env-name="roleTypeIdToIncludeAllChildTypes"/>
-        <env-to-env env-name="parameters.includeFromToSwitched" to-env-name="includeFromToSwitched"/>
-        <env-to-env env-name="parameters.recurse" to-env-name="recurse"/>
-        <env-to-env env-name="parameters.useCache" to-env-name="useCache"/>
+        <set from-field="parameters.partyIdFrom" field="relatedPartyIdList[]"/>
+        <set from-field="parameters.partyRelationshipTypeId" field="partyRelationshipTypeId"/>
+        <set from-field="parameters.roleTypeIdFrom" field="roleTypeIdFrom"/>
+        <set from-field="parameters.roleTypeIdFromInclueAllChildTypes" field="roleTypeIdFromInclueAllChildTypes"/>
+        <set from-field="parameters.roleTypeIdTo" field="roleTypeIdTo"/>
+        <set from-field="parameters.roleTypeIdToIncludeAllChildTypes" field="roleTypeIdToIncludeAllChildTypes"/>
+        <set from-field="parameters.includeFromToSwitched" field="includeFromToSwitched"/>
+        <set from-field="parameters.recurse" field="recurse"/>
+        <set from-field="parameters.useCache" field="useCache"/>
         
         <call-simple-method method-name="followPartyRelationshipsInline"/>
 
@@ -368,14 +364,14 @@
         <if-empty field-name="_inline_roleTypeIdFromList">
             <field-to-list field-name="roleTypeIdFrom" list-name="_inline_roleTypeIdFromList"/>
             <if-compare field-name="roleTypeIdFromInclueAllChildTypes" operator="equals" value="Y">
-                <string-to-field string="_inline_roleTypeIdFromList" field-name="roleTypeIdListName"/>
+                <set value="_inline_roleTypeIdFromList" field="roleTypeIdListName"/>
                 <call-simple-method method-name="getChildRoleTypesInline"/>
             </if-compare>
         </if-empty>
         <if-empty field-name="_inline_roleTypeIdToList">
             <field-to-list field-name="roleTypeIdTo" list-name="_inline_roleTypeIdToList"/>
             <if-compare field-name="roleTypeIdToInclueAllChildTypes" operator="equals" value="Y">
-                <string-to-field string="_inline_roleTypeIdToList" field-name="roleTypeIdListName"/>
+                <set value="_inline_roleTypeIdToList" field="roleTypeIdListName"/>
                 <call-simple-method method-name="getChildRoleTypesInline"/>
             </if-compare>
         </if-empty>
@@ -472,7 +468,7 @@
     
     <simple-method method-name="getChildRoleTypes" short-description="Get Child RoleTypes">
         <field-to-list field-name="roleTypeId" list-name="childRoleTypeIdList"/>
-        <string-to-field string="childRoleTypeIdList" field-name="roleTypeIdListName"/>
+        <set value="childRoleTypeIdList" field="roleTypeIdListName"/>
         <call-simple-method method-name="getChildRoleTypesInline"/>
         <field-to-result field-name="childRoleTypeIdList"/>
     </simple-method>
