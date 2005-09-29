@@ -4,8 +4,12 @@
 function toggle(e) {
     e.checked = !e.checked;    
 }
+
 function checkToggle(e) {
-    var cform = document.selectAllForm;
+    checkToggle(e, "selectAllForm");
+}
+function checkToggle(e, formName) {
+    var cform = document[formName];
     if (e.checked) {      
         var len = cform.elements.length;
         var allchecked = true;
@@ -20,18 +24,26 @@ function checkToggle(e) {
         cform.selectAll.checked = false;
     }
 }
+
 function toggleAll(e) {
-    var cform = document.selectAllForm;
+    toggleAll(e, "selectAllForm");
+}
+function toggleAll(e, formName) {
+    var cform = document[formName];
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];                   
+        var element = cform.elements[i];
         if (element.name.substring(0, 10) == "_rowSubmit" && element.checked != e.checked) {
             toggle(element);
-        } 
-    }     
+        }
+    }
 }
+
 function selectAll() {
-    var cform = document.selectAllForm;
+    selectAll("selectAllForm");
+}
+function selectAll(formName) {
+    var cform = document[formName];
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
         var element = cform.elements[i];                   
@@ -40,8 +52,12 @@ function selectAll() {
         } 
     }     
 }
+
 function removeSelected() {
-    var cform = document.selectAllForm;
+    removeSelected("selectAllForm");
+}
+function removeSelected(formName) {
+    var cform = document[formName];
     cform.removeSelected.value = true;
     cform.submit();
 }
