@@ -27,43 +27,31 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
 		
-    <form name="lookupFixedAsset" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupFixedAsset" title="" type="single">
-        <actions>
-            <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
-        </actions>
+    <form name="lookupFixedAsset" target="LookupFixedAsset" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden" />
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text-find default-value="equals"/></field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text-find default-value="equals"/></field>
         <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}">
-            <drop-down>
-                <option key="" description=""/>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="FixedAssetType" description="${description}">
                 </entity-options>
              </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
-    <form name="listLookupFixedAsset" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupFixedAsset" 
-        title="" type="list">
+    <form name="listLookupFixedAsset" list-name="entityList" paginate-target="LookupFixedAsset" title="" type="list" 
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="entityName" value="FixedAsset"/>
             </service>
         </actions>
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}">
-            <display-entity entity-name="FixedAssetType"/>
-        </field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}"><display-entity entity-name="FixedAssetType"/></field>
     </form>
 </forms>

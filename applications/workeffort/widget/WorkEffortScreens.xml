@@ -28,7 +28,6 @@
     <screen name="CommonWorkEffortDecorator">
         <section>
             <actions>
-                <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="headerItem" value="workeffort"/>
                 <set field="workEffortId" from-field="workEffortId" default-value="${parameters.workEffortId}"/>
                 <entity-one entity-name="WorkEffort" value-name="workEffort"/>
@@ -37,9 +36,8 @@
                 <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
                             <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
+                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
                                 <section>
@@ -53,7 +51,7 @@
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="head3">${uiLabelMap.MarketingViewPermissionError}</label>
+                                <label style="head3">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -186,7 +184,6 @@
             </widgets>
         </section>
     </screen>
-
     <screen name="EditWorkEffortAndAssoc">
         <section>
             <actions>

@@ -26,13 +26,9 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="lookupFacility" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupFacility" title="" type="single">
-        <actions>
-            <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-        </actions>
-        <auto-fields-entity entity-name="Facility" default-field-type="hidden" />
+    <form name="lookupFacility" target="LookupFacility" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="Facility" default-field-type="hidden"/>
         <field name="facilityId" title="${uiLabelMap.ProductFacilityId}"><text-find default-value="equals"/></field>
         <field name="facilityName" title="${uiLabelMap.ProductFacilityNameId}"><text-find default-value="equals"/></field>
         <field name="facilityTypeId">
@@ -42,18 +38,14 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="listLookupFacility" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" paginate-target="LookupFacility" 
-        title="" type="list">
+    <form name="listLookupFacility" list-iterator-name="listIt" paginate-target="LookupFacility" title="" type="list" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="Facility"/>
             </service>
         </actions>
         <field name="facilityId" title="&amp;nbsp;" widget-style="buttontext">
@@ -62,5 +54,4 @@
         <field name="facilityName"><display/></field>
         <field name="facilityTypeId"><display/></field>
     </form>
-
 </forms>

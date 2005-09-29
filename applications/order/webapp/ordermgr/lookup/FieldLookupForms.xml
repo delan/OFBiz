@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,26 +19,69 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author     Peter Goron <peter.goron@nereide.biz>
- *@version    $Rev$
- *@since      3.1
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="lookupOrderHeaderAndShipInfo" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupOrderHeaderAndShipInfo" title="" type="single">
+
+    <form name="lookupOrderHeader" target="LookupOrderHeader" title="" type="single" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="OrderHeader" default-field-type="find"/>
+        <field name="orderHeaderId" title="${uiLabelMap.OrderOrderHeaderId}"><text-find default-value="equals"/></field>
+        <field name="orderTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="salesChannelEnumId" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="equals" value="ORDER_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productStoreId"><lookup target-form-name="/marketing/control/LookupProductStore"/></field>
+        <field name="currencyUom" widget-style="selectBox">
+            <drop-down>
+                <entity-options description="${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupOrderHeader" paginate-target="LookupOrderHeader" title="" type="list" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="OrderHeader"/>
+            </service>
         </actions>
+        <auto-fields-entity entity-name="OrderHeader" default-field-type="display"/>
+        <field name="orderId" widget-style="buttontext">
+            <hyperlink target-type="plain" also-hidden="true" description="${orderId}" target="javascript:set_value('${orderId}')"/>
+        </field>
+        <field name="orderTypeId"><display-entity entity-name="OrderType" also-hidden="true"/></field>
+    </form>
+
+    <form name="lookupOrderHeaderAndShipInfo" target="LookupOrderHeaderAndShipInfo" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="OrderHeaderAndShipGroups" default-field-type="hidden"/>
         <field name="orderId"><text-find/></field>
         <field name="orderTypeId">
             <drop-down allow-empty="true">
-                <entity-options entity-name="OrderType" description="${description}">
-                </entity-options>
+                <entity-options entity-name="OrderType" description="${description}"/>
              </drop-down>
         </field>
         <field name="partyId"><text-find/></field>
@@ -68,32 +111,24 @@
              </drop-down>
         </field>
         <field name="grandTotal"><range-find/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="listLookupOrderHeaderAndShipInfo" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupOrderHeaderAndShipInfo" 
-        title="" type="list">
+    <form name="listLookupOrderHeaderAndShipInfo" list-name="entityList" paginate-target="LookupOrderHeaderAndShipInfo" title="" type="list" 
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="OrderHeaderAndShipGroups"/>
             </service>
         </actions>
         <auto-fields-entity entity-name="OrderHeaderAndShipGroups" default-field-type="hidden"/>
         <field name="orderId" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${orderId}" target="javascript:set_value('${orderId}')"/>
         </field>
-        <field name="orderTypeId">
-            <display-entity entity-name="OrderType"/>
-        </field>
+        <field name="orderTypeId"><display-entity entity-name="OrderType"/></field>
         <field name="partyId"><display/></field>
-        <field name="shipmentMethodTypeId">
-            <display-entity entity-name="ShipmentMethodType"/>
-        </field>
+        <field name="shipmentMethodTypeId"><display-entity entity-name="ShipmentMethodType"/></field>
         <field name="carrierPartyId"><display/></field>
         <field name="shipAfterDate"><display/></field>
         <field name="shipByDate"><display/></field>
@@ -103,12 +138,8 @@
         <field name="stateProvinceGeoId"><display/></field>
         <field name="grandTotal"><display/></field>
     </form>
-    <form name="lookupPurchaseOrderHeaderAndShipInfo" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupPurchaseOrderHeaderAndShipInfo" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
+    <form name="lookupPurchaseOrderHeaderAndShipInfo" target="LookupPurchaseOrderHeaderAndShipInfo" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="OrderHeaderAndShipGroups" default-field-type="hidden"/>
         <field name="orderId"><text-find/></field>
         <field name="orderTypeId"><hidden/></field>
@@ -139,16 +170,11 @@
              </drop-down>
         </field>
         <field name="grandTotal"><range-find/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="lookupCustRequest" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupCustRequest" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
+
+    <form name="lookupCustRequest" target="LookupCustRequest" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="CustRequest" default-field-type="hidden"/>
         <field name="custRequestTypeId">
             <drop-down allow-empty="true">
@@ -188,19 +214,14 @@
         <field name="createdByUserLogin"><hidden/></field>
         <field name="lastModifiedDate"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
-    <form name="listLookupCustRequest" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupCustRequest" 
-        title="" type="list">
+    <form name="listLookupCustRequest" list-name="entityList" paginate-target="LookupCustRequest" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="CustRequest"/>
             </service>
         </actions>
         <auto-fields-entity entity-name="CustRequest" default-field-type="hidden"/>
@@ -211,19 +232,12 @@
         <field name="priority"><display/></field>
         <field name="responseRequiredDate"><display/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><display/></field>
-        <field name="statusId">
-            <display-entity also-hidden="false" entity-name="StatusItem"/>
-        </field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
-            <display-entity also-hidden="false" entity-name="RoleType"/>
-        </field>
+        <field name="statusId"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}"><display-entity also-hidden="false" entity-name="RoleType"/></field>
     </form>
-    <form name="lookupCustRequestItem" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupCustRequestItem" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
+    
+    <form name="lookupCustRequestItem" target="LookupCustRequestItem" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="find"/>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
@@ -245,15 +259,12 @@
             <submit button-type="button"/>
         </field>
     </form>
-
-    <form name="listLookupCustRequestItem" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" paginate-target="LookupCustRequestItem" 
-        title="" type="list">
+    <form name="listLookupCustRequestItem" list-iterator-name="listIt" paginate-target="LookupCustRequestItem" title="" type="list"
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="CustRequestItem"/>
             </service>
         </actions>
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="hidden"/>
@@ -267,23 +278,16 @@
         <field name="statusId"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
     </form>
     
-    
-    <form name="lookupQuote" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupQuote" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
-         <auto-fields-entity entity-name="Quote" default-field-type="find"/>
+    <form name="lookupQuote" target="LookupQuote" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="Quote" default-field-type="find"/>
         <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"></field>
         <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId"/>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
             <drop-down allow-empty="false">
@@ -309,78 +313,22 @@
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
         <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
-    <form name="lookupQuote" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupQuote" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
-         <auto-fields-entity entity-name="Quote" default-field-type="find"/>
-        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"></field>
-        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId"/>
-            </drop-down>
-        </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" value="QUOTE_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="productStoreId" title="${uiLabelMap.QuoteProductStoreId}">
-            <drop-down allow-empty="true">
-                <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId"/>
-            </drop-down>
-        </field>
-        <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}">
-            <drop-down allow-empty="true">
-                <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
-                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
-        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
-        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-
-    <form name="listLookupQuote" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupQuote" 
-        title="" type="list">
+    <form name="listLookupQuote" list-name="entityList" paginate-target="LookupQuote" title="" type="list"
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="Quote"/>
             </service>
         </actions>
-        <auto-fields-entity entity-name="Quote" default-field-type="hidden"/>
+        <auto-fields-entity entity-name="Quote" default-field-type="display"/>
         <field name="quoteId" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${quoteId}" target="javascript:set_value('${quoteId}')"/>
         </field>
-        <auto-fields-entity entity-name="Quote" default-field-type="display"/>
-        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
-            <display-entity entity-name="QuoteType"/>
-        </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
-            <display-entity also-hidden="false" entity-name="StatusItem"/>
-        </field>
+        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}"><display-entity entity-name="QuoteType"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
         <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
@@ -391,24 +339,14 @@
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
     </form>
 
-    
-    
-    <form name="lookupQuoteItem" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupQuoteItem" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
-         <auto-fields-entity entity-name="QuoteItem" default-field-type="find"/>
+    <form name="lookupQuoteItem" target="LookupQuoteItem" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="QuoteItem" default-field-type="find"/>
         <field name="quoteId"><hidden/></field>
         <field name="isPromo"><hidden/></field>
         <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}"><display/></field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
-        <field name="productFeatureId" title="${uiLabelMap.ProductFeatures}">
-            <lookup target-form-name="LookupProductFeature"/>
-        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
+        <field name="productFeatureId" title="${uiLabelMap.ProductFeatures}"><lookup target-form-name="LookupProductFeature"/></field>
         <field name="deliverableTypeId" title="${uiLabelMap.OrderOrderQuoteDeliverableTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="DeliverableType" key-field-name="deliverableTypeId"/>
@@ -439,19 +377,14 @@
             </drop-down>
         </field>
          -->
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
-    <form name="listLookupQuoteItem" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupQuoteItem" 
-        title="" type="list">
+    <form name="listLookupQuoteItem" list-name="entityList" paginate-target="LookupQuoteItem" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="QuoteItem"/>
             </service>
         </actions>
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
@@ -486,14 +419,10 @@
         <field name="custRequestItemSeqId"><hidden/></field>
     </form>
    
-   
     <form name="lookupRequirement" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRequirement" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
-         <auto-fields-entity entity-name="Requirement" default-field-type="find"/>
+        <auto-fields-entity entity-name="Requirement" default-field-type="find"/>
         <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find default-value="equals"/></field>
         <field name="requirementTypeId" title="${uiLabelMap.OrderRequirementTypeId}">
             <drop-down allow-empty="true">
@@ -518,15 +447,12 @@
             <submit button-type="button"/>
         </field>
     </form>
-
-    <form name="listLookupRequirement" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupRequirement" 
-        title="" type="list">
+    <form name="listLookupRequirement" list-name="entityList" paginate-target="LookupRequirement" title="" type="list" 
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="Requirement"/>
             </service>
         </actions>
         <auto-fields-entity entity-name="Requirement" default-field-type="hidden"/>
@@ -544,109 +470,29 @@
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
     </form>
 
-    <form name="lookupShoppingList" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupShoppingList" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
-         <auto-fields-entity entity-name="ShoppingList" default-field-type="find"/>
+    <form name="lookupShoppingList" target="LookupShoppingList" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="ShoppingList" default-field-type="find"/>
         <field name="shoppingListId" title="${uiLabelMap.OrderShoppingListId}"><text-find default-value="equals"/></field>
         <field name="shoppingListTypeId" title="${uiLabelMap.OrderShoppingListTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ShoppingListType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
-    <form name="listLookupShoppingList" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupShoppingList" 
-        title="" type="list">
+    <form name="listLookupShoppingList" list-name="entityList" paginate-target="LookupShoppingList" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="ShoppingList"/>
             </service>
         </actions>
         <auto-fields-entity entity-name="ShoppingList" default-field-type="hidden"/>
         <field name="shoppingListId" widget-style="buttontext">
             <hyperlink target-type="plain" also-hidden="true" description="${shoppingListId}" target="javascript:set_value('${shoppingListId}')"/>
         </field>
-        <field name="shoppingListTypeId">
-            <display-entity entity-name="ShoppingListType" also-hidden="true"/>
-        </field>
+        <field name="shoppingListTypeId"><display-entity entity-name="ShoppingListType" also-hidden="true"/></field>
     </form>
-
-    <form name="lookupOrderHeader" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupOrderHeader" title="" type="single">
-        <actions>
-            <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-        </actions>
-         <auto-fields-entity entity-name="OrderHeader" default-field-type="find"/>
-        <field name="orderHeaderId" title="${uiLabelMap.OrderOrderHeaderId}"><text-find default-value="equals"/></field>
-        <field name="orderTypeId" widget-style="selectBox">
-            <drop-down>
-                <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
-                </entity-options>
-            </drop-down>
-        </field>
-        
-        <field name="salesChannelEnumId" widget-style="selectBox">
-            <drop-down>
-                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
-                    <entity-constraint name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
-            <drop-down>
-                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
-                    <entity-constraint name="statusTypeId" operator="equals" value="ORDER_STATUS"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        
-        <field name="productStoreId">
-            <lookup target-form-name="/marketing/control/LookupProductStore"/>
-        </field>
-        <field name="currencyUom" widget-style="selectBox">
-            <drop-down>
-                <entity-options description="${description}" entity-name="Uom" key-field-name="uomId">
-                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-
-    <form name="listLookupOrderHeader" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext"
-        paginate-target="LookupOrderHeader" 
-        title="" type="list">
-        <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
-            </service>
-        </actions>
-        <auto-fields-entity entity-name="OrderHeader" default-field-type="display"/>
-        <field name="orderId" widget-style="buttontext">
-            <hyperlink target-type="plain" also-hidden="true" description="${orderId}" target="javascript:set_value('${orderId}')"/>
-        </field>
-        <field name="orderTypeId">
-            <display-entity entity-name="OrderType" also-hidden="true"/>
-        </field>
-    </form>
-
 </forms>
