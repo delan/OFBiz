@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <Party partyId="Company" partyTypeId="PARTY_GROUP"/>
-    <PartyGroup partyId="Company" groupName="Your Company Name Here"/>
+    <PartyGroup partyId="Company" groupName="Your Company Name Here" logoImageUrl="http://www.ofbiz.org/images/ofbiz_logo.jpg"/>
     <PartyRole partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
     <PartyRole partyId="Company" roleTypeId="BILL_TO_CUSTOMER"/>
     <PartyRole partyId="Company" roleTypeId="INTERNAL_ORGANIZATIO"/>

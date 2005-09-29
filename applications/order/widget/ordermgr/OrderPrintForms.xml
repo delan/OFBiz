@@ -49,8 +49,11 @@
     </screen>
     <screen name="CompanyLogo">
         <section>
-          <widgets>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/order/companyLogo.fo.ftl"/></html></platform-specific>
+            <actions>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/companyHeader.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/order/companyHeader.fo.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -62,7 +65,6 @@
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/returnHeader.bsh"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/returnItems.bsh"/>
             </actions>
