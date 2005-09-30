@@ -233,7 +233,7 @@
                         <#assign picklistItem = picklistItemInfo.picklistItem>
                         <#assign orderItem = picklistItemInfo.orderItem>
                         <#assign product = picklistItemInfo.product>
-                        <#assign orderItemShipGrpInvRes = picklistItemInfo.orderItemShipGrpInvRes>
+                        <#assign orderItemShipGrpInvRes = picklistItemInfo.orderItemShipGrpInvRes?if_exists>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <fo:block><#--${picklistItem.orderId}:${picklistItem.shipGroupSeqId}:-->${picklistItem.orderItemSeqId}</fo:block>
@@ -249,7 +249,11 @@
                                 <fo:block>${picklistItem.quantity}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderItemShipGrpInvRes.inventoryItemId}:${orderItemShipGrpInvRes.quantity}:${orderItemShipGrpInvRes.quantityNotAvailable?if_exists}</fo:block>
+                                <#if orderItemShipGrpInvRes?has_content>
+                                    <fo:block>${orderItemShipGrpInvRes.inventoryItemId}:${orderItemShipGrpInvRes.quantity}:${orderItemShipGrpInvRes.quantityNotAvailable?if_exists}</fo:block>
+                                <#else>
+                                    <fo:block>No Inventory Reservation Information Available</fo:block>
+                                </#if>
                             </fo:table-cell>
                         </fo:table-row>
                         <#-- toggle the row color -->

@@ -39,7 +39,7 @@
     <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityTransfers?default(unselectedClassName)}">${uiLabelMap.ProductInventoryXfers}</a>
     <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveReturn?default(unselectedClassName)}">${uiLabelMap.ProductReceiveReturn}</a>
     <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PicklistOptions?default(unselectedClassName)}">${uiLabelMap.ProductPicking}</a>
-    <a href="<@ofbizUrl>/PackOrder?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PackOrder?default(unselectedClassName)}">Pack Order</a>
+    <a href="<@ofbizUrl>/PackOrder?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PackOrder?default(unselectedClassName)}">Packing</a>
     <a href="<@ofbizUrl>/FindShipment?destinationFacilityId=${facilityId}&amp;lookupFlag=Y</@ofbizUrl>" class="${selectedClassMap.FindShipment?default(unselectedClassName)}">${uiLabelMap.ProductIncomingShipments}</a>
     <a href="<@ofbizUrl>/FindShipment?originFacilityId=${facilityId}&amp;lookupFlag=Y</@ofbizUrl>" class="${selectedClassMap.FindShipment?default(unselectedClassName)}">${uiLabelMap.ProductOutgoingShipments}</a>
   </div>
