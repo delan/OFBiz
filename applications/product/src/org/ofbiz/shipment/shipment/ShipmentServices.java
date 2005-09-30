@@ -571,8 +571,13 @@ public class ShipmentServices {
             // to store list
             List toStore = new ArrayList();
 
+            String shipGroupSeqId = shipment.getString("primaryShipGroupSeqId");
+            String orderId = shipment.getString("primaryOrderId");
+            String orderInfoKey = orderId + "/" + shipGroupSeqId;
+
             // make the staging records
             GenericValue stageShip = delegator.makeValue("OdbcShipmentOut", null);
+            stageShip.set("orderInfoKey", orderInfoKey);
             stageShip.set("shipmentId", shipment.get("shipmentId"));
             stageShip.set("partyId", shipment.get("partyIdTo"));
             stageShip.set("carrierPartyId", routeSeg.get("carrierPartyId"));
@@ -596,6 +601,7 @@ public class ShipmentServices {
             while (p.hasNext()) {
                 GenericValue shipmentPkg = (GenericValue) p.next();
                 GenericValue stagePkg = delegator.makeValue("OdbcPackageOut", null);
+                stagePkg.set("orderInfoKey", orderInfoKey);
                 stagePkg.set("shipmentId", shipmentPkg.get("shipmentId"));
                 stagePkg.set("shipmentPackageSeqId", shipmentPkg.get("shipmentPackageSeqId"));
                 stagePkg.set("orderId", shipment.get("primaryOrderId"));

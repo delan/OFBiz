@@ -54,25 +54,28 @@
     <entity entity-name="OdbcPackageOut"
             package-name="org.ofbiz.odbc.shipment"
             title="Shipment Package Out Integration Entity">
+      <field name="orderInfoKey" type="id-vlong"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentPackageSeqId" type="id-ne"></field>
       <field name="orderId" type="id"></field>
       <field name="shipGroupSeqId" type="id"></field>
       <field name="shipmentBoxTypeId" type="id"></field>
       <field name="weight" type="floating-point"></field>
-      <prim-key field="shipmentId"/>
+      <prim-key field="orderInfoKey"/>
       <prim-key field="shipmentPackageSeqId"/>
     </entity>
 
     <entity entity-name="OdbcShipmentOut"
             package-name="org.ofbiz.odbc.shipment"
             title="Shipment Out Integration Entity">
+      <field name="orderInfoKey" type="id-vlong"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="orderId" type="id"></field>
       <field name="shipGroupSeqId" type="id"></field>
       <field name="carrierPartyId" type="id"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="shipmentValue" type="currency-amount"></field>
       <field name="toName" type="name"></field>
       <field name="attnName" type="name"></field>
       <field name="address1" type="long-varchar"></field>
@@ -85,7 +88,7 @@
       <field name="stateProvinceGeoId" type="id"></field>
       <field name="numberOfPackages" type="numeric"></field>
       <field name="handlingInstructions" type="long-varchar"></field>
-      <prim-key field="shipmentId"/>
+      <prim-key field="orderInfoKey"/>
     </entity>
 
     <entity entity-name="OdbcPackageIn"
@@ -95,14 +98,18 @@
       <field name="shipmentPackageSeqId" type="id-ne"></field>
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="externalShipmentId" type="id-ne"></field>
-      <field name="packageType" type="long-varchar"></field>
       <field name="voidIndicator" type="short-varchar"></field>
+      <field name="packageType" type="long-varchar"></field>
       <field name="trackingNumber" type="short-varchar"></field>
       <field name="shippedDate" type="date-time"></field>
       <field name="packageTotal" type="currency-amount"></field>
       <field name="shippingTotal" type="currency-amount"></field>
       <field name="billingWeight" type="floating-point"></field>
       <field name="actualWeight" type="floating-point"></field>
-      <field name="packageWeight" type="floating-point"></field>     
+      <field name="packageWeight" type="floating-point"></field>
+      <prim-key field="shipmentId"/>
+      <prim-key field="shipmentPackageSeqId"/>
+      <prim-key field="externalShipmentId"/>
+      <prim-key field="voidIndicator"/>        
     </entity>
 </entitymodel>
