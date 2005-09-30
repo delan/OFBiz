@@ -896,7 +896,9 @@
             <field-to-list field-name="picklistStatusHistoryInfo" list-name="picklistStatusHistoryInfoList"/>
         </iterate>
 
+        <clear-field field-name="picklistBinOrderList"/>
         <clear-field field-name="picklistBinInfoList"/>
+
         <string-to-list string="+binLocationNumber" list-name="picklistBinOrderList"/>
         <get-related value-name="picklist" relation-name="PicklistBin" list-name="picklistBinList" order-by-list-name="picklistBinOrderList"/>
         <iterate entry-name="picklistBin" list-name="picklistBinList">
