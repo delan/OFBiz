@@ -346,7 +346,7 @@
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <link target="/marketing/control/viewSegmentGroup?productStoreId=${productStoreId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}" text="[${uiLabelMap.ProductNewSegment}]" style="buttontext" url-mode="inter-app"/>
+                            <link target="marketing/control/viewSegmentGroup?productStoreId=${productStoreId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}" text="[${uiLabelMap.ProductNewSegment}]" style="buttontext" url-mode="inter-app"/>
                         </container>
                         <include-form name="ViewProductStoreSegments" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
                     </decorator-section>

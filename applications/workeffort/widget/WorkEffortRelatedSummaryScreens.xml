@@ -62,7 +62,7 @@
                                 </condition>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="/EditWorkEffortPartyAssign?workEffortId=${partyAssign.workEffortId}&amp;partyId=${partyAssign.partyId}" text="[${partyAssign.partyId}]" style="linktext"/>
+                                        <link target="EditWorkEffortPartyAssign?workEffortId=${partyAssign.workEffortId}&amp;partyId=${partyAssign.partyId}" text="[${partyAssign.partyId}]" style="linktext"/>
                                         <label text="${partyAssign.firstName} ${partyAssign.lastName}"/>
                                     </container>
                                 </widgets>
@@ -73,7 +73,7 @@
                                 </condition>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="/EditWorkEffortPartyAssign?workEffortId=${partyAssign.workEffortId}&amp;partyId=${partyAssign.partyId}" text="[${partyAssign.partyId}]" style="linktext"/>
+                                        <link target="EditWorkEffortPartyAssign?workEffortId=${partyAssign.workEffortId}&amp;partyId=${partyAssign.partyId}" text="[${partyAssign.partyId}]" style="linktext"/>
                                         <label text="${partyAssign.groupName}"/>
                                     </container>
                                 </widgets>
@@ -85,7 +85,7 @@
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="/EditWorkEffortCommEvent?workEffortId=${commEvent.workEffortId}&amp;communicationEventId=${commEvent.communicationEventId}" text="[${commEvent.communicationEventId}]" style="linktext"/>
+                                        <link target="EditWorkEffortCommEvent?workEffortId=${commEvent.workEffortId}&amp;communicationEventId=${commEvent.communicationEventId}" text="[${commEvent.communicationEventId}]" style="linktext"/>
                                         <label text="${commEvent.subject} ${commEvent.content}"/>
                                     </container>
                                 </widgets>
@@ -97,7 +97,7 @@
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="/EditWorkEffortShopList?workEffortId=${shopList.workEffortId}&amp;shoppingListId=${shopList.shoppingListId}" text="[${shopList.shoppingListId}]" style="linktext"/>
+                                        <link target="EditWorkEffortShopList?workEffortId=${shopList.workEffortId}&amp;shoppingListId=${shopList.shoppingListId}" text="[${shopList.shoppingListId}]" style="linktext"/>
                                         <label text="${shopList.listName} ${shopList.description}"/>
                                     </container>
                                 </widgets>
@@ -109,7 +109,7 @@
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="/EditWorkEffortQuote?workEffortId=${quote.workEffortId}&amp;quoteId=${quote.quoteId}" text="[${quote.quoteId}]" style="linktext"/>
+                                        <link target="EditWorkEffortQuote?workEffortId=${quote.workEffortId}&amp;quoteId=${quote.quoteId}" text="[${quote.quoteId}]" style="linktext"/>
                                         <label text="${quote.quoteName} ${quote.description}"/>
                                     </container>
                                 </widgets>
@@ -121,7 +121,7 @@
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="/EditWorkEffortOrderHeader?workEffortId=${orderHeader.workEffortId}&amp;orderId=${orderHeader.orderId}" 
+                                        <link target="EditWorkEffortOrderHeader?workEffortId=${orderHeader.workEffortId}&amp;orderId=${orderHeader.orderId}" 
                                             text="[${orderHeader.orderId}] orderType: ${orderHeader.orderTypeDescription},  status: ${orderHeader.statusItemDescription}, orderDate: ${orderHeader.orderDate}" style="linktext"/>
                                     </container>
                                 </widgets>

@@ -84,7 +84,7 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortOrderHeaders}</label></container>
-                        <container><link target="/AddWorkEffortOrderHeader?workEffortId=${workEffortId}" text="[Create New OrderHeader]" style="linktext"></link></container>
+                        <container><link target="AddWorkEffortOrderHeader?workEffortId=${workEffortId}" text="[Create New OrderHeader]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortOrderHeaders" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

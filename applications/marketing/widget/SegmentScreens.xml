@@ -80,8 +80,8 @@
             <widgets>
                 <decorator-screen name="CommonSegmentGroupDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditSegmentGroup}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupCreate}]" target="/viewSegmentGroup?DONE_PAGE=${donePage}" style="tabletext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditSegmentGroup}</label></container>
+                        <container><link text="${uiLabelMap.SegmentGroupCreate}" target="viewSegmentGroup?DONE_PAGE=${donePage}" style="tabletext"/></container>
                         <include-form name="EditSegmentGroup" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -119,8 +119,8 @@
                                 <if-has-permission permission="MARKETING" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <label style="head1">${uiLabelMap.PageTitleFindSegmentGroup}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupCreate}]" target="/viewSegmentGroup" style="tabletext"/>
+                                <container><label style="head1">${uiLabelMap.PageTitleFindSegmentGroup}</label></container>
+                                <container><link text="${uiLabelMap.SegmentGroupCreate}" target="viewSegmentGroup" style="tabletext"/></container>
                                 <!-- <include-form name="LookupSegmentGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/> -->
                                 <include-form name="listLookupSegmentGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                             </widgets>
@@ -152,16 +152,14 @@
             <widgets>
                 <decorator-screen name="CommonSegmentGroupDecorator">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditSegmentGroup}</label>
-                        <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupClassCreate}]" target="/viewSegmentGroupClass?segmentGroupId=${segmentGroupId}" style="tabletext"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditSegmentGroup}</label></container>
+                        <container><link text="${uiLabelMap.SegmentGroupClassCreate}" target="viewSegmentGroupClass?segmentGroupId=${segmentGroupId}" style="tabletext"/></container>
                         <include-form name="EditSegmentGroupClass" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
-    
     <screen name="EditSegmentGroupGeo">
         <section>
             <actions>
@@ -186,8 +184,6 @@
             </widgets>
         </section>
     </screen>
-    
-    
     <screen name="EditSegmentGroupRole">
         <section>
             <actions>
@@ -244,8 +240,8 @@
                                 <if-has-permission permission="MARKETING" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <label style="head1">${uiLabelMap.PageTitleListSegmentGroupClass}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupClassCreate}]" target="/viewSegmentGroupClass?segmentGroupId=${segmentGroupId}" style="tabletext"/>
+                                <container><label style="head1">${uiLabelMap.PageTitleListSegmentGroupClass}</label></container>
+                                <container><link text="${uiLabelMap.SegmentGroupClassCreate}" target="viewSegmentGroupClass?segmentGroupId=${segmentGroupId}" style="tabletext"/></container>
                                 <include-form name="listSegmentGroupClass" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
                             </widgets>
                             <fail-widgets>
@@ -289,8 +285,8 @@
                                 <if-has-permission permission="MARKETING" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <label style="head1">${uiLabelMap.PageTitleListSegmentGroupGeo}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupGeoCreate}]" target="/viewSegmentGroupGeo?segmentGroupId=${segmentGroupId}" style="tabletext"/>
+                                <container><label style="head1">${uiLabelMap.PageTitleListSegmentGroupGeo}</label></container>
+                                <container><link text="${uiLabelMap.SegmentGroupGeoCreate}" target="viewSegmentGroupGeo?segmentGroupId=${segmentGroupId}" style="tabletext"/></container>
                                 <include-form name="listSegmentGroupGeo" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
                             </widgets>
                             <fail-widgets>
@@ -334,8 +330,8 @@
                                 <if-has-permission permission="MARKETING" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <label style="head1">${uiLabelMap.PageTitleListSegmentGroupRole}</label>
-                                <link  text="&lt;br/&gt;[${uiLabelMap.SegmentGroupRoleCreate}]" target="/viewSegmentGroupRole?segmentGroupId=${segmentGroupId}" style="tabletext"/>
+                                <container><label style="head1">${uiLabelMap.PageTitleListSegmentGroupRole}</label></container>
+                                <container><link text="${uiLabelMap.SegmentGroupRoleCreate}" target="viewSegmentGroupRole?segmentGroupId=${segmentGroupId}" style="tabletext"/></container>
                                 <include-form name="listSegmentGroupRole" location="component://marketing/webapp/marketing/segment/SegmentForms.xml"/>
                             </widgets>
                             <fail-widgets>
@@ -458,6 +454,4 @@
             </widgets>
         </section>
     </screen>
-    
 </screens>
-

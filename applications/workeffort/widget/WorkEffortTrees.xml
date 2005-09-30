@@ -4,9 +4,9 @@
     <tree name="TreeWorkEffort" root-node-name="node-root" entity-name="WorkEffort"
         default-render-style="simple" default-wrap-style="treeWrapper">
         <node name="node-root"  entity-name="WorkEffort" render-style="expand-collapse">
-            <entity-one  entity-name="WorkEffort" value-name="workEffort"/>
+            <entity-one entity-name="WorkEffort" value-name="workEffort"/>
             <include-screen name="WorkEffortTreeLine" location="component://workeffort/widget/WorkEffortScreens.xml"/>
-            <sub-node node-name="node-list" >
+            <sub-node node-name="node-list">
                 <entity-condition entity-name="WorkEffortAssoc">
                     <condition-expr field-name="workEffortIdTo" operator="equals" env-name="workEffortId"/>
                 </entity-condition>
@@ -17,7 +17,7 @@
                 <field-map field-name="workEffortId" env-name="workEffortAssoc.workEffortIdFrom"/>
             </entity-one>
             <include-screen name="WorkEffortTreeLine" location="component://workeffort/widget/WorkEffortScreens.xml"/>
-            <sub-node node-name="node-list" >
+            <sub-node node-name="node-list">
                 <entity-condition entity-name="WorkEffortAssoc">
                     <condition-expr field-name="workEffortIdTo" operator="equals" env-name="workEffortAssoc.workEffortIdFrom"/>
                 </entity-condition>

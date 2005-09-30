@@ -83,7 +83,7 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortRequests}</label></container>
-                        <container><link target="/AddWorkEffortRequest?workEffortId=${workEffortId}" text="[Create New Request]" style="linktext"></link></container>
+                        <container><link target="AddWorkEffortRequest?workEffortId=${workEffortId}" text="[Create New Request]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortRequests" location="component://workeffort/widget/WorkEffortRequestForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -151,7 +151,7 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortRequestItems}</label></container>
-                        <container><link target="/AddWorkEffortRequestItem?workEffortId=${workEffortId}" text="[Create New RequestItem]" style="linktext"></link></container>
+                        <container><link target="AddWorkEffortRequestItem?workEffortId=${workEffortId}" text="[Create New RequestItem]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortRequestItems" location="component://workeffort/widget/WorkEffortRequestForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

@@ -53,7 +53,7 @@
                                 </section>
                                 <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommFindTabBar"/>
                                 <container><label style="head1" text="${uiLabelMap.PartyPendingCommunicationEvents}"/></container>
-                                <container><link style="buttontext" target="/viewCommunicationEvent?partyId=${partyId}" text="${uiLabelMap.PartyNewCommunication}"/></container>
+                                <container><link style="buttontext" target="viewCommunicationEvent?partyId=${partyId}" text="${uiLabelMap.PartyNewCommunication}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="listPendingCommEvents"/>
                             </widgets>
                             <fail-widgets>
@@ -139,8 +139,8 @@
                                     </widgets>
                                 </section>
                                 <container><label style="head1" text="${uiLabelMap.PartyFoundCommunicationEvents}"/></container>
-                                <container><link style="buttontext" target="/EditCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}"/></container>
-                                <container><link style="buttontext" target="/FindCommEvents" text="${uiLabelMap.CommonFind}"/></container>
+                                <container><link style="buttontext" target="EditCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}"/></container>
+                                <container><link style="buttontext" target="FindCommEvents" text="${uiLabelMap.CommonFind}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListLookupCommEvents"/>
                             </widgets>
                             <fail-widgets>
@@ -574,7 +574,7 @@
                                 </section>
                                 <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
                                 <container><label style="head1" text="${uiLabelMap.PartyCommWorkEfforts}"/></container>
-                                <container><link style="buttontext" target="/AddCommEventWorkEffort?communicationEventId=${communicationEventId}&amp;partyId=${partyId}" text="[${uiLabelMap.PartyNewCommWorkEffort}]"/></container>
+                                <container><link style="buttontext" target="AddCommEventWorkEffort?communicationEventId=${communicationEventId}&amp;partyId=${partyId}" text="[${uiLabelMap.PartyNewCommWorkEffort}]"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListCommWorkEfforts"/>
                             </widgets>
                             <fail-widgets>
