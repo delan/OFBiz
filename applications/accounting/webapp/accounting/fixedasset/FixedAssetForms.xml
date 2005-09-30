@@ -25,19 +25,19 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <!-- list all assets in a tabular format -->
     <form name="ListFixedAssets" type="list"  list-name="fixedAssets" 
-         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
 
-        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="buttontext">
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="linktext">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset?fixedAssetId=${fixedAssetId}"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}">
-            <display/>   
+            <display/>
         </field>
-        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedTypeId}">
-            <display-entity entity-name="FixedAssetType"/>
-        </field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedTypeId}"><display-entity entity-name="FixedAssetType"/></field>
         <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParentId}">
-            <display-entity entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}"/>
+            <display-entity entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}">
+                <sub-hyperlink target="EditFixedAsset?fixedAssetId=${parentFixedAssetId}" description="${parentFixedAssetId}" link-style="buttontext"/>
+            </display-entity>
         </field>
     </form>
     
@@ -48,7 +48,7 @@
         <alt-target use-when="fixedAsset==null" target="createFixedAsset"/>
         <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
  
-        <field use-when="fixedAsset!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="fixedAsset!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}" widget-style="tabletext"><display/></field>
         <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text size="20" maxlength="20"/></field>
         <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
 
@@ -59,9 +59,7 @@
                 </entity-options> 
             </drop-down>
         </field>
-
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPerson"/></field>
-
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" description="${description}">
@@ -69,15 +67,13 @@
                 </entity-options> 
             </drop-down>
         </field>
-        
         <field name="uomId" title="${uiLabelMap.CommonUom}" widget-style="selectBox">
             <drop-down allow-empty="true">
-                <entity-options entity-name="Uom" description="[${uomId}] ${description}">
+                <entity-options entity-name="UomAndType" description="[${typeDescription}] ${description}">
                     <entity-order-by field-name="uomTypeId"/>
                 </entity-options> 
             </drop-down>
         </field>
-            
         <!--<field name="calendarId"><hidden/></field>-->  <!-- not show, can better be maintained by the system -->
         <field name="calendarId" title="${uiLabelMap.CommonCalendar}" widget-style="selectBox">
             <drop-down allow-empty="true">
@@ -86,7 +82,6 @@
                 </entity-options> 
             </drop-down>
         </field>
-        
         <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParent}"><lookup target-form-name="LookupFixedAsset"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -98,8 +93,8 @@
         <field name="productId" title="${uiLabelMap.AccountingProduct}" widget-style="tabletext"><display-entity entity-name="Product" description="${description}[${productId}]"/></field>
         <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}" widget-style="tabletext"><display-entity entity-name="FixedAssetProductType"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"> <date-time/></field>
-        <field name="fixedAssetId"> <hidden/> </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"><date-time/></field>
+        <field name="fixedAssetId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeFixedAssetProduct?fixedAssetId=${fixedAssetId}&amp;productId=${productId}&amp;fixedAssetProductTypeId=${fixedAssetProductTypeId}&amp;fromDate=${fromDate}"
@@ -123,10 +118,9 @@
                 </entity-options> 
             </drop-down>
         </field>
-        
-        <field name="quantityUomId" title="${uiLabelMap.CommonQuantity}" widget-style="selectBox">
+        <field name="quantityUomId" title="${uiLabelMap.CommonQuantityUom}" widget-style="selectBox">
             <drop-down allow-empty="true">
-                <entity-options entity-name="Uom" key-field-name="uomId" description="[${uomId}] ${description}">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="[${typeDescription}] ${description}">
                     <entity-order-by field-name="uomTypeId"/>
                 </entity-options> 
             </drop-down>
@@ -142,18 +136,18 @@
         <field name="week" title="${uiLabelMap.Common${month}} ${year}" widget-area-style="calendarWeek" widget-style="calendarWeek"><display description="Week ${week}"/></field>
         <field name="Monday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
         <field name="MondayData" title="${uiLabelMap.CommonMonday}"><display/></field>
-        <field name="Tuesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="TuesdayData" title="${uiLabelMap.CommonTuesday}"> <display/></field>
-        <field name="Wednesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="WednesdayData" title="${uiLabelMap.CommonWednesday}"> <display/></field>
-        <field name="Thursday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="ThursdayData" title="${uiLabelMap.CommonThursday}"> <display/></field>
-        <field name="Friday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="FridayData" title="${uiLabelMap.CommonFriday}"> <display/></field>
-        <field name="Saturday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="SaturdayData" title="${uiLabelMap.CommonSaturday}"> <display/></field>
-        <field name="Sunday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
-        <field name="SundayData" title="${uiLabelMap.CommonSunday}"> <display/></field>
+        <field name="Tuesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="TuesdayData" title="${uiLabelMap.CommonTuesday}"><display/></field>
+        <field name="Wednesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="WednesdayData" title="${uiLabelMap.CommonWednesday}"><display/></field>
+        <field name="Thursday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="ThursdayData" title="${uiLabelMap.CommonThursday}"><display/></field>
+        <field name="Friday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="FridayData" title="${uiLabelMap.CommonFriday}"><display/></field>
+        <field name="Saturday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="SaturdayData" title="${uiLabelMap.CommonSaturday}"><display/></field>
+        <field name="Sunday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="SundayData" title="${uiLabelMap.CommonSunday}"><display/></field>
     </form>
 
     <!-- update the availability on a date basis of a fixed asset -->
