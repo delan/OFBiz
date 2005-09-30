@@ -335,4 +335,67 @@
     
     <TaxAuthorityRateType taxAuthorityRateTypeId="SALES_TAX" description="Sales Tax"/>
     <TaxAuthorityRateType taxAuthorityRateTypeId="USE_TAX" description="Use Tax"/>
+
+    <!-- Points of Title Transfer -->
+    <EnumerationType description="Points of Title Transfer" enumTypeId="PTSOFTTFR" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Desination" enumCode="DEST" enumId="POTT_DEST" sequenceId="01" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Origin" enumCode="ORIG" enumId="POTT_ORIG" sequenceId="02" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="In Transit" enumCode="INTR" enumId="POTT_INTR" sequenceId="03" enumTypeId="PTSOFTTFR"/>
+    <!-- INCOTERM options -->
+    <Enumeration description="EX-Works" enumCode="EXW" enumId="POTT_EXW" sequenceId="11" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Free On Board" enumCode="FOB" enumId="POTT_FOB" sequenceId="12" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Free Carrier" enumCode="FCA" enumId="POTT_FCA" sequenceId="13" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Free Alongside Ship" enumCode="FAS" enumId="POTT_FAS" sequenceId="14" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Cost and Freight" enumCode="CFR" enumId="POTT_CFR" sequenceId="15" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Cost, Insurance and Freight" enumCode="CIF" enumId="POTT_CIF" sequenceId="16" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Carriage Paid To" enumCode="CPT" enumId="POTT_CPT" sequenceId="17" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Carriage and Insurance Paid To" enumCode="CIP" enumId="POTT_CIP" sequenceId="18" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Delivered At Frontier" enumCode="DAF" enumId="POTT_DAF" sequenceId="19" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Delivered Ex Ship" enumCode="DES" enumId="POTT_DES" sequenceId="20" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Delivered Ex Quay" enumCode="DEQ" enumId="POTT_DEQ" sequenceId="21" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Delivered Duty Paid" enumCode="DDP" enumId="POTT_DDP" sequenceId="22" enumTypeId="PTSOFTTFR"/>
+    <Enumeration description="Delivered Duty Unpaid" enumCode="DDQ" enumId="POTT_DDQ" sequenceId="23" enumTypeId="PTSOFTTFR"/>
+    
+    <!--
+        INCOTERM options found here: http://www.foreign-trade.com/reference/incoterms.cfm
+     
+        EX-Works
+        One of the simplest and most basic shipment arrangements places the minimum responsibility on the seller with greater responsibility on the buyer. In an EX-Works transaction, goods are basically made available for pickup at the shipper/seller's factory or warehouse and "delivery" is accomplished when the merchandise is released to the consignee's freight forwarder. The buyer is responsible for making arrangements with their forwarder for insurance, export clearance and handling all other paperwork.
+        
+        FOB (Free On Board)
+        One of the most commonly used-and misused-terms, FOB means that the shipper/seller uses his freight forwarder to move the merchandise to the port or designated point of origin. Though frequently used to describe inland movement of cargo, FOB specifically refers to ocean or inland waterway transportation of goods. "Delivery" is accomplished when the shipper/seller releases the goods to the buyer's forwarder. The buyer's responsibility for insurance and transportation begins at the same moment.
+        
+        FCA (Free Carrier)
+        In this type of transaction, the seller is responsible for arranging transportation, but he is acting at the risk and the expense of the buyer. Where in FOB the freight forwarder or carrier is the choice of the buyer, in FCA the seller chooses and works with the freight forwarder or the carrier. "Delivery" is accomplished at a predetermined port or destination point and the buyer is responsible for Insurance.
+        
+        FAS (Free Alongside Ship)*
+        In these transactions, the buyer bears all the transportation costs and the risk of loss of goods. FAS requires the shipper/seller to clear goods for export, which is a reversal from past practices. Companies selling on these terms will ordinarily use their freight forwarder to clear the goods for export. "Delivery" is accomplished when the goods are turned over to the Buyers Forwarder for insurance and transportation.
+        
+        CFR (Cost and Freight)
+        This term formerly known as CNF (C&F) defines two distinct and separate responsibilities-one is dealing with the actual cost of merchandise "C" and the other "F" refers to the freight charges to a predetermined destination point. It is the shipper/seller's responsibility to get goods from their door to the port of destination. "Delivery" is accomplished at this time. It is the buyer's responsibility to cover insurance from the port of origin or port of shipment to buyer's door. Given that the shipper is responsible for transportation, the shipper also chooses the forwarder.
+        
+        CIF (Cost, Insurance and Freight)
+        This arrangement similar to CFR, but instead of the buyer insuring the goods for the maritime phase of the voyage, the shipper/seller will insure the merchandise. In this arrangement, the seller usually chooses the forwarder. "Delivery" as above, is accomplished at the port of destination.
+        
+        CPT (Carriage Paid To)
+        In CPT transactions the shipper/seller has the same obligations found with CIF, with the addition that the seller has to buy cargo insurance, naming the buyer as the insured while the goods are in transit.
+        
+        CIP (Carriage and Insurance Paid To)
+        This term is primarily used for multimodal transport. Because it relies on the carrier's insurance, the shipper/seller is only required to purchase minimum coverage. When this particular agreement is in force, Freight Forwarders often act in effect, as carriers. The buyer's insurance is effective when the goods are turned over to the Forwarder.
+        
+        DAF (Delivered At Frontier)
+        Here the seller's responsibility is to hire a forwarder to take goods to a named frontier, which usually a border crossing point, and clear them for export. "Delivery" occurs at this time. The buyer's responsibility is to arrange with their forwarder for the pick up of the goods after they are cleared for export, carry them across the border, clear them for importation and effect delivery. In most cases, the buyer's forwarder handles the task of accepting the goods at the border across the foreign soil.
+        
+        DES (Delivered Ex Ship)
+        In this type of transaction, it is the seller's responsibility to get the goods to the port of destination or to engage the forwarder to the move cargo to the port of destination uncleared. "Delivery" occurs at this time. Any destination charges that occur after the ship is docked are the buyer's responsibility.
+        
+        DEQ (Delivered Ex Quay)*
+        In this arrangement, the buyer/consignee is responsible for duties and charges and the seller is responsible for delivering the goods to the quay, wharf or port of destination. In a reversal of previous practice, the buyer must also arrange for customs clearance.
+        
+        DDP (Delivered Duty Paid)
+        DDP terms tend to be used in intermodal or courier-type shipments. Whereby, the shipper/seller is responsible for dealing with all the tasks involved in moving goods from the manufacturing plant to the buyer/consignee's door. It is the shipper/seller's responsibility to insure the goods and absorb all costs and risks including the payment of duty and fees.
+        
+        DDQ (Delivered Duty Unpaid)
+        This arrangement is basically the same as with DDP, except for the fact that the buyer is responsible for the duty, fees and taxes.
+    -->
 </entity-engine-xml>
