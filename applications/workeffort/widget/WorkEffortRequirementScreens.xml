@@ -84,7 +84,7 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortRequirements}</label></container>
-                        <container><link target="/AddWorkEffortRequirement?workEffortId=${workEffortId}" text="[Create New Requirement]" style="linktext"></link></container>
+                        <container><link target="AddWorkEffortRequirement?workEffortId=${workEffortId}" text="[Create New Requirement]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortRequirements" location="component://workeffort/widget/WorkEffortRequirementForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

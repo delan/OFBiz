@@ -83,7 +83,7 @@
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="component://order/widget/ordermgr/QuoteScreens.xml">
                     <decorator-section name="body">
-                        <container><link target="/AddQuoteWorkEffort?quoteId=${quoteId}" text="[Create New Quote]" style="linktext"></link></container>
+                        <container><link target="AddQuoteWorkEffort?quoteId=${quoteId}" text="[Create New Quote]" style="linktext"></link></container>
                         <include-form name="ListQuoteWorkEfforts" location="component://order/widget/ordermgr/QuoteWorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

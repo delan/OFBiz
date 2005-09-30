@@ -62,7 +62,7 @@
                                <label text="${uiLabelMap.CommonNewUser}" style="boxhead"/> 
                              </container>
                              <label text="${uiLabelMap.CommonMayCreateNewAccountHere}&lt;br/&gt;" style="tabletext"/>
-                             <link text="${uiLabelMap.CommonMayCreate}" style="smallSubmit" target="/ecommerce/control/newcustomer${previousParams}" url-mode="inter-app"/>
+                             <link text="${uiLabelMap.CommonMayCreate}" style="smallSubmit" target="ecommerce/control/newcustomer${previousParams}" url-mode="inter-app"/>
                            </container>
                            -->
                            <container style="boxright">

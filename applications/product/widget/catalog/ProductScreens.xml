@@ -57,7 +57,7 @@
                                         <container>
                                             <link target="EditProduct" text="${uiLabelMap.ProductNewProduct}" style="buttontext"/>
                                             <link target="CreateVirtualWithVariantsForm" text="${uiLabelMap.ProductNewVirtualProduct}" style="buttontext"/>
-                                            <link target="/ecommerce/control/product?product_id=${productId}" url-mode="plain" text="${uiLabelMap.ProductProductPage}" style="buttontext"/>
+                                            <link target="ecommerce/control/product?product_id=${productId}" url-mode="plain" text="${uiLabelMap.ProductProductPage}" style="buttontext"/>
                                         </container>
                                     </widgets>
                                 </section>

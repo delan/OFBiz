@@ -51,6 +51,7 @@
                     <!-- render appheader
                     <platform-specific><html><html-template location="component://workeffort/webapp/workeffort/includes/header.ftl"/></html></platform-specific>
                      -->
+                    <container style="apptitle"><label> ${uiLabelMap.WorkEffortWorkEffortManagerApplication}</label></container> 
                     <include-menu name="WorkEffortAppBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>                    
                     <container style="contentarea">
                         <container style="column-main">

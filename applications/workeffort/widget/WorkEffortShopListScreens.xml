@@ -84,7 +84,7 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortShopLists}</label></container>
-                        <container><link target="/AddWorkEffortShopList?workEffortId=${workEffortId}" text="[Create New ShopList]" style="linktext"></link></container>
+                        <container><link target="AddWorkEffortShopList?workEffortId=${workEffortId}" text="[Create New ShopList]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortShopLists" location="component://workeffort/widget/WorkEffortShopListForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

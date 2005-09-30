@@ -56,7 +56,7 @@
                                 <container>
                                     <link target="EditProduct" text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
                                     <!-- TODO: make link conditional on non-empty productId... -->
-                                    <link target="/ecommerce/control/product?product_id=${productId}" url-mode="raw" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
+                                    <link target="ecommerce/control/product?product_id=${productId}" url-mode="raw" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
                                 </container>
 								
 								<!-- Now call the SimpleScreen form -->
