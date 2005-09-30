@@ -306,18 +306,18 @@ public class ProductFeatureServices {
         return results;
     }
 
-  /* 
-   * Parameters: productCategoryId (String) and productFeatures (a List of ProductFeature GenericValues)
-   * Result: products (a List of Product GenericValues)
-   */
-     public static Map getCategoryVariantProducts(DispatchContext dctx, Map context) {
+    /* 
+     * Parameters: productCategoryId (String) and productFeatures (a List of ProductFeature GenericValues)
+     * Result: products (a List of Product GenericValues)
+     */
+    public static Map getCategoryVariantProducts(DispatchContext dctx, Map context) {
         Map results = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         List productFeatures = (List) context.get("productFeatures");
         String productCategoryId = (String) context.get("productCategoryId");
-		
+
         // get all the product members of the product category
         Map result = new HashMap();
         try {
@@ -334,7 +334,7 @@ public class ProductFeatureServices {
             for (Iterator pFi = productFeatures.iterator(); pFi.hasNext(); ) {
                 GenericValue nextFeature = (GenericValue) pFi.next();
                 featuresByType.put(nextFeature.getString("productFeatureTypeId"), nextFeature.getString("productFeatureId"));
-	    }
+            }
 
             List products = new ArrayList();  // final list of variant products  
             for (Iterator mPi = memberProducts.iterator(); mPi.hasNext(); ) {
@@ -356,8 +356,13 @@ public class ProductFeatureServices {
                 }
             }
 
-            results = ServiceUtil.returnSuccess();
-            results.put("products", products);
+            if (products.size() == 0) {
+                return ServiceUtil.returnError("No products which fit your requirements were found.");
+            } else {
+                results = ServiceUtil.returnSuccess();
+                results.put("products", products);    
+            }
+
         } else {
             Debug.logWarning("No products found in " + productCategoryId, module);
         }
