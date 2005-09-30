@@ -230,7 +230,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         if (UtilValidate.isNotEmpty(menuWidth)) {
             widthStr = " style=\"width:" + menuWidth + ";\"";
         }
-        buffer.append("<div class=\"" + menuContainerStyle + "\"" + widthStr + "> ");
+        buffer.append("<div class=\"" + menuContainerStyle + "\"" + widthStr + ">");
         
         this.appendWhitespace(buffer);
     }
@@ -242,7 +242,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
     	
     	String fillStyle = modelMenu.getFillStyle();
     	if (UtilValidate.isNotEmpty(fillStyle)) {
-    		buffer.append("<div style=\"" + fillStyle + "\">&nbsp;</div>");
+    		buffer.append("<div class=\"" + fillStyle + "\">&nbsp;</div>");
     	}
         //String menuContainerStyle = modelMenu.getMenuContainerStyle(context);
         buffer.append("</div>");
@@ -437,8 +437,6 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         
         // close tag
         buffer.append("</a>");
-        
-        appendWhitespace(buffer);
     }
 
     public void renderImage(StringBuffer buffer, Map context, ModelMenuItem.Image image) {
@@ -506,10 +504,6 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             buffer.append("\"");
         }
         buffer.append("/>");
-        
-        
-        appendWhitespace(buffer);
     }
-
 }
 
