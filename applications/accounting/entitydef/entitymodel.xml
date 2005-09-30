@@ -2341,6 +2341,30 @@
     <!-- org.ofbiz.accounting.tax -->
     <!-- ========================================================= -->
     
+    <entity entity-name="PartyTaxAuthInfo"
+        package-name="org.ofbiz.accounting.tax"
+        title="Party Tax Information Entity">
+        <description></description>
+        <field name="partyId" type="id-ne"></field>
+        <field name="taxAuthGeoId" type="id-ne"></field>
+        <field name="taxAuthPartyId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="partyTaxId" type="id-long-ne"></field>
+        <field name="isExempt" type="indicator"></field>
+        <field name="isNexus" type="indicator"><!-- if true it means that this Party has a sufficient presence in the area to warrant having to charge tax --></field>
+        <prim-key field="partyId"/>
+        <prim-key field="taxAuthGeoId"/>
+        <prim-key field="taxAuthPartyId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="PARTY_TXAI_PTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="PARTY_TXAI_TXA" rel-entity-name="TaxAuthority">
+            <key-map field-name="taxAuthGeoId"/>
+            <key-map field-name="taxAuthPartyId"/>
+        </relation>
+    </entity>
     <entity entity-name="SimpleSalesTaxLookup"
         package-name="org.ofbiz.accounting.tax"
         title="Simple Sales Tax Lookup Entity">
@@ -2432,6 +2456,7 @@
         <field name="taxAuthorityRateTypeId" type="id-ne"></field>
         <field name="productStoreId" type="id-ne"></field>
         <field name="productCategoryId" type="id-ne"></field>
+        <field name="titleTransferEnumId" type="id-ne"></field>
         <field name="minItemPrice" type="currency-amount"></field>
         <field name="minPurchase" type="currency-amount"></field>
         <field name="fromDate" type="date-time"></field>

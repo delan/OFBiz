@@ -111,7 +111,6 @@
     <entity-group group="org.ofbiz" entity="PartyRelationshipType" />
     <entity-group group="org.ofbiz" entity="PartyRole" />
     <entity-group group="org.ofbiz" entity="PartyRoleAndPartyDetail" />
-    <entity-group group="org.ofbiz" entity="PartyTaxAuthInfo" />
     <entity-group group="org.ofbiz" entity="PartyTaxInfo" />
     <entity-group group="org.ofbiz" entity="PartyType" />
     <entity-group group="org.ofbiz" entity="PartyTypeAttr" />
@@ -121,6 +120,4 @@
     <entity-group group="org.ofbiz" entity="RoleTypeAndParty" />
     <entity-group group="org.ofbiz" entity="RoleTypeAttr" />
     <entity-group group="org.ofbiz" entity="Vendor" />
-
 </entitygroup>
-

@@ -169,18 +169,4 @@
     <entity-group group="org.ofbiz" entity="ShoppingListItemSurvey" />
     <entity-group group="org.ofbiz" entity="ShoppingListType" />
     <entity-group group="org.ofbiz" entity="ShoppingListWorkEffort" />
-
-    <!-- ========================================================= -->
-    <!-- org.ofbiz.order.tax -->
-    <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz" entity="SimpleSalesTaxLookup" />
-    <entity-group group="org.ofbiz" entity="TaxAuthority" />
-    <entity-group group="org.ofbiz" entity="TaxAuthorityCategory" />
-    <entity-group group="org.ofbiz" entity="TaxAuthorityGlAccount" />
-    <entity-group group="org.ofbiz" entity="TaxAuthorityGlAccountBalance" />
-    <entity-group group="org.ofbiz" entity="TaxAuthorityRateProduct" />
-    <entity-group group="org.ofbiz" entity="TaxAuthorityRateType" />
-    <entity-group group="org.ofbiz" entity="ZipSalesRuleLookup" />
-    <entity-group group="org.ofbiz" entity="ZipSalesTaxLookup" />
 </entitygroup>
