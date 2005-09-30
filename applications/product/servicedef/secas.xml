@@ -42,6 +42,11 @@
         <action service="completeInventoryTransfer" mode="sync"/>
     </eca>
 
+    <!-- inventory variance -->
+    <eca service="createPhysicalInventoryAndVariance" event="commit">
+        <action service="balanceInventoryItems" mode="sync"/>    
+    </eca>
+
     <!-- Product Price Change ECAs -->
     <eca service="createProductPrice" event="commit">
         <action service="saveProductPriceChange" mode="sync"/>
