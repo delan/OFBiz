@@ -65,7 +65,7 @@
   </#if>
   <tr>
     <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingCurrency}</div></td>
+    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.CommonCurrency}</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%' class="tabletext">
   <#if returnHeader?exists>

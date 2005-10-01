@@ -46,7 +46,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -80,7 +80,7 @@
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
         <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"></field>
-        <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}"></field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}"></field>
         <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
       </form>
@@ -113,7 +113,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.AccountingCurrency}">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>

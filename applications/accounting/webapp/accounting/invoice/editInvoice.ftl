@@ -92,7 +92,7 @@
                     <#-- invoice status information -->
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingStatus}</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonStatus}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -108,7 +108,7 @@
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingDate}</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonDate}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -257,10 +257,10 @@
           <td>
             <table width="100%" border="0" cellpadding="0">
               <tr align='left' valign='bottom'>
-                <td width="20%" align="left"><span class="tableheadtext">${uiLabelMap.AccountingType}</span></td>
+                <td width="20%" align="left"><span class="tableheadtext">${uiLabelMap.CommonType}</span></td>
                 <td width="15%" aligh="left"><span class="tableheadtext">${uiLabelMap.AccountingProduct}</span></td>
                 <td width="40%" align="left"><span class="tableheadtext">${uiLabelMap.AccountingDescription}</span></td>
-                <td width="5%" align="right"><span class="tableheadtext">${uiLabelMap.AccountingQuantity}</span></td>
+                <td width="5%" align="right"><span class="tableheadtext">${uiLabelMap.CommonQuantity}</span></td>
                 <td width="10%" align="right"><span class="tableheadtext">${uiLabelMap.AccountingAmount}</span></td>            
                 <td width="10%" align="right"><span class="tableheadtext">${uiLabelMap.AccountingLineTotal}</span></td>
               </tr>

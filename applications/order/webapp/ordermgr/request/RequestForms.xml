@@ -195,7 +195,7 @@
                 <option key="1"/>
             </drop-down>
         </field>
-        <field name="maximumAmountUomId" title="${uiLabelMap.AccountingCurrency}">
+        <field name="maximumAmountUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>

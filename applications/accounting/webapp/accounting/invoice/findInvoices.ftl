@@ -74,7 +74,7 @@ function lookupInvoices() {
                 <td><input type='text' class='inputBox' name='invoiceId'></td>
               </tr>              
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingStatus}:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonStatus}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='invoiceStatusId' class='selectBox'> 
@@ -91,7 +91,7 @@ function lookupInvoices() {
               </tr>                            
               <tr>
                 <td width='25%' align='right'>
-                  <div class='tableheadtext'>${uiLabelMap.AccountingDateFilter}:</div>
+                  <div class='tableheadtext'>${uiLabelMap.CommonDateFilter}:</div>
                 </td>
                 <td width='5%'>&nbsp;</td>
                 <td>
@@ -161,11 +161,11 @@ document.lookupinvoice.invoiceId.focus();
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
-          <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.AccountingType}</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.AccountingInvoice} #</div></td>
           <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.AccountingInvoiceTotal}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">&nbsp;</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.AccountingStatus}</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
           <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.AccountingInvoiceDate}</div></td>
           <td width="10%">&nbsp;</td>
         </tr>

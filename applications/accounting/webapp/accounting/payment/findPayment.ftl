@@ -91,7 +91,7 @@ function lookupPayment() {
                 </td>
               </tr>                           
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingStatus}:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonStatus}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='paymentStatusId' class='selectBox'> 
@@ -118,7 +118,7 @@ function lookupPayment() {
               </tr>                                                     
               <tr>
                 <td width='25%' align='right'>
-                  <div class='tableheadtext'>${uiLabelMap.AccountingDateFilter}:</div>
+                  <div class='tableheadtext'>${uiLabelMap.CommonDateFilter}:</div>
                 </td>
                 <td width='5%'>&nbsp;</td>
                 <td>
@@ -191,9 +191,9 @@ function lookupPayment() {
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
           <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingPayment} #</div></td>
-          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingType}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>
           <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingMethod}</div></td>
-          <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingStatus}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
           <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingFromParty}</div></td>
           <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingToParty}</div></td>
           <td align="left"><div class="tableheadtext">${uiLabelMap.AccountingEffective}</div></td>
