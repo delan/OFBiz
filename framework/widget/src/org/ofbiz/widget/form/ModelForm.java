@@ -604,8 +604,14 @@ public class ModelForm {
                 positions = curPos;
             }
             ModelFormField.FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
-            ModelFormField fieldInfoFormField = currentFieldInfo.getModelFormField();
-            fieldInfoFormField.setModelForm(this);
+            if (currentFieldInfo != null) {
+                ModelFormField fieldInfoFormField = currentFieldInfo.getModelFormField();
+                if (fieldInfoFormField != null) {
+                    fieldInfoFormField.setModelForm(this);
+                }
+            } else {
+                throw new IllegalArgumentException("Error rendering form, a field has no FieldInfo, ie no sub-element for the type of field for field named: " + modelFormField.getName());
+            }
        }
 
         if ("single".equals(this.type)) {
