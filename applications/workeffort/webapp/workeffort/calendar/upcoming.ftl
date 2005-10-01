@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -19,16 +19,16 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones
  *@author     Johan Isacsson
  *@created    May 19 2003
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    1.0
 -->
 
-<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td align="left" class="boxhead">${uiLabelMap.WorkEffortCalendarUpComingEventsView}</td>
         </tr>
@@ -36,32 +36,31 @@
     </td>
   </tr>
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
           <#if days?has_content>
-              <table width='100%' cellpadding='2' cellspacing='0' border='0'>
+              <table width="100%" cellpadding="2" cellspacing="0" border="0">
                 <tr>
-                  <td><div class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></div></td>
-                  <td><div class='tabletext'><b>${uiLabelMap.CommonEndDateTime}</b></div></td>
-                  <td><div class='tabletext'><b>${uiLabelMap.WorkEffortEventName}</b></div></td>
+                  <td><div class="tabletext"><b>${uiLabelMap.CommonStartDateTime}</b></div></td>
+                  <td><div class="tabletext"><b>${uiLabelMap.CommonEndDateTime}</b></div></td>
+                  <td><div class="tabletext"><b>${uiLabelMap.WorkEffortEventName}</b></div></td>
                 </tr>                
                 <#list days as workEfforts>
-                  <tr><td colspan='3'><hr class='sepbar'></td></tr>
+                  <tr><td colspan="3"><hr class="sepbar"/></td></tr>
                   <#list workEfforts as workEffort>
                     <tr>
-                      <td><div class='tabletext'>${workEffort.estimatedStartDate}</div></td>
-                      <td><div class='tabletext'>${workEffort.estimatedCompletionDate}</div></td>
-                      <td><a class='buttontext' href='<@ofbizUrl>/event?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                          ${workEffort.workEffortName}</a></DIV></td>
+                      <td><div class="tabletext">${workEffort.estimatedStartDate}</div></td>
+                      <td><div class="tabletext">${workEffort.estimatedCompletionDate}</div></td>
+                      <td><a class="buttontext" href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
                     </tr>
                     </#list>
-                  <#if workEfforts_has_next><tr><td colspan='3'><hr></td></tr></#if>
+                  <#if workEfforts_has_next><tr><td colspan="3"><hr></td></tr></#if>
                 </#list>
               </table>
             <#else>
-              <div class='tabletext'>${uiLabelMap.WorkEffortNoEventsFound}.</div>
+              <div class="tabletext">${uiLabelMap.WorkEffortNoEventsFound}.</div>
             </#if>
           </td>
         </tr>

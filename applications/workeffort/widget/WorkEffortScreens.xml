@@ -25,11 +25,42 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="mytasks">
+        <section>
+            <actions>
+                <set field="headerItem" value="task"/>
+                <set field="title" value="View Activity and Task List"/>
+                
+                <service service-name="getWorkEffortAssignedActivities"/>
+                <service service-name="getWorkEffortAssignedActivitiesByRole"/>
+                <service service-name="getWorkEffortAssignedActivitiesByGroup"/>
+                <service service-name="getWorkEffortAssignedTasks"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://workeffort/webapp/workeffort/task/mytasks.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonWorkEffortDecorator">
         <section>
             <actions>
                 <set field="headerItem" value="workeffort"/>
-                <set field="workEffortId" from-field="workEffortId" default-value="${parameters.workEffortId}"/>
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-name="workEffort"/>
             </actions>
             <widgets>
@@ -47,7 +78,7 @@
                                         <container><label style="head1">WorkEffortId: ${workEffortId}</label></container>
                                     </widgets>
                                 </section>
-
+                                
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

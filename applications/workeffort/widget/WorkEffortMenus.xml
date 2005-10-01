@@ -34,15 +34,11 @@
         <menu-item name="workeffort" title="${uiLabelMap.WorkEffortWorkEffort}"><link target="FindWorkEffort"/></menu-item>
         
         <menu-item name="Logout" title="Logout" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
-            <condition>
-                <not><if-empty field-name="sessionAttributes.userLogin"/></not>
-            </condition>
+            <condition><not><if-empty field-name="sessionAttributes.userLogin"/></not></condition>
             <link target="logout"/>
         </menu-item>
         <menu-item name="Login" title="Login" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
-            <condition>
-                <if-empty field-name="requestAttributes.userLogin"/>
-            </condition>
+            <condition><if-empty field-name="sessionAttributes.userLogin"/></condition>
             <link target="${requestAttributes.checkLoginUrl}"/>
         </menu-item>
     </menu>
