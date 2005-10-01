@@ -29,8 +29,8 @@
 
 <#if surveyId?has_content>
   <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditSurvey?surveyId=${surveyId}</@ofbizUrl>" class="${selectedClassMap.EditSurvey?default(unselectedClassName)}">Edit</a>
-    <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${surveyId}</@ofbizUrl>" class="${selectedClassMap.EditSurveyQuestions?default(unselectedClassName)}">Questions</a>
-    <a href="<@ofbizUrl>/ViewSurveyResponses?surveyId=${surveyId}</@ofbizUrl>" class="${selectedClassMap.ViewSurveyResponses?default(unselectedClassName)}">Responses</a>
+    <a href="<@ofbizUrl>EditSurvey?surveyId=${surveyId}</@ofbizUrl>" class="${selectedClassMap.EditSurvey?default(unselectedClassName)}">Edit</a>
+    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${surveyId}</@ofbizUrl>" class="${selectedClassMap.EditSurveyQuestions?default(unselectedClassName)}">Questions</a>
+    <a href="<@ofbizUrl>ViewSurveyResponses?surveyId=${surveyId}</@ofbizUrl>" class="${selectedClassMap.ViewSurveyResponses?default(unselectedClassName)}">Responses</a>
   </div>
 </#if>

@@ -30,9 +30,9 @@
 function lookupReturn(click) {
     returnIdValue = document.lookupreturn.returnId.value;
     if (returnIdValue.length > 1) {
-        document.lookupreturn.action = "<@ofbizUrl>/returnMain</@ofbizUrl>";
+        document.lookupreturn.action = "<@ofbizUrl>returnMain</@ofbizUrl>";
     } else {
-        document.lookupreturn.action = "<@ofbizUrl>/findreturn</@ofbizUrl>";
+        document.lookupreturn.action = "<@ofbizUrl>findreturn</@ofbizUrl>";
     }
 
     if (click) {
@@ -44,7 +44,7 @@ function lookupReturn(click) {
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-  <form method='post' name="lookupreturn" action="<@ofbizUrl>/findreturn</@ofbizUrl>" onsubmit="javascript:lookupReturn();">
+  <form method='post' name="lookupreturn" action="<@ofbizUrl>findreturn</@ofbizUrl>" onsubmit="javascript:lookupReturn();">
     <input type='hidden' name='lookupFlag' value='A'>
     <input type='hidden' name='hideFields' value='Y'>
     <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -56,10 +56,10 @@ function lookupReturn(click) {
               <td align='right'>
                 <div class="tabletext">
                   <#if requestParameters.hideFields?default("N") == "Y">
-                    <a href="<@ofbizUrl>/findreturn?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
+                    <a href="<@ofbizUrl>findreturn?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
                   <#else>
-                    <#if returnHeaderList?exists><a href="<@ofbizUrl>/findreturn?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
-                    <a href="javascript:void();" onclick="javascript:lookupReturn(true);" class="submenutext">${uiLabelMap.OrderLookupReturn}</a><a href="<@ofbizUrl>/returnMain</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateReturn}</a>
+                    <#if returnHeaderList?exists><a href="<@ofbizUrl>findreturn?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
+                    <a href="javascript:void();" onclick="javascript:lookupReturn(true);" class="submenutext">${uiLabelMap.OrderLookupReturn}</a><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateReturn}</a>
                   </#if>
                 </div>
               </td>
@@ -169,7 +169,7 @@ function lookupReturn(click) {
                  <div class="boxhead" align="right">
                   <#if (returnHeaderListSize > 0)>
                     <#if (viewIndex > 1)>
-                      <a href="<@ofbizUrl>/findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
+                      <a href="<@ofbizUrl>findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                     <#else>
                       <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                     </#if>
@@ -177,7 +177,7 @@ function lookupReturn(click) {
                       <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${returnHeaderListSize}</span>
                     </#if>
                     <#if (returnHeaderListSize > highIndex)>
-                      <a href="<@ofbizUrl>/findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                      <a href="<@ofbizUrl>findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                     <#else>
                       <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                     </#if>
@@ -206,7 +206,7 @@ function lookupReturn(click) {
                   <#assign facility = returnHeader.getRelatedOne("Facility")>
                 </#if>
                 <tr class='${rowClass}'>
-                  <td><a href="<@ofbizUrl>/returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${returnHeader.returnId}</a></td>
+                  <td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${returnHeader.returnId}</a></td>
                   <td><div class="tabletext">${returnHeader.entryDate.toString()}</div></td>
                   <td>
                     <#if returnHeader.fromPartyId?exists>
@@ -217,7 +217,7 @@ function lookupReturn(click) {
                   </td>
                   <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></div></td>
                   <td><div class="tabletext">${statusItem.get("description",locale)}</div></td>
-                  <td align="center"><a href="<@ofbizUrl>/returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
+                  <td align="center"><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
                 </tr>
                 <#-- toggle the row color -->
                 <#if rowClass == "viewManyTR2">

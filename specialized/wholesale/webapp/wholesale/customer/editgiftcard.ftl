@@ -27,19 +27,19 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
-&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
+&nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
 <#else>
     <#if !giftCard?exists>
       <p class="head1">${uiLabelMap.AccountingAddNewGiftCard}</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+      &nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
       &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-      <form method="post" action='<@ofbizUrl>/createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
+      <form method="post" action='<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#else>
       <p class="head1">${uiLabelMap.AccountingEditCreditCard}</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+      &nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
       &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-      <form method="post" action='<@ofbizUrl>/updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
+      <form method="post" action='<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type='hidden' name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
@@ -115,6 +115,6 @@
   </table>
   </form>
 
-  &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+  &nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
   &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 </#if>

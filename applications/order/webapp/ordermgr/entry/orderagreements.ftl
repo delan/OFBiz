@@ -28,7 +28,7 @@
     <td>
       <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <#if hasAgreements=='Y'>
-        <form method="post" name="agreementForm" action="<@ofbizUrl>/setOrderAgreement</@ofbizUrl>">
+        <form method="post" name="agreementForm" action="<@ofbizUrl>setOrderAgreement</@ofbizUrl>">
         <input type='hidden' name='hasAgreements' value='${hasAgreements}'>
         <tr>
           <td>&nbsp;</td>
@@ -53,7 +53,7 @@
         <tr><td colspan="4">&nbsp;</td></tr>
         </form>
         </#if>
-        <form method="post" name="agreementForm" action="<@ofbizUrl>/setOrderCurrency</@ofbizUrl>">
+        <form method="post" name="agreementForm" action="<@ofbizUrl>setOrderCurrency</@ofbizUrl>">
          <input type='hidden' name='hasAgreements' value='${hasAgreements}'>
          <tr>
           <td>&nbsp;</td>

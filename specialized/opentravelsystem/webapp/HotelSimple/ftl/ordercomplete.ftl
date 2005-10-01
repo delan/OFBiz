@@ -33,7 +33,7 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="right">
-        <a href="<@ofbizUrl>/closeWindow</@ofbizUrl>" class="buttontextbig">[Close Window]</a>
+        <a href="<@ofbizUrl>closeWindow</@ofbizUrl>" class="buttontextbig">[Close Window]</a>
       </td>
     </tr>
   </table>    

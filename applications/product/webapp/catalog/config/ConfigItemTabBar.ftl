@@ -29,8 +29,8 @@
 
 <#if configItemId?has_content>
   <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditProductConfigItem?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigItem?default(unselectedClassName)}">Config Item</a>
-    <a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigOptions?default(unselectedClassName)}">Options</a>
-    <a href="<@ofbizUrl>/EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigItemContent?default(unselectedClassName)}">Content</a>
+    <a href="<@ofbizUrl>EditProductConfigItem?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigItem?default(unselectedClassName)}">Config Item</a>
+    <a href="<@ofbizUrl>EditProductConfigOptions?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigOptions?default(unselectedClassName)}">Options</a>
+    <a href="<@ofbizUrl>EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigItemContent?default(unselectedClassName)}">Content</a>
   </div>
 </#if>

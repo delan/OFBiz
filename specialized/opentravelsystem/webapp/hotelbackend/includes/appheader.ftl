@@ -36,11 +36,11 @@
 
 <div class="apptitle">${uiLabelMap.opentravelsystemApplication}</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
-  <div class="col"><a href="<@ofbizUrl>/intro</@ofbizUrl>" class="${selectedLeftClassMap.intro?default(unselectedLeftClassName)}">${uiLabelMap.CommonIntro}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>intro</@ofbizUrl>" class="${selectedLeftClassMap.intro?default(unselectedLeftClassName)}">${uiLabelMap.CommonIntro}</a></div>  
 
   <#if userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
   </#if>

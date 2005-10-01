@@ -30,7 +30,7 @@
 </head>
 <body class="ecbody">
   <center>
-    <form name="tellafriend" action="<@ofbizUrl>/emailFriend</@ofbizUrl>" method="post">
+    <form name="tellafriend" action="<@ofbizUrl>emailFriend</@ofbizUrl>" method="post">
       <#if requestParameters.productId?exists>
         <input type="hidden" name="pageUrl" value="<@ofbizUrl fullPath="true" encode="false" secure="false">/product?product_id=${requestParameters.productId}</@ofbizUrl>">
       <#elseif requestParameters.categoryId?exists>

@@ -28,7 +28,7 @@
 <#assign productFeaturesByTypeMap = Static["org.ofbiz.product.feature.ParametricSearch"].makeCategoryFeatureLists(productCategoryId, delegator)>
 
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductBackToEditCategory}]</a>
+    <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductBackToEditCategory}]</a>
 </#if>
 
 <form name="createProductInCategoryCheckExistingForm" method="post" action="<@ofbizUrl>createProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">

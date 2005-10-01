@@ -35,7 +35,7 @@
       <td><div class="tableheadtext">&nbsp;</div></td>
     </tr>
     <#list configOptionList as question>
-      <form method="post" action="<@ofbizUrl>/updateProductConfigOption</@ofbizUrl>">
+      <form method="post" action="<@ofbizUrl>updateProductConfigOption</@ofbizUrl>">
         <input type="hidden" name="configItemId" value="${question.configItemId}">
         <input type="hidden" name="configOptionId" value="${question.configOptionId}">
         <tr valign="middle">
@@ -43,8 +43,8 @@
           <td><input type="text" name="sequenceNum" size="3" class="textBox" value="${question.sequenceNum?if_exists}">
           <td><div class="tabletext">${question.description?if_exists}</div></td>
           <td><input type="submit" value="Update">
-          <td><a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${question.configOptionId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
-          <td><a href="<@ofbizUrl>/deleteProductConfigOption?configItemId=${question.configItemId}&configOptionId=${question.configOptionId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+          <td><a href="<@ofbizUrl>EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${question.configOptionId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <td><a href="<@ofbizUrl>deleteProductConfigOption?configItemId=${question.configItemId}&configOptionId=${question.configOptionId}</@ofbizUrl>" class="buttontext">[Remove]</a>
         </tr>
       </form>
     </#list>
@@ -57,7 +57,7 @@
 
     <#if configOptionId?has_content>
       <div class="head2">Edit Config Option:</div>
-      <a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}#edit</@ofbizUrl>" class="buttontext">[New Option]</a>
+      <a href="<@ofbizUrl>EditProductConfigOptions?configItemId=${requestParameters.configItemId}#edit</@ofbizUrl>" class="buttontext">[New Option]</a>
     <#else>
       <div class="head2">Create New Config Option</div>
     </#if>
@@ -82,8 +82,8 @@
           <td><div class="tabletext">${component.sequenceNum?if_exists}</div></td>
           <td><div class="tabletext">${component.productId?if_exists} - ${product.internalName?if_exists}</div></td>
           <td><div class="tabletext">${component.quantity?if_exists}</div></td>
-          <td><a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
-          <td><a href="<@ofbizUrl>/deleteProductConfigProduct?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}#edit</@ofbizUrl>" class="buttontext">[Remove]</a>
+          <td><a href="<@ofbizUrl>EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <td><a href="<@ofbizUrl>deleteProductConfigProduct?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}#edit</@ofbizUrl>" class="buttontext">[Remove]</a>
         </tr>
       </#list>
     </table>
@@ -92,7 +92,7 @@
       <div class="head2">Add a ConfigProduct:</div>
     <#else>
       <div class="head2">Edit a ConfigProduct:</div>
-      <a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${productConfigProduct.configOptionId}</@ofbizUrl>" class="buttontext">[New ConfigProduct]</a>
+      <a href="<@ofbizUrl>EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${productConfigProduct.configOptionId}</@ofbizUrl>" class="buttontext">[New ConfigProduct]</a>
     </#if>
     ${sections.render("CreateConfigProductForm")}
   </#if>

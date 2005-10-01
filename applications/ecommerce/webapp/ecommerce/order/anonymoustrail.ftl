@@ -24,4 +24,4 @@
  *@since      3.0
 -->
 
-<#if shipAddr?exists><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">${uiLabelMap.OrderChangeShippingAddress}</a><#if shipOptions?exists><a href="<@ofbizUrl>/setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">${uiLabelMap.OrderChangeShippingOptions}</a><#if billing?exists><a href="<@ofbizUrl>/setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">${uiLabelMap.OrderChangePaymentInfo}</a></#if></#if></#if>
+<#if shipAddr?exists><a href="<@ofbizUrl>setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">${uiLabelMap.OrderChangeShippingAddress}</a><#if shipOptions?exists><a href="<@ofbizUrl>setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">${uiLabelMap.OrderChangeShippingOptions}</a><#if billing?exists><a href="<@ofbizUrl>setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">${uiLabelMap.OrderChangePaymentInfo}</a></#if></#if></#if>

@@ -47,7 +47,7 @@
   <tr>
     <td width='100%'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <form name="custsetupform" method="post" action="<@ofbizUrl>/setBasicInfo</@ofbizUrl>">
+        <form name="custsetupform" method="post" action="<@ofbizUrl>setBasicInfo</@ofbizUrl>">
         <input type="hidden" name="finalizeMode" value="cust">
         <tr>
           <td>

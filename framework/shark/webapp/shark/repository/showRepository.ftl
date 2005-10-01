@@ -25,8 +25,8 @@
           <td align="left"><div class="tabletext">${packageId?default("??")}</div>
           <td align="left"><div class="tabletext">${version?default("??")}</div></td>
           <td align="center"><div class="tabletext"><#if open>Y<#else>N</#if></div>
-          <td align="center"><a href="<@ofbizUrl>/repository?delete=${package}</@ofbizUrl>" class="buttontext">Remove</a>
-          <td align="center"><a href="<@ofbizUrl>/repository?<#if open>close=${packageId}&version=${version}<#else>open=${package}</#if></@ofbizUrl>" class="buttontext"><#if open>Close<#else>Open</#if></a>
+          <td align="center"><a href="<@ofbizUrl>repository?delete=${package}</@ofbizUrl>" class="buttontext">Remove</a>
+          <td align="center"><a href="<@ofbizUrl>repository?<#if open>close=${packageId}&version=${version}<#else>open=${package}</#if></@ofbizUrl>" class="buttontext"><#if open>Close<#else>Open</#if></a>
         </tr>
       </#if>
     </#list>
@@ -38,7 +38,7 @@
 <br/>
 <div class="head2">Upload XPDL</div>
 <div>&nbsp;</div>
-<form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/repository?upload=xpdl</@ofbizUrl>" name="xpdlUploadForm">
+<form method="post" enctype="multipart/form-data" action="<@ofbizUrl>repository?upload=xpdl</@ofbizUrl>" name="xpdlUploadForm">
   <input type="file" class="inputBox" size="50" name="fname">
   <div><hr class="sepbar"></div>
   <input type="submit" class="smallSubmit" value="Upload">

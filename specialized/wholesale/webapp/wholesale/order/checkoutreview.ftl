@@ -30,7 +30,7 @@
     function processOrder() {
         if (clicked == 0) {
             clicked++;
-            window.location.replace("<@ofbizUrl>/processorder</@ofbizUrl>");
+            window.location.replace("<@ofbizUrl>processorder</@ofbizUrl>");
         } else {
             alert("You order is being processed, this may take a moment.");
         }
@@ -52,7 +52,7 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-        <a href="<@ofbizUrl>/${requestParameters.BACK_PAGE?default("setBilling")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBackToOptions}]</a>
+        <a href="<@ofbizUrl>${requestParameters.BACK_PAGE?default("setBilling")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBackToOptions}]</a>
       </td>
       <td align="right">
         <a href="javascript:processOrder();" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a>

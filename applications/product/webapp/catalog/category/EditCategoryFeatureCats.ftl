@@ -39,12 +39,12 @@
     <#assign line = line + 1>
     <#assign productFeatureGroup = (productFeatureCatGrpAppl.getRelatedOne("ProductFeatureGroup"))?default(null)>
     <tr valign="middle">
-        <td><a href="<@ofbizUrl>/EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}</@ofbizUrl>" class="buttontext"><#if productFeatureGroup?exists>${(productFeatureGroup.description)?if_exists}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}]</a></td>
+        <td><a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}</@ofbizUrl>" class="buttontext"><#if productFeatureGroup?exists>${(productFeatureGroup.description)?if_exists}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}]</a></td>
         <#assign hasntStarted = false>
         <#if (productFeatureCatGrpAppl.getTimestamp("fromDate"))?exists && nowTimestamp.before(productFeatureCatGrpAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
         <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productFeatureCatGrpAppl.fromDate)?if_exists}</div></td>
         <td align="center">
-            <FORM method="post" action="<@ofbizUrl>/updateProductFeatureCatGrpAppl</@ofbizUrl>" name="lineFormGrp${line}">
+            <FORM method="post" action="<@ofbizUrl>updateProductFeatureCatGrpAppl</@ofbizUrl>" name="lineFormGrp${line}">
                 <#assign hasExpired = false>
                 <#if (productFeatureCatGrpAppl.getTimestamp("thruDate"))?exists && nowTimestamp.after(productFeatureCatGrpAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                 <input type="hidden" name="productCategoryId" value="${(productFeatureCatGrpAppl.productCategoryId)?if_exists}">
@@ -56,13 +56,13 @@
             </FORM>
         </td>
         <td align="center">
-        <a href="<@ofbizUrl>/removeProductFeatureCatGrpAppl?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}&productCategoryId=${(productFeatureCatGrpAppl.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureCatGrpAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>removeProductFeatureCatGrpAppl?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}&productCategoryId=${(productFeatureCatGrpAppl.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureCatGrpAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
         </td>
     </tr>
     </#list>
     </table>
-    <form method="post" action="<@ofbizUrl>/createProductFeatureCatGrpAppl</@ofbizUrl>" style="margin: 0;" name="addNewGroupForm">
+    <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" style="margin: 0;" name="addNewGroupForm">
     <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
     
     <div class="head2">Apply Feature Group to Product Category:</div>
@@ -91,12 +91,12 @@
     <#assign line = line + 1>
     <#assign productFeatureCategory = (productFeatureCategoryAppl.getRelatedOne("ProductFeatureCategory"))?default(null)>
     <tr valign="middle">
-        <td><a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)?if_exists}</@ofbizUrl>" class="buttontext"><#if productFeatureCategory?exists>${(productFeatureCategory.description)?if_exists}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)?if_exists}]</a></td>
+        <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)?if_exists}</@ofbizUrl>" class="buttontext"><#if productFeatureCategory?exists>${(productFeatureCategory.description)?if_exists}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)?if_exists}]</a></td>
         <#assign hasntStarted = false>
         <#if (productFeatureCategoryAppl.getTimestamp("fromDate"))?exists && nowTimestamp.before(productFeatureCategoryAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
         <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productFeatureCategoryAppl.fromDate)?if_exists}</div></td>
         <td align="center">
-            <FORM method="post" action="<@ofbizUrl>/updateProductFeatureCategoryAppl</@ofbizUrl>" name="lineForm${line}">
+            <FORM method="post" action="<@ofbizUrl>updateProductFeatureCategoryAppl</@ofbizUrl>" name="lineForm${line}">
                 <#assign hasExpired = false>
                 <#if (productFeatureCategoryAppl.getTimestamp("thruDate"))?exists && nowTimestamp.after(productFeatureCategoryAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                 <input type="hidden" name="productCategoryId" value="${(productFeatureCategoryAppl.productCategoryId)?if_exists}">
@@ -108,13 +108,13 @@
             </FORM>
         </td>
         <td align="center">
-        <a href="<@ofbizUrl>/removeProductFeatureCategoryAppl?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)?if_exists}&productCategoryId=${(productFeatureCategoryAppl.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureCategoryAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>removeProductFeatureCategoryAppl?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)?if_exists}&productCategoryId=${(productFeatureCategoryAppl.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureCategoryAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
         </td>
     </tr>
     </#list>
     </table>
-    <form method="post" action="<@ofbizUrl>/createProductFeatureCategoryAppl</@ofbizUrl>" style="margin: 0;" name="addNewCategoryForm">
+    <form method="post" action="<@ofbizUrl>createProductFeatureCategoryAppl</@ofbizUrl>" style="margin: 0;" name="addNewCategoryForm">
     <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
     
     <div class="head2">Apply Feature Category to Product Category:</div>

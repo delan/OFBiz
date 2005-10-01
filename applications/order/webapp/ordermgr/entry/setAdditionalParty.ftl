@@ -29,11 +29,11 @@
 <div class="screenlet">
     <div class="screenlet-body">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
     <input type="hidden" name="finalizeMode" value="addpty"/>
   </form>
-  <form method="post" action="<@ofbizUrl>/setAdditionalParty</@ofbizUrl>" name="quickAddPartyForm">
+  <form method="post" action="<@ofbizUrl>setAdditionalParty</@ofbizUrl>" name="quickAddPartyForm">
 
   <tr>
     <td><div class="tableheadtext">1) ${uiLabelMap.OrderSelectPartyToOrder} :</div></td>
@@ -118,7 +118,7 @@
   <tr>
     <td width="100%">
       <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-        <form method="post" action="<@ofbizUrl>/addAdditionalParty</@ofbizUrl>">
+        <form method="post" action="<@ofbizUrl>addAdditionalParty</@ofbizUrl>">
         <tr>
           <td>&nbsp;</td>
           <td>

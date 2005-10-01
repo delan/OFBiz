@@ -27,10 +27,10 @@
 -->
     
     <div class="head1">${uiLabelMap.ProductFindLocationsFor}<span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
-    <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacilityLocation}]</a>
+    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+    <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacilityLocation}]</a>
         
-    <form action="<@ofbizUrl>/FindFacilityLocation</@ofbizUrl>" method="GET" style="margin: 0;">
+    <form action="<@ofbizUrl>FindFacilityLocation</@ofbizUrl>" method="GET" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <#if !(facilityId?exists)>
             <tr>
@@ -101,8 +101,8 @@
         <#list foundLocations as location>
         <#assign locationTypeEnum = location.getRelatedOneCache("TypeEnumeration")?if_exists>
         <tr>
-            <td><div class="tabletext"><a href="<@ofbizUrl>/EditFacility?facilityId=${(location.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(location.facilityId)?if_exists}</a></div></td>
-            <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">${(location.locationSeqId)?if_exists}</a></div></td>
+            <td><div class="tabletext"><a href="<@ofbizUrl>EditFacility?facilityId=${(location.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(location.facilityId)?if_exists}</a></div></td>
+            <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">${(location.locationSeqId)?if_exists}</a></div></td>
             <td><div class="tabletext">&nbsp;${(locationTypeEnum.description)?default(location.locationTypeEnumId?if_exists)}</div></td>
             <td><div class="tabletext">&nbsp;${(location.areaId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(location.aisleId)?if_exists}</div></td>
@@ -110,15 +110,15 @@
             <td><div class="tabletext">&nbsp;${(location.levelId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(location.positionId)?if_exists}</div></td>       
             <td>
-            <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${(location.facilityId)?if_exists}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewInventoryItem}]</a>
+            <a href="<@ofbizUrl>EditInventoryItem?facilityId=${(location.facilityId)?if_exists}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewInventoryItem}]</a>
             </td>
             <#if itemId?exists>
                 <td>
-                <a href="<@ofbizUrl>/UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductSetItem} ${itemId}]</a>
+                <a href="<@ofbizUrl>UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductSetItem} ${itemId}]</a>
                 </td>
             </#if>   
             <td>          
-            <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${(location.facilityId)?if_exists}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+            <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${(location.facilityId)?if_exists}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
             </td>     
         </tr>
         </#list>

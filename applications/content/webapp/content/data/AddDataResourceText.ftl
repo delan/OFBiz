@@ -4,6 +4,6 @@
 ${editWrapper.renderFormString()}
 <br/>
 <div class="inputBox">
-<a href="<@ofbizUrl>/AddDataResourceUrl</@ofbizUrl>">New Url DataResource</a>
-<a href="<@ofbizUrl>/AddDataResourceUpload</@ofbizUrl>">New Image DataResource</a>
+<a href="<@ofbizUrl>AddDataResourceUrl</@ofbizUrl>">New Url DataResource</a>
+<a href="<@ofbizUrl>AddDataResourceUpload</@ofbizUrl>">New Image DataResource</a>
 </div>

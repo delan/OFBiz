@@ -40,14 +40,14 @@
         <#assign line = line + 1>
         <#assign productStore = productStorePromoAppl.getRelatedOne("ProductStore")>
         <tr valign="middle">
-            <td><a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="buttontext"><#if productStore?exists>${(productStore.storeName)?if_exists}</#if>[${productStorePromoAppl.productStoreId}]</a></td>
+            <td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="buttontext"><#if productStore?exists>${(productStore.storeName)?if_exists}</#if>[${productStorePromoAppl.productStoreId}]</a></td>
             <#assign hasntStarted = false>
             <#if (productStorePromoAppl.getTimestamp("fromDate"))?exists && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
             <td><div class="tabletext" <#if hasntStarted>style="color: red;"</#if>>${productStorePromoAppl.fromDate?if_exists}</div></td>
             <td align="center">
                 <#assign hasExpired = false>
                 <#if (productStorePromoAppl.getTimestamp("thruDate"))?exists && nowTimestamp.after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                <form method="post" action="<@ofbizUrl>/promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
+                <form method="post" action="<@ofbizUrl>promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
                     <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}">
                     <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}">
                     <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}">
@@ -58,14 +58,14 @@
                 </form>
             </td>
             <td align="center">
-            <a href="<@ofbizUrl>/promo_deleteProductStorePromoAppl?productStoreId=${(productStorePromoAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>promo_deleteProductStorePromoAppl?productStoreId=${(productStorePromoAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
             [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
         </#list>
         </table>
         <br/>
-        <form method="post" action="<@ofbizUrl>/promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog" style="margin: 0;">
         <input type="hidden" name="productPromoId" value="${productPromoId}"/>
         <input type="hidden" name="tryEntity" value="true"/>
         

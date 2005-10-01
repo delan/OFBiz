@@ -24,10 +24,10 @@
 -->
 
 <div>
-    <a href="<@ofbizUrl>/EditQuote</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateOrderQuote}</a>
+    <a href="<@ofbizUrl>EditQuote</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateOrderQuote}</a>
     <#if quote?exists>
         <#if quote.statusId == "QUO_APPROVED">
-            <a href="<@ofbizUrl>/loadCartFromQuote?quoteId=${quote.quoteId}&finalizeMode=init</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateOrder}</a>
+            <a href="<@ofbizUrl>loadCartFromQuote?quoteId=${quote.quoteId}&finalizeMode=init</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateOrder}</a>
         <#else/>
             <span class="buttontextdisabled">${uiLabelMap.OrderCreateOrder}</span>
         </#if>

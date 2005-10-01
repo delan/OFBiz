@@ -408,7 +408,7 @@ function setAlternateGwp(field) {
             <div class="tabletext">
               <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
               &nbsp;&nbsp;
-              <a href="<@ofbizUrl>/createCustRequestFromCart</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateCustRequestFromCart}</a>&nbsp;&nbsp;
+              <a href="<@ofbizUrl>createCustRequestFromCart</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateCustRequestFromCart}</a>&nbsp;&nbsp;
               <#else>
                ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
                 ${uiLabelMap.EcommerceToOrderCreateCustRequestFromCart}.&nbsp;

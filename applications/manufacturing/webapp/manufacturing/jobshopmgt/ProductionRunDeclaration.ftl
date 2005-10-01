@@ -33,12 +33,12 @@
     <#list mandatoryWorkEfforts as mandatoryWorkEffortAssoc>
         <#assign mandatoryWorkEffort = mandatoryWorkEffortAssoc.getRelatedOne("FromWorkEffort")>
         <#if "PRUN_COMPLETED" == mandatoryWorkEffort.getString("currentStatusId") || "PRUN_CLOSED" == mandatoryWorkEffort.getString("currentStatusId")>
-            <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${mandatoryWorkEffort.workEffortName}</a>&nbsp;
+            <a href="<@ofbizUrl>ProductionRunDeclaration?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${mandatoryWorkEffort.workEffortName}</a>&nbsp;
         <#else>
             <#if "PRUN_CREATED" == mandatoryWorkEffort.getString("currentStatusId")>
-                <a href="<@ofbizUrl>/EditProductionRun?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${mandatoryWorkEffort.workEffortName}</a>[*]&nbsp;
+                <a href="<@ofbizUrl>EditProductionRun?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${mandatoryWorkEffort.workEffortName}</a>[*]&nbsp;
             <#else>
-                <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${mandatoryWorkEffort.workEffortName}</a>[*]&nbsp;
+                <a href="<@ofbizUrl>ProductionRunDeclaration?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${mandatoryWorkEffort.workEffortName}</a>[*]&nbsp;
             </#if>
         </#if>
     </#list>
@@ -51,12 +51,12 @@
     <#list dependentWorkEfforts as dependentWorkEffortAssoc>
         <#assign dependentWorkEffort = dependentWorkEffortAssoc.getRelatedOne("ToWorkEffort")>
         <#if "PRUN_COMPLETED" == dependentWorkEffort.currentStatusId || "PRUN_CLOSED" == dependentWorkEffort.currentStatusId>
-            <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${dependentWorkEffort.workEffortName}</a>&nbsp;
+            <a href="<@ofbizUrl>ProductionRunDeclaration?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${dependentWorkEffort.workEffortName}</a>&nbsp;
         <#else>
             <#if "PRUN_CREATED" == dependentWorkEffort.getString("currentStatusId")>
-                <a href="<@ofbizUrl>/EditProductionRun?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${dependentWorkEffort.workEffortName}</a>[*]&nbsp;
+                <a href="<@ofbizUrl>EditProductionRun?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${dependentWorkEffort.workEffortName}</a>[*]&nbsp;
             <#else>
-                <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${dependentWorkEffort.workEffortName}</a>[*]&nbsp;
+                <a href="<@ofbizUrl>ProductionRunDeclaration?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">${dependentWorkEffort.workEffortName}</a>[*]&nbsp;
             </#if>
         </#if>
     </#list>
@@ -78,24 +78,24 @@
                                 <#assign currentStatus = productionRun.getString("currentStatusId")/>
                                 <span class="submenutextdisabled">${uiLabelMap.ManufacturingConfirmProductionRun}</span>
                                 <#if currentStatus == "PRUN_COMPLETED">
-                                    <a href="<@ofbizUrl>/changeProductionRunStatusToClosed?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingProductionRunClose}</a>
+                                    <a href="<@ofbizUrl>changeProductionRunStatusToClosed?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingProductionRunClose}</a>
                                 <#else>
                                     <span class="submenutextdisabled">${uiLabelMap.ManufacturingProductionRunClose}</span>
                                 </#if>
                                 <#if currentStatus == "PRUN_CANCELLED" || currentStatus == "PRUN_COMPLETED" || currentStatus == "PRUN_CLOSED">
                                     <span class="submenutextdisabled">${uiLabelMap.ManufacturingQuickComplete}</span>
                                 <#else>
-                                    <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_COMPLETED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickComplete}</a>
+                                    <a href="<@ofbizUrl>quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_COMPLETED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickComplete}</a>
                                 </#if>
                                 <#if currentStatus == "PRUN_CANCELLED" || currentStatus == "PRUN_CLOSED">
                                     <span class="submenutextdisabled">${uiLabelMap.ManufacturingQuickClose}</span>
                                 <#else>
-                                    <a href="<@ofbizUrl>/quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_CLOSED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickClose}</a>
+                                    <a href="<@ofbizUrl>quickChangeProductionRunStatus?productionRunId=${productionRunId}&statusId=PRUN_CLOSED</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickClose}</a>
                                 </#if>
                                 <#if currentStatus == "PRUN_CANCELLED" || currentStatus == "PRUN_COMPLETED" || currentStatus == "PRUN_CLOSED">
                                     <span class="submenutextdisabled">${uiLabelMap.ManufacturingCancel}</span>
                                 <#else>
-                                    <a href="<@ofbizUrl>/cancelProductionRun?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ManufacturingCancel}</a>
+                                    <a href="<@ofbizUrl>cancelProductionRun?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ManufacturingCancel}</a>
                                 </#if>
                             </div>
                             <div class="boxhead-fill">&nbsp;</div>
@@ -213,7 +213,7 @@
                         <td><div class="boxhead">${uiLabelMap.ManufacturingListOfProductionRunRoutingTasks}</div></td>
                         <td align="right">
                             <div class="boxhead-right" align="right">
-                                <a href="<@ofbizUrl>/quickRunAllProductionRunTasks?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickRunAllTasks}</a>
+                                <a href="<@ofbizUrl>quickRunAllProductionRunTasks?productionRunId=${productionRunId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ManufacturingQuickRunAllTasks}</a>
                             </div>
                         </td>
                     </tr>

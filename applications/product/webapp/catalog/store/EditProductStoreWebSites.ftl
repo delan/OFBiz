@@ -38,7 +38,7 @@
           <td><span class="tabletext">${webSite.httpHost?default('&nbsp;')}</span></td>
           <td><span class="tabletext">${webSite.httpPort?default('&nbsp;')}</span></td>
           <td align="center">
-            <a href="<@ofbizUrl>/storeUpdateWebSite?viewProductStoreId=${productStoreId}&productStoreId=&webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
+            <a href="<@ofbizUrl>storeUpdateWebSite?viewProductStoreId=${productStoreId}&productStoreId=&webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
           </td>
         </tr>
       </#list>
@@ -47,7 +47,7 @@
   
   <br/>
 <div class="head2">${uiLabelMap.ProductSetStoreOnWebSite}:</div>
-<form name="addWebSite" action="<@ofbizUrl>/storeUpdateWebSite</@ofbizUrl>" method="post">
+<form name="addWebSite" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>" method="post">
     <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <select class="selectBox" name="webSiteId">

@@ -29,13 +29,13 @@
 
 <#if glAccountId?has_content>
   <div class='tabContainer'>
-  <a href="<@ofbizUrl>/EditGlobalGlAccount?glAccountId=${glAccountId}</@ofbizUrl>" class="tabButtonSelected">GL Account</a>
-  <a href="<@ofbizUrl>/EditGlobalGlAccountOrganizations?glAccountId=${glAccountId}</@ofbizUrl>" class="tabButton">Organizations</a>
-  <a href="<@ofbizUrl>/EditGlobalGlAccountRoles?glAccountId=${glAccountId}</@ofbizUrl>" class="tabButton">Roles</a>
+  <a href="<@ofbizUrl>EditGlobalGlAccount?glAccountId=${glAccountId}</@ofbizUrl>" class="tabButtonSelected">GL Account</a>
+  <a href="<@ofbizUrl>EditGlobalGlAccountOrganizations?glAccountId=${glAccountId}</@ofbizUrl>" class="tabButton">Organizations</a>
+  <a href="<@ofbizUrl>EditGlobalGlAccountRoles?glAccountId=${glAccountId}</@ofbizUrl>" class="tabButton">Roles</a>
   </div>
 </#if>
 <div class="head1">GL Account <span class='head2'><#if (glAccount.accountName)?has_content>"${glAccount.accountName}"</#if> [${uiLabelMap.CommonId}:${glAccountId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditGlobalGlAccount</@ofbizUrl>" class="buttontext">[New Global GL Account]</a>
+<a href="<@ofbizUrl>EditGlobalGlAccount</@ofbizUrl>" class="buttontext">[New Global GL Account]</a>
 
 ${editGlAccountWrapper.renderFormString()}
 

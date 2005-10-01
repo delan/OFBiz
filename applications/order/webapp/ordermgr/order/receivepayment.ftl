@@ -27,10 +27,10 @@
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
   <p class="head1">${uiLabelMap.OrderReceiveOfflinePayments}</p>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
+  &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
   &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
-  <form method="post" action="<@ofbizUrl>/receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">    
+  <form method="post" action="<@ofbizUrl>receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">    
     <input type="hidden" name="orderId" value="${requestParameters.order_id}">
     <#if requestParameters.workEffortId?exists>
     	<input type="hidden" name="workEffortId" value="${requestParameters.workEffortId}">
@@ -55,7 +55,7 @@
     </table>
   </form>
   
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
+  &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
   &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
    
 <br/>

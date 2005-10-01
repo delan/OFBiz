@@ -29,7 +29,7 @@
 
   ${pages.get("/catalog/ProductStoreTabBar.ftl")}
   <div class="head1">${uiLabelMap.ProductStore} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
+  <a href="<@ofbizUrl>EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <br/>
   <br/>
   ${editProductStoreForm.renderFormString()}

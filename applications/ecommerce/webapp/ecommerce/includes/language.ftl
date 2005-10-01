@@ -29,7 +29,7 @@
         <div class="boxhead">${uiLabelMap.CommonLanguageTitle}</div>
     </div>
     <div class="screenlet-body" style="text-align: center;">
-        <form method="post" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
+        <form method="post" name="chooseLanguage" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>" style="margin: 0;">
           <select name="locale" class="selectBox">
             <#assign initialDisplayName = locale.getDisplayName(locale)>
             <#if 18 < initialDisplayName?length>

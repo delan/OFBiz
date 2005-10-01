@@ -45,13 +45,13 @@
       <td><div class="tabletext">${feature.description?if_exists}</div></td>
       <td><div class="tabletext">${type.description}</div></td>
       <td><div class="tabletext">${category.description} (${category.productFeatureCategoryId})</div></td>
-      <td><a href="<@ofbizUrl>/RemoveProductFeatureGroupAppl?productFeatureGroupId=${groupAppl.productFeatureGroupId}&productFeatureId=${groupAppl.productFeatureId}&fromDate=${groupAppl.fromDate?string}</@ofbizUrl>" class="buttontext">[Remove]</a>
+      <td><a href="<@ofbizUrl>RemoveProductFeatureGroupAppl?productFeatureGroupId=${groupAppl.productFeatureGroupId}&productFeatureId=${groupAppl.productFeatureId}&fromDate=${groupAppl.fromDate?string}</@ofbizUrl>" class="buttontext">[Remove]</a>
     </tr>
   </#list>
 </table>
 
 <br/>
-<form method="post" action="<@ofbizUrl>/CreateProductFeatureGroupAppl</@ofbizUrl>" style='margin: 0;'>
+<form method="post" action="<@ofbizUrl>CreateProductFeatureGroupAppl</@ofbizUrl>" style='margin: 0;'>
   <input type="hidden" name="productFeatureGroupId" value="${requestParameters.productFeatureGroupId}">
   <div class='head2'>Quick Apply Product Feature:</div>
   <br/>
@@ -68,7 +68,7 @@
 
 <br/>
 <#if !productFeatures?has_content>
-  <form method="post" action="<@ofbizUrl>/EditFeatureGroupAppls</@ofbizUrl>" style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>EditFeatureGroupAppls</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="productFeatureGroupId" value="${requestParameters.productFeatureGroupId}">
     <div class='head2'>Apply Product Feature(s) From Category:</div>
     <br/>
@@ -105,7 +105,7 @@
 
     <#list productFeatures as feature>
       <#assign type = feature.getRelatedOne("ProductFeatureType")>
-      <form method="post" action="<@ofbizUrl>/CreateProductFeatureGroupAppl</@ofbizUrl>" style='margin: 0;'>
+      <form method="post" action="<@ofbizUrl>CreateProductFeatureGroupAppl</@ofbizUrl>" style='margin: 0;'>
         <input type="hidden" name="productFeatureGroupId" value="${requestParameters.productFeatureGroupId}">
         <input type="hidden" name="productFeatureCategoryId" value="${requestParameters.productFeatureCategoryId}">
         <input type="hidden" name="productFeatureId" value="${feature.productFeatureId}">
@@ -120,5 +120,5 @@
       </form>
     </#list>
   </table>
-  <a href="<@ofbizUrl>/EditFeatureGroupAppls?productFeatureGroupId=${requestParameters.productFeatureGroupId}</@ofbizUrl>" class="buttontext">[Finished w/ This Category]</a>
+  <a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${requestParameters.productFeatureGroupId}</@ofbizUrl>" class="buttontext">[Finished w/ This Category]</a>
 </#if>

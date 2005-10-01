@@ -25,7 +25,7 @@
 </@wrapSubContentCache >
 -->
 <@checkPermission mode="equals" entityOperation="_CREATE" targetOperation="HAS_USER_ROLE" >
-    <a class="tabButton" href="<@ofbizUrl>/createforumresponse?contentIdTo=${requestParameters.contentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.EcommerceRespond}</a>
+    <a class="tabButton" href="<@ofbizUrl>createforumresponse?contentIdTo=${requestParameters.contentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.EcommerceRespond}</a>
 </@checkPermission>
 <br/>
 
@@ -58,7 +58,7 @@
             </#if>
         </#if>
         <#if content?exists>
-        <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
+        <a class="tabButton" href="<@ofbizUrl>showforumresponse?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
 [${thisContentId}] ${content.contentName?if_exists}-${content.description?if_exists}
         </#if>
 

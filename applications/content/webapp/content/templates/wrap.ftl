@@ -10,7 +10,7 @@ mapKey:${mapKey?if_exists}
 <div id="divOne" class="wrapInner">
 <@renderWrappedText />
 </div>
-<a class="tabButton" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}') " > 
+<a class="tabButton" href="javascript:lookupSubContent('<@ofbizUrl>LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}') " > 
 &nbsp;&nbsp;&nbsp;&nbsp;Lookup&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 &nbsp;
@@ -25,9 +25,9 @@ mapKey:${mapKey?if_exists}
         <#assign ofbizRequest="EditLayoutSubContent" />
     </#if>
 </#if>
-<a class="tabButton" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>" >New</a>
+<a class="tabButton" href="<@ofbizUrl>${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>" >New</a>
 <#if subContentId?exists && (0 < subContentId?length)>
 &nbsp;
-    <a class="tabButton" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drDataResourceId=${subDataResourceId?if_exists}</@ofbizUrl>" >Edit</a>
+    <a class="tabButton" href="<@ofbizUrl>${ofbizRequest}?${httpParams}&contentId=${subContentId}&drDataResourceId=${subDataResourceId?if_exists}</@ofbizUrl>" >Edit</a>
 </#if>
 </div>

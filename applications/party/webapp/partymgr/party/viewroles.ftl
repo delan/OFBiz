@@ -55,7 +55,7 @@
                 <td align="left" valign="top" width="70%"><div class="tabletext">${userRole.description} [${userRole.roleTypeId}]</div></td>
                 <#if hasDeletePermission>
                 <td align="right" valign="top" width="20%">
-                  <a href="<@ofbizUrl>/deleterole?partyId=${partyId}&roleTypeId=${userRole.roleTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>&nbsp;
+                  <a href="<@ofbizUrl>deleterole?partyId=${partyId}&roleTypeId=${userRole.roleTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>&nbsp;
                 </td>
                 </#if>
               </tr>
@@ -76,7 +76,7 @@
   <TR>
     <TD width="100%" >
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-        <form name="addPartyRole" method="post" action="<@ofbizUrl>/addrole/viewroles</@ofbizUrl>">
+        <form name="addPartyRole" method="post" action="<@ofbizUrl>addrole/viewroles</@ofbizUrl>">
         <input type="hidden" name="partyId" value="${partyId}">
         <tr>
           <td align="right" width="75%"><span class="tabletext">&nbsp;${uiLabelMap.PartyAddToRole}:&nbsp;</span></td>

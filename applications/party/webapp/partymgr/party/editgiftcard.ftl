@@ -27,10 +27,10 @@
 
     <#if !giftCard?exists>
       <p class="head1">${uiLabelMap.AccountingCreateNewGiftCard}</p>
-      <form method="post" action="<@ofbizUrl>/createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
     <#else>
       <p class="head1">${uiLabelMap.AccountingEditGiftCard}</p>
-      <form method="post" action="<@ofbizUrl>/updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}">
     </#if>
 

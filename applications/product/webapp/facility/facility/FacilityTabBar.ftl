@@ -29,18 +29,18 @@
 
 <#if facilityId?has_content>
   <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditFacility?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacility?default(unselectedClassName)}">${uiLabelMap.ProductFacility}</a>
-    <a href="<@ofbizUrl>/ViewContactMechs?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ViewContactMechs?default(unselectedClassName)}">${uiLabelMap.PartyContactMechs}</a>
-    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroups?default(unselectedClassName)}">${uiLabelMap.ProductGroups}</a>
-    <a href="<@ofbizUrl>/FindFacilityLocation?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityLocation?default(unselectedClassName)}">${uiLabelMap.ProductLocations}</a>
-    <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityRoles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
-    <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventoryItems}</a>
-    <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveInventory?default(unselectedClassName)}">${uiLabelMap.ProductInventoryReceive}</a>
-    <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityTransfers?default(unselectedClassName)}">${uiLabelMap.ProductInventoryXfers}</a>
-    <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveReturn?default(unselectedClassName)}">${uiLabelMap.ProductReceiveReturn}</a>
-    <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PicklistOptions?default(unselectedClassName)}">${uiLabelMap.ProductPicking}</a>
-    <a href="<@ofbizUrl>/PackOrder?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PackOrder?default(unselectedClassName)}">Packing</a>
-    <a href="<@ofbizUrl>/FindShipment?destinationFacilityId=${facilityId}&amp;lookupFlag=Y</@ofbizUrl>" class="${selectedClassMap.FindShipment?default(unselectedClassName)}">${uiLabelMap.ProductIncomingShipments}</a>
-    <a href="<@ofbizUrl>/FindShipment?originFacilityId=${facilityId}&amp;lookupFlag=Y</@ofbizUrl>" class="${selectedClassMap.FindShipment?default(unselectedClassName)}">${uiLabelMap.ProductOutgoingShipments}</a>
+    <a href="<@ofbizUrl>EditFacility?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacility?default(unselectedClassName)}">${uiLabelMap.ProductFacility}</a>
+    <a href="<@ofbizUrl>ViewContactMechs?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ViewContactMechs?default(unselectedClassName)}">${uiLabelMap.PartyContactMechs}</a>
+    <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroups?default(unselectedClassName)}">${uiLabelMap.ProductGroups}</a>
+    <a href="<@ofbizUrl>FindFacilityLocation?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityLocation?default(unselectedClassName)}">${uiLabelMap.ProductLocations}</a>
+    <a href="<@ofbizUrl>EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityRoles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
+    <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventoryItems}</a>
+    <a href="<@ofbizUrl>ReceiveInventory?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveInventory?default(unselectedClassName)}">${uiLabelMap.ProductInventoryReceive}</a>
+    <a href="<@ofbizUrl>FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityTransfers?default(unselectedClassName)}">${uiLabelMap.ProductInventoryXfers}</a>
+    <a href="<@ofbizUrl>ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveReturn?default(unselectedClassName)}">${uiLabelMap.ProductReceiveReturn}</a>
+    <a href="<@ofbizUrl>PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PicklistOptions?default(unselectedClassName)}">${uiLabelMap.ProductPicking}</a>
+    <a href="<@ofbizUrl>PackOrder?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PackOrder?default(unselectedClassName)}">Packing</a>
+    <a href="<@ofbizUrl>FindShipment?destinationFacilityId=${facilityId}&amp;lookupFlag=Y</@ofbizUrl>" class="${selectedClassMap.FindShipment?default(unselectedClassName)}">${uiLabelMap.ProductIncomingShipments}</a>
+    <a href="<@ofbizUrl>FindShipment?originFacilityId=${facilityId}&amp;lookupFlag=Y</@ofbizUrl>" class="${selectedClassMap.FindShipment?default(unselectedClassName)}">${uiLabelMap.ProductOutgoingShipments}</a>
   </div>
 </#if>

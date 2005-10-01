@@ -25,7 +25,7 @@
 -->
 
 <div class="head1">Current Returns</div>
-<div><a href="<@ofbizUrl>/returnMain</@ofbizUrl>" class="buttontext">Create Return</a></div>
+<div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="buttontext">Create Return</a></div>
 
 <br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
@@ -43,7 +43,7 @@
     <#assign facility = returnHeader.getRelatedOne("Facility")>
   </#if>
   <tr>
-    <td><a href="<@ofbizUrl>/returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${returnHeader.returnId}</a></td>
+    <td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${returnHeader.returnId}</a></td>
     <td><div class="tabletext">${returnHeader.entryDate.toString()}</div></td>
     <td>
       <#if returnHeader.fromPartyId?exists>

@@ -44,7 +44,7 @@
     <td><div class="tabletext">${invoice.dueDate?if_exists}</div></td>
     <td align="right"><div class="tabletext">${invoice.invoiceTotal}</div></td>
     <td align="right">
-      <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+      <a href="<@ofbizUrl>viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
     </td>
   </tr>
   </#list>

@@ -27,7 +27,7 @@
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 
-<form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform"> 
+<form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform"> 
   <input type="hidden" name="finalizeMode" value="ship"/>
   <table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr><td>

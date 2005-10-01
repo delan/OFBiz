@@ -35,7 +35,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingLists}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createEmptySavedItemsList</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+            <a href="<@ofbizUrl>createEmptySavedItemsList</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
         </tr>
       </table>
@@ -47,7 +47,7 @@
         <tr>
           <td>
             <#if shoppingLists?has_content>
-              <form name="selectShoppingList" method="post" action="<@ofbizUrl>/editShoppingList</@ofbizUrl>">
+              <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
                 <select name="shoppingListId" class="selectBox">
                   <#-- it is actually somewhat confusing to show the current list here, without that it is much cleaner, especially with heirarchical lists
                     <#if shoppingList?has_content>
@@ -96,7 +96,7 @@
       <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <form name="updateList" method="post" action="<@ofbizUrl>/updateShoppingList</@ofbizUrl>">
+              <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
                 <input type="hidden" class="inputBox" name="shoppingListId" value="${shoppingList.shoppingListId}">
                 <input type="hidden" class="inputBox" name="partyId" value="${shoppingList.partyId?if_exists}">
                 <table border='0' cellspacing='0' cellpadding='0'>
@@ -146,7 +146,7 @@
                         </#list>
                       </select>
                       <#if parentShoppingList?exists>
-                        <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
+                        <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
                       </#if>
                     </td>
                   </tr>                           
@@ -176,7 +176,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceChildShoppingList} - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceAddChildListsToCart}</a>
+              <a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceAddChildListsToCart}</a>
           </td>
         </tr>
       </table>
@@ -199,14 +199,14 @@
 			      <#assign totalPrice = childShoppingListData.totalPrice>
 				  <tr>
 					<td nowrap align="left">
-                      <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
+                      <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
 					</td>                      
 					<td nowrap align="right">
 					  <div class="tabletext">${totalPrice}</div>
 					</td>                      
 					<td align="right">
-                      <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceGoToList}]</a>
-                      <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceAddListToCart}]</a>
+                      <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceGoToList}]</a>
+                      <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceAddListToCart}]</a>
 					</td>                      
 				  </tr>
 				</form>
@@ -238,7 +238,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceListItems} - ${shoppingList.listName}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceAddListToCart}</a>
+            <a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceAddListToCart}</a>
           </td>
         </tr>
       </table>
@@ -271,12 +271,12 @@
                       <tr>
                         <td>
                           <div class='tabletext'>
-                             <a href="<@ofbizUrl>/product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class='buttontext'>${shoppingListItem.productId} - 
+                             <a href="<@ofbizUrl>product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class='buttontext'>${shoppingListItem.productId} - 
                              ${product.productName?if_exists}</a> : ${product.description?if_exists}
                           </div>
                         </td>
                         <td nowrap align="center">
-						  <form method="post" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+						  <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
 						    <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
 						    <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
                             <div class='tabletext'>
@@ -297,7 +297,7 @@
                         </td>
                         <td align="right">
                         	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
-                        	<a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
+                        	<a href="<@ofbizUrl>removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
                           <#if isVirtual && productVariantAssocs?has_content>
                             <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_?if_exists>
                             <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_?if_exists>
@@ -320,7 +320,7 @@
                               <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceVariationToCart}]</a>
                             </form>
                           <#else>
-                            <a href="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&quantity=${shoppingListItem.quantity}&add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceToCart}]</a>
+                            <a href="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&quantity=${shoppingListItem.quantity}&add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceToCart}]</a>
                           </#if>
                         </td>
                       </tr>

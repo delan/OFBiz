@@ -30,7 +30,7 @@
     </div>
     <div class="screenlet-body">
         <#-- DO NOT CHANGE THE NAME OF THIS FORM, it will break the some of the multi-service pattern features -->
-        <form name="selectAllForm" method="post" action="<@ofbizUrl>/makeQuickReturn</@ofbizUrl>">
+        <form name="selectAllForm" method="post" action="<@ofbizUrl>makeQuickReturn</@ofbizUrl>">
           <input type="hidden" name="_checkGlobalScope" value="Y"/>
           <input type="hidden" name="_useRowSubmit" value="Y"/>
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
@@ -41,7 +41,7 @@
           </#if>
           <table border="0" width="100%" cellpadding="2" cellspacing="0">
             <tr>
-              <td colspan="7"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>/orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
+              <td colspan="7"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
               <td align="right">
                 <span class="tableheadtext">Select All</span>&nbsp;
                 <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);"/>
@@ -138,7 +138,7 @@
                             <#if shippingAddress.stateProvinceGeoId?has_content><br/>${shippingAddress.stateProvinceGeoId}</#if>
                             <#if shippingAddress.postalCode?has_content><br/>${shippingAddress.postalCode}</#if>
                             <#if shippingAddress.countryGeoId?has_content><br/>${shippingAddress.countryGeoId}</#if>
-                            <#--<a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[Update]</a>-->
+                            <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[Update]</a>-->
                           </div>
                         </td>
                       </tr>

@@ -26,7 +26,7 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
 <br/>
-<form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
+<form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="VIEW_SIZE" value="10">
   <table border="0" wdith="100%">
     <#if searchCategory?has_content>

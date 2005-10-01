@@ -25,11 +25,11 @@
 -->
 
 <div class='tabContainer'>
-        <a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingCalendar}</a>
-        <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingCalendarWeek}</a>
+        <a href="<@ofbizUrl>FindCalendar</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingCalendar}</a>
+        <a href="<@ofbizUrl>ListCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingCalendarWeek}</a>
 </div>
 
-<div><a href="<@ofbizUrl>/EditCalendar</@ofbizUrl>" class="buttontext">${uiLabelMap.ManufacturingNewCalendar}</a></div>
+<div><a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="buttontext">${uiLabelMap.ManufacturingNewCalendar}</a></div>
 
 <br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
@@ -47,8 +47,8 @@
         <td><div class="tabletext">${techDataCalendar.description?if_exists}</div></td>
         <td><div class="tabletext">${techDataCalendar.calendarWeekId?if_exists}</div></td>
         <td align="right">
-          <a href="<@ofbizUrl>/EditCalendar?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
-          <a href="<@ofbizUrl>/RemoveCalendar?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
+          <a href="<@ofbizUrl>EditCalendar?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
+          <a href="<@ofbizUrl>RemoveCalendar?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
         </td>        
       </tr>
     </#list>

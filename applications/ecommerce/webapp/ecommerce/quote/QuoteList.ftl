@@ -82,7 +82,7 @@
                     </td>
                     <td width="10">&nbsp;</td>
                     <td align="right">
-                        <a href="<@ofbizUrl>/ViewQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
+                        <a href="<@ofbizUrl>ViewQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
                     </td>
                     <td width="10">&nbsp;</td>
                 </tr>

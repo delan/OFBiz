@@ -45,7 +45,7 @@
     <#if (productCategoryRole.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productCategoryRole.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
     <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productCategoryRole.fromDate)?if_exists}</div></td>
     <td align="center">
-        <FORM method="post" action="<@ofbizUrl>/updatePartyToCategory</@ofbizUrl>" name="lineForm${line}">
+        <FORM method="post" action="<@ofbizUrl>updatePartyToCategory</@ofbizUrl>" name="lineForm${line}">
             <#assign hasExpired = false>
             <#if (productCategoryRole.getTimestamp("thruDate"))?exists && (Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productCategoryRole.getTimestamp("thruDate")))> <#assign hasExpired = true></#if>
             <input type="hidden" name="productCategoryId" value="${(productCategoryRole.productCategoryId)?if_exists}">
@@ -58,14 +58,14 @@
         </FORM>
     </td>
     <td align="center">
-        <a href="<@ofbizUrl>/removePartyFromCategory?productCategoryId=${(productCategoryRole.productCategoryId)?if_exists}&partyId=${(productCategoryRole.partyId)?if_exists}&roleTypeId=${(productCategoryRole.roleTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productCategoryRole.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>removePartyFromCategory?productCategoryId=${(productCategoryRole.productCategoryId)?if_exists}&partyId=${(productCategoryRole.partyId)?if_exists}&roleTypeId=${(productCategoryRole.roleTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productCategoryRole.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
     </td>
     </tr>
     </#list>
     </table>
     <br/>
-    <form method="post" action="<@ofbizUrl>/addPartyToCategory</@ofbizUrl>" style="margin: 0;" name="addNewForm">
+    <form method="post" action="<@ofbizUrl>addPartyToCategory</@ofbizUrl>" style="margin: 0;" name="addNewForm">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
     
     <div class="head2">${uiLabelMap.ProductAssociatePartyToCategory}:</div>

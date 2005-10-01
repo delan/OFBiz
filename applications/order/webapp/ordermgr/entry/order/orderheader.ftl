@@ -28,7 +28,7 @@
 <#if orderHeader?exists>
   <div class="boxtop">
     <div class="boxhead" align="left">
-      &nbsp;${uiLabelMap.OrderOrderConfirmation}&nbsp;#<a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>
+      &nbsp;${uiLabelMap.OrderOrderConfirmation}&nbsp;#<a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>
     </div>
   </div>
 </#if>

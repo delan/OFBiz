@@ -27,7 +27,7 @@
 -->
 
 <div class="head1">${uiLabelMap.PartyRoles} <span class="head2">${uiLabelMap.CommonFor} "${(facilityGroup.facilityGroupName)?if_exists}" [${uiLabelMap.CommonId} :${facilityGroupId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
+<a href="<@ofbizUrl>EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
 <br/>
 <br/>
 
@@ -44,7 +44,7 @@
     <td><a href="/partymgr/control/viewprofile?party_id=${facilityGroupRole.partyId}" class="buttontext">${facilityGroupRole.partyId}</a></td>    
     <td><div class="tabletext">${roleType.description}</div></td>
     <td align="center">
-      <a href="<@ofbizUrl>/removePartyFromFacilityGroup?facilityGroupId=${facilityGroupRole.facilityGroupId}&partyId=${facilityGroupRole.partyId}&roleTypeId=${facilityGroupRole.roleTypeId}</@ofbizUrl>" class="buttontext">
+      <a href="<@ofbizUrl>removePartyFromFacilityGroup?facilityGroupId=${facilityGroupRole.facilityGroupId}&partyId=${facilityGroupRole.partyId}&roleTypeId=${facilityGroupRole.roleTypeId}</@ofbizUrl>" class="buttontext">
       [${uiLabelMap.CommonDelete}]</a>
     </td>
   </tr>
@@ -52,7 +52,7 @@
 </table>
 
 <br/>
-<form method="post" action="<@ofbizUrl>/addPartyToFacilityGroup</@ofbizUrl>" style="margin: 0;">
+<form method="post" action="<@ofbizUrl>addPartyToFacilityGroup</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="facilityGroupId" value="${facilityGroupId}">  
   <div class="head2">${uiLabelMap.ProductAddFacilityGroupPartyRole} :</div>
   <div class="tabletext">

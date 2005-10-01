@@ -35,11 +35,11 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${requestAttributes.uiLabelMap.CommonInformation}</div>
+                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${requestAttributes.uiLabelMap.CommonInformation}</div>
                 </td>
                 <#if maySelectItems?default(false) && returnLink?default("N") == "Y">
                   <td valign="middle" align="right" nowrap>
-                    <a href="<@ofbizUrl>/makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${requestAttributes.uiLabelMap.OrderRequestReturn}</a>
+                    <a href="<@ofbizUrl>makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${requestAttributes.uiLabelMap.OrderRequestReturn}</a>
                   </td>
                 </#if>
               </tr>
@@ -249,7 +249,7 @@
                 </td>
                 <#if maySelectItems?default(false) && !maySplit?default(false)>
                 <td valign="middle" align="right">
-                  <a href="<@ofbizUrl>/allowordersplit?orderId=${orderHeader.orderId}&order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${requestAttributes.uiLabelMap.OrderAllowSplit}</a>
+                  <a href="<@ofbizUrl>allowordersplit?orderId=${orderHeader.orderId}&order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${requestAttributes.uiLabelMap.OrderAllowSplit}</a>
                 </td> 
                 </#if>               
               </tr>

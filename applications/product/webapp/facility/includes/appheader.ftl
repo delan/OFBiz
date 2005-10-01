@@ -33,13 +33,13 @@
 
 <div class="apptitle">&nbsp;${uiLabelMap.ProductFacilityManagerApplication}&nbsp;</div>
 <div class="row"> 
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.ProductMain}</a></div>
-  <div class="col"><a href="<@ofbizUrl>/FindFacility</@ofbizUrl>" class="${selectedLeftClassMap.facility?default(unselectedLeftClassName)}">${uiLabelMap.ProductFacilities}</a></div> 
-  <div class="col"><a href="<@ofbizUrl>/FindFacilityGroup</@ofbizUrl>" class="${selectedLeftClassMap.facilityGroup?default(unselectedLeftClassName)}">${uiLabelMap.ProductFacilityGroups}</a></div>
-  <div class="col"><a href="<@ofbizUrl>/FindShipment</@ofbizUrl>" class="${selectedLeftClassMap.shipment?default(unselectedLeftClassName)}">${uiLabelMap.ProductShipments}</a></div> 
+  <div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.ProductMain}</a></div>
+  <div class="col"><a href="<@ofbizUrl>FindFacility</@ofbizUrl>" class="${selectedLeftClassMap.facility?default(unselectedLeftClassName)}">${uiLabelMap.ProductFacilities}</a></div> 
+  <div class="col"><a href="<@ofbizUrl>FindFacilityGroup</@ofbizUrl>" class="${selectedLeftClassMap.facilityGroup?default(unselectedLeftClassName)}">${uiLabelMap.ProductFacilityGroups}</a></div>
+  <div class="col"><a href="<@ofbizUrl>FindShipment</@ofbizUrl>" class="${selectedLeftClassMap.shipment?default(unselectedLeftClassName)}">${uiLabelMap.ProductShipments}</a></div> 
   
   <#if requestAttributes.userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
   </#if>

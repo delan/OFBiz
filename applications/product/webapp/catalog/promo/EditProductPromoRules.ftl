@@ -41,7 +41,7 @@
         <tr valign="middle">
             <td><div class="tabletext"><b>${(productPromoRule.productPromoRuleId)?if_exists}</b></div></td>
             <td align="left">
-                <form method="post" action="<@ofbizUrl>/updateProductPromoRule</@ofbizUrl>">
+                <form method="post" action="<@ofbizUrl>updateProductPromoRule</@ofbizUrl>">
                     <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                     <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                     <input type="text" size="30" name="ruleName" value="${(productPromoRule.ruleName)?if_exists}" class="inputBox">
@@ -50,7 +50,7 @@
             </td>
             <td align="center">&nbsp;
             <#if (productPromoConds.size() == 0 && productPromoActions.size() == 0)>
-                <a href="<@ofbizUrl>/deleteProductPromoRule?productPromoId=${(productPromoRule.productPromoId)?if_exists}&productPromoRuleId=${(productPromoRule.productPromoRuleId)?if_exists}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>deleteProductPromoRule?productPromoId=${(productPromoRule.productPromoId)?if_exists}&productPromoRuleId=${(productPromoRule.productPromoRuleId)?if_exists}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
             </#if>
             </td>
@@ -71,7 +71,7 @@
                         </#if>
                         <td><div class="tabletext"><b>${(productPromoCond.productPromoCondSeqId)?if_exists}</b></div></td>
                         <td align="left">
-                            <form method="post" action="<@ofbizUrl>/updateProductPromoCond</@ofbizUrl>">
+                            <form method="post" action="<@ofbizUrl>updateProductPromoCond</@ofbizUrl>">
                                 <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)?if_exists}"/>
                                 <input type="hidden" name="productPromoRuleId" value="${(productPromoCond.productPromoRuleId)?if_exists}"/>
                                 <input type="hidden" name="productPromoCondSeqId" value="${(productPromoCond.productPromoCondSeqId)?if_exists}"/>
@@ -114,12 +114,12 @@
                                     - ${(condApplEnumeration.description)?default(condProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${condProductPromoCategory.includeSubCategories?default("N")}
                                     - And Group: ${condProductPromoCategory.andGroupId}
-                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(condProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(condProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(condProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(condProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(condProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(condProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
                             </#list>
                             <div class="tabletext">
-                                <form method="post" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>createProductPromoCategory</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${productPromoId}">
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="_NA_">
@@ -151,12 +151,12 @@
                                 <div class="tabletext">
                                     ${(condProduct.internalName)?if_exists} [${condProductPromoProduct.productId}]
                                     - ${(condApplEnumeration.description)?default(condProductPromoProduct.productPromoApplEnumId)}
-                                    <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(condProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoProduct.productPromoCondSeqId)?if_exists}&productId=${(condProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    <a href="<@ofbizUrl>deleteProductPromoProduct?productPromoId=${(condProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoProduct.productPromoCondSeqId)?if_exists}&productId=${(condProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
                             </#list>
                             <div class="tabletext">
-                                <form method="post" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${productPromoId}">
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="_NA_">
@@ -172,14 +172,14 @@
                             </div>
                         </td>
                         <td align="center">
-                        <a href="<@ofbizUrl>/deleteProductPromoCond?productPromoId=${(productPromoCond.productPromoId)?if_exists}&productPromoRuleId=${(productPromoCond.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(productPromoCond.productPromoCondSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
+                        <a href="<@ofbizUrl>deleteProductPromoCond?productPromoId=${(productPromoCond.productPromoId)?if_exists}&productPromoRuleId=${(productPromoCond.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(productPromoCond.productPromoCondSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
                         [${uiLabelMap.CommonDelete}]</a>
                         </td>
                     </tr>
                 </#list>
                 <tr>
                     <td align="left" colspan="3">
-                        <form method="post" action="<@ofbizUrl>/createProductPromoCond</@ofbizUrl>">
+                        <form method="post" action="<@ofbizUrl>createProductPromoCond</@ofbizUrl>">
                             <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                             <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                             <span class="tabletext"><b>${uiLabelMap.CommonNew} :</b>&nbsp;</span>
@@ -220,7 +220,7 @@
                         <td><div class="tabletext"><b>${(productPromoAction.productPromoActionSeqId)?if_exists}</b></div></td>
                         <td align="left">
                             <div class="tabletext">
-                            <form method="post" action="<@ofbizUrl>/updateProductPromoAction</@ofbizUrl>">
+                            <form method="post" action="<@ofbizUrl>updateProductPromoAction</@ofbizUrl>">
                                 <input type="hidden" name="productPromoId" value="${(productPromoAction.productPromoId)?if_exists}">
                                 <input type="hidden" name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)?if_exists}">
                                 <input type="hidden" name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)?if_exists}">
@@ -267,12 +267,12 @@
                                     - ${(actionApplEnumeration.description)?default(actionProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${actionProductPromoCategory.includeSubCategories?default("N")}
                                     - And Group: ${actionProductPromoCategory.andGroupId}
-                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoCategory.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(actionProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoCategory.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(actionProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
                             </#list>
                             <div class="tabletext">
-                                <form method="post" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>createProductPromoCategory</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${productPromoId}">
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}">
@@ -304,12 +304,12 @@
                                 <div class="tabletext">
                                     ${(actionProduct.internalName)?if_exists} [${actionProductPromoProduct.productId}]
                                     - ${(actionApplEnumeration.description)?default(actionProductPromoProduct.productPromoApplEnumId)}
-                                    <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(actionProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoProduct.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoProduct.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productId=${(actionProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    <a href="<@ofbizUrl>deleteProductPromoProduct?productPromoId=${(actionProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoProduct.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoProduct.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productId=${(actionProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
                             </#list>
                             <div class="tabletext">
-                                <form method="post" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
+                                <form method="post" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>">
                                     <input type="hidden" name="productPromoId" value="${productPromoId}">
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}">
@@ -325,7 +325,7 @@
                             </div>
                         </td>
                         <td align="center">
-                        <a href="<@ofbizUrl>/deleteProductPromoAction?productPromoId=${(productPromoAction.productPromoId)?if_exists}&productPromoRuleId=${(productPromoAction.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(productPromoAction.productPromoActionSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
+                        <a href="<@ofbizUrl>deleteProductPromoAction?productPromoId=${(productPromoAction.productPromoId)?if_exists}&productPromoRuleId=${(productPromoAction.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(productPromoAction.productPromoActionSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
                         [${uiLabelMap.CommonDelete}]</a>
                         </td>
                     </tr>
@@ -333,7 +333,7 @@
                 <tr>
                     <td align="left" colspan="3">
                         <div class="tabletext">
-                        <form method="post" action="<@ofbizUrl>/createProductPromoAction</@ofbizUrl>">
+                        <form method="post" action="<@ofbizUrl>createProductPromoAction</@ofbizUrl>">
                             <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                             <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                             <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
@@ -370,7 +370,7 @@
 
         <div class="head3">${uiLabelMap.ProductAddPromoRule}:</div>
         <div class="tabletext">
-            <form method="post" action="<@ofbizUrl>/createProductPromoRule</@ofbizUrl>" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>" style="margin: 0;">
                 <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}">
                 ${uiLabelMap.ProductName} : <input type="text" size="30" name="ruleName" class="inputBox">
                 <input type="submit" value="${uiLabelMap.CommonAdd}">
@@ -389,12 +389,12 @@
                 - ${(promoApplEnumeration.description)?default(promoProductPromoCategory.productPromoApplEnumId)}
                 - SubCats? ${promoProductPromoCategory.includeSubCategories?default("N")}
                 - And Group: ${promoProductPromoCategory.andGroupId}
-                <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(promoProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(promoProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(promoProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(promoProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(promoProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(promoProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
             </div>
         </#list>
         <div class="tabletext">
-            <form method="post" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
+            <form method="post" action="<@ofbizUrl>createProductPromoCategory</@ofbizUrl>">
                 <input type="hidden" name="productPromoId" value="${productPromoId}">
                 <input type="hidden" name="productPromoRuleId" value="_NA_">
                 <input type="hidden" name="productPromoActionSeqId" value="_NA_">
@@ -426,12 +426,12 @@
             <div class="tabletext">
                 ${(promoProduct.internalName)?if_exists} [${promoProductPromoProduct.productId}]
                 - ${(promoApplEnumeration.description)?default(promoProductPromoProduct.productPromoApplEnumId)}
-                <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(promoProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoProduct.productPromoCondSeqId)?if_exists}&productId=${(promoProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>deleteProductPromoProduct?productPromoId=${(promoProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoProduct.productPromoCondSeqId)?if_exists}&productId=${(promoProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
             </div>
         </#list>
         <div class="tabletext">
-            <form method="post" name="createpromoproductform" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
+            <form method="post" name="createpromoproductform" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>">
                 <input type="hidden" name="productPromoId" value="${productPromoId}">
                 <input type="hidden" name="productPromoRuleId" value="_NA_">
                 <input type="hidden" name="productPromoActionSeqId" value="_NA_">

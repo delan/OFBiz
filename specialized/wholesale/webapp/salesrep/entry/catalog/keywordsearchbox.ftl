@@ -43,7 +43,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td align="center">
-            <form name="keywordsearchform" method="post" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
+            <form name="keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style='margin: 0;'>
               <input type='hidden' name="VIEW_SIZE" value="10">
               <div class='tabletext'>
                 <input type='text' class='inputBox' name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}">
@@ -79,7 +79,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td align="center">
-            <form name="advancedsearchform" method="post" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style='margin: 0;'>
+            <form name="advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>" style='margin: 0;'>
               <#if 0 < otherSearchProdCatalogCategories?size>
                 <div class='tabletext'>${uiLabelMap.ProductAdvancedSearchIn}: </div>
                 <div class='tabletext'>

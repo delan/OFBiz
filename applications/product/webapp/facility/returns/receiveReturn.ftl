@@ -26,7 +26,7 @@
 -->
 
 <div class="head1">${uiLabelMap.ProductReceiveReturn} <span class='head2'>${uiLabelMap.CommonInto}&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+<a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 
 <div>&nbsp;</div>
 
@@ -61,7 +61,7 @@
 
 <#-- Multi-Item Return Receiving -->
 <#if returnHeader?has_content>
-  <form method="post" action="<@ofbizUrl>/receiveReturnedProduct</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>receiveReturnedProduct</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
     <#-- general request fields -->
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
     <input type="hidden" name="returnId" value="${requestParameters.returnId?if_exists}">   
@@ -216,7 +216,7 @@
           </tr>
           <tr>
             <td colspan="2" align="right">
-              <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReturnToReceiving}</a>
+              <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReturnToReceiving}</a>
             </td>
           </tr>          
         <#else>        
@@ -234,7 +234,7 @@
   
   <#-- Initial Screen -->
 <#else>
-  <form name="selectAllForm" method="post" action="<@ofbizUrl>/ReceiveReturn</@ofbizUrl>" style='margin: 0;'>
+  <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveReturn</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
     <input type="hidden" name="initialSelected" value="Y">
 	<table border='0' cellpadding='2' cellspacing='0'>

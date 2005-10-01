@@ -28,7 +28,7 @@
 <#if hasPermission>
 
 <div class="head1">Find Global GL Account</div>
-<div><a href="<@ofbizUrl>/EditGlobalGlAccount</@ofbizUrl>" class="buttontext">[Create New Global GL Account]</a></div>
+<div><a href="<@ofbizUrl>EditGlobalGlAccount</@ofbizUrl>" class="buttontext">[Create New Global GL Account]</a></div>
 <br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -46,7 +46,7 @@
   <#assign glAccountClass = glAccount.getRelatedOne("GlAccountClass")>
   <#assign glResourceType = glAccount.getRelatedOne("GlResourceType")>
   <tr valign="middle">
-    <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditGlobalGlAccount?glAccountId=${glAccount.glAccountId}</@ofbizUrl>" class="buttontext">[${glAccount.glAccountId}]</a></div></td>   
+    <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditGlobalGlAccount?glAccountId=${glAccount.glAccountId}</@ofbizUrl>" class="buttontext">[${glAccount.glAccountId}]</a></div></td>   
     <td><div class="tabletext">&nbsp;${glAccount.accountName?if_exists}</div></td>
     <td><div class="tabletext">&nbsp;${glAccount.accountCode?if_exists}</div></td>
     <td><div class="tabletext">&nbsp;${glAccount.parentGlAccountId?if_exists}</div></td>
@@ -54,7 +54,7 @@
     <td><div class="tabletext">&nbsp;${glAccountClass.description?default(glAccount.glAccountClassId)}</div></td>
     <td><div class="tabletext">&nbsp;${glResourceType.description?default(glAccount.glResourceTypeId)}</div></td>
     <td>
-      <a href="<@ofbizUrl>/EditGlobalGlAccount?glAccountId=${glAccount.glAccountId}</@ofbizUrl>" class="buttontext">
+      <a href="<@ofbizUrl>EditGlobalGlAccount?glAccountId=${glAccount.glAccountId}</@ofbizUrl>" class="buttontext">
       [${uiLabelMap.CommonEdit}]</a>
     </td>
   </tr>

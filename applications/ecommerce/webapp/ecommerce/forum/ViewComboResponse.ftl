@@ -14,7 +14,7 @@
             <#if counter < len>
         ${indent}
         ${pair[0]?if_exists} - ${pair[1]?if_exists}
-        <a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${pair[0]?if_exists}&nodeTrailCsv=${csv?if_exists}"></@ofbizUrl>${uiLabelMap.CommonView}</a> <br/> 
+        <a class="tabButton" href="<@ofbizUrl>ViewBlog?contentId=${pair[0]?if_exists}&nodeTrailCsv=${csv?if_exists}"></@ofbizUrl>${uiLabelMap.CommonView}</a> <br/> 
             <#assign indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
             <#else>
         <hr>
@@ -25,7 +25,7 @@
     
         <#if dataResourceId?exists>
             <br/>
-            <img src="<@ofbizUrl>/img?imgId=${dataResourceId}</@ofbizUrl>" />
+            <img src="<@ofbizUrl>img?imgId=${dataResourceId}</@ofbizUrl>" />
         </#if>
         <br/>
     </#if>

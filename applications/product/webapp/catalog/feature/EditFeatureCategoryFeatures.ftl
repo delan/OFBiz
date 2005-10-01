@@ -26,7 +26,7 @@
 -->
 
 <div class="head1">${uiLabelMap.ProductEditFeaturesForFeatureCategory} "${(curProductFeatureCategory.description)?if_exists}"</div>
-<a href="<@ofbizUrl>/EditFeature?productFeatureCategoryId=${productFeatureCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewFeature}]</a>
+<a href="<@ofbizUrl>EditFeature?productFeatureCategoryId=${productFeatureCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewFeature}]</a>
 
 <br/>
 <p class="head2">${uiLabelMap.ProductProductFeatureMaintenance}</p>
@@ -40,11 +40,11 @@
             <span class="tabletext">
             <b>
             <#if (viewIndex > 0)>
-            <a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+            <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             ${lowIndex+1} - ${highIndex} of ${listSize}
             <#if (listSize > highIndex)>
-            | <a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+            | <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
             </b>
             </span>
@@ -53,7 +53,7 @@
     </table>
 </#if>
 <table border="1" cellpadding='2' cellspacing='0'>
-    <form method='POST' action='<@ofbizUrl>/UpdateProductFeatureInCategory</@ofbizUrl>' name="selectAllForm">
+    <form method='POST' action='<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>' name="selectAllForm">
     <input type="hidden" name="_useRowSubmit" value="Y">
     <input type="hidden" name="_checkGlobalScope" value="N">
     <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}">
@@ -76,7 +76,7 @@
   <#assign curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType")>
   <tr valign="middle" class='viewOneTR1'>
       <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}">
-      <td><a href="<@ofbizUrl>/EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
+      <td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
       <td><input type="text" class='inputBox' size='15' name="description_o_${rowCount}" value="${productFeature.description}"></td>
       <td><select name='productFeatureTypeId_o_${rowCount}' size="1" class='selectBox'>
         <#if productFeature.productFeatureTypeId?has_content>

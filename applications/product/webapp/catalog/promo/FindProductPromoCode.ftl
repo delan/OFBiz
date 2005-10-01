@@ -26,9 +26,9 @@
 <#if productPromoId?exists>
     <div>
         <#if manualOnly?if_exists == "Y">
-            <a href="<@ofbizUrl>/FindProductPromoCode?manualOnly=N&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[View Manual and Automatic]</a>
+            <a href="<@ofbizUrl>FindProductPromoCode?manualOnly=N&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[View Manual and Automatic]</a>
         <#else>
-            <a href="<@ofbizUrl>/FindProductPromoCode?manualOnly=Y&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
+            <a href="<@ofbizUrl>FindProductPromoCode?manualOnly=Y&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
         </#if>
     </div>
     <br/>
@@ -44,14 +44,14 @@
         <#list productPromoCodes as productPromoCode>
             <#assign productPromo = productPromoCode.getRelatedOne("ProductPromo")>
             <tr valign="middle">
-                <td><div class='tabletext'>&nbsp;<a href="<@ofbizUrl>/EditProductPromoCode?productPromoCodeId=${(productPromoCode.productPromoCodeId)?if_exists}</@ofbizUrl>" class="buttontext">[${(productPromoCode.productPromoCodeId)?if_exists}]</a></div></td>
+                <td><div class='tabletext'>&nbsp;<a href="<@ofbizUrl>EditProductPromoCode?productPromoCodeId=${(productPromoCode.productPromoCodeId)?if_exists}</@ofbizUrl>" class="buttontext">[${(productPromoCode.productPromoCodeId)?if_exists}]</a></div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromoCode.useLimitPerCode)?if_exists}</div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromoCode.useLimitPerCustomer)?if_exists}</div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromoCode.requireEmailOrParty)?if_exists}</div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromoCode.createdDate)?if_exists}</div></td>
                 <td>
-                    <a href='<@ofbizUrl>/EditProductPromoCode?productPromoCodeId=${(productPromoCode.productPromoCodeId)?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
-                    <a href='<@ofbizUrl>/deleteProductPromoCode?productPromoCodeId=${(productPromoCode.productPromoCodeId)?if_exists}&productPromoId=${productPromoId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDelete}]</a>
+                    <a href='<@ofbizUrl>EditProductPromoCode?productPromoCodeId=${(productPromoCode.productPromoCodeId)?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+                    <a href='<@ofbizUrl>deleteProductPromoCode?productPromoCodeId=${(productPromoCode.productPromoCodeId)?if_exists}&productPromoId=${productPromoId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
         </#list>

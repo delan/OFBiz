@@ -27,18 +27,18 @@
 -->
     
     <div class="head1">${uiLabelMap.ProductLocationFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
-    <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacilityLocation}]</a>
+    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+    <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacilityLocation}]</a>
     <#if facilityId?exists && locationSeqId?exists>
-        <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${facilityId}&locationSeqId=${locationSeqId}</@ofbizUrl>" class="buttontext">[[${uiLabelMap.ProductNewInventoryItem}]</a>
+        <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&locationSeqId=${locationSeqId}</@ofbizUrl>" class="buttontext">[[${uiLabelMap.ProductNewInventoryItem}]</a>
     </#if>
     
     <#if facilityId?exists && !(facilityLocation?exists)> 
-        <form action="<@ofbizUrl>/CreateFacilityLocation</@ofbizUrl>" method="post" style="margin: 0;">
+        <form action="<@ofbizUrl>CreateFacilityLocation</@ofbizUrl>" method="post" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="facilityId" value="${facilityId}">  
     <#elseif facilityLocation?exists>
-        <form action="<@ofbizUrl>/UpdateFacilityLocation</@ofbizUrl>" method="post" style="margin: 0;">
+        <form action="<@ofbizUrl>UpdateFacilityLocation</@ofbizUrl>" method="post" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
         <input type="hidden" name="locationSeqId" value="${locationSeqId}">
@@ -124,7 +124,7 @@
 	        <tr valign="middle">
 	            <td><div class="tabletext"><#if product?exists>${product.internalName}</#if>[${productFacilityLocation.productId}]</div></td>
 	            <td align="center">
-	                <FORM method="post" action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
+	                <FORM method="post" action="<@ofbizUrl>updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
 	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
 	                    <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
 	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)?if_exists}">
@@ -134,14 +134,14 @@
 	                </FORM>
 	            </td>
 	            <td align="center">
-	            <a href="<@ofbizUrl>/deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}&locationSeqId=${(productFacilityLocation.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
+	            <a href="<@ofbizUrl>deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}&locationSeqId=${(productFacilityLocation.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
 	            [${uiLabelMap.CommonDelete}]</a>
 	            </td>
 	        </tr>
         </#list>
         </table>
         <br/>
-        <form method="post" action="<@ofbizUrl>/createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
+        <form method="post" action="<@ofbizUrl>createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
             <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
             <input type="hidden" name="locationSeqId" value="${locationSeqId?if_exists}">
             <input type="hidden" name="useValues" value="true">

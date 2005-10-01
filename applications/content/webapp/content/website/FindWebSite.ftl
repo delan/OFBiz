@@ -27,7 +27,7 @@
 <#if hasPermission>
 
 <div class="head1">WebSite List</div>
-<div><a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[Create New WebSite]</a></div>
+<div><a href="<@ofbizUrl>EditWebSite</@ofbizUrl>" class="buttontext">[Create New WebSite]</a></div>
 <br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -36,9 +36,9 @@
   </tr>
 <#list webSites as webSite>
   <tr valign="middle">
-    <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">${webSite.siteName} [${webSite.webSiteId}]</a></div></td>
+    <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">${webSite.siteName} [${webSite.webSiteId}]</a></div></td>
     <td>
-      <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">
+      <a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">
       [Edit]</a>
     </td>
   </tr>

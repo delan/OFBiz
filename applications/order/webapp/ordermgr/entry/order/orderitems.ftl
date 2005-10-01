@@ -56,7 +56,7 @@
                 <td valign="top">                      
                   <div class="tabletext"> 
                     <#if orderItem.productId?exists>                       
-                      <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
+                      <a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
                     <#else>                                                    
                       <b>${itemType.description}</b> : ${orderItem.itemDescription?if_exists}
                     </#if>

@@ -28,7 +28,7 @@
     <#if productId?exists>
         <hr class="sepbar"/>
         <div class="head2">${uiLabelMap.ProductDuplicateProduct}</div>
-        <form action="<@ofbizUrl>/DuplicateProduct</@ofbizUrl>" method="post" style="margin: 0;">
+        <form action="<@ofbizUrl>DuplicateProduct</@ofbizUrl>" method="post" style="margin: 0;">
             <input type="hidden" name="oldProductId" value="${productId}"/>
             <div>
                 <span class="tabletext">${uiLabelMap.ProductDuplicateRemoveSelectedWithNewId}:</span>
@@ -60,7 +60,7 @@
         <#if product?exists && product.isVirtual?if_exists == "Y">
         <hr class="sepbar"/>
         <div class="head2">${uiLabelMap.ProductUpdateProductVariants}</div>
-        <form action="<@ofbizUrl>/UpdateProductVariants?productId=${productId}</@ofbizUrl>" method="post" style="margin: 0;">
+        <form action="<@ofbizUrl>UpdateProductVariants?productId=${productId}</@ofbizUrl>" method="post" style="margin: 0;">
             <input type="hidden" name="virtualProductId" value="${productId}"/>
             <div class="tabletext">
                 <b>${uiLabelMap.CommonUpdateVariants}:</b>

@@ -29,7 +29,7 @@
     <div class="screenlet-header">
         <div style="float: right;">
             <#if orderId?exists>
-                <a href="<@ofbizUrl>/orderview?order_id=${orderId}</@ofbizUrl>" class="submenutext">[View&nbsp;Order]</a>
+                <a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="submenutext">[View&nbsp;Order]</a>
             </#if>
         </div>
         <div class="boxhead">Delivery Schedule Info</div>

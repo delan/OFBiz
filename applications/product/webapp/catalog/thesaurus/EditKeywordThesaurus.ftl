@@ -26,7 +26,7 @@
  *@since      3.0
 -->
 <div class="head1">${uiLabelMap.ProductAlternateKeyWordThesaurus}</div>
-<form method="post" action="<@ofbizUrl>/createKeywordThesaurus</@ofbizUrl>">
+<form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
         <div class="tabletext">
         ${uiLabelMap.ProductKeyword} :<input type="text" name="enteredKeyword" size="10" class="inputBox"/>
         ${uiLabelMap.ProductAlternate} :<input type="text" name="alternateKeyword" size="10" class="inputBox"/>
@@ -38,7 +38,7 @@
 <div class="tabletext">
     <#list letterList as letter>
       <#if letter == firstLetter><#assign highlight=true><#else><#assign highlight=false></#if>
-      <a href="<@ofbizUrl>/editKeywordThesaurus?firstLetter=${letter}</@ofbizUrl>" class="buttontext"><#if highlight>[</#if>[${letter}]<#if highlight>]</#if></a>
+      <a href="<@ofbizUrl>editKeywordThesaurus?firstLetter=${letter}</@ofbizUrl>" class="buttontext"><#if highlight>[</#if>[${letter}]<#if highlight>]</#if></a>
     </#list>
 </div>
 <br/>
@@ -55,10 +55,10 @@
         </#if>
         <tr>
           <td>
-            <form method="post" action="<@ofbizUrl>/createKeywordThesaurus</@ofbizUrl>">
+            <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
               <div class="tabletext">
                 <b>${keyword.enteredKeyword}</b>
-                <a href="<@ofbizUrl>/deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDeleteAll}]</a>
+                <a href="<@ofbizUrl>deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDeleteAll}]</a>
               </div>
               <div class="tabletext">
                 <input type="hidden" name="enteredKeyword" value=${keyword.enteredKeyword}>
@@ -71,7 +71,7 @@
           <td align="left">
       </#if>
       <div class="tabletext">
-        <a href="<@ofbizUrl>/deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}&alternateKeyword=${keyword.alternateKeyword}</@ofbizUrl>" class="buttontext">[X]</a>
+        <a href="<@ofbizUrl>deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}&alternateKeyword=${keyword.alternateKeyword}</@ofbizUrl>" class="buttontext">[X]</a>
         <b>${keyword.alternateKeyword}</b>&nbsp;(Rel:${(relationship.description)?default(keyword.relationshipEnumId?if_exists)})
       </div>
     </#list>

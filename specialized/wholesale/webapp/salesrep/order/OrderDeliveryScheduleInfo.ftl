@@ -33,7 +33,7 @@
           <td width="50%"><div class="boxhead">Delivery Schedule Info</div></td>
           <td width="50%"><div class="boxhead" align="right">
             <#if orderId?exists>
-                <a href="<@ofbizUrl>/orderview?order_id=${orderId}</@ofbizUrl>" class="submenutext">[View&nbsp;Order]</a>
+                <a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="submenutext">[View&nbsp;Order]</a>
             </#if>
           </td>
         </tr>

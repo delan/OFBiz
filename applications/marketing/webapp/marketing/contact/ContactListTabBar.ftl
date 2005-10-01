@@ -33,9 +33,9 @@
   <tr>
     <td align="right">
       <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditContactList?contactListId=${contactListId}</@ofbizUrl>" class="${selectedClassMap.EditContactList?default(unselectedClassName)}">${uiLabelMap.ContactList}</a>
-        <a href="<@ofbizUrl>/ListContactListParty?contactListId=${contactListId}</@ofbizUrl>" class="${selectedClassMap.ContactListParty?default(unselectedClassName)}">${uiLabelMap.ContactListParty}</a>
-        <a href="<@ofbizUrl>/ListContactListCommEvent?contactListId=${contactListId}</@ofbizUrl>" class="${selectedClassMap.ContactListCommEvent?default(unselectedClassName)}">${uiLabelMap.ContactListCommEvent}</a>
+        <a href="<@ofbizUrl>EditContactList?contactListId=${contactListId}</@ofbizUrl>" class="${selectedClassMap.EditContactList?default(unselectedClassName)}">${uiLabelMap.ContactList}</a>
+        <a href="<@ofbizUrl>ListContactListParty?contactListId=${contactListId}</@ofbizUrl>" class="${selectedClassMap.ContactListParty?default(unselectedClassName)}">${uiLabelMap.ContactListParty}</a>
+        <a href="<@ofbizUrl>ListContactListCommEvent?contactListId=${contactListId}</@ofbizUrl>" class="${selectedClassMap.ContactListCommEvent?default(unselectedClassName)}">${uiLabelMap.ContactListCommEvent}</a>
       </div>
     </td>
   </tr>

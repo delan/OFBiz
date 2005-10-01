@@ -42,7 +42,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-              <form method="post" action="<@ofbizUrl>/appendItemToOrder?${paramString}</@ofbizUrl>" name="appendItemForm" style="margin: 0;">
+              <form method="post" action="<@ofbizUrl>appendItemToOrder?${paramString}</@ofbizUrl>" name="appendItemForm" style="margin: 0;">
               <input type="hidden" name="orderId" value="${orderId}"/>
               <table border="0">
                 <tr>

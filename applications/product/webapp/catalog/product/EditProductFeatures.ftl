@@ -27,7 +27,7 @@
 -->
     <#if productId?exists>    
         <table border="1" cellpadding="2" cellspacing="0">
-        <form method="post" action="<@ofbizUrl>/UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
+        <form method="post" action="<@ofbizUrl>UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y">
         <input type="hidden" name="_checkGlobalScope" value="Y">
         <input type="hidden" name="productId" value="${productId}">
@@ -54,7 +54,7 @@
                 <td><div class="tabletext">${(productFeatureAndAppl.productFeatureId)?if_exists}</div></td>
                 <td><div class="tabletext">${(productFeatureAndAppl.description)?if_exists}</div></td>
                 <td><div class="tabletext">${(curProductFeatureType.description)?default((productFeatureAndAppl.productFeatureTypeId)?if_exists)}</div></td>
-                <td><a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}&productId=${(productFeatureAndAppl.productId)?if_exists}</@ofbizUrl>" class="buttontext">
+                <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}&productId=${(productFeatureAndAppl.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                     ${(curProductFeatureCategory.description)?if_exists}
                     [${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}]</a></td>
                 <#assign hasntStarted = false>
@@ -81,7 +81,7 @@
                     <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
                 </td>
                 <td>
-                <a href='<@ofbizUrl>/RemoveFeatureFromProduct?productId=${(productFeatureAndAppl.productId)?if_exists}&productFeatureId=${(productFeatureAndAppl.productFeatureId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
+                <a href='<@ofbizUrl>RemoveFeatureFromProduct?productId=${(productFeatureAndAppl.productId)?if_exists}&productFeatureId=${(productFeatureAndAppl.productFeatureId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
                  [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
@@ -93,7 +93,7 @@
         </table>
 
         <br/>
-        <form method="post" action="<@ofbizUrl>/ApplyFeaturesFromCategory</@ofbizUrl>" style='margin: 0;'>
+        <form method="post" action="<@ofbizUrl>ApplyFeaturesFromCategory</@ofbizUrl>" style='margin: 0;'>
         <input type="hidden" name="productId" value="${productId}">
         <div class='head2'>${uiLabelMap.ProductAddProductFeatureFromCategory}:</div>
         <br/>
@@ -119,7 +119,7 @@
 
         <br/>
 
-        <form method="post" action="<@ofbizUrl>/ApplyFeatureToProductFromTypeAndCode</@ofbizUrl>" style='margin: 0;' name='addFeatureByTypeIdCode'>
+        <form method="post" action="<@ofbizUrl>ApplyFeatureToProductFromTypeAndCode</@ofbizUrl>" style='margin: 0;' name='addFeatureByTypeIdCode'>
         <input type="hidden" name="productId" value="${productId}">
         <div class='head2'>${uiLabelMap.ProductAddProductFeatureTypeId}:</div>
         <br/>
@@ -146,7 +146,7 @@
 
         <br/>
 
-        <form method="post" action="<@ofbizUrl>/ApplyFeatureToProduct</@ofbizUrl>" style="margin: 0;" name="addFeatureById">
+        <form method="post" action="<@ofbizUrl>ApplyFeatureToProduct</@ofbizUrl>" style="margin: 0;" name="addFeatureById">
         <input type="hidden" name="productId" value="${productId}">
         <div class="head2">${uiLabelMap.ProductAddProductFeatureID}:</div>
         <br/>

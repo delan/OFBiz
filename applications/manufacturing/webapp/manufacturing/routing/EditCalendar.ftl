@@ -26,11 +26,11 @@
 
 <#if techDataCalendar?has_content>
   <div class="head1">${uiLabelMap.ManufacturingUpdateCalendar} </div>
-  <form name="calendarform" method="post" action="<@ofbizUrl>/UpdateCalendar</@ofbizUrl>">
+  <form name="calendarform" method="post" action="<@ofbizUrl>UpdateCalendar</@ofbizUrl>">
     <input type="hidden" name="calendarId" value="${techDataCalendar.calendarId}">
 <#else>
   <div class="head1">${uiLabelMap.ManufacturingCreateCalendar}</div>
-  <form name="calendarform" method="post" action="<@ofbizUrl>/CreateCalendar</@ofbizUrl>">
+  <form name="calendarform" method="post" action="<@ofbizUrl>CreateCalendar</@ofbizUrl>">
 </#if>
 
   <br/>
@@ -73,7 +73,7 @@
 <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td width='100%' align='right' valign='top'>
-            <a href="<@ofbizUrl>/EditCalendar</@ofbizUrl>" class="buttontext">${uiLabelMap.ManufacturingNewCalendar}</a>
+            <a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="buttontext">${uiLabelMap.ManufacturingNewCalendar}</a>
         </td>
     </tr>
 </table>

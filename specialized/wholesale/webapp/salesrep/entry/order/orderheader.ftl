@@ -31,12 +31,12 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Order Confirmation<#if orderHeader?exists>&nbsp;#<a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a></#if></div>
+                  <div class="boxhead">&nbsp;Order Confirmation<#if orderHeader?exists>&nbsp;#<a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a></#if></div>
                 </td>
                 <#if !orderHeader?exists>
                 <td align="right">
                   <div class="tabletext">
-                    <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">Items</a><#if cart?has_content && cart.getOrderType() != "PURCHASE_ORDER"><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">Shipping</a><a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">Options</a><a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">Payment</a></#if><a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="submenutextright">Create Order</a>
+                    <a href="<@ofbizUrl>orderentry</@ofbizUrl>" class="submenutext">Items</a><#if cart?has_content && cart.getOrderType() != "PURCHASE_ORDER"><a href="<@ofbizUrl>setShipping</@ofbizUrl>" class="submenutext">Shipping</a><a href="<@ofbizUrl>setOptions</@ofbizUrl>" class="submenutext">Options</a><a href="<@ofbizUrl>setBilling</@ofbizUrl>" class="submenutext">Payment</a></#if><a href="<@ofbizUrl>processorder</@ofbizUrl>" class="submenutextright">Create Order</a>
                   </div>
                 </td>   
                 </#if>                             

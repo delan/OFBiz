@@ -28,14 +28,14 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div class="simple-right-half">
-            <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductPicklistOptions}</a>
-            <a href="<@ofbizUrl>/PicklistManage?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductPicklistManage}</a>
-            <a href="<@ofbizUrl>/PickMoveStock?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductStockMoves}</a>
+            <a href="<@ofbizUrl>PicklistOptions?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductPicklistOptions}</a>
+            <a href="<@ofbizUrl>PicklistManage?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductPicklistManage}</a>
+            <a href="<@ofbizUrl>PickMoveStock?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductStockMoves}</a>
         </div>
         <div class="boxhead">${uiLabelMap.ProductStockMovesNeeded}</div>
     </div>
     <div class="screenlet-body">
-          <form method="post" action="<@ofbizUrl>/processPhysicalStockMove</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
+          <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
               <#-- general request fields -->
               <input type="hidden" name="facilityId" value="${facilityId?if_exists}">   
               <input type="hidden" name="_useRowSubmit" value="Y">

@@ -35,7 +35,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <form method="post" action="<@ofbizUrl>/setcustselect/${donePage}</@ofbizUrl>" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>setcustselect/${donePage}</@ofbizUrl>" style="margin: 0;">
         <select name="party_id" class="selectBox">
           <#if parties?has_content>
             <option value="">Select Customer</option>

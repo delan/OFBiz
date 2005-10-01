@@ -27,15 +27,15 @@
 -->
 <div class="head1">${uiLabelMap.ProductProductPromotionsList}</div>
 <div class="tabletext">
-    <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProductPromo}]</a>
+    <a href="<@ofbizUrl>EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProductPromo}]</a>
     <#if manualOnly?if_exists == "Y">
-        <a href="<@ofbizUrl>/FindProductPromo?manualOnly=N</@ofbizUrl>" class="buttontext">[View Manual and Imported]</a>
+        <a href="<@ofbizUrl>FindProductPromo?manualOnly=N</@ofbizUrl>" class="buttontext">[View Manual and Imported]</a>
     <#else>
-        <a href="<@ofbizUrl>/FindProductPromo?manualOnly=Y</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
+        <a href="<@ofbizUrl>FindProductPromo?manualOnly=Y</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
     </#if>
 </div>
 <div class="tabletext">
-    <form method="post" action="<@ofbizUrl>/EditProductPromoCode</@ofbizUrl>" style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>EditProductPromoCode</@ofbizUrl>" style="margin: 0;">
         Promotion Code: <input type="text" size="10" name="productPromoCodeId" class="inputBox">
         <input type="submit" value="${uiLabelMap.CommonEdit}">
     </form>
@@ -51,12 +51,12 @@
     </tr>
     <#list productPromos as productPromo>
         <tr valign="middle">
-            <td><div class='tabletext'>&nbsp;<a href="<@ofbizUrl>/EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext">${(productPromo.promoName)?if_exists} [${(productPromo.productPromoId)?if_exists}]</a></div></td>
+            <td><div class='tabletext'>&nbsp;<a href="<@ofbizUrl>EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext">${(productPromo.promoName)?if_exists} [${(productPromo.productPromoId)?if_exists}]</a></div></td>
             <td><div class='tabletext'>&nbsp;${(productPromo.promoText)?if_exists}</div></td>
             <td><div class='tabletext'>&nbsp;${(productPromo.requireCode)?default("N")}</div></td>
             <td><div class='tabletext'>&nbsp;${(productPromo.createdDate)?if_exists}</div></td>
             <td>
-                <a href='<@ofbizUrl>/EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+                <a href='<@ofbizUrl>EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
             </td>
         </tr>
     </#list>

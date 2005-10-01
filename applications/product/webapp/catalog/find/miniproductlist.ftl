@@ -29,9 +29,9 @@
     <div class="screenlet-header">
         <div class="simple-right-small">
             <#if isOpen>
-                <a href="<@ofbizUrl>/main?CategoryProductsState=close</@ofbizUrl>" class="lightbuttontext">&nbsp;_&nbsp;</a>
+                <a href="<@ofbizUrl>main?CategoryProductsState=close</@ofbizUrl>" class="lightbuttontext">&nbsp;_&nbsp;</a>
             <#else>
-                <a href="<@ofbizUrl>/main?CategoryProductsState=open</@ofbizUrl>" class="lightbuttontext">&nbsp;[]&nbsp;</a>
+                <a href="<@ofbizUrl>main?CategoryProductsState=open</@ofbizUrl>" class="lightbuttontext">&nbsp;[]&nbsp;</a>
             </#if>
         </div>
         <div class="boxhead">${uiLabelMap.ProductCategoryProducts}</div>
@@ -43,7 +43,7 @@
               <#list productCategoryMembers as productCategoryMember>
                 <#assign product = productCategoryMember.getRelatedOneCache("Product")>
                   <div>
-                    <a href='<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>' class='buttontext'>
+                    <a href='<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>' class='buttontext'>
                       ${product.internalName?default("No Internal Name")}
                     </a>
                     <div class='tabletext'>

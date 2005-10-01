@@ -43,7 +43,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/editforuminfo?contentId=${contentId?if_exists}&nodeTrailCsv=${nodeTrailCsv?if_exists}&contentIdTo=${contentIdTo?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
+            <a href="<@ofbizUrl>editforuminfo?contentId=${contentId?if_exists}&nodeTrailCsv=${nodeTrailCsv?if_exists}&contentIdTo=${contentIdTo?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceContentInformation}</div>
     </div>
@@ -59,14 +59,14 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/editaddimage?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=IMAGE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
+            <a href="<@ofbizUrl>editaddimage?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=IMAGE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceImageInformation}</div>
     </div>
     <div class="screenlet-body">
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr><td align="right" nowrap><div class='tabletext'><b>${uiLabelMap.EcommerceImage}</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
-        <img src="<@ofbizUrl>/img?imgId=${imgDataResourceId?if_exists}</@ofbizUrl>" />
+        <img src="<@ofbizUrl>img?imgId=${imgDataResourceId?if_exists}</@ofbizUrl>" />
 <div></td></tr>
   </table>
     </div>
@@ -75,7 +75,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=SUMMARY&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
+            <a href="<@ofbizUrl>editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=SUMMARY&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSummaryInformation}</div>
     </div>
@@ -91,7 +91,7 @@ ${summaryData?if_exists}
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=ARTICLE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
+            <a href="<@ofbizUrl>editaddforumdata?contentIdTo=${contentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}&mapKey=ARTICLE&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonUpdate}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceArticleInformation}</div>
     </div>

@@ -28,23 +28,23 @@
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; payment info
-        form.action="<@ofbizUrl>/updateShippingOptions/checkoutpayment</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateShippingOptions/checkoutpayment</@ofbizUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>/updateShippingOptions/showcart</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateShippingOptions/showcart</@ofbizUrl>";
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>/updateShippingOptions/editcontactmech?DONE_PAGE=splitship&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateShippingOptions/editcontactmech?DONE_PAGE=splitship&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
         form.submit();
     } else if (mode == "SV") {
         // save option; return to current screen
-        form.action="<@ofbizUrl>/updateShippingOptions/splitship</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateShippingOptions/splitship</@ofbizUrl>";
         form.submit();
     } else if (mode == "SA") {
         // selected shipping address
-        form.action="<@ofbizUrl>/updateShippingAddress/splitship</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateShippingAddress/splitship</@ofbizUrl>";
         form.submit();
     }
 }
@@ -174,7 +174,7 @@ function submitForm(form, mode, value) {
           <#list cart.items() as cartLine>
             <#assign cartLineIndex = cart.getItemIndex(cartLine)>
             <tr>
-              <form method="post" action="<@ofbizUrl>/updatesplit</@ofbizUrl>" name="editgroupform" style="margin: 0;">
+              <form method="post" action="<@ofbizUrl>updatesplit</@ofbizUrl>" name="editgroupform" style="margin: 0;">
                 <input type="hidden" name="itemIndex" value="${cartLineIndex}"/>
                 <td>
                   <div class="tabletext">
@@ -184,12 +184,12 @@ function submitForm(form, mode, value) {
                       <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale)?if_exists>
                       <#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                       <#if smallImageUrl?has_content>
-                        <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
+                        <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
                           <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${smallImageUrl}</@ofbizContentUrl>" align="left" width="50" class="imageborder" border="0"/>
                         </a>
                       </#if>
                       <#-- end code to display a small image of the product -->
-                      <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
+                      <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
                       ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
 
                       <#-- display the registered ship groups and quantity -->
@@ -259,10 +259,10 @@ function submitForm(form, mode, value) {
 <table>
   <tr valign="top">
     <td align="left">
-      &nbsp;<a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      &nbsp;<a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
     </td>
     <td align="right">
-      <a href="<@ofbizUrl>/view/checkoutpayment</@ofbizUrl>" class="buttontextbig">${uiLabelMap.CommonContinue}</a>
+      <a href="<@ofbizUrl>view/checkoutpayment</@ofbizUrl>" class="buttontextbig">${uiLabelMap.CommonContinue}</a>
     </td>
   </tr>
 </table>

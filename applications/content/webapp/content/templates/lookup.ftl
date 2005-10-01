@@ -44,7 +44,7 @@
         
         function execRemoteCall(requestName,dataResourceId, contentId, contentIdTo, mapKey) {
                 if (!win_opener) return;
-                var url = "<@ofbizUrl>/" + requestName + "/~dataResourceId=" 
+                var url = "<@ofbizUrl>" + requestName + "/~dataResourceId=" 
                         + dataResourceId 
                         + "/~contentId=" + contentId 
                         + "/~contentIdTo=" + contentIdTo 

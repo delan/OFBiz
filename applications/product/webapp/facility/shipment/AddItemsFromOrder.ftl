@@ -26,7 +26,7 @@
 -->
 <#if shipment?exists>
 
-<form name="additemsfromorder" action="<@ofbizUrl>/AddItemsFromOrder</@ofbizUrl>">
+<form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<div class="tabletext">
         ${uiLabelMap.ProductOrderId} : <input type="text" class='inputBox' size="20" name="orderId" value="${orderId?if_exists}"/>
@@ -68,9 +68,9 @@
 <#if orderItemDatas?exists>
     <#assign rowCount = 0>
     <#if isSalesOrder>
-        <form action="<@ofbizUrl>/issueOrderItemShipGrpInvResToShipment</@ofbizUrl>" name="selectAllForm">
+        <form action="<@ofbizUrl>issueOrderItemShipGrpInvResToShipment</@ofbizUrl>" name="selectAllForm">
     <#else>
-        <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="selectAllForm">
+        <form action="<@ofbizUrl>issueOrderItemToShipment</@ofbizUrl>" name="selectAllForm">
     </#if>
     <input type="hidden" name="shipmentId" value="${shipmentId}">
     <input type="hidden" name="_useRowSubmit" value="Y">

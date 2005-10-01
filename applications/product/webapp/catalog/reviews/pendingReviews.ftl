@@ -32,7 +32,7 @@
 </#if>
 
 <#list pendingReviews as review>
-  <form name="prr_${review.productReviewId}" method="post" action="<@ofbizUrl>/updateProductReview</@ofbizUrl>">
+  <form name="prr_${review.productReviewId}" method="post" action="<@ofbizUrl>updateProductReview</@ofbizUrl>">
     <input type="hidden" name="productReviewId" value="${review.productReviewId}">
     <table border="0" cellpadding="2">
       <#assign postedUserLogin = review.getRelatedOne("UserLogin")>

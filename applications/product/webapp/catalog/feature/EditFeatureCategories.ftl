@@ -29,7 +29,7 @@
 
 <br/>
 
-<form method="post" action="<@ofbizUrl>/EditFeature</@ofbizUrl>" style="margin: 0;">
+<form method="post" action="<@ofbizUrl>EditFeature</@ofbizUrl>" style="margin: 0;">
   <div class="head2">${uiLabelMap.ProductEditFeatureId} :</div>
   <input type="text" class="inputBox" size="12" name="productFeatureId" value=""/>
   <input type="submit" value="${uiLabelMap.CommonEdit}"/>
@@ -49,9 +49,9 @@
 
 <#list productFeatureCategories as productFeatureCategory>
   <tr valign="middle">
-    <FORM method="post" action="<@ofbizUrl>/UpdateFeatureCategory</@ofbizUrl>">
+    <FORM method="post" action="<@ofbizUrl>UpdateFeatureCategory</@ofbizUrl>">
     <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategory.productFeatureCategoryId}">
-    <td><a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategory.productFeatureCategoryId}</@ofbizUrl>" class="buttontext">${productFeatureCategory.productFeatureCategoryId}</a></td>
+    <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategory.productFeatureCategoryId}</@ofbizUrl>" class="buttontext">${productFeatureCategory.productFeatureCategoryId}</a></td>
     <td><input type="text" class="inputBox" size="30" name="description" value="${productFeatureCategory.description?if_exists}"></td>
     <td>
       <select name="parentCategoryId" size="1" class="selectBox">
@@ -67,14 +67,14 @@
       </select>
     </td>
     <td><INPUT type="submit" value="${uiLabelMap.CommonUpdate}"></td>
-    <td><a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategory.productFeatureCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></td>
+    <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategory.productFeatureCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></td>
     </FORM>
   </tr>
 </#list>
 </table>
 <br/>
 
-<form method="post" action="<@ofbizUrl>/CreateFeatureCategory</@ofbizUrl>" style="margin: 0;">
+<form method="post" action="<@ofbizUrl>CreateFeatureCategory</@ofbizUrl>" style="margin: 0;">
   <div class="head2">${uiLabelMap.ProductCreateAProductFeatureCategory}:</div>
   <br/>
   <table>

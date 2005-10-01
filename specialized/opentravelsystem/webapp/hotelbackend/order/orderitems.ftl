@@ -38,7 +38,7 @@
           <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
               <td valign="middle" align="right">
-                <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCancelAllItems}</a></div>
+                <div class="tabletext"><a href="<@ofbizUrl>changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCancelAllItems}</a></div>
               </td>
             </#if>
           </#if>
@@ -109,7 +109,7 @@
                             <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader")>
                             <#if returnHeader.statusId != "RETURN_CANCELLED">
                               <div class="tabletext">
-                                <font color="red"><b>${uiLabelMap.OrderReturned}</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="buttontext">${returnItem.returnId}</a>
+                                <font color="red"><b>${uiLabelMap.OrderReturned}</b></font> #<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="buttontext">${returnItem.returnId}</a>
                               </div>
                             </#if>
                           </#list>
@@ -137,7 +137,7 @@
                       <td>&nbsp;</td>
                       <td align="right" valign="top" nowrap>
                         <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED") || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && orderHeader.statusId != "ORDER_SENT")>
-                          <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancelAll}]</a></div>
+                          <div class="tabletext"><a href="<@ofbizUrl>cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancelAll}]</a></div>
                         <#else>
                           &nbsp;
                         </#if>
@@ -238,7 +238,7 @@
                         <td align="right" valign="top" nowrap>
                           <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)))>
                           <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
-                            <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancel}]</a></div>
+                            <div class="tabletext"><a href="<@ofbizUrl>cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancel}]</a></div>
                           <#else>
                             &nbsp;
                           </#if>
@@ -353,7 +353,7 @@
               <#-- add new adjustment -->
               <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">
                 <tr>
-                  <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>/addOrderAdjustment?${paramString}</@ofbizUrl>">
+                  <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>addOrderAdjustment?${paramString}</@ofbizUrl>">
                     <input type="hidden" name="orderId" value="${orderId}">
                     <input type="hidden" name="comments" value="Added manually by "${userLogin.userLoginId}"">
                     <td align="right" colspan="5">

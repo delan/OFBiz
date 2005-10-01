@@ -27,10 +27,10 @@
 <#if security.hasEntityPermission("SALESREP_ORDER", "_VIEW", session)>  
   <p class="head1">Add Note</p>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
+  &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
   &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[Save]</a>
 
-  <form method="post" action="<@ofbizUrl>/createordernote/${donePage}</@ofbizUrl>" name="createnoteform">
+  <form method="post" action="<@ofbizUrl>createordernote/${donePage}</@ofbizUrl>" name="createnoteform">
     <input type="hidden" name="orderId" value="${orderId?if_exists}">
     <table width="90%" border="0" cellpadding="2" cellspacing="0">
       <tr>
@@ -43,7 +43,7 @@
     </table>
   </form>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
+  &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
   &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[Save]</a>
   
 <#else>

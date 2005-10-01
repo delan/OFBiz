@@ -40,7 +40,7 @@
     <tr valign="middle">
         <td><div class="tabletext"><#if productGlAccountType?exists>${(productGlAccountType.description)?if_exists}<#else>[${(productGlAccount.productGlAccountTypeId)?if_exists}]</#if></div></td>
         <td align="center">
-            <form method="post" action="<@ofbizUrl>/updateProductGlAccount</@ofbizUrl>" name="lineForm${line}">
+            <form method="post" action="<@ofbizUrl>updateProductGlAccount</@ofbizUrl>" name="lineForm${line}">
                 <input type="hidden" name="productId" value="${(productGlAccount.productId)?if_exists}"/>
                 <input type="hidden" name="productGlAccountTypeId" value="${(productGlAccount.productGlAccountTypeId)?if_exists}"/>
                 <select class="selectBox" name="glAccountId">
@@ -56,14 +56,14 @@
             </form>
         </td>
         <td align="center">
-        <a href="<@ofbizUrl>/deleteProductGlAccount?productId=${(productGlAccount.productId)?if_exists}&productGlAccountTypeId=${(productGlAccount.productGlAccountTypeId)?if_exists}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>deleteProductGlAccount?productId=${(productGlAccount.productId)?if_exists}&productGlAccountTypeId=${(productGlAccount.productGlAccountTypeId)?if_exists}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
         </td>
     </tr>
     </#list>
     </table>
     <br/>
-    <form method="post" action="<@ofbizUrl>/createProductGlAccount</@ofbizUrl>" style="margin: 0;" name="createProductGlAccountForm">
+    <form method="post" action="<@ofbizUrl>createProductGlAccount</@ofbizUrl>" style="margin: 0;" name="createProductGlAccountForm">
         <input type="hidden" name="productId" value="${productId}"/>
         <input type="hidden" name="useValues" value="true"/>
     

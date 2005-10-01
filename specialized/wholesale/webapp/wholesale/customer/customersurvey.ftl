@@ -47,7 +47,7 @@
                 <td width="90%">
                   <#-- Render the survey -->
                   <#if surveyWrapper?has_content>
-                    <form method="post" action="<@ofbizUrl>/profilesurvey/viewprofile</@ofbizUrl>" style="margin: 0;">
+                    <form method="post" action="<@ofbizUrl>profilesurvey/viewprofile</@ofbizUrl>" style="margin: 0;">
                       ${surveyWrapper.renderSurvey().toString()}
                     </form>
                   <#else>

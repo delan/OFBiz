@@ -39,11 +39,11 @@
   <tr>
     <td align="right">
       <div class="tabContainer">
-        <a href="<@ofbizUrl>/LookupSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.LookupSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupLookup}</a>
-        <a href="<@ofbizUrl>/viewSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.viewSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroup}</a>
-        <a href="<@ofbizUrl>/listSegmentGroupClass?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupClassification?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupClassification}</a>
-        <a href="<@ofbizUrl>/listSegmentGroupGeo?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupGeo?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupGeo}</a>
-        <a href="<@ofbizUrl>/listSegmentGroupRole?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupRole?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupRole}</a>
+        <a href="<@ofbizUrl>LookupSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.LookupSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupLookup}</a>
+        <a href="<@ofbizUrl>viewSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.viewSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroup}</a>
+        <a href="<@ofbizUrl>listSegmentGroupClass?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupClassification?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupClassification}</a>
+        <a href="<@ofbizUrl>listSegmentGroupGeo?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupGeo?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupGeo}</a>
+        <a href="<@ofbizUrl>listSegmentGroupRole?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupRole?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupRole}</a>
       </div>
     </td>
   </tr>

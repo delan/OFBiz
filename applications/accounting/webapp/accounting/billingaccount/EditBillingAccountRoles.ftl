@@ -52,7 +52,7 @@
         <#if role.thruDate?exists>
           &nbsp;
         <#else>
-        <a href="<@ofbizUrl>/updateBillingAccountRole?billingAccountId=${role.billingAccountId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate}&thruDate=${nowTimestamp}</@ofbizUrl>" class="buttontext">[Remove]</a> 
+        <a href="<@ofbizUrl>updateBillingAccountRole?billingAccountId=${role.billingAccountId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate}&thruDate=${nowTimestamp}</@ofbizUrl>" class="buttontext">[Remove]</a> 
         </#if>
       </td>
     </tr>
@@ -63,7 +63,7 @@
 <br/>
 <div class="head1">${uiLabelMap.AccountingCreateBillingAccountRole}</div>
 <br/>
-<form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccountRole</@ofbizUrl>">
+<form name="billingform" method="post" action="<@ofbizUrl>createBillingAccountRole</@ofbizUrl>">
   <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">
   <table width="90%" border="0" cellpadding="2" cellspacing="0"> 
     <tr>

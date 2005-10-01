@@ -30,7 +30,7 @@
     function processOrder() {
         if (clicked == 0) {
             clicked++;
-            //window.location.replace("<@ofbizUrl>/processorder</@ofbizUrl>");
+            //window.location.replace("<@ofbizUrl>processorder</@ofbizUrl>");
             document.processForm.processButton.disabled=true;
             document.processForm.processButton.value="${uiLabelMap.OrderSubmittingOrder}";
             document.processForm.submit();
@@ -51,10 +51,10 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-        <a href="<@ofbizUrl>/${requestParameters.BACK_PAGE?default("setBilling")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBackToOptions}]</a>
+        <a href="<@ofbizUrl>${requestParameters.BACK_PAGE?default("setBilling")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBackToOptions}]</a>
       </td>
       <td align="right">
-        <form type="POST" action="<@ofbizUrl>/processorder</@ofbizUrl>" name="processForm">
+        <form type="POST" action="<@ofbizUrl>processorder</@ofbizUrl>" name="processForm">
           <#if (requestParameters.checkoutpage)?has_content>
             <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}">
           </#if>

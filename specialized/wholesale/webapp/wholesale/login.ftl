@@ -55,7 +55,7 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
-                  <form method="post" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style='margin: 0;'>
+                  <form method="post" action="<@ofbizUrl>login${previousParams}</@ofbizUrl>" name="loginform" style='margin: 0;'>
                     <table border='0' cellpadding='0' cellspacing='2'>
                       <tr align="center">
                         <td align='right'><span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span></td>
@@ -118,7 +118,7 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td valign='middle' align='center'>
-                  <form method="post" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style='margin: 0;'>
+                  <form method="post" action="<@ofbizUrl>forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style='margin: 0;'>
                     <span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span><input type="text" size="20" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>'>
                     <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}" name="EMAIL_PASSWORD"></div>
                   </form>
@@ -148,7 +148,7 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
-                  <form method="post" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style='margin: 0;'>
+                  <form method="post" action="<@ofbizUrl>newcustomer${previousParams}</@ofbizUrl>" style='margin: 0;'>
                     <div class="tabletext" align="center">${uiLabelMap.CommonMayCreateNewAccountHere}:</div>
                     <div align='center'><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonMayCreate}"></div>
                   </form>
@@ -177,7 +177,7 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
-                  <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" style='margin: 0;'>
+                  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" style='margin: 0;'>
                     <div class="tabletext" align="center">${uiLabelMap.CommonCheckoutAnonymousMsg}:</div>
                     <div align='center'><input type="submit" class="smallSubmit" value="Checkout"></div>
                   </form>

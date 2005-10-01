@@ -42,9 +42,9 @@
     </td>
     <td align="right">
       <#if showOld>
-        <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyHideOld}</a>&nbsp;&nbsp;
+        <a href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyHideOld}</a>&nbsp;&nbsp;
       <#else>
-        <a href="<@ofbizUrl>/viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyShowOld}</a>&nbsp;&nbsp;
+        <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyShowOld}</a>&nbsp;&nbsp;
       </#if>
     </td>
   </tr>
@@ -54,7 +54,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/editperson</@ofbizUrl>" class="submenutextright">
+            <a href="<@ofbizUrl>editperson</@ofbizUrl>" class="submenutextright">
             <#if person?exists>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.PartyPersonalInformation}</div>
@@ -112,7 +112,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.PartyContactInformation}</div>
     </div>
@@ -147,7 +147,7 @@
                         <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
                           <span class="buttontextdisabled">${uiLabelMap.EcommerceIsDefaul}</span>
                         <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
-                          <a href="<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceSetDefault}</a>
+                          <a href="<@ofbizUrl>setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceSetDefault}</a>
                         </#if>
                       <#else>
                         <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
@@ -213,11 +213,11 @@
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(${partyContactMech.allowSolicitation?if_exists})</b></div></td>
             <td width="5">&nbsp;</td>
             <td align="right" valign="top" nowrap width="1%" nowrap>
-              <div><a href="<@ofbizUrl>/editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">
+              <div><a href="<@ofbizUrl>editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">
               ${uiLabelMap.CommonUpdate}</a>&nbsp;</div>
             </td>
             <td align="right" valign="top" width="1%" nowrap>
-              <div><a href="<@ofbizUrl>/deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">
+              <div><a href="<@ofbizUrl>deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">
               ${uiLabelMap.CommonExpire}</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
@@ -233,7 +233,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewCreditCard}</a><a href="<@ofbizUrl>/editgiftcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewGiftCard}</a><a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyCreateNewEftAccount}</a>
+            <a href="<@ofbizUrl>editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewCreditCard}</a><a href="<@ofbizUrl>editgiftcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewGiftCard}</a><a href="<@ofbizUrl>editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyCreateNewEftAccount}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentMethodInformation}</div>
     </div>
@@ -268,7 +268,7 @@
                           </td>
                           <td width="5">&nbsp;</td>
                           <td align="right" valign="top" width="1%" nowrap>
-                            <div><a href="<@ofbizUrl>/editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                            <div><a href="<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
                             ${uiLabelMap.CommonUpdate}</a></div>
                           </td>
                       <#elseif paymentMethod.paymentMethodTypeId?if_exists == "GIFT_CARD">
@@ -297,7 +297,7 @@
                           </td>
                           <td width="5">&nbsp;</td>
                           <td align="right" valign="top" width="1%" nowrap>
-                            <div><a href="<@ofbizUrl>/editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                            <div><a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
                             ${uiLabelMap.CommonUpdate}</a></div>
                           </td>
                       <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
@@ -310,19 +310,19 @@
                           </td>
                           <td width="5">&nbsp;</td>
                           <td align="right" valign="top" width="1%" nowrap>
-                            <div><a href="<@ofbizUrl>/editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                            <div><a href="<@ofbizUrl>editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
                             ${uiLabelMap.CommonUpdate}</a></div>
                           </td>
                       </#if>
                       <td align="right" valign="top" width="1%" nowrap>
-                        <div><a href="<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                        <div><a href="<@ofbizUrl>deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
                         ${uiLabelMap.CommonExpire}</a></div>
                       </td>
                       <td align="right" valign="top" width="1%" nowrap>
                         <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
                           <div class="buttontextdisabled">${uiLabelMap.EcommerceIsDefault}</span>
                         <#else>
-                          <div><a href="<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                          <div><a href="<@ofbizUrl>setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
                           ${uiLabelMap.EcommerceSetDefault}</a></div>
                         </#if>
                       </td>
@@ -341,7 +341,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/changepassword</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyChangePassword}</a>
+            <a href="<@ofbizUrl>changepassword</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyChangePassword}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.CommonUsername} & ${uiLabelMap.CommonPassword}</div>
     </div>
@@ -359,7 +359,7 @@
 <#-- only 5 messages will show; edit the viewprofile.bsh to change this number -->
 ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-include")}
 
-<form name="setdefaultshipmeth" action="<@ofbizUrl>/setprofiledefault/viewprofile</@ofbizUrl>" method="post">
+<form name="setdefaultshipmeth" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>" method="post">
 <input type="hidden" name="productStoreId" value="${productStoreId}">
 <div class="screenlet">
     <div class="screenlet-header">
@@ -410,7 +410,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
                 <td><div class="tabletext">${contentRole.fromDate?if_exists}</div></td>
                 <td align="right">
                   <a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">${uiLabelMap.CommonView}</a>
-                  <a href="<@ofbizUrl>/removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
+                  <a href="<@ofbizUrl>removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
                 </td>
               </tr>
             </#list>
@@ -421,7 +421,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
         <div>&nbsp;</div>
         <div align="right" class="head3"><b><u>${uiLabelMap.EcommerceUploadNewFile}</u></b>
           <div>&nbsp;</div>
-          <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/createPartyAsset</@ofbizUrl>" style="margin: 0;">
+          <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>createPartyAsset</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
             <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
             <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
@@ -454,7 +454,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
                 <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
                   <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey>
                 </#if>
-                <td align="right" width="10%" nowrap><a href="<@ofbizUrl>/takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">${surveyLabel}</a></td>
+                <td align="right" width="10%" nowrap><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">${surveyLabel}</a></td>
               <#else>
                 &nbsp;
               </#if>

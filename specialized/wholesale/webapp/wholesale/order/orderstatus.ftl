@@ -26,7 +26,7 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if orderHeader?has_content>
   <#assign maySelectItems = true>
-  <form name="addCommonToCartForm" action="<@ofbizUrl>/addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">
+  <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">
     <input type="hidden" name="add_all" value="false">
     <input type="hidden" name="order_id" value="${orderHeader.orderId}">    
     <#include "orderheader.ftl">

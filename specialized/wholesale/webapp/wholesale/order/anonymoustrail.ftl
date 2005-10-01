@@ -26,4 +26,4 @@
 
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<#if shipAddr?exists><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">${uiLabelMap.OrderChangeShippingAddress}</a><#if shipOptions?exists><a href="<@ofbizUrl>/setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">Change Shipping Options</a><#if billing?exists><a href="<@ofbizUrl>/setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">${uiLabelMap.OrderChangePaymentInfo}</a></#if></#if></#if>
+<#if shipAddr?exists><a href="<@ofbizUrl>setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">${uiLabelMap.OrderChangeShippingAddress}</a><#if shipOptions?exists><a href="<@ofbizUrl>setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">Change Shipping Options</a><#if billing?exists><a href="<@ofbizUrl>setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">${uiLabelMap.OrderChangePaymentInfo}</a></#if></#if></#if>

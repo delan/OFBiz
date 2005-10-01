@@ -34,9 +34,9 @@
                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
                     <div class="tabletext">
                       <#--
-                      <a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a>
+                      <a href="<@ofbizUrl>changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a>
                       -->
-                      <a href="<@ofbizUrl>/editOrderItems?orderId=${orderId}&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderEditItems}</a>
+                      <a href="<@ofbizUrl>editOrderItems?orderId=${orderId}&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderEditItems}</a>
                     </div>
                 </#if>
             </#if>
@@ -83,7 +83,7 @@
                         <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">${uiLabelMap.ProductCatalog}</a>
                         <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">${uiLabelMap.EcommerceEcommerce}</a>
                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
-                          <a href="<@ofbizUrl>/viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
+                          <a href="<@ofbizUrl>viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
                         </#if>
                       </div>
                     </#if>
@@ -106,7 +106,7 @@
                         <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader")>
                         <#if returnHeader.statusId != "RETURN_CANCELLED">
                           <div class="tabletext">
-                            <font color="red"><b>${uiLabelMap.OrderReturned}</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="buttontext">${returnItem.returnId}</a>
+                            <font color="red"><b>${uiLabelMap.OrderReturned}</b></font> #<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="buttontext">${returnItem.returnId}</a>
                           </div>
                         </#if>
                       </#list>

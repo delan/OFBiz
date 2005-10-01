@@ -47,7 +47,7 @@
           <td>
             <#if shippingContactMechListF?has_content>
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
-              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="finalizeMode" value="ship">
 
                 <tr><td colspan="4"><hr class='sepbar'></td></tr>
@@ -90,10 +90,10 @@
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td colspan="3">
-                  <a href="<@ofbizUrl>/setShipping?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
+                  <a href="<@ofbizUrl>setShipping?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
                 </td>
               </tr>
-              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform"> 
+              <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform"> 
                 <input type="hidden" name="finalizeMode" value="ship">
                                 
                 <tr><td colspan="3"><hr class='sepbar'></td></tr>
@@ -127,10 +127,10 @@
             </table>  
             <#else>
               <#if postalAddress?has_content>            
-              <form method="post" action="<@ofbizUrl>/updatePostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>updatePostalAddress</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="contactMechId" value="${shipContactMechId?if_exists}">
               <#else>
-              <form method="post" action="<@ofbizUrl>/createPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>createPostalAddress</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
                 <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION">
               </#if>

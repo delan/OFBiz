@@ -30,12 +30,12 @@
     </#if>
 
     <div class="head1">${uiLabelMap.ProductInventoryTransfer} <span class="head2">${uiLabelMap.CommonFrom}&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 
 <#--    <table border="0" cellpadding="2" cellspacing="0">  -->
 
    <#if !(inventoryItem?exists)>
-        <form method="post" action="<@ofbizUrl>/TransferInventoryItem</@ofbizUrl>" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>TransferInventoryItem</@ofbizUrl>" style="margin: 0;">
          <table border="0" cellpadding="2" cellspacing="0">
         <tr>
             <td width="25%" align="right"><div class="tabletext">${uiLabelMap.ProductInventoryItemId}</div></td>
@@ -52,9 +52,9 @@
         </form>
     <#else>
        <#if !(inventoryTransfer?exists)>
-            <form method="post" action="<@ofbizUrl>/CreateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>CreateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
         <#else>
-            <form method="post" action="<@ofbizUrl>/UpdateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
             <input type="hidden" name="inventoryTransferId" value="${inventoryTransferId?if_exists}">
         </#if>
 

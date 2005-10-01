@@ -38,7 +38,7 @@ function addRoutingTask() {
 </script>
 
 <#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
-<form method="post" action="<@ofbizUrl>/AddRoutingTaskAssoc</@ofbizUrl>" name="addtaskassocform">
+<form method="post" action="<@ofbizUrl>AddRoutingTaskAssoc</@ofbizUrl>" name="addtaskassocform">
     <input type="hidden" name="workEffortId" value="${workEffortId}">
     <input type="hidden" name="workEffortIdFrom" value="${workEffortId}">
     <input type="hidden" name="workEffortAssocTypeId" value="ROUTING_COMPONENT">
@@ -51,7 +51,7 @@ function addRoutingTask() {
             </td>
             <td>
                 <input type="text" name="workEffortIdTo" class="inputBox" size="20">
-                <a href="javascript:call_fieldlookup(document.addtaskassocform.workEffortIdTo,'<@ofbizUrl>/LookupRoutingTask</@ofbizUrl>', 'vide',540,450);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+                <a href="javascript:call_fieldlookup(document.addtaskassocform.workEffortIdTo,'<@ofbizUrl>LookupRoutingTask</@ofbizUrl>', 'vide',540,450);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
             </td>
             <td align="right">
                 <div class="tableheadtext">${uiLabelMap.CommonFromDate}</div>

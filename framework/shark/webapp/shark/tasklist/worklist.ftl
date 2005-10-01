@@ -24,7 +24,7 @@
         <#assign time = 0>
       </#if>
       <tr>
-        <form method="post" action="<@ofbizUrl>/worklist</@ofbizUrl>" name="assignmentChange${formNumber}" style='margin: 0;'>
+        <form method="post" action="<@ofbizUrl>worklist</@ofbizUrl>" name="assignmentChange${formNumber}" style='margin: 0;'>
           <input type="hidden" name="process" value="${assignm.activity().container().key()}">
           <input type="hidden" name="activity" value="${assignm.activity().key()}">
           <input type="hidden" name="resource" value="${assignm.assignee().resource_key()}">
@@ -44,7 +44,7 @@
             <td align="center"><div class="tabletext">N/A</div></td>
           </#if>
           <#if assignm.activity().state() == "open.running">
-            <td align="center"><a href="<@ofbizUrl>/worklist?mode=complete&resource=${assignm.assignee().resource_key()}&process=${assignm.activity().container().key()}&activity=${assignm.activity().key()}</@ofbizUrl>" class="buttontext">Complete</a></td>
+            <td align="center"><a href="<@ofbizUrl>worklist?mode=complete&resource=${assignm.assignee().resource_key()}&process=${assignm.activity().container().key()}&activity=${assignm.activity().key()}</@ofbizUrl>" class="buttontext">Complete</a></td>
           <#else>
             <td>&nbsp;</td>
           </#if>

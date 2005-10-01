@@ -30,31 +30,31 @@
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
-        form.action="<@ofbizUrl>/checkoutoptions</@ofbizUrl>";
+        form.action="<@ofbizUrl>checkoutoptions</@ofbizUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
         form.submit();
     } else if (mode == "NC") {
         // new credit card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment</@ofbizUrl>";
         form.submit();
     } else if (mode == "EC") {
         // edit credit card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "GC") {
         // edit gift card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "NE") {
         // new eft account
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment</@ofbizUrl>";
         form.submit();
     } else if (mode == "EE") {
         // edit eft account
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     }
 }
@@ -315,9 +315,9 @@ function toggleBillingAccount(box) {
               <tr>
                 <td colspan="3">
                   <div class='tabletext' valign='middle'>
-                    <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseCreditCard}</a>&nbsp;</#if>
-                    <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseGiftCard}</a>&nbsp;</#if>
-                    <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists><a href="<@ofbizUrl>/setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseEFTAccount}</a>&nbsp;</#if>
+                    <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD?exists><a href="<@ofbizUrl>setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseCreditCard}</a>&nbsp;</#if>
+                    <#if productStorePaymentMethodTypeIdMap.GIFT_CARD?exists><a href="<@ofbizUrl>setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseGiftCard}</a>&nbsp;</#if>
+                    <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT?exists><a href="<@ofbizUrl>setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingSingleUseEFTAccount}</a>&nbsp;</#if>
                   </div>
                 </td>
               </tr>

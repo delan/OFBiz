@@ -52,8 +52,8 @@
       <td><div class="tabletext">${term.termValue?if_exists}</div></td>
       <td><div class="tabletext"><#if uom?has_content>${uom.description?if_exists}<#else>&nbsp;</#if></div></td>
       <td align="right">  
-        <a href="<@ofbizUrl>/EditBillingAccountTerms?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[Edit]</a>&nbsp;
-        <a href="<@ofbizUrl>/removeBillingAccountTerm?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[Remove]</a> 
+        <a href="<@ofbizUrl>EditBillingAccountTerms?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[Edit]</a>&nbsp;
+        <a href="<@ofbizUrl>removeBillingAccountTerm?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[Remove]</a> 
       </td>
     </tr>
     </#list>
@@ -64,12 +64,12 @@
 <#if billingAccountTerm?has_content>
     <div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms}</div>
     <br/>
-    <form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccountTerm</@ofbizUrl>">
+    <form name="billingform" method="post" action="<@ofbizUrl>updateBillingAccountTerm</@ofbizUrl>">
       <input type="hidden" name="billingAccountTermId" value="${billingAccountTerm.billingAccountTermId}">
 <#else>
     <div class="head1">${uiLabelMap.AccountingCreateBillingAccountTerm}</div>
     <br/>
-    <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccountTerm</@ofbizUrl>">
+    <form name="billingform" method="post" action="<@ofbizUrl>createBillingAccountTerm</@ofbizUrl>">
 </#if>
   <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">
   <table width="90%" border="0" cellpadding="2" cellspacing="0"> 

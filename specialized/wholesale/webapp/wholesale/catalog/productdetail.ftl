@@ -53,11 +53,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <tr>
       <td colspan="2" align="right">
         <#if requestAttributes.previousProductId?exists>
-          <a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
+          <a href='<@ofbizUrl>product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
+        <a href="<@ofbizUrl>category/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
         <#if requestAttributes.nextProductId?exists>
-          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonNext}]</a>
+          &nbsp;|&nbsp;<a href='<@ofbizUrl>product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </td>
     </tr>
@@ -79,9 +79,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <div class="tabletext"><b>${uiLabelMap.ProductUsuallyShipsIn} <font color='red'>${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
       </#if>
 		<br/>
-      <div class="tabletext"><a href="<@ofbizUrl>/productfaq/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>">FAQ</div></a>
+      <div class="tabletext"><a href="<@ofbizUrl>productfaq/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>">FAQ</div></a>
 	   <br/>
-	  <div class="tabletext"><a href="<@ofbizUrl>/productdetail.pdf/~product_id=${product.productId?if_exists}</@ofbizUrl>">View as PDF</a></div>
+	  <div class="tabletext"><a href="<@ofbizUrl>productdetail.pdf/~product_id=${product.productId?if_exists}</@ofbizUrl>">View as PDF</a></div>
 		<br/>	   
       <div class="tabletext"><b>Item: ${product.productId?if_exists}</b>
       <#-- for prices:
@@ -123,9 +123,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <#-- tell a friend -->
       <div class="tabletext">&nbsp;</div>
       <div class="tabletext">
-        <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId?if_exists}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
+        <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId?if_exists}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
       </div>
-      <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
+      <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
@@ -191,7 +191,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 	<div class="tabletext">
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
         <hr class="sepbar">
-        <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+        <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${requestParameters.product_id}">
           <input type="hidden" name="product_id" value="${requestParameters.product_id}">
           <select name="shoppingListId" class="selectBox">
@@ -208,7 +208,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.WholesaleAddtoShoppingList}]</a>
         </form>
       <#else> <br/>
-        ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
+        ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
         $uiLabelMap.WholesaleToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
 	  </div>
@@ -337,7 +337,7 @@ ${setRequestAttribute("productValue", productValue)}
     </#list>
     <tr>
       <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
+        <a href="<@ofbizUrl>reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
       </td>
     </tr>
   <#else>
@@ -348,7 +348,7 @@ ${setRequestAttribute("productValue", productValue)}
     </tr>
     <tr>
       <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
+        <a href="<@ofbizUrl>reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
       </td>
     </tr>
   </#if> -->

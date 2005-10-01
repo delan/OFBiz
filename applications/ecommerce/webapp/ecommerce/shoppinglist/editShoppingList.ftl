@@ -41,13 +41,13 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/createEmptyShoppingList?productStoreId=${productStoreId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+            <a href="<@ofbizUrl>createEmptyShoppingList?productStoreId=${productStoreId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingLists}</div>
     </div>
     <div class="screenlet-body">
         <#if shoppingLists?has_content>
-          <form name="selectShoppingList" method="post" action="<@ofbizUrl>/editShoppingList</@ofbizUrl>">
+          <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
             <select name="shoppingListId" class="selectBox">
               <#if shoppingList?has_content>
                 <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -72,13 +72,13 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCreateCustRequestFromShoppingList}</a>            
+            <a href="<@ofbizUrl>createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCreateCustRequestFromShoppingList}</a>            
             <a href="javascript:document.updateList.submit();" class="submenutextright">${uiLabelMap.CommonSave}</a>            
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingListDetail} - ${shoppingList.listName}</div>
     </div>
     <div class="screenlet-body">
-        <form name="updateList" method="post" action="<@ofbizUrl>/updateShoppingList</@ofbizUrl>">
+        <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
             <input type="hidden" class="inputBox" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
             <input type="hidden" class="inputBox" name="partyId" value="${shoppingList.partyId?if_exists}"/>
             <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -139,7 +139,7 @@
                     </#list>
                   </select>
                   <#if parentShoppingList?exists>
-                    <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
+                    <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
                   </#if>
                 </td>
               </tr>                           
@@ -169,7 +169,7 @@
         </div>
     </div>
     <div class="screenlet-body">
-        <form name="reorderinfo" method="post" action="<@ofbizUrl>/updateShoppingList</@ofbizUrl>">
+        <form name="reorderinfo" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
             <table width="100%" cellspacing="0" cellpadding="1" border="0">
               <tr>
@@ -276,9 +276,9 @@
                 <td align="right" colspan="9">
                   <div class="tabletext">
                     <a href="javascript:document.reorderinfo.submit();" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-                    <a href="<@ofbizUrl>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
-                    <a href="<@ofbizUrl>/editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceNewCreditCard}]</a>
-                    <a href="<@ofbizUrl>/editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceNewEFTAccount}]</a>
+                    <a href="<@ofbizUrl>editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
+                    <a href="<@ofbizUrl>editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceNewCreditCard}]</a>
+                    <a href="<@ofbizUrl>editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceNewEFTAccount}]</a>
                   </div>
                 </td>
               </tr>
@@ -323,7 +323,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceAddChildListsToCart}</a>
+            <a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceAddChildListsToCart}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceChildShoppingList} - ${shoppingList.listName}</div>
     </div>
@@ -340,14 +340,14 @@
               <#assign totalPrice = childShoppingListData.totalPrice/>
               <tr>
                 <td nowrap align="left">
-                  <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
                 </td>                      
                 <td nowrap align="right">
                   <div class="tabletext"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/></div>
                 </td>                      
                 <td align="right">
-                  <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceGoToList}]</a>
-                  <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceAddListToCart}]</a>
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceGoToList}]</a>
+                  <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceAddListToCart}]</a>
                 </td>                      
               </tr>
             </form>
@@ -368,7 +368,7 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceAddListToCart}</a>
+            <a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceAddListToCart}</a>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceListItems} - ${shoppingList.listName}</div>
     </div>
@@ -395,12 +395,12 @@
                   <tr>
                     <td>
                       <div class="tabletext">
-                         <a href="<@ofbizUrl>/product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">${shoppingListItem.productId} - 
+                         <a href="<@ofbizUrl>product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">${shoppingListItem.productId} - 
                          ${productContentWrapper.get("PRODUCT_NAME")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")?if_exists}
                       </div>
                     </td>
                     <td nowrap align="center">
-                      <form method="post" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}" style="margin: 0;">
+                      <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}" style="margin: 0;">
                         <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}"/>
                         <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}"/>
                         <input type="hidden" name="reservStart"/>
@@ -426,7 +426,7 @@
                     </td>
                     <td align="right">
                         <a href="javascript:TimestampSubmit(listform_${shoppingListItem.shoppingListItemSeqId});" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
-                        <a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
+                        <a href="<@ofbizUrl>removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
                       <#if isVirtual && productVariantAssocs?has_content>
                         <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_?if_exists>
                         <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_?if_exists>
@@ -450,7 +450,7 @@
                           <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceVariationToCart}]</a>
                         </form>
                       <#else>
-                        <a href="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&quantity=${shoppingListItem.quantity}&reservStart=${shoppingListItem.reservStart?if_exists}&reservPersons=${shoppingListItem.reservPersons?if_exists}&reservLength=${shoppingListItem.reservLength?if_exists}&add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceToCart}]</a>
+                        <a href="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&quantity=${shoppingListItem.quantity}&reservStart=${shoppingListItem.reservStart?if_exists}&reservPersons=${shoppingListItem.reservPersons?if_exists}&reservLength=${shoppingListItem.reservLength?if_exists}&add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceToCart}]</a>
                       </#if>
                     </td>
                   </tr>
@@ -515,7 +515,7 @@
         <div class="boxhead">&nbsp;${uiLabelMap.CommonQuickAddList}</div>
     </div>
     <div class="screenlet-body">
-        <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+        <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
           <input type="text" class="inputBox" name="productId" value="${requestParameters.add_product_id?if_exists}"/>
           <#if reservStart?exists></td><td class="tabletext">${uiLabelMap.EcommerceStartDate}</td><td><input type="text" class="inputBox" size="10" name="reservStart" value=${requestParameters.reservStart?default("")}></td><td class="tabletext"> ${uiLabelMap.EcommerceLength}:</td><td><input type="text" class="inputBox" size="2" name="reservLength" value=${requestParameters.reservLength?default("")}></td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td class="tabletext">${uiLabelMap.EcommerceNbrPersons}:</td><td><input type="text" class="inputBox" size="3" name="reservPersons" value=${requestParameters.reservPersons?default("1")}></td><td class="tabletext" nowrap></#if> ${uiLabelMap.CommonQuantity} :</td><td><input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}"></td><td>

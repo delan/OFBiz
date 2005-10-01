@@ -35,7 +35,7 @@
         <div class="boxhead">${randomSurvey.getSurveyName()?if_exists}</div>
     </div>
     <div class="screenlet-body">
-        <form method="post" action="<@ofbizUrl>/minipoll<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>minipoll<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" style="margin: 0;">
           ${randomSurvey.render().toString()}
         </form>
     </div>

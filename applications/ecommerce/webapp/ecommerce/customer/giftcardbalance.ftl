@@ -52,7 +52,7 @@
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
   </#if>
-  <form method="post" action="<@ofbizUrl>/querygcbalance</@ofbizUrl>">
+  <form method="post" action="<@ofbizUrl>querygcbalance</@ofbizUrl>">
     <input type="hidden" name="currency" value="USD">
     <input type="hidden" name="paymentConfig" value="${paymentProperties?default("payment.properties")}">
     <tr>

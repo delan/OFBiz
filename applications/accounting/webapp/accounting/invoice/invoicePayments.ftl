@@ -27,7 +27,7 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign locale = requestAttributes.locale>
 
-<div class="head1">${uiLabelMap.AccountingInvoicePayments} - <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoiceId}</@ofbizUrl>" class="buttontext">#${invoiceId}</div>
+<div class="head1">${uiLabelMap.AccountingInvoicePayments} - <a href="<@ofbizUrl>viewInvoice?invoiceId=${invoiceId}</@ofbizUrl>" class="buttontext">#${invoiceId}</div>
 
 <br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">

@@ -34,7 +34,7 @@
           </td>
           <td valign="middle" align="right">
             <#if security.hasEntityPermission("SALESREP_ORDER", "_NOTE", session)>  
-              <a href="<@ofbizUrl>/createnewnote?${paramString}</@ofbizUrl>" class="submenutextright">Create New</a>
+              <a href="<@ofbizUrl>createnewnote?${paramString}</@ofbizUrl>" class="submenutextright">Create New</a>
             </#if>
           </td>
         </tr>

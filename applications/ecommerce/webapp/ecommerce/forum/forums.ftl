@@ -45,7 +45,7 @@
         <#assign count_1=0/>
         <@loopSubContentCache subContentId=forumRootId viewIndex=0 viewSize=9999 orderBy="contentName" contentAssocTypeId="SUBSITE">
             <div class="browsecategorytext" style="margin-left: 10px">
-               -&nbsp;<a href="<@ofbizUrl>/showforum?forumId=${subContentId}</@ofbizUrl>" class="browsecategorybutton">${content.contentName}</a>
+               -&nbsp;<a href="<@ofbizUrl>showforum?forumId=${subContentId}</@ofbizUrl>" class="browsecategorybutton">${content.contentName}</a>
             </div>
             <#assign count_1=(count_1 + 1)/>
         </@loopSubContentCache>

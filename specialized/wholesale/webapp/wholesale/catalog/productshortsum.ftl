@@ -38,7 +38,7 @@
   <table border="0" width="100%" cellpadding="0" cellspacing="0">
     <tr>
       <td valign="top" align="center">
-          <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>">
+          <a href="<@ofbizUrl>${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>">
             <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>" align="center" height="50" class="imageborder" border="0">
           </a>
       </td>
@@ -46,7 +46,7 @@
     <tr>
       <td align="left" valign="top" width="100%" align="center"> 
           <div class="tabletext" align="center">
-            <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">${product.productName?if_exists}</a>
+            <a href="<@ofbizUrl>${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">${product.productName?if_exists}</a>
           </div>
           <div class="tabletext" align="center">
             <nobr>
@@ -75,12 +75,12 @@
             <div class="tabletext" style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
-            <a href="<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
+            <a href="<@ofbizUrl>product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
           <#-- check to see if the product requires an amount -->
           <#elseif product.requireAmount?exists && product.requireAmount == "Y">
-            <a href="<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseAmount}...]</nobr></a>
+            <a href="<@ofbizUrl>product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseAmount}...]</nobr></a>
           <#else>
-            <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style="margin: 0;">
               <input type="hidden" name="add_product_id" value="${product.productId}">
               <input type="hidden" name="quantity" value="1">
               <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"></#if>
@@ -95,7 +95,7 @@
             <#if requestAttributes.productCategoryMember?exists>
                 <#assign prodCatMem = requestAttributes.productCategoryMember>
                 <#if prodCatMem?exists && prodCatMem.quantity?exists && 0.00 < prodCatMem.quantity?double>
-                <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style="margin: 0;">
                   <input type="hidden" name="add_product_id" value="${prodCatMem.productId?if_exists}">
                   <input type="hidden" name="quantity" value="${prodCatMem.quantity?if_exists}">
                   <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"></#if>

@@ -39,8 +39,8 @@
     </td>
     <td align="right">
       <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditPartyClassificationGroup?partyClassificationGroupId=<#if partyClassificationGroup?has_content>${partyClassificationGroup.partyClassificationGroupId}</#if></@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroup?default(unselectedClassName)}">${uiLabelMap.PartyClassificationGroups}</a>
-        <a href="<@ofbizUrl>/EditPartyClassificationGroupParties?partyClassificationGroupId=<#if partyClassificationGroup?has_content>${partyClassificationGroup.partyClassificationGroupId}</#if></@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroupParties?default(unselectedClassName)}">${uiLabelMap.Parties}</a>
+        <a href="<@ofbizUrl>EditPartyClassificationGroup?partyClassificationGroupId=<#if partyClassificationGroup?has_content>${partyClassificationGroup.partyClassificationGroupId}</#if></@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroup?default(unselectedClassName)}">${uiLabelMap.PartyClassificationGroups}</a>
+        <a href="<@ofbizUrl>EditPartyClassificationGroupParties?partyClassificationGroupId=<#if partyClassificationGroup?has_content>${partyClassificationGroup.partyClassificationGroupId}</#if></@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroupParties?default(unselectedClassName)}">${uiLabelMap.Parties}</a>
       </div>
     </td>
   </tr>

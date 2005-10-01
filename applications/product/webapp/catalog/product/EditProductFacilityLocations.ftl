@@ -41,7 +41,7 @@
             <td><div class="tabletext"><#if facility?exists>${facility.facilityName}<#else>[${productFacilityLocation.facilityId}]</#if></div></td>
             <td><div class="tabletext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</div></td>
             <td align="center">
-                <form method="post" action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
+                <form method="post" action="<@ofbizUrl>updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
                     <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}"/>
                     <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}"/>
                     <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)?if_exists}"/>
@@ -51,14 +51,14 @@
                 </form>
             </td>
             <td align="center">
-            <a href="<@ofbizUrl>/deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}&locationSeqId=${(productFacilityLocation.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}&locationSeqId=${(productFacilityLocation.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
             [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
     </#list>
     </table>
     <br/>
-    <form method="post" action="<@ofbizUrl>/createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
+    <form method="post" action="<@ofbizUrl>createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
         <input type="hidden" name="productId" value="${productId?if_exists}">
         <input type="hidden" name="useValues" value="true">
         <div class="head2">${uiLabelMap.CommonAdd} ${uiLabelMap.ProductFacilityLocation}:</div>

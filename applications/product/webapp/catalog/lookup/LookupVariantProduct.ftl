@@ -29,7 +29,7 @@
 <br/>
 <#if searchFeatures?has_content>
     <table border="1" cellpadding="2" cellspacing="0">
-        <form method="post" action="<@ofbizUrl>/LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
+        <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="productId" value="${product.productId}">
         <#list searchFeatures as searchFeature>
             <tr>
@@ -66,7 +66,7 @@
 </#if>
 <#if productFeatureIds?exists>
     <table border="1" cellpadding="2" cellspacing="0">
-        <form method="post" action="<@ofbizUrl>/LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
+        <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
         <input type="hidden" name="productId" value="${product.productId}">
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}">
         <input type="text" name="productVariantId" value="${productVariantId}" class="inputBox">

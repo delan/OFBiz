@@ -30,30 +30,30 @@
     <div class="screenlet-header">
         <div class="simple-right-small">
             <#if isOpen>
-                <a href='<@ofbizUrl>/main?BrowseCatalogsState=close</@ofbizUrl>' class='lightbuttontext'>&nbsp;_&nbsp;</a>
+                <a href='<@ofbizUrl>main?BrowseCatalogsState=close</@ofbizUrl>' class='lightbuttontext'>&nbsp;_&nbsp;</a>
             <#else>
-                <a href='<@ofbizUrl>/main?BrowseCatalogsState=open</@ofbizUrl>' class='lightbuttontext'>&nbsp;[]&nbsp;</a>
+                <a href='<@ofbizUrl>main?BrowseCatalogsState=open</@ofbizUrl>' class='lightbuttontext'>&nbsp;[]&nbsp;</a>
             </#if>
         </div>
         <div class="boxhead">${uiLabelMap.ProductBrowseCatalogs}</div>
     </div>
 <#if isOpen>
     <div class="screenlet-body">
-        <div><a href='<@ofbizUrl>/FindProdCatalog</@ofbizUrl>' class='buttontext'>${uiLabelMap.ProductCatalogDetailList}</a></div>
+        <div><a href='<@ofbizUrl>FindProdCatalog</@ofbizUrl>' class='buttontext'>${uiLabelMap.ProductCatalogDetailList}</a></div>
         <div style='margin-left: 10px;'>
           <#assign sortList = Static["org.ofbiz.base.util.UtilMisc"].toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId")>
           <#list prodCatalogs as prodCatalog>
           <#if curProdCatalogId?exists && curProdCatalogId == prodCatalog.prodCatalogId>
             <#assign prodCatalogCategories = prodCatalog.getRelatedOrderByCache("ProdCatalogCategory", sortList)>
-            <div class='browsecategorytext'>-&nbsp;<a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class='browsecategorybutton'>${prodCatalog.catalogName?if_exists}</a></div>
+            <div class='browsecategorytext'>-&nbsp;<a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class='browsecategorybutton'>${prodCatalog.catalogName?if_exists}</a></div>
               <div style='margin-left: 10px;'>
               	<#list prodCatalogCategories as prodCatalogCategory>
                   <#assign productCategory = prodCatalogCategory.getRelatedOneCache("ProductCategory")>
-                  <div class='browsecategorytext'>-&nbsp;<a href='<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&amp;productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>' class="browsecategorybutton">${(productCategory.description)?if_exists}</a></div>
+                  <div class='browsecategorytext'>-&nbsp;<a href='<@ofbizUrl>EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&amp;productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>' class="browsecategorybutton">${(productCategory.description)?if_exists}</a></div>
                 </#list>
               </div>
           <#else>
-            <div class='browsecategorytext'>-&nbsp;<a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class='browsecategorybutton'>${prodCatalog.catalogName?if_exists}</a></div>
+            <div class='browsecategorytext'>-&nbsp;<a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class='browsecategorybutton'>${prodCatalog.catalogName?if_exists}</a></div>
           </#if>
           </#list>
         </div>

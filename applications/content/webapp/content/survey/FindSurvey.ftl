@@ -38,7 +38,7 @@
             <div class="boxhead" align="right">
               <#if 0 < surveyList?size>
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/FindSurvey?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                  <a href="<@ofbizUrl>FindSurvey?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                 <#else>
                   <span class="submenutextdisabled">Previous</span>
                 </#if>
@@ -46,7 +46,7 @@
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/FindSurvey?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                  <a href="<@ofbizUrl>FindSurvey?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                 <#else>
                   <span class="submenutextrightdisabled">Next</span>
                 </#if>
@@ -56,7 +56,7 @@
           </td>
         </tr>
       </table>
-      <div class="tabletext"><a href="<@ofbizUrl>/EditSurvey</@ofbizUrl>" class="buttontext">[Create New Survey]</a></div>
+      <div class="tabletext"><a href="<@ofbizUrl>EditSurvey</@ofbizUrl>" class="buttontext">[Create New Survey]</a></div>
       <br/>
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
@@ -74,13 +74,13 @@
           <#assign rowClass = "viewManyTR2">
           <#list surveyList[lowIndex..highIndex-1] as survey>
             <tr class="${rowClass}">
-              <td><a href="<@ofbizUrl>/EditSurvey?surveyId=${survey.surveyId}</@ofbizUrl>" class="buttontext">${survey.surveyId}</a></td>
+              <td><a href="<@ofbizUrl>EditSurvey?surveyId=${survey.surveyId}</@ofbizUrl>" class="buttontext">${survey.surveyId}</a></td>
               <td><div class="tabletext">${survey.description?default("No Description")}</div></td>
               <td><div class="tabletext">${survey.isAnonymous?default("&nbsp;")}</div></td>
               <td><div class="tabletext">${survey.allowMultiple?default("&nbsp;")}</div></td>
               <td><div class="tabletext">${survey.allowUpdate?default("&nbsp;")}</div></td>
               <td align="right">
-                <a href="<@ofbizUrl>/EditSurvey?surveyId=${survey.surveyId}</@ofbizUrl>" class="buttontext">Edit</a>
+                <a href="<@ofbizUrl>EditSurvey?surveyId=${survey.surveyId}</@ofbizUrl>" class="buttontext">Edit</a>
               </td>
             </tr>
             <#-- toggle the row color -->

@@ -7,7 +7,7 @@
   <tr>
      <td colspan="3">  
 <ul>
-<li><a href="<@ofbizUrl>/FindAgreement</@ofbizUrl>">List Available Agreements</a></li>
+<li><a href="<@ofbizUrl>FindAgreement</@ofbizUrl>">List Available Agreements</a></li>
 </ul>
 <br/>
      </td>
@@ -19,7 +19,7 @@
   <tr>
      <td colspan="3">  
 <ul>
-<li><a href="<@ofbizUrl>/FindBillingAccount</@ofbizUrl>">Show Customer Billing Accounts</a></li>
+<li><a href="<@ofbizUrl>FindBillingAccount</@ofbizUrl>">Show Customer Billing Accounts</a></li>
 </ul>
 <br/>
      </td>
@@ -32,7 +32,7 @@
   <tr>
      <td colspan="3">  
 <ul>
-<li><a href="<@ofbizUrl>/ListFixedAssets</@ofbizUrl>">Show all Fixed Assets</a></li>
+<li><a href="<@ofbizUrl>ListFixedAssets</@ofbizUrl>">Show all Fixed Assets</a></li>
 </ul>
 <br/>
      </td>
@@ -45,20 +45,20 @@
   <tr valign="top">
 <td>
 <ul>
-<li><a href="<@ofbizUrl>/findInvoices?lookupFlag=Y</@ofbizUrl>">Show All Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y</@ofbizUrl>">Show All Invoices</a></li>
 </ul>
 </td>
 
 <td>
 <ul>
-<li><a href="<@ofbizUrl>/findInvoices?lookupFlag=Y&invoiceTypeId=SALES_INVOICE</@ofbizUrl>">Show Sales Invoices</a></li>
-<li><a href="<@ofbizUrl>/findInvoices?lookupFlag=Y&invoiceTypeId=PURCHASE_INVOICE</@ofbizUrl>">Show Purchases Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=SALES_INVOICE</@ofbizUrl>">Show Sales Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=PURCHASE_INVOICE</@ofbizUrl>">Show Purchases Invoices</a></li>
 </ul>
 </td>
 <td>
 <ul>
 <#list invoiceStatus as status>
-<li><a href="<@ofbizUrl>/findInvoices?lookupFlag=Y&invoiceStatusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceStatusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Invoices</a></li>
 </#list>
 </ul>
 </td>
@@ -71,14 +71,14 @@
 <tr valign="top">
 <td>
 <ul>
-<li><a href="<@ofbizUrl>/findPayment?lookupFlag=Y</@ofbizUrl>">Show all Payments</a></li>
+<li><a href="<@ofbizUrl>findPayment?lookupFlag=Y</@ofbizUrl>">Show all Payments</a></li>
 </ul>
 </td>
 
 <td>
 <ul>
 <#list paymentMethodTypes as paymentMethodType>
-<li><a href="<@ofbizUrl>/findPayment?lookupFlag=Y&paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">Show ${paymentMethodType.get("description",locale)} Payments</a></li>
+<li><a href="<@ofbizUrl>findPayment?lookupFlag=Y&paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">Show ${paymentMethodType.get("description",locale)} Payments</a></li>
 </#list>
 </ul>
 </td>
@@ -86,7 +86,7 @@
 <td>
 <ul>
 <#list paymentStatus as status>
-<li><a href="<@ofbizUrl>/findPayment?lookupFlag=Y&paymentStatusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Payments</a></li>
+<li><a href="<@ofbizUrl>findPayment?lookupFlag=Y&paymentStatusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Payments</a></li>
 </#list>
 </ul>
 </td>

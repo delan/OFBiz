@@ -27,14 +27,14 @@
 
 <#if returnHeader?exists>
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.OrderReturnHeader}</a>  
-    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}<#if requestParameters.orderId?exists>&orderId=${requestParameters.orderId}</#if></@ofbizUrl>" class="tabButton">${uiLabelMap.OrderReturnItems}</a>
+    <a href="<@ofbizUrl>returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.OrderReturnHeader}</a>  
+    <a href="<@ofbizUrl>returnItems?returnId=${returnId?if_exists}<#if requestParameters.orderId?exists>&orderId=${requestParameters.orderId}</#if></@ofbizUrl>" class="tabButton">${uiLabelMap.OrderReturnItems}</a>
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
       <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${externalKeyParam}" class="tabButton">${uiLabelMap.OrderReceiveReturn}</a>
     </#if>
 </div>
 <div>
-    <a href="<@ofbizUrl>/return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="buttontext">PDF</a>
+    <a href="<@ofbizUrl>return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="buttontext">PDF</a>
 </div>
 <#else>
   <div class="head1">${uiLabelMap.OrderCreateNewReturn}</div>
@@ -45,11 +45,11 @@
 </#if>
 
 <#if returnHeader?exists>
-<form name="returnhead" method="post" action="<@ofbizUrl>/updateReturn</@ofbizUrl>">
+<form name="returnhead" method="post" action="<@ofbizUrl>updateReturn</@ofbizUrl>">
 <input type="hidden" name="returnId" value="${returnHeader.returnId}">
 <input type="hidden" name="currentStatusId" value="${returnHeader.statusId?if_exists}">
 <#else>
-<form name="returnhead" method="post" action="<@ofbizUrl>/createReturn</@ofbizUrl>">
+<form name="returnhead" method="post" action="<@ofbizUrl>createReturn</@ofbizUrl>">
 </#if>
 
 <table border='0' cellpadding='2' cellspacing='0'>

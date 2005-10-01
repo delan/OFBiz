@@ -31,9 +31,9 @@ function lookupParty(click) {
     partyIdValue = document.lookupparty.partyId.value;
     userLoginIdValue = document.lookupparty.userlogin_id.value;
     if (partyIdValue.length > 1 || userLoginIdValue.length > 1) {
-        document.lookupparty.action = "<@ofbizUrl>/viewprofile</@ofbizUrl>";
+        document.lookupparty.action = "<@ofbizUrl>viewprofile</@ofbizUrl>";
     } else {
-        document.lookupparty.action = "<@ofbizUrl>/findparty</@ofbizUrl>";
+        document.lookupparty.action = "<@ofbizUrl>findparty</@ofbizUrl>";
     }
 
     if (click) {
@@ -50,7 +50,7 @@ function refreshInfo() {
 </script>
 
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
-  <form method='post' name="lookupparty" action="<@ofbizUrl>/findparty</@ofbizUrl>" onsubmit="javascript:lookupParty();">
+  <form method='post' name="lookupparty" action="<@ofbizUrl>findparty</@ofbizUrl>" onsubmit="javascript:lookupParty();">
     <input type='hidden' name='lookupFlag' value='Y'>
     <input type='hidden' name='hideFields' value='Y'>
     <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -62,9 +62,9 @@ function refreshInfo() {
               <td align='right'>
                 <div class="tabletext">
                   <#if requestParameters.hideFields?default("N") == "Y">
-                    <a href="<@ofbizUrl>/findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                    <a href="<@ofbizUrl>findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
                   <#else>
-                    <#if partyList?exists><a href="<@ofbizUrl>/findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
+                    <#if partyList?exists><a href="<@ofbizUrl>findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
                     <a href="javascript:lookupParty(true);" class="submenutextright">Lookup Party(s)</a>
                   </#if>
                 </div>
@@ -231,7 +231,7 @@ function refreshInfo() {
                  <div class="boxhead" align="right">
                   <#if (partyListSize > 0)>
                     <#if (viewIndex > 1)>
-                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                      <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                     <#else>
                       <span class="submenutextdisabled">Previous</span>
                     </#if>
@@ -239,7 +239,7 @@ function refreshInfo() {
                       <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${partyListSize}</span>
                     </#if>
                     <#if (partyListSize > highIndex)>
-                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                      <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                     <#else>
                       <span class="submenutextrightdisabled">Next</span>
                     </#if>
@@ -270,7 +270,7 @@ function refreshInfo() {
               <#list partyList as partyRow>
                 <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
                 <tr class='${rowClass}'>
-                  <td><a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${partyRow.partyId}</a></td>
+                  <td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${partyRow.partyId}</a></td>
                   <td>
                     <div class="tabletext">
                       <#if partyRow.containsKey("userLoginId")>
@@ -319,7 +319,7 @@ function refreshInfo() {
                   <td align="right">
                     <!-- this is all on one line so that no break will be inserted -->
                     <div class="tabletext"><nobr>
-                      <a href='<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDetails}]</a>&nbsp;
+                      <a href='<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDetails}]</a>&nbsp;
                       <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
                         <a href='/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyRow.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
                       </#if>
@@ -340,7 +340,7 @@ function refreshInfo() {
               <tr>
                 <td colspan='5'>
                   <span class='head3'>No party(s) found.</span>
-                  &nbsp;&nbsp;<a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="buttontext">[Create New]</a>
+                  &nbsp;&nbsp;<a href="<@ofbizUrl>createnew</@ofbizUrl>" class="buttontext">[Create New]</a>
                 </td>
               </tr>
             </#if>

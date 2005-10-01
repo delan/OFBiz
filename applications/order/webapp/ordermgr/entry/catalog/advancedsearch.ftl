@@ -28,7 +28,7 @@
 
 <div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
 <br/>
-<form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
+<form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="VIEW_SIZE" value="10">
   <table border="0" wdith="100%">
     <#if searchCategory?has_content>
@@ -147,15 +147,15 @@
     <div class="head2">${uiLabelMap.EcommerceLastSearches}...</div>
   
     <div class="tabletext">
-      <a href="<@ofbizUrl>/clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">Clear Search History</a>
+      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">Clear Search History</a>
       (Note that your history will automatically be cleared after you leave the site)
     </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div class="tabletext">
           <b>Search #${searchOptions_index + 1}</b>
-          <a href="<@ofbizUrl>/setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">Search</a>
-          <a href="<@ofbizUrl>/setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">Refine</a>
+          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">Search</a>
+          <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">Refine</a>
         </div>
         <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator)>
         <#list constraintStrings as constraintString>

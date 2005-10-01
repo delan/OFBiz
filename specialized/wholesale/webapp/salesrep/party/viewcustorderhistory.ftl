@@ -29,7 +29,7 @@
         <tr>
           <td align='left'><div class="boxhead">${requestAttributes.uiLabelMap.OrderHistory}</div></td>
           <#--<td align='right'>
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${requestAttributes.uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>main</@ofbizUrl>" class="lightbuttontext">[${requestAttributes.uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
           </td>-->
         </tr>
       </table>      
@@ -108,7 +108,7 @@
                     <div class="tabletext">${orderHeader.noteInfo?if_exists}</div>
                   </td>
                   <td align="right">
-                    <a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
+                    <a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
                   </td>
                 </tr>
               </#list>

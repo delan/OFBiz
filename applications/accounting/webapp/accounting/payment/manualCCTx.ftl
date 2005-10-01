@@ -43,7 +43,7 @@
       ${setRequestAttribute("validTx", "true")}
       <script language="JavaScript" type="text/javascript">
       <!-- //
-        document.manualTxForm.action = "<@ofbizUrl>/processManualCcTx</@ofbizUrl>";
+        document.manualTxForm.action = "<@ofbizUrl>processManualCcTx</@ofbizUrl>";
       // -->
       </script>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>

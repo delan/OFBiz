@@ -47,7 +47,7 @@
             <#elseif partyGroup?has_content>
               <div class='tabletext'><a href="/partymgr/control/viewprofile?party_id=${partyId}" class="buttontext">${partyGroup.groupName?if_exists}</a></div>
             </#if>
-            <form method="post" action="<@ofbizUrl>/orderentry</@ofbizUrl>" name="setpartyform">
+            <form method="post" action="<@ofbizUrl>orderentry</@ofbizUrl>" name="setpartyform">
               <div><input type="text" class="inputBox" name="partyId" size='10' value="${partyId?if_exists}"></div>
               <div class="tabletext">
                 <a href="javascript:document.setpartyform.submit();" class="buttontext">Set</a>&nbsp;|&nbsp;<a href="/partymgr/control/findparty" class="buttontext">Find</a><#if partyId?default("_NA_") != "_NA_" && partyId?default("_NA_") != "">&nbsp;|&nbsp;<a href="/partymgr/control/viewprofile?party_id=${partyId}" class="buttontext">View</a></#if>

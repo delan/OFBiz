@@ -1,7 +1,7 @@
 <table width="100%" border="0" >
   <TR>
     <TD width='100%'>
-      <form name="siteRoleForm" mode="POST" action="<@ofbizUrl>/updateSiteRoles</@ofbizUrl>">
+      <form name="siteRoleForm" mode="POST" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
@@ -32,7 +32,7 @@
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead"><input type="text" name="partyId_o_${rowCount}" value=""/>
-<a href="javascript:call_fieldlookup3('<@ofbizUrl>/LookupPartyAndUserLoginAndPerson</@ofbizUrl>')"><img src="<@ofbizContentUrl>/content/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup"></a></div>
+<a href="javascript:call_fieldlookup3('<@ofbizUrl>LookupPartyAndUserLoginAndPerson</@ofbizUrl>')"><img src="<@ofbizContentUrl>/content/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup"></a></div>
           </td>
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />

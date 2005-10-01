@@ -58,7 +58,7 @@
 </#if>
 
 <p class="head1">${uiLabelMap.PartyRequestNewAccount}</p>
-<p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
+<p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
 
 <#macro fieldErrors fieldName>
   <#if errorMessageList?has_content>
@@ -340,7 +340,7 @@
 <div class="tabletext">${uiLabelMap.CommonFieldsMarkedAreRequired}</div>
 
 <div>
-&nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBack}]</a>
+&nbsp;&nbsp;<a href="<@ofbizUrl>checkLogin/main</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBack}]</a>
 &nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontextbig">[${uiLabelMap.CommonSave}]</a>
 </div>
 

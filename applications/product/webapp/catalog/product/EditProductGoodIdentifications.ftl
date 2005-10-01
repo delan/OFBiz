@@ -54,7 +54,7 @@
     </#list>
     </table>
     <br/>
-    <form method="post" action="<@ofbizUrl>/createGoodIdentification</@ofbizUrl>" style="margin: 0;" name="createGoodIdentificationForm">
+    <form method="post" action="<@ofbizUrl>createGoodIdentification</@ofbizUrl>" style="margin: 0;" name="createGoodIdentificationForm">
         <input type="hidden" name="productId" value="${productId}"/>
         <input type="hidden" name="useValues" value="true"/>
     

@@ -34,7 +34,7 @@
           </td>
           <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
           <td valign="middle" align="right">
-            <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutextright">Cancel All Items</a></div>
+            <div class="tabletext"><a href="<@ofbizUrl>changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutextright">Cancel All Items</a></div>
           </td>
           </#if>
         </tr>
@@ -72,7 +72,7 @@
                       <td valign="top">
                         <div class="tabletext">
                           <#if productId?exists>
-							<a href="<@ofbizUrl>/product/~product_id=${orderItem.productId}</@ofbizUrl>">${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?if_exists}</a>
+							<a href="<@ofbizUrl>product/~product_id=${orderItem.productId}</@ofbizUrl>">${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?if_exists}</a>
                           <#elseif orderItemType?exists>
                             ${orderItemType.description} - ${orderItem.itemDescription?if_exists}
                           <#else>
@@ -96,7 +96,7 @@
                         <#if returns?has_content>
                           <#list returns as return>
                             <div class="tabletext">
-                              <font color="red"><b>Returned</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${return.returnId}</@ofbizUrl>" class="buttontext">${return.returnId}</a>
+                              <font color="red"><b>Returned</b></font> #<a href="<@ofbizUrl>returnMain?returnId=${return.returnId}</@ofbizUrl>" class="buttontext">${return.returnId}</a>
                             </div>
                           </#list>
                         </#if>
@@ -116,7 +116,7 @@
                       <td>&nbsp;</td>                      
                       <td align="right" valign="top" nowrap>
                         <#if security.hasEntityPermission("SALESREP_ORDER", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED">
-                          <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="buttontext">[Cancel]</a></div>
+                          <div class="tabletext"><a href="<@ofbizUrl>changeOrderItemStatus?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="buttontext">[Cancel]</a></div>
                         <#else>
                           &nbsp;
                         </#if>
@@ -224,7 +224,7 @@
               <#-- add new adjustment -->
               <#if security.hasEntityPermission("SALESREP_ORDER", "_UPDATE", session) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">                              
                 <tr>                  
-                  <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>/addOrderAdjustment?${paramString}</@ofbizUrl>">
+                  <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>addOrderAdjustment?${paramString}</@ofbizUrl>">
                     <input type="hidden" name="orderId" value="${orderId}">
                     <input type="hidden" name="comments" value="Added manually by "${userLogin.userLoginId}"">
                     <td align="right" colspan="5">

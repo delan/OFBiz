@@ -26,13 +26,13 @@
 -->
 
 <div class="head1">${uiLabelMap.ProductEditInventoryItemWithId} [${inventoryItemId?if_exists}]</div>
-<a href="<@ofbizUrl>/EditInventoryItem<#if facilityId?exists>?facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewInventoryItem}]</a>
+<a href="<@ofbizUrl>EditInventoryItem<#if facilityId?exists>?facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewInventoryItem}]</a>
 <#if inventoryItemId?exists>
-	<a href="<@ofbizUrl>/TransferInventoryItem?inventoryItemId=${inventoryItemId}<#if facilityId?exists>&facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductTransferItem}]</a>
+	<a href="<@ofbizUrl>TransferInventoryItem?inventoryItemId=${inventoryItemId}<#if facilityId?exists>&facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductTransferItem}]</a>
 </#if>
 
 <#if inventoryItem?exists>
-  <form action="<@ofbizUrl>/UpdateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
+  <form action="<@ofbizUrl>UpdateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
   <table border="0" cellpadding="2" cellspacing="0">
   <input type="hidden" name="inventoryItemId" value="${inventoryItemId}">
   <tr>
@@ -44,11 +44,11 @@
   </tr>
 <#else>
   <#if inventoryItemId?exists>
-    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
+    <form action="<@ofbizUrl>CreateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
     <table border="0" cellpadding="2" cellspacing="0">
     <h3>${uiLabelMap.ProductNotFindInventoryItemWithId} "${inventoryItemId}".</h3>
   <#else>
-    <form action="<@ofbizUrl>/CreateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
+    <form action="<@ofbizUrl>CreateInventoryItem</@ofbizUrl>" method="post" style="margin: 0;" name="inventoryItemForm">
     <table border="0" cellpadding="2" cellspacing="0">
   </#if>
 </#if>
@@ -136,7 +136,7 @@
               </#list>
             </select>
             <#if (inventoryItem.facilityId)?has_content>
-                <a href="<@ofbizUrl>/EditFacility?facilityId=${inventoryItem.facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductEditFacility} ${inventoryItem.facilityId}]</a>
+                <a href="<@ofbizUrl>EditFacility?facilityId=${inventoryItem.facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductEditFacility} ${inventoryItem.facilityId}]</a>
             </#if>
             <br/>
             <span class="tabletext">${uiLabelMap.ProductOrEnterContainerId} :</span>
@@ -158,7 +158,7 @@
           </#if>
           <#if inventoryItem?exists>
             <input type="text" size="20" maxsize="20" name="locationSeqId" value="${inventoryItem.locationSeqId?if_exists}" class="inputBox"/>
-            &nbsp;<a href="<@ofbizUrl>/FindFacilityLocation?facilityId=${facilityId?if_exists}&inventoryItemId=${inventoryItemId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductFindLocation}]</a>
+            &nbsp;<a href="<@ofbizUrl>FindFacilityLocation?facilityId=${facilityId?if_exists}&inventoryItemId=${inventoryItemId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductFindLocation}]</a>
           <#else>
             <input type="text" size="20" maxsize="20" name="locationSeqId" value="${locationSeqId?if_exists}" class="inputBox">
           </#if>

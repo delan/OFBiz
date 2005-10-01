@@ -32,7 +32,7 @@
       <div class="head1">
         ${productCategory.description?if_exists}
         <#if hasQuantities?exists>
-          <form method="post" action="<@ofbizUrl>/addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
+          <form method="post" action="<@ofbizUrl>addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
             <input type='hidden' name='add_category_id' value='${productCategory.productCategoryId}'>            
             <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
             <#if requestParameters.category_id?exists><input type='hidden' name='category_id' value='${requestParameters.category_id}'></#if>
@@ -68,13 +68,13 @@
     <td align="right">
       <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+          <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a> |
+          | <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a> |
         </#if>
       </b>
     </td>
@@ -138,13 +138,13 @@
     <td align="right">
       <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+          <a href="<@ofbizUrl>category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a> |
+          | <a href="<@ofbizUrl>category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a> |
         </#if>
       </b>
     </td>

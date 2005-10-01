@@ -27,10 +27,10 @@
 <#if security.hasEntityPermission("SALESREP_ORDER", "_UPDATE", session)>
   <p class="head1">Receive Offline Payment(s)</p>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
+  &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
   &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[Save]</a>
 
-  <form method="post" action="<@ofbizUrl>/receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">    
+  <form method="post" action="<@ofbizUrl>receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">    
     <input type="hidden" name="orderId" value="${requestParameters.order_id}">
     <#if requestParameters.workEffortId?exists>
     	<input type="hidden" name="workEffortId" value="${requestParameters.workEffortId}">
@@ -55,7 +55,7 @@
     </table>
   </form>
   
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
+  &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
   &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[Save]</a>
    
 <br/>

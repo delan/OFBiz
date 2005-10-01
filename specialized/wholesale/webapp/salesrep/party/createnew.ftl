@@ -49,13 +49,13 @@
                 <td align="center" valign="center" width='100%'>                  
                   <table width='100%' border='0' cellpadding='0' cellspacing='2'>
                     <tr>        
-                      <td><a href="<@ofbizUrl>/editpartygroup?create_new=Y</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewPartyGroup}</a></td>
+                      <td><a href="<@ofbizUrl>editpartygroup?create_new=Y</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewPartyGroup}</a></td>
                     </tr>
                     <tr>        
-                      <td><a href="<@ofbizUrl>/editperson?create_new=Y</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewPerson}</a></td>
+                      <td><a href="<@ofbizUrl>editperson?create_new=Y</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewPerson}</a></td>
                     </tr>                    
                     <tr>        
-                      <td><a href="<@ofbizUrl>/newcustomer</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewCustomer}</a></td>
+                      <td><a href="<@ofbizUrl>newcustomer</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewCustomer}</a></td>
                     </tr>
                     <tr>        
                       <td><a href="#" class="buttontextbigdisabled">[*] ${uiLabelMap.PartyCreateNewEmployee}</a>&nbsp;&nbsp;<span class="tabletext">${uiLabelMap.CommonComingSoon}</span></td>

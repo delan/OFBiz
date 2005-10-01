@@ -47,7 +47,7 @@ ${menuWrapper.renderMenuString()}
 <TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <form name="userform" mode="POST" action="<@ofbizUrl>/UserPermissions</@ofbizUrl>" >
+      <form name="userform" mode="POST" action="<@ofbizUrl>UserPermissions</@ofbizUrl>" >
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
         <tr>
           <td colspan="1" valign="middle" align="right">
@@ -68,7 +68,7 @@ ${menuWrapper.renderMenuString()}
           </td>
           <td valign="middle" align="left">
             <div class="boxhead"><#if partyAndUserLoginAndPerson?has_content>${partyAndUserLoginAndPerson.firstName?if_exists}&nbsp;${partyAndUserLoginAndPerson.lastName?if_exists}[${partyAndUserLoginAndPerson.partyId?if_exists}]<#else>(No current user)</#if>
-<a href="javascript:call_fieldlookup3('<@ofbizUrl>/LookupPartyAndUserLoginAndPerson</@ofbizUrl>')"><img src="<@ofbizContentUrl>/content/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup"></a></div>
+<a href="javascript:call_fieldlookup3('<@ofbizUrl>LookupPartyAndUserLoginAndPerson</@ofbizUrl>')"><img src="<@ofbizContentUrl>/content/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup"></a></div>
           </td>
         </tr>
       </table>
@@ -78,7 +78,7 @@ ${menuWrapper.renderMenuString()}
 <#if partyAndUserLoginAndPerson?has_content>
   <TR>
     <TD width='100%'>
-      <form name="siteRoleForm" mode="POST" action="<@ofbizUrl>/updateSiteRoles</@ofbizUrl>">
+      <form name="siteRoleForm" mode="POST" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <table width='100%' border='0' cellspacing='0' cellpadding='4' class='boxoutside'>
         <tr>
             <td class="">Site</td>

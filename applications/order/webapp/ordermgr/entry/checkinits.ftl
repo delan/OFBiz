@@ -56,7 +56,7 @@
   </tr>
   <tr>
     <td>
-      <form method="post" name="salesentryform" action="<@ofbizUrl>/initorderentry</@ofbizUrl>">
+      <form method="post" name="salesentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
       <input type='hidden' name='finalizeMode' value='type'>
       <input type='hidden' name='orderMode' value='SALES_ORDER'>
       <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
@@ -153,7 +153,7 @@
   </tr>
   <tr>
     <td>
-      <form method="post" name="poentryform" action="<@ofbizUrl>/initorderentry</@ofbizUrl>">
+      <form method="post" name="poentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
       <input type='hidden' name='finalizeMode' value='type'>
       <input type='hidden' name='orderMode' value='PURCHASE_ORDER'>
       <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
