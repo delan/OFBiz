@@ -158,8 +158,8 @@
             </if-compare-field>
 
             <!-- Workaround for bug: returnPrice=16.99, returnablePrice=16.9894 => OrderReturnPriceCannotExceedThePurchasePrice -->
-            <calculate field-name="epsilon" type="Double"><number value="0.01"/></calculate>
-            <calculate field-name="zero" type="Double"><number value="0.0"/></calculate>
+            <set field="epsilon" value="0.01" type="Double"/>
+            <set field="zero" value="0.0" type="Double"/>
             <calculate field-name="returnPriceDelta" type="Double">
                 <calcop operator="subtract">
                     <calcop operator="get" field-name="returnPrice" map-name="parameters"/>
@@ -167,7 +167,7 @@
                 </calcop>
             </calculate>
             <if-compare-field field-name="returnPriceDelta" operator="less" to-field-name="zero" type="Double">
-                <calcop field-name="returnPriceDelta" operator="negative"/>
+                <calculate field-name="returnPriceDelta" type="Double"><calcop field-name="returnPriceDelta" operator="negative"/></calculate>
             </if-compare-field>
 
             <if-compare-field field-name="returnPriceDelta" operator="greater-equals" to-field-name="epsilon" type="Double">
