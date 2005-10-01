@@ -1516,7 +1516,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("_fld0_op\" value=\"greaterThan\"/>");
         buffer.append(opGreaterThan);
 
-        buffer.append(" <span");
+        buffer.append(" </span>");
 
         buffer.append(" <br/> ");
 
