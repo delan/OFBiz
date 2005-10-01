@@ -523,7 +523,15 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupFacility"/>
     </request-map>
-
+    <request-map uri="LookupFixedAsset">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupFixedAsset"/>
+    </request-map>
+    <request-map uri="LookupRequirement">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupRequirement"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -592,5 +600,7 @@
     <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
     <view-map name="LookupWorkEffort" type="screen" page="component://workeffort/widget/LookupScreens.xml#LookupWorkEffort"/>
     <view-map name="LookupFacility" type="screen" page="component://product/widget/facility/LookupScreens.xml#LookupFacility"/>
+    <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
+    <view-map name="LookupRequirement" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupRequirement"/>
     <!-- end of view mappings -->
 </site-conf>
