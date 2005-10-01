@@ -42,7 +42,7 @@
             </drop-down>
         </field>
         <field name="workEffortPurposeTypeId">
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="WorkEffortPurposeType" key-field-name="workEffortPurposeTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
@@ -56,7 +56,7 @@
             </drop-down>
         </field>
         <field name="workEffortParentId"><lookup target-form-name="LookupWorkEffort"/></field>
-        <field name="facilityId"><lookup target-form-name="/LookupWorkEffort"/></field>
+        <field name="facilityId"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="scopeEnumId">
             <drop-down>
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -64,9 +64,9 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="moneyUomId" title="${uiLabelMap.AccountingCurrency}">
+        <field name="moneyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down allow-empty="true">
-                <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
+                <entity-options description="[${uomId}] - ${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                 </entity-options>
             </drop-down>
@@ -346,7 +346,7 @@
     </form>
     <form name="FindWorkEffortCommEvents" default-map-name="workEffortCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="ListWorkEffortCommEvents" title="" type="single">
         <field name="workEffortId"><hidden/></field>
-        <field name="commEventId"><lookup target-form-name="/LookupCommEvent"/></field>
+        <field name="commEventId"><lookup target-form-name="LookupCommEvent"/></field>
         <field name="fromDate"><date-find/></field>
         <field name="thruDate"><date-find/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
