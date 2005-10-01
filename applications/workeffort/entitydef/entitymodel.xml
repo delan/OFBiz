@@ -271,6 +271,7 @@
             title="Work Effort Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="workEffortTypeId" type="id"></field>
+      <field name="currentStatusId" type="id"></field>
       <field name="workEffortPurposeTypeId" type="id"></field>
       <field name="workEffortParentId" type="id"></field>
       <field name="workflowPackageId" type="id-long"></field>
@@ -278,9 +279,7 @@
       <field name="workflowProcessId" type="id-long"></field>
       <field name="workflowProcessVersion" type="short-varchar"></field>
       <field name="workflowActivityId" type="id-long"></field>
-      <field name="currentStatusId" type="id"></field>
       <field name="lastStatusUpdate" type="date-time"></field>
-      <field name="universalId" type="short-varchar"></field>
       <field name="scopeEnumId" type="id"></field>
       <field name="priority" type="numeric"></field>
       <field name="percentComplete" type="numeric"></field>
@@ -288,12 +287,10 @@
       <field name="description" type="description"></field>
       <field name="locationDesc" type="description"></field>
       <field name="revisionNumber" type="numeric"></field>
+      <field name="universalId" type="short-varchar"></field>
+      <field name="sourceReferenceId" type="id-long"></field>
       <field name="fixedAssetId" type="id"></field>
       <field name="facilityId" type="id"></field>
-      <field name="createdDate" type="date-time"></field>
-      <field name="createdByUserLogin" type="id-vlong"></field>
-      <field name="lastModifiedDate" type="date-time"></field>
-      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <field name="estimatedStartDate" type="date-time"></field>
       <field name="estimatedCompletionDate" type="date-time"></field>
       <field name="estimatedMilliSeconds" type="floating-point"></field>
@@ -315,12 +312,15 @@
       <field name="quantityToProduce" type="floating-point"></field>
       <field name="quantityProduced" type="floating-point"></field>
       <field name="quantityRejected" type="floating-point"></field>
-      <field name="sourceReferenceId" type="id-long"></field>
       <field name="reservPersons" type="floating-point"></field>   <!-- the number of persons renting the attached asset -->
-      <!-- reservationSecondPersonPricePercentage:        percentage of the end price for the 2nd person renting this asset connected to the workEfforty-->
+      <!-- reservationSecondPersonPricePercentage: percentage of the end price for the 2nd person renting this asset connected to the workEfforty-->
       <field name="reserv2ndPPPerc" type="floating-point"/>
-      <!-- reservationNthPersonPricePercentage:        percentage of the end price for the Nth (2+) person renting this asset connected to the workEfforty-->
+      <!-- reservationNthPersonPricePercentage: percentage of the end price for the Nth (2+) person renting this asset connected to the workEfforty-->
       <field name="reservNthPPPerc" type="floating-point"/>      
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="workEffortId"/>
       <relation type="one" fk-name="WK_EFFRT_TYPE" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId"/>

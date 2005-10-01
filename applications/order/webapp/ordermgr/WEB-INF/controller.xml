@@ -1303,6 +1303,12 @@
     <view-map name="CreateQuoteAndQuoteItemForRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#CreateQuoteAndQuoteItemForRequest"/>
     <view-map name="EditQuoteItemForRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditQuoteItemForRequest"/>
 
+    <view-map name="AddQuoteWorkEffort" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#AddQuoteWorkEffort"/>
+    <view-map name="EditQuoteWorkEffort" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#EditQuoteWorkEffort"/>
+    <view-map name="ListQuoteWorkEfforts" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#ListQuoteWorkEfforts"/>
+    <view-map name="EditOrderHeader" type="screen" page="component://order/widget/ordermgr/OrderHeaderScreens.xml#EditOrderHeader"/>
+    <view-map name="ListOrderHeaders" type="screen" page="component://order/widget/ordermgr/OrderHeaderScreens.xml#ListOrderHeaders"/>
+    
     <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
     <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
@@ -1316,11 +1322,6 @@
     <view-map name="LookupRequirement" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupRequirement"/>
     <view-map name="LookupShoppingList" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupShoppingList"/>
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
-    <view-map name="AddQuoteWorkEffort" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#AddQuoteWorkEffort"/>
-    <view-map name="EditQuoteWorkEffort" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#EditQuoteWorkEffort"/>
-    <view-map name="ListQuoteWorkEfforts" type="screen" page="component://order/widget/ordermgr/QuoteWorkEffortScreens.xml#ListQuoteWorkEfforts"/>
-    <view-map name="EditOrderHeader" type="screen" page="component://order/widget/ordermgr/OrderHeaderScreens.xml#EditOrderHeader"/>
-    <view-map name="ListOrderHeaders" type="screen" page="component://order/widget/ordermgr/OrderHeaderScreens.xml#ListOrderHeaders"/>
 
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
