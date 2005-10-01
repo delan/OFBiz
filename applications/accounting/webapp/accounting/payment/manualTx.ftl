@@ -31,7 +31,7 @@
 
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
   ${setRequestAttribute("validTx", "false")}
-  <form name="manualTxForm" method="get" action="<@ofbizUrl>/manualETx</@ofbizUrl>">
+  <form name="manualTxForm" method="get" action="<@ofbizUrl>manualETx</@ofbizUrl>">
     <#if requestParameters.paymentMethodId?exists>
       <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}">
     </#if>

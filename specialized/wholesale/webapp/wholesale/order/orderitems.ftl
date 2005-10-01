@@ -75,7 +75,7 @@
                   <#else>
                     <td valign="top">
                       <div class="tabletext">
-                        <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
+                        <a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
                       </div>
                       <#if maySelectItems?default(false)>
                         <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
@@ -123,7 +123,7 @@
                     <#if maySelectItems?default(false)>
                       <td>&nbsp;</td>
                       <#if (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED")>
-                        <td><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}</@ofbizUrl>" class="buttontext">${requestAttributes.uiLabelMap.CommonCancel}</a></td>
+                        <td><a href="<@ofbizUrl>cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}</@ofbizUrl>" class="buttontext">${requestAttributes.uiLabelMap.CommonCancel}</a></td>
                       <#else>
                         <td>&nbsp;</td>
                       </#if>

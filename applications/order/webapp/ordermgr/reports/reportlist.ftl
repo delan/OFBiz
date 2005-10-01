@@ -31,7 +31,7 @@ control over. special thanks for Britton LaRoche for creating the first pass of
 these reports and helping to improve them.</div>
 <br/>
 
-<FORM METHOD="post" NAME="orderreportform" ACTION="<@ofbizUrl>/orderreportjasper.pdf</@ofbizUrl>" TARGET="OrderReport">   
+<FORM METHOD="post" NAME="orderreportform" ACTION="<@ofbizUrl>orderreportjasper.pdf</@ofbizUrl>" TARGET="OrderReport">   
 <Table>
 <TR>
 <TD><div class="tableheadtext">From Date:</div></td>
@@ -69,7 +69,7 @@ these reports and helping to improve them.</div>
  <INPUT TYPE="submit" TABINDEX="16" CLASS="button" NAME="GoReport" VALUE="Order Report">
 </form>
 
-<FORM METHOD="post" NAME="itemreportform" ACTION="<@ofbizUrl>/orderitemreportjasper.pdf</@ofbizUrl>" TARGET="OrderReport">   
+<FORM METHOD="post" NAME="itemreportform" ACTION="<@ofbizUrl>orderitemreportjasper.pdf</@ofbizUrl>" TARGET="OrderReport">   
 <Table>
 <TR>
 <TD><div class="tableheadtext">From Date:</div></td>

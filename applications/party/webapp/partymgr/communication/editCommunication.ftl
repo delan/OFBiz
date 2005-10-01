@@ -30,8 +30,8 @@
       <#if communicationEvent?has_content>
         <a href="/workeffort/control/task?communicationEventId=${communicationEvent.communicationEventId}${externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewTask}]</a>
         <a href="/workeffort/control/event?communicationEventId=${communicationEvent.communicationEventId}${externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewEvent}]</a>
-        <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}&partyIdFrom=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
-        <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}&partyIdTo=${partyId}&parentCommEventId=${communicationEvent.communicationEventId}&origCommEventId=${communicationEvent.origCommEventId?default("")}</@ofbizUrl>" class="buttontext">[Reply]</a>
+        <a href="<@ofbizUrl>viewCommunicationEvent?partyId=${partyId}&partyIdFrom=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
+        <a href="<@ofbizUrl>viewCommunicationEvent?partyId=${partyId}&partyIdTo=${partyId}&parentCommEventId=${communicationEvent.communicationEventId}&origCommEventId=${communicationEvent.origCommEventId?default("")}</@ofbizUrl>" class="buttontext">[Reply]</a>
       </#if>
 </div>
 
@@ -66,14 +66,14 @@
                 </td>
                 <#if okayToUpdate>
                 <td bgcolor='white'>
-                  <a href="<@ofbizUrl>/removeCommunicationEventPurpose?partyId=${partyId}&communicationEventPrpTypId=${purposeType.communicationEventPrpTypId}&communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                  <a href="<@ofbizUrl>removeCommunicationEventPurpose?partyId=${partyId}&communicationEventPrpTypId=${purposeType.communicationEventPrpTypId}&communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
                 </td>
                 </#if>
               </tr>
             </#list>          
           </#if>
           <#if okayToUpdate>
-          <form method="post" name="addeventpurpose" action="<@ofbizUrl>/createCommunicationEventPurpose</@ofbizUrl>">
+          <form method="post" name="addeventpurpose" action="<@ofbizUrl>createCommunicationEventPurpose</@ofbizUrl>">
             <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">
             <input type="hidden" name="partyId" value="${partyId}">
             <tr>
@@ -108,7 +108,7 @@
                 </td>
                 <#if okayToUpdate>
                 <td bgcolor='white'>
-                  <a href="<@ofbizUrl>/removeCommunicationEventRole?party_id=${partyId}&partyId=${eventRole.partyId}&roleTypeId=${eventRole.roleTypeId}&communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                  <a href="<@ofbizUrl>removeCommunicationEventRole?party_id=${partyId}&partyId=${eventRole.partyId}&roleTypeId=${eventRole.roleTypeId}&communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
                 </td>
                 </#if>
               </tr>
@@ -116,7 +116,7 @@
           </#if>
           <#if okayToUpdate>
           <tr>
-            <form method="post" name="addeventrole" action="<@ofbizUrl>/createCommunicationEventRole</@ofbizUrl>">
+            <form method="post" name="addeventrole" action="<@ofbizUrl>createCommunicationEventRole</@ofbizUrl>">
               <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">
               <input type="hidden" name="party_id" value="${partyId}">
               <td bgcolor='white'>

@@ -5,7 +5,7 @@
 <#if ancestorList?has_content && (0 < ancestorList?size) >
     <#assign lastContent=ancestorList?last />
     <div class="head1">[${lastContent.contentId}] ${lastContent.description}
-              <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${lastContent.contentId?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a> 
+              <a class="tabButton" href="<@ofbizUrl>searchContent?siteId=${lastContent.contentId?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a> 
     </div>
 </#if>
 <table border="0">
@@ -78,7 +78,7 @@
        <tr>
          <td >
             ${indent}
-            <a class="tabButton" href="<@ofbizUrl>/viewcontent?contentId=${subContentId?if_exists}&nodeTrailCsv=${thisCsv}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>  ${content.description?if_exists}
+            <a class="tabButton" href="<@ofbizUrl>viewcontent?contentId=${subContentId?if_exists}&nodeTrailCsv=${thisCsv}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>  ${content.description?if_exists}
          </td >
        </tr>
 </@loopSubContentCache >
@@ -101,8 +101,8 @@
             </#if>
             <#local thisCsv=thisNodeTrailCsv />
             <#local thisCsv=thisNodeTrailCsv + "," + subContentId />
-            <a class="tabButton" href="<@ofbizUrl>/showcontenttree?contentId=${siteId?if_exists}&nodeTrailCsv=${thisCsv}</@ofbizUrl>" >${plusMinus}</a> &nbsp;${content.description?if_exists}
-              <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${subContentId?if_exists}&nodeTrailCsv=${thisCsv}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a> 
+            <a class="tabButton" href="<@ofbizUrl>showcontenttree?contentId=${siteId?if_exists}&nodeTrailCsv=${thisCsv}</@ofbizUrl>" >${plusMinus}</a> &nbsp;${content.description?if_exists}
+              <a class="tabButton" href="<@ofbizUrl>searchContent?siteId=${subContentId?if_exists}&nodeTrailCsv=${thisCsv}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a> 
          </td >
        </tr>
        <#if thisContentId == subContentId>

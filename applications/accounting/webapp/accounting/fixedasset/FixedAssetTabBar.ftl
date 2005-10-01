@@ -28,10 +28,10 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
     <div class='tabContainer'>
-        <a href="<@ofbizUrl>/EditFixedAsset?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.EditFixedAsset?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAsset}</a>
-<!--   <a href="<@ofbizUrl>/ListFixedAssetRollUp?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetRollUp?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetRollUp}</a>
-        <a href="<@ofbizUrl>/ListFixedAssetParties?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetParties?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetParties}</a> -->
-        <a href="<@ofbizUrl>/ListFixedAssetProducts?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetProducts?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetProducts}</a>
-        <a href="<@ofbizUrl>/ListFixedAssetCalendar?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetCalendar?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetCalendar}</a>
-        <a href="<@ofbizUrl>/ListFixedAssetStdCosts?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetStdCosts?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetStdCosts}</a>
+        <a href="<@ofbizUrl>EditFixedAsset?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.EditFixedAsset?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAsset}</a>
+<!--   <a href="<@ofbizUrl>ListFixedAssetRollUp?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetRollUp?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetRollUp}</a>
+        <a href="<@ofbizUrl>ListFixedAssetParties?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetParties?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetParties}</a> -->
+        <a href="<@ofbizUrl>ListFixedAssetProducts?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetProducts?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetProducts}</a>
+        <a href="<@ofbizUrl>ListFixedAssetCalendar?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetCalendar?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetCalendar}</a>
+        <a href="<@ofbizUrl>ListFixedAssetStdCosts?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetStdCosts?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetStdCosts}</a>
     </div>

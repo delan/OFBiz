@@ -24,7 +24,7 @@
  *@since      3.0
 -->
   <div class="head1">${uiLabelMap.ManufacturingCreateProductionRun}</div>
-  <form name="productionRunform" method="post" action="<@ofbizUrl>/CreateProductionRunGo</@ofbizUrl>">
+  <form name="productionRunform" method="post" action="<@ofbizUrl>CreateProductionRunGo</@ofbizUrl>">
 
   <br/>
   <table width="90%" border="0" cellpadding="2" cellspacing="0">

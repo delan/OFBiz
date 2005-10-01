@@ -47,7 +47,7 @@
         <tr>
           <td>
             <#if shoppingLists?has_content>
-              <form name="selectShoppingList" method="post" action="<@ofbizUrl>/editShoppingList</@ofbizUrl>">
+              <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
                 <select name="shoppingListId" class="selectBox">
                     <#if shoppingList?has_content>
                       <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -95,7 +95,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <form name="updateList" method="post" action="<@ofbizUrl>/updateShoppingList</@ofbizUrl>">
+              <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
                 <input type="hidden" class="inputBox" name="shoppingListId" value="${shoppingList.shoppingListId}">
                 <input type="hidden" class="inputBox" name="partyId" value="${shoppingList.partyId?if_exists}">
                 <table border='0' width='100%' cellspacing='0' cellpadding='0'>
@@ -145,7 +145,7 @@
                         </#list>
                       </select>
                       <#if parentShoppingList?exists>
-                        <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
+                        <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
                       </#if>
                     </td>
                   </tr>
@@ -177,7 +177,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyAddChildListsToCart}</a>
+              <a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyAddChildListsToCart}</a>
           </td>
         </tr>
       </table>
@@ -198,11 +198,11 @@
                 <#assign childShoppingList = childShoppingListData.childShoppingList>
 		<tr>
 		  <td nowrap align="left">
-                  <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
 		  </td>                                        
 		  <td align="right">
-                    <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyGotoList}</a>
-                    <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyAddListToCart}</a>
+                    <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyGotoList}</a>
+                    <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyAddListToCart}</a>
 	          </td>                      
 		</tr>
 	      </#list>
@@ -226,7 +226,7 @@
           </td>
           <#--
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyAddListToCart}</a>
+            <a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyAddListToCart}</a>
           </td>
           -->
         </tr>
@@ -267,7 +267,7 @@
                           </div>
                         </td>
                         <td nowrap align="center">
-						  <form method="post" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+						  <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
 						    <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
 						    <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
                             <div class='tabletext'>
@@ -283,7 +283,7 @@
                         </td>
                         <td align="right" nowrap>
                         	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a>
-                        	<a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
+                        	<a href="<@ofbizUrl>removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
                         </td>
                       </tr>
                   </#list>
@@ -324,7 +324,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
-            <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+            <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
               <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}">
               <input type="hidden" name="partyId" value="${shoppingList.partyId?if_exists}">
               <input type="text" class="inputBox" name="productId" value="">

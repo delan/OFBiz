@@ -27,14 +27,14 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <div class="head1">${uiLabelMap.AccountingEditPayment}</div>
-<a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingCreatePayment}]</a>
+<a href="<@ofbizUrl>editPayment</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingCreatePayment}]</a>
 <br/>
 
 <#if payment?has_content>
-  <form name="editpayment" method="post" action="<@ofbizUrl>/updatePayment</@ofbizUrl>">
+  <form name="editpayment" method="post" action="<@ofbizUrl>updatePayment</@ofbizUrl>">
   <input type="hidden" name="paymentId" value="${payment.paymentId}">
 <#else>
-  <form name="editpayment" method="post" action="<@ofbizUrl>/createPayment</@ofbizUrl>">
+  <form name="editpayment" method="post" action="<@ofbizUrl>createPayment</@ofbizUrl>">
 </#if>
 
   <table border='0' cellpadding='2' cellspacing='0'>

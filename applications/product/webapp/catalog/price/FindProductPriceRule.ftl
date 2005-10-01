@@ -28,9 +28,9 @@
 
 <div class="head1">${uiLabelMap.ProductGlobalPriceRules}</div>
 <#if activeOnly>
-    <a href="<@ofbizUrl>/FindProductPriceRules?activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
+    <a href="<@ofbizUrl>FindProductPriceRules?activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
 <#else>
-    <a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
+    <a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
 </#if>
 <br/>
 <br/>
@@ -45,7 +45,7 @@
     </tr>
     <#list productPriceRules as rule>
     <tr>
-      <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditProductPriceRules?productPriceRuleId=${rule.productPriceRuleId}</@ofbizUrl>" class="buttontext">${rule.ruleName?if_exists} [${rule.productPriceRuleId}]</a></div></td>
+      <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditProductPriceRules?productPriceRuleId=${rule.productPriceRuleId}</@ofbizUrl>" class="buttontext">${rule.ruleName?if_exists} [${rule.productPriceRuleId}]</a></div></td>
       <td><div class="tabletext">&nbsp;${rule.isSale?if_exists}</div></td>
       <td>
         <#assign hasntStarted = false>
@@ -62,7 +62,7 @@
         </div>
       </td>
       <td align="center">
-        <a href="<@ofbizUrl>/EditProductPriceRules?productPriceRuleId=${rule.productPriceRuleId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+        <a href="<@ofbizUrl>EditProductPriceRules?productPriceRuleId=${rule.productPriceRuleId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
       </td>
     </tr>
     </#list>
@@ -72,7 +72,7 @@
 </#if>
 
 <br/>
-<form method="post" action="<@ofbizUrl>/createProductPriceRule</@ofbizUrl>" style="margin: 0;">
+<form method="post" action="<@ofbizUrl>createProductPriceRule</@ofbizUrl>" style="margin: 0;">
   <div class="head2">${uiLabelMap.ProductAddPriceRule}:</div>
   <br/>
   ${uiLabelMap.ProductName}: <input type="text" size="30" class="inputBox" name="ruleName"/>

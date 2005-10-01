@@ -45,7 +45,7 @@
         <td><div class="tabletext">${taxItem.salesTaxPercentage?if_exists}</div></td>
         <td><div class="tabletext">${taxItem.fromDate?string}</div></td>
         <#if security.hasEntityPermission("TAXRATE", "_DELETE", session)>
-          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minItemPrice=${taxItem.minItemPrice?string.number}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></div></td>
+          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minItemPrice=${taxItem.minItemPrice?string.number}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></div></td>
         <#else>
           <td>&nbsp;</td>
         </#if>
@@ -56,7 +56,7 @@
 <br/>
 <table>
     <#if security.hasEntityPermission("TAXRATE", "_CREATE", session)>
-      <form name="addrate" action="<@ofbizUrl>/storeCreateTaxRate</@ofbizUrl>">
+      <form name="addrate" action="<@ofbizUrl>storeCreateTaxRate</@ofbizUrl>">
         <input type="hidden" name="productStoreId" value="${productStoreId}">
         <tr>
           <td><span class="tableheadtext">${uiLabelMap.ProductCountry}</span></td>

@@ -52,7 +52,7 @@
         </#list>
     </table>
     <br/>
-    <form method="post" action="<@ofbizUrl>/UpdateProductAttribute</@ofbizUrl>" style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>UpdateProductAttribute</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="productId" value="${productId}"/>
         <input type="hidden" name="PRODUCT_ID" value="${productId}"/>
         <input type="hidden" name="UPDATE_MODE" value="CREATE"/>

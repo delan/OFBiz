@@ -24,7 +24,7 @@
 -->
 
 <#if quote?exists>
-<form action="<@ofbizUrl>/copyQuote</@ofbizUrl>" method="post" style="margin: 0;">
+<form action="<@ofbizUrl>copyQuote</@ofbizUrl>" method="post" style="margin: 0;">
     <input type="hidden" name="quoteId" value="${quoteId}"/>
     <div class="tabletext">
         <b>${uiLabelMap.OrderCopyQuote}:</b>

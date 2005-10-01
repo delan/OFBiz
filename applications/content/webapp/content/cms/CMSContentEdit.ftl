@@ -79,7 +79,7 @@ ${menuWrapper.renderMenuString()}
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <form mode="POST" name="publishsite" action="<@ofbizUrl>/linkContentToPubPt</@ofbizUrl>">
+            <form mode="POST" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
               <input type="hidden" name="contentId" value="${contentId}"/>
               <table width="100%" border="0" cellpadding="1">
                     <#assign rowCount = 0 />
@@ -121,7 +121,7 @@ ${menuWrapper.renderMenuString()}
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <form mode="POST" name="updatefeatures" action="<@ofbizUrl>/updateFeatures</@ofbizUrl>">
+            <form mode="POST" name="updatefeatures" action="<@ofbizUrl>updateFeatures</@ofbizUrl>">
               <input type="hidden" name="contentId" value="${contentId}"/>
               <table width="100%" border="0" cellpadding="1">
                        <tr>
@@ -148,7 +148,7 @@ ${menuWrapper.renderMenuString()}
                     <tr>
                       <td valign="middle" align="left">
                         <div class="boxhead"><input type="text" name="fieldValue0_o_${rowCount}" value=""/>
-                          <a href="javascript:call_fieldlookup3('<@ofbizUrl>/LookupFeature</@ofbizUrl>')">
+                          <a href="javascript:call_fieldlookup3('<@ofbizUrl>LookupFeature</@ofbizUrl>')">
                             <img src="<@ofbizContentUrl>/content/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup">
                           </a>
                         </div>
@@ -187,7 +187,7 @@ ${menuWrapper.renderMenuString()}
             <div class="boxhead">&nbsp;Image Information</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/EditAddImage?contentId=${imgContentId?if_exists}dataResourceId=${imgDataResourceId?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>EditAddImage?contentId=${imgContentId?if_exists}dataResourceId=${imgDataResourceId?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
           </td>
         </tr>
       </table>
@@ -200,7 +200,7 @@ ${menuWrapper.renderMenuString()}
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr><td align="right" nowrap><div class='tabletext'><b>Image</b></div></td><td>&nbsp;</td><td align="left"><div class='tabletext'>
-        <img src="<@ofbizUrl>/img?imgId=${imgDataResourceId?if_exists}</@ofbizUrl>" />
+        <img src="<@ofbizUrl>img?imgId=${imgDataResourceId?if_exists}</@ofbizUrl>" />
 <div></td></tr>
   </table>
           </td>
@@ -248,7 +248,7 @@ ${menuWrapper.renderMenuString()}
             <div class="boxhead">&nbsp;</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/EditAddContent?contentId=${content.contentId?if_exists}&contentIdTo=${content.caContentIdTo?if_exists}&contentAssocTypeId=${content.caContentAssocTypeId?if_exists}&fromDate=${content.caFromDate?if_exists}&mapKey=${content.caMapKey?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>EditAddContent?contentId=${content.contentId?if_exists}&contentIdTo=${content.caContentIdTo?if_exists}&contentAssocTypeId=${content.caContentAssocTypeId?if_exists}&fromDate=${content.caFromDate?if_exists}&mapKey=${content.caMapKey?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
           </td>
         </tr>
       </table>

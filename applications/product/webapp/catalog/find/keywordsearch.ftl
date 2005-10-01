@@ -27,10 +27,10 @@
 
 <div class="head1">Product Search, <span class="head2">you searched for:</span></div>
 <#list searchConstraintStrings as searchConstraintString>
-    <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
+    <div class="tabletext">&nbsp;<a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
 </#list>
 <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
-<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[Refine Search]</a></div>
+<div class="tabletext"><a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[Refine Search]</a></div>
 
 <#if !productIds?has_content>
   <br/><div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
@@ -42,13 +42,13 @@
       <td align="right">
         <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+          <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+          | <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
         </b>
       </td>
@@ -84,7 +84,7 @@
       <tr>
         <td>
           <input type="checkbox" name="selectResult${productId_index}" onchange="checkProductToBagTextArea(this, '${productId}');"/>
-          <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${productId}] ${(product.internalName)?if_exists}</a>
+          <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${productId}] ${(product.internalName)?if_exists}</a>
         </td>
       </tr>
     </#list>
@@ -98,13 +98,13 @@
       <td align="right">
         <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+          <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+          | <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
         </b>
       </td>
@@ -120,7 +120,7 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="post" action="<@ofbizUrl>/searchRemoveFromCategory</@ofbizUrl>"
+<form method="post" action="<@ofbizUrl>searchRemoveFromCategory</@ofbizUrl>"
   <b>Remove Results From </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <option value="">- Any Category -</option>
@@ -140,7 +140,7 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="post" action="<@ofbizUrl>/searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
+<form method="post" action="<@ofbizUrl>searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
   <b>Expire Results From </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <option value="">- Any Category -</option>
@@ -161,7 +161,7 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="post" action="<@ofbizUrl>/searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
+<form method="post" action="<@ofbizUrl>searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
   <b>Add Results to </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <#list productCategories as productCategory>
@@ -181,7 +181,7 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="post" action="<@ofbizUrl>/searchAddFeature</@ofbizUrl>" name="searchAddFeature">
+<form method="post" action="<@ofbizUrl>searchAddFeature</@ofbizUrl>" name="searchAddFeature">
   <b>Add Feature to Results:</b><br/>
   Feature ID<input type="text" size="10" name="productFeatureId" value="" class="inputBox">
   From<input type="tex"t size="25" name="fromDate" class="inputBox"><a href="javascript:call_cal(document.searchAddFeature.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a> 
@@ -208,7 +208,7 @@ ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVi
 <hr class="sepbar"/>
 
 <div class="tabletext">
-<form method="post" action="<@ofbizUrl>/searchRemoveFeature</@ofbizUrl>" name="searchRemoveFeature">
+<form method="post" action="<@ofbizUrl>searchRemoveFeature</@ofbizUrl>" name="searchRemoveFeature">
   <b>Remove Feature from Results:</b><br/>
   Feature ID<input type="text" size="10" name="productFeatureId" value="" class="inputBox">
   <input type="hidden" name="clearSearch" value="N">

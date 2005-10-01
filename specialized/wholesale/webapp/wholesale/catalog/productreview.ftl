@@ -25,7 +25,7 @@
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if requestParameters.product_id?exists>
-  <form name="reviewProduct" method="post" action="<@ofbizUrl>/createProductReview</@ofbizUrl>">
+  <form name="reviewProduct" method="post" action="<@ofbizUrl>createProductReview</@ofbizUrl>">
     <input type="hidden" name="productId" value="${requestParameters.product_id}">
     <input type="hidden" name="product_id" value="${requestParameters.product_id}">
     <input type="hidden" name="category_id" value="${requestParameters.category_id}">
@@ -64,7 +64,7 @@
       <tr>
         <td>
           <a href="javascript:document.reviewProduct.submit();" class="buttontext">[${uiLabelMap.CommonSave}]</a>&nbsp;
-          <a href="<@ofbizUrl>/product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancel}]</a>
+          <a href="<@ofbizUrl>product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancel}]</a>
         </td>
       </tr>
     </table>

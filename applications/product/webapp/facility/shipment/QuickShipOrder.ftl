@@ -33,9 +33,9 @@ function setWeight(weight) {
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
   <div class="head1">${uiLabelMap.ProductQuickShipOrderFrom}<span class='head2'>${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/quickShipOrder?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNextShipment}]</a>
+  <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNextShipment}]</a>
   <#if shipment?has_content>
-    <a href="<@ofbizUrl>/EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductEditShipment}]</a>
+    <a href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductEditShipment}]</a>
   </#if>
   <br/><br/>
   
@@ -53,7 +53,7 @@ function setWeight(weight) {
             <#-- multiple routes -->
             <div class="tabletext"><font color="red">${uiLabelMap.ProductMoreRouteSegmentFound}.</font></div>
           <#elseif !requestParameters.shipmentRouteSegmentId?exists || requestAttributes._ERROR_MESSAGE_?exists>
-            <form name="routeForm" method="post" action="<@ofbizUrl>/setQuickRouteInfo</@ofbizUrl>" style='margin: 0;'>
+            <form name="routeForm" method="post" action="<@ofbizUrl>setQuickRouteInfo</@ofbizUrl>" style='margin: 0;'>
               <#assign shipmentRoute = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRoutes))?if_exists>
               <#assign carrierPerson = (shipmentRoute.getRelatedOne("CarrierPerson"))?if_exists>
               <#assign carrierPartyGroup = (shipmentRoute.getRelatedOne("CarrierPartyGroup"))?if_exists>
@@ -101,7 +101,7 @@ function setWeight(weight) {
                   </td>
                   <td><span class="tabletext">&nbsp;</span></td>
                   <td width="80%">
-                    <a href="<@ofbizUrl>/quickShipOrder?facilityId=${facilityId}&shipmentId=${shipmentId}&reweigh=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReWeighPackage}</a>                  
+                    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}&shipmentId=${shipmentId}&reweigh=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReWeighPackage}</a>                  
                   </td>
                 </tr>
                 <tr>
@@ -126,12 +126,12 @@ function setWeight(weight) {
             <#-- display the links for label/packing slip -->
             <#assign allDone = "yes">
             <center>
-              <a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductShippingLabel}</a><br/>
-              <a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductPackingSlip}</a>
+              <a href="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductShippingLabel}</a><br/>
+              <a href="<@ofbizUrl>ShipmentManifestReport.pdf?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductPackingSlip}</a>
             </center>                
           </#if>
         <#else>
-          <form name="weightForm" method="post" action="<@ofbizUrl>/setQuickPackageWeight</@ofbizUrl>" style='margin: 0;'>
+          <form name="weightForm" method="post" action="<@ofbizUrl>setQuickPackageWeight</@ofbizUrl>" style='margin: 0;'>
             <#assign weightUom = shipmentPackage.getRelatedOne("WeightUom")?if_exists>
             <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
             <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}"/>
@@ -186,7 +186,7 @@ function setWeight(weight) {
       </#if>
     </#if>
   <#else>
-    <form name="selectOrderForm" method="post" action="<@ofbizUrl>/createQuickShipment</@ofbizUrl>" style='margin: 0;'>
+    <form name="selectOrderForm" method="post" action="<@ofbizUrl>createQuickShipment</@ofbizUrl>" style='margin: 0;'>
       <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
       <input type="hidden" name="originFacilityId" value="${facilityId?if_exists}">
       <input type="hidden" name="setPackedOnly" value="Y">

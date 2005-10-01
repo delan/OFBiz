@@ -31,7 +31,7 @@
     <div>&nbsp;</div>
 
     <!-- select order form -->
-    <form name="selectOrderForm" method="post" action="<@ofbizUrl>/PackOrder</@ofbizUrl>" style='margin: 0;'>
+    <form name="selectOrderForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>" style='margin: 0;'>
       <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
       <table border='0' cellpadding='2' cellspacing='0'>
         <tr>
@@ -55,18 +55,18 @@
       </table>
     </form>
 
-    <form name="completePackForm" method="post" action="<@ofbizUrl>/CompletePack</@ofbizUrl>" style='margin: 0;'>
+    <form name="completePackForm" method="post" action="<@ofbizUrl>CompletePack</@ofbizUrl>" style='margin: 0;'>
       <input type="hidden" name="orderId" value="${orderId?if_exists}"/>
       <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
       <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
       <input type="hidden" name="handlingInstructions" value="${packingSession.getHandlingInstructions()?if_exists}"/>
     </form>
-    <form name="clearPackForm" method="post" action="<@ofbizUrl>/ClearPackAll</@ofbizUrl>" style='margin: 0;'>
+    <form name="clearPackForm" method="post" action="<@ofbizUrl>ClearPackAll</@ofbizUrl>" style='margin: 0;'>
       <input type="hidden" name="orderId" value="${orderId?if_exists}"/>
       <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
       <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
     </form>
-    <form name="incPkgSeq" method="post" action="<@ofbizUrl>/SetNextPackageSeq</@ofbizUrl>" style='margin: 0;'>
+    <form name="incPkgSeq" method="post" action="<@ofbizUrl>SetNextPackageSeq</@ofbizUrl>" style='margin: 0;'>
       <input type="hidden" name="orderId" value="${orderId?if_exists}"/>
       <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
       <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
@@ -80,7 +80,7 @@
 
       <!-- manual per item form -->
       <#if useGrid != "Y">
-        <form name="singlePackForm" method="post" action="<@ofbizUrl>/ProcessPackOrder</@ofbizUrl>" style='margin: 0;'>
+        <form name="singlePackForm" method="post" action="<@ofbizUrl>ProcessPackOrder</@ofbizUrl>" style='margin: 0;'>
           <input type="hidden" name="packageSeq" value="${packingSession.getCurrentPackageSeq()}"/>
           <input type="hidden" name="orderId" value="${orderId}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId}"/>
@@ -131,7 +131,7 @@
       <#if useGrid == "Y" && itemInfos?has_content>
         <hr class="sepbar"/>
         <div>&nbsp;</div>
-        <form name="multiPackForm" method="post" action="<@ofbizUrl>/ProcessBulkPackOrder</@ofbizUrl>" style='margin: 0;'>
+        <form name="multiPackForm" method="post" action="<@ofbizUrl>ProcessBulkPackOrder</@ofbizUrl>" style='margin: 0;'>
           <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
           <input type="hidden" name="orderId" value="${orderId?if_exists}">
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}">
@@ -229,7 +229,7 @@
               <td><div class="tabletext">${line.getInventoryItemId()}</td>
               <td align="right"><div class="tabletext">${line.getQuantity()}</td>
               <td align="right"><div class="tabletext">${line.getPackageSeq()}</td>
-              <td align="right"><a href="<@ofbizUrl>/ClearPackLine?facilityId=${facilityId}&orderId=${line.getOrderId()}&orderItemSeqId=${line.getOrderItemSeqId()}&shipGroupSeqId=${line.getShipGroupSeqId()}&inventoryItemId=${line.getInventoryItemId()}&packageSeqId=${line.getPackageSeq()}</@ofbizUrl>" class="buttontext">Clear</a></td>
+              <td align="right"><a href="<@ofbizUrl>ClearPackLine?facilityId=${facilityId}&orderId=${line.getOrderId()}&orderItemSeqId=${line.getOrderItemSeqId()}&shipGroupSeqId=${line.getShipGroupSeqId()}&inventoryItemId=${line.getInventoryItemId()}&packageSeqId=${line.getPackageSeq()}</@ofbizUrl>" class="buttontext">Clear</a></td>
             </tr>
           </#list>
         </table>

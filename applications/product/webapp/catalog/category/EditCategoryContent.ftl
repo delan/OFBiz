@@ -53,7 +53,7 @@ function insertNowTimestamp(field) {
             <#assign categoryContent=entry.categoryContent/>
             <#assign prodCatContentType=categoryContent.getRelatedOneCache("ProductCategoryContentType")/>
             <tr class="tabletext">
-                <td><a href="<@ofbizUrl>/EditCategoryContentContent?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[No description]")} [${entry.content.contentId}]</td>
+                <td><a href="<@ofbizUrl>EditCategoryContentContent?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[No description]")} [${entry.content.contentId}]</td>
                 <td>${prodCatContentType.description?default(categoryContent.prodCatContentTypeId)}</td>
                 <td>${categoryContent.fromDate?default("N/A")}</td>
                 <td>${categoryContent.thruDate?default("N/A")}</td>
@@ -61,7 +61,7 @@ function insertNowTimestamp(field) {
                 <td>${categoryContent.purchaseThruDate?default("N/A")}</td>
                 <td>${categoryContent.useCountLimit?default("N/A")}</td>
                 <td>${categoryContent.useDaysLimit?default("N/A")}</td>
-                <td><a href="<@ofbizUrl>/removeContentFromCategory?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
+                <td><a href="<@ofbizUrl>removeContentFromCategory?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
                 <td><a href="/content/control/EditContent?contentId=${categoryContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[Edit Content ${entry.content.contentId}]</td>
              </tr>
         </#list>
@@ -81,7 +81,7 @@ function insertNowTimestamp(field) {
         <hr class="sepbar"/>
         
         <div class="head2">Override Simple Fields</div>
-        <form action="<@ofbizUrl>/updateCategoryContent</@ofbizUrl>" method="post" style="margin: 0;" name="categoryForm">
+        <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" style="margin: 0;" name="categoryForm">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
     <tr>

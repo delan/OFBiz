@@ -40,9 +40,9 @@
     <td width="100%">
       <p>&nbsp;</p>
       <ul>
-        <li><a href="<@ofbizUrl>/repository</@ofbizUrl>" class="buttontext">XPDL Repository</a>
-        <li><a href="<@ofbizUrl>/processes</@ofbizUrl>" class="buttontext">Process List</a>
-        <li><a href="<@ofbizUrl>/worklist</@ofbizUrl>" class="buttontext">Work List</a>
+        <li><a href="<@ofbizUrl>repository</@ofbizUrl>" class="buttontext">XPDL Repository</a>
+        <li><a href="<@ofbizUrl>processes</@ofbizUrl>" class="buttontext">Process List</a>
+        <li><a href="<@ofbizUrl>worklist</@ofbizUrl>" class="buttontext">Work List</a>
       </ul>
       <p>&nbsp;</p>
     </td>

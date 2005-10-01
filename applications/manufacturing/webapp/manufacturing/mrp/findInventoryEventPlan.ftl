@@ -32,7 +32,7 @@ function lookupInventory() {
 // -->
 </script>
 
-<form method='post' name="lookupinventory" action="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>">
+<form method='post' name="lookupinventory" action="<@ofbizUrl>FindInventoryEventPlan</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -44,10 +44,10 @@ function lookupInventory() {
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/FindInventoryEventPlan?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
+                <a href="<@ofbizUrl>FindInventoryEventPlan?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
               <#else>
                 <#if inventoryList?exists>
-                    <a href="<@ofbizUrl>/FindInventoryEventPlan?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a>
+                    <a href="<@ofbizUrl>FindInventoryEventPlan?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a>
                 </#if>
                 <a href="javascript:lookupInventory();" class="submenutextright">${uiLabelMap.CommonLookup}</a>                
               </#if>
@@ -120,7 +120,7 @@ document.lookupinventory.productId.focus();
              <div class="boxhead" align="right">
                
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/FindInventoryEventPlan?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
+                  <a href="<@ofbizUrl>FindInventoryEventPlan?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
@@ -128,7 +128,7 @@ document.lookupinventory.productId.focus();
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/FindInventoryEventPlan?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                  <a href="<@ofbizUrl>FindInventoryEventPlan?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 <#else>
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>

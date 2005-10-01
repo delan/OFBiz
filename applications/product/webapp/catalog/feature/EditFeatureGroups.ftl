@@ -37,19 +37,19 @@
 
   <#list productFeatureGroups as productFeatureGroup>
     <tr valign="middle">
-      <FORM method='POST' action='<@ofbizUrl>/UpdateProductFeatureGroup</@ofbizUrl>'>
+      <FORM method='POST' action='<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>'>
         <input type='hidden' name="productFeatureGroupId" value="${productFeatureGroup.productFeatureGroupId}">
-        <td><a href='<@ofbizUrl>/EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="buttontext">${productFeatureGroup.productFeatureGroupId}</a></td>
+        <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="buttontext">${productFeatureGroup.productFeatureGroupId}</a></td>
         <td><input type='text' class='inputBox' size='30' name="description" value="${productFeatureGroup.description?if_exists}"></td>
         <td><INPUT type="submit" value="${uiLabelMap.CommonUpdate}"></td>
-        <td><a href='<@ofbizUrl>/EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a></td>
+        <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a></td>
       </FORM>
     </tr>
   </#list>
 </table>
 <br/>
 
-<form method="post" action="<@ofbizUrl>/CreateProductFeatureGroup</@ofbizUrl>" style='margin: 0;'>
+<form method="post" action="<@ofbizUrl>CreateProductFeatureGroup</@ofbizUrl>" style='margin: 0;'>
   <div class='head2'>${uiLabelMap.ProductCreateProductFeatureGroup}:</div>
   <br/>
   <table>

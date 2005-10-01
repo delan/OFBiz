@@ -28,7 +28,7 @@
 <#--if hasPermission>
   ${pages.get("/store/ProductStoreTabBar.ftl")}-->
   <div class="head1">${uiLabelMap.ProductProductStoreTaxSettings} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
-<!--  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>-->
+<!--  <a href="<@ofbizUrl>EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>-->
   
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
@@ -49,7 +49,7 @@
         <td><div class="tabletext">${taxItem.salesTaxPercentage?if_exists}</div></td>
         <td><div class="tabletext">${taxItem.fromDate?string}</div></td>
         <#if security.hasEntityPermission("TAXRATE", "_DELETE", session)>
-          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.get("fromDate").toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></div></td>
+          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.get("fromDate").toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></div></td>
         <#else>
           <td>&nbsp;</td>
         </#if>
@@ -60,7 +60,7 @@
   <br/>
   <table>
     <#if security.hasEntityPermission("TAXRATE", "_CREATE", session)>
-      <form name="addrate" action="<@ofbizUrl>/storeCreateTaxRate</@ofbizUrl>">
+      <form name="addrate" action="<@ofbizUrl>storeCreateTaxRate</@ofbizUrl>">
         <input type="hidden" name="productStoreId" value="${productStoreId}">
         <tr>
           <td><span class="tableheadtext">${uiLabelMap.ProductCountry}</span></td>

@@ -26,7 +26,7 @@
     </td>
     <td width="40" valign="bottom">
 <@checkPermission subContentId=subContentId targetOperation="HAS_USER_ROLE" contentPurposeList="RESPONSE" >
-<a class="tabButton" href="<@ofbizUrl>/createforumresponse?contentIdTo=${subContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.EcommerceRespond}</a>
+<a class="tabButton" href="<@ofbizUrl>createforumresponse?contentIdTo=${subContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.EcommerceRespond}</a>
 </@checkPermission>
 <br/>
 
@@ -76,7 +76,7 @@
   <tr>
   <td class="tabletext">
         ${indentFill}
-        <a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
+        <a class="tabButton" href="<@ofbizUrl>ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
                      ${content.contentId?if_exists}-${content.description?if_exists}<br/>
   </td>
   </tr>
@@ -110,7 +110,7 @@
                         >
                 <#assign description=currentValue.description?default("No description")/>
 ${uiLabelMap.CommonDescription}[${currentValue.contentId?if_exists}]:${description}
-<a class="tabButton" href="<@ofbizUrl>/ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
+<a class="tabButton" href="<@ofbizUrl>ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
                    </@traverseSubContentCache >
                 </@wrapSubContentCache>
             </#if>
@@ -129,7 +129,7 @@ ${uiLabelMap.CommonDescription}[${currentValue.contentId?if_exists}]:${descripti
        <tr>
          <td >
             ${indent}
-            <a class="tabButton" href="<@ofbizUrl>/main?pubPt=${webSitePublishPoint.contentId?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${webSitePublishPoint.templateTitle?if_exists}
+            <a class="tabButton" href="<@ofbizUrl>main?pubPt=${webSitePublishPoint.contentId?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${webSitePublishPoint.templateTitle?if_exists}
                 <#assign indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
          [${webSitePublishPoint.contentId?if_exists}]</td>
         </#if>

@@ -27,19 +27,19 @@
 -->
 
     <div class="head1">${uiLabelMap.ProductFacilityGroup}<span class="head2">&nbsp;<#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityGroupId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
+    <a href="<@ofbizUrl>EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
     
     <#if !(facilityGroup?exists)>
         <#if facilityGroupId?exists>
-            <form action="<@ofbizUrl>/CreateFacilityGroup</@ofbizUrl>" method="post" style="margin: 0;">
+            <form action="<@ofbizUrl>CreateFacilityGroup</@ofbizUrl>" method="post" style="margin: 0;">
             <table border="0" cellpadding="2" cellspacing="0">
             <h3>${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityGroupId}".</h3>
         <#else>
-            <form action="<@ofbizUrl>/CreateFacilityGroup</@ofbizUrl>" method="post" style="margin: 0;">
+            <form action="<@ofbizUrl>CreateFacilityGroup</@ofbizUrl>" method="post" style="margin: 0;">
             <table border="0" cellpadding="2" cellspacing="0">
         </#if>
     <#else>
-        <form action="<@ofbizUrl>/UpdateFacilityGroup</@ofbizUrl>" method="post" style="margin: 0;">
+        <form action="<@ofbizUrl>UpdateFacilityGroup</@ofbizUrl>" method="post" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="facilityGroupId" value="${facilityGroupId?if_exists}">
         <tr>

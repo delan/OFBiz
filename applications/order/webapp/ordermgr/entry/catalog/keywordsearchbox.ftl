@@ -30,7 +30,7 @@
         <div class="boxhead">${uiLabelMap.ProductSearchCatalog}</div>
     </div>
     <div class="screenlet-body" style="text-align: center;">
-        <form name="keywordsearchform" method="post" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>">
+        <form name="keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
           <input type="hidden" name="VIEW_SIZE" value="10"/>
           <div class="tabletext">
             <input type="text" class="inputBox" name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}"/>
@@ -52,7 +52,7 @@
           </#if>
           <div class="tabletext"><input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if>/>${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if>/>${uiLabelMap.CommonAll}&nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a></div>
         </form>
-        <form name="advancedsearchform" method="post" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>">
+        <form name="advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
           <#if 0 < otherSearchProdCatalogCategories?size>
             <div class="tabletext">${uiLabelMap.ProductAdvancedSearchIn}: </div>
             <div class="tabletext">

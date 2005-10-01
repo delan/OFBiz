@@ -28,7 +28,7 @@
 						<table  border="0" cellpadding="0" cellspacing="0">
 			          	<#if sessionAttributes.autoName?has_content>
               					<tr><td align="center" class="link">${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName}!
-                (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>/autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
+                (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
               </td></tr>
           <#else>
               <tr><td width="90%" align="center" class="link">${uiLabelMap.CommonWelcome}!</TD></tr>
@@ -36,9 +36,9 @@
 						
 							<tr>
 								<td align="center" class="link">
-									<a href="<@ofbizUrl>/main</@ofbizUrl>" target="_self" class="link">Home</a> | 
+									<a href="<@ofbizUrl>main</@ofbizUrl>" target="_self" class="link">Home</a> | 
 									<a href="<@ofbizUrl>book</@ofbizUrl>" target="_self" class="link">Book Online</a> | 
-									<a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="link">Order History</a> | 
+									<a href="<@ofbizUrl>orderhistory</@ofbizUrl>" class="link">Order History</a> | 
 									<a href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="link">Profile</a> | 
 			          	<#if sessionAttributes.autoName?has_content>
 									<a href="<@ofbizUrl>contactus</@ofbizUrl>" class="link">Contact Us</a> | 

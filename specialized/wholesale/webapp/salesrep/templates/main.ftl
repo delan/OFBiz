@@ -59,7 +59,7 @@
             </#if>
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
-                <form method="post" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>" style="margin: 0;">
                 <select name="locale" class="selectBox">
                     <option value="${requestAttributes.locale.toString()}">${requestAttributes.locale.getDisplayName()}</option>
                     <option value="${requestAttributes.locale.toString()}">----</option>

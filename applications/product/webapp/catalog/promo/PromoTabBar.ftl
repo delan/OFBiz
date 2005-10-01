@@ -29,9 +29,9 @@
 
 <#if productPromoId?has_content>
     <div class='tabContainer'>
-        <a href="<@ofbizUrl>/EditProductPromo?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromo?default(unselectedClassName)}">Promo</a>
-        <a href="<@ofbizUrl>/EditProductPromoRules?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromoRules?default(unselectedClassName)}">Rules</a>
-        <a href="<@ofbizUrl>/EditProductPromoStores?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromoStores?default(unselectedClassName)}">Stores</a>
-        <a href="<@ofbizUrl>/FindProductPromoCode?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.FindProductPromoCode?default(unselectedClassName)}">Codes</a>
+        <a href="<@ofbizUrl>EditProductPromo?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromo?default(unselectedClassName)}">Promo</a>
+        <a href="<@ofbizUrl>EditProductPromoRules?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromoRules?default(unselectedClassName)}">Rules</a>
+        <a href="<@ofbizUrl>EditProductPromoStores?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromoStores?default(unselectedClassName)}">Stores</a>
+        <a href="<@ofbizUrl>FindProductPromoCode?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.FindProductPromoCode?default(unselectedClassName)}">Codes</a>
     </div>
 </#if>

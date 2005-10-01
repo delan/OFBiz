@@ -29,7 +29,7 @@
     <div class="screenlet-header">
         <div style="float: right;">
             <#if showMessageLinks?default("false")?upper_case == "TRUE">
-                <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
+                <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
             </#if>
         </div>
         <div class="boxhead">&nbsp;${pageHeader}</div>
@@ -56,7 +56,7 @@
           <tr>
             <td width="5">&nbsp;</td>
             <td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></td>
-            <td><div class="tabletext">&nbsp;${sessionAttributes.autoName} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>/autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)</div></td>
+            <td><div class="tabletext">&nbsp;${sessionAttributes.autoName} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)</div></td>
           </tr>
           <#if partyIdTo?has_content>
             <#assign partyToName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>

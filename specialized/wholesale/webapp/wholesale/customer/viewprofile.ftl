@@ -42,11 +42,11 @@
       </div>
     </td>
     <td align="right">
-      <a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderHistory}]</a>&nbsp;&nbsp;
+      <a href="<@ofbizUrl>orderhistory</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderHistory}]</a>&nbsp;&nbsp;
       <#if showOld>
-        <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyHideOld}]</a>&nbsp;&nbsp;
+        <a href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyHideOld}]</a>&nbsp;&nbsp;
       <#else>
-        <a href="<@ofbizUrl>/viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>&nbsp;&nbsp;
+        <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>&nbsp;&nbsp;
       </#if>
     </td>
   </tr>
@@ -62,7 +62,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.PartyPersonalInformation}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editperson</@ofbizUrl>" class="submenutextright">
+            <a href="<@ofbizUrl>editperson</@ofbizUrl>" class="submenutextright">
             <#if person?exists>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></a>
           </td>
         </tr>
@@ -122,7 +122,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.PartyContactInformation}</div>
           </td>
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+              <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
         </tr>
       </table>
@@ -222,11 +222,11 @@
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(${partyContactMech.allowSolicitation?if_exists})</b></div></td>
             <td width="5">&nbsp;</td>
             <td align="right" valign="top" nowrap width="1%">
-              <div><a href='<@ofbizUrl>/editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
+              <div><a href='<@ofbizUrl>editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
               [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div>
             </td>
             <td align="right" valign="top" width="1%">
-              <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
+              <div><a href='<@ofbizUrl>deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
               [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
@@ -252,7 +252,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentMethodInformation}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewCreditCard}</a><#--<a href="<@ofbizUrl>/editgiftcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewGiftCard}</a>--><a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyCreateNewEftAccount}</a> 
+            <a href="<@ofbizUrl>editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewCreditCard}</a><#--<a href="<@ofbizUrl>editgiftcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewGiftCard}</a>--><a href="<@ofbizUrl>editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyCreateNewEftAccount}</a> 
           </td>
         </tr>
       </table>
@@ -286,7 +286,7 @@
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
-                                    <div><a href='<@ofbizUrl>/editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                    <div><a href='<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                     [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
                               <#elseif paymentMethod.paymentMethodTypeId?if_exists == "GIFT_CARD">
@@ -315,7 +315,7 @@
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
-                                    <div><a href='<@ofbizUrl>/editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                    <div><a href='<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                     [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
                               <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
@@ -328,12 +328,12 @@
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
-                                    <div><a href='<@ofbizUrl>/editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                    <div><a href='<@ofbizUrl>editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                     [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
                               </#if>
                               <td align="right" valign="top" width='1%'>
-                                <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                <div><a href='<@ofbizUrl>deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                 [${uiLabelMap.CommonExpire}]</a></div>
                               </td>
                             </tr>
@@ -362,7 +362,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.CommonUsername} & ${uiLabelMap.CommonPassword}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/changepassword</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyChangePassword}</a>
+            <a href="<@ofbizUrl>changepassword</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyChangePassword}</a>
           </td>
         </tr>
       </table>
@@ -422,7 +422,7 @@
                     <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
                       <#assign surveyLabel = "[Update Survey]">
                     </#if>
-                    <td align="right" width="10%" nowrap><a href="<@ofbizUrl>/takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">${surveyLabel}</a></td>
+                    <td align="right" width="10%" nowrap><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">${surveyLabel}</a></td>
                   <#else>
                     &nbsp;
                   </#if>

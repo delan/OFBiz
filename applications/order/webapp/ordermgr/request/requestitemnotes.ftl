@@ -26,7 +26,7 @@
  *@since      2.1
 -->
 <#if showAll = "false">
-    <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&showAll=true</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderShowAllNotes}</a>
+    <a href="<@ofbizUrl>requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&showAll=true</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderShowAllNotes}</a>
 <#else>
-    <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&showAll=false</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderShowThisItemsNotes}</a>
+    <a href="<@ofbizUrl>requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&showAll=false</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderShowThisItemsNotes}</a>
 </#if>

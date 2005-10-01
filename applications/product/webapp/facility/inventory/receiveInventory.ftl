@@ -30,7 +30,7 @@
 </#if>
 
 <div class="head1">${uiLabelMap.ProductReceiveInventory} <span class='head2'>into&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId} :${facility.facilityId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+<a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 
 <script language='JavaScript'>
     function setNow(field) { eval('document.selectAllForm.' + field + '.value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}"'); }
@@ -56,7 +56,7 @@
     <tr><td colspan="8"><hr class="sepbar"></td></tr>
     <#list receivedItems as item>
       <tr>
-        <td><div class="tabletext"><a href="<@ofbizUrl>/EditShipment?shipmentId=${item.shipmentId?if_exists}</@ofbizUrl>">${item.shipmentId?if_exists}</a></div></td>
+        <td><div class="tabletext"><a href="<@ofbizUrl>EditShipment?shipmentId=${item.shipmentId?if_exists}</@ofbizUrl>">${item.shipmentId?if_exists}</a></div></td>
         <td><div class="tabletext">${item.receiptId}</div></td>
         <td><div class="tabletext">${item.getString("datetimeReceived").toString()}</div></td>
         <td><div class="tabletext">${item.orderId}</div></td>
@@ -73,7 +73,7 @@
 
 <#-- Single Product Receiving -->
 <#if requestParameters.initialSelected?exists && product?has_content>
-  <form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>receiveInventoryProduct</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
       <#-- general request fields -->
       <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
@@ -231,7 +231,7 @@
   
 <#-- Select Shipment Screen -->
 <#elseif requestParameters.initialSelected?exists && !requestParameters.shipmentId?exists && shipments?has_content>
-  <form method="post" action="<@ofbizUrl>/ReceiveInventory</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
     <#-- general request fields -->
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
     <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
@@ -289,7 +289,7 @@
   
 <#-- Multi-Item PO Receiving -->
 <#elseif requestParameters.initialSelected?exists && purchaseOrder?has_content>
-  <form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>receiveInventoryProduct</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
     <#-- general request fields -->
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
     <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
@@ -436,7 +436,7 @@
           </tr>
           <tr>
             <td colspan="2" align="right">
-              <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReturnToReceiving}</a>
+              <a href="<@ofbizUrl>ReceiveInventory?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReturnToReceiving}</a>
             </td>
           </tr>          
         <#else>        
@@ -454,7 +454,7 @@
   
 <#-- Initial Screen -->
 <#else>
-  <form name="selectAllForm" method="post" action="<@ofbizUrl>/ReceiveInventory</@ofbizUrl>" style='margin: 0;'>
+  <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
     <input type="hidden" name="initialSelected" value="Y">
 	<table border='0' cellpadding='2' cellspacing='0'>

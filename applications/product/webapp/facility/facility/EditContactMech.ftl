@@ -32,13 +32,13 @@
 
 <#if !mechMap.facilityContactMech?exists && mechMap.contactMech?exists>
   <p><h3>${uiLabelMap.PartyContactInfoNotBelongToYou}.</h3></p>
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMapCommon.Back}]</a>
+  &nbsp;<a href="<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMapCommon.Back}]</a>
 <#else>
   <#if !mechMap.contactMech?exists>
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
     <p class="head1">${uiLabelMap.PartyCreateNewContact}</p>
-    <form method="get" action='<@ofbizUrl>/EditContactMech</@ofbizUrl>' name="createcontactmechform">
+    <form method="get" action='<@ofbizUrl>EditContactMech</@ofbizUrl>' name="createcontactmechform">
       <input type='hidden' name='facilityId' value='${facilityId}'>
       <input type='hidden' name='DONE_PAGE' value='${donePage?if_exists}'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -60,13 +60,13 @@
   <#if mechMap.contactMechTypeId?has_content>
     <#if !mechMap.contactMech?has_content>
       <p class="head1">${uiLabelMap.PartyCreateNewContact}</p>
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <#if contactMechPurposeType?exists>
         <div>(${uiLabelMap.PartyMsgContactHavePurpose}<b>"${contactMechPurposeType.description?if_exists}"</b>)</div>
       </#if>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <form method="get" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
+        <form method="get" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
         <input type='hidden' name='DONE_PAGE' value='${donePage}'>
         <input type='hidden' name='contactMechTypeId' value='${mechMap.contactMechTypeId}'>
         <input type='hidden' name='facilityId' value='${facilityId}'>        
@@ -76,7 +76,7 @@
         <#if paymentMethodId?exists><input type='hidden' name='paymentMethodId' value='${paymentMethodId}'></#if>
     <#else>
       <p class="head1">${uiLabelMap.PartyEditContactInformation}</p>
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='buttontext'>[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='buttontext'>[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <#if mechMap.purposeTypes?has_content>
@@ -99,13 +99,13 @@
                       (${uiLabelMap.CommonSince}:${facilityContactMechPurpose.fromDate.toString()})
                       <#if facilityContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpires}: ${facilityContactMechPurpose.thruDate.toString()}</#if>
                     &nbsp;</div></td>
-                  <td bgcolor='white'><div><a href='<@ofbizUrl>/deleteFacilityContactMechPurpose?facilityId=${facilityId}&contactMechId=${contactMechId}&contactMechPurposeTypeId=${facilityContactMechPurpose.contactMechPurposeTypeId}&fromDate=${facilityContactMechPurpose.fromDate.toString()}&DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                  <td bgcolor='white'><div><a href='<@ofbizUrl>deleteFacilityContactMechPurpose?facilityId=${facilityId}&contactMechId=${contactMechId}&contactMechPurposeTypeId=${facilityContactMechPurpose.contactMechPurposeTypeId}&fromDate=${facilityContactMechPurpose.fromDate.toString()}&DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                 </tr>
               </#list>
               </#if>              
            
               <tr>
-                <form method='get' action='<@ofbizUrl>/createFacilityContactMechPurpose?DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' name='newpurposeform'>
+                <form method='get' action='<@ofbizUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' name='newpurposeform'>
                 <input type="hidden" name='facilityId' value='${facilityId}'>
                 <input type="hidden" name='contactMechId' value='${contactMechId?if_exists}'>
                   <td bgcolor='white'>
@@ -123,7 +123,7 @@
           </td>
         </tr>
         </#if>
-        <form method="post" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
+        <form method="post" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
         <input type="hidden" name="contactMechId" value='${contactMechId}'>
         <input type="hidden" name="contactMechTypeId" value='${mechMap.contactMechTypeId}'>
         <input type="hidden" name='facilityId' value='${facilityId}'>
@@ -230,9 +230,9 @@
   </form>
   </table>
 
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
   <#else>
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
   </#if>
 </#if>

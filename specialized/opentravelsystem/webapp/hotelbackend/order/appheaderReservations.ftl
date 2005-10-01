@@ -42,7 +42,7 @@
   <div class="col"><a href="<@ofbizUrl>reports</@ofbizUrl>" class="${selectedLeftClassMap.reports?default(unselectedLeftClassName)}">Reports</a></div>  
 
   <#if userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
   </#if>

@@ -34,7 +34,7 @@
         <div class="boxhead">&nbsp;${uiLabelMap.PartyBasicInformation}</div>
     </div>
     <div class="screenlet-body">
-        <form name="custsetupform" method="post" action="<@ofbizUrl>/setBasicInfo</@ofbizUrl>">
+        <form name="custsetupform" method="post" action="<@ofbizUrl>setBasicInfo</@ofbizUrl>">
         <input type="hidden" name="finalizeMode" value="cust"/>
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>

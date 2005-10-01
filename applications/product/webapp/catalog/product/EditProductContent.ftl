@@ -69,7 +69,7 @@ function insertImageName(type,nameValue) {
         <#assign productContent=entry.productContent/>
         <#assign productContentType=productContent.getRelatedOneCache("ProductContentType")/>
         <tr class="tabletext">
-            <td><a href="<@ofbizUrl>/EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
+            <td><a href="<@ofbizUrl>EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
             <td>${productContentType.description?default(productContent.productContentTypeId)}</td>
             <td>${productContent.fromDate?default("N/A")}</td>
             <td>${productContent.thruDate?default("N/A")}</td>
@@ -79,7 +79,7 @@ function insertImageName(type,nameValue) {
             <td>${productContent.useTime?default("N/A")}</td>
             <td>${productContent.useTimeUomId?default("N/A")}</td>
             <td>${productContent.useRoleTypeId?default("N/A")}</td>
-            <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></td>
+            <td><a href="<@ofbizUrl>removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></td>
             <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.ProductEditContent} ${entry.content.contentId}]</td>
          </tr>
     </#list>
@@ -96,7 +96,7 @@ function insertImageName(type,nameValue) {
     <hr class="sepbar"/>
     
     <div class="head2">${uiLabelMap.ProductOverrideSimpleFields}</div>
-    <form action="<@ofbizUrl>/updateProductContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
+    <form action="<@ofbizUrl>updateProductContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
     <table border="0" cellpadding="2" cellspacing="0">
     <input type="hidden" name="productId" value="${productId?if_exists}">
     <tr>
@@ -225,14 +225,14 @@ function insertImageName(type,nameValue) {
         };
     </script>
     <div class="head3">${uiLabelMap.ProductUploadImage}</div>
-    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
+    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
         <input type="file" class="inputBox" size="50" name="fname">
         <br/>
         <span class="tabletext">
-            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="small" checked onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>");'>${uiLabelMap.CommonSmall}
-            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="medium" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=medium</@ofbizUrl>");'>${uiLabelMap.CommonMedium}
-            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=large</@ofbizUrl>");'>${uiLabelMap.CommonLarge}
-            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=detail</@ofbizUrl>");'>${uiLabelMap.CommonDetail}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="small" checked onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>");'>${uiLabelMap.CommonSmall}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="medium" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&upload_file_type=medium</@ofbizUrl>");'>${uiLabelMap.CommonMedium}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&upload_file_type=large</@ofbizUrl>");'>${uiLabelMap.CommonLarge}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&upload_file_type=detail</@ofbizUrl>");'>${uiLabelMap.CommonDetail}
         </span>
         <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
     </form>

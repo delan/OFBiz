@@ -25,13 +25,13 @@
 -->
 <#if person?exists>
   <p class="head1">${uiLabelMap.PartyEditPersonalInformation}</p>
-    <form method="post" action="<@ofbizUrl>/updatePerson/${donePage}</@ofbizUrl>" name="editpersonform">
+    <form method="post" action="<@ofbizUrl>updatePerson/${donePage}</@ofbizUrl>" name="editpersonform">
 <#else>
   <p class="head1">${uiLabelMap.PartyAddNewPersonalInformation}</p>
-    <form method="post" action="<@ofbizUrl>/createPerson/${donePage}</@ofbizUrl>" name="editpersonform">
+    <form method="post" action="<@ofbizUrl>createPerson/${donePage}</@ofbizUrl>" name="editpersonform">
 </#if>
 
-&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+&nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
 &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
 <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -154,5 +154,5 @@
 </table>
 </form>
 
-&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+&nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
 &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>

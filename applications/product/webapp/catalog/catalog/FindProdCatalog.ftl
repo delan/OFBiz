@@ -26,7 +26,7 @@
 -->
 
 <div class="head1">${uiLabelMap.ProductProductCatalogsList}</div>
-<div><a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProdCatalog}]</a></div>
+<div><a href="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProdCatalog}]</a></div>
 <br/>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -36,10 +36,10 @@
   </tr>
 <#list prodCatalogs as prodCatalog>
   <tr valign="middle">
-    <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class="buttontext">${prodCatalog.catalogName} [${prodCatalog.prodCatalogId}]</a></div></td>   
+    <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class="buttontext">${prodCatalog.catalogName} [${prodCatalog.prodCatalogId}]</a></div></td>   
     <td><div class="tabletext">&nbsp;${prodCatalog.useQuickAdd?if_exists}</div></td>
     <td>
-      <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class="buttontext">
+      <a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class="buttontext">
       [${uiLabelMap.CommonEdit}]</a>
     </td>
   </tr>

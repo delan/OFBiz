@@ -27,7 +27,7 @@
 -->
 
 <div class="head1">${uiLabelMap.ProductRollups} <span class="head2">${uiLabelMap.CommonFor}"${(facilityGroup.facilityGroupName)?if_exists}" [${uiLabelMap.CommonId}:${facilityGroupId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
+<a href="<@ofbizUrl>EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
 <br/>
 <br/>
 
@@ -45,10 +45,10 @@
   <#list currentGroupRollups as facilityGroupRollup>
     <#assign curGroup = facilityGroupRollup.getRelatedOne("ParentFacilityGroup")?if_exists>
     <tr valign="middle">
-      <td><a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${(curGroup.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext">${(curGroup.facilityGroupName)?if_exists}</a></td>
+      <td><a href="<@ofbizUrl>EditFacilityGroup?facilityGroupId=${(curGroup.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext">${(curGroup.facilityGroupName)?if_exists}</a></td>
       <td><div class="tabletext" <#if facilityGroupRollup.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupRollup.fromDate)>style="color: red;"</#if>>${facilityGroupRollup.fromDate}</div></td>
       <td align="center">
-        <FORM method="post" action="<@ofbizUrl>/updateFacilityGroupToGroup</@ofbizUrl>" name="lineParentForm${facilityGroupRollup_index}">
+        <FORM method="post" action="<@ofbizUrl>updateFacilityGroupToGroup</@ofbizUrl>" name="lineParentForm${facilityGroupRollup_index}">
             <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
             <input type="hidden" name="facilityGroupId" value="${facilityGroupRollup.facilityGroupId}">
             <input type="hidden" name="parentFacilityGroupId" value="${facilityGroupRollup.parentFacilityGroupId}">
@@ -60,7 +60,7 @@
         </FORM>
       </td>
       <td>
-        <a href="<@ofbizUrl>/removeFacilityGroupFromGroup?showFacilityGroupId=${facilityGroupId}&facilityGroupId=${facilityGroupRollup.facilityGroupId}&parentFacilityGroupId=${facilityGroupRollup.parentFacilityGroupId}&fromDate=${(facilityGroupRollup.fromDate.toString())?if_exists}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>removeFacilityGroupFromGroup?showFacilityGroupId=${facilityGroupId}&facilityGroupId=${facilityGroupRollup.facilityGroupId}&parentFacilityGroupId=${facilityGroupRollup.parentFacilityGroupId}&fromDate=${(facilityGroupRollup.fromDate.toString())?if_exists}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
       </td>
     </tr>
@@ -72,7 +72,7 @@
 </#if>
 </table>
 <br/>
-<form method="post" action="<@ofbizUrl>/addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addParentForm">
+<form method="post" action="<@ofbizUrl>addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addParentForm">
   <input type="hidden" name="facilityGroupId" value="${facilityGroupId}">
   <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
   <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductParent}</b> ${uiLabelMap.ProductGroupSelectCategoryFromDate}:</div>
@@ -103,10 +103,10 @@
   <#list parentGroupRollups as facilityGroupRollup>
     <#assign curGroup = facilityGroupRollup.getRelatedOne("CurrentFacilityGroup")>
     <tr valign="middle">
-      <td><a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${(curGroup.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext">${(curGroup.facilityGroupName)?if_exists}</a></td>
+      <td><a href="<@ofbizUrl>EditFacilityGroup?facilityGroupId=${(curGroup.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext">${(curGroup.facilityGroupName)?if_exists}</a></td>
       <td><div class="tabletext" <#if facilityGroupRollup.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupRollup.fromDate)>style="color: red;"</#if>>${facilityGroupRollup.fromDate}</div></td>
       <td align="center">
-        <FORM method="post" action="<@ofbizUrl>/updateFacilityGroupToGroup</@ofbizUrl>" name="lineChildForm${facilityGroupRollup_index}">
+        <FORM method="post" action="<@ofbizUrl>updateFacilityGroupToGroup</@ofbizUrl>" name="lineChildForm${facilityGroupRollup_index}">
             <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
             <input type="hidden" name="facilityGroupId" value="${facilityGroupRollup.facilityGroupId}">
             <input type="hidden" name="parentFacilityGroupId" value="${facilityGroupRollup.parentFacilityGroupId}">
@@ -118,7 +118,7 @@
         </FORM>
       </td>
       <td>
-        <a href="<@ofbizUrl>/removeFacilityGroupFromGroup?showFacilityGroupId=${facilityGroupId}&facilityGroupId=${facilityGroupRollup.facilityGroupId}&parentFacilityGroupId=${facilityGroupRollup.parentFacilityGroupId}&fromDate=${(facilityGroupRollup.fromDate.toString())?if_exists}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>removeFacilityGroupFromGroup?showFacilityGroupId=${facilityGroupId}&facilityGroupId=${facilityGroupRollup.facilityGroupId}&parentFacilityGroupId=${facilityGroupRollup.parentFacilityGroupId}&fromDate=${(facilityGroupRollup.fromDate.toString())?if_exists}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
       </td>
     </tr>
@@ -130,7 +130,7 @@
 </#if>
 </table>
 <br/>
-<form method="post" action="<@ofbizUrl>/addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addChildForm">
+<form method="post" action="<@ofbizUrl>addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addChildForm">
   <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
   <input type="hidden" name="parentFacilityGroupId" value="${facilityGroupId}">
   <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductChild}</b> ${uiLabelMap.ProductGroupSelectGroupFromDate} :</div>

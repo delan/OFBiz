@@ -25,9 +25,9 @@
  *@since      2.2
 -->
   <#if !requestParameters.showAll?exists>
-    <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}&showAll=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowAll}]</a>
+    <a href="<@ofbizUrl>EditProductStoreRoles?productStoreId=${productStoreId}&showAll=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowAll}]</a>
   <#else>
-    <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowActive}]</a>
+    <a href="<@ofbizUrl>EditProductStoreRoles?productStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowActive}]</a>
   </#if>
   <br/>
   
@@ -51,7 +51,7 @@
             <td>&nbsp;</td>
           <#else>
             <td align="center">
-              <a href="<@ofbizUrl>/storeRemoveRole?productStoreId=${productStoreId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
+              <a href="<@ofbizUrl>storeRemoveRole?productStoreId=${productStoreId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
             </td>
           </#if>
         </tr>
@@ -61,7 +61,7 @@
   
   <br/>
   <div class="head2">${uiLabelMap.ProductCreateProductStoreRole}:</div>
-  <form name="addProductStoreRole" action="<@ofbizUrl>/storeCreateRole</@ofbizUrl>" method="post">
+  <form name="addProductStoreRole" action="<@ofbizUrl>storeCreateRole</@ofbizUrl>" method="post">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <table cellspacing="2" cellpadding="2">
       <tr>

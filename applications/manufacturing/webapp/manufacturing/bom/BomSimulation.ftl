@@ -50,7 +50,7 @@
           <#list tree as node>            
             <tr class='${rowClass}'>
               <td><img src='/manufacturing/images/depth${node.depth}.gif' height='16' border='0' alt='Depth'></td>
-              <td><a href="<@ofbizUrl>/EditProductBom?productId=${(node.product.productId)?if_exists}&productAssocTypeId=${(node.bomTypeId)?if_exists}</@ofbizUrl>" class="buttontext">${node.product.productId}</a></td>
+              <td><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)?if_exists}&productAssocTypeId=${(node.bomTypeId)?if_exists}</@ofbizUrl>" class="buttontext">${node.product.productId}</a></td>
               <td>
                 <#if node.product.isVirtual?default("N") == "Y">
                     Virtual

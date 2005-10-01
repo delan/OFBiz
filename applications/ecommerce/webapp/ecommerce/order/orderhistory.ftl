@@ -28,7 +28,7 @@
     <div class="screenlet-header">
         <#--
         <div style="float: right;">
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.OrderBackHome}]</a>
+            <a href="<@ofbizUrl>main</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.OrderBackHome}]</a>
         </div>
         -->
         <div class="boxhead">${uiLabelMap.OrderHistory}</div>
@@ -75,7 +75,7 @@
               </td>
               <td width="10">&nbsp;</td>
               <td align="right">
-                <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
               </td>
             </tr>
           </#list>

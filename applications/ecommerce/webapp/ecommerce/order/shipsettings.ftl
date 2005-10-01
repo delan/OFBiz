@@ -35,10 +35,10 @@
     </div>
     <div class="screenlet-body">
         <#if useEntityFields?default("N") == "Y">
-          <form method="post" action="<@ofbizUrl>/changeShippingAddress</@ofbizUrl>" name="shipsetupform">
+          <form method="post" action="<@ofbizUrl>changeShippingAddress</@ofbizUrl>" name="shipsetupform">
             <input type="hidden" name="contactMechId" value="${(postalFields.contactMechId)?if_exists}"/>
         <#else>
-          <form method="post" action="<@ofbizUrl>/enterShippingAddress</@ofbizUrl>" name="shipsetupform">
+          <form method="post" action="<@ofbizUrl>enterShippingAddress</@ofbizUrl>" name="shipsetupform">
             <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS"/>
             <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
         </#if>

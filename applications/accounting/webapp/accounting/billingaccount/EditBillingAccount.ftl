@@ -28,11 +28,11 @@
 
 <#if billingAccount?has_content>
   <div class="head1">${uiLabelMap.AccountingUpdateBillingAccount}</div>
-  <form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccount</@ofbizUrl>">
+  <form name="billingform" method="post" action="<@ofbizUrl>updateBillingAccount</@ofbizUrl>">
     <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">
 <#else>
   <div class="head1">${uiLabelMap.AccountingCreateBillingAccount}</div>
-  <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccount</@ofbizUrl>">
+  <form name="billingform" method="post" action="<@ofbizUrl>createBillingAccount</@ofbizUrl>">
     <#if (requestParameters.partyId)?has_content && (requestParameters.roleTypeId)?has_content>
       <input type="hidden" name="roleTypeId" value="${requestParameters.roleTypeId}">
       <input type="hidden" name="partyId" value="${requestParameters.partyId}">

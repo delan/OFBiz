@@ -35,7 +35,7 @@
             </td>
             <#if 4 < sessionAttributes.lastViewedProducts?size>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CommonMore}</a>
+              <a href="<@ofbizUrl>lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CommonMore}</a>
             </td>
             </#if>
           </tr>

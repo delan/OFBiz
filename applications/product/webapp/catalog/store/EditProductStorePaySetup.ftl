@@ -44,7 +44,7 @@
         <td><div class="tabletext">${setting.paymentPropertiesPath?default("[global]")}</div></td>
         <td><div class="tabletext">${setting.applyToAllProducts?if_exists}</div></td>
         <td align="center" nowrap>
-          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>/storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div>
+          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div>
         </td>        
       </tr>
     </#list>

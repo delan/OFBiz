@@ -54,7 +54,7 @@
         <tr>
             <td><div class="tabletext">${product.internalName?default("-no internal name-")} [${product.productId}]</div></td>
             <td><div class="tabletext">${product.productName?default("-no name-")} [${product.productId}]</div></td>
-            <td width="10%"><a href="<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductThisIsIt}]</a></td>
+            <td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductThisIsIt}]</a></td>
         </tr>
     </#list>
     </table>
@@ -64,7 +64,7 @@
 
 <br/>
 
-<form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>/createProductInCategory</@ofbizUrl>" style="margin: 0;">
+<form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
     <table cellpadding="1" cellspacing="0" border="1">
         <#list productFeatureAndTypeDatas?if_exists as productFeatureAndTypeData>

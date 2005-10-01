@@ -66,7 +66,7 @@ function removeSelected() {
 }
 function addToList() {
     var cform = document.cartform;
-    cform.action = "<@ofbizUrl>/addBulkToShoppingList</@ofbizUrl>";
+    cform.action = "<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>";
     cform.submit();
 }
 //-->
@@ -100,7 +100,7 @@ function addToList() {
         <tr>
           <td>          
   <#if (shoppingCartSize > 0)>
-    <FORM METHOD="POST" ACTION="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
+    <FORM METHOD="POST" ACTION="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
       <input type="hidden" name="removeSelected" value="false">
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <input type="hidden" name="finalizeReqShipInfo" value="false">
@@ -133,7 +133,7 @@ function addToList() {
                 <div class="tabletext">                    
                   <#if cartLine.getProductId()?exists>
                     <#-- product item -->
-                    <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} - 
+                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} - 
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
                     
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
@@ -224,8 +224,8 @@ function addToList() {
         <tr><td colspan="7"><hr class="sepbar"></td></tr>     
         <tr>
                   <td colspan="7" valign="middle" align="right">                     
-            <#if (shoppingCartSize > 0)><a href="javascript:document.cartform.submit()"  class="buttontext">[Update]</a>&nbsp;<a href="<@ofbizUrl>/emptycart</@ofbizUrl>"  class="buttontext">[Clear Order]</a>&nbsp;<#if shoppingCart.getOrderType() == "PURCHASE_ORDER"><a href="<@ofbizUrl>/finalizeOrder?finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>"  class="buttontext">[Place Order]</a><#else><a href="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" class="buttontext">[Place Order]</a></#if>
-            <#else><span class="buttontext">[Update]</span><a href="<@ofbizUrl>/emptycart</@ofbizUrl> "class="buttontext">[Clear Order]</a><span class="submenutextrightdisabled">[Place Order]</span>
+            <#if (shoppingCartSize > 0)><a href="javascript:document.cartform.submit()"  class="buttontext">[Update]</a>&nbsp;<a href="<@ofbizUrl>emptycart</@ofbizUrl>"  class="buttontext">[Clear Order]</a>&nbsp;<#if shoppingCart.getOrderType() == "PURCHASE_ORDER"><a href="<@ofbizUrl>finalizeOrder?finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>"  class="buttontext">[Place Order]</a><#else><a href="<@ofbizUrl>finalizeOrder</@ofbizUrl>" class="buttontext">[Place Order]</a></#if>
+            <#else><span class="buttontext">[Update]</span><a href="<@ofbizUrl>emptycart</@ofbizUrl> "class="buttontext">[Clear Order]</a><span class="submenutextrightdisabled">[Place Order]</span>
             </#if>
           </td>
         </tr>
@@ -265,7 +265,7 @@ function addToList() {
    <tr><td colspan="3"><hr class="sepbar"></td></tr>
 
    <tr>
-     <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">         
+     <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">         
           <td width="50%">
               <div class="tableheadtext">
                 <input type="text" class="inputBox" size="15" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">

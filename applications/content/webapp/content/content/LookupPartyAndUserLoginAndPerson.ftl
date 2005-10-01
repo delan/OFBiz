@@ -27,7 +27,7 @@
 <script language="javascript1.2">
 function set_value(partyId, userLoginId, webSitePublishPoint) {
     window.close();
-    window.opener.location="<@ofbizUrl>/UserPermissions</@ofbizUrl>?partyId=" + partyId + "&userLoginId=" + userLoginId + "&webSitePublishPoint=" + webSitePublishPoint;
+    window.opener.location="<@ofbizUrl>UserPermissions</@ofbizUrl>?partyId=" + partyId + "&userLoginId=" + userLoginId + "&webSitePublishPoint=" + webSitePublishPoint;
 }
 </script>
 

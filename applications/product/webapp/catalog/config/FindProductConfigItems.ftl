@@ -36,7 +36,7 @@
             <div class="boxhead" align="right">
               <#if 0 < itemsList?size>
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/FindProductConfigItems?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="submenutext">Previous</a>
+                  <a href="<@ofbizUrl>FindProductConfigItems?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="submenutext">Previous</a>
                 <#else>
                   <span class="submenutextdisabled">Previous</span>
                 </#if>
@@ -44,7 +44,7 @@
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/FindProductConfigItems?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="submenutextright">Next</a>
+                  <a href="<@ofbizUrl>FindProductConfigItems?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="submenutextright">Next</a>
                 <#else>
                   <span class="submenutextrightdisabled">Next</span>
                 </#if>
@@ -54,7 +54,7 @@
           </td>
         </tr>
       </table>
-      <div class="tabletext"><a href="<@ofbizUrl>/EditProductConfigItem</@ofbizUrl>" class="buttontext">[Create New Config Item]</a></div>
+      <div class="tabletext"><a href="<@ofbizUrl>EditProductConfigItem</@ofbizUrl>" class="buttontext">[Create New Config Item]</a></div>
       <br/>
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
@@ -76,7 +76,7 @@
               </div></td>
               <td><div class="tabletext">${item.description?default("No Description")}</div></td>
               <td align="right">
-                <a href="<@ofbizUrl>/EditProductConfigItem?configItemId=${item.configItemId}</@ofbizUrl>" class="buttontext">Edit</a>
+                <a href="<@ofbizUrl>EditProductConfigItem?configItemId=${item.configItemId}</@ofbizUrl>" class="buttontext">Edit</a>
               </td>
             </tr>
             <#-- toggle the row color -->

@@ -1,7 +1,7 @@
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width="100%">
-      <form method="post" name="findorder" action="<@ofbizUrl>/orderlist</@ofbizUrl>">
+      <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
         <table border=0 cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
           <td><div class="tableheadtext">Status:</div></td>
@@ -101,7 +101,7 @@
                     <div class="tabletext"><nobr>${orderHeader.orderDate.toString()}</nobr></div>
                   </td>
                   <td>
-                    <div class="tabletext"><a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a>
+                    <div class="tabletext"><a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a>
                     </div>
                   </td>
                   <td>

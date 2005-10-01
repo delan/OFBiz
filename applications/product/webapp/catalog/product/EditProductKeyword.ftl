@@ -37,7 +37,7 @@
                 <DIV class="boxhead">${uiLabelMap.ProductAddProductKeyword}:</DIV>
             </TD>
             <TD align="right">
-                <a href="<@ofbizUrl>/EditProduct?productId=${productId?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductEditProduct}</a>
+                <a href="<@ofbizUrl>EditProduct?productId=${productId?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductEditProduct}</a>
             </td>
             </tr>
         </table>
@@ -48,7 +48,7 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
             <tr>
             <td>
-                <form method="post" action="<@ofbizUrl>/UpdateProductKeyword</@ofbizUrl>" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>UpdateProductKeyword</@ofbizUrl>" style="margin: 0;">
                     <input type="hidden" name="UPDATE_MODE" value="CREATE">
                     <input type="hidden" name="PRODUCT_ID" value="${productId?if_exists}">
                     <input type="hidden" name="productId" value="${productId?if_exists}">
@@ -73,7 +73,7 @@
                 <DIV class="boxhead">${uiLabelMap.ProductKeywords}</DIV>
             </TD>
             <TD align="right">
-                <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}&productId=${productId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductReInduceKeywords}</a><a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&productId=${productId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductDeleteAllKeywords}</a>
+                <a href="<@ofbizUrl>UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}&productId=${productId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductReInduceKeywords}</a><a href="<@ofbizUrl>UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&productId=${productId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductDeleteAllKeywords}</a>
             </td>
         </tr>
         </table>
@@ -95,7 +95,7 @@
                     <td align="left">&nbsp;${(productKeyword.keyword)?if_exists}</td>
                     <td>&nbsp;&nbsp;</td>
                     <td align="left">
-                        <form method="post" action="<@ofbizUrl>/UpdateProductKeyword</@ofbizUrl>">
+                        <form method="post" action="<@ofbizUrl>UpdateProductKeyword</@ofbizUrl>">
                             <input type="hidden" name="productId" value="${productId}">
                             <input type="hidden" name="UPDATE_MODE" value="DELETE">
                             <input type="hidden" name="PRODUCT_ID" value="${productId}">

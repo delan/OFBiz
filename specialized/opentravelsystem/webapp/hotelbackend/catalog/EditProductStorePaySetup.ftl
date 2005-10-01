@@ -28,7 +28,7 @@
 <#--if hasPermission>
   ${pages.get("/store/ProductStoreTabBar.ftl")}-->
   <div class="head1">${uiLabelMap.ProductProductStorePaymentSettings} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
-  <#--a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>-->
+  <#--a href="<@ofbizUrl>EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>-->
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
       <td nowrap><div class="tableheadtext">${uiLabelMap.AccountingPaymentMethod}</td>
@@ -46,7 +46,7 @@
         <td><div class="tabletext">${setting.paymentService?default("N/A")}</div></td>
         <td><div class="tabletext">${setting.paymentPropertiesPath?default("[global]")}</div></td>
         <td align="center" nowrap>
-          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>/storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div>
+          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div>
         </td>        
       </tr>
     </#list>

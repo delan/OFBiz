@@ -71,7 +71,7 @@ ${pages.get("/party/viewcustomers.ftl")}
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editperson?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
+              <a href="<@ofbizUrl>editperson?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
               <#if lookupPerson?has_content>${uiLabelMap.CommonUpdate}</#if></a>
             </td>
             </#if>
@@ -83,7 +83,7 @@ ${pages.get("/party/viewcustomers.ftl")}
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editpartygroup?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
+              <a href="<@ofbizUrl>editpartygroup?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
               <#if lookupGroup?has_content>${uiLabelMap.CommonUpdate}</#if></a>
             </td>
             </#if>
@@ -172,7 +172,7 @@ ${pages.get("/party/viewcustomers.ftl")}
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+              <a href="<@ofbizUrl>editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
           </#if>
         </tr>
@@ -271,13 +271,13 @@ ${pages.get("/party/viewcustomers.ftl")}
             <td width="5">&nbsp;</td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td align="right" valign="top" nowrap width="1%">
-              <div><a href='<@ofbizUrl>/editcontactmech?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
+              <div><a href='<@ofbizUrl>editcontactmech?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
               [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div>
             </td>
             </#if>
             <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session)>
             <td align="right" valign="top" width="1%">
-              <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}&partyId=${partyId}</@ofbizUrl>' class="buttontext">
+              <div><a href='<@ofbizUrl>deleteContactMech/viewprofile?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}&partyId=${partyId}</@ofbizUrl>' class="buttontext">
               [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div>
             </td>
             </#if>
@@ -307,7 +307,7 @@ ${pages.get("/party/viewcustomers.ftl")}
           </td>
           <td valign="middle" align="right">
              <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session)>
-                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a> <#-- <a href="<@ofbizUrl>/editgiftcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewGiftCard}</a> --> <a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a>
+                <a href="<@ofbizUrl>editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a> <#-- <a href="<@ofbizUrl>editgiftcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewGiftCard}</a> --> <a href="<@ofbizUrl>editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a>
              </#if>
           </td>
         </tr>
@@ -344,7 +344,7 @@ ${pages.get("/party/viewcustomers.ftl")}
                                   <td width="5">&nbsp;</td>
                                 <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>                       
                                   <td align="right" valign="top" width='1%' nowrap>
-                                        <div><a href='<@ofbizUrl>/editcreditcard?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                        <div><a href='<@ofbizUrl>editcreditcard?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                         [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
                                   
@@ -383,7 +383,7 @@ ${pages.get("/party/viewcustomers.ftl")}
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
-                                        <div><a href='<@ofbizUrl>/editeftaccount?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                        <div><a href='<@ofbizUrl>editeftaccount?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                         [${uiLabelMap.CommonUpdate}]</a></div>
                                     </#if>
                                   </td>
@@ -401,14 +401,14 @@ ${pages.get("/party/viewcustomers.ftl")}
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
-                                        <div><a href='<@ofbizUrl>/editeftaccount?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                        <div><a href='<@ofbizUrl>editeftaccount?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                         [${uiLabelMap.CommonUpdate}]</a></div>
                                     </#if>
                                   </td>
                               </#if>
                               <td align="right" valign="top" width='1%'>
                                 <#if security.hasEntityPermission("PAY_INFO", "_DELETE", session)>
-                                    <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                    <div><a href='<@ofbizUrl>deletePaymentMethod/viewprofile?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                     [${uiLabelMap.CommonExpire}]</a></div>
                                 </#if>
                               </td>

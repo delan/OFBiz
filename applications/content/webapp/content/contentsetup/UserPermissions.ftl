@@ -39,7 +39,7 @@ function call_fieldlookup3(view_name) {
 <TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <form name="userform" mode="POST" action="<@ofbizUrl>/UserPermissions</@ofbizUrl>" >
+      <form name="userform" mode="POST" action="<@ofbizUrl>UserPermissions</@ofbizUrl>" >
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
         <tr>
           <td colspan="1" valign="middle" align="right">
@@ -60,7 +60,7 @@ function call_fieldlookup3(view_name) {
   </TR>
   <TR>
     <TD width='100%'>
-      <form name="siteRoleForm" mode="POST" action="<@ofbizUrl>/updateSiteRoles</@ofbizUrl>">
+      <form name="siteRoleForm" mode="POST" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <table width='100%' border='0' cellspacing='0' cellpadding='4' class='boxoutside'>
         <tr>
             <td class="">Site</td>

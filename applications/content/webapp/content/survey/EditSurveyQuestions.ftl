@@ -49,7 +49,7 @@
     <#list surveyQuestionAndApplList as surveyQuestionAndAppl>
       <#assign questionType = surveyQuestionAndAppl.getRelatedOne("SurveyQuestionType")>
       <#assign questionCat = surveyQuestionAndAppl.getRelatedOne("SurveyQuestionCategory")>
-      <form method="post" action="<@ofbizUrl>/updateSurveyQuestionAppl</@ofbizUrl>">
+      <form method="post" action="<@ofbizUrl>updateSurveyQuestionAppl</@ofbizUrl>">
         <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}">
         <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}">
         <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}">
@@ -71,8 +71,8 @@
           <td><input type="text" name="withSurveyQuestionId" size="5" class="textBox" value="${surveyQuestionAndAppl.withSurveyQuestionId?if_exists}">
           <td><input type="text" name="withSurveyOptionSeqId" size="5" class="textBox" value="${surveyQuestionAndAppl.withSurveyOptionSeqId?if_exists}">
           <td><input type="submit" value="Update">
-          <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
-          <td><a href="<@ofbizUrl>/removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">[Remove]</a>
+          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">[Remove]</a>
         </tr>
       </form>
     </#list>
@@ -99,12 +99,12 @@
 
       <#list categoryQuestions as question>
         <#assign questionType = question.getRelatedOne("SurveyQuestionType")>
-        <form method="post" action="<@ofbizUrl>/createSurveyQuestionAppl#apply</@ofbizUrl>">
+        <form method="post" action="<@ofbizUrl>createSurveyQuestionAppl#apply</@ofbizUrl>">
           <input type="hidden" name="surveyId" value="${requestParameters.surveyId}">
           <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}">
           <input type="hidden" name="surveyQuestionCategoryId" value="${requestParameters.surveyQuestionCategoryId}">
           <tr valign="middle">
-            <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${question.surveyQuestionId}&surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="buttontext">${question.surveyQuestionId}</a></td>
+            <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${question.surveyQuestionId}&surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="buttontext">${question.surveyQuestionId}</a></td>
             <td><div class="tabletext">${question.description?if_exists}</div></td>
             <td><div class="tabletext">${questionType.description}</div></td>
             <td><div class="tabletext">${question.question?if_exists}</div></td>
@@ -128,7 +128,7 @@
   <hr class="sepbar">
   <div class="head2">Apply Question(s) From Category</div>
   <br/>
-  <form method="post" action="<@ofbizUrl>/EditSurveyQuestions#apply</@ofbizUrl>">
+  <form method="post" action="<@ofbizUrl>EditSurveyQuestions#apply</@ofbizUrl>">
     <input type="hidden" name="surveyId" value="${requestParameters.surveyId}">
     <select name="surveyQuestionCategoryId" class="selectBox">
       <#list questionCategories as category>
@@ -145,17 +145,17 @@
   <#-- new question / category -->
   <#if requestParameters.newCategory?default("N") == "Y">
     <div class="head2">Create Question Category</div>
-    <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
+    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
     <br/><br/>
     ${createSurveyQuestionCategoryWrapper.renderFormString()}
   <#else>
     <#if surveyQuestionId?has_content>
       <div class="head2">Edit Question:</div>
-      <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
+      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
     <#else>
       <div class="head2">Create New Question</div>
     </#if>
-    <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">[New Question Category]</a>
+    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">[New Question Category]</a>
     <br/><br/>
     ${createSurveyQuestionWrapper.renderFormString()}
   </#if>
@@ -178,8 +178,8 @@
         <tr valign="middle">
           <td><div class="tabletext">${option.description?if_exists}</div></td>
           <td><div class="tabletext">${option.sequenceNum?if_exists}</div></td>
-          <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[Edit]</a>
-          <td><a href="<@ofbizUrl>/removeSurveyQuestionAppl?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a>
         </tr>
       </#list>
     </table>
@@ -188,7 +188,7 @@
       <div class="head2">Create Question Option:</div>
     <#else>
       <div class="head2">Edit Question Option:</div>
-      <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="buttontext">[New Option]</a>
+      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="buttontext">[New Option]</a>
     </#if>
     ${createSurveyOptionWrapper.renderFormString()}
   </#if>

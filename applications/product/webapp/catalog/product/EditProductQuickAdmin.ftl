@@ -122,8 +122,8 @@ function doPublish() {
         <#list productAssocs as productAssoc>
             <#assign assocProduct = productAssoc.getRelatedOne("AssocProduct")/>
             <tr>
-                <td nowrap><a class="buttontext" href="<@ofbizUrl>/EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">[${assocProduct.productId?if_exists}]</a></td>
-                <td width="100%"><a class="buttontext" href="<@ofbizUrl>/EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName?if_exists}</a></td>
+                <td nowrap><a class="buttontext" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">[${assocProduct.productId?if_exists}]</a></td>
+                <td width="100%"><a class="buttontext" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName?if_exists}</a></td>
                 <input type="hidden" name="productId${idx}" value="${assocProduct.productId?if_exists}">
                 <td colspan="2">
                     <input class="inputBox" name="description${idx}" size="70" maxlength="100" value="${selFeatureDesc[assocProduct.productId]?if_exists}">
@@ -174,7 +174,7 @@ function doPublish() {
         <#assign idx=0/>
         <#list distinguishingFeatures as distinguishingFeature>
             <tr>
-                <td><a href="<@ofbizUrl>/quickAdminRemoveProductFeature?productId=${productId}&productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>">[x]</a></td>
+                <td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>">[x]</a></td>
                 <td>[${distinguishingFeature.productFeatureId}] ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).description}: ${distinguishingFeature.description} </td>
             </tr>
         </#list>
@@ -225,9 +225,9 @@ function doPublish() {
                     <td><input class="inputBox" name="~ml${idx}" size="6" maxlength="20" value="${featureMl.get(assocProduct.productId)?if_exists}"/></td>
                     <td><input class="inputBox" name="~ntwt${idx}" size="6" maxlength="20" value="${featureNtwt.get(assocProduct.productId)?if_exists}"/></td>
                     <td><input class="inputBox" name="~grams${idx}" size="6" maxlength="20" value="${featureGrams.get(assocProduct.productId)?if_exists}"/></td>
-                    <td><a class="buttontext" href="<@ofbizUrl>/EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">[${featureHazmat.get(assocProduct.productId)?if_exists}]</a></td>
-                    <td><a class="buttontext" href="<@ofbizUrl>/EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${featureSalesThru.get(assocProduct.productId)?if_exists}</a></td>
-                    <td><a class="buttontext" href="<@ofbizUrl>/EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${featureThruDate.get(assocProduct.productId)?if_exists}</a></td>
+                    <td><a class="buttontext" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">[${featureHazmat.get(assocProduct.productId)?if_exists}]</a></td>
+                    <td><a class="buttontext" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${featureSalesThru.get(assocProduct.productId)?if_exists}</a></td>
+                    <td><a class="buttontext" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${featureThruDate.get(assocProduct.productId)?if_exists}</a></td>
                 </tr>
             <#assign idx = idx + 1/>
         </#list>
@@ -247,9 +247,9 @@ function doPublish() {
                 <td><input class="inputBox" name="~ml" size="6" maxlength="20" value="${ml?if_exists}"></td>
                 <td><input class="inputBox" name="~ntwt" size="6" maxlength="20" value="${ntwt?if_exists}"></td>
                 <td><input class="inputBox" name="~grams" size="6" maxlength="20" value="${grams?if_exists}"></td>
-                <td><a class="buttontext" href="<@ofbizUrl>/EditProductFeatures?productId=${product.productId}</@ofbizUrl>">[${hazmat?if_exists}]</a></td>
-                <td><a class="buttontext" href="<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>">${salesthru?if_exists}</a></td>
-                <td><a class="buttontext" href="<@ofbizUrl>/EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${thrudate?if_exists}</a></td>
+                <td><a class="buttontext" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">[${hazmat?if_exists}]</a></td>
+                <td><a class="buttontext" href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>">${salesthru?if_exists}</a></td>
+                <td><a class="buttontext" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${thrudate?if_exists}</a></td>
             </tr>
             <tr>
                 <td colspan=10 align="right"><input type="submit" value="${uiLabelMap.UpdateShipping}"></td>
@@ -265,7 +265,7 @@ function doPublish() {
     <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
     <tr>
     <td>
-        <form method="post" action="<@ofbizUrl>/quickAdminApplyFeatureToProduct</@ofbizUrl>" style="margin: 0;" name="addFeatureById">
+        <form method="post" action="<@ofbizUrl>quickAdminApplyFeatureToProduct</@ofbizUrl>" style="margin: 0;" name="addFeatureById">
         <input type="hidden" name="productId" value="${product.productId?if_exists}">
         <input type="hidden" name="productFeatureApplTypeId" value="STANDARD_FEATURE">
         <input type="hidden" name="fromDate" value="${nowTimestampString}">
@@ -297,7 +297,7 @@ function doPublish() {
             <#list standardFeatureAppls as standardFeatureAppl>
                 <#assign featureId = standardFeatureAppl.productFeatureId/>
                 <tr>
-                    <td><a href='<@ofbizUrl>/quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId?if_exists}&productFeatureId=${featureId?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(standardFeatureAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">[x]</a></td>
+                    <td><a href='<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId?if_exists}&productFeatureId=${featureId?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(standardFeatureAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">[x]</a></td>
                     <td>${productFeatureTypeLookup.get(featureId).getString("description")}:
                             ${standardFeatureLookup.get(featureId).getString("description")}</td>
                 </tr>
@@ -351,7 +351,7 @@ function doPublish() {
             <#list productCategoryMembers as prodCatMemb>
                 <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory")/>
                 <tr>
-                    <td><a href='<@ofbizUrl>/quickAdminRemoveProductFromCategory?productId=${prodCatMemb.productId?if_exists}&productCategoryId=${prodCatMemb.productCategoryId}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(prodCatMemb.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">[x]</a></td>
+                    <td><a href='<@ofbizUrl>quickAdminRemoveProductFromCategory?productId=${prodCatMemb.productId?if_exists}&productCategoryId=${prodCatMemb.productCategoryId}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(prodCatMemb.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">[x]</a></td>
                     <td>${prodCat.description?if_exists} [${prodCat.productCategoryId}]</td>
                 </tr>
             </#list>

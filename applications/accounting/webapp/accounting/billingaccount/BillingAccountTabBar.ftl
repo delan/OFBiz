@@ -29,10 +29,10 @@
 
 <#if billingAccount?has_content>
     <div class='tabContainer'>
-        <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.EditBillingAccount?default(unselectedClassName)}">${uiLabelMap.AccountingAccount}</a>
-        <a href="<@ofbizUrl>/EditBillingAccountRoles?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.EditBillingAccountRoles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
-        <a href="<@ofbizUrl>/EditBillingAccountTerms?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.EditBillingAccountTerms?default(unselectedClassName)}">${uiLabelMap.PartyTerms}</a>
-        <a href="<@ofbizUrl>/BillingAccountInvoices?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.BillingAccountInvoices?default(unselectedClassName)}">${uiLabelMap.AccountingInvoices}</a>
-        <a href="<@ofbizUrl>/BillingAccountPayments?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.BillingAccountPayments?default(unselectedClassName)}">${uiLabelMap.AccountingPayments}</a>
+        <a href="<@ofbizUrl>EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.EditBillingAccount?default(unselectedClassName)}">${uiLabelMap.AccountingAccount}</a>
+        <a href="<@ofbizUrl>EditBillingAccountRoles?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.EditBillingAccountRoles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
+        <a href="<@ofbizUrl>EditBillingAccountTerms?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.EditBillingAccountTerms?default(unselectedClassName)}">${uiLabelMap.PartyTerms}</a>
+        <a href="<@ofbizUrl>BillingAccountInvoices?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.BillingAccountInvoices?default(unselectedClassName)}">${uiLabelMap.AccountingInvoices}</a>
+        <a href="<@ofbizUrl>BillingAccountPayments?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="${selectedClassMap.BillingAccountPayments?default(unselectedClassName)}">${uiLabelMap.AccountingPayments}</a>
     </div>
 </#if>

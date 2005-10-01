@@ -16,15 +16,15 @@
          <td >
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
-              <a class="tabButton" href="<@ofbizUrl>/showcontenttree?contentId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName?if_exists}
+              <a class="tabButton" href="<@ofbizUrl>showcontenttree?contentId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName?if_exists}
             <#else>
-              <a class="tabButton" href="<@ofbizUrl>/showcontenttree?contentId=${siteId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName?if_exists}
+              <a class="tabButton" href="<@ofbizUrl>showcontenttree?contentId=${siteId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName?if_exists}
             </#if>
             <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
             [${content.contentId?if_exists}]
             <#if searchOn?has_content && searchOn?lower_case == "true">
                 &nbsp;
-              <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${siteId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a> 
+              <a class="tabButton" href="<@ofbizUrl>searchContent?siteId=${siteId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a> 
             </#if>
         </#if>
          </td>

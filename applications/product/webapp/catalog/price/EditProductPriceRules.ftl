@@ -26,7 +26,7 @@
  *@since      2.2
 -->
 <div class="head1">${uiLabelMap.ProductGlobalPriceRule}</div>
-<a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductFindRule}]</a>
+<a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductFindRule}]</a>
 
 <br/>
 
@@ -43,7 +43,7 @@
   <tr valign="middle">
     <td><div class="tabletext"><b>${productPriceRule.productPriceRuleId}</b></div></td>
     <td align="left">
-        <FORM method="post" action="<@ofbizUrl>/updateProductPriceRule</@ofbizUrl>" name="updateProductPriceRule">
+        <FORM method="post" action="<@ofbizUrl>updateProductPriceRule</@ofbizUrl>" name="updateProductPriceRule">
             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
             <input type="text" size="15" name="ruleName" value="${productPriceRule.ruleName}" class="inputBox">
             <input type="text" size="22" name="fromDate" value="${productPriceRule.fromDate?if_exists}" class="inputBox"><a href="javascript:call_cal(document.updateProductPriceRule.fromDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
@@ -59,7 +59,7 @@
     </td>
     <td align="center">&nbsp;
       <#if !productPriceConds?has_content && !productPriceActions?has_content>
-          <a href="<@ofbizUrl>/deleteProductPriceRule?productPriceRuleId=${productPriceRule.productPriceRuleId}</@ofbizUrl>" class="buttontext">
+          <a href="<@ofbizUrl>deleteProductPriceRule?productPriceRuleId=${productPriceRule.productPriceRuleId}</@ofbizUrl>" class="buttontext">
           [${uiLabelMap.CommonDelete}]</a>
       </#if>
     </td>
@@ -81,7 +81,7 @@
                 <#if (curCondSeqId >= maxCondSeqId)><#assign maxCondSeqId = curCondSeqId + 1></#if>
                 <td><div class="tabletext"><b>${productPriceCond.productPriceCondSeqId}</b></div></td>
                 <td align="left">
-                    <FORM method="post" action="<@ofbizUrl>/updateProductPriceCond</@ofbizUrl>">
+                    <FORM method="post" action="<@ofbizUrl>updateProductPriceCond</@ofbizUrl>">
                         <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}"/>
                         <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}"/>
                         <select name="inputParamEnumId" size="1" class="selectBox">
@@ -113,14 +113,14 @@
                     </FORM>
                 </td>
                 <td align="center">
-                  <a href="<@ofbizUrl>/deleteProductPriceCond?productPriceRuleId=${productPriceCond.productPriceRuleId}&productPriceCondSeqId=${productPriceCond.productPriceCondSeqId}</@ofbizUrl>" class="buttontext">
+                  <a href="<@ofbizUrl>deleteProductPriceCond?productPriceRuleId=${productPriceCond.productPriceRuleId}&productPriceCondSeqId=${productPriceCond.productPriceCondSeqId}</@ofbizUrl>" class="buttontext">
                   [${uiLabelMap.CommonDelete}]</a>
                 </td>
               </tr>
           </#list>
           <tr>
             <td align="left" colspan="3">
-                <FORM method="post" action="<@ofbizUrl>/createProductPriceCond</@ofbizUrl>">
+                <FORM method="post" action="<@ofbizUrl>createProductPriceCond</@ofbizUrl>">
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
                     <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="inputParamEnumId" size="1" class="selectBox">
@@ -158,7 +158,7 @@
                 <#if (curActionSeqId >= maxActionSeqId)><#assign maxActionSeqId = curActionSeqId + 1></#if>
                 <td><div class="tabletext"><b>${productPriceAction.productPriceActionSeqId}</b></div></td>
                 <td align="left">
-                    <FORM method="post" action="<@ofbizUrl>/updateProductPriceAction</@ofbizUrl>">
+                    <FORM method="post" action="<@ofbizUrl>updateProductPriceAction</@ofbizUrl>">
                         <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}">
                         <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}">
                         <select name="productPriceActionTypeId" size="1" class="selectBox">
@@ -178,14 +178,14 @@
                     </FORM>
                 </td>
                 <td align="center">
-                  <a href="<@ofbizUrl>/deleteProductPriceAction?productPriceRuleId=${productPriceAction.productPriceRuleId}&productPriceActionSeqId=${productPriceAction.productPriceActionSeqId}</@ofbizUrl>" class="buttontext">
+                  <a href="<@ofbizUrl>deleteProductPriceAction?productPriceRuleId=${productPriceAction.productPriceRuleId}&productPriceActionSeqId=${productPriceAction.productPriceActionSeqId}</@ofbizUrl>" class="buttontext">
                   [${uiLabelMap.CommonDelete}]</a>
                 </td>
               </tr>
           </#list>
           <tr>
             <td align="left" colspan="3">
-                <FORM method="post" action="<@ofbizUrl>/createProductPriceAction</@ofbizUrl>">
+                <FORM method="post" action="<@ofbizUrl>createProductPriceAction</@ofbizUrl>">
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
                     <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="productPriceActionTypeId" size="1" class="selectBox">

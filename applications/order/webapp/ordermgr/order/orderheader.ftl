@@ -37,13 +37,13 @@
             <div class="screenlet-header">
                 <div style="float: right;">
                     <#if currentStatus.statusId == "ORDER_CREATED" || currentStatus.statusId == "ORDER_PROCESSING">
-                        <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_APPROVED&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderApproveOrder}</a></div>
+                        <div class="tabletext"><a href="<@ofbizUrl>changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_APPROVED&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderApproveOrder}</a></div>
                     </#if>
                     <#if setOrderCompleteOption>
-                    	  <div class="tabletext"><a href="<@ofbizUrl>/changeOrderStatus?orderId=${orderId}&statusId=ORDER_COMPLETED</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCompleteOrder}</a></div>
+                    	  <div class="tabletext"><a href="<@ofbizUrl>changeOrderStatus?orderId=${orderId}&statusId=ORDER_COMPLETED</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCompleteOrder}</a></div>
                     </#if>
                 </div>
-                <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${uiLabelMap.CommonInformation} [<a href="<@ofbizUrl>/order.pdf?order_id=${orderId}</@ofbizUrl>" class="submenutextright" target="_blank">PDF</a> ]</div>
+                <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${uiLabelMap.CommonInformation} [<a href="<@ofbizUrl>order.pdf?order_id=${orderId}</@ofbizUrl>" class="submenutextright" target="_blank">PDF</a> ]</div>
             </div>
             <div class="screenlet-body">
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
@@ -193,7 +193,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          <a href="<@ofbizUrl>/viewimage?orderId=${orderId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
+                          <a href="<@ofbizUrl>viewimage?orderId=${orderId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
                         </div>
                       </td>
                     </tr>
@@ -269,7 +269,7 @@
                          </td>
                         <#else>
                           <td align="right">
-                            <a valign="top" href="<@ofbizUrl>/receivepayment?${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingReceivePayment}</a>
+                            <a valign="top" href="<@ofbizUrl>receivepayment?${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingReceivePayment}</a>
                           </td>
                         </#if>
                       </tr>
@@ -536,7 +536,7 @@
                         <div class="tabletext">
                           ${contactMech.infoString}
                           <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
-                             <br/>(<a href="<@ofbizUrl>/confirmationmailedit?orderId=${orderId}&partyId=${partyId}&sendTo=${contactMech.infoString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSendConfirmationEmail}</a>)
+                             <br/>(<a href="<@ofbizUrl>confirmationmailedit?orderId=${orderId}&partyId=${partyId}&sendTo=${contactMech.infoString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSendConfirmationEmail}</a>)
                           <#else>
                              <a href="mailto:${contactMech.infoString}" class="buttontext">(${uiLabelMap.OrderSendEmail})</a>
                           </#if>
@@ -656,7 +656,7 @@
                         <#if shipGroup.maySplit?upper_case == "N">
                             ${uiLabelMap.FacilityWaitEntireOrderReady}
                             <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                              <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderAllowSplit}</a></#if>
+                              <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>allowordersplit?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderAllowSplit}</a></#if>
                             </#if>
                         <#else>
                             ${uiLabelMap.FacilityShipAvailable}
@@ -768,15 +768,15 @@
                    <td align="left" valign="top" width="80%">
                      <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                        <#if (orderHeader.orderTypeId == "SALES_ORDER") && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
-                         <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Entire Order</a></div>
+                         <div class="tabletext"><a href="<@ofbizUrl>quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Entire Order</a></div>
                        </#if>
                        <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
-                         <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
-                         <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderViewEditDelivery}</a></div>
+                         <div class="tabletext"><a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
+                         <div class="tabletext"><a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderViewEditDelivery}</a></div>
                        </#if>
                        <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
-                         <div><a href="<@ofbizUrl>/quickRefundOrder?order_id=${orderId}&orderId=${orderId}&receiveReturn=true</@ofbizUrl>" class="buttontext">Quick-Refund Entire Order</a></div>
-                         <div><a href="<@ofbizUrl>/quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}</@ofbizUrl>" class="buttontext">Create Return</a></div>
+                         <div><a href="<@ofbizUrl>quickRefundOrder?order_id=${orderId}&orderId=${orderId}&receiveReturn=true</@ofbizUrl>" class="buttontext">Quick-Refund Entire Order</a></div>
+                         <div><a href="<@ofbizUrl>quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}</@ofbizUrl>" class="buttontext">Create Return</a></div>
                        </#if>
                      </#if>
                    </td>

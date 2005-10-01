@@ -33,7 +33,7 @@
         <div class="head2">${productCategory.description?if_exists}</div>
       </td>
       <td align="right">
-        <form name="choosequickaddform" method="post" action="<@ofbizUrl>/quickadd</@ofbizUrl>" style='margin: 0;'>
+        <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>" style='margin: 0;'>
           <select name='category_id' class='selectBox'>
             <option value='${productCategory.productCategoryId}'>${productCategory.description?if_exists}</option>
             <option value='${productCategory.productCategoryId}'>--</option>
@@ -67,7 +67,7 @@
 <#if productCategoryMembers?exists && 0 < productCategoryMembers?size>
   <br/>
   <center>
-  <form method="post" action="<@ofbizUrl>/addtocartbulk</@ofbizUrl>" name="bulkaddform" style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform" style='margin: 0;'>
     <input type='hidden' name='category_id' value='${categoryId}'>
     <div class="tabletext" align="right">
       <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>

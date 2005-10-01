@@ -3,7 +3,7 @@
 <#else>
     <#if dataResourceId?exists>
         <br/>
-        <img src="<@ofbizUrl>/img?imgId=${dataResourceId}</@ofbizUrl>" />
+        <img src="<@ofbizUrl>img?imgId=${dataResourceId}</@ofbizUrl>" />
     </#if>
     <br/>
     ${singleWrapper.renderFormString()}

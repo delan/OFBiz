@@ -51,7 +51,7 @@
                   <#list productPromosAllShowable as productPromo>
                     <tr>
                       <td>
-                        <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText}</div>
+                        <div class="tabletext"><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText}</div>
                       </td>
                     </tr>
                     <#if productPromo_has_next>

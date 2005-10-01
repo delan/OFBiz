@@ -45,10 +45,10 @@
     <#assign hasExpired = false>
     <#if productCategoryRollup.thruDate?exists && nowTimestamp.after(productCategoryRollup.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
     <tr valign="middle">
-      <td><#if curCategory?has_content><a href="<@ofbizUrl>/EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if></td>
+      <td><#if curCategory?has_content><a href="<@ofbizUrl>EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if></td>
       <td><div class="tabletext" <#if hasntStarted>style="color: red;"</#if>>${productCategoryRollup.fromDate}</div></td>
       <td align="center">
-        <form method="post" action="<@ofbizUrl>/updateProductCategoryToCategory</@ofbizUrl>" name="lineParentForm${lineParent}">
+        <form method="post" action="<@ofbizUrl>updateProductCategoryToCategory</@ofbizUrl>" name="lineParentForm${lineParent}">
             <input type="hidden" name="showProductCategoryId" value="${productCategoryRollup.productCategoryId}">
             <input type="hidden" name="productCategoryId" value="${productCategoryRollup.productCategoryId}">
             <input type="hidden" name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}">
@@ -60,7 +60,7 @@
         </form>
       </td>
       <td>
-        <a href="<@ofbizUrl>/removeProductCategoryFromCategory?showProductCategoryId=${productCategoryId}&productCategoryId=${productCategoryRollup.productCategoryId}&parentProductCategoryId=${productCategoryRollup.parentProductCategoryId}&fromDate=${productCategoryRollup.fromDate}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>removeProductCategoryFromCategory?showProductCategoryId=${productCategoryId}&productCategoryId=${productCategoryRollup.productCategoryId}&parentProductCategoryId=${productCategoryRollup.parentProductCategoryId}&fromDate=${productCategoryRollup.fromDate}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
       </td>
     </tr>
@@ -73,7 +73,7 @@
 </#if>
 </table>
 <br/>
-<form method="post" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
+<form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
   <input type="hidden" name="productCategoryId" value="${productCategoryId}">
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
   <div class="tabletext">${uiLabelMap.CommonAddA} <b>${uiLabelMap.ProductParent}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
@@ -111,10 +111,10 @@
     <#assign hasExpired = false>
     <#if productCategoryRollup.thruDate?exists && nowTimestamp.after(productCategoryRollup.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
     <tr valign="middle">
-      <td><#if curCategory?has_content><a href="<@ofbizUrl>/EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if>
+      <td><#if curCategory?has_content><a href="<@ofbizUrl>EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${curCategory.description?if_exists} [${curCategory.productCategoryId}]</a></#if>
       <td><div class="tabletext" <#if hasntStarted>style="color: red"</#if>>${productCategoryRollup.fromDate}</div></td>
       <td align="center">
-        <form method="post" action="<@ofbizUrl>/updateProductCategoryToCategory</@ofbizUrl>" name="lineChildForm${lineChild}">
+        <form method="post" action="<@ofbizUrl>updateProductCategoryToCategory</@ofbizUrl>" name="lineChildForm${lineChild}">
             <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
             <input type="hidden" name="productCategoryId" value="${productCategoryRollup.productCategoryId}">
             <input type="hidden" name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}">
@@ -126,7 +126,7 @@
         </form>
       </td>
       <td>
-        <a href="<@ofbizUrl>/removeProductCategoryFromCategory?showProductCategoryId=${productCategoryId}&productCategoryId=${productCategoryRollup.productCategoryId}&parentProductCategoryId=${productCategoryRollup.parentProductCategoryId}&fromDate=${productCategoryRollup.fromDate}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>removeProductCategoryFromCategory?showProductCategoryId=${productCategoryId}&productCategoryId=${productCategoryRollup.productCategoryId}&parentProductCategoryId=${productCategoryRollup.parentProductCategoryId}&fromDate=${productCategoryRollup.fromDate}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
       </td>
     </tr>
@@ -140,7 +140,7 @@
 </table>
 <br/>
 
-<form method="post" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
+<form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
   <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}">
   <div class="tabletext">${uiLabelMap.CommonAddA} <b>${uiLabelMap.ProductChild}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>

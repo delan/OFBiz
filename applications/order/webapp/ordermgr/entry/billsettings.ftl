@@ -28,9 +28,9 @@
 <script language="JavaScript" type="text/javascript">
 function shipBillAddr() {
     if (document.checkoutsetupform.useShipAddr.checked) {
-        window.location = "<@ofbizUrl>/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y</@ofbizUrl>";
+        window.location = "<@ofbizUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y</@ofbizUrl>";
     } else { 
-        window.location = "<@ofbizUrl>/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}</@ofbizUrl>";
+        window.location = "<@ofbizUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}</@ofbizUrl>";
     }
 }
 
@@ -56,12 +56,12 @@ function makeExpDate() {
     <div class="screenlet-body">
         <#if (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew?exists>
           <#-- initial screen when we have a associated party -->
-          <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+          <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payment"/>
             <table width="100%" cellpadding="1" cellspacing="0" border="0">
               <tr>
                 <td colspan="2">    
-                  <a href="<@ofbizUrl>/setBilling?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
+                  <a href="<@ofbizUrl>setBilling?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
                 </td>
               </tr>
               <tr><td colspan="3"><hr class="sepbar"/></td></tr>                      
@@ -146,24 +146,24 @@ function makeExpDate() {
           <#-- after initial screen; show detailed screens for selected type -->
           <#if paymentMethodType == "CC">
             <#if postalAddress?has_content>
-              <form method="post" action="<@ofbizUrl>/updateCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>updateCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId?if_exists}"/>
                 <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}"/>
             <#elseif requestParameters.useShipAddr?exists>
-              <form method="post" action="<@ofbizUrl>/createCreditCard</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>createCreditCard</@ofbizUrl>" name="checkoutsetupform">
             <#else>
-              <form method="post" action="<@ofbizUrl>/createCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>createCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
             </#if>
           </#if>
           <#if paymentMethodType == "EFT">
             <#if postalAddress?has_content>                  
-              <form method="post" action="<@ofbizUrl>/updateEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>updateEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId?if_exists}"/>
                 <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}"/>
             <#elseif requestParameters.useShipAddr?exists>
-              <form method="post" action="<@ofbizUrl>/createEftAccount</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>createEftAccount</@ofbizUrl>" name="checkoutsetupform">
             <#else>                    
-              <form method="post" action="<@ofbizUrl>/createEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>createEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
             </#if>        
           </#if>
           
@@ -478,7 +478,7 @@ function makeExpDate() {
           </table>                    	                                                                     
         <#else>
           <#-- initial screen show a list of options -->
-          <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+          <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payoption"/>
             <input type="hidden" name="createNew" value="Y"/>
             <table width="100%" border="0" cellpadding="1" cellspacing="0"> 

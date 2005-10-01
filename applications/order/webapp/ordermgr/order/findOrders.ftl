@@ -30,10 +30,10 @@
 function lookupOrders(click) {
     orderIdValue = document.lookuporder.order_id.value;
     if (orderIdValue.length > 1) {
-        document.lookuporder.action = "<@ofbizUrl>/orderview</@ofbizUrl>";
+        document.lookuporder.action = "<@ofbizUrl>orderview</@ofbizUrl>";
         document.lookuporder.method = "get";
     } else {
-        document.lookuporder.action = "<@ofbizUrl>/findorders</@ofbizUrl>";
+        document.lookuporder.action = "<@ofbizUrl>findorders</@ofbizUrl>";
     }
 
     if (click) {
@@ -70,7 +70,7 @@ function runAction() {
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-<form method='post' name="lookuporder" action="<@ofbizUrl>/findorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
+<form method='post' name="lookuporder" action="<@ofbizUrl>findorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -82,9 +82,9 @@ function runAction() {
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
+                <a href="<@ofbizUrl>findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
               <#else>
-                <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
+                <#if orderHeaderList?exists><a href="<@ofbizUrl>findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
                 <a href="javascript:lookupOrders(true);" class="submenutext">${uiLabelMap.OrderLookupOrder}</a>
                 <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">${uiLabelMap.PartyLookupParty}</a>
               </#if>
@@ -291,7 +291,7 @@ document.lookuporder.order_id.focus();
             <div class="boxhead" align="right">
               <#if 0 < orderHeaderList?size>
                 <#if (viewIndex > 1)>
-                  <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                  <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                 <#else>
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
@@ -299,7 +299,7 @@ document.lookuporder.order_id.focus();
                   <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${orderHeaderListSize}</span>
                 </#if>
                 <#if (orderHeaderListSize > highIndex)>
-                  <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                  <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                 <#else>
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
@@ -315,8 +315,8 @@ document.lookuporder.order_id.focus();
         <input type="hidden" name="orderIdList" value=""/>
         <select name="serviceName" class="selectBox" onchange="javascript:setServiceName(this);">
            <option value="javascript:void();"></option>
-           <option value="<@ofbizUrl>/massApproveOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Approve Orders</option>
-           <option value="<@ofbizUrl>/massPickOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Pick Orders</option>
+           <option value="<@ofbizUrl>massApproveOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Approve Orders</option>
+           <option value="<@ofbizUrl>massPickOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Pick Orders</option>
         </select>
         <a href="javascript:runAction();" class="buttontext">Run Action</a>
       </div>
@@ -361,7 +361,7 @@ document.lookuporder.order_id.focus();
                  <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}"</td>
               </td>
               <td><div class='tabletext'>${orderType.description?default(orderType.orderTypeId?default(""))}</div></td>
-              <td><a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
+              <td><a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
               <td>
                 <div class="tabletext">
                   <#if displayParty?has_content>
@@ -412,7 +412,7 @@ document.lookuporder.order_id.focus();
                 </#if>
               </td>
               <td align='right'>
-                <a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
+                <a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
               </td>
             </tr>
             <#-- toggle the row color -->

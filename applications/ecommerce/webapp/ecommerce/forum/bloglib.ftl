@@ -61,11 +61,11 @@
         <#if content?has_content>${content.description?if_exists}</#if>
     </td>
     <td width="40px" valign="bottom">
-<a class="tabButton" href="<@ofbizUrl>/showforumarticle?contentId=${thisSubContentId}&nodeTrailCsv=${thisNodeTrailCsv?if_exists}&forumId=${contentIdx?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
+<a class="tabButton" href="<@ofbizUrl>showforumarticle?contentId=${thisSubContentId}&nodeTrailCsv=${thisNodeTrailCsv?if_exists}&forumId=${contentIdx?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
     </td>
 <@checkPermission mode="equals" entityOperation="_UPDATE" subContentId=content.contentId targetOperation="CONTENT_UPDATE" contentPurposeList="ARTICLE">
     <td width="40px" valign="bottom">
-<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/editforumarticle?contentIdTo=${content.contentId}&nodeTrailCsv=${contentIdx?if_exists},${content.contentId}</@ofbizUrl>" >${uiLabelMap.CommonEdit}</a>
+<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>editforumarticle?contentIdTo=${content.contentId}&nodeTrailCsv=${contentIdx?if_exists},${content.contentId}</@ofbizUrl>" >${uiLabelMap.CommonEdit}</a>
     </td>
 </@checkPermission>
   </tr>
@@ -86,7 +86,7 @@
 </#if>
 <@checkPermission mode="equals" entityOperation="_CREATE" subContentId=contentDept statusId="BLOG_PUBLISHED" targetOperation=targOp contentPurposeList="ARTICLE" quickCheckContentId=contentIdx>
 <tr><td align="right">
-<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/createforumarticle?forumId=${contentIdx?if_exists}&nodeTrailCsv=${contentIdx?if_exists}</@ofbizUrl>" >${uiLabelMap.ProductNewArticle}</a>
+<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>createforumarticle?forumId=${contentIdx?if_exists}&nodeTrailCsv=${contentIdx?if_exists}</@ofbizUrl>" >${uiLabelMap.ProductNewArticle}</a>
 </td></tr>
 </@checkPermission>
 <@checkPermission mode="not-equals" entityOperation="_CREATE" subContentId=contentDept statusId="BLOG_PUBLISHED" targetOperation=targOp contentPurposeList="ARTICLE" quickCheckContentId=contentIdx>
@@ -120,9 +120,9 @@ ${uiLabelMap.EcommerceLoggedToPost}
          <td >
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
-              <a class="tabButton" href="<@ofbizUrl>/showforum?forumId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName?if_exists}
+              <a class="tabButton" href="<@ofbizUrl>showforum?forumId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName?if_exists}
             <#else>
-              <a class="tabButton" href="<@ofbizUrl>/showforumarticle?contentId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}to</a> &nbsp;${content.contentName?if_exists}
+              <a class="tabButton" href="<@ofbizUrl>showforumarticle?contentId=${content.contentId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}to</a> &nbsp;${content.contentName?if_exists}
             </#if>
             <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
             [${content.contentId?if_exists}]</td>

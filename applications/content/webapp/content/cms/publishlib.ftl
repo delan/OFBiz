@@ -153,19 +153,19 @@
             ${plusMinus} ${content.contentName?if_exists}
          </td >
          <td >
-            <a class="buttontext" href="<@ofbizUrl>/CMSSites?rootForumId=${rootForumId}&moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
+            <a class="buttontext" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="buttontext" href="<@ofbizUrl>/CMSSites?rootForumId=${rootForumId}&permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
+            <a class="buttontext" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="buttontext" href="<@ofbizUrl>/addSubSite?rootForumId=${rootForumId}&parentForumId=${content.contentId}</@ofbizUrl>" >Add Child Forum</a>
+            <a class="buttontext" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&parentForumId=${content.contentId}</@ofbizUrl>" >Add Child Forum</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="buttontext" href="<@ofbizUrl>/removeSite?rootForumId=${rootForumId}&contentId=${content.contentId}&contentIdTo=${forumId}&contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
+            <a class="buttontext" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&contentId=${content.contentId}&contentIdTo=${forumId}&contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
          </td >
        </tr>
        <#assign rowCount = rowCount + 1 />
@@ -176,7 +176,7 @@
 
 <#macro moderateSite forumId rootForumId >
 <table width="100%" border="0" >
- <form name="mostrecent" mode="POST" action="<@ofbizUrl>/publishResponse</@ofbizUrl>"/>
+ <form name="mostrecent" mode="POST" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
   <#list mostRecentList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
@@ -185,7 +185,7 @@
           <td class="tabletext"> <b>name:</b>${content.contentName} </td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
           <td>
-  <a class="tabButton" href="<@ofbizUrl>/CMSContentEdit?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+  <a class="tabButton" href="<@ofbizUrl>CMSContentEdit?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
           </td>
           <td class="tabletext">
           <b>submitted:</b>
@@ -232,7 +232,7 @@
 <table width="100%" border="0" >
   <TR>
     <TD width='100%'>
-      <form name="siteRoleForm" mode="POST" action="<@ofbizUrl>/updateSiteRoles</@ofbizUrl>">
+      <form name="siteRoleForm" mode="POST" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
@@ -263,7 +263,7 @@
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead"><input type="text" name="partyId_o_${rowCount}" value=""/>
-<a href="javascript:call_fieldlookup3('<@ofbizUrl>/LookupPerson</@ofbizUrl>')"><img src="<@ofbizContentUrl>/content/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup"></a></div>
+<a href="javascript:call_fieldlookup3('<@ofbizUrl>LookupPerson</@ofbizUrl>')"><img src="<@ofbizContentUrl>/content/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup"></a></div>
           </td>
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />

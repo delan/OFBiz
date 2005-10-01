@@ -37,9 +37,9 @@
     <div class="screenlet-header">
         <div style="float: right;">
             <#if (communicationEvent.partyIdFrom?if_exists != (userLogin.partyId)?if_exists)>
-              <a href="<@ofbizUrl>/newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyReply}</a>
+              <a href="<@ofbizUrl>newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyReply}</a>
             </#if>
-            <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.ViewList}</a>
+            <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.ViewList}</a>
         </div>
         <div class="boxhead">Read Message</div>
     </div>

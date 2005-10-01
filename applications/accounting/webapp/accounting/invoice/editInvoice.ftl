@@ -100,7 +100,7 @@
                       </td>
                       <#if payments?has_content>
                       <td align="right" width="5%" nowrap>
-                        <a href="<@ofbizUrl>/invoicePayments?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingPayments}</a>&nbsp;
+                        <a href="<@ofbizUrl>invoicePayments?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingPayments}</a>&nbsp;
                       </td>
                       </#if>
                     </tr>
@@ -294,7 +294,7 @@
                 <tr><td><font color="red">${uiLabelMap.AccountingNocurrentinvoicelineitems}.</font></td></tr>
               </#if>
               <#if editInvoice?default(false)>
-                <form name="additem" method="post" action="<@ofbizUrl>/createInvoiceItem</@ofbizUrl>">
+                <form name="additem" method="post" action="<@ofbizUrl>createInvoiceItem</@ofbizUrl>">
                 <input type="hidden" name="editInvoice" value="true">
                 <input type="hidden" name="invoiceId" value="${invoice.invoiceId}">  
                 <input type="hidden" name="invoiceItemSeqId" value="${seqId}">  

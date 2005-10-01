@@ -51,11 +51,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <tr>
       <td colspan="2" align="right">
         <#if requestAttributes.previousProductId?exists>
-          <a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
+          <a href='<@ofbizUrl>product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
+        <a href="<@ofbizUrl>category/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
         <#if requestAttributes.nextProductId?exists>
-          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonNext}]</a>
+          &nbsp;|&nbsp;<a href='<@ofbizUrl>product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </td>
     </tr>
@@ -113,7 +113,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </div>
       </#if>
 
-      <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
+      <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
@@ -171,7 +171,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 
       <#if shoppingLists?has_content>
         <hr class="sepbar">
-        <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList</@ofbizUrl>">
+        <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList</@ofbizUrl>">
           <input type="hidden" name="productId" value="${requestParameters.product_id}">
           <select name="shoppingListId" class="selectBox">
             <#list shoppingLists as shoppingList>
@@ -272,7 +272,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     </#list>
     <tr>
       <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Review This Product!</a>
+        <a href="<@ofbizUrl>reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Review This Product!</a>
       </td>
     </tr>
   <#else>
@@ -283,7 +283,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     </tr>
     <tr>
       <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Be The First To Review This Product!</a>
+        <a href="<@ofbizUrl>reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Be The First To Review This Product!</a>
       </td>
     </tr>
   </#if>
@@ -298,7 +298,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <#list assocProducts as productAssoc>
       <tr><td>
         <div class="tabletext">
-          <a href='<@ofbizUrl>/product/~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
+          <a href='<@ofbizUrl>product/~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
             ${productAssoc.productIdTo?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>

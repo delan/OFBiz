@@ -35,17 +35,17 @@
   <#if curCategoryId?exists && curCategoryId == category.productCategoryId>
     <div class="browsecategorytext">
       <#if sessionAttributes.shoppingCart?exists && sessionAttributes.shoppingCart.isPurchaseOrder()>
-        -&nbsp;<a href="<@ofbizUrl>/keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId?if_exists}/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.description?if_exists}</a>
+        -&nbsp;<a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId?if_exists}/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.description?if_exists}</a>
       <#else>
-        -&nbsp;<a href="<@ofbizUrl>/category/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.description?if_exists}</a>
+        -&nbsp;<a href="<@ofbizUrl>category/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.description?if_exists}</a>
       </#if>
     </div>
   <#else>
     <div class="browsecategorytext">
       <#if sessionAttributes.shoppingCart?exists && sessionAttributes.shoppingCart.isPurchaseOrder()>
-        -&nbsp;<a href="<@ofbizUrl>/keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId?if_exists}/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
+        -&nbsp;<a href="<@ofbizUrl>keywordsearch/~SEARCH_CATEGORY_ID=${category.productCategoryId}/~SEARCH_SUPPLIER_ID=${sessionAttributes.shoppingCart.partyId?if_exists}/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
       <#else>
-        -&nbsp;<a href="<@ofbizUrl>/category/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
+        -&nbsp;<a href="<@ofbizUrl>category/~category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
       </#if>
     </div>
   </#if>

@@ -27,10 +27,10 @@
 -->
 
 <div class="head1">${uiLabelMap.ProductFacility} <span class='head2'>${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+<a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 <#if facilityId?has_content>
 	<a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonViewCalendar}]</a>
-	<a href="<@ofbizUrl>/EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewContactMech}]</a>
+	<a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewContactMech}]</a>
 </#if>
 
 <br/><br/>
@@ -121,13 +121,13 @@
             <td width="5">&nbsp;</td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td align="right" valign="top" nowrap width="1%">
-              <div><a href='<@ofbizUrl>/EditContactMech?facilityId=${facilityId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
+              <div><a href='<@ofbizUrl>EditContactMech?facilityId=${facilityId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
               [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div>
             </td>
             </#if>
             <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session)>
             <td align="right" valign="top" width="1%">
-              <div><a href='<@ofbizUrl>/deleteContactMech/ViewContactMechs?facilityId=${facilityId}&contactMechId=${contactMech.contactMechId}&facilityId=${facilityId}</@ofbizUrl>' class="buttontext">
+              <div><a href='<@ofbizUrl>deleteContactMech/ViewContactMechs?facilityId=${facilityId}&contactMechId=${contactMech.contactMechId}&facilityId=${facilityId}</@ofbizUrl>' class="buttontext">
               [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div>
             </td>
             </#if>

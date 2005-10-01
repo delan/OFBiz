@@ -86,9 +86,9 @@
 <#if productId?has_content>
     <a href="/facility/control/EditInventoryItem?productId=${productId}${externalKeyParam}" class="buttontext">${uiLabelMap.ProductCreateNewInventoryItemProduct}</a>
     <#if showEmpty>
-        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductHideEmptyItems}</a>
+        <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductHideEmptyItems}</a>
     <#else>
-        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}&showEmpty=true</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductShowEmptyItems}</a>
+        <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}&showEmpty=true</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductShowEmptyItems}</a>
     </#if>
 </#if>
 <br/>
@@ -150,7 +150,7 @@
                     <#elseif inventoryItem.facilityId?exists>
                         <td><span class="tabletext">${uiLabelMap.ProductFacilityLetter}:&nbsp;</span><a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${externalKeyParam}" class="linktext">${inventoryItem.facilityId}</a></td>
                     <#elseif (inventoryItem.containerId)?exists>
-                        <td><span class="tabletext">${uiLabelMap.ProductContainerLetter}:&nbsp;</span><a href="<@ofbizUrl>/EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="linktext">${inventoryItem.containerId}</a></td>
+                        <td><span class="tabletext">${uiLabelMap.ProductContainerLetter}:&nbsp;</span><a href="<@ofbizUrl>EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="linktext">${inventoryItem.containerId}</a></td>
                     <#else>
                         <td>&nbsp;</td>
                     </#if>
@@ -173,7 +173,7 @@
                     <a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">${uiLabelMap.CommonEdit}</a>
                     </td>
                     <td>
-                    <a href="<@ofbizUrl>/DeleteProductInventoryItem?productId=${productId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="<@ofbizUrl>DeleteProductInventoryItem?productId=${productId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
                     </td>
                 </tr>
             </#if>

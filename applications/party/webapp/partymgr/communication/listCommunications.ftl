@@ -27,7 +27,7 @@
 
 <#if partyId?exists>
 <div style="text-align: right;">
-    <a href="<@ofbizUrl>/viewCommunicationEvent?partyIdFrom=${partyId}&partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
+    <a href="<@ofbizUrl>viewCommunicationEvent?partyIdFrom=${partyId}&partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
 </div>
 </#if>
 
@@ -94,17 +94,17 @@
         <td><div class="tabletext">${(statusItem.get("description",locale))?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${event.subject?if_exists}</div></td>
         <#if event.partyIdFrom?has_content>
-          <td><a href="<@ofbizUrl>/viewprofile?partyId=${event.partyIdFrom}</@ofbizUrl>" class="buttontext">${event.partyIdFrom}</a></td>
+          <td><a href="<@ofbizUrl>viewprofile?partyId=${event.partyIdFrom}</@ofbizUrl>" class="buttontext">${event.partyIdFrom}</a></td>
         <#else>
           <td><div class="tabletext">${uiLabelMap.CommonNA}</div></td>
         </#if>
         <#if event.partyIdTo?has_content>
-          <td><a href="<@ofbizUrl>/viewprofile?partyId=${event.partyIdTo}</@ofbizUrl>" class="buttontext">${event.partyIdTo}</a></td>
+          <td><a href="<@ofbizUrl>viewprofile?partyId=${event.partyIdTo}</@ofbizUrl>" class="buttontext">${event.partyIdTo}</a></td>
         <#else>
           <td><div class="tabletext">${uiLabelMap.CommonNA}</div></td>
         </#if>
         <td><div class="tabletext">${(event.entryDate?string)?if_exists}</div></td>
-        <td align="right"><a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${event.partyIdFrom?if_exists}&communicationEventId=${event.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a>
+        <td align="right"><a href="<@ofbizUrl>viewCommunicationEvent?partyId=${event.partyIdFrom?if_exists}&communicationEventId=${event.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a>
       </tr>
     </#list>
   <#else>

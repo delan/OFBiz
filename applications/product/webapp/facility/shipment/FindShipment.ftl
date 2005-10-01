@@ -29,16 +29,16 @@
 function lookupShipments() {
     shipmentIdValue = document.lookupShipmentForm.shipmentId.value;
     if (shipmentIdValue.length > 1) {
-        document.lookupShipmentForm.action = "<@ofbizUrl>/ViewShipment</@ofbizUrl>";
+        document.lookupShipmentForm.action = "<@ofbizUrl>ViewShipment</@ofbizUrl>";
     } else {
-        document.lookupShipmentForm.action = "<@ofbizUrl>/FindShipment</@ofbizUrl>";
+        document.lookupShipmentForm.action = "<@ofbizUrl>FindShipment</@ofbizUrl>";
     }
     document.lookupShipmentForm.submit();
 }
 // -->
 </script>
 
-<form method="post" name="lookupShipmentForm" action="<@ofbizUrl>/FindShipment</@ofbizUrl>">
+<form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
 <input type="hidden" name="lookupFlag" value="Y">
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
@@ -49,8 +49,8 @@ function lookupShipments() {
           <td align="right">
             <div class="tabletext">
               <#if requestParameters.facilityId?has_content>
-              <a href="<@ofbizUrl>/quickShipOrder?facilityId=${requestParameters.facilityId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductQuickShipOrder}</a></#if>
-              <a href="<@ofbizUrl>/EditShipment</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductNewShipment}</a>
+              <a href="<@ofbizUrl>quickShipOrder?facilityId=${requestParameters.facilityId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductQuickShipOrder}</a></#if>
+              <a href="<@ofbizUrl>EditShipment</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductNewShipment}</a>
               <a href="javascript:lookupShipments();" class="submenutextright">${uiLabelMap.ProductLookupShipment}</a>
             </div>
           </td>
@@ -175,7 +175,7 @@ function lookupShipments() {
             <div class="boxhead" align="right">
               <#if 0 < shipmentList?size>             
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/FindShipment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
+                  <a href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
@@ -183,7 +183,7 @@ function lookupShipments() {
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/FindShipment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                  <a href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 <#else>
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
@@ -214,14 +214,14 @@ function lookupShipments() {
             <#assign statusItem = shipment.getRelatedOneCache("StatusItem")>
             <#assign shipmentType = shipment.getRelatedOneCache("ShipmentType")?if_exists>
             <tr class="${rowClass}">
-              <td><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${shipment.shipmentId}</a></td>
+              <td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${shipment.shipmentId}</a></td>
               <td><div class="tabletext">${shipmentType.description?default(shipmentType.shipmentTypeId?default(""))}</div></td>
               <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext">${(originFacility.facilityName)?if_exists} [${shipment.originFacilityId?if_exists}]</div></td>
               <td><div class="tabletext">${(destinationFacility.facilityName)?if_exists} [${shipment.destinationFacilityId?if_exists}]</div></td>
               <td><div class="tabletext"><nobr>${(shipment.estimatedShipDate.toString())?if_exists}</nobr></div></td>
               <td align="right">
-                <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
               </td>
             </tr>
             <#-- toggle the row color -->

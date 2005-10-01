@@ -11,7 +11,7 @@
 
 <table width="100%" border="0" >
 
- <form name="mostrecent" mode="POST" action="<@ofbizUrl>/publishResponse</@ofbizUrl>"/>
+ <form name="mostrecent" mode="POST" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
   <#list entityList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
@@ -20,7 +20,7 @@
           <td class="tabletext"> <b>${uiLabelMap.CommonName}:</b>${content.contentName} </td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
           <td>
-  <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a> 
+  <a class="tabButton" href="<@ofbizUrl>showforumresponse?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >${uiLabelMap.CommonView}</a> 
           </td>
           <td class="tabletext">
           <b>${uiLabelMap.CommonSubmitted}:</b>

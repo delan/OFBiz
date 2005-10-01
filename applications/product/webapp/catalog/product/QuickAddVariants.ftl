@@ -73,7 +73,7 @@ function clickAll(e) {
     <#if (featureTypes.size() > 0)>
         <table border="1" cellpadding="2" cellspacing="0">
                 <#assign rowCount = 0>
-                <FORM method="post" action="<@ofbizUrl>/QuickAddChosenVariants</@ofbizUrl>" name="selectAllForm">
+                <FORM method="post" action="<@ofbizUrl>QuickAddChosenVariants</@ofbizUrl>" name="selectAllForm">
                 <input type="hidden" name="productId" value="${productId}">
                 <input type="hidden" name="_useRowSubmit" value="Y">
                 <input type="hidden" name="_checkGlobalScope" value="Y">
@@ -107,7 +107,7 @@ function clickAll(e) {
 			            <td>
 			                <div class="tabletext">&nbsp;
 			                <#list existingVariantProductIds as existingVariantProductId>
-			                	[<a href="<@ofbizUrl>/EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="buttontext">${existingVariantProductId}</a>] &nbsp;
+			                	[<a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="buttontext">${existingVariantProductId}</a>] &nbsp;
 			                </#list>
 			                </div>
 			            </td>

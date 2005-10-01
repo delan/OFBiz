@@ -61,7 +61,7 @@ ${virtualJavaScript?if_exists}
            return;
        } else {
            if (isVirtual(document.addform.add_product_id.value)) {
-               document.location = '<@ofbizUrl>/product?category_id=${categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
+               document.location = '<@ofbizUrl>product?category_id=${categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
                return;
            } else {
                document.addform.submit();
@@ -209,11 +209,11 @@ ${virtualJavaScript?if_exists}
     <tr>
       <td colspan="2" align="right">
         <#if previousProductId?exists>
-          <a href="<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${previousProductId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
+          <a href="<@ofbizUrl>product/~category_id=${categoryId?if_exists}/~product_id=${previousProductId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>/category/~category_id=${categoryId?if_exists}</@ofbizUrl>" class="buttontext">${category.description?if_exists}</a>
+        <a href="<@ofbizUrl>category/~category_id=${categoryId?if_exists}</@ofbizUrl>" class="buttontext">${category.description?if_exists}</a>
         <#if nextProductId?exists>
-          &nbsp;|&nbsp;<a href="<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${nextProductId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
+          &nbsp;|&nbsp;<a href="<@ofbizUrl>product/~category_id=${categoryId?if_exists}/~product_id=${nextProductId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
       </td>
     </tr>
@@ -333,7 +333,7 @@ ${virtualJavaScript?if_exists}
       <#-- tell a friend -->
       <div class="tabletext">&nbsp;</div>
       <div class="tabletext">
-        <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
+        <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
       </div>
       <br/>
 
@@ -347,8 +347,8 @@ ${virtualJavaScript?if_exists}
             <div class="tabletext">&nbsp;</div>
       </#if>
 
-      <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="addform"  style="margin: 0;">
-      <#--form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform"  style="margin: 0;"-->
+      <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform"  style="margin: 0;">
+      <#--form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform"  style="margin: 0;"-->
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?if_exists?upper_case == "Y">
@@ -424,7 +424,7 @@ ${virtualJavaScript?if_exists}
     <#--div class="tabletext">
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
         <hr class="sepbar"/>
-        <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+        <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${requestParameters.product_id}"/>
           <input type="hidden" name="product_id" value="${requestParameters.product_id}"/>
           <input type="hidden" name="productStoreId" value="${productStoreId}"/>
@@ -448,7 +448,7 @@ ${virtualJavaScript?if_exists}
           <a href="javascript:addShoplistSubmit();" class="buttontext">${uiLabelMap.EcommerceAddtoShoppingList}</a>
         </form>
       <#else> <br/>
-        ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
+        ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
         ${uiLabelMap.EcommerceToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
       </div-->
@@ -538,13 +538,13 @@ ${virtualJavaScript?if_exists}
               </table>
         </#list>
         <div>
-            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductReviewThisProduct}!</a>
+            <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductReviewThisProduct}!</a>
         </div>
       <#else>
         <div class="tabletext">${uiLabelMap.ProductProductNotReviewedYet}.</div>
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
         <div class="tabletext">
-            <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
+            <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
         </div>
       </#if>
       </#if>
@@ -562,7 +562,7 @@ ${virtualJavaScript?if_exists}
     <div class="productsummary-container">
     <#list assocProducts as productAssoc>
         <div class="tabletext">
-          <a href="<@ofbizUrl>/${targetRequest}/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>" class="buttontext">
+          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>" class="buttontext">
             ${productAssoc.productIdTo?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>

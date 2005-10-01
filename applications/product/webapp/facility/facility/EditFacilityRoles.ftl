@@ -27,7 +27,7 @@
 -->
     
     <div class="head1">${uiLabelMap.PartyRoleFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <p>
     
     <p class="head2">${uiLabelMap.ProductFacilityRoleMemberMaintenance}</p>
@@ -44,7 +44,7 @@
         <td><a href="/partymgr/control/viewprofile?party_id=${(facilityRole.partyId)?if_exists}" class="buttontext">${(facilityRole.partyId)?if_exists}</a></td>    
         <td><div class="tabletext">${(roleType.description)?if_exists}</div></td>    
         <td align="center">
-        <a href="<@ofbizUrl>/removePartyFromFacility?facilityId=${(facilityRole.facilityId)?if_exists}&partyId=${(facilityRole.partyId)?if_exists}&roleTypeId=${(facilityRole.roleTypeId)?if_exists}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>removePartyFromFacility?facilityId=${(facilityRole.facilityId)?if_exists}&partyId=${(facilityRole.partyId)?if_exists}&roleTypeId=${(facilityRole.roleTypeId)?if_exists}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
         </td>
     </tr>
@@ -52,7 +52,7 @@
     </table>
     
     <br/>
-    <form method="post" action="<@ofbizUrl>/addPartyToFacility</@ofbizUrl>" style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>addPartyToFacility</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="facilityId" value="${facilityId}">  
     <div class="head2">${uiLabelMap.ProductAddFacilityPartyRole}:</div>
     <div class="tabletext">

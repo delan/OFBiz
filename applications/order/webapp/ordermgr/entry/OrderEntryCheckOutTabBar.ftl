@@ -38,7 +38,7 @@
         <#if isLastStep == "N">
             <a href="javascript:document.checkoutsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
         <#else>
-            <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateOrder}</a>
+            <a href="<@ofbizUrl>processorder</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateOrder}</a>
         </#if>
     </div>
     <div class="boxhead-left" align="left">

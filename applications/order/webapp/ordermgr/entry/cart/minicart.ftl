@@ -41,7 +41,7 @@
     <div class="screenlet-body">
         <#if (shoppingCartSize > 0)>
           <#if !hidetoplinks?exists>
-            <div><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceViewCart}</a>&nbsp;<a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceCheckout}</a></div>
+            <div><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceViewCart}</a>&nbsp;<a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceCheckout}</a></div>
           </#if>
           <table width="100%" cellpadding="0" cellspacing="2">
             <tr>
@@ -54,7 +54,7 @@
                 <td valign="top"><div class="tabletext">${cartLine.getQuantity()?string.number}</div></td>
                 <td valign="top">
                   <#if cartLine.getProductId()?exists>
-                    <div><a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="linktext">${cartLine.getName()}</a></div>
+                    <div><a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="linktext">${cartLine.getName()}</a></div>
                   <#else>
                     <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
                   </#if>

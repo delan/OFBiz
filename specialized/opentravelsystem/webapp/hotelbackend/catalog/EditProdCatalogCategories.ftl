@@ -29,16 +29,16 @@
 <#--if hasPermission>
     <#if prodCatalogId?has_content>
         <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.ProductCatalog}</a>
-        <a href="<@ofbizUrl>/EditProdCatalogStores?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.ProductStores}</a>
-        <a href="<@ofbizUrl>/EditProdCatalogParties?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyParties}</a>
-        <a href="<@ofbizUrl>/EditProdCatalogCategories?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ProductCategories}</a>
+        <a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.ProductCatalog}</a>
+        <a href="<@ofbizUrl>EditProdCatalogStores?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.ProductStores}</a>
+        <a href="<@ofbizUrl>EditProdCatalogParties?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyParties}</a>
+        <a href="<@ofbizUrl>EditProdCatalogCategories?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ProductCategories}</a>
         </div>
     </#if-->
     <#--div class="head1">${uiLabelMap.ProductCategoriesFor} <span class="head2"> <#if prodCatalogId?has_content>${prodCatalogId}</#if-->
     </span></div>
     
-    <#--a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProdCatalog}]</a>
+    <#--a href="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProdCatalog}]</a>
     <p-->
     <#if prodCatalogId?exists && prodCatalog?exists>    
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
@@ -56,7 +56,7 @@
         <#assign curProdCatalogCategoryType = prodCatalogCategory.getRelatedOneCache("ProdCatalogCategoryType")>
         
         <tr valign="middle">
-            <td><a href="<@ofbizUrl>/EditCategory?productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="buttontext">
+            <td><a href="<@ofbizUrl>EditCategory?productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="buttontext">
                 ${(productCategory.description)?if_exists}&nbsp;[${prodCatalogCategory.productCategoryId}]</a>
             </td>
             <td>
@@ -72,7 +72,7 @@
                 <#if prodCatalogCategory.getTimestamp("thruDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(prodCatalogCategory.getTimestamp("thruDate"))>
                     <#assign hasExpired = true>
                 </#if>
-                <FORM method="post" action="<@ofbizUrl>/updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
+                <FORM method="post" action="<@ofbizUrl>updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
                     <input type="hidden" name="prodCatalogId" value="${prodCatalogCategory.prodCatalogId}">
                     <input type="hidden" name="productCategoryId" value="${prodCatalogCategory.productCategoryId}">
                     <input type="hidden" name="prodCatalogCategoryTypeId" value="${prodCatalogCategory.prodCatalogCategoryTypeId}">
@@ -100,10 +100,10 @@
                     </select> -->
                     <INPUT type="submit" value="${uiLabelMap.CommonUpdate}">
                     <td align="center">
-                        <a href="<@ofbizUrl>/removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogCategory.prodCatalogId}&productCategoryId=${prodCatalogCategory.productCategoryId}&fromDate=${prodCatalogCategory.fromDate}&prodCatalogCategoryTypeId=${prodCatalogCategory.prodCatalogCategoryTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
+                        <a href="<@ofbizUrl>removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogCategory.prodCatalogId}&productCategoryId=${prodCatalogCategory.productCategoryId}&fromDate=${prodCatalogCategory.fromDate}&prodCatalogCategoryTypeId=${prodCatalogCategory.prodCatalogCategoryTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
                     </td>
                     <td align="center">
-                        <a href="<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="buttontext"> [${uiLabelMap.ProductMakeTop}]</a>
+                        <a href="<@ofbizUrl>EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="buttontext"> [${uiLabelMap.ProductMakeTop}]</a>
                     </td>            
                 </FORM>
             </td>
@@ -112,7 +112,7 @@
         </#list>
         </table>
         <br/>
-        <form method="post" action="<@ofbizUrl>/addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
+        <form method="post" action="<@ofbizUrl>addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="prodCatalogId" value="${prodCatalogId}">
         <input type="hidden" name="tryEntity" value="true">
         <div class="head2">Activate Category (select Category and Type, then enter optional From Date):</div>

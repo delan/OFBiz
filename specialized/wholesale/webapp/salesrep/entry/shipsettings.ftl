@@ -35,7 +35,7 @@
           </td> 
           <td nowrap align="right">
             <div class="tabletext">
-              <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">Refresh</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">Items</a><a href="javascript:document.shipsetupform.submit();" class="submenutextright">Continue</a>
+              <a href="<@ofbizUrl>setShipping</@ofbizUrl>" class="submenutext">Refresh</a><a href="<@ofbizUrl>orderentry</@ofbizUrl>" class="submenutext">Items</a><a href="javascript:document.shipsetupform.submit();" class="submenutextright">Continue</a>
             </div>
           </td>         
         </tr>
@@ -51,10 +51,10 @@
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td colspan="3">
-                  <a href="<@ofbizUrl>/setShipping?createNew=Y</@ofbizUrl>" class="buttontext">[Create New]</a>
+                  <a href="<@ofbizUrl>setShipping?createNew=Y</@ofbizUrl>" class="buttontext">[Create New]</a>
                 </td>
               </tr>
-              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="shipsetupform"> 
+              <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="shipsetupform"> 
                 <input type="hidden" name="finalizeMode" value="ship">
                                 
                 <tr><td colspan="3"><hr class='sepbar'></td></tr>
@@ -88,10 +88,10 @@
             </table>  
             <#else>
               <#if postalAddress?has_content>            
-              <form method="post" action="<@ofbizUrl>/updatePostalAddress</@ofbizUrl>" name="shipsetupform">
+              <form method="post" action="<@ofbizUrl>updatePostalAddress</@ofbizUrl>" name="shipsetupform">
                 <input type="hidden" name="contactMechId" value="${shipContactMechId?if_exists}">
               <#else>
-              <form method="post" action="<@ofbizUrl>/createPostalAddress</@ofbizUrl>" name="shipsetupform">
+              <form method="post" action="<@ofbizUrl>createPostalAddress</@ofbizUrl>" name="shipsetupform">
                 <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
                 <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION">
               </#if>

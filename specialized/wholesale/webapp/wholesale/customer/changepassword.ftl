@@ -26,10 +26,10 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
   <p class="head1">${uiLabelMap.PartyChangePassword}</p>
 
-    &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
-  <form method="post" action="<@ofbizUrl>/updatePassword/${donePage}</@ofbizUrl>" name="changepasswordform">
+  <form method="post" action="<@ofbizUrl>updatePassword/${donePage}</@ofbizUrl>" name="changepasswordform">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyOldPassword}</div></td>
@@ -58,5 +58,5 @@
   </table>
   </form>
 
-    &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>

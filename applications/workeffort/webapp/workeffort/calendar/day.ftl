@@ -29,7 +29,7 @@
   <tr> 
     <td width="100%"> 
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-        <tr> 
+        <tr>
           <td align="left" class="boxhead">${uiLabelMap.WorkEffortCalendarDayView}</td>
         </tr>
       </table>
@@ -39,14 +39,14 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
 	<td width="100%" class="monthheadertext">${start?date?string("EEEE")?cap_first} ${start?date?string.long}</td>
-    <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>/day?start=${prev.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousDay}</a> | <a href="<@ofbizUrl>/day?start=${next.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextDay}</a> | <a href="<@ofbizUrl>/day?start=${now.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.CommonToday}</a></td>
+    <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>day?start=${prev.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousDay}</a> | <a href="<@ofbizUrl>day?start=${next.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextDay}</a> | <a href="<@ofbizUrl>day?start=${now.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.CommonToday}</a></td>
   </tr>
 </table>
 <#if periods?has_content>
 
-<#if maxConcurrentEntries = 0>
+<#if (maxConcurrentEntries = 0)>
   <#assign entryWidth = 100>
-<#elseif maxConcurrentEntries < 2>
+<#elseif (maxConcurrentEntries < 2)>
   <#assign entryWidth = (100 / (maxConcurrentEntries + 1))>
 <#else> 
   <#assign entryWidth = (100 / (maxConcurrentEntries))>

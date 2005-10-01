@@ -25,14 +25,14 @@
 -->
 
     <div class="tabContainer">
-        <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.CommonBackToList}</a>
-        <a href="<@ofbizUrl>/EditCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingNewCalendarWeek}</a>
+        <a href="<@ofbizUrl>ListCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.CommonBackToList}</a>
+        <a href="<@ofbizUrl>EditCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingNewCalendarWeek}</a>
 	</div>
 
 		<#if calendarWeek?has_content>
   			<div class="head1">${uiLabelMap.ManufacturingUpdateCalendarWeek} </div>
 			<br/>
-  			<form name="calendarWeekform" method="post" action="<@ofbizUrl>/UpdateCalendarWeek</@ofbizUrl>">
+  			<form name="calendarWeekform" method="post" action="<@ofbizUrl>UpdateCalendarWeek</@ofbizUrl>">
 			<table width="90%" border="0" cellpadding="2" cellspacing="0">
 			  <tr>
 		      	<td width="26%" align="right" valign="top" ><div class="tabletext">${uiLabelMap.ManufacturingCalendarWeekId}</div></td>
@@ -42,7 +42,7 @@
 		<#else>
   			<div class="head1">${uiLabelMap.ManufacturingCreateCalendarWeek} </div>
 			<br/>
-  			<form name="calendarWeekform" method="post" action="<@ofbizUrl>/CreateCalendarWeek</@ofbizUrl>">
+  			<form name="calendarWeekform" method="post" action="<@ofbizUrl>CreateCalendarWeek</@ofbizUrl>">
 			<table width="90%" border="0" cellpadding="2" cellspacing="0">
 			  <tr>
 		      	<td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.ManufacturingCalendarWeekId}</div></td>

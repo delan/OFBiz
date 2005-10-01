@@ -26,10 +26,10 @@
 
 <div class="head1">${uiLabelMap.ProductProductSearch}, <span class="head2">${uiLabelMap.ProductYouSearchedFor}:</span></div>
 <#list searchConstraintStrings as searchConstraintString>
-    <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
+    <div class="tabletext">&nbsp;<a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
 </#list>
 <div class="tabletext">${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
-<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductRefineSearch}</a></div>
+<div class="tabletext"><a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductRefineSearch}</a></div>
 
 <#if !productIds?has_content>
   <div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
@@ -42,19 +42,19 @@
         <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
           <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
           <#list 1..viewIndexMax as curViewNum>
-            <option value="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
+            <option value="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
           </#list>
         </select>
         <#-- End Page Select Drop-Down -->
         <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
         </b>
     </div>
@@ -77,19 +77,19 @@
         <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
           <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
           <#list 1..viewIndexMax as curViewNum>
-            <option value="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
+            <option value="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
           </#list>
         </select>
         <#-- End Page Select Drop-Down -->
         <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
         </b>
     </div>

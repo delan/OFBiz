@@ -25,9 +25,9 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <p class="head1">${uiLabelMap.PartyRequestNewAccount}</p>
 <br/>
-<p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
+<p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
 
-<form method="post" action="<@ofbizUrl>/createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style='margin:0;'>
+<form method="post" action="<@ofbizUrl>createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style='margin:0;'>
 <input type="hidden" name="productStoreId" value="${productStoreId}">
 <TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -345,7 +345,7 @@
 
 <br/><div class="commentary">Fields marked with (*) are required.</div>
 
-&nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
+&nbsp;&nbsp;<a href="<@ofbizUrl>checkLogin/main</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
 &nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 <br/>
 <br/>

@@ -44,7 +44,7 @@
             <td>
               <!-- Suspended Processes -->
               <#if workEffortStatus == "WF_SUSPENDED">
-                <form action="<@ofbizUrl>/releasehold</@ofbizUrl>" method="post" name="activityForm">
+                <form action="<@ofbizUrl>releasehold</@ofbizUrl>" method="post" name="activityForm">
                   <input type="hidden" name="workEffortId" value="${workEffortId}">                        
                   <table width="100%">
                     <tr>
@@ -61,7 +61,7 @@
               </#if>
               <!-- Active Processes -->
               <#if workEffortStatus == "WF_RUNNING">
-                <form action="<@ofbizUrl>/holdorder</@ofbizUrl>" method="post" name="activityForm">
+                <form action="<@ofbizUrl>holdorder</@ofbizUrl>" method="post" name="activityForm">
                   <input type="hidden" name="workEffortId" value="${workEffortId}">                        
                   <table width="100%">
                     <tr>
@@ -101,7 +101,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-              <form action="<@ofbizUrl>/completeassignment</@ofbizUrl>" method="post" name="transitionForm">
+              <form action="<@ofbizUrl>completeassignment</@ofbizUrl>" method="post" name="transitionForm">
                 <input type="hidden" name="workEffortId" value="${workEffortId}">
                 <input type="hidden" name="partyId" value="${assignPartyId}">
                 <input type="hidden" name="roleTypeId" value="${assignRoleTypeId}">

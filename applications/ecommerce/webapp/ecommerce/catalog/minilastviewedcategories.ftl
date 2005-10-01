@@ -41,7 +41,7 @@
                 <#if category?has_content>
                     <div>
                         <span class="browsecategorytext">-&nbsp;</span>
-                        <a href="<@ofbizUrl>/category/~category_id=${categoryId}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
+                        <a href="<@ofbizUrl>category/~category_id=${categoryId}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
                     </div>
                 </#if>
             </#list>

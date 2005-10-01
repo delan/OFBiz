@@ -32,12 +32,12 @@
         <tr>
           <td>
             <#if orderTerms?has_content && !requestParameters.createNew?exists>
-            <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+            <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="term"/>
              <table width="100%" border="0" cellpadding="1" cellspacing="0">
                <tr>
                 <td colspan="4">
-                  <a href="<@ofbizUrl>/setOrderTerm?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
+                  <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
                 </td>
                </tr>
                <tr>
@@ -54,9 +54,9 @@
                   <td><div class="tabletext">${orderTerm.termValue?default("")}</div></td>
                   <td><div class="tabletext">${orderTerm.termDays?default("")}</div></td>
                   <td align="right">
-                    <a href="<@ofbizUrl>/setOrderTerm?termIndex=${index}&createNew=Y</@ofbizUrl>" class="buttontext">update</a>
+                    <a href="<@ofbizUrl>setOrderTerm?termIndex=${index}&createNew=Y</@ofbizUrl>" class="buttontext">update</a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="<@ofbizUrl>/removeOrderTerm?termIndex=${index}</@ofbizUrl>" class="buttontext">remove</a>
+                    <a href="<@ofbizUrl>removeOrderTerm?termIndex=${index}</@ofbizUrl>" class="buttontext">remove</a>
                   </td>
                   </tr>
                   <#if orderTerms.size()&lt;index >
@@ -71,10 +71,10 @@
           </table>
             <#else>
               <#if !orderTerms?has_content || requestParameters.createNew?exists>
-               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+               <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                  <input type="hidden" name="finalizeMode" value="term"/>
                </form>
-               <form method="post" action="<@ofbizUrl>/addOrderTerm</@ofbizUrl>" name="termform">
+               <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">
                 <input type="hidden" name="partyId" value="${cart.partyId?default("_NA_")}"/>
                 <input type="hidden" name="finalizeMode" value="term"/>
                 <input type="hidden" name="termIndex" value="${termIndex?default(-1)}"/>

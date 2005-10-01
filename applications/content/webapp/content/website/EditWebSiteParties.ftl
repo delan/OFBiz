@@ -28,14 +28,14 @@
 
 <#if webSiteId?has_content>
   <div class='tabContainer'>
-  <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">WebSite</a>
-  <a href="<@ofbizUrl>/EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">Parties</a>  
+  <a href="<@ofbizUrl>EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">WebSite</a>
+  <a href="<@ofbizUrl>EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">Parties</a>  
   </div>
 </#if>
 
 <div class="head1">Parties <span class='head2'>for <#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [ID:${webSiteId?if_exists}]</span></div>
 
-<a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[New WebSite]</a>
+<a href="<@ofbizUrl>EditWebSite</@ofbizUrl>" class="buttontext">[New WebSite]</a>
 <br/>
 <br/>
 <#if webSiteId?has_content>

@@ -25,9 +25,9 @@
  *@since      2.1
 -->
     <#if activeOnly>
-        <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
+        <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
     <#else>
-        <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
+        <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
     </#if>    
     <#if productCategoryId?exists && productCategory?exists>
         <#if (listSize > 0)>
@@ -37,11 +37,11 @@
                     <span class="tabletext">
                     <b>
                     <#if (viewIndex > 1)>
-                    <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                    <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     ${lowIndex} - ${highIndex} of ${listSize}
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                    | <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                     </span>
@@ -66,10 +66,10 @@
             <#assign hasExpired = false>
             <#if productCategoryMember.thruDate?exists && nowTimestamp.after(productCategoryMember.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
             <tr valign="middle">
-                <td><a href="<@ofbizUrl>/EditProduct?productId=${(productCategoryMember.productId)?if_exists}</@ofbizUrl>" class="buttontext"><#if product?exists>${(product.internalName)?if_exists}</#if> [${(productCategoryMember.productId)?if_exists}]</a></td>
+                <td><a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)?if_exists}</@ofbizUrl>" class="buttontext"><#if product?exists>${(product.internalName)?if_exists}</#if> [${(productCategoryMember.productId)?if_exists}]</a></td>
                 <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productCategoryMember.fromDate)?if_exists}</div></td>
                 <td align="center">
-                    <form method="post" action="<@ofbizUrl>/updateCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
+                    <form method="post" action="<@ofbizUrl>updateCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
                         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
                         <input type="hidden" name="productId" value="${(productCategoryMember.productId)?if_exists}">
                         <input type="hidden" name="productCategoryId" value="${(productCategoryMember.productCategoryId)?if_exists}">
@@ -82,7 +82,7 @@
                     </form>
                 </td>
                 <td align="center">
-                <a href="<@ofbizUrl>/removeCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&productId=${(productCategoryMember.productId)?if_exists}&productCategoryId=${(productCategoryMember.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue((productCategoryMember.getTimestamp("fromDate").toString()))}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>removeCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&productId=${(productCategoryMember.productId)?if_exists}&productCategoryId=${(productCategoryMember.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue((productCategoryMember.getTimestamp("fromDate").toString()))}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
@@ -98,11 +98,11 @@
                     <span class="tabletext">
                     <b>
                     <#if (viewIndex > 1)>
-                        <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                        <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                         </#if>
                         ${lowIndex} - ${highIndex} of ${listSize}
                         <#if (listSize > highIndex)>
-                        | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                        | <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                     </span>
@@ -111,7 +111,7 @@
             </table>
         </#if>
         <br/>
-        <form method="post" action="<@ofbizUrl>/addCategoryProductMember</@ofbizUrl>" style="margin: 0;" name="addProductCategoryMemberForm">
+        <form method="post" action="<@ofbizUrl>addCategoryProductMember</@ofbizUrl>" style="margin: 0;" name="addProductCategoryMemberForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
@@ -126,7 +126,7 @@
         </form>
         
         <br/>
-        <form method="post" action="<@ofbizUrl>/copyCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="copyCategoryProductMembersForm">
+        <form method="post" action="<@ofbizUrl>copyCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="copyCategoryProductMembersForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
@@ -153,7 +153,7 @@
         </form>
         
         <br/>
-        <form method="post" action="<@ofbizUrl>/expireAllCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="expireAllCategoryProductMembersForm">
+        <form method="post" action="<@ofbizUrl>expireAllCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="expireAllCategoryProductMembersForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         
@@ -165,7 +165,7 @@
         </div>
         </form>
         <br/>
-        <form method="post" action="<@ofbizUrl>/removeExpiredCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="removeExpiredCategoryProductMembersForm">
+        <form method="post" action="<@ofbizUrl>removeExpiredCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="removeExpiredCategoryProductMembersForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
         

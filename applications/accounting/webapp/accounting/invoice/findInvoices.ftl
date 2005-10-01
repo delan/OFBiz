@@ -32,9 +32,9 @@
 function lookupInvoices() {
     invoiceIdValue = document.lookupinvoice.invoiceId.value;
     if (invoiceIdValue.length > 1) {
-        document.lookupinvoice.action = "<@ofbizUrl>/viewInvoice</@ofbizUrl>";
+        document.lookupinvoice.action = "<@ofbizUrl>viewInvoice</@ofbizUrl>";
     } else {
-        document.lookupinvoice.action = "<@ofbizUrl>/findInvoices</@ofbizUrl>";
+        document.lookupinvoice.action = "<@ofbizUrl>findInvoices</@ofbizUrl>";
     }
     document.lookupinvoice.submit();
 }
@@ -42,7 +42,7 @@ function lookupInvoices() {
 </script>
 
 <#if security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-<form method='post' name="lookupinvoice" action="<@ofbizUrl>/findInvoices</@ofbizUrl>">
+<form method='post' name="lookupinvoice" action="<@ofbizUrl>findInvoices</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -54,9 +54,9 @@ function lookupInvoices() {
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findInvoices?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
+                <a href="<@ofbizUrl>findInvoices?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
               <#else>
-                <#if invoiceList?exists><a href="<@ofbizUrl>/findInvoices?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingHideFields}</a></#if>
+                <#if invoiceList?exists><a href="<@ofbizUrl>findInvoices?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingHideFields}</a></#if>
                 <a href="javascript:lookupInvoices();" class="submenutextright">${uiLabelMap.AccountingLookupInvoices }(s)</a>                
               </#if>
             </div>
@@ -141,7 +141,7 @@ document.lookupinvoice.invoiceId.focus();
             <div class="boxhead" align="right">
               <#if 0 < invoiceList?size>             
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
+                  <a href="<@ofbizUrl>findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
@@ -149,7 +149,7 @@ document.lookupinvoice.invoiceId.focus();
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                  <a href="<@ofbizUrl>findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 <#else>
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
@@ -180,14 +180,14 @@ document.lookupinvoice.invoiceId.focus();
             <#assign invoiceTotal = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceTotal(invoice)>        
             <tr class='${rowClass}'>
               <td><div class='tabletext'>${invoiceType.description?default(invoiceType.invoiceTypeId?default(""))}</div></td>
-              <td><a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${invoice.invoiceId}</a></td>
+              <td><a href="<@ofbizUrl>viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${invoice.invoiceId}</a></td>
               
               <td align="right"><div class="tabletext">${invoiceTotal?default(0.00)}</div></td>
               <td>&nbsp;</td>
               <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext"><nobr>${invoice.invoiceDate?default("N/A").toString()}</nobr></div></td>                            
               <td align='right'>
-                <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${uiLabelMap.CommonView}</a>
               </td>
             </tr>
             <#-- toggle the row color -->

@@ -46,7 +46,7 @@
           <#list productPromoCategoryIncludeList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
             <div class="tabletext">
-                -&nbsp;<a href="<@ofbizUrl>/category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
                 <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
             </div>
           </#list>
@@ -56,7 +56,7 @@
           <#list productPromoCategoryExcludeList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
             <div class="tabletext">
-                -&nbsp;<a href="<@ofbizUrl>/category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
                 <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
             </div>
           </#list>
@@ -66,7 +66,7 @@
           <#list productPromoCategoryAlwaysList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
             <div class="tabletext">
-                -&nbsp;<a href="<@ofbizUrl>/category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
                 <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
             </div>
           </#list>
@@ -88,11 +88,11 @@
                     <span class="tabletext">
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
+                    <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
                     </#if>
                     ${lowIndex+1} - ${highIndex} of ${listSize}
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
+                    | <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
                     </#if>
                     </b>
                     </span>

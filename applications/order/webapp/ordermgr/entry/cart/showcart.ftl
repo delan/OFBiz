@@ -63,7 +63,7 @@ function removeSelected() {
 }
 function addToList() {
     var cform = document.cartform;
-    cform.action = "<@ofbizUrl>/addBulkToShoppingList</@ofbizUrl>";
+    cform.action = "<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>";
     cform.submit();
 }
 function gwAll(e) {
@@ -105,7 +105,7 @@ function gwAll(e) {
       <table border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td>           
-            <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
               <table border="0">
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :</div></td>
@@ -154,7 +154,7 @@ function gwAll(e) {
         <tr><td><hr class="sepbar"/></td></tr>
         <tr>
           <td>
-            <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
                 <div class="tableheadtext">
                     ${uiLabelMap.ProductItem}:&nbsp;${uiLabelMap.ProductType}:&nbsp;<select name="add_item_type" class="selectBox"><option value="BULK_ORDER_ITEM">Bulk Item</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option></select>
                     Category:&nbsp;<select name="add_category_id" class="selectBox">
@@ -189,7 +189,7 @@ function gwAll(e) {
       <table border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td>           
-            <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>/addBulkToShoppingList</@ofbizUrl>" style='margin: 0;'>
+            <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>" style='margin: 0;'>
               <#assign index = 0/>
               <#list shoppingCart.items() as cartLine>
                 <#if (cartLine.getProductId()?exists) && !cartLine.getIsPromo()>
@@ -229,7 +229,7 @@ function gwAll(e) {
     </div>
     <div class="screenlet-body">
   <#if (shoppingCartSize > 0)>
-    <form method="post" action="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
       <input type="hidden" name="removeSelected" value="false"/>
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <input type="hidden" name="finalizeReqShipInfo" value="false"/>
@@ -275,7 +275,7 @@ function gwAll(e) {
                 <div class="tabletext">                    
                   <#if cartLine.getProductId()?exists>
                     <#-- product item -->
-                    <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()}</a> -
+                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()}</a> -
                     <input size="60" class="inputBox" type="text" name="description_${cartLineIndex}" value="${cartLine.getName()?default("")}"/><br/>
                     <i>${cartLine.getDescription()?if_exists}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
@@ -344,7 +344,7 @@ function gwAll(e) {
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionProduct = delegator.findByPrimaryKeyCache("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", alternativeOptionProductId))>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale)?if_exists>
-                    <div class="tabletext"><a href="<@ofbizUrl>/setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="buttontext">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
+                    <div class="tabletext"><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="buttontext">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>
             </td>
@@ -406,7 +406,7 @@ function gwAll(e) {
                 <td colspan="4" nowrap align="right">
                   <div class="tabletext">
                     <i>Adjustment</i> - ${adjustmentType.description?if_exists}
-                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a></#if>:
+                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a></#if>:
                   </div>
                 </td>
                 <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=currencyUomId/></div></td>

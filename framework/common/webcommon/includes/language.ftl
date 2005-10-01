@@ -43,7 +43,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td align='center'>
-            <form method="post" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
+            <form method="post" name="chooseLanguage" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>" style="margin: 0;">
               <select name="locale" class="selectBox">
                 <#assign initialDisplayName = locale.getDisplayName(locale)>
                 <#if 18 < initialDisplayName?length>

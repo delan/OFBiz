@@ -38,13 +38,13 @@
             <td align="right">
                 <b>
                 <#if (viewIndex > 0)>
-                <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                 </#if>
                 <#if (listSize > 0)>
                     ${lowIndex+1} - ${highIndex} of ${listSize}
                 </#if>
                 <#if (listSize > highIndex)>
-                | <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                | <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                 </#if>
                 </b>
             </td>
@@ -76,13 +76,13 @@
         <#assign isQuantity = false>
         <#if (inventoryItem.quantityOnHandTotal)?exists && (!(inventoryItem.serialNumber)?exists || (inventoryItem.serialNumber.length() == 0))><#assign isQuantity=true></#if>
         <tr valign="middle">
-            <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}&facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${(inventoryItem.inventoryItemId)?if_exists}</a></div></td>
+            <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}&facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${(inventoryItem.inventoryItemId)?if_exists}</a></div></td>
             <td><div class="tabletext">&nbsp;${(curInventoryItemType.description)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.statusId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.datetimeReceived)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.expireDate)?if_exists}</div></td>
             <td><a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">${(inventoryItem.productId)?if_exists}</a></td>
-            <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content>(${facilityLocationTypeEnum.description})</#if>[${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
+            <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content>(${facilityLocationTypeEnum.description})</#if>[${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
             <#if (inventoryItem.inventoryItemTypeId)?exists && (inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM"))>
@@ -97,13 +97,13 @@
                 <td>&nbsp;</td>
             </#if>
             <td>
-            <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">Edit</a>
+            <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">Edit</a>
             </td>
             <td>
-            <a href="<@ofbizUrl>/TransferInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">Transfer</a>
+            <a href="<@ofbizUrl>TransferInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">Transfer</a>
             </td>
             <#-- <td>
-            <a href="<@ofbizUrl>/DeleteFacilityInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>DeleteFacilityInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">
             [Delete]</a>
             </td> -->
         </tr>
@@ -116,13 +116,13 @@
             <td align="right">
                 <b>
                 <#if (viewIndex > 0)>
-                <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
                 </#if>
                 <#if (listSize > 0)>
                 ${lowIndex+1} - ${highIndex} of ${listSize}
                 </#if>
                 <#if (listSize > highIndex)>
-                | <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+                | <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
                 </#if>
                 </b>
             </td>

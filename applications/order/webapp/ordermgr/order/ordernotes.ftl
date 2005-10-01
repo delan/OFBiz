@@ -37,7 +37,7 @@
           </td>
           <td valign="middle" align="right">
             <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>  
-              <a href="<@ofbizUrl>/createnewnote?${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderNotesCreateNew}</a>
+              <a href="<@ofbizUrl>createnewnote?${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderNotesCreateNew}</a>
             </#if>
           </td>
         </tr>

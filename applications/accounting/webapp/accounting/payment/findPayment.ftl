@@ -32,9 +32,9 @@
 function lookupPayment() {
     paymentIdValue = document.lookuppayment.paymentId.value;
     if (paymentIdValue.length > 1) {
-        document.lookuppayment.action = "<@ofbizUrl>/editPayment</@ofbizUrl>";
+        document.lookuppayment.action = "<@ofbizUrl>editPayment</@ofbizUrl>";
     } else {
-        document.lookuppayment.action = "<@ofbizUrl>/findPayment</@ofbizUrl>";
+        document.lookuppayment.action = "<@ofbizUrl>findPayment</@ofbizUrl>";
     }
     document.lookuppayment.submit();
 }
@@ -42,7 +42,7 @@ function lookupPayment() {
 </script>
 
 <#if security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-<form method='post' name="lookuppayment" action="<@ofbizUrl>/findPayment</@ofbizUrl>">
+<form method='post' name="lookuppayment" action="<@ofbizUrl>findPayment</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -54,12 +54,12 @@ function lookupPayment() {
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findPayment?hideFields=N${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonShowLookupFields}</a>
+                <a href="<@ofbizUrl>findPayment?hideFields=N${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonShowLookupFields}</a>
               <#else>
-                <#if invoiceList?exists><a href="<@ofbizUrl>/findPayment?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingHideFields}</a></#if>
+                <#if invoiceList?exists><a href="<@ofbizUrl>findPayment?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingHideFields}</a></#if>
                 <a href="javascript:lookupPayment();" class="submenutext">${uiLabelMap.AccountingLookupPayment}(s)</a>
               </#if>
-              <a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingNewPayment}</a>
+              <a href="<@ofbizUrl>editPayment</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingNewPayment}</a>
             </div>
           </td>
         </tr>
@@ -170,7 +170,7 @@ function lookupPayment() {
             <div class="boxhead" align="right">
               <#if 0 < paymentList?size>             
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
+                  <a href="<@ofbizUrl>findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
@@ -178,7 +178,7 @@ function lookupPayment() {
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                  <a href="<@ofbizUrl>findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 <#else>
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
@@ -210,7 +210,7 @@ function lookupPayment() {
             <#assign paymentType = payment.getRelatedOne("PaymentType")>
             <#assign paymentMethodType = payment.getRelatedOne("PaymentMethodType")?if_exists>            
             <tr class='${rowClass}'>
-              <td><a href="<@ofbizUrl>/editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>${payment.paymentId}</a></td>            
+              <td><a href="<@ofbizUrl>editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>${payment.paymentId}</a></td>            
               <td><div class='tabletext'>${paymentType.description?default(paymentType.paymentTypeId?default(""))}</div></td>
               <td><div class='tabletext'>${paymentMethodType.description?if_exists}</div></td>
               <td>
@@ -222,7 +222,7 @@ function lookupPayment() {
               <td><div class='tabletext'>${payment.partyIdTo}</div></td>
               <td><div class='tabletext'>${(payment.effectiveDate?string)?if_exists}</div></td>
               <td align='right'><div class='tabletext'>${payment.amount}</div></td>
-              <td align='right'><a href="<@ofbizUrl>/editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>Edit</a></td>
+              <td align='right'><a href="<@ofbizUrl>editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>Edit</a></td>
             </tr>
             <#-- toggle the row color -->
             <#if rowClass == "viewManyTR2">

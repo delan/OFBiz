@@ -63,7 +63,7 @@ function removeSelected() {
 }
 function addToList() {
     var cform = document.cartform;
-    cform.action = "<@ofbizUrl>/addBulkToShoppingList</@ofbizUrl>";
+    cform.action = "<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>";
     cform.submit();
 }
 //-->
@@ -88,7 +88,7 @@ function addToList() {
         <tr>
           <td>
   <#if (shoppingCartSize > 0)>
-    <form method="post" action="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
       <input type="hidden" name="removeSelected" value="false">
       <input type="hidden" name="alwaysShowcart" value="checked">
       <input type="hidden" name="selectedItem" value="">
@@ -135,10 +135,10 @@ function addToList() {
             <td>
                 <#if cartLine.getShoppingListId()?exists>
                   <#assign itemsFromList = true>
-                  <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="buttontext">L</a>&nbsp;&nbsp;
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="buttontext">L</a>&nbsp;&nbsp;
                 <#elseif cartLine.getIsPromo()>
                   <#assign promoItems = true>
-                  <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">P</a>&nbsp;&nbsp;
+                  <a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="buttontext">P</a>&nbsp;&nbsp;
                 <#else>
                   &nbsp;
                 </#if>
@@ -150,11 +150,11 @@ function addToList() {
                     <#-- <b>${cartLineIndex}</b> - -->
                     <table width="100%">
                       <tr>
-                        <td valign=middle width="35%"><a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
+                        <td valign=middle width="35%"><a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
                           <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${cartLine.getProduct().smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>" valign="bottom" height="50" class="imageborder" border="0"></a>
                         </td>
                         <td valign=middle align="left">
-                          	<a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
+                          	<a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
                       			${cartLine.getName()?if_exists} <#--<#if cartLine.getProductFeatures()?has_content> - ${cartLine.getProductFeatures()} </#if>  --></a>
                    		</td>
                       </tr>
@@ -255,7 +255,7 @@ function addToList() {
                 <td colspan="5" nowrap align="right">
                     <div class="tabletext">
                         <i>${uiLabelMap.EcommerceAdjustment}</i> - ${adjustmentType.description?if_exists}
-                        <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a></#if>:
+                        <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a></#if>:
                     </div>
                 </td>
                 <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></div></td>
@@ -327,7 +327,7 @@ function addToList() {
             <tr>
           		<td align="right" valign="bottom">
             		<div class="tabletext">
-              			<a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontext">[continue browsing]</a>
+              			<a href="<@ofbizUrl>main</@ofbizUrl>" class="buttontext">[continue browsing]</a>
             		</div>
          		</td>
           		<td align="right" valign="bottom">
@@ -337,7 +337,7 @@ function addToList() {
          		</td>
           		<td align="right" valign="bottom">
             		<div class="tabletext">
-              			<a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="buttontext">[place order]</a>
+              			<a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="buttontext">[place order]</a>
             		</div>
           		</td>
           	</tr>
@@ -347,7 +347,7 @@ function addToList() {
       </table>
   <#else>
     <div class="tabletext">${uiLabelMap.EcommerceYourShoppingCartEmpty}.</div><br/>
-    <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontext">[continue browsing]</a>
+    <a href="<@ofbizUrl>main</@ofbizUrl>" class="buttontext">[continue browsing]</a>
   </#if>
           </td>
         </tr>
@@ -379,7 +379,7 @@ function addToList() {
    <tr><td colspan="3"><hr class="sepbar"></td></tr>
 
    <tr>
-     <form method="post" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">         
+     <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">         
           <td width="50%">
               <div class="tableheadtext">
                 <input type="text" class="inputBox" size="15" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
@@ -415,7 +415,7 @@ function addToList() {
           <tr>
             <td>
               <div class="tabletext">
-	            <form method="post" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
+	            <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
 	              <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
 	              <input type="submit" class="smallSubmit" value="Add Code">
 	              <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>

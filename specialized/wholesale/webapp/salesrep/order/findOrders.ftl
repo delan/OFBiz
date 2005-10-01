@@ -29,9 +29,9 @@
 function lookupOrders() {
     orderIdValue = document.lookuporder.order_id.value;
     if (orderIdValue.length > 1) {
-        document.lookuporder.action = "<@ofbizUrl>/orderview</@ofbizUrl>";
+        document.lookuporder.action = "<@ofbizUrl>orderview</@ofbizUrl>";
     } else {
-        document.lookuporder.action = "<@ofbizUrl>/findorders</@ofbizUrl>";
+        document.lookuporder.action = "<@ofbizUrl>findorders</@ofbizUrl>";
     }
     document.lookuporder.submit();
 }
@@ -39,7 +39,7 @@ function lookupOrders() {
 </script>
 
 <#if security.hasEntityPermission("SALESREP_ORDER", "_VIEW", session)>
-<form method='post' name="lookuporder" action="<@ofbizUrl>/findorders</@ofbizUrl>">
+<form method='post' name="lookuporder" action="<@ofbizUrl>findorders</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -51,9 +51,9 @@ function lookupOrders() {
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                <a href="<@ofbizUrl>findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
               <#else>
-                <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
+                <#if orderHeaderList?exists><a href="<@ofbizUrl>findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
                 <a href="javascript:lookupOrders();" class="submenutext">Lookup Order(s)</a>
                 <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">Lookup Party</a>
               </#if>
@@ -234,7 +234,7 @@ document.lookuporder.order_id.focus();
             <div class="boxhead" align="right">
               <#if 0 < orderHeaderList?size>
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                  <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                 <#else>
                   <span class="submenutextdisabled">Previous</span>
                 </#if>
@@ -242,7 +242,7 @@ document.lookuporder.order_id.focus();
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                  <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                 <#else>
                   <span class="submenutextrightdisabled">Next</span>
                 </#if>
@@ -278,7 +278,7 @@ document.lookuporder.order_id.focus();
             <#assign placingParty = orh.getPlacingParty()?if_exists>
             <tr class='${rowClass}'>
               <td><div class='tabletext'>${orderType.description?default(orderType.orderTypeId?default(""))}</div></td>
-              <td><a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
+              <td><a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
               <td>
                 <div class='tabletext'>
                 <#assign partyId = "_NA_">
@@ -316,7 +316,7 @@ document.lookuporder.order_id.focus();
                 </#if>
               </td>
               <td align='right'>
-                <a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
+                <a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
               </td>
             </tr>
             <#-- toggle the row color -->

@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 <#if orderHeader?has_content>
-  <form name="addCommonToCartForm" action="<@ofbizUrl>/addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">
+  <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">
     <input type="hidden" name="add_all" value="false">
     <input type="hidden" name="order_id" value="${orderHeader.orderId}">
     ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}

@@ -27,7 +27,7 @@
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 <div class="tabContainer">
-  <a href="<@ofbizUrl>/EditFeatureTypes</@ofbizUrl>" class="${selectedClassMap.FeatureType?default(unselectedClassName)}">${uiLabelMap.ProductFeatureType}</a>
-  <a href="<@ofbizUrl>/EditFeatureCategories</@ofbizUrl>" class="${selectedClassMap.FeatureCategory?default(unselectedClassName)}">${uiLabelMap.ProductFeatureCategory}</a>
-  <a href="<@ofbizUrl>/EditFeatureGroups</@ofbizUrl>" class="${selectedClassMap.FeatureGroup?default(unselectedClassName)}">${uiLabelMap.ProductFeatureGroup}</a>
+  <a href="<@ofbizUrl>EditFeatureTypes</@ofbizUrl>" class="${selectedClassMap.FeatureType?default(unselectedClassName)}">${uiLabelMap.ProductFeatureType}</a>
+  <a href="<@ofbizUrl>EditFeatureCategories</@ofbizUrl>" class="${selectedClassMap.FeatureCategory?default(unselectedClassName)}">${uiLabelMap.ProductFeatureCategory}</a>
+  <a href="<@ofbizUrl>EditFeatureGroups</@ofbizUrl>" class="${selectedClassMap.FeatureGroup?default(unselectedClassName)}">${uiLabelMap.ProductFeatureGroup}</a>
 </div>

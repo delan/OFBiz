@@ -59,11 +59,11 @@ function insertImageName(size,nameValue) {
         <#assign productContent=entry.productContent/>
         <#assign productContentType=productContent.getRelatedOneCache("ProdConfItemContentType")/>
         <tr class="tabletext">
-            <td><a href="<@ofbizUrl>/EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
+            <td><a href="<@ofbizUrl>EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
             <td>${productContentType.description?default(productContent.confItemContentTypeId)}</td>
             <td>${productContent.fromDate?default("N/A")}</td>
             <td>${productContent.thruDate?default("N/A")}</td>
-            <td><a href="<@ofbizUrl>/removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></td>
+            <td><a href="<@ofbizUrl>removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></td>
             <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.ProductEditContent} ${entry.content.contentId}]</td>
          </tr>
     </#list>
@@ -80,7 +80,7 @@ function insertImageName(size,nameValue) {
     <hr class="sepbar"/>
     
     <div class="head2">${uiLabelMap.ProductOverrideSimpleFields}</div>
-    <form action="<@ofbizUrl>/updateProductConfigItemContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
+    <form action="<@ofbizUrl>updateProductConfigItemContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
     <table border="0" cellpadding="2" cellspacing="0">
     <input type="hidden" name="configItemId" value="${configItemId?if_exists}">
     <tr>
@@ -128,7 +128,7 @@ function insertImageName(size,nameValue) {
     <hr class="sepbar"/>
 
     <div class="head3">${uiLabelMap.ProductUploadImage}</div>
-    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductConfigItemImage?configItemId=${configItemId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
+    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductConfigItemImage?configItemId=${configItemId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
         <input type="file" class="inputBox" size="50" name="fname">
         <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
     </form>

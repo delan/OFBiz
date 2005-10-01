@@ -26,7 +26,7 @@
 
 <#-- Render the survey -->
 <#if surveyString?has_content>
-  <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/updateSurveyResponse</@ofbizUrl>" style="margin: 0;">
+  <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>updateSurveyResponse</@ofbizUrl>" style="margin: 0;">
     ${surveyString}
   </form>
 <#else>

@@ -60,19 +60,19 @@
       <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
         <option value="#">Page ${viewIndex?int} of ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
-          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+          <option value="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">Go to Page ${curViewNum}</option>
         </#list>
       </select>
       <#-- End Page Select Drop-Down -->
       <b>
         <#if (viewIndex?int > 1)>
-          <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
       </b>
     </div>
@@ -92,19 +92,19 @@
       <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
         <option value="#">Page ${viewIndex?int} of ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
-          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+          <option value="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">Go to Page ${curViewNum}</option>
         </#list>
       </select>
       <#-- End Page Select Drop-Down -->
       <b>
         <#if (viewIndex?int > 1)>
-          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
         </#if>
       </b>
     </div>

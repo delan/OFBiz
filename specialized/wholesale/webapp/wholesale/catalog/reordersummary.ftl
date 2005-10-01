@@ -26,12 +26,12 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if miniProduct?exists>
     <td>
-      <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${miniProduct.smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>" align="left" height="50" class="imageborder" border="0"></a>
+      <a href="<@ofbizUrl>product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${miniProduct.smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>" align="left" height="50" class="imageborder" border="0"></a>
     </td>
 
     <td>
       <div class="tabletext">
-        <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProduct.productId} - ${miniProduct.productName}</a>
+        <a href="<@ofbizUrl>product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProduct.productId} - ${miniProduct.productName}</a>
       </div>
     </td>
 
@@ -58,7 +58,7 @@
     
     <td>
       <#if security.hasEntityPermission("WHOLESALE_ORDER", "_CREATE", session)>
-        <form method="post" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
             <input type="hidden" name="add_product_id" value="${miniProduct.productId}">
             <#if requestParameters.order_id?has_content><input type="hidden" name="order_id" value="${requestParameters.order_id}"></#if>
             <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"></#if>

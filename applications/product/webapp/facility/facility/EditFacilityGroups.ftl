@@ -27,11 +27,11 @@
 -->
     
     <div class="head1">${uiLabelMap.ProductGroupsFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <#if activeOnly>
-        <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
+        <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
     <#else>
-        <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
+        <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
     </#if>
     <br/>
     <br/>
@@ -45,13 +45,13 @@
             <td align="right">
                 <b>
                 <#if (viewIndex > 0)>
-                <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                 </#if>
                 <#if (listSize > 0)>
                 ${lowIndex+1} - ${highIndex} of ${listSize}
                 </#if>
                 <#if (listSize > highIndex)>
-                | <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                | <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                 </#if>
                 </b>
             </td>
@@ -72,7 +72,7 @@
             <#assign line = line + 1>
             <#assign facilityGroup = facilityGroupMember.getRelatedOne("FacilityGroup")>
             <tr valign="middle">
-                <td><a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [${(facilityGroupMember.facilityGroupId)?if_exists}]</a></td>
+                <td><a href="<@ofbizUrl>EditFacilityGroup?facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [${(facilityGroupMember.facilityGroupId)?if_exists}]</a></td>
                 <td>
                     <#assign hasntStarted = false>
                     <#if (facilityGroupMember.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupMember.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
@@ -83,7 +83,7 @@
                 <td align="center">
                     <#assign hasExpired = false>
                     <#if (facilityGroupMember.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupMember.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                    <FORM method="post" action="<@ofbizUrl>/updateGroupToFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
+                    <FORM method="post" action="<@ofbizUrl>updateGroupToFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
                         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
                         <input type="hidden" name="facilityId" value="${(facilityGroupMember.facilityId)?if_exists}">
                         <input type="hidden" name="facilityGroupId" value="${(facilityGroupMember.facilityGroupId)?if_exists}">
@@ -95,7 +95,7 @@
                     </FORM>
                 </td>
                 <td align="center">
-                <a href="<@ofbizUrl>/removeGroupFromFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&facilityId=${(facilityGroupMember.facilityId)?if_exists}&facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(facilityGroupMember.getTimestamp("fromDate").toString())}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>removeGroupFromFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&facilityId=${(facilityGroupMember.facilityId)?if_exists}&facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(facilityGroupMember.getTimestamp("fromDate").toString())}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
@@ -109,13 +109,13 @@
                 <td align="right">
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                    <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
                     ${lowIndex+1} - ${highIndex} of ${listSize}
                     </#if>
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                    | <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -124,7 +124,7 @@
         </#if>
         
         <br/>
-        <form method="post" action="<@ofbizUrl>/addGroupToFacility</@ofbizUrl>" style="margin: 0;" name="addFacilityGroupMemberForm">
+        <form method="post" action="<@ofbizUrl>addGroupToFacility</@ofbizUrl>" style="margin: 0;" name="addFacilityGroupMemberForm">
         <input type="hidden" name="facilityId" value="${facilityId}">
         <input type="hidden" name="useValues" value="true">
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
@@ -145,7 +145,7 @@
         
         <!-- TO DO IMPLEMENT THIS
         <br/>
-        <form method="post" action="<@ofbizUrl>/expireAllFacilityGroupMembers</@ofbizUrl>" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>expireAllFacilityGroupMembers</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="facilityGroupId" value="${facilityGroupId?if_exists}">
         <input type="hidden" name="useValues" value="true">
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">
@@ -157,7 +157,7 @@
         </div>
         </form>
         <br/>
-        <form method="post" action="<@ofbizUrl>/removeExpiredFacilityGroupMembers</@ofbizUrl>" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>removeExpiredFacilityGroupMembers</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="facilityGroupId" value="${facilityGroupId?if_exists}">
         <input type="hidden" name="useValues" value="true">
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}">

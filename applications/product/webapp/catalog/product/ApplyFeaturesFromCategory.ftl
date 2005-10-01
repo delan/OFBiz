@@ -32,8 +32,8 @@
 </#if>
 <#if productId?has_content>
     <div>
-        <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProduct}]</a>
-        <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProductFeatures}]</a>
+        <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProduct}]</a>
+        <a href="<@ofbizUrl>EditProductFeatures?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProductFeatures}]</a>
     </div>
 </#if>
 
@@ -49,11 +49,11 @@
             <span class="tabletext">
             <b>
             <#if (viewIndex > 0)>
-            <a href="<@ofbizUrl>/ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&productFeatureApplTypeId=${selectedFeatureApplTypeId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+            <a href="<@ofbizUrl>ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&productFeatureApplTypeId=${selectedFeatureApplTypeId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             ${lowIndex+1} - ${highIndex} of ${listSize}
             <#if (listSize > highIndex)>
-            | <a href="<@ofbizUrl>/ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&productFeatureApplTypeId=${selectedFeatureApplTypeId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+            | <a href="<@ofbizUrl>ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&productFeatureApplTypeId=${selectedFeatureApplTypeId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${productString?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
             </b>
             </span>
@@ -62,7 +62,7 @@
     </table>
 </#if>
 <table border="1" cellpadding="2" cellspacing="0">
-<form method="post" action="<@ofbizUrl>/ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
+<form method="post" action="<@ofbizUrl>ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
   <input type="hidden" name="_useRowSubmit" value="Y">
   <input type="hidden" name="_checkGlobalScope" value="Y">
   <input type="hidden" name="productId" value="${productId}">
@@ -84,7 +84,7 @@
   <#assign curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType")>
     <tr valign="middle" class="viewOneTR1">
         <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}">
-        <td><a href="<@ofbizUrl>/EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
+        <td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
         <td>${productFeature.description}</td>
         <td><#if curProductFeatureType?exists>${curProductFeatureType.description}<#else> [${productFeature.productFeatureTypeId}]</#if></td>
         <td>

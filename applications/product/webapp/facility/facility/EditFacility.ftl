@@ -28,13 +28,13 @@
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
 <div class="head1">${uiLabelMap.ProductFacility} <span class='head2'>${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewFacility}</a>
+<a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewFacility}</a>
 <#if facilityId?has_content>
 	<a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">${uiLabelMap.CommonViewCalendar}</a>
 </#if>
 
 <#if facility?exists && facilityId?has_content>
-  <form action="<@ofbizUrl>/UpdateFacility</@ofbizUrl>" method="post" style='margin: 0;'>
+  <form action="<@ofbizUrl>UpdateFacility</@ofbizUrl>" method="post" style='margin: 0;'>
   <table border='0' cellpadding='2' cellspacing='0'>
   <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
   <tr>
@@ -45,7 +45,7 @@
     </td>
   </tr>
 <#else>
-  <form action="<@ofbizUrl>/CreateFacility</@ofbizUrl>" method="post" style='margin: 0;'>
+  <form action="<@ofbizUrl>CreateFacility</@ofbizUrl>" method="post" style='margin: 0;'>
   <table border='0' cellpadding='2' cellspacing='0'>
   <#if facilityId?exists>
     <h3>${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId?if_exists}".</h3>

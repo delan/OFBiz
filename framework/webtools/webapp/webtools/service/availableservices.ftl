@@ -36,7 +36,7 @@
                 Service: ${selectedServiceMap.serviceName}</div>
             </td>
             <td align='right'>
-                <a href='<@ofbizUrl>/${url}</@ofbizUrl>' class='submenutextright'>List All</a>&nbsp;&nbsp;
+                <a href='<@ofbizUrl>${url}</@ofbizUrl>' class='submenutextright'>List All</a>&nbsp;&nbsp;
             </td>
         </tr>
     </table>
@@ -53,7 +53,7 @@
                <td align="center"><form><textarea class="textAreaBox" rows="20" cols="85" name="wsdloutput">${selectedServiceMap.wsdl}</textarea></form></td>
             </tr>
             <tr>
-               <td align="center"><a href='<@ofbizUrl>/${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>' class='buttontext'>Back</a></td>
+               <td align="center"><a href='<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>' class='buttontext'>Back</a></td>
             </tr>
         </table>
     <#else>
@@ -65,13 +65,13 @@
             <td align='left' valign='top'><br>
                 <b>Service Name:</b>&nbsp;${selectedServiceMap.serviceName}<br>
                 <b>Description:</b>&nbsp;${selectedServiceMap.description}<br>
-                <b>Exportable:</b>&nbsp;${selectedServiceMap.export}<#if selectedServiceMap.export = "True">&nbsp;(<a href='<@ofbizUrl>/${url}?sel_service_name=${selectedServiceMap.serviceName}&show_wsdl=true</@ofbizUrl>' class='buttontext'>Show wsdl</a>)</#if><br>
+                <b>Exportable:</b>&nbsp;${selectedServiceMap.export}<#if selectedServiceMap.export = "True">&nbsp;(<a href='<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&show_wsdl=true</@ofbizUrl>' class='buttontext'>Show wsdl</a>)</#if><br>
             <td width='10' align='left'>&nbsp;</td>
             <td align='left' valign='top'><br>
-                <b>Engine Name:</b>&nbsp;<a href='<@ofbizUrl>/${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>' class='buttontext'>${selectedServiceMap.engineName}</a><br>
+                <b>Engine Name:</b>&nbsp;<a href='<@ofbizUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>' class='buttontext'>${selectedServiceMap.engineName}</a><br>
                 <b>Invoke:</b>&nbsp;${selectedServiceMap.invoke}<br>
                 <b>Location:</b>&nbsp;</b><a href='<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>' class='buttontext'>${selectedServiceMap.location}</a><br>
-                <b>Default Entity Name:</b>&nbsp;<a href='<@ofbizUrl>/${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>' class='buttontext'>${selectedServiceMap.defaultEntityName}</a><br>
+                <b>Default Entity Name:</b>&nbsp;<a href='<@ofbizUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>' class='buttontext'>${selectedServiceMap.defaultEntityName}</a><br>
                 <b>Require new transaction:</b>&nbsp;${selectedServiceMap.requireNewTransaction}<br>
                 <b>Use transaction:</b>&nbsp;${selectedServiceMap.useTrans}<br>
                 <b>Max retries:</b>&nbsp;${selectedServiceMap.maxRetry}
@@ -314,14 +314,14 @@
                                 }
                             }
                         </script>
-                        <form id='dispForm' method='post' action='<@ofbizUrl>/${url}</@ofbizUrl>'>
+                        <form id='dispForm' method='post' action='<@ofbizUrl>${url}</@ofbizUrl>'>
                     </#if>
                     <#assign isfirst=true>
                     <#list serviceNamesAlphaList as alpha>
                         <#if !isfirst>
                             &nbsp;|&nbsp;
                         </#if>
-                        <a href='<@ofbizUrl>/${url}?constraint=alpha@${alpha}</@ofbizUrl>' class='buttontext'>${alpha}</a>
+                        <a href='<@ofbizUrl>${url}?constraint=alpha@${alpha}</@ofbizUrl>' class='buttontext'>${alpha}</a>
                         <#assign isfirst=false>
                     </#list>
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -348,7 +348,7 @@
                 Services list for ${dispatcherName?default("NA")}(${servicesFoundCount} found)</div>
             </td>
             <td align='right'>
-                <a href='<@ofbizUrl>/${url}</@ofbizUrl>' class='submenutextright'>List All</a>&nbsp;&nbsp;
+                <a href='<@ofbizUrl>${url}</@ofbizUrl>' class='submenutextright'>List All</a>&nbsp;&nbsp;
             </td>
         </tr>
     </table>
@@ -386,15 +386,15 @@
         <#list servicesList as service>
             <tr class='${rowClass}'>
                 <td align='left'>
-                    <a href='<@ofbizUrl>/${url}?sel_service_name=${service.serviceName}</@ofbizUrl>' class='buttontext'>${service.serviceName}</a>
+                    <a href='<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>' class='buttontext'>${service.serviceName}</a>
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td align='left'>
-                    <a href='<@ofbizUrl>/${url}?constraint=engine_name@${service.engineName?default("NA")}</@ofbizUrl>' class='buttontext'>${service.engineName}</a>
+                    <a href='<@ofbizUrl>${url}?constraint=engine_name@${service.engineName?default("NA")}</@ofbizUrl>' class='buttontext'>${service.engineName}</a>
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td align='left'>
-                    <a href='<@ofbizUrl>/${url}?constraint=default_entity_name@${service.defaultEntityName?default("NA")}</@ofbizUrl>' class='buttontext'>${service.defaultEntityName}</a>
+                    <a href='<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName?default("NA")}</@ofbizUrl>' class='buttontext'>${service.defaultEntityName}</a>
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td align='left'>
@@ -402,7 +402,7 @@
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td align='left'>
-                    <a href='<@ofbizUrl>/${url}?constraint=location@${service.location?default("NA")}</@ofbizUrl>' class='buttontext'>${service.location}
+                    <a href='<@ofbizUrl>${url}?constraint=location@${service.location?default("NA")}</@ofbizUrl>' class='buttontext'>${service.location}
                 </td>
             </tr>
             <#if rowClass=='viewManyTR1'>
@@ -419,7 +419,7 @@
                 No services found...
             <td>
             <td align='right'>
-                <a href='<@ofbizUrl>/${url}</@ofbizUrl>' class='buttontext'>List All</a>&nbsp;&nbsp;
+                <a href='<@ofbizUrl>${url}</@ofbizUrl>' class='buttontext'>List All</a>&nbsp;&nbsp;
             </td>
         </tr>    
     </table>

@@ -54,7 +54,7 @@
                 <td valign="top"><div class="tabletext">${cartLine.getQuantity()?string.number}</div></td>
                 <td valign="top">
                   <#if cartLine.getProductId()?exists>
-                    <div><a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getName()}</a></div>
+                    <div><a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getName()}</a></div>
                   <#else>
                     <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
                   </#if>

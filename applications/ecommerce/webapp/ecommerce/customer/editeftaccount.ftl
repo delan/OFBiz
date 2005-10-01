@@ -26,14 +26,14 @@
 
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingEftNotBelongToYou}.</h3></p>
-&nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
+&nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
 <#else>
     <#if !eftAccount?exists>
       <p class="head1">${uiLabelMap.AccountingAddNewEftAccount}</p>
-      <form method="post" action="<@ofbizUrl>/createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform" style="margin: 0;">
     <#else>
       <p class="head1">${uiLabelMap.PageTitleEditEFTAccount}</p>
-      <form method="post" action="<@ofbizUrl>/updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform" style="margin: 0;">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}">
     </#if>
     &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancelDone}]</a>
@@ -93,7 +93,7 @@
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-        <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="buttontext">
           [Create New Address]</a>&nbsp;&nbsp;
         -->
         <table width="100%" border="0" cellpadding="1">

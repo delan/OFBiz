@@ -40,7 +40,7 @@
     <#assign prodCatalog = prodCatalogCategory.getRelatedOne("ProdCatalog")>
     <#assign curProdCatalogCategoryType = prodCatalogCategory.getRelatedOneCache("ProdCatalogCategoryType")>
     <tr valign="middle">
-        <td><a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)?if_exists}</@ofbizUrl>" class="buttontext"><#if prodCatalog?exists>${(prodCatalog.catalogName)?if_exists}</#if> [${(prodCatalogCategory.prodCatalogId)?if_exists}]</a></td>
+        <td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)?if_exists}</@ofbizUrl>" class="buttontext"><#if prodCatalog?exists>${(prodCatalog.catalogName)?if_exists}</#if> [${(prodCatalogCategory.prodCatalogId)?if_exists}]</a></td>
         <td>
             <div class="tabletext">${(curProdCatalogCategoryType.description)?default(prodCatalogCategory.prodCatalogCategoryTypeId)}</div>
         </td>
@@ -48,7 +48,7 @@
         <#if (prodCatalogCategory.getTimestamp("fromDate"))?exists && nowTimestamp.before(prodCatalogCategory.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
         <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(prodCatalogCategory.fromDate)?if_exists}</div></td>
         <td align="center">
-            <form method="post" action="<@ofbizUrl>/category_updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
+            <form method="post" action="<@ofbizUrl>category_updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
                 <#assign hasExpired = false>
                 <#if (prodCatalogCategory.getTimestamp("thruDate"))?exists && nowTimestamp.after(prodCatalogCategory.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                 <input type="hidden" name="prodCatalogId" value="${(prodCatalogCategory.prodCatalogId)?if_exists}"/>
@@ -74,14 +74,14 @@
             </form>
         </td>
         <td align="center">
-        <a href="<@ofbizUrl>/category_removeProductCategoryFromProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)?if_exists}&productCategoryId=${(prodCatalogCategory.productCategoryId)?if_exists}&prodCatalogCategoryTypeId=${(prodCatalogCategory.prodCatalogCategoryTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(prodCatalogCategory.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>category_removeProductCategoryFromProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)?if_exists}&productCategoryId=${(prodCatalogCategory.productCategoryId)?if_exists}&prodCatalogCategoryTypeId=${(prodCatalogCategory.prodCatalogCategoryTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(prodCatalogCategory.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
         </td>
     </tr>
     </#list>
     </table>
     <br/>
-    <form method="post" action="<@ofbizUrl>/category_addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
+    <form method="post" action="<@ofbizUrl>category_addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
     <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}"/>
     
     <div class="head2">${uiLabelMap.ProductAddCatalogProductCategory}:</div>

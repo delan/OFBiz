@@ -37,7 +37,7 @@
         <tr valign="middle">
             <td><div class="tabletext"><#if facility?exists>${facility.facilityName}<#else>[${productFacility.facilityId}]</#if></div></td>
             <td align="center">
-                <form method="post" action="<@ofbizUrl>/updateProductFacility</@ofbizUrl>" name="lineForm${productFacility_index}">
+                <form method="post" action="<@ofbizUrl>updateProductFacility</@ofbizUrl>" name="lineForm${productFacility_index}">
                     <input type="hidden" name="productId" value="${(productFacility.productId)?if_exists}"/>
                     <input type="hidden" name="facilityId" value="${(productFacility.facilityId)?if_exists}"/>
                     <input type="text" size="10" name="minimumStock" value="${(productFacility.minimumStock)?if_exists}" class="inputBox"/>
@@ -47,14 +47,14 @@
                 </form>
             </td>
             <td align="center">
-                <a href="<@ofbizUrl>/deleteProductFacility?productId=${(productFacility.productId)?if_exists}&facilityId=${(productFacility.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>deleteProductFacility?productId=${(productFacility.productId)?if_exists}&facilityId=${(productFacility.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
     </#list>
     </table>
     <br/>
-    <form method="post" action="<@ofbizUrl>/createProductFacility</@ofbizUrl>" style="margin: 0;" name="createProductFacilityForm">
+    <form method="post" action="<@ofbizUrl>createProductFacility</@ofbizUrl>" style="margin: 0;" name="createProductFacilityForm">
         <input type="hidden" name="productId" value="${productId?if_exists}"/>
         <input type="hidden" name="useValues" value="true"/>
     

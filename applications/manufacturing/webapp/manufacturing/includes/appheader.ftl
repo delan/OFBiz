@@ -33,18 +33,18 @@
 
 <div class="apptitle">&nbsp;${uiLabelMap.ManufacturingManagerApplication}&nbsp;</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>
+  <div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>
   <#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
-    <div class="col"><a href="<@ofbizUrl>/FindProductionRun</@ofbizUrl>" class="${selectedLeftClassMap.jobshop?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingJobShop}</a></div>
-    <div class="col"><a href="<@ofbizUrl>/FindRouting</@ofbizUrl>" class="${selectedLeftClassMap.routing?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingRouting}</a></div>
-    <div class="col"><a href="<@ofbizUrl>/FindRoutingTask</@ofbizUrl>" class="${selectedLeftClassMap.routingTask?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a></div>
-    <div class="col"><a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="${selectedLeftClassMap.calendar?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingCalendar}</a></div>
-    <div class="col"><a href="<@ofbizUrl>/BomSimulation</@ofbizUrl>" class="${selectedLeftClassMap.bom?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingBillOfMaterials}</a></div>
-    <div class="col"><a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedLeftClassMap.mrp?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingMrp}</a></div>
-    <div class="col"><a href="<@ofbizUrl>/ApproveRequirements</@ofbizUrl>" class="${selectedLeftClassMap.requirement?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingApproveRequirements}</a></div>
+    <div class="col"><a href="<@ofbizUrl>FindProductionRun</@ofbizUrl>" class="${selectedLeftClassMap.jobshop?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingJobShop}</a></div>
+    <div class="col"><a href="<@ofbizUrl>FindRouting</@ofbizUrl>" class="${selectedLeftClassMap.routing?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingRouting}</a></div>
+    <div class="col"><a href="<@ofbizUrl>FindRoutingTask</@ofbizUrl>" class="${selectedLeftClassMap.routingTask?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a></div>
+    <div class="col"><a href="<@ofbizUrl>FindCalendar</@ofbizUrl>" class="${selectedLeftClassMap.calendar?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingCalendar}</a></div>
+    <div class="col"><a href="<@ofbizUrl>BomSimulation</@ofbizUrl>" class="${selectedLeftClassMap.bom?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingBillOfMaterials}</a></div>
+    <div class="col"><a href="<@ofbizUrl>FindInventoryEventPlan</@ofbizUrl>" class="${selectedLeftClassMap.mrp?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingMrp}</a></div>
+    <div class="col"><a href="<@ofbizUrl>ApproveRequirements</@ofbizUrl>" class="${selectedLeftClassMap.requirement?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingApproveRequirements}</a></div>
   </#if>  
   <#if userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
   </#if>

@@ -28,7 +28,7 @@
 <#if hasPermission>
 
 <#if shipmentId?has_content>
-    <div><a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_blank">${uiLabelMap.ProductGenerateShipmentManifestReport}</a></div>
+    <div><a href="<@ofbizUrl>ShipmentManifestReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_blank">${uiLabelMap.ProductGenerateShipmentManifestReport}</a></div>
 </#if>
 
 <#else>

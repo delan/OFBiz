@@ -48,7 +48,7 @@ function insertImageName(type,nameValue) {
 <#if ! productCategory?has_content>
   <#if productCategoryId?has_content>
     <h3>${uiLabelMap.ProductCouldNotFindProductCategoryWithId} "${productCategoryId}".</h3>
-    <form action="<@ofbizUrl>/createProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
+    <form action="<@ofbizUrl>createProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
     <table border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td align="right"><div class="tabletext">${uiLabelMap.ProductProductCategoryId}</div></td>
@@ -58,7 +58,7 @@ function insertImageName(type,nameValue) {
       </td>
     </tr>
   <#else>
-    <form action="<@ofbizUrl>/createProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
+    <form action="<@ofbizUrl>createProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
     <table border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td align="right"><div class="tabletext">${uiLabelMap.ProductProductCategoryId}</div></td>
@@ -69,7 +69,7 @@ function insertImageName(type,nameValue) {
     </tr>
   </#if>
 <#else>
-  <form action="<@ofbizUrl>/updateProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
+  <form action="<@ofbizUrl>updateProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
   <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
   <table border="0" cellpadding="2" cellspacing="0">
   <tr>
@@ -213,13 +213,13 @@ function insertImageName(type,nameValue) {
         };
     </script>
     <div class="head3">${uiLabelMap.CategoryUploadImage}</div>
-    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId?if_exists}&amp;upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
+    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId?if_exists}&amp;upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
         <input type="file" class="inputBox" size="50" name="fname"/>
         <br/>
         <span class="tabletext">
-            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="category" checked="checked" onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=category</@ofbizUrl>");'/>${uiLabelMap.ProductCategoryImageUrl}
-            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkOne</@ofbizUrl>");'/>${uiLabelMap.ProductLinkOneImageUrl}
-            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkTwo</@ofbizUrl>");'/>${uiLabelMap.ProductLinkTwoImageUrl}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="category" checked="checked" onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=category</@ofbizUrl>");'/>${uiLabelMap.ProductCategoryImageUrl}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkOne</@ofbizUrl>");'/>${uiLabelMap.ProductLinkOneImageUrl}
+            <input class="radioButton" type="radio" name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkTwo</@ofbizUrl>");'/>${uiLabelMap.ProductLinkTwoImageUrl}
         </span>
         <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}"/>
     </form>

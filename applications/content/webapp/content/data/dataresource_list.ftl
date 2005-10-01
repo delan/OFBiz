@@ -19,7 +19,7 @@
 <tr>
 <td valign="top">
 <div class="inputBox">
-    <a href="<@ofbizUrl>/${uriResource}?dataResourceId=${dataResource.dataResourceId}</@ofbizUrl>">[Edit]</a>
+    <a href="<@ofbizUrl>${uriResource}?dataResourceId=${dataResource.dataResourceId}</@ofbizUrl>">[Edit]</a>
 </div>
     ${id}
 <br/>
@@ -36,6 +36,6 @@ ${electronicTextMap[id]?if_exists}
 </#if>
 </table>
 <div class="inputBox">
-<a href="<@ofbizUrl>/AddDataResource</@ofbizUrl>">New DataResource</a>
+<a href="<@ofbizUrl>AddDataResource</@ofbizUrl>">New DataResource</a>
 </div>
 

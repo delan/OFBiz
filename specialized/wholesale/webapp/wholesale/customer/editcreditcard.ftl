@@ -27,19 +27,19 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
-&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
+&nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
 <#else>
     <#if !creditCard?exists>
       <p class="head1">${uiLabelMap.AccountingAddNewCreditCard}</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+      &nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-      <form method="post" action='<@ofbizUrl>/createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action='<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#else>
       <p class="head1">${uiLabelMap.AccountingEditCreditCard}</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+      &nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-      <form method="post" action='<@ofbizUrl>/updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action='<@ofbizUrl>updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
@@ -125,7 +125,7 @@
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-        <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="buttontext">
           [Create New Address]</a>&nbsp;&nbsp;
         -->
         <table width="100%" border="0" cellpadding="1">
@@ -218,7 +218,7 @@
   </table>
   </form>
 
-  &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+  &nbsp;<a href='<@ofbizUrl>authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
   &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 </#if>
 

@@ -30,19 +30,19 @@
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
-        form.action="<@ofbizUrl>/checkoutoptions</@ofbizUrl>";
+        form.action="<@ofbizUrl>checkoutoptions</@ofbizUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutshippingaddress</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutshippingaddress</@ofbizUrl>";
         form.submit();
     } else if (mode == "EA") {
         // edit address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@ofbizUrl>";
         form.submit();
     }
 }
@@ -73,7 +73,7 @@ function toggleBillingAccount(box) {
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td colspan="2">
-                  <a href="<@ofbizUrl>/splitship</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSplitShipment}</a>
+                  <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSplitShipment}</a>
                   <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">${uiLabelMap.PartyAddNewAddress}</a>
                   <#if (cart.getShipGroupSize() > 1)>
                     <div class="tabletext" style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExis}</div>

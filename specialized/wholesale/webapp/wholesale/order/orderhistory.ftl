@@ -28,7 +28,7 @@
 <table border="0" cellspacing='0' cellpadding='0'>
   <tr>
     <td align="right">
-      <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${requestAttributes.uiLabelMap.CommonProfile}]</a><br/>&nbsp;&nbsp;
+      <a href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="buttontext">[${requestAttributes.uiLabelMap.CommonProfile}]</a><br/>&nbsp;&nbsp;
     </td>
   </tr>
 </table>
@@ -40,7 +40,7 @@
         <tr>
           <td align='left'><div class="boxhead">${requestAttributes.uiLabelMap.OrderHistory}</div></td>
           <#--<td align='right'>
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${requestAttributes.uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>main</@ofbizUrl>" class="lightbuttontext">[${requestAttributes.uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
           </td>-->
         </tr>
       </table>      
@@ -90,7 +90,7 @@
                     <div class="tabletext">${status.description}</div>
                   </td>
                   <td align="right">
-                    <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
+                    <a href="<@ofbizUrl>orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
                   </td>
                 </tr>
               </#list>

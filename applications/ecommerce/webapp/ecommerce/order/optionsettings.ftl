@@ -34,7 +34,7 @@
         <div class='boxhead'>&nbsp;${uiLabelMap.OrderShippingInformation}</div>
     </div>
     <div class="screenlet-body">
-        <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="optsetupform">
+        <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="optsetupform">
           <input type="hidden" name="finalizeMode" value="options"/>
           <table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
             <#list carrierShipmentMethodList as carrierShipmentMethod>

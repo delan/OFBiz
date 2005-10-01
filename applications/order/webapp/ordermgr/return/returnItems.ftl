@@ -25,14 +25,14 @@
 -->
 
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>
-    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Items</a>
+    <a href="<@ofbizUrl>returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>
+    <a href="<@ofbizUrl>returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Items</a>
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
       <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${externalKeyParam}" class="tabButton">Receive Return</a>
     </#if>
 </div>
 <div>
-    <a href="<@ofbizUrl>/return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="buttontext">PDF</a>
+    <a href="<@ofbizUrl>return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="buttontext">PDF</a>
 </div>
 <#if !requestParameters.orderId?exists>
 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
@@ -57,7 +57,7 @@
       <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
       <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
       <tr>
-        <td><a href="<@ofbizUrl>/orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a></td>
+        <td><a href="<@ofbizUrl>orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a></td>
         <td><div class="tabletext">${item.orderItemSeqId?default("N/A")}</div></td>
         <td><div class="tabletext">${item.description?default("N/A")}</div></td>
         <td><div class="tabletext">${item.returnQuantity?string.number}</div></td>
@@ -71,7 +71,7 @@
               <#if itemResp.paymentId?has_content>
                 <div class="tabletext">Payment #<a href="/accounting/control/editPayment?paymentId=${itemResp.paymentId}${externalKeyParam}" class="buttontext">${itemResp.paymentId}</a></div>
               <#elseif itemResp.replacementOrderId?has_content>
-                <div class="tabletext">Order #<a href="<@ofbizUrl>/orderview?order_id=${itemResp.replacementOrderId}</@ofbizUrl>" class="buttontext">${itemResp.replacementOrderId}</a></div>
+                <div class="tabletext">Order #<a href="<@ofbizUrl>orderview?order_id=${itemResp.replacementOrderId}</@ofbizUrl>" class="buttontext">${itemResp.replacementOrderId}</a></div>
               <#elseif itemResp.billingAccountId?has_content>
                 <div class="tabletext">Acct #<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${externalKeyParam}" class="buttontext">${itemResp.billingAccountId}</a></div>
               </#if>
@@ -83,7 +83,7 @@
           </#if>
         </td>
         <#if returnHeader.statusId == "RETURN_REQUESTED">
-          <td align='right'><a href="<@ofbizUrl>/removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
+          <td align='right'><a href="<@ofbizUrl>removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
         <#else>
           <td>&nbsp;</td>
         </#if>
@@ -97,7 +97,7 @@
 </table>
 <br/>
 <#if returnHeader.statusId == "RETURN_REQUESTED">
-<form name="returnItems" method="post" action="<@ofbizUrl>/returnItems</@ofbizUrl>">
+<form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${returnId}">
   <table border='0' cellpadding='2' cellspacing='0'>
     <tr><td colspan="4"><div class="head3">Return Item(s)</div></td></tr>
@@ -137,7 +137,7 @@
 </form>
 </#if>
 <#else>                            
-<form name="returnItems" method="post" action="<@ofbizUrl>/createReturnItems</@ofbizUrl>">
+<form name="returnItems" method="post" action="<@ofbizUrl>createReturnItems</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${returnId}">
   <input type="hidden" name="_useRowSubmit" value="Y">
   <table border='0' width='100%' cellpadding='2' cellspacing='0'>
