@@ -25,10 +25,10 @@
  *@version    1.0
 -->
 
-<table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr> 
-    <td width='100%'> 
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
       	<tr> 
           <td align="left" class="boxhead">${uiLabelMap.WorkEffortCalendarWeekView}</td>
         </tr>
@@ -39,7 +39,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
 	<td width="100%" class="monthheadertext">${uiLabelMap.CommonWeek} ${start?date?string("w")}</td>
-    <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>/week?start=${prev.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortPreviousWeek}</a> | <a href='<@ofbizUrl>/week?start=${next.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortNextWeek}</a> | <a href='<@ofbizUrl>/week?start=${now.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortThisWeek}</a></td>
+    <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>/week?start=${prev.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousWeek}</a> | <a href="<@ofbizUrl>/week?start=${next.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextWeek}</a> | <a href="<@ofbizUrl>/week?start=${now.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortThisWeek}</a></td>
   </tr>
 </table>
 <#if periods?has_content> 
@@ -57,14 +57,14 @@
     <td colspan=${maxConcurrentEntries} class="monthdayheader">${uiLabelMap.WorkEffortCalendarEntries}<br/>
       <img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1" width="88"></td>
   </tr>
-  <#list periods as period>               
+  <#list periods as period>
   <tr>
-    <td valign="top" nowrap width="1%" class="monthweekheader" height="36"><a href='<@ofbizUrl>/day?start=${period.start.time?string("#")}</@ofbizUrl>' class="monthweeknumber">${period.start?date?string("EEEE")?cap_first} ${period.start?date?string("d/M")?cap_first}</a><br/>
-	  <a href='<@ofbizUrl>/event?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>'>${uiLabelMap.CommonAddNew}</a>
+    <td valign="top" nowrap width="1%" class="monthweekheader" height="36"><a href="<@ofbizUrl>/day?start=${period.start.time?string("#")}</@ofbizUrl>" class="monthweeknumber">${period.start?date?string("EEEE")?cap_first} ${period.start?date?string("d/M")?cap_first}</a><br/>
+	  <a href="<@ofbizUrl>EditWorkEffort?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>">${uiLabelMap.CommonAddNew}</a>
 	  </td>
     <#list period.calendarEntries as calEntry>
     <#if calEntry.startOfPeriod>			  
-    <td class="calendarentry" rowspan='${calEntry.periodSpan}' colspan='1' width='${entryWidth?string("#")}%' valign='top'>
+    <td class="calendarentry" rowspan="${calEntry.periodSpan}" colspan="1" width="${entryWidth?string("#")}%" valign="top">
 	<#if (calEntry.workEffort.estimatedStartDate.compareTo(start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(next) >= 0)>
       ${uiLabelMap.CommonAllWeek}
 	<#elseif (calEntry.workEffort.estimatedStartDate.compareTo(period.start)  = 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(period.end) = 0)>
@@ -76,17 +76,17 @@
     <#else>
 	  ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
     </#if>
-      <br/><a href="<@ofbizUrl>/event?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;</td>
+      <br/><a href="<@ofbizUrl>EditWorkEffort?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;</td>
     </#if>
     </#list>
     <#if period.calendarEntries?size < maxConcurrentEntries>
     <#assign emptySlots = (maxConcurrentEntries - period.calendarEntries?size)>
 	<#list 1..emptySlots as num>
-	<td width='${entryWidth?string("#")}%'  class="calendarempty"><br/></td>
+	<td width="${entryWidth?string("#")}%"  class="calendarempty"><br/></td>
 	</#list>				  	
     </#if>
     <#if maxConcurrentEntries < 2>			  
-    <td width='${entryWidth?string("#")}' class="calendarempty">&nbsp;</td>
+    <td width="${entryWidth?string("#")}" class="calendarempty">&nbsp;</td>
     </#if>
   </tr>
   </#list>  				

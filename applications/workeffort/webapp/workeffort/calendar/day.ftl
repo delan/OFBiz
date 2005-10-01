@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,10 +25,10 @@
  *@version    1.0
 -->
 
-<table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr> 
-    <td width='100%'> 
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr> 
           <td align="left" class="boxhead">${uiLabelMap.WorkEffortCalendarDayView}</td>
         </tr>
@@ -39,7 +39,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
 	<td width="100%" class="monthheadertext">${start?date?string("EEEE")?cap_first} ${start?date?string.long}</td>
-    <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>/day?start=${prev.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortPreviousDay}</a> | <a href='<@ofbizUrl>/day?start=${next.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortNextDay}</a> | <a href='<@ofbizUrl>/day?start=${now.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.CommonToday}</a></td>
+    <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>/day?start=${prev.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousDay}</a> | <a href="<@ofbizUrl>/day?start=${next.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextDay}</a> | <a href="<@ofbizUrl>/day?start=${now.time?string("#")}</@ofbizUrl>" class="previousnext">${uiLabelMap.CommonToday}</a></td>
   </tr>
 </table>
 <#if periods?has_content>
@@ -61,10 +61,10 @@
   <#list periods as period>              
   <tr>                  
     <td valign="top" nowrap width="1%" class="monthweekheader" height="36"><span class="monthweeknumber">${period.start?time?string.short}</span><br/>
-      <a href='<@ofbizUrl>/event?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>'>${uiLabelMap.CommonAddNew}</a></td>
+      <a href="<@ofbizUrl>EditWorkEffort?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>">${uiLabelMap.CommonAddNew}</a></td>
     <#list period.calendarEntries as calEntry>
     <#if calEntry.startOfPeriod>			  
-    <td class="calendarentry" rowspan='${calEntry.periodSpan}' colspan=1 width='${entryWidth?string("#")}%' valign="top">
+    <td class="calendarentry" rowspan="${calEntry.periodSpan}" colspan="1" width="${entryWidth?string("#")}%" valign="top">
 	<#if (calEntry.workEffort.estimatedStartDate.compareTo(start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(next) >= 0)>
      ${uiLabelMap.CommonAllDay}
     <#elseif calEntry.workEffort.estimatedStartDate.before(start)>
@@ -74,17 +74,17 @@
     <#else>
 	  ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
     </#if>
-	  <br/><a href="<@ofbizUrl>/event?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;</td>
+	  <br/><a href="<@ofbizUrl>EditWorkEffort?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;</td>
     </#if>
     </#list>	
     <#if period.calendarEntries?size < maxConcurrentEntries>
     <#assign emptySlots = (maxConcurrentEntries - period.calendarEntries?size)>			  	
 	<#list 1..emptySlots as num>
-	<td width='${entryWidth?string("#")}%'  class="calendarempty"><br/></td>
+	<td width="${entryWidth?string("#")}%"  class="calendarempty"><br/></td>
 	</#list>
     </#if>
     <#if maxConcurrentEntries < 2>			  
-    <td width='${entryWidth?string("#")}' class="calendarempty">&nbsp;</td>
+    <td width="${entryWidth?string("#")}" class="calendarempty">&nbsp;</td>
     </#if>
   </tr>
   </#list>                  
