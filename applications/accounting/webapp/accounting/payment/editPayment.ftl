@@ -86,7 +86,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingStatus}:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.CommonStatus}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <select name="statusId" class="selectBox">

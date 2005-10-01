@@ -32,7 +32,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
     <tr>
         <td><div class="tableheadtext">${uiLabelMap.AccountingPayment} #</div></td>
-        <td><div class="tableheadtext">${uiLabelMap.AccountingType}</div></td>  
+        <td><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>  
         <td><div class="tableheadtext">${uiLabelMap.AccountingInvoice} #</div></td>
         <td><div class="tableheadtext">${uiLabelMap.AccountingInvoiceItem}</div></td>
         <td><div class="tableheadtext">${uiLabelMap.AccountingPaymentDate}</div></td>

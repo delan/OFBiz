@@ -80,7 +80,7 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingCurrency}</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonCurrency}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">

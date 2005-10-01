@@ -68,7 +68,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.AccountingCurrency}<b>:</div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.CommonCurrency}<b>:</div></td>
                   <td valign="bottom"><div class="tabletext">${currencyUomId}</div></td>
                 </tr>
                 <#if agreementId?has_content>
