@@ -49,6 +49,7 @@
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="activeApp" value="hotelbackend" global="true"/>
             </actions>
             <widgets>
@@ -360,6 +361,42 @@
                                             <html><html-template location="component://accountingext/webapp/accountingext/accounting/AccountingTabBar.ftl"/></html>
                                         </platform-specific>
                                         <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonAdminDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="Accounting"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="ACCOUNTING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <widgets>
+                                        <container>
+                                            <label style="head1">For organization: ${organizationPartyId}</label>
+                                        </container>
+                                        <platform-specific>
+                                            <html><html-template location="component://accountingext/webapp/accountingext/admin/AdminTabBar.ftl"/></html>
+                                        </platform-specific>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

@@ -2459,12 +2459,12 @@
     <view-map name="TaxSummary" type="screen" page="component://accountingext/widget/AccountingScreens.xml#TaxSummary"/>
     <view-map name="AccountActivitiesDetail" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
     <!-- Accounting administrative pages -->
-    <view-map name="AdminMain" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#AdminMain"/>
-    <view-map name="PartyAcctgPreference" type="screen" page="component://accountingext/widget/AccountingScreens.xml#PartyAcctgPreference"/>
-    <view-map name="ViewFXConversions" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ViewFXConversions"/>
+    <view-map name="AdminMain" type="screen" page="component://accountingext/widget/AdminScreens.xml#AdminMain"/>
+    <view-map name="PartyAcctgPreference" type="screen" page="component://accountingext/widget/AdminScreens.xml#PartyAcctgPreference"/>
+    <view-map name="ViewFXConversions" type="screen" page="component://accountingext/widget/AdminScreens.xml#ViewFXConversions"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListUnpostedAcctgTrans"/>
     <!-- GL organisation -->
-    <view-map name="ListGlAccountOrganization" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#ListGlAccountOrganization"/>
+    <view-map name="ListGlAccountOrganization" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccountOrganization"/>
     <view-map name="AssignGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AssignGlAccount"/>
     <!-- end of view mappings -->
 </site-conf>
