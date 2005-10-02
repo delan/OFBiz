@@ -403,14 +403,6 @@
             <field-to-field field-name="role.roleTypeId" to-field-name="cqrContext.roleTypeId"/>
             <call-service service-name="createQuoteRole" in-map-name="cqrContext"></call-service>
         </iterate>
-        <!-- set the attribute -->
-        <if-not-empty field-name="parameters.attrName">
-            <make-value value-name="newQuoteAttribute" entity-name="QuoteAttribute"/>
-            <env-to-field env-name="quoteId" map-name="newQuoteAttribute"/>
-            <field-to-field field-name="parameters.attrName" to-field-name="newQuoteAttribute.attrName"/>
-            <field-to-field field-name="parameters.attrValue" to-field-name="newQuoteAttribute.attrValue"/>
-            <create-value value-name="newQuoteAttribute"/>
-        </if-not-empty>
         <check-errors/>
     </simple-method>
     <simple-method method-name="autoUpdateQuotePrice" short-description="Auto update a QuoteItem price">
@@ -649,6 +641,57 @@
             <result-to-field result-name="quoteId" field-name="quoteId"/>
         </call-service>
      
+        <field-to-result field-name="quoteId" result-name="quoteId"/>
+    </simple-method>
+
+    <simple-method method-name="createQuoteFromCustRequest" short-description="Create a Quote from a CustRequest">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteFromCustRequest"/>
+        </check-permission>
+        <check-errors/>
+
+        <entity-one entity-name="CustRequest" value-name="custRequest" auto-field-map="true"/>
+        <if-compare field-name="custRequest.custRequestTypeId" operator="not-equals" value="RF_QUOTE">
+            <add-error><fail-message message="ERROR: CustRequest [${custRequest.custRequestId}] is not a request for quote."/></add-error>
+        </if-compare>
+        <check-errors/>
+
+        <set field="createQuoteInMap.partyId" from-field="custRequest.fromPartyId"/>
+        <set field="createQuoteInMap.productStoreId" from-field="custRequest.productStoreId"/>
+        <set field="createQuoteInMap.quoteName" from-field="custRequest.custRequestName"/>
+        <set field="createQuoteInMap.description" from-field="custRequest.description"/>
+        <set field="createQuoteInMap.currencyUomId" from-field="custRequest.maximumAmountUomId"/>
+        <set field="createQuoteInMap.statusId" value="QUO_CREATED"/>
+        <set field="createQuoteInMap.quoteTypeId" from-field="parameters.quoteTypeId"/>
+        <if-empty field-name="createQuoteInMap.quoteTypeId">
+            <set field="createQuoteInMap.quoteTypeId" value="PRODUCT_QUOTE"/>
+        </if-empty>
+        <call-service service-name="createQuote" in-map-name="createQuoteInMap">
+            <result-to-field result-name="quoteId" field-name="quoteId"/>
+        </call-service>
+        <check-errors/>
+        
+        <get-related value-name="custRequest" relation-name="CustRequestItem" list-name="custRequestItems"/>
+        <iterate list-name="custRequestItems" entry-name="custRequestItem">
+            <clear-field field-name="createQuoteItemInMap"/>
+            <set field="createQuoteItemInMap.quoteId" from-field="quoteId"/>
+            <set field="createQuoteItemInMap.custRequestId" from-field="custRequestItem.custRequestId"/>
+            <set field="createQuoteItemInMap.custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
+            <set field="createQuoteItemInMap.productId" from-field="custRequestItem.productId"/>
+            <set field="createQuoteItemInMap.quantity" from-field="custRequestItem.quantity"/>
+            <set field="createQuoteItemInMap.selectedAmount" from-field="custRequestItem.selectedAmount"/>
+            <call-service service-name="createQuoteItem" in-map-name="createQuoteItemInMap"/>
+        </iterate>
+        <!-- roles -->
+        <get-related value-name="custRequest" relation-name="CustRequestRole" list-name="custRequestRoles"/>
+        <iterate list-name="custRequestRoles" entry-name="custRequestRole">
+            <clear-field field-name="createQuoteRoleInMap"/>
+            <set field="createQuoteRoleInMap.quoteId" from-field="quoteId"/>
+            <set field="createQuoteRoleInMap.partyId" from-field="custRequestRole.partyId"/>
+            <set field="createQuoteRoleInMap.roleTypeId" from-field="custRequestRole.roleTypeId"/>
+            <call-service service-name="createQuoteRole" in-map-name="createQuoteRoleInMap"/>
+        </iterate>
+        
         <field-to-result field-name="quoteId" result-name="quoteId"/>
     </simple-method>
 

@@ -139,8 +139,6 @@
         <description>Create a new Quote and Quote Item for a CustRequest</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="OUT" optional="true"/>
-        <attribute name="attrName" type="String" mode="IN" optional="true"/>
-        <attribute name="attrValue" type="String" mode="IN" optional="true"/>
         <override name="custRequestId" optional="false"/>
     </service>
     <service name="autoUpdateQuotePrice" engine="simple" default-entity-name="QuoteItem"
@@ -203,6 +201,13 @@
         <description>Creates a new quote from a shopping list</description>
         <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
         <attribute name="applyStorePromotions" type="String" mode="IN" optional="true"/>
+        <attribute name="quoteId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="createQuoteFromCustRequest" engine="simple" auth="true"
+            location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteFromCustRequest">
+        <description>Creates a new quote from a customer request</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="quoteTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="quoteId" type="String" mode="OUT" optional="false"/>
     </service>
 
