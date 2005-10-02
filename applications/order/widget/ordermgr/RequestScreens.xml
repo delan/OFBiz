@@ -84,6 +84,43 @@
             </widgets>
          </section>
     </screen>
+    <screen name="ViewRequest">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="rightonly"/>
+                <set field="tabButtonItem" value="ViewRequest"/>
+                <set field="title-property" value="PageTitleViewRequest"/>
+                <!--<set field="headerItem" value="Shopping List"/>-->
+                <set field="showRequestManagementLinks" value="Y"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-name="custRequest"/>
+                <get-related-one value-name="custRequest" relation-name="CustRequestType" to-value-name="custRequestType"/>
+                <get-related-one value-name="custRequest" relation-name="StatusItem" to-value-name="statusItem"/>
+                <get-related-one value-name="custRequest" relation-name="Uom" to-value-name="currency"/>
+                <get-related-one value-name="custRequest" relation-name="ProductStore" to-value-name="store"/>
+                
+                <get-related value-name="custRequest" relation-name="CustRequestItem" list-name="requestItems"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="request" text="${uiLabelMap.OrderNewRequest}" style="buttontext"/>
+                            <link target="createQuoteFromCustRequest?custRequestId=${custRequestId}" text="${uiLabelMap.OrderNewQuote}" style="buttontext"/>
+                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestInfo.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditRequest">
         <section>
             <actions>
@@ -100,9 +137,6 @@
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
                     <decorator-section name="body">
-                        <container>
-                            <link target="request" text="${uiLabelMap.OrderNewRequest}" style="buttontext"/>
-                        </container>
                         <include-form name="EditCustRequest" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

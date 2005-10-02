@@ -26,7 +26,8 @@
 
 <#if custRequest?exists>
 <div class='tabContainer'>
-  <a href="<@ofbizUrl>request?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="${selectedClassMap.request?default(unselectedClassName)}">${uiLabelMap.OrderRequest}</a>
+  <a href="<@ofbizUrl>ViewRequest?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="${selectedClassMap.ViewRequest?default(unselectedClassName)}">${uiLabelMap.OrderViewRequest}</a>
+  <a href="<@ofbizUrl>EditRequest?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="${selectedClassMap.request?default(unselectedClassName)}">${uiLabelMap.OrderRequest}</a>
   <a href="<@ofbizUrl>requestroles?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="${selectedClassMap.requestroles?default(unselectedClassName)}">${uiLabelMap.OrderRequestRoles}</a>
   <a href="<@ofbizUrl>requestitems?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="${selectedClassMap.requestitems?default(unselectedClassName)}">${uiLabelMap.OrderRequestItems}</a>
   <#if custRequestItem?exists>

@@ -354,25 +354,31 @@
     <request-map uri="createQuoteFromCart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createQuoteFromCart"/>
-        <response name="success" type="request" value="EditQuote"/>
+        <response name="success" type="request" value="ViewQuote"/>
         <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="createCustRequestFromCart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createCustRequestFromCart"/>
-        <response name="success" type="request" value="request"/>
+        <response name="success" type="request" value="ViewRequest"/>
         <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="createQuoteFromShoppingList">
         <security https="true" auth="true"/>
         <event type="service" invoke="createQuoteFromShoppingList"/>
-        <response name="success" type="request" value="EditQuote"/>
+        <response name="success" type="request" value="ViewQuote"/>
         <response name="error" type="request" value="orderentry"/>
+    </request-map>
+    <request-map uri="createQuoteFromCustRequest">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createQuoteFromCustRequest"/>
+        <response name="success" type="request" value="ViewQuote"/>
+        <response name="error" type="request" value="request"/>
     </request-map>
     <request-map uri="createCustRequestFromShoppingList">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestFromShoppingList"/>
-        <response name="success" type="request" value="request"/>
+        <response name="success" type="request" value="ViewRequest"/>
         <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="viewPartyShoppingLists">
@@ -808,10 +814,15 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindRequest"/>
     </request-map>
+    <request-map uri="ViewRequest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewRequest"/>
+    </request-map>
     <request-map uri="EditRequest">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditRequest"/>
     </request-map>
+    <!-- deprecated: use EditRequest instead -->
     <request-map uri="request">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditRequest"/>
@@ -850,6 +861,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="RequestItems"/>
     </request-map>
+    <request-map uri="EditRequestItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRequestItem"/>
+    </request-map>
+    <!-- deprecated: use EditRequestItem instead -->
     <request-map uri="requestitem">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditRequestItem"/>
@@ -1292,6 +1308,7 @@
     <view-map name="EditQuoteAdjustment" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteAdjustment"/>
 
     <view-map name="FindRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#FindRequest"/>
+    <view-map name="ViewRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#ViewRequest"/>
     <view-map name="EditRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditRequest"/>
     <view-map name="EditRequestItem" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditRequestItem"/>
     <view-map name="RequestItems" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#RequestItems"/>
