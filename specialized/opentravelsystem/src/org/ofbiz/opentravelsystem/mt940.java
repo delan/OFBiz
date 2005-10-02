@@ -128,11 +128,11 @@ public class mt940 {
 		if (debug) Debug.logInfo("Start processing payments...", module);
 		while (getPayment(request) != null) {
 			if (debet  == false)	{
-				payment.put("statusId","PMNT_RECEIVED");
+				payment.put("statusId","PMNT_NOT_PAID");
 				payment.put("partyIdFrom",getParty(delegator));
 				payment.put("partyIdTo", accountPartyId);    		}
 			else	{ // credit
-				payment.put("statusId","PMNT_SENT");
+				payment.put("statusId","PMNT_NOT_PAID");
 				payment.put("partyIdTo",getParty(delegator));
 				payment.put("partyIdFrom", accountPartyId);    		}
 			
