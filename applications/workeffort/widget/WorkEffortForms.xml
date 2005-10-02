@@ -62,6 +62,8 @@
         <field name="recurrenceInfoId"><ignored/></field>
         <field name="runtimeDataId"><ignored/></field>
         <field name="noteId"><ignored/></field>
+
+        <field name="revisionNumber"><display/></field>
         
         <field name="workEffortParentId"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
