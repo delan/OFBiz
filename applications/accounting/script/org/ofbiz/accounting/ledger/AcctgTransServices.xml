@@ -38,8 +38,8 @@
         <sequenced-id-to-env sequence-name="AcctgTrans" env-name="newEntity.acctgTransId"/>
         <field-to-result field-name="newEntity.acctgTransId" result-name="acctgTransId"/>
         
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>
@@ -47,32 +47,25 @@
         <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateAcctgTrans you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="AcctgTrans" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="AcctgTrans" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
-
+        <set from-field="userLogin.userLoginId" field="lookedUpValue.lastModifiedByUserLogin"/>
+        
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteAcctgTrans" short-description="Delete an AcctgTrans">
         <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteAcctgTrans you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="AcctgTrans" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="AcctgTrans" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="updateAcctgTransLastModified" short-description="Update AcctgTrans LastModified Info">
     	<!-- this is just a little method that is meant to be called as an inline call-simple-method target with the context already setup -->
-        <make-value entity-name="AcctgTrans" value-name="lookupACTXMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupACTXMap"/>
-        <find-by-primary-key map-name="lookupACTXMap" value-name="lookedUpACTX"/>
-        
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpACTX"/>
-        <store-value value-name="lookedUpValue"/>
+        <entity-one entity-name="AcctgTrans" value-name="lookedUpACTX"/>
+        <set from-field="userLogin.userLoginId" field="lookedUpACTX.lastModifiedByUserLogin"/>
+        <store-value value-name="lookedUpACTX"/>
     </simple-method>
     
     <!-- ========= AcctgTransEntry methods ========= -->
@@ -87,8 +80,7 @@
         <field-to-result field-name="newEntity.acctgTransEntrySeqId" result-name="acctgTransEntrySeqId"/>
 
         <!-- by default, set the reconciled status of this new entry to not reconciled -->
-        <string-to-field string="AES_NOT_RECONCILED" field-name="reconcileStatusId" map-name="newEntity"/>
-        
+        <set value="AES_NOT_RECONCILED" field="newEntity.reconcileStatusId"/>
         <create-value value-name="newEntity"/>
 
 		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
@@ -98,11 +90,8 @@
         <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateAcctgTransEntry you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="AcctgTransEntry" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="AcctgTransEntry" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-
         <store-value value-name="lookedUpValue"/>
 
 		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
@@ -112,9 +101,7 @@
         <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteAcctgTransEntry you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="AcctgTransEntry" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="AcctgTransEntry" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
 
 		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
