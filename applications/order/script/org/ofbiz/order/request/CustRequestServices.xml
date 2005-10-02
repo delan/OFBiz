@@ -31,8 +31,8 @@
         <if>
             <condition>
                 <and>
-                    <not><if-empty field-name="parameters.requestPartyId"/></not>
-                    <not><if-compare-field field-name="parameters.requestPartyId" operator="equals" to-field-name="userLogin.partyId"/></not>
+                    <not><if-empty field-name="parameters.fromPartyId"/></not>
+                    <not><if-compare-field field-name="parameters.fromPartyId" operator="equals" to-field-name="userLogin.partyId"/></not>
                     <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
                 </and>
             </condition>
@@ -60,11 +60,20 @@
         <create-value value-name="newEntity"/>
         <field-to-result field-name="custRequestId" map-name="newEntity"/>
 
-        <field-to-field field-name="custRequestId" map-name="newEntity" to-map-name="takerMap"/>
-        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="takerMap"/>
-        <string-to-field string="REQ_TAKER" map-name="takerMap" field-name="roleTypeId"/>
-        <call-service service-name="createCustRequestRole" in-map-name="takerMap"/>
+        <!-- If the logged in partyId that is creating the request is not equal to the fromPartyId
+             then we associate it to the request as the request taker.
+             This is not done if they are the same e.g. a logged in customer that is creating a request for its
+             own sake. -->
+        <if-compare-field field-name="parameters.fromPartyId" operator="not-equals" to-field-name="userLogin.partyId">
+            <field-to-field field-name="custRequestId" map-name="newEntity" to-map-name="takerMap"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="takerMap"/>
+            <string-to-field string="REQ_TAKER" map-name="takerMap" field-name="roleTypeId"/>
+            <call-service service-name="createCustRequestRole" in-map-name="takerMap"/>
+        </if-compare-field>
 
+        <!-- This code is commented because the requester party is no more maintained in the CustRequestRole entity.
+             There is now the fromPartyId field in the CustRequest entity for this. -->
+        <!--
         <field-to-field field-name="custRequestId" map-name="newEntity" to-map-name="requesterMap"/>
         <if-not-empty field-name="requestPartyId" map-name="parameters">
             <field-to-field field-name="requestPartyId" map-name="parameters" to-map-name="requesterMap" to-field-name="partyId"/>
@@ -73,7 +82,8 @@
             </else>
         </if-not-empty>
         <string-to-field string="REQ_REQUESTER" map-name="requesterMap" field-name="roleTypeId"/>
-        <call-service service-name="createCustRequestRole" in-map-name="requesterMap"/>   
+        <call-service service-name="createCustRequestRole" in-map-name="requesterMap"/>
+        -->
     </simple-method>
     <simple-method method-name="updateCustRequest" short-description="Update Customer Request">
         <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -165,11 +175,12 @@
     </simple-method>
 
     <simple-method method-name="createCustRequestFromCart" short-description="Create a CustRequest from a ShoppingCart">
-        <call-object-method obj-field-name="parameters.cart" method-name="getPartyId" ret-field-name="createCustRequestInMap.requestPartyId"/>
+        <call-object-method obj-field-name="parameters.cart" method-name="getPartyId" ret-field-name="createCustRequestInMap.fromPartyId"/>
         <string-to-field string="RF_QUOTE" field-name="createCustRequestInMap.custRequestTypeId"/>
         <string-to-field string="CRQ_SUBMITTED" field-name="createCustRequestInMap.statusId"/>
         <set field="createCustRequestInMap.custRequestName" from-field="parameters.custRequestName"/>
         <call-object-method obj-field-name="parameters.cart" method-name="getCurrency" ret-field-name="createCustRequestInMap.maximumAmountUomId"/>
+        <call-object-method obj-field-name="parameters.cart" method-name="getProductStoreId" ret-field-name="createCustRequestInMap.productStoreId"/>
         <call-service service-name="createCustRequest" in-map-name="createCustRequestInMap">
             <result-to-field result-name="custRequestId" field-name="custRequestId"/>
         </call-service>
