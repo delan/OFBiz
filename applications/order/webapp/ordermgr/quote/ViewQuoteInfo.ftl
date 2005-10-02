@@ -108,7 +108,7 @@
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
-                                <div class="tabletext"><#if currency?exists>${store.storeName?default(quote.productStoreId?if_exists)}</#if></div>
+                                <div class="tabletext"><#if store?exists>${store.storeName?default(quote.productStoreId?if_exists)}</#if></div>
                             </td>
                         </tr>
                         
