@@ -906,6 +906,7 @@
       <alias entity-alias="CR" name="custRequestId"/>
       <alias entity-alias="CR" name="custRequestTypeId"/>
       <alias entity-alias="CR" name="statusId"/>
+      <alias entity-alias="CR" name="fromPartyId"/>
       <alias entity-alias="CR" name="priority"/>
       <alias entity-alias="CR" name="custRequestDate"/>
       <alias entity-alias="CR" name="responseRequiredDate"/>
