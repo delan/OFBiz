@@ -27,7 +27,7 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- ExampleFeature methods -->
     <simple-method method-name="createExampleFeature" short-description="create a ExampleFeature">
-        <string-to-field string="_CREATE" field-name="securityAction"/>
+        <set value="_CREATE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
         <make-value entity-name="ExampleFeature" value-name="newEntity"/>
@@ -37,7 +37,7 @@
         <create-value value-name="newEntity"/>  
     </simple-method>   
     <simple-method method-name="updateExampleFeature" short-description="update a ExampleFeature">
-        <string-to-field string="_UPDATE" field-name="securityAction"/>
+        <set value="_UPDATE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="ExampleFeature" value-name="lookedUpValue"/>
@@ -45,7 +45,7 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteExampleFeature" short-description="delete a ExampleFeature">
-        <string-to-field string="_DELETE" field-name="securityAction"/>
+        <set value="_DELETE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="ExampleFeature" value-name="lookedUpValue"/>
@@ -54,7 +54,7 @@
 
     <!-- ExampleFeatureAppl methods -->
     <simple-method method-name="createExampleFeatureAppl" short-description="create a ExampleFeatureAppl">
-        <string-to-field string="_CREATE" field-name="securityAction"/>
+        <set value="_CREATE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
         <make-value entity-name="ExampleFeatureAppl" value-name="newEntity"/>
@@ -65,7 +65,7 @@
         <create-value value-name="newEntity"/>  
     </simple-method>   
     <simple-method method-name="updateExampleFeatureAppl" short-description="update a ExampleFeatureAppl">
-        <string-to-field string="_UPDATE" field-name="securityAction"/>
+        <set value="_UPDATE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="ExampleFeatureAppl" value-name="lookedUpValue"/>
@@ -73,7 +73,7 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteExampleFeatureAppl" short-description="delete a ExampleFeatureAppl">
-        <string-to-field string="_DELETE" field-name="securityAction"/>
+        <set value="_DELETE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
         <entity-one entity-name="ExampleFeatureAppl" value-name="lookedUpValue"/>
