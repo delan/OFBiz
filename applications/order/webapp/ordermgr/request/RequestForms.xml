@@ -41,7 +41,7 @@
     <form name="FindRequests" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="inputBox"
             target="FindRequest" title="" type="single" default-map-name="parameters">
-        <auto-fields-entity entity-name="CustRequestAndRole" default-field-type="find"/>
+        <auto-fields-entity entity-name="CustRequest" default-field-type="find"/>
         <field name="custRequestTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="CustRequestType" key-field-name="custRequestTypeId"/>
@@ -55,24 +55,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
-            <drop-down allow-empty="true">
-                <option key="REQ_REQUESTER" description="${uiLabelMap.WorkEffortRequestingParty}"/>
-                <option key="AGENT" description="${uiLabelMap.OrderAgent}"/>
-                <option key="REQ_TAKER" description="${uiLabelMap.WorkEffortRequestTaker}"/>
-                <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
-            </drop-down>
-        </field>
-        <!--
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="RoleType" description="${description}">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        -->
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="fromPartyId" title="${uiLabelMap.FromPartyParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="custRequestCategoryId"><hidden/></field>
         <field name="priority"><hidden/></field>
         <field name="description"><hidden/></field>
@@ -89,24 +72,22 @@
             title="" list-name="custRequestAndRoles" paginate-target="FindRequest"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
       	<actions>
-          <set field="entityName" value="CustRequestAndRole"/>
+          <!--<set field="entityName" value="CustRequestAndRole"/>-->
+          <set field="entityName" value="CustRequest"/>
           <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
             <field-map field-name="inputFields" env-name="requestParameters"/>
             <field-map field-name="entityName" env-name="entityName"/>
           </service>
         </actions>
         <field name="custRequestId" widget-style="buttontext">
-            <hyperlink description="${custRequestId}" target="request?custRequestId=${custRequestId}"/>
+            <hyperlink description="${custRequestId}" target="ViewRequest?custRequestId=${custRequestId}"/>
         </field>
         <field name="custRequestName"><display/></field>
         <field name="priority"><display/></field>
         <field name="responseRequiredDate"><display/></field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><display/></field>
+        <field name="fromPartyId" title="${uiLabelMap.FromPartyParty}"><display/></field>
         <field name="statusId">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
-        </field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
-            <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
     </form>
     <form name="ListRequestItems" type="list" use-row-submit="true" 
@@ -181,7 +162,6 @@
                 </entity-options>
             </drop-down>
         </field>
-
         <field name="priority" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <option key="9"/>
@@ -202,11 +182,21 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="custRequestDate" title="Request Date"><date-time type="timestamp"/></field>
+        <field name="productStoreId" title="${uiLabelMap.QuoteProductStoreId}">
+            <drop-down allow-empty="true">
+                <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId"/>
+            </drop-down>
+        </field>
+        <field name="custRequestDate" title="${uiLabelMap.OrderRequestDate}"><date-time type="timestamp"/></field>
         <field name="responseRequiredDate" title="Response Required Date"><date-time type="timestamp"/></field>
-        
-        <field name="requestPartyId" use-when="custRequest==null" title="Requesting Party"><lookup target-form-name="LookupPartyName"/></field>
-
+        <!--<field name="requestPartyId" use-when="custRequest==null" title="Requesting Party"><lookup target-form-name="LookupPartyName"/></field>-->
+        <field name="fromPartyId" title="Requesting Party">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="createdDate"><hidden/></field>
+        <field name="createdByUserLogin"><hidden/></field>
+        <field name="lastModifiedDate"><hidden/></field>
+        <field name="lastModifiedByUserLogin"><hidden/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditCustRequestItem" type="single"
