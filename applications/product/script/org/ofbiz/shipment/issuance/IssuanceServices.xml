@@ -31,9 +31,9 @@
     <!-- ItemIssuance services -->
     <simple-method method-name="createItemIssuance" short-description="Create ItemIssuance">
         <check-permission permission="FACILITY" action="_CREATE">
-        	<fail-message message="Security Error: to run createItemIssuance you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run createItemIssuance you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
-        <string-to-field string="Create ItemIssuance" field-name="operationName"/>
+        <set value="Create ItemIssuance" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
@@ -47,38 +47,34 @@
     </simple-method>
     <simple-method method-name="updateItemIssuance" short-description="Update ItemIssuance">
         <check-permission permission="FACILITY" action="_UPDATE">
-        	<fail-message message="Security Error: to run updateItemIssuance you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run updateItemIssuance you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
-        <string-to-field string="Update ItemIssuance" field-name="operationName"/>
+        <set value="Update ItemIssuance" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="ItemIssuance"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ItemIssuance" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="ItemIssuance" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteItemIssuance" short-description="Delete ItemIssuance">
         <check-permission permission="FACILITY" action="_DELETE">
-        	<fail-message message="Security Error: to run deleteItemIssuance you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteItemIssuance you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
-        <string-to-field string="Delete ItemIssuance" field-name="operationName"/>
+        <set value="Delete ItemIssuance" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="ItemIssuance"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ItemIssuance" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="ItemIssuance" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
     <!-- ItemIssuanceRole services -->
     <simple-method method-name="createItemIssuanceRole" short-description="Create ItemIssuanceRole">
         <check-permission permission="FACILITY" action="_CREATE">
-        	<fail-message message="Security Error: to run createItemIssuanceRole you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run createItemIssuanceRole you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
-        <string-to-field string="Create ItemIssuanceRole" field-name="operationName"/>
+        <set value="Create ItemIssuanceRole" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
@@ -90,21 +86,19 @@
     </simple-method>
     <simple-method method-name="deleteItemIssuanceRole" short-description="Delete ItemIssuanceRole">
         <check-permission permission="FACILITY" action="_DELETE">
-        	<fail-message message="Security Error: to run deleteItemIssuanceRole you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteItemIssuanceRole you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
-        <string-to-field string="Delete ItemIssuanceRole" field-name="operationName"/>
+        <set value="Delete ItemIssuanceRole" field="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="ItemIssuanceRole"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ItemIssuanceRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="ItemIssuanceRole" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
     <!-- the actual issuance services -->
     <simple-method method-name="issueOrderItemToShipment" short-description="Issue OrderItem to Shipment">
-        <string-to-field string="Issue OrderItem to Shipment" field-name="operationName"/>
+        <set value="Issue OrderItem to Shipment" field="operationName"/>
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
@@ -135,7 +129,7 @@
     </simple-method>
     
     <simple-method method-name="issueOrderItemShipGrpInvResToShipment" short-description="Issue OrderItemShipGrpInvRes to Shipment">
-        <string-to-field string="Issue OrderItemShipGrpInvRes to Shipment" field-name="operationName"/>
+        <set value="Issue OrderItemShipGrpInvRes to Shipment" field="operationName"/>
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
@@ -174,17 +168,11 @@
         <check-errors/>
 
         <!-- get orderItem -->
-        <make-value entity-name="OrderItem" value-name="orderItemLookupPk"/>
-        <set-pk-fields value-name="orderItemLookupPk" map-name="parameters"/>
-        <find-by-primary-key map-name="orderItemLookupPk" value-name="orderItem"/>
+        <entity-one entity-name="OrderItem" value-name="orderItem"/>
         <!-- get inventoryItem -->
-        <make-value entity-name="InventoryItem" value-name="inventoryItemLookupPk"/>
-        <set-pk-fields value-name="inventoryItemLookupPk" map-name="parameters"/>
-        <find-by-primary-key map-name="inventoryItemLookupPk" value-name="inventoryItem"/>
+        <entity-one entity-name="InventoryItem" value-name="inventoryItem"/>
         <!-- get shipment -->
-        <make-value entity-name="Shipment" value-name="shipmentLookupPk"/>
-        <set-pk-fields value-name="shipmentLookupPk" map-name="parameters"/>
-        <find-by-primary-key map-name="shipmentLookupPk" value-name="shipment"/>
+        <entity-one entity-name="Shipment" value-name="shipment"/>
         <!-- get orderShipment -->
         <make-value entity-name="OrderShipment" value-name="orderShipmentLookupPk"/>
         <set-pk-fields value-name="orderShipmentLookupPk" map-name="parameters"/>
@@ -204,16 +192,16 @@
                 <field-to-result field-name="orderShipment.shipmentItemSeqId" result-name="shipmentItemSeqId"/>
                 <make-value entity-name="ShipmentItem" value-name="shipmentItemLookupPk"/>
                 <set-pk-fields value-name="shipmentItemLookupPk" map-name="parameters"/>
-                <field-to-field field-name="orderShipment.shipmentItemSeqId" to-field-name="shipmentItemLookupPk.shipmentItemSeqId"/>
+                <set from-field="orderShipment.shipmentItemSeqId" field="shipmentItemLookupPk.shipmentItemSeqId"/>
                 <find-by-primary-key map-name="shipmentItemLookupPk" value-name="shipmentItem"/>
                 <remove-value value-name="orderShipment"/>
             </if-not-empty>
             <if-compare value="0" operator="not-equals" field-name="qtyForShipmentItem" type="Double">
                 <!-- add the qtyForShipmentItem to the shipmentItem -->
-                <field-to-field field-name="paremeters.quantity" to-field-name="originalQuantity"/>
-                <field-to-field field-name="qtyForShipmentItem" to-field-name="paremeters.quantity"/>
+                <set from-field="paremeters.quantity" field="originalQuantity"/>
+                <set from-field="qtyForShipmentItem" field="paremeters.quantity"/>
                 <call-simple-method method-name="findCreateIssueShipmentItem"/>
-                <field-to-field field-name="originalQuantity" to-field-name="paremeters.quantity"/>
+                <set from-field="originalQuantity" field="paremeters.quantity"/>
             </if-compare>
         <else>
             <!-- decrement the orderShipment.quantity -->
@@ -226,7 +214,7 @@
             <field-to-result field-name="orderShipment.shipmentItemSeqId" result-name="shipmentItemSeqId"/>
             <make-value entity-name="ShipmentItem" value-name="shipmentItemLookupPk"/>
             <set-pk-fields value-name="shipmentItemLookupPk" map-name="parameters"/>
-            <field-to-field field-name="orderShipment.shipmentItemSeqId" to-field-name="shipmentItemLookupPk.shipmentItemSeqId"/>
+            <set from-field="orderShipment.shipmentItemSeqId" field="shipmentItemLookupPk.shipmentItemSeqId"/>
             <find-by-primary-key map-name="shipmentItemLookupPk" value-name="shipmentItem"/>
         </else>
         </if-compare>
@@ -248,9 +236,9 @@
             <!-- if there are no more OIIRs for the orderItem, set the orderItem.statusId to ITEM_COMPLETED -->
             <get-related value-name="orderItem" relation-name="OrderItemShipGrpInvRes" list-name="otherOiirs"/>
             <if-empty field-name="otherOiirs">
-                <string-to-field string="ITEM_COMPLETED" field-name="statusId" map-name="changeOrderItemStatusMap"/>
-                <field-to-field field-name="orderId" map-name="orderItem" to-map-name="changeOrderItemStatusMap"/>
-                <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="changeOrderItemStatusMap"/>
+                <set value="ITEM_COMPLETED" field="changeOrderItemStatusMap.statusId"/>
+                <set from-field="orderItem.orderId" field="changeOrderItemStatusMap.orderId"/>
+                <set from-field="orderItem.orderItemSeqId" field="changeOrderItemStatusMap.orderItemSeqId"/>
                 <call-service service-name="changeOrderItemStatus" in-map-name="changeOrderItemStatusMap"/>
             </if-empty>
         <else>
@@ -260,13 +248,13 @@
         
         <!-- Decrement InventoryItem quantityOnHand -->
         <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
-        <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
-        <env-to-env env-name="orderItem.orderId" to-env-name="createDetailMap.orderId"/>
-        <env-to-env env-name="orderItem.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
-        <env-to-env env-name="orderItemShipGrpInvRes.shipGroupSeqId" to-env-name="createDetailMap.shipGroupSeqId"/>
-        <env-to-env env-name="shipmentItem.shipmentId" to-env-name="createDetailMap.shipmentId"/>
-        <env-to-env env-name="shipmentItem.shipmentItemSeqId" to-env-name="createDetailMap.shipmentItemSeqId"/>
-        <env-to-env env-name="itemIssuanceId" to-env-name="createDetailMap.itemIssuanceId"/>
+        <set from-field="inventoryItem.inventoryItemId" field="createDetailMap.inventoryItemId"/>
+        <set from-field="orderItem.orderId" field="createDetailMap.orderId"/>
+        <set from-field="orderItem.orderItemSeqId" field="createDetailMap.orderItemSeqId"/>
+        <set from-field="orderItemShipGrpInvRes.shipGroupSeqId" field="createDetailMap.shipGroupSeqId"/>
+        <set from-field="shipmentItem.shipmentId" field="createDetailMap.shipmentId"/>
+        <set from-field="shipmentItem.shipmentItemSeqId" field="createDetailMap.shipmentItemSeqId"/>
+        <set from-field="itemIssuanceId" field="createDetailMap.itemIssuanceId"/>
         <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
             <calcop field-name="parameters.quantity" operator="negative"/>
         </calculate>
@@ -279,24 +267,25 @@
         <!-- try to find an existing shipmentItem and attach to it, if none found create a new shipmentItem -->
         <!-- if there is NO productId on the orderItem, ALWAYS create a new shipmentItem -->
         <if-not-empty field-name="productId" map-name="orderItem">
-            <field-to-field field-name="productId" map-name="orderItem" to-map-name="shipmentItemLookup"/>
-            <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="shipmentItemLookup"/>
-            <if-not-empty field-name="paremeters.shipmentItemSeqId">
-                <field-to-field field-name="shipmentItemSeqId" map-name="parameters" to-map-name="shipmentItemLookup"/>
-            </if-not-empty>
-            <string-to-list string="shipmentItemSeqId" list-name="shipmentItemOrder"/>
-            <find-by-and entity-name="ShipmentItem" list-name="shipmentItems" map-name="shipmentItemLookup" order-by-list-name="shipmentItemOrder"/>
+            <entity-condition entity-name="ShipmentItem" list-name="shipmentItems">
+                <condition-list combine="and">
+                    <condition-expr field-name="productId" env-name="orderItem.productId"/>
+                    <condition-expr field-name="shipmentId" env-name="parameters.shipmentId"/>
+                    <condition-expr field-name="shipmentItemSeqId" env-name="parameters.shipmentItemSeqId" ignore-if-empty="true"/>
+                </condition-list>
+                <order-by field-name="shipmentItemSeqId"/>
+            </entity-condition>
             <first-from-list entry-name="shipmentItem" list-name="shipmentItems"/>
         </if-not-empty>
         
         <if-empty field-name="shipmentItem">
-            <field-to-field field-name="productId" map-name="orderItem" to-map-name="shipmentItemCreate"/>
-            <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="shipmentItemCreate"/>
-            <field-to-field field-name="quantity" map-name="parameters" to-map-name="shipmentItemCreate"/>
+            <set from-field="orderItem.productId" field="shipmentItemCreate.productId"/>
+            <set from-field="parameters.shipmentId" field="shipmentItemCreate.shipmentId"/>
+            <set from-field="parameters.quantity" field="shipmentItemCreate.quantity"/>
             <call-service service-name="createShipmentItem" in-map-name="shipmentItemCreate">
                 <result-to-field result-name="shipmentItemSeqId" map-name="shipmentItemLookupPk"/>
             </call-service>
-            <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="shipmentItemLookupPk"/>
+            <set from-field="parameters.shipmentId" field="shipmentItemLookupPk.shipmentId"/>
             <find-by-primary-key entity-name="ShipmentItem" map-name="shipmentItemLookupPk" value-name="shipmentItem"/>
         <else>
             <calculate field-name="quantity" map-name="shipmentItem">
@@ -311,23 +300,23 @@
     </simple-method>
     <simple-method method-name="callCreateItemIssuance" short-description="Call Create ItemIssuance - meant to be called in-line">
         <!-- create the ItemIssuance -->
-        <field-to-field field-name="quantity" map-name="parameters" to-map-name="itemIssuanceCreate"/>
-        <field-to-field field-name="shipmentId" map-name="shipmentItem" to-map-name="itemIssuanceCreate"/>
-        <field-to-field field-name="shipmentItemSeqId" map-name="shipmentItem" to-map-name="itemIssuanceCreate"/>
-        <field-to-field field-name="orderId" map-name="orderItem" to-map-name="itemIssuanceCreate"/>
-        <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemIssuanceCreate"/>
+        <set from-field="parameters.quantity" field="itemIssuanceCreate.quantity"/>
+        <set from-field="shipmentItem.shipmentId" field="itemIssuanceCreate.shipmentId"/>
+        <set from-field="shipmentItem.shipmentItemSeqId" field="itemIssuanceCreate.shipmentItemSeqId"/>
+        <set from-field="orderItem.orderId" field="itemIssuanceCreate.orderId"/>
+        <set from-field="orderItem.orderItemSeqId" field="itemIssuanceCreate.orderItemSeqId"/>
         
         <if-not-empty field-name="orderItemShipGrpInvRes">
             <!-- if this is coming from an OrderItem issue instead of an OrderItemShipGrpInvRes issue, we won't have this info -->
-            <field-to-field field-name="inventoryItemId" map-name="orderItemShipGrpInvRes" to-map-name="itemIssuanceCreate"/>
-            <field-to-field field-name="shipGroupSeqId" map-name="orderItemShipGrpInvRes" to-map-name="itemIssuanceCreate"/>
+            <set from-field="orderItemShipGrpInvRes.inventoryItemId" field="itemIssuanceCreate.inventoryItemId"/>
+            <set from-field="orderItemShipGrpInvRes.shipGroupSeqId" field="itemIssuanceCreate.shipGroupSeqId"/>
         </if-not-empty>
         <if-not-empty field-name="orderItemShipGroupAssoc">
             <!-- If we have a ShipGroup Assoc for this Item to focus on, set that; this is mostly the case for purchase orders and such -->
-            <field-to-field field-name="shipGroupSeqId" map-name="orderItemShipGroupAssoc" to-map-name="itemIssuanceCreate"/>
+            <set from-field="orderItemShipGroupAssoc.shipGroupSeqId" field="itemIssuanceCreate.shipGroupSeqId"/>
         </if-not-empty>
         
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="issuedByUserLoginId" to-map-name="itemIssuanceCreate"/>
+        <set from-field="userLogin.userLoginId" field="itemIssuanceCreate.issuedByUserLoginId"/>
         <call-service service-name="createItemIssuance" in-map-name="itemIssuanceCreate" >
             <result-to-field result-name="itemIssuanceId"/>
         </call-service>
@@ -336,17 +325,17 @@
     <simple-method method-name="associateIssueRoles" short-description="Associate Roles for ItemIssuance - meant to be called in-line">
         <!-- make sure the party is in the PACKER role -->
         <make-value entity-name="PartyRole" value-name="partyRole"/>
-        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="partyRole"/>
-        <string-to-field string="PACKER" field-name="roleTypeId" map-name="partyRole"/>
+        <set field="partyRole.partyId" from-field="userLogin.partyId"/>
+        <set field="partyRole.roleTypeId" value="PACKER"/>
         <find-by-primary-key entity-name="PartyRole" map-name="partyRole" value-name="checkPartyRole"/>
         <if-empty field-name="checkPartyRole">
             <create-value value-name="partyRole"/>
         </if-empty>
         
         <!-- Add ItemIssuanceRole for party that issues this... -->
-        <env-to-field env-name="itemIssuanceId" map-name="itemIssuanceRoleCreate"/>
-        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="itemIssuanceRoleCreate"/>
-        <string-to-field string="PACKER" field-name="roleTypeId" map-name="itemIssuanceRoleCreate"/>
+        <set from-field="itemIssuanceId" field="itemIssuanceRoleCreate.itemIssuanceId"/>
+        <set from-field="userLogin.partyId" field="itemIssuanceRoleCreate.partyId"/>
+        <set value="PACKER" field="itemIssuanceRoleCreate.roleTypeId"/>
         <call-service service-name="createItemIssuanceRole" in-map-name="itemIssuanceRoleCreate"/>
     </simple-method>
 </simple-methods>
