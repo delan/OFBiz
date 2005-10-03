@@ -29,39 +29,27 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- ProductAssoc -->
     <simple-method method-name="createBOMAssoc" short-description="Create Product to Product Association">
-        <if-empty field-name="fromDate" map-name="parameters">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="parameters"/>
+        <if-empty field-name="parameters.fromDate">
+            <now-timestamp-to-env env-name="parameters.fromDate"/>
         </if-empty>
+        <set field="" from-field=""/>
 
-        <field-to-field field-name="productId" map-name="parameters" to-field-name="productId" to-map-name="searchDuplicatedAncestorContext" />
-        <field-to-field field-name="productIdTo" map-name="parameters" to-field-name="productIdTo" to-map-name="searchDuplicatedAncestorContext" />
-        <if-not-empty field-name="fromDate" map-name="parameters">
-            <field-to-field field-name="fromDate" map-name="parameters" to-field-name="fromDate" to-map-name="searchDuplicatedAncestorContext" />
+        <set field="searchDuplicatedAncestorContext.productId" from-field="parameters.productId"/>
+        <set field="searchDuplicatedAncestorContext.productIdTo" from-field="parameters.productIdTo"/>
+        <if-not-empty field-name="parameters.fromDate">
+            <set field="searchDuplicatedAncestorContext.fromDate" from-field="parameters.fromDate"/>
         </if-not-empty>
-        <field-to-field field-name="productAssocTypeId" map-name="parameters" to-field-name="productAssocTypeId" to-map-name="searchDuplicatedAncestorContext" />
+        <set field="searchDuplicatedAncestorContext.productAssocTypeId" from-field="parameters.productAssocTypeId"/>
         <call-service service-name="searchDuplicatedAncestor" in-map-name="searchDuplicatedAncestorContext">
             <result-to-field result-name="duplicatedProductAssoc" field-name="duplicatedProductAssoc"/>
         </call-service>
         <if-not-empty field-name="duplicatedProductAssoc">
-            <field-to-list field-name="productId" map-name="duplicatedProductAssoc" list-name="productToProduct"/>
-            <field-to-list field-name="productIdTo" map-name="duplicatedProductAssoc" list-name="productToProduct"/>
+            <set field="productToProduct[]" from-field="duplicatedProductAssoc.productId"/>
+            <set field="productToProduct[]" from-field="duplicatedProductAssoc.productIdTo"/>
             <property-to-field property="ManufacturingDuplicatedComponentInBOM" resource="ManufacturingUiLabels" field-name="errorMessage" arg-list-name="productToProduct"/>
             <field-to-result field-name="errorMessage" result-name="errorMessage"/>
             <return/>
         </if-not-empty>
-        <!--
-        <make-value value-name="newEntity" entity-name="ProductAssoc"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-
-        <if-empty field-name="fromDate" map-name="newEntity">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
-        </if-empty>
-        
-        <create-value value-name="newEntity"/>
-        -->
         <set-service-fields service-name="createProductAssoc" map-name="parameters" to-map-name="context"/>
         <call-service service-name="createProductAssoc" in-map-name="context"/>
     </simple-method>
@@ -72,7 +60,7 @@
         <find-by-and entity-name="ProductAssoc" map-name="lookupMap" list-name="assocs"/>
         <iterate entry-name="assoc" list-name="assocs">
             <set-service-fields service-name="createBOMAssoc" map-name="assoc" to-map-name="context"/>
-            <field-to-field field-name="copyToProductId" map-name="parameters" to-field-name="productId" to-map-name="context"/>
+            <set field="context.productId" from-field="parameters.copyToProductId"/>
             <call-service service-name="createBOMAssoc" in-map-name="context" break-on-error="false"/>
         </iterate>
     </simple-method>
@@ -146,9 +134,8 @@
             <check-errors/>
 	<else>
             <make-value value-name="newEntity" entity-name="ProductManufacturingRule"/>
-            <if-empty field-name="ruleId" map-name="parameters">
-                <sequenced-id-to-env sequence-name="ProductManufacturingRule" env-name="ruleId"/>
-                <env-to-field env-name="ruleId" map-name="parameters"/>
+            <if-empty field-name="parameters.ruleId">
+                <sequenced-id-to-env sequence-name="ProductManufacturingRule" env-name="parameters.ruleId"/>
             </if-empty>
             <set-pk-fields map-name="parameters" value-name="newEntity"/>
             <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
@@ -165,7 +152,7 @@
         <make-value value-name="lookupPKMap" entity-name="ProductManufacturingRule"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductManufacturingRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <if-not-empty map-name="lookedUpValue" field-name="ruleId">
+        <if-not-empty field-name="lookedUpValue.ruleId">
             <remove-value value-name="lookedUpValue"/>
         </if-not-empty>
     </simple-method>
