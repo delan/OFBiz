@@ -29,7 +29,7 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
         
     <simple-method method-name="linearComponentFormula" short-description="Formula that the number of linear components in bom">
-        <field-to-field field-name="parameters.arguments" to-field-name="arguments"/>
+        <set field="arguments" from-field="parameters.arguments"/>
         <calculate field-name="totQuantity">
             <calcop operator="multiply">
                 <calcop operator="get" field-name="arguments.neededQuantity"/>
