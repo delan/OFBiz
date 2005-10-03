@@ -46,42 +46,34 @@
         <check-errors/>
         
         <make-value entity-name="Payment" value-name="payment"/>
-        <sequenced-id-to-env sequence-name="Payment" env-name="paymentId"/>
-        <to-string field-name="paymentId"/>
-        <env-to-field env-name="paymentId" map-name="payment"/>
-        
-        <set-nonpk-fields map-name="parameters" value-name="payment"/>
+        <sequenced-id-to-env sequence-name="Payment" env-name="payment.paymentId"/>
+        <field-to-result field-name="payment.paymentId" result-name="paymentId"/>
 
-        <if-empty field-name="effectiveDate" map-name="parameters">
-            <now-timestamp-to-env env-name="timestamp"/>
-            <env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
+        <set-nonpk-fields map-name="parameters" value-name="payment"/>
+        <if-empty field-name="payment.effectiveDate">
+            <now-timestamp-to-env env-name="payment.effectiveDate"/>
         </if-empty>
         
         <create-value value-name="payment"/>
-        <field-to-result field-name="paymentId" map-name="payment" result-name="paymentId"/>
     </simple-method>
     <simple-method method-name="updatePayment" short-description="Update a Payment">
-        <make-value entity-name="Payment" value-name="lookupPayment"/>
-        <set-pk-fields value-name="lookupPayment" map-name="parameters"/>
-        
-        <find-by-primary-key entity-name="Payment" map-name="lookupPayment" value-name="payment"/>
+        <entity-one entity-name="Payment" value-name="payment"/>
         <if>
-          <condition>
-              <and>
-                <not><if-has-permission permission="PAY_INFO" action="_UPDATE"/></not>
-                <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="payment"/></not>
-                <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="payment"/></not>
-              </and>                
-          </condition>
-          <then>
-            <add-error><fail-property resource="AccountingUiLabels" property="AccountingUpdatePaymentPermissionError"/></add-error>
-          </then>
+            <condition>
+                <and>
+                    <not><if-has-permission permission="PAY_INFO" action="_UPDATE"/></not>
+                    <not><if-compare-field field-name="userLogin.partyId" operator="equals" to-field-name="payment.partyIdFrom"/></not>
+                    <not><if-compare-field field-name="userLogin.partyId" operator="equals" to-field-name="payment.partyIdTo"/></not>
+                </and>                
+            </condition>
+            <then>
+                <add-error><fail-property resource="AccountingUiLabels" property="AccountingUpdatePaymentPermissionError"/></add-error>
+            </then>
         </if>
         <check-errors/>
         <set-nonpk-fields map-name="parameters" value-name="payment"/>
-        <if-empty field-name="effectiveDate" map-name="parameters">
-            <now-timestamp-to-env env-name="timestamp"/>
-            <env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
+        <if-empty field-name="payment.effectiveDate">
+            <now-timestamp-to-env env-name="payment.effectiveDate"/>
         </if-empty>
         <store-value value-name="payment"/>
     </simple-method>
@@ -99,19 +91,16 @@
         <make-value entity-name="PaymentApplication" value-name="paymentAppl"/>
         <set-nonpk-fields map-name="parameters" value-name="paymentAppl"/>
         
-        <if-not-empty field-name="invoiceId" map-name="parameters">
-            <field-to-field field-name="invoiceId" map-name="parameters" to-map-name="invoiceLookup"/>
-            <find-by-primary-key entity-name="Invoice" map-name="invoiceLookup" value-name="invoice"/>
-            <if-not-empty field-name="billingAccountId" map-name="invoice">
-                <field-to-field field-name="billingAccountId" map-name="invoice" to-map-name="paymentAppl"/>
+        <if-not-empty field-name="parameters.invoiceId">
+            <entity-one entity-name="Invoice" value-name="invoice"/>
+            <if-not-empty field-name="invoice.billingAccountId">
+                <set from-field="invoice.billingAccountId" field="paymentAppl.billingAccountId"/>
             </if-not-empty>
         </if-not-empty>
         
-        <sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentApplicationId"/>
-        <to-string field-name="paymentApplicationId"/>
-        <env-to-field env-name="paymentApplicationId" field-name="paymentApplicationId" map-name="paymentAppl"/>
+        <sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentAppl.paymentApplicationId"/>
+        <field-to-result field-name="paymentAppl.paymentApplicationId" result-name="paymentApplicationId"/>
         
         <create-value value-name="paymentAppl"/>
-        <field-to-result field-name="paymentApplicationId" map-name="paymentAppl"/>
     </simple-method>
 </simple-methods>
