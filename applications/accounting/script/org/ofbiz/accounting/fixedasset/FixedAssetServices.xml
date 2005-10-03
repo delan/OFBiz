@@ -41,26 +41,22 @@
           <!-- create new entity and create all the fields -->
         <make-value value-name="newEntity" entity-name="FixedAsset"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="newEntity"/>
+        <set from-field="parameters.fixedAssetId" field="newEntity.fixedAssetId"/>
 
         <!-- create a non existing ID if not supplied -->
-        <if-empty field-name="fixedAssetId" map-name="newEntity">
-            <sequenced-id-to-env sequence-name="fixedAsset" env-name="fixedAssetId"/>
-            <to-string field-name="fixedAssetId"/>
-            <env-to-field env-name="fixedAssetId" map-name="newEntity"/>
-            <field-to-result field-name="fixedAssetId" result-name="fixedAssetId"/>
+        <if-empty field-name="newEntity.fixedAssetId">
+            <sequenced-id-to-env sequence-name="FixedAsset" env-name="newEntity.fixedAssetId"/>
+            <field-to-result field-name="newEntity.fixedAssetId" result-name="fixedAssetId"/>
         <else>
             <!-- check the provided ID --> 
-            <check-id field-name="fixedAssetId" map-name="newEntity"/>
+            <check-id field-name="newEntity.fixedAssetId"/>
             <check-errors/>
-            </else>
+        </else>
         </if-empty>
                                 
         <!-- finally create the record (should not exist already)-->
         <create-value value-name="newEntity"/>
-        <check-errors/>
-
-        </simple-method>
+    </simple-method>
 
     <!-- update an existing Fixed Asset header Record -->
     <simple-method method-name="updateFixedAsset" short-description="Update an existing FixedAsset">
@@ -70,12 +66,9 @@
         </check-permission>        
         <check-errors/>
 
-        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="FixedAsset" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <check-errors/>
+        <entity-one entity-name="FixedAsset" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        <check-errors/>
     </simple-method>
 
     <!-- ================================================================ -->
@@ -94,13 +87,11 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
-        <if-empty field-name="fromDate" map-name="newEntity">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        <if-empty field-name="newEntity.fromDate">
+            <now-timestamp-to-env env-name="newEntity.fromDate"/>
         </if-empty>
         
         <create-value value-name="newEntity"/>
-        <check-errors/>
     </simple-method>
 
     <!-- update the product to fixed Asset link -->    
@@ -111,12 +102,9 @@
         </check-permission>        
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="FixedAssetProduct"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="FixedAssetProduct" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="FixedAssetProduct" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        <check-errors/>
     </simple-method>
     
     <!-- remove the productlink from the Fixed Asset -->
@@ -127,11 +115,8 @@
         </check-permission>        
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="FixedAssetProduct"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="FixedAssetProduct" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="FixedAssetProduct" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-        <check-errors/>
     </simple-method>
 
     <!-- ================================================================ -->
@@ -145,9 +130,7 @@
         </check-permission>        
         <check-errors/>
 
-        <make-value value-name="fixedAssetPKMap" entity-name="FixedAsset"/>
-        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="fixedAssetPKMap"/>
-        <find-by-primary-key entity-name="FixedAsset" map-name="fixedAssetPKMap" value-name="fixedAsset"/>
+        <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
         
         <make-value value-name="excDayPKMap" entity-name="TechDataCalendarExcDay"/>
         <set-pk-fields field-name= "calendarId" map-name="fixedAsset" value-name="excDayPKMap"/>
@@ -155,7 +138,6 @@
         <find-by entity-name="TechDataCalendarExcDay" map-name="excDayPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields field-name="capacity" map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        <check-errors/>
     </simple-method>
     
 
@@ -166,8 +148,8 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="addPartyToFixedAsset" short-description="Add Party to FixedAsset">
-        <string-to-field string="addPartyToFixedAsset" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
+        <set value="addPartyToFixedAsset" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
@@ -175,34 +157,29 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
-        <if-empty field-name="fromDate" map-name="newEntity">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        <if-empty field-name="newEntity.fromDate">
+            <now-timestamp-to-env env-name="newEntity.fromDate"/>
         </if-empty>
         
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updatePartyToFixedAsset" short-description="Update Party to FixedAsset Application">
-        <string-to-field string="updatePartyToFixedAsset" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <set value="updatePartyToFixedAsset" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="FixedAssetRole"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="FixedAssetRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="FixedAssetRole" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removePartyFromFixedAsset" short-description="Remove Party From FixedAsset">
-        <string-to-field string="removePartyFromFixedAsset" field-name="callingMethodName"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
+        <set value="removePartyFromFixedAsset" field="callingMethodName"/>
+        <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="FixedAssetRole"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="FixedAssetRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="FixedAssetRole" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
@@ -211,10 +188,10 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="addFixedAssetToFixedAsset" short-description="Add FixedAsset to FixedAsset">
-        <string-to-field string="addFixedAssetToFixedAsset" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
+        <set value="addFixedAssetToFixedAsset" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
         <!-- note the the user must be associated with the parent FixedAsset with the role limited permission -->
-        <string-to-field string="parentFixedAssetId" field-name="fixedAssetIdName"/>
+        <set value="parentFixedAssetId" field="fixedAssetIdName"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
@@ -222,40 +199,33 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
-        <if-empty field-name="fromDate" map-name="newEntity">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        <if-empty field-name="newEntity.fromDate">
+            <now-timestamp-to-env env-name="newEntity.fromDate"/>
         </if-empty>
         
         <create-value value-name="newEntity"/>
     </simple-method>
-
     <simple-method method-name="updateFixedAssetToFixedAsset" short-description="Update FixedAsset to FixedAsset Application">
-        <string-to-field string="updateFixedAssetToFixedAsset" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <set value="updateFixedAssetToFixedAsset" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
         <!-- note the the user must be associated with the parent FixedAsset with the role limited permission -->
-        <string-to-field string="parentFixedAssetId" field-name="fixedAssetIdName"/>
+        <set value="parentFixedAssetId" field="fixedAssetIdName"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="FixedAssetRollup"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="FixedAssetRollup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="FixedAssetRollup" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-
     <simple-method method-name="removeFixedAssetFromFixedAsset" short-description="Remove FixedAsset From FixedAsset">
-        <string-to-field string="removeFixedAssetFromFixedAsset" field-name="callingMethodName"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
+        <set value="removeFixedAssetFromFixedAsset" field="callingMethodName"/>
+        <set value="DELETE" field="checkAction"/>
         <!-- note the the user must be associated with the parent FixedAsset with the role limited permission -->
-        <string-to-field string="parentFixedAssetId" field-name="fixedAssetIdName"/>
+        <set value="parentFixedAssetId" field="fixedAssetIdName"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="FixedAssetRollup"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="FixedAssetRollup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="FixedAssetRollup" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
@@ -264,88 +234,92 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="copyFixedAssetProductMembers" short-description="copy FixedAssetProduct Members to a FixedAssetProductTo">
-        <string-to-field string="copyFixedAssetProductMembers" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
+        <set value="copyFixedAssetProductMembers" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
         <!-- note the the user must be associated with the target FixedAsset with the role limited permission -->
-        <string-to-field string="fixedAssetIdTo" field-name="fixedAssetIdName"/>
+        <set value="fixedAssetIdTo" field="fixedAssetIdName"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
-        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
-        <find-by-and entity-name="FixedAssetMember" map-name="lookupMap" list-name="FixedAssetMembers"/>
+        <entity-and entity-name="FixedAssetMember" list-name="fixedAssetMembers">
+            <field-map field-name="fixedAssetId" env-name="parameters.fixedAssetId"/>
+        </entity-and>
 
-        <field-to-env field-name="validDate" map-name="parameters" env-name="validDate"/>
-        <if-not-empty field-name="validDate">
-            <filter-list-by-date list-name="FixedAssetMembers" valid-date-name="validDate"/>
+        <if-not-empty field-name="parameters.validDate">
+            <filter-list-by-date list-name="fixedAssetMembers" valid-date-name="parameters.validDate"/>
         </if-not-empty>
         
         <!-- add each to a list to store and then store all and let the entity engine do inserts or updates as needed; much more reliable/useful -->
-        <iterate entry-name="FixedAssetMember" list-name="FixedAssetMembers">
-            <clone-value value-name="FixedAssetMember" new-value-name="newFixedAssetMember"/>
-            <field-to-field field-name="fixedAssetIdTo" map-name="parameters" to-field-name="fixedAssetId" to-map-name="newFixedAssetMember"/>
-            <field-to-list field-name="newFixedAssetMember" list-name="pcmsToStore"/>
+        <iterate entry-name="fixedAssetMember" list-name="fixedAssetMembers">
+            <clone-value value-name="fixedAssetMember" new-value-name="newFixedAssetMember"/>
+            <set from-field="parameters.fixedAssetIdTo" field="newFixedAssetMember.fixedAssetId"/>
+            <set field="pcmsToStore[]" from-field="newFixedAssetMember"/>
         </iterate>
         <store-list list-name="pcmsToStore"/>
 
         <if-compare field-name="recurse" map-name="parameters" operator="equals" value="Y">
             <!-- call this service for each sub-FixedAsset in the rollup with the same FixedAssetIdTo -->
-            <field-to-field field-name="fixedAssetId" map-name="parameters" to-field-name="parentFixedAssetId" to-map-name="lookupChildrenMap"/>
-            <find-by-and entity-name="FixedAssetRollup" map-name="lookupChildrenMap" list-name="FixedAssetRollups"/>
+            <entity-and entity-name="FixedAssetRollup" list-name="fixedAssetRollups">
+                <field-map field-name="parentFixedAssetId" env-name="parameters.fixedAssetId"/>
+            </entity-and>
 
-            <if-not-empty field-name="validDate">
-                <filter-list-by-date list-name="FixedAssetRollups" valid-date-name="validDate"/>
+
+            <if-not-empty field-name="parameters.validDate">
+                <filter-list-by-date list-name="fixedAssetRollups" valid-date-name="parameters.validDate"/>
             </if-not-empty>
 
-            <iterate entry-name="FixedAssetRollup" list-name="FixedAssetRollups">
-                <field-to-field field-name="fixedAssetId" map-name="FixedAssetRollup" to-map-name="callServiceMap"/>
-                <field-to-field field-name="fixedAssetIdTo" map-name="parameters" to-map-name="callServiceMap"/>
-                <field-to-field field-name="validDate" map-name="parameters" to-map-name="callServiceMap"/>
-                <field-to-field field-name="recurse" map-name="parameters" to-map-name="callServiceMap"/>
+            <iterate entry-name="fixedAssetRollup" list-name="fixedAssetRollups">
+                <set from-field="fixedAssetRollup.fixedAssetId" field="callServiceMap.fixedAssetId"/>
+                <set from-field="parameters.fixedAssetIdTo" field="callServiceMap.fixedAssetIdTo"/>
+                <set from-field="parameters.validDate" field="callServiceMap.validDate"/>
+                <set from-field="parameters.recurse" field="callServiceMap.recurse"/>
                 <call-service service-name="copyFixedAssetProductMembers" in-map-name="callServiceMap"/>
             </iterate>
         </if-compare>
     </simple-method>
 
     <simple-method method-name="expireAllFixedAssetProductMembers" short-description="Remove FixedAsset From FixedAsset">
-        <string-to-field string="expireAllFixedAssetProductMembers" field-name="callingMethodName"/>
-        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <set value="expireAllFixedAssetProductMembers" field="callingMethodName"/>
+        <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
         <if-not-empty field-name="thruDate" map-name="parameters">
-            <field-to-env field-name="thruDate" map-name="parameters" env-name="expireTimestamp"/>
-            <else>
-                <now-timestamp-to-env env-name="expireTimestamp"/>
-            </else>
+            <set from-field="parameters.thruDate" field="expireTimestamp"/>
+        <else>
+            <now-timestamp-to-env env-name="expireTimestamp"/>
+        </else>
         </if-not-empty>
         
-        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
-        <find-by-and entity-name="FixedAssetMember" map-name="lookupMap" list-name="FixedAssetMembers"/>
+        <entity-and entity-name="FixedAssetMember" list-name="fixedAssetMembers">
+            <field-map field-name="fixedAssetId" env-name="parameters.fixedAssetId"/>
+        </entity-and>
         
-        <iterate entry-name="FixedAssetMember" list-name="FixedAssetMembers">
-            <env-to-field env-name="expireTimestamp" field-name="thruDate" map-name="FixedAssetMember"/>
-            <store-value value-name="FixedAssetMember"/>
+        <iterate entry-name="fixedAssetMember" list-name="fixedAssetMembers">
+            <set from-field="expireTimestamp" field="fixedAssetMember.thruDate"/>
+            <store-value value-name="fixedAssetMember"/>
         </iterate>
     </simple-method>
     <simple-method method-name="removeExpiredFixedAssetProductMembers" short-description="Remove FixedAsset From FixedAsset">
-        <string-to-field string="removeExpiredFixedAssetProductMembers" field-name="callingMethodName"/>
-        <string-to-field string="DELETE" field-name="checkAction"/>
+        <set value="removeExpiredFixedAssetProductMembers" field="callingMethodName"/>
+        <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
-        <if-not-empty field-name="validDate" map-name="parameters">
-            <field-to-env field-name="validDate" map-name="parameters" env-name="expireTimestamp"/>
-            <else>
-                <now-timestamp-to-env env-name="expireTimestamp"/>
-            </else>
+        <if-not-empty field-name="parameters.validDate">
+            <set from-field="parameters.validDate" field="expireTimestamp"/>
+        <else>
+            <now-timestamp-to-env env-name="expireTimestamp"/>
+        </else>
         </if-not-empty>
         
-        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
-        <find-by-and entity-name="FixedAssetMember" map-name="lookupMap" list-name="FixedAssetMembers"/>
+        <entity-and entity-name="FixedAssetMember" list-name="fixedAssetMembers">
+            <field-map field-name="fixedAssetId" env-name="parameters.fixedAssetId"/>
+        </entity-and>
         
-        <iterate entry-name="FixedAssetMember" list-name="FixedAssetMembers">
-            <if-compare-field field-name="thruDate" map-name="FixedAssetMember" operator="less" to-field-name="expireTimestamp" type="Timestamp">
-                <remove-value value-name="FixedAssetMember"/>
+        <iterate entry-name="fixedAssetMember" list-name="fixedAssetMembers">
+            <if-compare-field field-name="thruDate" map-name="fixedAssetMember" operator="less" to-field-name="expireTimestamp" type="Timestamp">
+                <remove-value value-name="fixedAssetMember"/>
             </if-compare-field>
         </iterate>
     </simple-method>
@@ -354,20 +328,20 @@
     <!-- Special FixedAsset Related Create Services -->
     <!-- ================================================================ -->
     <simple-method method-name="createProductInFixedAsset" short-description="Create a Product in a FixedAsset along with special information such as features">
-        <string-to-field string="createProductInFixedAsset" field-name="callingMethodName"/>
-        <string-to-field string="CREATE" field-name="checkAction"/>
+        <set value="createProductInFixedAsset" field="callingMethodName"/>
+        <set value="CREATE" field="checkAction"/>
         <call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
         
-        <if-empty field-name="currencyUomId" map-name="parameters">
+        <if-empty field-name="parameters.currencyUomId">
             <!-- default to USD for lack of a better alternative, for now anyway... -->
-            <string-to-field string="USD" field-name="currencyUomId" map-name="parameters"/>
+            <set value="USD" field="parameters.currencyUomId"/>
         </if-empty>
         
         <!-- create Product -->
         <set-service-fields service-name="createProduct" map-name="parameters" to-map-name="callCreateProductMap"/>
-        <if-empty field-name="productTypeId" map-name="callCreateProductMap">
-            <string-to-field string="FINISHED_GOOD" field-name="productTypeId" map-name="callCreateProductMap"/>
+        <if-empty field-name="callCreateProductMap.productTypeId">
+            <set value="FINISHED_GOOD" field="callCreateProductMap.productTypeId"/>
         </if-empty>
         <call-service service-name="createProduct" in-map-name="callCreateProductMap">
             <result-to-field result-name="productId"/>
@@ -375,40 +349,40 @@
         <field-to-result field-name="productId"/>
         
         <!-- create FixedAssetMember -->
-        <env-to-field env-name="productId" map-name="callCreateFixedAssetMemberMap"/>
-        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="callCreateFixedAssetMemberMap"/>
+        <set field="callCreateFixedAssetMemberMap.productId" from-field="productId"/>
+        <set field="callCreateFixedAssetMemberMap.fixedAssetId" from-field="parameters.fixedAssetId"/>
         <call-service service-name="addProductToFixedAsset" in-map-name="callCreateFixedAssetMemberMap"/>
         
         <!-- create defaultPrice and averageCost ProductPrice -->
         <if-not-empty field-name="parameters.defaultPrice">
-            <env-to-field env-name="productId" map-name="createDefaultPriceMap"/>
-            <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="createDefaultPriceMap"/>
-            <env-to-env env-name="parameters.defaultPrice" to-env-name="createDefaultPriceMap.price"/>
-            <string-to-field string="_NA_" field-name="createDefaultPriceMap.productStoreGroupId"/>
-            <string-to-field string="DEFAULT_PRICE" field-name="createDefaultPriceMap.productPriceTypeId"/>
+            <set from-field="productId" field="createDefaultPriceMap.productId"/>
+            <set from-field="parameters.currencyUomId" field="createDefaultPriceMap.currencyUomId"/>
+            <set from-field="parameters.defaultPrice" field="createDefaultPriceMap.price"/>
+            <set value="_NA_" field="createDefaultPriceMap.productStoreGroupId"/>
+            <set value="DEFAULT_PRICE" field="createDefaultPriceMap.productPriceTypeId"/>
             <call-service service-name="createProductPrice" in-map-name="createDefaultPriceMap"/>
         </if-not-empty>
         
         <if-not-empty field-name="parameters.averageCost">
-            <env-to-field env-name="productId" map-name="createAverageCostMap"/>
-            <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="createAverageCostMap"/>
-            <env-to-env env-name="parameters.averageCost" to-env-name="createAverageCostMap.price"/>
-            <string-to-field string="_NA_" field-name="createAverageCostMap.productStoreGroupId"/>
-            <string-to-field string="AVERAGE_COST" field-name="createAverageCostMap.productPriceTypeId"/>
+            <set from-field="productId" field="createAverageCostMap.productId"/>
+            <set from-field="parameters.currencyUomId" field="createAverageCostMap.currencyUomId"/>
+            <set from-field="parameters.averageCost" field="createAverageCostMap.price"/>
+            <set value="_NA_" field="createAverageCostMap.productStoreGroupId"/>
+            <set value="AVERAGE_COST" field="createAverageCostMap.productPriceTypeId"/>
             <call-service service-name="createProductPrice" in-map-name="createAverageCostMap"/>
         </if-not-empty>
 
         <!-- create ProductFeatureAppl(s) -->
-        <string-to-field string="N" field-name="hasSelectableFeatures"/>
+        <set value="N" field="hasSelectableFeatures"/>
         <iterate-map map-name="parameters.productFeatureIdByType" key-name="productFeatureTypeId" value-name="productFeatureId">
             <log level="info" message="Applying feature [${productFeatureId}] of type [${productFeatureTypeId}] to product [${productId}]"/>
-            <env-to-field env-name="productId" map-name="createPfaMap"/>
-            <env-to-field env-name="productFeatureId" map-name="createPfaMap"/>
+            <set from-field="productId" field="createPfaMap.productId"/>
+            <set from-field="productFeatureId" field="createPfaMap.productFeatureId"/>
             <if-compare field-name="${productFeatureTypeId}" map-name="parameters.productFeatureSelectableByType" operator="equals" value="Y">
-                <string-to-field string="SELECTABLE_FEATURE" field-name="productFeatureApplTypeId" map-name="createPfaMap"/>
-                <string-to-field string="Y" field-name="hasSelectableFeatures"/>
+                <set value="SELECTABLE_FEATURE" field="createPfaMap.productFeatureApplTypeId"/>
+                <set value="Y" field="hasSelectableFeatures"/>
             <else>
-                <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="createPfaMap"/>
+                <set value="STANDARD_FEATURE" field="createPfaMap.productFeatureApplTypeId"/>
             </else>
             </if-compare>
             <call-service service-name="applyFeatureToProduct" in-map-name="createPfaMap"/>
@@ -417,9 +391,8 @@
         
         <!-- set isVirtual based on hasSelectableFeatures -->
         <if-compare field-name="hasSelectableFeatures" operator="equals" value="Y">
-            <env-to-field env-name="productId" map-name="findProductMap"/>
-            <find-by-primary-key entity-name="Product" map-name="findProductMap" value-name="newProduct"/>
-            <string-to-field string="Y" field-name="isVirtual" map-name="newProduct"/>
+            <entity-one entity-name="Product" value-name="newProduct"/>
+            <set value="Y" field="newProduct.isVirtual"/>
             <store-value value-name="newProduct"/>
         </if-compare>
     </simple-method>    
@@ -449,11 +422,10 @@
             <fail-message message="Security Error: to run updateFixedAssetStdCost you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
         </check-permission>
         <check-errors/>
-        <entity-one entity-name="FixedAssetStdCost" value-name="fixedAssetStdCost" auto-field-map="true"/>
-        <check-errors/>
+
+        <entity-one entity-name="FixedAssetStdCost" value-name="fixedAssetStdCost"/>
         <set-nonpk-fields map-name="parameters" value-name="fixedAssetStdCost"/>
         <store-value value-name="fixedAssetStdCost"/>
-        <check-errors/>
     </simple-method>
 
     <!-- cancel an existing Agreement -->
@@ -463,12 +435,9 @@
             <fail-message message="Security Error: to run cancelFixedAssetStdCost you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
         </check-permission>
         <check-errors/>
-        <entity-one entity-name="FixedAssetStdCost" value-name="fixedAssetStdCost" auto-field-map="true"/>
-        <check-errors/>
-        <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="fixedAssetStdCost"/>
-        <store-value value-name="fixedAssetStdCost"/>
-        <check-errors/>
-    </simple-method>
 
+        <entity-one entity-name="FixedAssetStdCost" value-name="fixedAssetStdCost"/>
+        <now-timestamp-to-env env-name="fixedAssetStdCost.thruDate"/>
+        <store-value value-name="fixedAssetStdCost"/>
+    </simple-method>
 </simple-methods>
