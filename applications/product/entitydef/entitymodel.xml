@@ -2932,7 +2932,6 @@
             title="Product Store Email Settings Entity">
       <field name="productStoreId" type="id-ne"></field>
       <field name="emailType" type="id-ne"></field>
-      <field name="templatePath" type="long-varchar"><!-- deprecated by screenLocation, but still used for some non-order notice emails --></field>
       <field name="bodyScreenLocation" type="long-varchar"><!-- if empty defaults to a screen based on the emailType --></field>
       <field name="xslfoAttachScreenLocation" type="long-varchar"><!-- if specified is used to generate XSL:FO that is transformed to a PDF via Apache FOP and attached to the email --></field>
       <field name="fromAddress" type="email"></field>

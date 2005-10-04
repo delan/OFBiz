@@ -237,8 +237,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="bodyScreenLocation" title="${uiLabelMap.ProductBodyScreenLocation}" tooltip="Used for Order Notice Emails"></field>
-        <field name="templatePath" title="${uiLabelMap.ProductTemplatePath}" tooltip="Used for non-Order Emails"></field>
+        <field name="bodyScreenLocation" title="${uiLabelMap.ProductBodyScreenLocation}"></field>
+        <field name="xslfoAttachScreenLocation" title="${uiLabelMap.ProductAttachmentScreenLocation}"></field>
         <field name="subject" title="${uiLabelMap.ProductSubject}"></field>
         <field name="fromAddress" title="${uiLabelMap.CommonFromAddress}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -251,9 +251,8 @@
         <field name="emailType" title="${uiLabelMap.CommonEmailType}" widget-style="tabletext">
             <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}" cache="true" also-hidden="true"/>
         </field>
-        <field name="bodyScreenLocation" title="${uiLabelMap.ProductBodyScreenLocation}" tooltip="Used for Order Notice Emails"></field>
-        <field name="xslfoAttachScreenLocation" title="XSL-FO Attachment Screen Location"></field>
-        <field name="templatePath" title="${uiLabelMap.ProductTemplatePath}" tooltip="Used for non-Order Emails"></field>
+        <field name="bodyScreenLocation" title="${uiLabelMap.ProductBodyScreenLocation}"></field>
+        <field name="xslfoAttachScreenLocation" title="${uiLabelMap.ProductAttachmentScreenLocation}"></field>
         <field name="subject" title="${uiLabelMap.ProductSubject}"></field>
         <field name="fromAddress" title="${uiLabelMap.CommonFromAddress}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>

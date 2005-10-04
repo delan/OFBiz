@@ -386,9 +386,8 @@ public class UtilMisc {
         }
         if (localeObject != null && localeObject instanceof Locale) {
             return (Locale) localeObject;
-        } else {
-            return Locale.getDefault();
         }
+        return Locale.getDefault();
     }
 
     public static List availableLocaleList = null;
