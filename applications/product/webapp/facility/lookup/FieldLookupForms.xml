@@ -29,8 +29,8 @@
     <form name="lookupFacility" target="LookupFacility" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="Facility" default-field-type="hidden"/>
-        <field name="facilityId" title="${uiLabelMap.ProductFacilityId}"><text-find default-value="equals"/></field>
-        <field name="facilityName" title="${uiLabelMap.ProductFacilityNameId}"><text-find default-value="equals"/></field>
+        <field name="facilityId" title="${uiLabelMap.ProductFacilityId}"><text-find/></field>
+        <field name="facilityName" title="${uiLabelMap.ProductFacilityNameId}"><text-find/></field>
         <field name="facilityTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="FacilityType" key-field-name="facilityTypeId">

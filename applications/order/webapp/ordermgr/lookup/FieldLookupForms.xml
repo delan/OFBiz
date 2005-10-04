@@ -27,7 +27,7 @@
     <form name="lookupOrderHeader" target="LookupOrderHeader" title="" type="single" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="OrderHeader" default-field-type="find"/>
-        <field name="orderHeaderId" title="${uiLabelMap.OrderOrderHeaderId}"><text-find default-value="equals"/></field>
+        <field name="orderHeaderId" title="${uiLabelMap.OrderOrderHeaderId}"><text-find/></field>
         <field name="orderTypeId" widget-style="selectBox">
             <drop-down>
                 <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
@@ -423,7 +423,7 @@
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRequirement" title="" type="single">
         <auto-fields-entity entity-name="Requirement" default-field-type="find"/>
-        <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find default-value="equals"/></field>
+        <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find/></field>
         <field name="requirementTypeId" title="${uiLabelMap.OrderRequirementTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RequirementType" description="${description}"/>
@@ -473,7 +473,7 @@
     <form name="lookupShoppingList" target="LookupShoppingList" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="ShoppingList" default-field-type="find"/>
-        <field name="shoppingListId" title="${uiLabelMap.OrderShoppingListId}"><text-find default-value="equals"/></field>
+        <field name="shoppingListId" title="${uiLabelMap.OrderShoppingListId}"><text-find/></field>
         <field name="shoppingListTypeId" title="${uiLabelMap.OrderShoppingListTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ShoppingListType" description="${description}"/>

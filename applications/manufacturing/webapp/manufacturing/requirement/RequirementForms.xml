@@ -31,7 +31,7 @@
             target="ApproveRequirements" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><text-find default-value="equals"/></field>
+        <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><text-find/></field>
         <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RequirementType" description="${description}"/>

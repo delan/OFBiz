@@ -33,10 +33,10 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingId}">
-            <text-find default-value="equals"/>
+            <text-find/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}">
-            <text-find default-value="equals"/>
+            <text-find/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -80,10 +80,10 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
-            <text-find default-value="equals"/>
+            <text-find/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}">
-            <text-find default-value="equals"/>
+            <text-find/>
         </field>
         <field name="fixedAssetId">
             <drop-down allow-empty="true">
