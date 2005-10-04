@@ -622,9 +622,11 @@ public class ModelFormField {
         } else {
             //Debug.logInfo("Getting entry, isError false so getting from Map in context for field " + this.getName() + " of form " + this.modelForm.getName(), module);
             Map dataMap = this.getMap(context);
+            boolean dataMapIsContext = false;
             if (dataMap == null) {
                 //Debug.logInfo("Getting entry, no Map found with name " + this.getMapName() + ", using context for field " + this.getName() + " of form " + this.modelForm.getName(), module);
                 dataMap = context;
+                dataMapIsContext = true;
             }
             Object retVal = null;
             if (this.entryAcsr != null && !this.entryAcsr.isEmpty()) {
@@ -634,6 +636,18 @@ public class ModelFormField {
                 //Debug.logInfo("Getting entry, no entryAcsr so using field name " + this.name + " for field " + this.getName() + " of form " + this.modelForm.getName(), module);
                 // if no entry name was specified, use the field's name
                 retVal = dataMap.get(this.name);
+            }
+            
+            // this is a special case to fill in fields during a create by default from parameters passed in
+            if (dataMapIsContext && retVal == null && !Boolean.FALSE.equals(useRequestParameters)) {
+                Map parameters = (Map) context.get("parameters");
+                if (parameters != null) {
+                    if (this.entryAcsr != null && !this.entryAcsr.isEmpty()) {
+                        retVal = this.entryAcsr.get(parameters);
+                    } else {
+                        retVal = parameters.get(this.name);
+                    }
+                }
             }
 
             if (retVal != null) {
