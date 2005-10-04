@@ -33,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -225,7 +227,7 @@ public class LoginEvents {
             if (userLogin != null && hasBasePermission(userLogin, request)) {
                 doBasicLogin(userLogin, request);
             } else {
-                errMsg = UtilProperties.getMessage(resource,"loginevents.unable_to_login_this_application", UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "loginevents.unable_to_login_this_application", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg );
                 return "error";
             }
@@ -235,7 +237,7 @@ public class LoginEvents {
             }
         } else {
             Map messageMap = UtilMisc.toMap("errorMessage", (String) result.get(ModelService.ERROR_MESSAGE));
-            errMsg = UtilProperties.getMessage(resource,"loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -352,7 +354,7 @@ public class LoginEvents {
 
         if (!UtilValidate.isNotEmpty(userLoginId)) {
             // the password was incomplete
-            errMsg = UtilProperties.getMessage(resource,"loginevents.username_was_empty_reenter", UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.username_was_empty_reenter", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -366,7 +368,7 @@ public class LoginEvents {
         }
         if (supposedUserLogin == null) {
             // the Username was not found
-            errMsg = UtilProperties.getMessage(resource,"loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -375,13 +377,13 @@ public class LoginEvents {
 
         if (!UtilValidate.isNotEmpty(passwordHint)) {
             // the Username was not found
-            errMsg = UtilProperties.getMessage(resource,"loginevents.no_password_hint_specified_try_password_emailed", UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.no_password_hint_specified_try_password_emailed", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
         Map messageMap = UtilMisc.toMap("passwordHint", passwordHint);
-        errMsg = UtilProperties.getMessage(resource,"loginevents.password_hint_is", messageMap, UtilHttp.getLocale(request));
+        errMsg = UtilProperties.getMessage(resource, "loginevents.password_hint_is", messageMap, UtilHttp.getLocale(request));
         request.setAttribute("_ERROR_MESSAGE_", errMsg);
         return "success";
     }
@@ -394,12 +396,15 @@ public class LoginEvents {
      * @return String specifying the exit status of this event
      */
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
+        String defaultScreenLocation = "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail";
+        
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        
         String errMsg = null;
 
-        Map subjectData = new HashMap();
+        Map subjectData = FastMap.newInstance();
         subjectData.put("productStoreId", productStoreId);
 
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
@@ -413,7 +418,7 @@ public class LoginEvents {
 
         if (!UtilValidate.isNotEmpty(userLoginId)) {
             // the password was incomplete
-            errMsg = UtilProperties.getMessage(resource,"loginevents.username_was_empty_reenter", UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.username_was_empty_reenter", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -425,7 +430,7 @@ public class LoginEvents {
             supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
             if (supposedUserLogin == null) {
                 // the Username was not found
-                errMsg = UtilProperties.getMessage(resource,"loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
@@ -443,14 +448,14 @@ public class LoginEvents {
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
             Map messageMap = UtilMisc.toMap("errorMessage", e.toString());
-            errMsg = UtilProperties.getMessage(resource,"loginevents.error_accessing_password", messageMap, UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.error_accessing_password", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
         if (supposedUserLogin == null) {
             // the Username was not found
             Map messageMap = UtilMisc.toMap("userLoginId", userLoginId);
-            errMsg = UtilProperties.getMessage(resource,"loginevents.user_with_the_username_not_found", messageMap, UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.user_with_the_username_not_found", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -474,7 +479,7 @@ public class LoginEvents {
 
         if (!UtilValidate.isNotEmpty(emails.toString())) {
             // the Username was not found
-            errMsg = UtilProperties.getMessage(resource,"loginevents.no_primary_email_address_set_contact_customer_service", UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.no_primary_email_address_set_contact_customer_service", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -488,27 +493,27 @@ public class LoginEvents {
         }
 
         if (productStoreEmail == null) {
-            errMsg = UtilProperties.getMessage(resource,"loginevents.problems_with_configuration_contact_customer_service", UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.problems_with_configuration_contact_customer_service", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
-        // need OFBIZ_HOME for processing
-        String ofbizHome = System.getProperty("ofbiz.home");
-
+        String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+        if (UtilValidate.isEmpty(bodyScreenLocation)) {
+            bodyScreenLocation = defaultScreenLocation;
+        }
+        
         // set the needed variables in new context
-        Map templateData = new HashMap();
-        templateData.put("useEncryption", new Boolean(useEncryption));
-        templateData.put("password", UtilFormatOut.checkNull(passwordToSend));
+        Map bodyParameters = FastMap.newInstance();
+        bodyParameters.put("useEncryption", new Boolean(useEncryption));
+        bodyParameters.put("password", UtilFormatOut.checkNull(passwordToSend));
+        bodyParameters.put("locale", UtilHttp.getLocale(request));
+        bodyParameters.put("userLogin", supposedUserLogin);
 
-        // prepare the parsed subject
-        String subjectString = productStoreEmail.getString("subject");
-        subjectString = FlexibleStringExpander.expandString(subjectString, subjectData);
-
-        Map serviceContext = new HashMap();
-        serviceContext.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
-        serviceContext.put("templateData", templateData);
-        serviceContext.put("subject", subjectString);
+        Map serviceContext = FastMap.newInstance();
+        serviceContext.put("bodyScreenUri", bodyScreenLocation);
+        serviceContext.put("bodyParameters", bodyParameters);
+        serviceContext.put("subject", productStoreEmail.getString("subject"));
         serviceContext.put("sendFrom", productStoreEmail.get("fromAddress"));
         serviceContext.put("sendCc", productStoreEmail.get("ccAddress"));
         serviceContext.put("sendBcc", productStoreEmail.get("bccAddress"));
@@ -516,17 +521,17 @@ public class LoginEvents {
         serviceContext.put("sendTo", emails.toString());
 
         try {
-            Map result = dispatcher.runSync("sendGenericNotificationEmail", serviceContext);
+            Map result = dispatcher.runSync("sendMailFromScreen", serviceContext);
 
             if (ModelService.RESPOND_ERROR.equals((String) result.get(ModelService.RESPONSE_MESSAGE))) {
                 Map messageMap = UtilMisc.toMap("errorMessage", result.get(ModelService.ERROR_MESSAGE));
-                errMsg = UtilProperties.getMessage(resource,"loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         } catch (GenericServiceException e) {
             Debug.logWarning(e, "", module);
-            errMsg = UtilProperties.getMessage(resource,"loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -538,18 +543,18 @@ public class LoginEvents {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "", module);
                 Map messageMap = UtilMisc.toMap("errorMessage", e.toString());
-                errMsg = UtilProperties.getMessage(resource,"loginevents.error_saving_new_password_email_not_correct_password", messageMap, UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "loginevents.error_saving_new_password_email_not_correct_password", messageMap, UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         }
 
         if (useEncryption) {
-            errMsg = UtilProperties.getMessage(resource,"loginevents.new_password_createdandsent_check_email", UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            errMsg = UtilProperties.getMessage(resource, "loginevents.new_password_createdandsent_check_email", UtilHttp.getLocale(request));
+            request.setAttribute("_EVENT_MESSAGE_", errMsg);
         } else {
-            errMsg = UtilProperties.getMessage(resource,"loginevents.new_password_sent_check_email", UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            errMsg = UtilProperties.getMessage(resource, "loginevents.new_password_sent_check_email", UtilHttp.getLocale(request));
+            request.setAttribute("_EVENT_MESSAGE_", errMsg);
         }
         return "success";
     }

@@ -2006,7 +2006,7 @@ public class OrderServices {
             sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
         } catch (Exception e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderServiceExceptionSeeLogs",locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderServiceExceptionSeeLogs",locale));
         }
 
         // check for errors

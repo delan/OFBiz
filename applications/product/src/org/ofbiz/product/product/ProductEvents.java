@@ -36,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
@@ -1258,8 +1260,11 @@ public class ProductEvents {
     }
 
     public static String tellAFriend(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        String emailType = "PRDS_TELL_FRIEND";
+        String defaultScreenLocation = "component://ecommerce/widget/EmailProductScreens.xml#TellFriend";
 
         GenericValue productStore = ProductStoreWorker.getProductStore(request);
         if (productStore == null) {
@@ -1270,7 +1275,6 @@ public class ProductEvents {
         String productStoreId = productStore.getString("productStoreId");
         
         GenericValue productStoreEmail = null;
-        String emailType = "PRDS_TELL_FRIEND";
         try {
             productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting",
                     UtilMisc.toMap("productStoreId", productStoreId, "emailType", emailType));
@@ -1286,23 +1290,27 @@ public class ProductEvents {
             return "error";
         }
 
+        String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+        if (UtilValidate.isEmpty(bodyScreenLocation)) {
+            bodyScreenLocation = defaultScreenLocation;
+        }
+        
         Map paramMap = UtilHttp.getParameterMap(request);
-        String subjectString = productStoreEmail.getString("subject");
-        subjectString = FlexibleStringExpander.expandString(subjectString, paramMap);
+        paramMap.put("locale", UtilHttp.getLocale(request));
+        paramMap.put("userLogin", session.getAttribute("userLogin"));
 
-        String ofbizHome = System.getProperty("ofbiz.home");
-        Map context = new HashMap();
-        context.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
-        context.put("templateData", paramMap);
+        Map context = FastMap.newInstance();
+        context.put("bodyScreenUri", bodyScreenLocation);
+        context.put("bodyParameters", paramMap);
         context.put("sendTo", paramMap.get("sendTo"));
         context.put("contentType", productStoreEmail.get("contentType"));
         context.put("sendFrom", productStoreEmail.get("fromAddress"));
         context.put("sendCc", productStoreEmail.get("ccAddress"));
         context.put("sendBcc", productStoreEmail.get("bccAddress"));
-        context.put("subject", subjectString);
+        context.put("subject", productStoreEmail.getString("subject"));
 
         try {
-            dispatcher.runAsync("sendGenericNotificationEmail", context);
+            dispatcher.runAsync("sendMailFromScreen", context);
         } catch (GenericServiceException e) {
             String errMsg = "Problem sending mail: " + e.toString();
             Debug.logError(e, errMsg, module);

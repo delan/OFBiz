@@ -58,8 +58,9 @@
     <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GC_PURCHASE" bodyScreenLocation="component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardPurchase" fromAddress="ofbiztest@yahoo.com" subject="A Gift From ${senderName}!"/>
     <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GC_RELOAD" bodyScreenLocation="component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardReload" fromAddress="ofbiztest@yahoo.com" subject="Gift Card Reload Results"/>
 
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_TELL_FRIEND" templatePath="/applications/ecommerce/templates/email/tellafriend.ftl" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@yahoo.com"/>
-    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_PWD_RETRIEVE" templatePath="/applications/securityext/email/default/passwordemail.ftl" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_TELL_FRIEND" bodyScreenLocation="component://ecommerce/widget/EmailProductScreens.xml#TellFriend" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@yahoo.com"/>
+
+    <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_PWD_RETRIEVE" bodyScreenLocation="component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
     
     <ProductStoreFacility productStoreId="9000" facilityId="WebStoreWarehouse" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-05-13 12:00:00.0"/>
