@@ -27,9 +27,9 @@
         <alt-target target="createWorkEffort" use-when="workEffort==null"/>
         <auto-fields-service service-name="updateWorkEffort"/>
         
-        <field name="workEffortId" use-when="workEffort!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field name="workEffortId" use-when="workEffort!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonNotModifRecreat}" widget-style="tabletext"><display/></field>
         <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId==null" title="${uiLabelMap.WorkEffortWorkEffortId}"><ignored/></field>
-        <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${workEffortId}]"><display/></field>
+        <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${workEffortId}]" widget-style="tabletext"><display/></field>
 
         <field name="workEffortName" title="${uiLabelMap.CommonName}*"/>
         <field name="workEffortTypeId" title="${uiLabelMap.CommonType}*">
@@ -41,7 +41,16 @@
         </field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}*">
             <drop-down>
-                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[General] ${description}">
+                    <entity-constraint name="statusTypeId" value="CALENDAR_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[Task] ${description}">
+                    <entity-constraint name="statusTypeId" value="TASK_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[Event] ${description}">
+                    <entity-constraint name="statusTypeId" value="EVENT_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -51,6 +60,12 @@
                 <entity-options description="${description}" entity-name="WorkEffortPurposeType" key-field-name="workEffortPurposeTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
+            </drop-down>
+        </field>
+        <field name="priority">
+            <drop-down allow-empty="true">
+                <option key="1" description="1 (High)"/><option key="2"/><option key="3"/><option key="4"/><option key="5"/>
+                <option key="6"/><option key="7"/><option key="8"/><option key="9" description="9 (Low)"/>
             </drop-down>
         </field>
 
@@ -63,7 +78,7 @@
         <field name="runtimeDataId"><ignored/></field>
         <field name="noteId"><ignored/></field>
 
-        <field name="revisionNumber"><display/></field>
+        <field name="revisionNumber" use-when="workEffort!=null" widget-style="tabletext"><display/></field>
         
         <field name="workEffortParentId"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
@@ -83,17 +98,23 @@
             </drop-down>
         </field>
 
-        <field use-when="workEffort==null" name="quickAssignPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field use-when="workEffort==null" name="quickAssignPartyId"><lookup target-form-name="LookupPartyName" default-value="${userLogin.partyId}"/></field>
         <field use-when="workEffort==null" name="requirementId"><lookup target-form-name="LookupRequirement"/></field>
-
-        <field name="communicationEventId"><lookup target-form-name="LookupCommunicationEvent"/></field><!-- TODO: need to implement this -->
+        <field name="communicationEventId" title="Quick Add Comm. Event Id" map-name="context"><lookup target-form-name="LookupCommunicationEvent"/></field><!-- TODO: need to implement this -->
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
 
         <sort-order>
+            <sort-field name="quickAssignPartyId"/>
             <sort-field name="workEffortId"/>
             <sort-field name="workEffortName"/>
             <sort-field name="description"/>
+            <sort-field name="workEffortTypeId"/>
+            <sort-field name="currentStatusId"/>
+            <sort-field name="priority"/>
+            <sort-field name="percentComplete"/>
+            <sort-field name="estimatedStartDate"/>
+            <sort-field name="estimatedCompletionDate"/>
         </sort-order>
     </form>
   
