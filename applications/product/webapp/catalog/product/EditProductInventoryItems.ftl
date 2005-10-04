@@ -110,6 +110,7 @@
         <td><div class="tabletext"><b>${uiLabelMap.ProductLocation}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.ProductLotId}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.ProductBinNum}</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductPerUnitPrice}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.ProductAtpQohSerial}</b></div></td>
         <td><div class="tabletext">&nbsp;</div></td>
         <td><div class="tabletext">&nbsp;</div></td>
@@ -157,6 +158,7 @@
                     <td><div class="tabletext"><a href="/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)?if_exists}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}${externalKeyParam}" class="linktext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.description})</#if> [${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
                     <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>
                     <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
+                    <td><div class="tabletext">&nbsp;${inventoryItem.unitCost?default(0)?string("##0.00")}</div></td>
                     <#if inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM">
                         <td>
                             <div class="tabletext">${(inventoryItem.availableToPromiseTotal)?default("NA")}
