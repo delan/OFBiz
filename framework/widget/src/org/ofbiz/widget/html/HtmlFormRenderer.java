@@ -339,7 +339,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
 
-        String value = modelFormField.getEntry(context);
+        String value = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
         if (UtilValidate.isNotEmpty(value)) {
             buffer.append(" value=\"");
             buffer.append(value);
@@ -1212,7 +1212,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
 
-        String value = modelFormField.getEntry(context);
+        String value = modelFormField.getEntry(context, textFindField.getDefaultValue(context));
         if (UtilValidate.isNotEmpty(value)) {
             buffer.append(" value=\"");
             buffer.append(value);
@@ -1304,7 +1304,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_value\"");
 
-        String value = modelFormField.getEntry(context);
+        String value = modelFormField.getEntry(context, rangeFindField.getDefaultValue(context));
         if (UtilValidate.isNotEmpty(value)) {
             buffer.append(" value=\"");
             buffer.append(value);
@@ -1455,7 +1455,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_value\"");
 
-        String value = modelFormField.getEntry(context);
+        String value = modelFormField.getEntry(context, dateFindField.getDefaultValue(context));
         if (UtilValidate.isNotEmpty(value)) {
             buffer.append(" value=\"");
             buffer.append(value);
@@ -1625,7 +1625,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
 
-        String value = modelFormField.getEntry(context);
+        String value = modelFormField.getEntry(context, lookupField.getDefaultValue(context));
         if (UtilValidate.isNotEmpty(value)) {
             buffer.append(" value=\"");
             buffer.append(value);
