@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,6 +26,8 @@ package org.ofbiz.party.party;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -38,6 +40,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.util.EntityUtil;
 
 /**
  * Worker methods for Party Information
@@ -113,5 +117,29 @@ public class PartyWorker {
         clubId = clubId + new Integer(check).toString();
 
         return clubId;
+    }
+
+    public static GenericValue findPartyLatestUserLogin(String partyId, GenericDelegator delegator) {
+        try {
+            List userLoginList = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("-" + ModelEntity.STAMP_FIELD));
+            return EntityUtil.getFirst(userLoginList);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error while finding latest UserLogin for party with ID [" + partyId + "]: " + e.toString(), module);
+            return null;
+        }
+    }
+    
+    public static Locale findPartyLastLocale(String partyId, GenericDelegator delegator) {
+        // just get the most recent UserLogin for this party, if there is one...
+        GenericValue userLogin = findPartyLatestUserLogin(partyId, delegator);
+        if (userLogin == null) {
+            return null;
+        }
+        String localeString = userLogin.getString("lastLocale");
+        if (UtilValidate.isNotEmpty(localeString)) {
+            return UtilMisc.parseLocale(localeString);
+        } else {
+            return null;
+        }
     }
 }

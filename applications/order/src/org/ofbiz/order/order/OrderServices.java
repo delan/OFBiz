@@ -70,6 +70,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
+import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -1954,21 +1955,9 @@ public class OrderServices {
         // or if not available then the system Locale
         Locale locale = null;
         GenericValue placingParty = orh.getPlacingParty();
-        GenericValue placingUserLogin = null;
+        GenericValue placingUserLogin = placingParty == null ? null : PartyWorker.findPartyLatestUserLogin(placingParty.getString("partyId"), delegator);
         if (locale == null && placingParty != null) {
-            // just get the most recent UserLogin for this party, if there is one...
-            try {
-                List placingUserLoginList = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", placingParty.get("partyId")), UtilMisc.toList("-" + ModelEntity.STAMP_FIELD));
-                if (placingUserLoginList != null && placingUserLoginList.size() > 0) {
-                    placingUserLogin = (GenericValue) placingUserLoginList.get(0);
-                    String localeString = placingUserLogin.getString("lastLocale");
-                    if (UtilValidate.isNotEmpty(localeString)) {
-                        locale = UtilMisc.parseLocale(localeString);
-                    }
-                }
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Error getting Placing Party UserLogin for order email notification, will try other sources: " + e.toString(), module);
-            }
+            locale = PartyWorker.findPartyLastLocale(placingParty.getString("partyId"), delegator);
         }
         GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(orderHeader);
         if (locale == null && productStore != null) {
