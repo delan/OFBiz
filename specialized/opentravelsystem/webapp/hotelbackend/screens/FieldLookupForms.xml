@@ -34,8 +34,8 @@
             <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
         </actions>
         <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden" />
-	    <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text-find default-value="equals"/></field>
-        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text-find default-value="equals"/></field>
+	    <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text-find/></field>
+        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text-find/></field>
         <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}">
             <drop-down>
                 <option key="" description=""/>
