@@ -27,10 +27,10 @@
     <form name="LookupSegmentGroup" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupSegmentGroup" title="" type="single">
-        <field name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><text-find default-value="equals"/></field>
-        <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><text-find default-value="equals"/></field>
-        <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><text-find default-value="equals"/></field>
-        <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><text-find default-value="equals"/></field>
+        <field name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><text-find/></field>
+        <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><text-find/></field>
+        <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><text-find/></field>
+        <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><text-find/></field>
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
    <form name="listLookupSegmentGroup" default-title-style="tableheadtext"
@@ -127,16 +127,16 @@
     <form name="LookupGeo" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupGeo" title="" type="single" >
-        <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><text-find default-value="equals"/></field>
+        <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><text-find/></field>
         <field name="geoTypeId" title="${uiLabelMap.SegmentGroupGeoTypeId}">
             <drop-down>
                <entity-options key-field-name="geoTypeId" entity-name="GeoType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="geoName" title="${uiLabelMap.SegmentGroupGeoName}"><text-find default-value="equals"/></field>
-        <field name="geoCode" title="${uiLabelMap.SegmentGroupGeoCode}"><text-find default-value="equals"/></field>
-        <field name="geoSecCode" title="${uiLabelMap.SegmentGroupGeoSecCode}"><text-find default-value="equals"/></field>
-        <field name="geoAbbr" title="${uiLabelMap.SegmentGroupGeoAbbr}"><text-find default-value="equals"/></field>
+        <field name="geoName" title="${uiLabelMap.SegmentGroupGeoName}"><text-find/></field>
+        <field name="geoCode" title="${uiLabelMap.SegmentGroupGeoCode}"><text-find/></field>
+        <field name="geoSecCode" title="${uiLabelMap.SegmentGroupGeoSecCode}"><text-find/></field>
+        <field name="geoAbbr" title="${uiLabelMap.SegmentGroupGeoAbbr}"><text-find/></field>
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
    <form name="listLookupGeo" default-title-style="tableheadtext"

@@ -31,8 +31,8 @@
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProduct" title="" type="single">
         <!-- <auto-fields-entity entity-name="Product" default-field-type="hidden" /> -->
-        <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find default-value="equals"/></field>
-        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find default-value="equals"/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find/></field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductType" description="${description}">

@@ -31,7 +31,7 @@
             target="FindRequirements" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find default-value="equals"/></field>
+        <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find/></field>
         <field name="requirementTypeId" title="${uiLabelMap.OrderRequirementTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RequirementType" description="${description}"/>
