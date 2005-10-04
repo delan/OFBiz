@@ -122,7 +122,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupExampleFeature" title="" type="single">
         <auto-fields-entity entity-name="ExampleFeature" default-field-type="find"/>
-        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"/> <!-- <text-find default-value="equals"/> -->
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"/> <!-- <text-find/> -->
         <field name="featureSourceEnumId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
