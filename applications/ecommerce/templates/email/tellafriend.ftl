@@ -23,11 +23,15 @@
  *@version    $Rev$
  *@since      3.0
 -->
-
+<html>
+<head></head>
+<body>
 ${sendTo},
 <br/>
 ${sendFrom} ${uiLabelMap.EcommerceFollowingMessage}
 <br/><br/>
-${message}
+<b>${message}</b>
 <br/><br/>
 <a href="${pageUrl}">${pageUrl}</a>
+</body>
+</html>
