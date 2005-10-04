@@ -272,6 +272,7 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="workEffortTypeId" type="id"></field>
       <field name="currentStatusId" type="id"></field>
+      <field name="lastStatusUpdate" type="date-time"></field>
       <field name="workEffortPurposeTypeId" type="id"></field>
       <field name="workEffortParentId" type="id"></field>
       <field name="workflowPackageId" type="id-long"></field>
@@ -279,31 +280,29 @@
       <field name="workflowProcessId" type="id-long"></field>
       <field name="workflowProcessVersion" type="short-varchar"></field>
       <field name="workflowActivityId" type="id-long"></field>
-      <field name="lastStatusUpdate" type="date-time"></field>
       <field name="scopeEnumId" type="id"></field>
       <field name="priority" type="numeric"></field>
       <field name="percentComplete" type="numeric"></field>
       <field name="workEffortName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="locationDesc" type="description"></field>
-      <field name="revisionNumber" type="numeric"></field>
+      <field name="estimatedStartDate" type="date-time"></field>
+      <field name="estimatedCompletionDate" type="date-time"></field>
+      <field name="actualStartDate" type="date-time"></field>
+      <field name="actualCompletionDate" type="date-time"></field>
+      <field name="estimatedMilliSeconds" type="floating-point"></field>
+      <field name="estimatedSetupMillis" type="floating-point"></field>
+      <field name="actualMilliSeconds" type="floating-point"></field>
+      <field name="actualSetupMillis" type="floating-point"></field>
+      <field name="totalMilliSecondsAllowed" type="floating-point"></field>
+      <field name="totalMoneyAllowed" type="currency-amount"></field>
+      <field name="moneyUomId" type="id"></field>
+      <field name="specialTerms" type="long-varchar"></field>
+      <field name="timeTransparency" type="numeric"></field>
       <field name="universalId" type="short-varchar"></field>
       <field name="sourceReferenceId" type="id-long"></field>
       <field name="fixedAssetId" type="id"></field>
       <field name="facilityId" type="id"></field>
-      <field name="estimatedStartDate" type="date-time"></field>
-      <field name="estimatedCompletionDate" type="date-time"></field>
-      <field name="estimatedMilliSeconds" type="floating-point"></field>
-      <field name="estimatedSetupMillis" type="floating-point"></field>
-      <field name="totalMilliSecondsAllowed" type="floating-point"></field>
-      <field name="totalMoneyAllowed" type="currency-amount"></field>
-      <field name="moneyUomId" type="id"></field>
-      <field name="actualStartDate" type="date-time"></field>
-      <field name="actualCompletionDate" type="date-time"></field>
-      <field name="actualMilliSeconds" type="floating-point"></field>
-      <field name="actualSetupMillis" type="floating-point"></field>
-      <field name="specialTerms" type="long-varchar"></field>
-      <field name="timeTransparency" type="numeric"></field>
       <field name="infoUrl" type="long-varchar"></field>
       <field name="recurrenceInfoId" type="id"></field>
       <field name="runtimeDataId" type="id"></field>
@@ -317,6 +316,7 @@
       <field name="reserv2ndPPPerc" type="floating-point"/>
       <!-- reservationNthPersonPricePercentage: percentage of the end price for the Nth (2+) person renting this asset connected to the workEfforty-->
       <field name="reservNthPPPerc" type="floating-point"/>      
+      <field name="revisionNumber" type="numeric"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>

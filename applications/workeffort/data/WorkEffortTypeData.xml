@@ -139,12 +139,10 @@
     <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_ABORTED" transitionName="Abort"/>
     <StatusValidChange condition="" statusId="WF_SUSPENDED" statusIdTo="WF_RUNNING" transitionName="Un-suspend"/>
 
-    <WorkEffortAssocType description="WorkEffort Breakdown" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_BREAKDOWN"/>
+    <WorkEffortAssocType description="WorkEffort Breakdown/Detail" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_BREAKDOWN"/>
     <WorkEffortAssocType description="WorkEffort Dependency" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_DEPENDENCY"/>
     <WorkEffortAssocType description="WorkEffort Concurrency" hasTable="N" parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_CONCURRENCY"/>
     <WorkEffortAssocType description="WorkEffort Precedency" hasTable="N" parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_PRECEDENCY"/>
-    <WorkEffortAssocType description="WorkEffort Project Phase" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_PHASE"/>
-    <WorkEffortAssocType description="WorkEffort Phase Task" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_TASK"/>
 
     <WorkflowParticipantType description="A set of resource" hasTable="N" parentTypeId="" participantTypeId="RESOURCE_SET" typeCode="RESOURCE_SET"/>
     <WorkflowParticipantType description="A specific resource agent" hasTable="N" parentTypeId="" participantTypeId="RESOURCE" typeCode="RESOURCE"/>

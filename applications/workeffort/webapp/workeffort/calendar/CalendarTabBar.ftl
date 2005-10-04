@@ -29,5 +29,9 @@
     <a href="<@ofbizUrl>week<#if start?exists>?start=${start.time?string("#")}</#if></@ofbizUrl>" class="${selectedClassMap.week?default(unselectedClassName)}">${uiLabelMap.WorkEffortWeekView}</a>
     <a href="<@ofbizUrl>month<#if start?exists>?start=${start.time?string("#")}</#if></@ofbizUrl>" class="${selectedClassMap.month?default(unselectedClassName)}">${uiLabelMap.WorkEffortMonthView}</a>
     <a href="<@ofbizUrl>upcoming</@ofbizUrl>" class="${selectedClassMap.upcoming?default(unselectedClassName)}">${uiLabelMap.WorkEffortUpcomingEvents}</a>
-    <a href="<@ofbizUrl>event</@ofbizUrl>" class="${selectedClassMap.event?default(unselectedClassName)}">${uiLabelMap.WorkEffortNewEvent}</a>
 </div>
+
+<div>
+    <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&currentStatusId=CAL_TENTATIVE</@ofbizUrl>" class="buttontext">${uiLabelMap.WorkEffortNewEvent}</a>
+</div>
+<br/>
