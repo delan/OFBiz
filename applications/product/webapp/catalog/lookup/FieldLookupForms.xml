@@ -20,6 +20,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     Al Byers
+ *@author     David E. Jones
  *@author     Olivier.Heintz@nereide.biz
  *@version    $Rev$
  *@since      3.0
@@ -90,6 +92,7 @@
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
     </form>
+    
     <form name="lookupProductFeature"
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
@@ -109,15 +112,12 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="listLookupProductFeature" 
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupProductFeature" 
-        title="" type="list">
+    <form name="listLookupProductFeature" list-name="entityList" paginate-target="LookupProductFeature" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>

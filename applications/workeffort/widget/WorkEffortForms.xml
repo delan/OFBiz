@@ -39,6 +39,13 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="workEffortPurposeTypeId" title="${uiLabelMap.CommonPurpose}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="WorkEffortPurposeType" key-field-name="workEffortPurposeTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}*">
             <drop-down>
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="[General] ${description}">
@@ -55,13 +62,6 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="workEffortPurposeTypeId" title="${uiLabelMap.CommonPurpose}">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="WorkEffortPurposeType" key-field-name="workEffortPurposeTypeId">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
         <field name="priority">
             <drop-down allow-empty="true">
                 <option key="1" description="1 (High)"/><option key="2"/><option key="3"/><option key="4"/><option key="5"/>
@@ -69,17 +69,6 @@
             </drop-down>
         </field>
 
-        <field name="workflowPackageId"><ignored/></field>
-        <field name="workflowPackageVersion"><ignored/></field>
-        <field name="workflowProcessId"><ignored/></field>
-        <field name="workflowProcessVersion"><ignored/></field>
-        <field name="workflowActivityId"><ignored/></field>
-        <field name="recurrenceInfoId"><ignored/></field>
-        <field name="runtimeDataId"><ignored/></field>
-        <field name="noteId"><ignored/></field>
-
-        <field name="revisionNumber" use-when="workEffort!=null" widget-style="tabletext"><display/></field>
-        
         <field name="workEffortParentId"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
@@ -102,8 +91,19 @@
         <field use-when="workEffort==null" name="requirementId"><lookup target-form-name="LookupRequirement"/></field>
         <field name="communicationEventId" title="Quick Add Comm. Event Id" map-name="context"><lookup target-form-name="LookupCommunicationEvent"/></field><!-- TODO: need to implement this -->
         
+        <field name="revisionNumber" use-when="workEffort!=null" widget-style="tabletext"><display/></field>
+
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
 
+        <field name="workflowPackageId"><ignored/></field>
+        <field name="workflowPackageVersion"><ignored/></field>
+        <field name="workflowProcessId"><ignored/></field>
+        <field name="workflowProcessVersion"><ignored/></field>
+        <field name="workflowActivityId"><ignored/></field>
+        <field name="recurrenceInfoId"><ignored/></field>
+        <field name="runtimeDataId"><ignored/></field>
+        <field name="noteId"><ignored/></field>
+        
         <sort-order>
             <sort-field name="quickAssignPartyId"/>
             <sort-field name="workEffortId"/>
@@ -138,6 +138,41 @@
                 </entity-options>
             </drop-down>
         </field>
+
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[General] ${description}">
+                    <entity-constraint name="statusTypeId" value="CALENDAR_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[Task] ${description}">
+                    <entity-constraint name="statusTypeId" value="TASK_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[Event] ${description}">
+                    <entity-constraint name="statusTypeId" value="EVENT_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="workEffortParentId"><lookup target-form-name="LookupWorkEffort"/></field>
+        <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
+        <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
+        <field name="scopeEnumId">
+            <drop-down>
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+                    <entity-constraint name="enumTypeId" value="WORK_EFF_SCOPE"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="moneyUomId" title="${uiLabelMap.CommonCurrency}">
+            <drop-down allow-empty="true">
+                <entity-options description="[${uomId}] - ${description}" entity-name="Uom" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
         <field name="workflowPackageId"><ignored/></field>
         <field name="workflowPackageVersion"><ignored/></field>
         <field name="workflowProcessId"><ignored/></field>

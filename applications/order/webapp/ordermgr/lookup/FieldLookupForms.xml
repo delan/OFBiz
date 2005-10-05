@@ -58,6 +58,8 @@
                 </entity-options>
             </drop-down>
         </field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupOrderHeader" paginate-target="LookupOrderHeader" title="" type="list" 
@@ -111,9 +113,10 @@
              </drop-down>
         </field>
         <field name="grandTotal"><range-find/></field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
     <form name="listLookupOrderHeaderAndShipInfo" list-name="entityList" paginate-target="LookupOrderHeaderAndShipInfo" title="" type="list" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
@@ -138,6 +141,7 @@
         <field name="stateProvinceGeoId"><display/></field>
         <field name="grandTotal"><display/></field>
     </form>
+
     <form name="lookupPurchaseOrderHeaderAndShipInfo" target="LookupPurchaseOrderHeaderAndShipInfo" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="OrderHeaderAndShipGroups" default-field-type="hidden"/>
@@ -170,6 +174,8 @@
              </drop-down>
         </field>
         <field name="grandTotal"><range-find/></field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -214,6 +220,8 @@
         <field name="createdByUserLogin"><hidden/></field>
         <field name="lastModifiedDate"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCustRequest" list-name="entityList" paginate-target="LookupCustRequest" title="" type="list"
@@ -255,9 +263,9 @@
             </drop-down>
         </field>
         <field name="priority"><text-find></text-find></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCustRequestItem" list-iterator-name="listIt" paginate-target="LookupCustRequestItem" title="" type="list"
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
@@ -313,6 +321,8 @@
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
         <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupQuote" list-name="entityList" paginate-target="LookupQuote" title="" type="list"
@@ -377,6 +387,7 @@
             </drop-down>
         </field>
          -->
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupQuoteItem" list-name="entityList" paginate-target="LookupQuoteItem" title="" type="list"
@@ -443,9 +454,9 @@
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="requirementStartDate" title="${uiLabelMap.OrderRequirementStartDate}"><date-find type="date"/></field>
         <field name="requiredByDate" title="${uiLabelMap.OrderRequirementByDate}"><date-find type="date"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupRequirement" list-name="entityList" paginate-target="LookupRequirement" title="" type="list" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
@@ -479,6 +490,8 @@
                 <entity-options entity-name="ShoppingListType" description="${description}"/>
             </drop-down>
         </field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupShoppingList" list-name="entityList" paginate-target="LookupShoppingList" title="" type="list"
