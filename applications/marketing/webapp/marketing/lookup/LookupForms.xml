@@ -31,6 +31,7 @@
         <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><text-find/></field>
         <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
    <form name="listLookupSegmentGroup" default-title-style="tableheadtext"
@@ -49,10 +50,8 @@
         <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><display/></field>
         <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><display/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="deleteSegmentGroup?segmentGroupId=${segmentGroupId}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="deleteSegmentGroup?segmentGroupId=${segmentGroupId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
-        
     </form>
      
    <form name="listSegmentGroupClass" default-title-style="tableheadtext"
@@ -73,10 +72,10 @@
         </field>
     </form>
     
-    <form name="LookupProductStore" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
+    <form name="LookupProductStore" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProductStore" title="" type="single">
         <auto-fields-entity entity-name="ProductStore" default-field-type="find" />
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductStore" default-title-style="tableheadtext"
@@ -92,15 +91,9 @@
         <field name="productStoreId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productStoreId}" target="javascript:set_value('${productStoreId}')"/>
         </field>
-        <field name="primaryStoreGroupId">
-            <display/>
-        </field>
-        <field name="storeName">
-            <display/>
-        </field>
-        <field name="companyName">
-            <display/>
-        </field>
+        <field name="primaryStoreGroupId"><display/></field>
+        <field name="storeName"><display/></field>
+        <field name="companyName"><display/></field>
     </form>
     <form name="listLookupPartyClassificationGroup" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
@@ -113,15 +106,9 @@
         <field name="partyClassificationGroupId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${partyClassificationGroupId}" target="javascript:set_value('${partyClassificationGroupId}')"/>
         </field>
-        <field name="partyClassificationTypeId">
-            <display/>
-        </field>
-        <field name="parentGroupId">
-            <display/>
-        </field>
-        <field name="description">
-            <display/>
-        </field>
+        <field name="partyClassificationTypeId"><display/></field>
+        <field name="parentGroupId"><display/></field>
+        <field name="description"><display/></field>
     </form>
     <!-- Geo Lookup forms -->
     <form name="LookupGeo" default-title-style="tableheadtext"
@@ -137,6 +124,7 @@
         <field name="geoCode" title="${uiLabelMap.SegmentGroupGeoCode}"><text-find/></field>
         <field name="geoSecCode" title="${uiLabelMap.SegmentGroupGeoSecCode}"><text-find/></field>
         <field name="geoAbbr" title="${uiLabelMap.SegmentGroupGeoAbbr}"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
    <form name="listLookupGeo" default-title-style="tableheadtext"
@@ -159,6 +147,4 @@
         <field name="geoSecCode" title="${uiLabelMap.SegmentGroupGeoSecCode}"><display/></field>
         <field name="geoAbbr" title="${uiLabelMap.SegmentGroupGeoAbbr}"><display/></field>
     </form>
-    
 </forms>
-
