@@ -1,6 +1,9 @@
 
 // ================= FIELD LOOKUP METHODS ============================
 
+var target = null;
+var target2 = null;
+
 function call_fieldlookup(target, viewName, formName,viewWidth,viewheight) {   
     var fieldLookup = new fieldLookup1(target);  
     if (! viewWidth) viewWidth = 250;
@@ -27,11 +30,12 @@ function fieldLookup1(obj_target, args) {
 		return lookup_error("Error calling the field lookup: no target control specified");
 	if (obj_target.value == null)
 		return cal_error("Error calling the field lookup: parameter specified is not valid tardet control");
-	this.target = obj_target;	
+    //this.target = obj_target; 
+    target = obj_target; 
 	
 	// register in global collections
-	this.id = lookups.length;
-	lookups[this.id] = this;
+	//this.id = lookups.length;
+	//lookups[this.id] = this;
 }
 function fieldLookup2(obj_target, obj_target2) {
     // passing methods
@@ -43,18 +47,18 @@ function fieldLookup2(obj_target, obj_target2) {
         return lookup_error("Error calling the field lookup: no target control specified");
     if (obj_target.value == null)
         return cal_error("Error calling the field lookup: parameter specified is not valid tardet control");
-    this.target = obj_target;
+    target = obj_target;
     // validate input parameters
     if (!obj_target2)
         return lookup_error("Error calling the field lookup: no target control specified");
     if (obj_target2.value == null)
         return cal_error("Error calling the field lookup: parameter specified is not valid tardet control");
-    this.target2 = obj_target2;
+    target2 = obj_target2;
 
 
     // register in global collections
-    this.id = lookups.length;
-    lookups[this.id] = this;
+    //this.id = lookups.length;
+    //lookups[this.id] = this;
 }
 
 function lookup_popup1 (view_name, form_name, viewWidth, viewheight) {
