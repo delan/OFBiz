@@ -26,7 +26,8 @@
 -->
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-    <#assign useGrid = requestParameters.useGrid?default("N")>
+    <#assign showInput = requestParameters.showInput?default("Y")>
+    <#assign hideGrid = requestParameters.hideGrid?default("N")>
     <div class="head1">Pack Order<span class='head2'>&nbsp;in&nbsp;${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <div>&nbsp;</div>
 
@@ -42,7 +43,7 @@
             <span class="tabletext">/</span>
             <input type="text" class="inputBox" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?if_exists}"/
           </td>
-          <td><div class="tabletext">Use Grid:&nbsp;<input type="checkbox" name="useGrid" value="Y" <#if (useGrid == "Y")>checked</#if>></div></td>
+          <td><div class="tabletext">Hide Grid:&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked</#if>></div></td>
           <td><div class='tabletext'>&nbsp;</div></td>
         </tr>
         <tr>
@@ -55,12 +56,6 @@
       </table>
     </form>
 
-    <form name="completePackForm" method="post" action="<@ofbizUrl>CompletePack</@ofbizUrl>" style='margin: 0;'>
-      <input type="hidden" name="orderId" value="${orderId?if_exists}"/>
-      <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
-      <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
-      <input type="hidden" name="handlingInstructions" value="${packingSession.getHandlingInstructions()?if_exists}"/>
-    </form>
     <form name="clearPackForm" method="post" action="<@ofbizUrl>ClearPackAll</@ofbizUrl>" style='margin: 0;'>
       <input type="hidden" name="orderId" value="${orderId?if_exists}"/>
       <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
@@ -77,58 +72,96 @@
       <div class='head2'>Order #${orderId} / ShipGroup #${shipGroupSeqId}</div>
       <div class="tableheadtext">${packingSession.getPrimaryOrderId()?default("N/A")} / ${packingSession.getPrimaryShipGroupSeqId()?default("N/A")}</div>
       <div>&nbsp;</div>
+      <#if orderItemShipGroup?has_content>
+        <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress")>
+        <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
+        <table border='0' cellpadding='4' cellspacing='4' width="100%">
+          <tr>
+            <td valign="top">
+              <div class="tableheadtext">Ship-To Address:</div>
+              <div class="tabletext">
+                <b>To: </b>${postalAddress.toName?default("")}<br>
+                <#if postalAddress.attnName?has_content>
+                  <b>Attn: </b>${postalAddress.attnName}<br>
+                </#if>
+                ${postalAddress.address1}<br>
+                <#if postalAddress.address2?has_content>
+                  ${postalAddress.address2}<br>
+                </#if>
+                ${postalAddress.city}, ${postalAddress.stateProvinceGeoId?if_exists} ${postalAddress.postalCode}<br>
+                ${postalAddress.countryGeoId}
+              </div>
+            </td>
+            <td>&nbsp;&nbsp;</td>
+            <td valign="top">
+              <div class="tableheadtext">Carrier/Shipping Method:</div>
+              <div class="tabletext">
+                <#if carrier == "USPS">
+                  <#assign color = "red">
+                <#elseif carrier == "UPS">
+                  <#assign color = "green">
+                <#else>
+                  <#assign color = "black">
+                </#if>
+                <#if carrier != "_NA_">
+                  <font color="${color}">${carrier}</font>
+                  &nbsp;
+                </#if>
+                ${orderItemShipGroup.shipmentMethodTypeId?default("??")}
+              </div>
+            </td>
+            <td>&nbsp;&nbsp;</td>
+            <td valign="top">
+              <div class="tableheadtext">Shipping Instructions:</div>
+              <div class="tabletext">${orderItemShipGroup.shippingInstructions?default("(none)")}</div>
+            </td>
+          </tr>
+        </table>
+        <div>&nbsp;</div>
+      </#if>
 
       <!-- manual per item form -->
-      <#if useGrid != "Y">
+      <#if showInput != "N">
+        <hr class="sepbar"/>
+        <div>&nbsp;</div>
         <form name="singlePackForm" method="post" action="<@ofbizUrl>ProcessPackOrder</@ofbizUrl>" style='margin: 0;'>
           <input type="hidden" name="packageSeq" value="${packingSession.getCurrentPackageSeq()}"/>
           <input type="hidden" name="orderId" value="${orderId}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId}"/>
           <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
-          <input type="hidden" name="useGrid" value="${useGrid}"/>
-          <table border='0' cellpadding='2' cellspacing='0'>
+          <input type="hidden" name="hideGrid" value="${hideGrid}"/>
+          <table border='0' cellpadding='2' cellspacing='0' width="100%">
             <tr>
-              <td align="right" colspan="4">
-                <nobr>
-                <div class="tabletext">Handling Instructions:&nbsp;
-                  <input type="text" class="inputBox" name="handlingInstructions" size="30" value="${packingSession.getHandlingInstructions()?if_exists}" onchange="javascript:document.completePackForm.handlingInstructions.value = document.singlePackForm.handlingInstructions.value;"/>
-                </div>
-                </nobr>
-              </td>
-            </tr>
-            <tr>
-              <td align="right" colspan="4">
-                <div class="tabletext">
-                  Current Package Sequence: <b>${packingSession.getCurrentPackageSeq()}</b>
-                  <input type="button" value="Next Package" onclick="javascript:document.incPkgSeq.submit();">
-                </div>
-                <div>
-                  <input type="button" value="Complete" onclick="javascript:document.completePackForm.submit();"/>
-                </div>
-              </td>
-            <tr>
-              <td width="25%" align='right'><div class="tabletext">Product #</div></td>
+              <td><div class="tabletext">Product #</div></td>
               <td width="1">&nbsp;</td>
-              <td width="25%">
+              <td>
                 <input type="text" class="inputBox" name="productId" size="20" maxlength="20" value=""/>
                 <span class="tabletext">@</span>
                 <input type="text" class="inputBox" name="quantity" size="6" maxlength="6" value="1"/>
               </td>
               <td><div class='tabletext'>&nbsp;</div></td>
+              <td align="right">
+                <div class="tabletext">
+                  Current Package Sequence: <b>${packingSession.getCurrentPackageSeq()}</b>
+                  <input type="button" value="Next Package" onclick="javascript:document.incPkgSeq.submit();">
+                </div>
+              </td>
             </tr>
             <tr>
               <td colspan="2">&nbsp;</td>
-              <td colspan="2">
+              <td valign="top">
                 <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.singlePackForm.submit();">
                 <a href="javascript:document.singlePackForm.submit();" class="buttontext">Pack Item</a>
               </td>
+              <td>&nbsp;</td>
             </tr>
           </table>
         </form>
+        <div>&nbsp;</div>
       </#if>
 
       <!-- auto grid form -->
-      <#if useGrid == "Y" && itemInfos?has_content>
+      <#if showInput != "N" && hideGrid != "Y" && itemInfos?has_content>
         <hr class="sepbar"/>
         <div>&nbsp;</div>
         <form name="multiPackForm" method="post" action="<@ofbizUrl>ProcessBulkPackOrder</@ofbizUrl>" style='margin: 0;'>
@@ -136,7 +169,7 @@
           <input type="hidden" name="orderId" value="${orderId?if_exists}">
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}">
           <input type="hidden" name="originFacilityId" value="${facilityId?if_exists}">
-          <input type="hidden" name="useGrid" value="${useGrid}"/>
+          <input type="hidden" name="hideGrid" value="${hideGrid}"/>
 
           <table border='0' width="100%" cellpadding='2' cellspacing='0'>
             <tr>
@@ -183,23 +216,45 @@
             </#list>
             <tr><td colspan="9">&nbsp;</td></tr>
             <tr>
-              <td colspan="5">
-                <div class="tabletext">Handling Instructions:&nbsp;
-                  <input type="text" class="inputBox" name="handlingInstructions" size="30" value="${packingSession.getHandlingInstructions()?if_exists}" onchange="javascript:document.completePackForm.handlingInstructions.value = document.multiPackForm.handlingInstructions.value;"/>
-                </div>
-              </td>
-              <td colspan="4" align="right">
+              <td colspan="9" align="right">
                 <input type="submit" value="Pack Items">
                 &nbsp;
                 <input type="button" value="Clear" onclick="javascript:document.clearPackForm.submit();"/>
-                &nbsp;
-                <input type="button" value="Complete" onclick="javascript:document.completePackForm.submit();"/>
               </td>
             </tr>
           </table>
         </form>
+        <div>&nbsp;</div>
       </#if>
 
+      <!-- complete form -->
+      <#if showInput != "N">
+        <form name="completePackForm" method="post" action="<@ofbizUrl>CompletePack</@ofbizUrl>" style='margin: 0;'>
+          <input type="hidden" name="orderId" value="${orderId?if_exists}"/>
+          <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
+          <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
+          <input type="hidden" name="showInput" value="N"/>
+          <hr class="sepbar">
+          <div>&nbsp;</div>
+          <table border='0' cellpadding='2' cellspacing='0' width="100%">
+            <tr>
+              <td>
+                <div class="tableheadtext">Handling Instructions:</div>
+                <div>
+                  <textarea name="handlingInstructions" class="inputBox" rows="2" cols="30">${packingSession.getHandlingInstructions()?if_exists}</textarea>
+                </div>
+              </td>
+              <td align="right">
+                <div>
+                  <input type="button" value="Complete" onclick="javascript:document.completePackForm.submit();"/>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <div>&nbsp;</div>
+        </form>
+      </#if>
+        
       <!-- packed items display -->
       <#assign packedLines = packingSession.getLines()?if_exists>
       <#if packedLines?has_content>
@@ -237,15 +292,13 @@
     </#if>
 
     <#if orderId?has_content>
-      <#if useGrid != "Y">
-        <script language="javascript">
-          document.singlePackForm.productId.focus();
-        </script>
-      </#if>
+      <script language="javascript">
+        document.singlePackForm.productId.focus();
+      </script>
     <#else>
       <script language="javascript">
-          document.selectOrderForm.orderId.focus();
-        </script>
+        document.selectOrderForm.orderId.focus();
+      </script>
     </#if>
 <#else>
   <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>

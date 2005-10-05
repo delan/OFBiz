@@ -586,7 +586,7 @@
     <request-map uri="CompletePack">
         <security https="true" auth="true"/>
         <event type="service" invoke="completePack"/>
-        <response name="success" type="view" value="ViewShipment"/>
+        <response name="success" type="view" value="PackOrder"/>
         <response name="error" type="view" value="PackOrder"/>
     </request-map>
 
