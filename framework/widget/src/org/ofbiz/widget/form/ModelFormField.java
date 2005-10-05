@@ -2007,9 +2007,7 @@ public class ModelFormField {
             } catch (Exception e) {
                 maxlength = null;
                 if (maxlengthStr != null && maxlengthStr.length() > 0) {
-                    Debug.logError(
-                        "Could not parse the size value of the text element: [" + sizeStr + "], setting to null; default of no maxlength will be used",
-                        module);
+                    Debug.logError("Could not parse the max-length value of the text element: [" + maxlengthStr + "], setting to null; default of no maxlength will be used", module);
                 }
             }
             
