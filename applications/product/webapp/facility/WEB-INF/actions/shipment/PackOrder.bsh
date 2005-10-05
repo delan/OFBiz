@@ -72,6 +72,8 @@ if (UtilValidate.isNotEmpty(orderId)) {
         context.put("orderId", orderId);
         context.put("orderHeader", orderHeader);
         context.put("orderReadHelper", orh);
+        context.put("orderItemShipGroup", orh.getOrderItemShipGroup(shipGroupSeqId));
+
         if ("ORDER_APPROVED".equals(orderHeader.getString("statusId"))) {
             if (UtilValidate.isNotEmpty(shipGroupSeqId)) {
                 context.put("itemInfos", orh.getOrderItemAndShipGroupAssoc(shipGroupSeqId));
