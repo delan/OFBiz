@@ -269,4 +269,23 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="PackingSlip.fo">
+        <section>
+            <actions>
+                <!-- base/top/specific map first, then more common map added for shared labels -->
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="shipmentId" from-field="parameters.shipmentId"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/ViewShipment.bsh"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentItems.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/facility/shipment/PackingSlip.fo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>

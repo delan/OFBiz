@@ -37,6 +37,11 @@ if (UtilValidate.isNotEmpty(facilityId)) {
 
 orderId = parameters.get("orderId");
 shipGroupSeqId = parameters.get("shipGroupSeqId");
+shipmentId = parameters.get("shipmentId");
+if (shipmentId == null) {
+    shipmentId = request.getAttribute("shipmentId");
+}
+context.put("shipmentId", shipmentId);
 
 if (UtilValidate.isNotEmpty(orderId) && UtilValidate.isEmpty(shipGroupSeqId) && orderId.indexOf("/") > -1) {
     // split the orderID/shipGroupSeqID
