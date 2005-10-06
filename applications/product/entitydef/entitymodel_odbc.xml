@@ -54,21 +54,19 @@
     <entity entity-name="OdbcPackageOut"
             package-name="org.ofbiz.odbc.shipment"
             title="Shipment Package Out Integration Entity">
-      <field name="orderInfoKey" type="id-vlong"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentPackageSeqId" type="id-ne"></field>
       <field name="orderId" type="id"></field>
       <field name="shipGroupSeqId" type="id"></field>
       <field name="shipmentBoxTypeId" type="id"></field>
       <field name="weight" type="floating-point"></field>
-      <prim-key field="orderInfoKey"/>
+      <prim-key field="shipmentId"/>
       <prim-key field="shipmentPackageSeqId"/>
     </entity>
 
     <entity entity-name="OdbcShipmentOut"
             package-name="org.ofbiz.odbc.shipment"
             title="Shipment Out Integration Entity">
-      <field name="orderInfoKey" type="id-vlong"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="orderId" type="id"></field>
@@ -88,7 +86,7 @@
       <field name="stateProvinceGeoId" type="id"></field>
       <field name="numberOfPackages" type="numeric"></field>
       <field name="handlingInstructions" type="long-varchar"></field>
-      <prim-key field="orderInfoKey"/>
+      <prim-key field="shipmentId"/>
     </entity>
 
     <entity entity-name="OdbcPackageIn"
@@ -110,6 +108,6 @@
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentPackageSeqId"/>
       <prim-key field="externalShipmentId"/>
-      <prim-key field="voidIndicator"/>        
+      <prim-key field="voidIndicator"/>
     </entity>
 </entitymodel>
