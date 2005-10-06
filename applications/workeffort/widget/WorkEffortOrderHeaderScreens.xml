@@ -25,51 +25,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="AddWorkEffortOrderHeader">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleAddWorkEffortOrderHeader"/>
-                <set field="tabButtonItem" value="WorkEffortOrderHeaders"/>
-                <set field="labelTitleProperty" value="PageTitleAddWorkEffortOrderHeader"/>
-
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
-                <set field="workEffortId" from-field="parameters.workEffortId"/>
-                <entity-one entity-name="OrderHeader" value-name="orderHeader"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
-                    <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffortOrderHeader}</label>
-                        <include-form name="AddWorkEffortOrderHeader" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="EditWorkEffortOrderHeader">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleEditWorkEffortOrderHeader"/>
-                <set field="tabButtonItem" value="WorkEffortOrderHeaders"/>
-                <set field="labelTitleProperty" value="PageTitleEditWorkEffortOrderHeader"/>
-
-                <set field="donePage" from-field="parameters.DONE_PAGE" />
-                <set field="workEffortId" from-field="parameters.workEffortId"/>
-                <set field="orderId" from-field="parameters.orderId"/>
-                <entity-one entity-name="OrderHeader" value-name="orderHeader"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
-                    <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleEditWorkEffortOrderHeader}</label>
-                        <include-form name="EditWorkEffortOrderHeader" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
     <screen name="ListWorkEffortOrderHeaders">
         <section>
             <actions>
@@ -84,13 +39,12 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortOrderHeaders}</label></container>
-                        <container><link target="AddWorkEffortOrderHeader?workEffortId=${workEffortId}" text="[Create New OrderHeader]" style="linktext"></link></container>
                         <include-form name="ListWorkEffortOrderHeaders" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortOrderHeader}</label></container>
+                        <include-form name="AddWorkEffortOrderHeader" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-
 </screens>
-

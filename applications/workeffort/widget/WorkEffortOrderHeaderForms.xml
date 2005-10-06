@@ -22,54 +22,29 @@
 -->
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
   
-    <form name="ListWorkEffortOrderHeaders" separate-columns="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-    default-widget-style="tabletext" target="" title="" type="list" >
+    <form name="ListWorkEffortOrderHeaders" separate-columns="true" target="" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <entity-and entity-name="WorkEffortOrderHeaderView" >
+            <entity-and entity-name="WorkEffortOrderHeaderView">
                 <field-map field-name="workEffortId"/>
                 <order-by field-name="orderId"/>
             </entity-and>
         </actions>
-        <field name="workEffortId">
-            <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" link-style="linktext"/>
-            </display-entity>
-        </field>
+        <field name="workEffortId"><hidden/></field>
         <field name="orderId" widget-style="buttontext">
-            <hyperlink target="/ordermgr/control/EditOrderHeader?orderId=${orderId}&amp;workEffortId=${workEffortId}" target-type="inter-app"   description="[${orderId}]" />
+            <hyperlink target="/ordermgr/control/orderview?order_id=${orderId}&amp;orderId=${orderId}&amp;workEffortId=${workEffortId}" target-type="inter-app" description="[${orderId}]"/>
         </field>
         <field name="statusItemDescription"><display/></field>
         <field name="orderTypeDescription"><display/></field>
         <field name="orderDate"><display/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteWorkEffortOrderHeader?workEffortId=${workEffortId}&amp;orderId=${orderId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]"/></field>
+        <field name="grandTotal"><display/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteWorkEffortOrderHeader?workEffortId=${workEffortId}&amp;orderId=${orderId}" also-hidden="false" description="${uiLabelMap.CommonDelete}"/></field>
     </form>
   
-    <form name="AddWorkEffortOrderHeader" default-map-name="workOrderHeaderFulfillment" 
-            default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-            default-widget-style="inputBox" 
-            extends="EditOrderHeader" extends-resource="component://order/webapp/ordermgr/order/OrderForms.xml"
-            target="createWorkEffortOrderHeader" title="" type="single">
-        <sort-order>
-            <sort-field name="workEffortId"/>
-            <banner left-text-style="tabletext" left-text="Enter existing Order Id below"/>
-            <sort-field name="orderId"/>
-            <banner left-text-style="tabletext" left-text="OR add new OrderHeader data below to create new entity (leave Order Id empty)"/>
-        </sort-order>
-        <field name="workEffortId" > <display/> </field>
-        <field name="orderId" use-when="orderHeader==null"><lookup target-form-name="/ordermgr/control/LookupOrderHeader"/></field>
-       <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
-    </form>
-  
-    <form name="EditWorkEffortOrderHeader" default-map-name="orderHeader" 
-            default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-            default-widget-style="inputBox" 
-            extends="EditOrderHeader" extends-resource="component://order/webapp/ordermgr/order/OrderForms.xml"
-            target="updateOrderHeader" title="" type="single">
-        <sort-order>
-            <sort-field name="workEffortId"/>
-        </sort-order>
-        <field name="workEffortId" map-name="parameters"> <display /> </field>
-        <field name="orderId" ><display/></field>
-       <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"> <submit button-type="text-link"/> </field>
+    <form name="AddWorkEffortOrderHeader" target="createWorkEffortOrderHeader" title="" type="single"
+            default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="workEffortId"><hidden/></field>
+        <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
+       <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 </forms>
