@@ -20,15 +20,17 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
  *@version    $Rev$
- *@since      3.0
+ *@since      3.5
 -->
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
     <#assign showInput = requestParameters.showInput?default("Y")>
     <#assign hideGrid = requestParameters.hideGrid?default("N")>
     <div class="head1">Pack Order<span class='head2'>&nbsp;in&nbsp;${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+    <#if shipmentId?has_content>
+      <div class="tabletext">View <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">Packing Slip</a> For Shipment #${shipmentId}</div>
+    </#if>
     <div>&nbsp;</div>
 
     <!-- select order form -->
@@ -67,7 +69,7 @@
       <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
     </form>
 
-    <#if orderHeader?exists && orderHeader?has_content>
+    <#if showInput != "N" && orderHeader?exists && orderHeader?has_content>
       <hr class="sepbar"/>
       <div class='head2'>Order #${orderId} / ShipGroup #${shipGroupSeqId}</div>
       <div class="tableheadtext">${packingSession.getPrimaryOrderId()?default("N/A")} / ${packingSession.getPrimaryShipGroupSeqId()?default("N/A")}</div>
@@ -254,7 +256,7 @@
           <div>&nbsp;</div>
         </form>
       </#if>
-        
+
       <!-- packed items display -->
       <#assign packedLines = packingSession.getLines()?if_exists>
       <#if packedLines?has_content>
