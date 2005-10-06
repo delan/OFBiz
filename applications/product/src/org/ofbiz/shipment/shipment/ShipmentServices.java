@@ -590,7 +590,7 @@ public class ShipmentServices {
             stageShip.set("city", address.get("city"));
             stageShip.set("postalCode", address.get("postalCode"));
             stageShip.set("postalCodeExt", address.get("postalCodeExt"));
-            stageShip.set("countryGeoId", address.get("stateProvinceGeoId"));
+            stageShip.set("countryGeoId", address.get("countryGeoId"));
             stageShip.set("stateProvinceGeoId", address.get("stateProvinceGeoId"));
             stageShip.set("numberOfPackages", new Integer(packages.size()));
             stageShip.set("handlingInstructions", shipment.get("handlingInstructions"));
