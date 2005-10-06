@@ -58,6 +58,8 @@ if (packSession == null) {
 } else {
     if (packSession.getStatus() == 0) {
         packSession.clear();
+        shipGroupSeqId = null;
+        orderId = null;
     }
 }
 
