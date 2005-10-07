@@ -72,7 +72,8 @@
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
-            <a href="<@ofbizUrl>createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCreateCustRequestFromShoppingList}</a>            
+            <a href="<@ofbizUrl>createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCreateCustRequestFromShoppingList}</a>
+            <a href="<@ofbizUrl>createQuoteFromShoppingList?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCreateQuoteFromShoppingList}</a>
             <a href="javascript:document.updateList.submit();" class="submenutextright">${uiLabelMap.CommonSave}</a>            
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingListDetail} - ${shoppingList.listName}</div>

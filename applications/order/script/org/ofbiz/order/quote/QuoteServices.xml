@@ -32,10 +32,19 @@
     
     <!-- create a new Quote -->
     <simple-method method-name="createQuote" short-description="Create a Quote">
-        <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuote"/>
-        </check-permission>
-		<check-errors/>
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field-name="parameters.partyId"/></not>
+                    <not><if-compare-field field-name="parameters.partyId" operator="equals" to-field-name="userLogin.partyId"/></not>
+                    <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+                </and>
+            </condition>
+            <then>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuote"/></add-error>
+            </then>
+        </if>
+        <check-errors/>
         <!-- create new entity and create all the fields -->
         <make-value value-name="newEntity" entity-name="Quote"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
@@ -181,9 +190,20 @@
 
     <!-- create a new QuoteItem -->
     <simple-method method-name="createQuoteItem" short-description="Create a QuoteItem">
-        <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteItem"/>
-        </check-permission>
+        <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field-name="quote.partyId"/></not>
+                    <not><if-compare-field field-name="quote.partyId" operator="equals" to-field-name="userLogin.partyId"/></not>
+                    <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+                </and>
+            </condition>
+            <then>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteItem"/></add-error>
+            </then>
+        </if>
+
         <check-errors/>
         <!-- create new entity and create all the fields -->
         <make-value value-name="newEntity" entity-name="QuoteItem"/>
@@ -434,7 +454,7 @@
     </simple-method>
     <simple-method method-name="autoCreateQuoteAdjustments" short-description="Auto create QuoteAdjustments">
         <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunAutoUpdateQuotePrice"/>
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunAutoCreateQuoteAdjustments"/>
         </check-permission>
         <check-errors/>
         <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
@@ -559,14 +579,23 @@
     </simple-method>
     
     <simple-method method-name="createQuoteFromCart" short-description="Create a Quote from a Cart">
-        <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunAutoUpdateQuotePrice"/>
-        </check-permission>
+        <call-object-method obj-field-name="parameters.cart" method-name="getPartyId" ret-field-name="createQuoteInMap.partyId"/>
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field-name="createQuoteInMap.partyId"/></not>
+                    <not><if-compare-field field-name="createQuoteInMap.partyId" operator="equals" to-field-name="userLogin.partyId"/></not>
+                    <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+                </and>
+            </condition>
+            <then>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteFromCart"/></add-error>
+            </then>
+        </if>
         <check-errors/>
 
         <call-object-method obj-field-name="parameters.cart" method-name="getCurrency" ret-field-name="createQuoteInMap.currencyUomId"/>
         <call-object-method obj-field-name="parameters.cart" method-name="getProductStoreId" ret-field-name="createQuoteInMap.productStoreId"/>
-        <call-object-method obj-field-name="parameters.cart" method-name="getPartyId" ret-field-name="createQuoteInMap.partyId"/>
         <string-to-field string="PRODUCT_QUOTE" field-name="createQuoteInMap.quoteTypeId"/>
         <string-to-field string="QUO_CREATED" field-name="createQuoteInMap.statusId"/>
         <call-service service-name="createQuote" in-map-name="createQuoteInMap">
@@ -627,11 +656,6 @@
     </simple-method>
 
     <simple-method method-name="createQuoteFromShoppingList" short-description="Create a Quote from a Shopping List">
-        <check-permission permission="ORDERMGR" action="_CREATE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateQuoteFromShoppingList"/>
-        </check-permission>
-        <check-errors/>
-
         <call-service service-name="loadCartFromShoppingList" in-map-name="parameters">
             <result-to-field result-name="shoppingCart" field-name="cart"/>
         </call-service>
