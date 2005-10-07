@@ -411,7 +411,7 @@
             <env-to-env env-name="parameters.emailProductStoreId" to-env-name="storeEmailLookup.productStoreId"/>
             <string-to-field string="PRDS_CUST_REGISTER" field-name="emailType" map-name="storeEmailLookup"/>
             <find-by-primary-key map-name="storeEmailLookup" entity-name="ProductStoreEmailSetting"  value-name="storeEmail"/>
-            <if-not-empty field-name="templatePath" map-name="storeEmail">
+            <if-not-empty field-name="bodyScreenLocation" map-name="storeEmail">
                 <!-- prepare the email context -->
                 <get-related-one value-name="createdUserLogin" relation-name="Person" to-value-name="personObj"/>
                 <env-to-field env-name="createdUserLogin" field-name="userLogin" map-name="emailCtx"/>
@@ -423,7 +423,7 @@
                 <field-to-field field-name="ccAddress" map-name="storeEmail" to-field-name="sendCc" to-map-name="notifyCtx"/>
                 <field-to-field field-name="bccAddress" map-name="storeEmail" to-field-name="sendBcc" to-map-name="notifyCtx"/>
                 <field-to-field field-name="contentType" map-name="storeEmail" to-field-name="contentType" to-map-name="notifyCtx"/>
-                <field-to-field field-name="templatePath" map-name="storeEmail" to-field-name="templateName" to-map-name="notifyCtx"/>
+                <field-to-field field-name="bodyScreenLocation" map-name="storeEmail" to-field-name="templateName" to-map-name="notifyCtx"/>
                 <env-to-field env-name="emailCtx" field-name="templateData" map-name="notifyCtx"/>
                 <!-- call the service async -->
                 <call-service-asynch service-name="sendGenericNotificationEmail" in-map-name="notifyCtx" include-user-login="true"/>
