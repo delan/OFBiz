@@ -1151,9 +1151,21 @@
         <response name="success" type="request" value="showcart"/>
         <response name="error" type="request" value="showcart"/>
     </request-map>
+    <request-map uri="createQuoteFromCart">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createQuoteFromCart"/>
+        <response name="success" type="request" value="showcart"/>
+        <response name="error" type="request" value="showcart"/>
+    </request-map>
     <request-map uri="createCustRequestFromShoppingList">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestFromShoppingList"/>
+        <response name="success" type="request" value="editShoppingList"/>
+        <response name="error" type="request" value="editShoppingList"/>
+    </request-map>
+    <request-map uri="createQuoteFromShoppingList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createQuoteFromShoppingList"/>
         <response name="success" type="request" value="editShoppingList"/>
         <response name="error" type="request" value="editShoppingList"/>
     </request-map>
