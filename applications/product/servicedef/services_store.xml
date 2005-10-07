@@ -145,7 +145,7 @@
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreEmail" auth="true">
         <description>Create a Product Store Email Setting</description>
         <auto-attributes entity-name="ProductStoreEmailSetting" include="all" mode="IN" optional="false"/>
-        <override name="templatePath" optional="true"/>
+        <override name="xslfoAttachScreenLocation" optional="true"/>
         <override name="ccAddress" optional="true"/>
         <override name="bccAddress" optional="true"/>
         <override name="contentType" optional="true"/>
@@ -154,7 +154,7 @@
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStoreEmail" auth="true">
         <description>Update a Product Store Email Setting</description>
         <auto-attributes entity-name="ProductStoreEmailSetting" include="all" mode="IN" optional="false"/>
-        <override name="templatePath" optional="true"/>
+        <override name="xslfoAttachScreenLocation" optional="true"/>
         <override name="ccAddress" optional="true"/>
         <override name="bccAddress" optional="true"/>
         <override name="contentType" optional="true"/>
