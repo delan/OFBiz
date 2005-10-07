@@ -475,7 +475,7 @@ public class ProductStoreWorker {
                 if (surveyAppl.get("productId") != null) {
                     if (surveyAppl.get("productId").equals(productId)) {
                         surveys.add(surveyAppl);
-                    } else if (surveyAppl.getString("productId").equals(virtualProductId)) {
+                    } else if ((virtualProductId != null) && (surveyAppl.getString("productId").equals(virtualProductId))) {
                         surveys.add(surveyAppl);    
                     }
                 } else if (surveyAppl.get("productCategoryId") != null) {
