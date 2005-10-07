@@ -21,9 +21,8 @@
 *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="EditWorkEffort" default-map-name="workEffort" default-title-style="tableheadtext" 
-        default-tooltip-style="tabletext" default-widget-style="inputBox"  
-        target="updateWorkEffort" title="" type="single">
+    <form name="EditWorkEffort" default-map-name="workEffort" target="updateWorkEffort" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <alt-target target="createWorkEffort" use-when="workEffort==null"/>
         <auto-fields-service service-name="updateWorkEffort"/>
         
