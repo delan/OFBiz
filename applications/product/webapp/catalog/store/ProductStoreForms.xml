@@ -45,9 +45,9 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field use-when="productStore!=null&amp;&amp;productStore.getString(&quot;inventoryFacilityId&quot;)!=null" name="inventoryFacilityLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field use-when="productStore!=null&amp;&amp;productStore.getString(&quot;inventoryFacilityId&quot;)!=null" name="inventoryFacilityLink" title=" " widget-style="buttontext">
             <hyperlink target="/facility/control/EditFacility?facilityId=${productStore.inventoryFacilityId}" target-type="inter-app"
-                description="[Edit Facility ${productStore.inventoryFacilityId}]" also-hidden="false"/>
+                description="Edit Facility ${productStore.inventoryFacilityId}" also-hidden="false"/>
         </field>
 
          <field name="manualAuthIsCapture" widget-style="selectBox">
@@ -212,15 +212,15 @@
         <field name="productStoreId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.ProductCatalogId}" widget-style="tabletext">
             <display-entity entity-name="ProdCatalog" description="${catalogName}" also-hidden="true">
-                <sub-hyperlink target="EditProdCatalog?prodCatalogId=${prodCatalogId}" description="[${prodCatalogId}]" link-style="buttontext"/>
+                <sub-hyperlink target="EditProdCatalog?prodCatalogId=${prodCatalogId}" description="${prodCatalogId}" link-style="buttontext"/>
             </display-entity>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteProductStoreCatalog?prodCatalogId=${prodCatalogId}&amp;productStoreId=${productStoreId}&amp;fromDate=${fromDate}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
 
@@ -281,7 +281,7 @@
         target="updateProductStoreKeywordOvrd" title="" list-name="productStorekeywordOvrdList"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProductStoreKeywordOvrd"/>
-        <field name="productStoreId" ><hidden/></field>
+        <field name="productStoreId"><hidden/></field>
         <field name="keyword" title="${uiLabelMap.ProductKeyword}"><display description="${keyword}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display description="${fromDate}"/></field>
         <field name="targetTypeEnumId" title="${uiLabelMap.ProductTargetType}" widget-style="selectBox">
@@ -293,27 +293,27 @@
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteProductStoreKeywordOvrd?productStoreId=${productStoreId}&amp;keyword=${keyword}&amp;fromDate=${fromDate}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
-   <form name="ViewProductStoreSegments" default-title-style="tableheadtext"
+    <form name="ViewProductStoreSegments" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
         target="" paginate-target="" title="" type="list">
         <actions>
-        	<entity-and entity-name="SegmentGroup" >
-            	<field-map field-name="productStoreId"/>
-        	</entity-and>
+            <entity-and entity-name="SegmentGroup">
+                <field-map field-name="productStoreId"/>
+            </entity-and>
         </actions>
         <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.ProductSegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="inter-app" description="${segmentGroupId}" target="/marketing/control/viewSegmentGroup?segmentGroupId=${segmentGroupId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}"/>
+            <hyperlink also-hidden="false" target-type="inter-app" description="${segmentGroupId}" target="/marketing/control/viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
         </field>
-        <field name="segmentGroupTypeId" title="${uiLabelMap.ProductSegmentGroupTypeId}"><display/></field>
+        <field name="segmentGroupTypeId" title="${uiLabelMap.ProductSegmentGroupTypeId}"><display-entity entity-name="SegmentGroupType"/></field>
         <field name="description" title="${uiLabelMap.ProductSegmentGroupDescription}"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="/marketing/control/deleteSegmentGroup?segmentGroupId=${segmentGroupId}&amp;DONE_PAGE=/catalog/control/ViewProductStoreSegments?productStoreId=${productStoreId}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false" target-type="inter-app"/>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="/marketing/control/deleteSegmentGroup?segmentGroupId=${segmentGroupId}"
+                description="${uiLabelMap.CommonDelete}" also-hidden="false" target-type="inter-app"/>
         </field>
     </form>
 </forms>

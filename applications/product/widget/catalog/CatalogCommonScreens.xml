@@ -91,7 +91,7 @@
                                     <html><html-template location="component://product/webapp/catalog/catalog/CatalogTabBar.ftl"/></html>
                                 </platform-specific>
                                 <container>
-                                    <link target="EditProdCatalog" text="[${uiLabelMap.ProductNewProdCatalog}]" style="buttontext"/>
+                                    <link target="EditProdCatalog" text="${uiLabelMap.ProductNewProdCatalog}" style="buttontext"/>
                                 </container>
                                 
                                 <!-- add Create Product and View Product (in ecommerce) links -->
@@ -133,7 +133,7 @@
                                             <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]  ${${extraFunctionName}}</label>
                                         </container>
                                         <container>
-                                            <link target="EditProductStore" text="[${uiLabelMap.ProductNewProductStore}]" style="buttontext"/>
+                                            <link target="EditProductStore" text="${uiLabelMap.ProductNewProductStore}" style="buttontext"/>
                                         </container>
                                     </widgets>
                                 </section>
