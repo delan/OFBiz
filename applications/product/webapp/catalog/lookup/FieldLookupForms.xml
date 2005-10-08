@@ -62,12 +62,12 @@
                 <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
-        <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="productId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
-        <field name="searchVariants" title="&amp;nbsp;" widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
+        <field name="searchVariants" title=" " widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="Variants" target="LookupVariantProduct?productId=${productId}"/>
         </field>
     </form>
@@ -84,11 +84,11 @@
         title="" type="list">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
-        <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="productId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
     </form>
@@ -116,17 +116,42 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="listLookupProductFeature" list-name="entityList" paginate-target="LookupProductFeature" title="" type="list"
+    <form name="listLookupProductFeature" list-iterator-name="listIt" paginate-target="LookupProductFeature" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="ProductFeature"/>
             </service>
         </actions>
         <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
-        <field name="productFeatureId" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="productFeatureId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
         </field>
+    </form>
+
+    <form name="LookupProductStore" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupProductStore" title="" type="single">
+        <auto-fields-entity entity-name="ProductStore" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupProductStore" list-iterator-name="listIt" target="" paginate-target="LookupProductStore" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="ProductStore"/>
+            </service>
+        </actions>
+        
+        <!-- <auto-fields-entity entity-name="ProductStore" default-field-type="display"/> -->
+        
+        <field name="productStoreId" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productStoreId}" target="javascript:set_value('${productStoreId}')"/>
+        </field>
+        <field name="primaryStoreGroupId"><display/></field>
+        <field name="storeName"><display/></field>
+        <!-- <field name="companyName"><display/></field> -->
     </form>
 </forms>
