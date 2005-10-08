@@ -62,7 +62,7 @@
         
         <field name="groupId"><hidden/></field>
         <field name="permissionId" title="${uiLabelMap.PartyPermissionId}" widget-style="tabletext"><display-entity entity-name="SecurityPermission" description="[${permissionId}] ${description}"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeSecurityPermissionFromSecurityGroup?permissionId=${permissionId}&amp;groupId=${groupId}"
                 description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
         </field>

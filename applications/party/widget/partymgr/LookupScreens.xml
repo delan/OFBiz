@@ -127,7 +127,9 @@
             </widgets>
         </section>
     </screen>
-    <screen name="LookupSegmentGroup">
+    
+    <!-- PartyClassificationGroup Lookup Screen -->
+    <screen name="LookupPartyClassificationGroup">
         <section>
             <condition>
                 <or>
@@ -135,15 +137,18 @@
                 </or>
             </condition>
             <actions>
-                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-
-                <set field="title" value="Lookup Segment Group"/>
-                <set field="entityName" value="SegmentGroup"/>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <set field="title" value="Lookup PartyClassificationGroup"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="listLookupSegmentGroup" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                        <include-form name="LookupPartyClassificationGroup" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
+                        <include-form name="listLookupPartyClassificationGroup" location="component://party/webapp/partymgr/lookup/LookupForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
