@@ -26,7 +26,9 @@ view_WORK_ORDER = request.getParameter("view_WORK_ORDER");
 
 // if no status is selected, choose viewall by default
 if ((viewcompleted == null) && (viewcancelled == null) && (viewrejected == null) && (viewapproved == null) && (viewcreated == null) && (viewprocessing == null) && (viewsent == null)) {
-    viewall = "Y";
+    viewcreated = "Y";
+    viewprocessing = "Y";
+    viewapproved = "Y";
 }
 
 // put back in context for pre-checking checkboxes
