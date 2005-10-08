@@ -117,7 +117,7 @@
                   </td>
                   <td align="right" valign="top" nowrap>
                     <div class="tabletext" nowrap>
-                      <input style="textBox" type="text" size="8" name="ipm_${orderItem.orderItemSeqId}" value="${orderItem.unitPrice?string("##0.00")}"/>
+                      <input style="textBox" type="text" size="8" name="ipm_${orderItem.orderItemSeqId}" value="<@ofbizAmount amount=orderItem.unitPrice/>"/>
                       &nbsp;<input type="checkbox" name="opm_${orderItem.orderItemSeqId}" value="Y"/>
                     </div>
                   </td>
@@ -249,7 +249,7 @@
                   </select>
                 </td>
                 <td align="right">
-                  <input type="text" name="amount" size="6" value="0.00" class="inputBox"/>
+                  <input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="inputBox"/>
                 </td>
                 <td align="right" colspan="2">
                   <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">${uiLabelMap.CommonAdd}</a>

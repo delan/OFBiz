@@ -3898,7 +3898,7 @@ public class OrderServices {
 
                 // set quantity
                 try {
-                    cartItem.setQuantity(qty.doubleValue(), dispatcher, cart, true, false, true); // trigger external ops, don't reset ship groups, and update prices for both PO and SO items
+                    cartItem.setQuantity(qty.doubleValue(), dispatcher, cart, true, false); // trigger external ops, don't reset ship groups (and update prices for both PO and SO items)
                 } catch (CartItemModifyException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(e.getMessage());
@@ -3913,9 +3913,16 @@ public class OrderServices {
                     String priceStr = (String) itemPriceMap.get(itemSeqId);
                     if (UtilValidate.isNotEmpty(priceStr)) {
                         double price = -1;
+                        //parse the price
+                        NumberFormat nf = null;
+                        if (locale != null) {
+                            nf = NumberFormat.getNumberInstance(locale);
+                        } else {
+                            nf = NumberFormat.getNumberInstance();
+                        }
                         try {
-                            price = Double.parseDouble(priceStr);
-                        } catch (NumberFormatException e) {
+                            price = nf.parse(priceStr).doubleValue();
+                        } catch (ParseException e) {
                             Debug.logError(e, module);
                             return ServiceUtil.returnError(e.getMessage());
                         }
