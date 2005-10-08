@@ -54,7 +54,7 @@
         <field name="submitButton" title="Find" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="createLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create New"  
              target="EditLayoutSubContent?mode=add&amp;contentIdTo=TEMPLATE_MASTER"/>
         </field>
@@ -147,12 +147,12 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
+        <field name="createLink" title=" " widget-style="buttontext" position="1">
             <hyperlink also-hidden="false" description="Create New"  
                 target="EditLayoutTemplate?mode=add&amp;contentIdTo=TEMPLATE_MASTER"/>
         </field>
         -->
-        <field name="cloneLayout" title="&amp;nbsp;" widget-style="buttontext" position="2" >
+        <field name="cloneLayout" title=" " widget-style="buttontext" position="2" >
             <hyperlink also-hidden="false" description="Clone Layout"  
                 target="cloneLayout?contentId=${currentValue.contentId}"/>
         </field>
@@ -221,7 +221,7 @@
         <field name="contentName"><display/></field>
         <field name="description"><display/></field>
         <field name="drObjectInfo" title="Template File"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContent?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
     </form>
@@ -237,7 +237,7 @@
         <field name="contentName"><display/></field>
         <field name="description"><display/></field>
         <field name="drObjectInfo" title="Template File"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeLayout?contentId=${contentId}&amp;contentIdTo=${caContentIdTo}&amp;contentAssocTypeId=${caContentAssocTypeId}&amp;fromDate=${caFromDate}"/>
         </field>
     </form>
@@ -702,13 +702,13 @@
         <field name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="paste" title="&amp;nbsp;" widget-style="buttontext"
+        <field name="paste" title=" " widget-style="buttontext"
             use-when="!&quot;${contentIdTo}&quot;.equals(&quot;TEMPLATE_MASTER&quot;)" >
             <hyperlink target-type="plain" 
               target="javascript:call_fieldlookup2(document.AddLayoutSubContent.drDataResourceId, 'ClipBoardContent')"
               description="Paste"/>
         </field>
-        <field name="paste" title="&amp;nbsp;" widget-style="buttontext"
+        <field name="paste" title=" " widget-style="buttontext"
             use-when="&quot;${contentIdTo}&quot;.equals(&quot;TEMPLATE_MASTER&quot;)" >
             <hyperlink target-type="plain" 
               target="javascript:call_fieldlookup2(document.AddLayoutSubContent.drDataResourceId, 'LookupListLayout')"

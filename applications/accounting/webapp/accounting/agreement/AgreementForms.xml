@@ -76,7 +76,7 @@
         </field>
         <field name="agreementDate" title="${uiLabelMap.AccountingAgreementDate}"><hidden/></field>
         <field name="textData" title="${uiLabelMap.AccountingTextData}"><hidden/></field>
-        <field name="cancelLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="cancelLink" title=" " widget-style="buttontext">
             <hyperlink target="cancelAgreement?agreementId=${agreementId}" description="[${uiLabelMap.CommonCancel}]" also-hidden="false"/>
         </field>
     </form>
@@ -128,7 +128,7 @@
         <field name="agreementItemTypeId" title="${uiLabelMap.AccountingAgreementItemTypeId}">
             <display-entity entity-name="AgreementItemType"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeAgreementItem?agreementItemSeqId=${agreementItemSeqId}&amp;agreementId=${agreementId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
         </field>
     </form>
@@ -169,7 +169,7 @@
         <field name="termTypeId" title="${uiLabelMap.AccountingTermTypeId}">
             <display-entity entity-name="TermType"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeAgreementTerm?agreementTermId=${agreementTermId}&amp;agreementId=${agreementId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
         </field>
     </form>

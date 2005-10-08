@@ -232,7 +232,7 @@
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  >
         <alt-target target="createWorkEffortAndAssoc" use-when="workEffortAssoc==null"/>
         <field name="workEffortIdTo" field-name="workEffortIdTo" map-name="workEffortAssoc"><display/></field>
-        <field name="editToLink" title="&amp;nbsp;" widget-style="buttontext" position="2">
+        <field name="editToLink" title=" " widget-style="buttontext" position="2">
             <hyperlink also-hidden="false" description="Edit" target="EditWorkEffort?workEffortId=${workEffortIdTo}"/>
         </field>
         <field name="workEffortIdFrom" field-name="workEffortIdTo" map-name="workEffortAssoc"><display/></field>
@@ -268,16 +268,16 @@
         </field>
         <field name="workEffortTypeId"><display-entity entity-name="WorkEffortType"/></field>
         <field name="workEffortPurposeTypeId"><display-entity entity-name="WorkEffortPurposeType"/></field>
-        <field name="editLink" title="&amp;nbsp;" widget-style="linktext">
+        <field name="editLink" title=" " widget-style="linktext">
             <hyperlink also-hidden="false" description="Edit" target="EditWorkEffort?workEffortId=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
         </field>
-        <field name="childLink" title="&amp;nbsp;" widget-style="linktext">
+        <field name="childLink" title=" " widget-style="linktext">
             <hyperlink also-hidden="false" description="SubNodes" target="ChildWorkEfforts?trail=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
         </field>
-        <field name="editChildLink" title="&amp;nbsp;" widget-style="linktext">
+        <field name="editChildLink" title=" " widget-style="linktext">
             <hyperlink also-hidden="false" description="Detail + SubNodes" target="EditListWorkEfforts?trail=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="linktext">
+        <field name="deleteLink" title=" " widget-style="linktext">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeWorkEffort?workEffortId=${workEffortId}"/>
         </field>
     </form>
@@ -288,10 +288,10 @@
         </field>
         <field name="workEffortTypeId"><display-entity entity-name="WorkEffortType"/></field>
         <field name="workEffortPurposeTypeId"><display-entity entity-name="WorkEffortPurposeType"/></field>
-        <field name="detailLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="detailLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="Detail" target="ListChildWorkEffort?trail=${workEffortId}"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeWorkEffort?workEffortId=${workEffortId}"/>
         </field>
     </form>
@@ -340,7 +340,7 @@
         <field name="thruDate"><display/></field>
         <field name="statusId"><display-entity entity-name="StatusItem"/></field>
         <field name="preferredContactMechId"><display/></field>
-        <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="editLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditWorkEffortParty?workEffortId=${workEffortId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"/>
         </field>
     </form>

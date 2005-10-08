@@ -40,10 +40,10 @@
         <field name="dataResourceId" title="Data Resource Id" ><text-find/></field>
         <field name="contentName" title="Name" ><text-find/></field>
         <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="createBlog" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="createBlog" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="New Blog"  target="EditBlogArticle"/>
         </field>
-        <field name="createForum" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="createForum" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="New Forum"  target="EditForumArticle"/>
         </field>
 

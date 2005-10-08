@@ -59,7 +59,7 @@
           </service>
         </actions>
         <auto-fields-entity entity-name="DataResource" default-field-type="display"/>
-        <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="dataResourceId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="${dataResourceId}" target="gotoDataResource?dataResourceId=${dataResourceId}"/>
         </field>
     </form>
@@ -84,7 +84,7 @@
             </service>
         </actions>
         <auto-fields-entity entity-name="DataResource" default-field-type="display"/>
-        <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="dataResourceId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>
         </field>
     </form>
@@ -107,7 +107,7 @@
         </actions>
         <field name="dataResourceId"><display/></field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="createContent" title="&amp;nbsp;" widget-style="buttontext" position="2">
+        <field name="createContent" title=" " widget-style="buttontext" position="2">
             <hyperlink also-hidden="false" description="Create New Content" target="AddContent?dataResourceId=${currentValue.dataResourceId}"/>
         </field>
         <field name="mode" ><hidden value="UPDATE"/></field>
@@ -278,7 +278,7 @@
         <auto-fields-service service-name="updateDataResourceAttribute" default-field-type="display"/>
         <field name="attrValue" widget-style="buttontext"><text/></field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceAttribute?dataResourceId=${dataResourceId}&amp;attrName=${attrName}"/>
         </field>
         <actions>
@@ -315,7 +315,7 @@
         <auto-fields-service service-name="updateDataResourceRole" default-field-type="display"/>
         <field name="thruDate" widget-style="buttontext"><date-time/></field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceRole?dataResourceId=${dataResourceId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"/>
         </field>
         <actions>
@@ -343,7 +343,7 @@
         target="" title="" type="list">
         <auto-fields-entity entity-name="ProductFeatureDataResource" default-field-type="display"/>
         <field name="dataResourceId"><hidden/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceProductFeature?dataResourceId=${dataResourceId}&amp;productFeatureId=${productFeatureId}"/>
         </field>
         <actions>
@@ -382,7 +382,7 @@
         list-name="entityList" paginate-target="/LookupProductFeature" 
         title="" type="list">
         <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
-        <field name="productFeatureId" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="productFeatureId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
         </field>
     </form>

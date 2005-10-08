@@ -105,7 +105,7 @@
             </drop-down>
         </field>
             
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteExampleItem?exampleId=${exampleId}&amp;exampleItemSeqId=${exampleItemSeqId}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>

@@ -39,7 +39,7 @@
                 <sub-hyperlink description="[${workEffortId}]" target="EditQuoteWorkEffort?workEffortId=${workEffortId}&amp;quoteId=${quoteId}" link-style="linktext"/>
             </display-entity>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="linktext">
+        <field name="deleteLink" title=" " widget-style="linktext">
             <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeQuoteWorkEffort?quoteId=${quoteId}&amp;quoteId=${quoteId}"/>
         </field>
     </form>
