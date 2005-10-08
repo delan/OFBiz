@@ -131,6 +131,10 @@ public class ByAndFinder implements Serializable {
         ModelEntity modelEntity = delegator.getModelEntity(entityName);
         String resultSetTypeString = this.resultSetTypeExdr.expandString(context);
         
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("In find entity by and could not find definition for entity with name [" + entityName + "].");
+        }
+        
         boolean useCache = "true".equals(useCacheStr);
         boolean filterByDate = "true".equals(filterByDateStr);
         boolean distinct = "true".equals(distinctStr);
