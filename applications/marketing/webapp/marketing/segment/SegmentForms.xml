@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2005-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,154 +23,148 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+
+    <form name="FindSegmentGroup" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
+        list-iterator-name="listIt" target="" paginate-target="FindSegmentGroup" title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="SegmentGroup"/>
+                <field-map field-name="noConditionFind" value="Y"/>
+            </service>
+        </actions>
+        <field name="segmentGroupId" widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
+            <hyperlink also-hidden="false" description="${segmentGroupId}" target="viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
+        </field>
+        <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><display-entity entity-name="SegmentGroupType" description="${description}"/></field>
+        <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><display/></field>
+        <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><display/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="deleteSegmentGroup?segmentGroupId=${segmentGroupId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
+        </field>
+    </form>
+
     <form name="EditSegmentGroup" type="single" 
             target="updateSegmentGroup" title="" default-map-name="segmentGroup"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="segmentGroup==null" target="createSegmentGroup"/>
         
-        <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}" widget-style="tabletext"><display/></field>
         <field use-when="segmentGroup==null&amp;&amp;segmentGroupId==null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><ignored/></field>
-        <field use-when="segmentGroup==null&amp;&amp;segmentGroupId!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${segmentGroupId}]"><display/></field>
+        <field use-when="segmentGroup==null&amp;&amp;segmentGroupId!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${segmentGroupId}]" widget-style="tabletext"><display/></field>
 
         <field name="segmentGroupTypeId">
             <drop-down>
                 <entity-options description="${description}" entity-name="SegmentGroupType" key-field-name="segmentGroupTypeId">
+                    <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <!-- 
-        <field name="productStoreId" use-when="&quot;${parameters.productStoreId}&quot;.length()&gt;0" map-name="parameters">
-            <lookup target-form-name="LookupProductStore"/>
+        <field name="productStoreId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
+                    <entity-order-by field-name="storeName"/>
+                </entity-options>
+                <sub-hyperlink target="/catalog/control/EditProductStore?productStoreId=${segmentGroup.productStoreId}" target-type="inter-app" description="${segmentGroup.productStoreId}" link-style="buttontext"/>
+            </drop-down>
         </field>
-        -->
-        <field name="productStoreId" >
-            <lookup target-form-name="LookupProductStore"/>
-        </field>
-        <field name="description" >
-            <text size="55"/>
-        </field>
+        <field name="description"><text size="55"/></field>
         
-        <field name="DONE_PAGE">
-            <hidden value="${donePage}"/>
-        </field>
-        
-        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]" target-type="inter-app"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
-    <form name="EditSegmentGroupClass" type="single" 
-            target="updateSegmentGroupClassification" title="" default-map-name="segmentGroupClass"
+    <form name="AddSegmentGroupClass" type="single" 
+            target="createSegmentGroupClassification" title="" default-map-name="segmentGroupClass"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <alt-target use-when="segmentGroupClassification==null" target="createSegmentGroupClassification"/>
-        <auto-fields-service service-name="updateSegmentGroupClassification"/>
+        <auto-fields-service service-name="createSegmentGroupClassification"/>
         
-        <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="segmentGroup==null&amp;&amp;segmentGroupId==null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><ignored/></field>
-        <field use-when="segmentGroup==null&amp;&amp;segmentGroupId!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${segmentGroupId}]"><display/></field>
+        <field name="segmentGroupId"><hidden/></field>
 
         <field name="partyClassificationGroupId">
             <lookup target-form-name="LookupPartyClassificationGroup"/>
         </field>
-        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-
-    <form name="EditSegmentGroupGeo" type="single" 
-            target="updateSegmentGroupGeo" title="" default-map-name="segmentGroupGeo"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <alt-target use-when="segmentGroupGeo==null" target="createSegmentGroupGeo"/>
-        <auto-fields-service service-name="updateSegmentGroupGeo"/>
-        
-        <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="segmentGroup==null&amp;&amp;segmentGroupId==null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><ignored/></field>
-        <field use-when="segmentGroup==null&amp;&amp;segmentGroupId!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${segmentGroupId}]"><display/></field>
-
-        <field name="geoId">
-            <lookup target-form-name="LookupGeo"/>
-        </field>
-        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
-    </form>
-
-   <form name="listSegmentGroupGeo" default-title-style="tableheadtext"
+    <form name="listSegmentGroupClass" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="" target="" paginate-target="listSegmentGroupGeo" title="" type="list">
+        list-name="segmentGroupClassList" target="" paginate-target="listSegmentGroupClass" title="" type="list">
         <actions>
-        <entity-and entity-name="SegmentGroupGeo">
-            <field-map env-name="segmentGroupId" />
-        </entity-and>
+            <entity-and entity-name="SegmentGroupClassification">
+                <field-map env-name="segmentGroupId"/>
+            </entity-and>
         </actions>
-        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <display/>
+        <field name="segmentGroupId"><hidden/></field>
+        <field name="partyClassificationGroupId" title="${uiLabelMap.SegmentGroupPartyClassificationGroupId}"><display/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="deleteSegmentGroupClassification?segmentGroupId=${segmentGroupId}&amp;partyClassificationGroupId=${partyClassificationGroupId}"
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
-        <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+    </form>
+    
+    <form name="AddSegmentGroupGeo" type="single" 
+            target="createSegmentGroupGeo" title="" default-map-name="segmentGroupGeo"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createSegmentGroupGeo"/>
+        
+        <field name="segmentGroupId"><hidden/></field>
+        
+        <field name="geoId"><lookup target-form-name="LookupGeo"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+    <form name="listSegmentGroupGeo" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
+        list-name="segmentGroupGeos" target="" paginate-target="listSegmentGroupGeo" title="" type="list">
+        <actions>
+            <entity-and entity-name="SegmentGroupGeo">
+                <field-map env-name="segmentGroupId"/>
+            </entity-and>
+        </actions>
+        <field name="segmentGroupId"><hidden/></field>
+        <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><display-entity entity-name="Geo" description="${geoName} [Code:${geoCode}][ID:${geoId}]"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteSegmentGroupGeo?segmentGroupId=${segmentGroupId}&amp;geoId=${geoId}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
 
-    <form name="EditSegmentGroupRole" type="single" 
-            target="updateSegmentGroupRole" title="" default-map-name="segmentGroupRole"
+    <form name="AddSegmentGroupRole" type="single" 
+            target="createSegmentGroupRole" title="" default-map-name="segmentGroupRole"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <alt-target use-when="segmentGroupRole==null" target="createSegmentGroupRole"/>
-        <auto-fields-service service-name="updateSegmentGroupRole"/>
+        <auto-fields-service service-name="createSegmentGroupRole"/>
         
-        <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="segmentGroup==null&amp;&amp;segmentGroupId==null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><ignored/></field>
-        <field use-when="segmentGroup==null&amp;&amp;segmentGroupId!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${segmentGroupId}]"><display/></field>
-
-        <field name="partyId">
-            <lookup target-form-name="LookupParty"/>
-        </field>
+        <field name="segmentGroupId"><hidden/></field>
+        
+        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="roleTypeId">
             <drop-down>
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                    <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-
-
-   <form name="listSegmentGroupRole" default-title-style="tableheadtext"
+    <form name="listSegmentGroupRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="" target="" paginate-target="listSegmentGroupRole" title="" type="list">
-        <actions>
-        <entity-and entity-name="SegmentGroupRole">
-            <field-map env-name="segmentGroupId" />
-        </entity-and>
-        </actions>
-        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <display/>
-        </field>
-        <field name="partyId" title="${uiLabelMap.SegmentGroupPartyId}"><display/></field>
-        <field name="roleTypeId" title="${uiLabelMap.SegmentGroupRoleTypeId}"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="deleteSegmentGroupRole?segmentGroupId=${segmentGroupId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
-        </field>
-    </form>
-    
-   <form name="listSegmentGroupClass" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupClass" title="" type="list">
+        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupRole" title="" type="list">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="SegmentGroupRole"/>
+                <field-map field-name="noConditionFind" value="Y"/>
             </service>
         </actions>
-        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <display/>
+        <field name="segmentGroupId"><hidden/></field>
+        <field name="partyId" title="${uiLabelMap.SegmentGroupPartyId}">
+            <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${groupName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" description="${partyId}" link-style="buttontext" target-type="inter-app"/>
+            </display-entity>
         </field>
-        <field name="partyClassificationGroupId" title="${uiLabelMap.SegmentGroupPartyClassificationGroupId}"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="deleteSegmentGroupClassification?segmentGroupId=${segmentGroupId}&amp;partyClassificationGroupId=${partyClassificationGroupId}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        <field name="roleTypeId" title="${uiLabelMap.SegmentGroupRoleTypeId}"><display-entity entity-name="RoleType"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="deleteSegmentGroupRole?segmentGroupId=${segmentGroupId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
-    
-
 </forms>

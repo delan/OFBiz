@@ -19,35 +19,21 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     Johan Isacsson
+ * @author     Al Byers
  * @author     David E. Jones
- * @author     Andy Zeneski
- * @created    May 26 2003
- *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- * @version    1.0
- */
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <#if security.hasEntityPermission("MARKETING", "_VIEW", session)>
 <#if segmentGroup?has_content>
 <#-- Main Heading -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="right">
-      <div class="tabContainer">
-        <a href="<@ofbizUrl>LookupSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.LookupSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupLookup}</a>
-        <a href="<@ofbizUrl>viewSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.viewSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroup}</a>
-        <a href="<@ofbizUrl>listSegmentGroupClass?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupClassification?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupClassification}</a>
-        <a href="<@ofbizUrl>listSegmentGroupGeo?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupGeo?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupGeo}</a>
-        <a href="<@ofbizUrl>listSegmentGroupRole?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupRole?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupRole}</a>
-      </div>
-    </td>
-  </tr>
- </table>
+  <div class="tabContainer">
+    <a href="<@ofbizUrl>viewSegmentGroup?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.viewSegmentGroup?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroup}</a>
+    <a href="<@ofbizUrl>listSegmentGroupClass?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupClassification?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupClassification}</a>
+    <a href="<@ofbizUrl>listSegmentGroupGeo?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupGeo?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupGeo}</a>
+    <a href="<@ofbizUrl>listSegmentGroupRole?segmentGroupId=${segmentGroupId}</@ofbizUrl>" class="${selectedClassMap.listSegmentGroupRole?default(unselectedClassName)}">${uiLabelMap.SegmentGroupSegmentGroupRole}</a>
+  </div>
 
 <#else>
   <div class="head2">${uiLabelMap.SegmentGroupNoSegmentGroupFoundWithId}: ${segmentGroupIdId?if_exists}</div>

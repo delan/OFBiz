@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -31,7 +31,7 @@
   <div class="col"><a href="<@ofbizUrl>EditDataSources</@ofbizUrl>" class="headerButtonLeft">DataSource</a></div>
   <div class="col"><a href="<@ofbizUrl>FindMarketingCampaign</@ofbizUrl>" class="headerButtonLeft">Campaign</a></div>
   <div class="col"><a href="<@ofbizUrl>FindTrackingCode</@ofbizUrl>" class="headerButtonLeft">Tracking</a></div>
-  <div class="col"><a href="<@ofbizUrl>LookupSegmentGroup</@ofbizUrl>" class="headerButtonLeft">Segment</a></div>
+  <div class="col"><a href="<@ofbizUrl>FindSegmentGroup</@ofbizUrl>" class="headerButtonLeft">Segment</a></div>
   <div class="col"><a href="<@ofbizUrl>ListContactLists</@ofbizUrl>" class="headerButtonLeft">ContactList</a></div>
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
