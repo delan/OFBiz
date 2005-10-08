@@ -186,9 +186,9 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="viewSegmentGroup"/>
     </request-map>
-    <request-map uri="LookupSegmentGroup">
+    <request-map uri="FindSegmentGroup">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupSegmentGroup"/>
+        <response name="success" type="view" value="FindSegmentGroup"/>
     </request-map>
     <request-map uri="createSegmentGroup">
         <security https="true" auth="true"/>
@@ -210,10 +210,6 @@
     </request-map>
     
     <!--  SegmentGroupClassification requests -->
-    <request-map uri="viewSegmentGroupClass">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewSegmentGroupClass"/>
-    </request-map>
     <request-map uri="listSegmentGroupClass">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="listSegmentGroupClass"/>
@@ -221,14 +217,14 @@
     <request-map uri="createSegmentGroupClassification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroupClassification"/>
-        <response name="success" type="view" value="viewSegmentGroupClass"/>
-        <response name="error" type="view" value="viewSegmentGroupClass"/>
+        <response name="success" type="view" value="listSegmentGroupClass"/>
+        <response name="error" type="view" value="listSegmentGroupClass"/>
     </request-map>
     <request-map uri="updateSegmentGroupClassification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateSegmentGroupClassification"/>
-        <response name="success" type="view" value="viewSegmentGroupClass"/>
-        <response name="error" type="view" value="viewSegmentGroupClass"/>
+        <response name="success" type="view" value="listSegmentGroupClass"/>
+        <response name="error" type="view" value="listSegmentGroupClass"/>
     </request-map>
     <request-map uri="deleteSegmentGroupClassification">
         <security https="true" auth="true"/>
@@ -239,10 +235,6 @@
     
     
     <!--  SegmentGroupGeo requests -->
-    <request-map uri="viewSegmentGroupGeo">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewSegmentGroupGeo"/>
-    </request-map>
     <request-map uri="listSegmentGroupGeo">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="listSegmentGroupGeo"/>
@@ -250,27 +242,23 @@
     <request-map uri="createSegmentGroupGeo">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroupGeo"/>
-        <response name="success" type="view" value="viewSegmentGroupGeo"/>
-        <response name="error" type="view" value="viewSegmentGroupGeo"/>
+        <response name="success" type="view" value="listSegmentGroupGeo"/>
+        <response name="error" type="view" value="listSegmentGroupGeo"/>
     </request-map>
     <request-map uri="updateSegmentGroupGeo">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateSegmentGroupGeo"/>
-        <response name="success" type="view" value="viewSegmentGroupGeo"/>
-        <response name="error" type="view" value="viewSegmentGroupGeo"/>
+        <response name="success" type="view" value="listSegmentGroupGeo"/>
+        <response name="error" type="view" value="listSegmentGroupGeo"/>
     </request-map>
-   <request-map uri="deleteSegmentGroupGeo">
+    <request-map uri="deleteSegmentGroupGeo">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteSegmentGroupGeo"/>
-        <response name="success" type="view" value="viewSegmentGroupGeo"/>
-        <response name="error" type="view" value="viewSegmentGroupGeo"/>
+        <response name="success" type="view" value="listSegmentGroupGeo"/>
+        <response name="error" type="view" value="listSegmentGroupGeo"/>
     </request-map>
     
     <!--  SegmentGroupRole requests -->
-    <request-map uri="viewSegmentGroupRole">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewSegmentGroupRole"/>
-    </request-map>
     <request-map uri="listSegmentGroupRole">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="listSegmentGroupRole"/>
@@ -278,20 +266,20 @@
     <request-map uri="createSegmentGroupRole">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroupRole"/>
-        <response name="success" type="view" value="viewSegmentGroupRole"/>
-        <response name="error" type="view" value="viewSegmentGroupRole"/>
+        <response name="success" type="view" value="listSegmentGroupRole"/>
+        <response name="error" type="view" value="listSegmentGroupRole"/>
     </request-map>
     <request-map uri="updateSegmentGroupRole">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateSegmentGroupRole"/>
-        <response name="success" type="view" value="viewSegmentGroupRole"/>
-        <response name="error" type="view" value="viewSegmentGroupRole"/>
+        <response name="success" type="view" value="listSegmentGroupRole"/>
+        <response name="error" type="view" value="listSegmentGroupRole"/>
     </request-map>
-   <request-map uri="deleteSegmentGroupRole">
+    <request-map uri="deleteSegmentGroupRole">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteSegmentGroupRole"/>
-        <response name="success" type="view" value="viewSegmentGroupRole"/>
-        <response name="error" type="view" value="viewSegmentGroupRole"/>
+        <response name="success" type="view" value="listSegmentGroupRole"/>
+        <response name="error" type="view" value="listSegmentGroupRole"/>
     </request-map>
     
    <!-- Lookup request mappings -->
@@ -453,12 +441,11 @@
     <view-map name="FindMarketingCampaign" type="region"/>
     <view-map name="EditMarketingCampaign" type="region"/>
     <view-map name="EditMarketingCampaignRoles" type="region"/>
+
+    <view-map name="FindSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#FindSegmentGroup"/>
     <view-map name="viewSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroup"/>
-    <view-map name="viewSegmentGroupClass" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroupClass"/>
     <view-map name="listSegmentGroupClass" type="screen" page="component://marketing/widget/SegmentScreens.xml#listSegmentGroupClass"/>
-    <view-map name="viewSegmentGroupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroupGeo"/>
     <view-map name="listSegmentGroupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#listSegmentGroupGeo"/>
-    <view-map name="viewSegmentGroupRole" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroupRole"/>
     <view-map name="listSegmentGroupRole" type="screen" page="component://marketing/widget/SegmentScreens.xml#listSegmentGroupRole"/>
 
     <view-map name="ListContactLists" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactLists"/>
@@ -470,29 +457,24 @@
     <view-map name="EditContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListCommEvent"/>
     <view-map name="FindContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvents"/>
 
-    <view-map name="LookupContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupContactList"/>
-    <view-map name="LookupCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupCommEvent"/>
-    <view-map name="LookupPreferredContactMech" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupPreferredContactMech"/>
-    
-    <view-map name="LookupSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupSegmentGroup"/>
-    <view-map name="LookupProductStore" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupProductStore"/>
-    <view-map name="LookupPartyClassificationGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupPartyClassificationGroup"/>
-    
-    <view-map name="LookupGeo" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupGeo"/>
-    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
-    <view-map name="LookupRoleType" type="screen" page="component://marketing/widget/SegmentScreens.xml#LookupRoleType"/>
-
     <view-map name="ListContactLists" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactLists"/>
     <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>
     <view-map name="ListContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParties"/>
     <view-map name="EditContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListParty"/>
     <view-map name="FindContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListParties"/>
-    <view-map name="LookupPreferredContactMech" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupPreferredContactMech"/>
-    <view-map name="LookupContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupContactList"/>
-    <view-map name="LookupCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupCommEvent"/>
 
     <view-map name="ListContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListCommEvents"/>
     <view-map name="EditContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListCommEvent"/>
     <view-map name="FindContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvents"/>
+
+    <view-map name="LookupSegmentGroup" type="screen" page="component://marketing/widget/LookupScreens.xml#LookupSegmentGroup"/>
+    <view-map name="LookupContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupContactList"/>
+    <view-map name="LookupCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupCommEvent"/>
+    <view-map name="LookupPreferredContactMech" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupPreferredContactMech"/>
+
+    <view-map name="LookupProductStore" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductStore"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupPartyClassificationGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyClassificationGroup"/>
+    <view-map name="LookupGeo" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeo"/>
     <!-- end of view mappings -->
 </site-conf>

@@ -24,9 +24,8 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <!-- SegmentGroup Lookup forms -->
-    <form name="LookupSegmentGroup" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupSegmentGroup" title="" type="single">
+    <form name="LookupSegmentGroup" target="LookupSegmentGroup" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><text-find/></field>
         <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><text-find/></field>
@@ -34,29 +33,24 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-   <form name="listLookupSegmentGroup" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="LookupSegmentGroup" title="" type="list">
+    <form name="listLookupSegmentGroup" list-iterator-name="listIt" target="" paginate-target="LookupSegmentGroup" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="SegmentGroup"/>
             </service>
         </actions>
         <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
+            <hyperlink also-hidden="false" target-type="plain" description="${segmentGroupId}" target="javascript:set_value('${partyClassificationGroupId}')"/>
         </field>
         <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><display/></field>
         <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><display/></field>
         <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="deleteSegmentGroup?segmentGroupId=${segmentGroupId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
-        </field>
     </form>
-     
-   <form name="listSegmentGroupClass" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupClass" title="" type="list">
+    
+    <form name="listSegmentGroupClass" list-iterator-name="listIt" target="" paginate-target="listSegmentGroupClass" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
         <entity-and entity-name="SegmentGroupClassification">
             <field-map env-name="segmentGroupId" />
@@ -66,85 +60,9 @@
             <hyperlink also-hidden="false" target-type="intra-app" description="${segmentGroupId}" target="viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
         </field>
         <field name="partyClassificationGroupId" title="${uiLabelMap.SegmentGroupPartyClassificationGroupId}"><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteSegmentGroupClass?segmentGroupId=${segmentGroupId}&amp;partyClassificationGroupId=${partyClassificationGroupId}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
-    </form>
-    
-    <form name="LookupProductStore" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupProductStore" title="" type="single">
-        <auto-fields-entity entity-name="ProductStore" default-field-type="find" />
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    <form name="listLookupProductStore" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-iterator-name="" target="" paginate-target="" 
-        title="" type="list">
-        <actions>
-            <entity-and entity-name="ProductStore"/>
-        </actions>
-        
-        <!-- <auto-fields-entity entity-name="ProductStore" default-field-type="display"/> -->
-        
-        <field name="productStoreId" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${productStoreId}" target="javascript:set_value('${productStoreId}')"/>
-        </field>
-        <field name="primaryStoreGroupId"><display/></field>
-        <field name="storeName"><display/></field>
-        <field name="companyName"><display/></field>
-    </form>
-    <form name="listLookupPartyClassificationGroup" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-iterator-name="" target="" paginate-target="" 
-        title="" type="list">
-        <actions>
-            <entity-and entity-name="PartyClassificationGroup"/>
-        </actions>
-        
-        <field name="partyClassificationGroupId" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${partyClassificationGroupId}" target="javascript:set_value('${partyClassificationGroupId}')"/>
-        </field>
-        <field name="partyClassificationTypeId"><display/></field>
-        <field name="parentGroupId"><display/></field>
-        <field name="description"><display/></field>
-    </form>
-    <!-- Geo Lookup forms -->
-    <form name="LookupGeo" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupGeo" title="" type="single" >
-        <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><text-find/></field>
-        <field name="geoTypeId" title="${uiLabelMap.SegmentGroupGeoTypeId}">
-            <drop-down>
-               <entity-options key-field-name="geoTypeId" entity-name="GeoType" description="${description}"/>
-            </drop-down>
-        </field>
-        <field name="geoName" title="${uiLabelMap.SegmentGroupGeoName}"><text-find/></field>
-        <field name="geoCode" title="${uiLabelMap.SegmentGroupGeoCode}"><text-find/></field>
-        <field name="geoSecCode" title="${uiLabelMap.SegmentGroupGeoSecCode}"><text-find/></field>
-        <field name="geoAbbr" title="${uiLabelMap.SegmentGroupGeoAbbr}"><text-find/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-   <form name="listLookupGeo" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="LookupGeo" title="" type="list">
-        <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
-            </service>
-        </actions>
-        <field name="geoId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupGeoId}">
-            <hyperlink also-hidden="false" target-type="plain" description="${geoId}"  target="javascript:set_value('${geoId}')"/>
-        </field>
-        <field name="geoTypeId" title="${uiLabelMap.SegmentGroupGeoTypeId}">
-            <display-entity key-field-name="geoTypeId" entity-name="GeoType" description="${description}"/>
-        </field>
-        <field name="geoName" title="${uiLabelMap.SegmentGroupGeoName}"><display/></field>
-        <field name="geoCode" title="${uiLabelMap.SegmentGroupGeoCode}"><display/></field>
-        <field name="geoSecCode" title="${uiLabelMap.SegmentGroupGeoSecCode}"><display/></field>
-        <field name="geoAbbr" title="${uiLabelMap.SegmentGroupGeoAbbr}"><display/></field>
     </form>
 </forms>

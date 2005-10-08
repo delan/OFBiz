@@ -52,7 +52,7 @@
                     <platform-specific><html><html-template location="component://marketing/webapp/marketing/includes/appheader.ftl"/></html></platform-specific>
                    -->
                     <label style="apptitle">&amp;nbsp;Marketing Manager Application&amp;nbsp;</label>
-                    <include-menu name="MarketingAppBar" location="component://marketing/widget/MarketingMenus.xml" />
+                    <include-menu name="MarketingAppBar" location="component://marketing/widget/MarketingMenus.xml"/>
                      
                     <container style="contentarea">
                         <container style="column-main">

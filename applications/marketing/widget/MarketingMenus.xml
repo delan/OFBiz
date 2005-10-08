@@ -25,25 +25,25 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">
     <menu name="MarketingAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
-        default-align-style="col" menu-container-style="row"
+        default-align-style="col" menu-container-style="row" selected-menuitem-context-field-name="headerItem"
         fill-style="col-fill"
         orientation="horizontal" type="simple">
-        <menu-item name="main" title="Main"><link target="/main"/></menu-item>
-        <menu-item name="DataSource" title="DataSource"><link target="/EditDataSources"/></menu-item>
-        <menu-item name="Campaign" title="Campaign"><link target="/FindMarketingCampaign"/></menu-item>
-        <menu-item name="Tracking" title="Tracking"><link target="/FindTrackingCode"/></menu-item>
-        <menu-item name="Segment" title="Segment"><link target="/LookupSegmentGroup"/></menu-item>
-        <menu-item name="ContactList" title="ContactList"><link target="/ListContactLists"/></menu-item>
+        <menu-item name="main" title="Main"><link target="main"/></menu-item>
+        <menu-item name="DataSource" title="DataSource"><link target="EditDataSources"/></menu-item>
+        <menu-item name="Campaign" title="Campaign"><link target="FindMarketingCampaign"/></menu-item>
+        <menu-item name="Tracking" title="Tracking"><link target="FindTrackingCode"/></menu-item>
+        <menu-item name="Segment" title="Segment"><link target="FindSegmentGroup"/></menu-item>
+        <menu-item name="ContactList" title="ContactList"><link target="ListContactLists"/></menu-item>
         
         <menu-item name="Logout" title="Logout" align-style="col-right" >
             <condition>
-                <not><if-empty field-name="requestAttributes.userLogin" /></not>
+                <not><if-empty field-name="userLogin"/></not>
             </condition>
-            <link target="/logout"/>
+            <link target="logout"/>
         </menu-item>
         <menu-item name="Login" title="Login" align-style="col-right" >
             <condition>
-                <if-empty field-name="requestAttributes.userLogin" />
+                <if-empty field-name="userLogin"/>
             </condition>
             <link target="${requestAttributes.checkLoginUrl}"/>
         </menu-item>
