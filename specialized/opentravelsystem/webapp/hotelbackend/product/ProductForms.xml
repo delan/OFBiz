@@ -244,7 +244,7 @@
         </field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteProductPrice?productId=${productId}&amp;productPriceTypeId=${productPriceTypeId}&amp;currencyUomId=${currencyUomId}&amp;productStoreGroupId=${productStoreGroupId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
@@ -286,7 +286,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
         <field name="comments" title="${uiLabelMap.ProductComments}" ><ignored/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeProductFromCategory?productId=${productId}&amp;productCategoryId=${productCategoryId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
@@ -364,7 +364,7 @@
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
@@ -525,11 +525,11 @@
         <field name="lastPrice"><display/></field>
         <field name="currencyUomId" title="Currency"><display/></field>
 
-        <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="updateLink" title=" " widget-style="buttontext">
             <hyperlink target="EditProductSuppliers?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}"
                 description="[${uiLabelMap.CommonUpdate}]" also-hidden="false"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeSupplierProduct?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
@@ -593,7 +593,7 @@
             </drop-down>
         </field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeContentFromCategory?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}"
                 description="[Delete]" also-hidden="false"/>
         </field>
@@ -661,7 +661,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteProductConfig?productId=${productId}&amp;configItemId=${configItemId}&amp;sequenceNum=${sequenceNum}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
@@ -688,10 +688,10 @@
 
 <!-- 			<display-entity entity-name="FixedAsset" description="${fixedAssetName}[${fixedAssetId}]"/> -->
 			
-		<field name="edit" title="&amp;nbsp;" widget-style="buttontext"> 
+		<field name="edit" title=" " widget-style="buttontext"> 
 				<hyperlink description="[${uiLabelMap.CommonEdit}]" target="showFixedAssetProduct?fixedAssetId=${fixedAssetId}&amp;productId=${productId}&amp;fixedAssetProductTypeId=${fixedAssetProductTypeId}&amp;fromDate=${fromDate}"/>
 				</field>
-		<field name="del" title="&amp;nbsp;" widget-style="buttontext" separate-column="false"> 
+		<field name="del" title=" " widget-style="buttontext" separate-column="false"> 
 				<hyperlink description="[${uiLabelMap.CommonDelete}]" target="removeFixedAssetProduct?fixedAssetId=${fixedAssetId}&amp;productId=${productId}&amp;fixedAssetProductTypeId=${fixedAssetProductTypeId}&amp;fromDate=${fromDate}"/>
 				</field>
 		<field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset}[${uiLabelMap.AccountingFixedAssetId}]" widget-style="buttontext" > 

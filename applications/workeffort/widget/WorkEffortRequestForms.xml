@@ -38,10 +38,10 @@
         <field name="description"><display/></field>
         <field name="custRequestTypeDescription"><display/></field>
         <field name="statusItemDescription"><display/></field>
-        <field name="editLink" widget-style="buttontext" title="&amp;nbsp;" >
+        <field name="editLink" widget-style="buttontext" title=" " >
             <hyperlink description="[${uiLabelMap.CommonEdit}]" target="EditWorkEffortRequest?workEffortId=${workEffortId}&amp;custRequestId=${custRequestId}" />
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="linktext">
+        <field name="deleteLink" title=" " widget-style="linktext">
             <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeWorkEffortRequest?workEffortId=${workEffortId}&amp;custRequestId=${custRequestId}"/>
         </field>
     </form>
@@ -93,10 +93,10 @@
         <field name="priority"><display/></field>
         <field name="productId"><display/></field>
         <field name="description"><display/></field>
-        <field name="editLink" title="&amp;nbsp;" widget-style="linktext">
+        <field name="editLink" title=" " widget-style="linktext">
             <hyperlink also-hidden="false" description="[${uiLabelMap.CommonEdit}]" target="EditWorkEffortRequestItem?workEffortId=${workEffortId}&amp;custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="linktext">
+        <field name="deleteLink" title=" " widget-style="linktext">
             <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="deleteWorkEffortRequestItem?workEffortId=${workEffortId}&amp;custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>
     </form>

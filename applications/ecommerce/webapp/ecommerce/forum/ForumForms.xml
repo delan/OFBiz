@@ -171,7 +171,7 @@
         <field name="contentName" title="Name" ><text-find/></field>
         <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
 <!--
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="createLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
         </field>
 -->
@@ -347,10 +347,10 @@
         <field name="lastModifiedByUserLogin" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
+        <field name="createLink" title=" " widget-style="buttontext" position="1">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}"  target="AddContent"/>
         </field>
-        <field name="findContent" title="&amp;nbsp;" widget-style="buttontext" position="2">
+        <field name="findContent" title=" " widget-style="buttontext" position="2">
             <hyperlink also-hidden="false" description="Find"  target="FindContent"/>
         </field>
        <field name="nodeTrailCsv" map-name="dummy">

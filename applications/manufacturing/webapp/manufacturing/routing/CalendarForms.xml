@@ -32,10 +32,10 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext" >
         <field name="calendarWeekId" title="${uiLabelMap.ManufacturingCalendarWeekId}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="updateLink" title=" " widget-style="buttontext">
             <hyperlink target="EditCalendarWeek?calendarWeekId=${calendarWeekId}" description="${uiLabelMap.CommonUpdate}" />
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="RemoveCalendarWeek?calendarWeekId=${calendarWeekId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
@@ -49,11 +49,11 @@
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field> 
         <field name="exceptionDateStartTime" title="${uiLabelMap.ManufacturingExceptionDateStartTime}"><display/></field>
         <field name="exceptionCapacity" title="${uiLabelMap.ManufacturingCalendarCapacity}" ><display/></field>
-        <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="updateLink" title=" " widget-style="buttontext">
             <hyperlink target="EditCalendarExceptionDay?calendarId=${calendarId}&amp;exceptionDateStartTime=${exceptionDateStartTime}"
                 description="${uiLabelMap.CommonSelected}" />
         </field> 
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="RemoveCalendarExceptionDay?calendarId=${calendarId}&amp;exceptionDateStartTime=${exceptionDateStartTime}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -98,11 +98,11 @@
         <field name="exceptionDateStart" title="${uiLabelMap.ManufacturingExceptionDateStart}"><display/></field>
         <field name="calendarWeekId" title="${uiLabelMap.ManufacturingCalendarWeek}">  
         		<display description="${calendarWeek.description} "/> </field>
-        <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="updateLink" title=" " widget-style="buttontext">
             <hyperlink target="EditCalendarExceptionWeek?calendarId=${calendarExceptionWeek.calendarId}&amp;exceptionDateStart=${calendarExceptionWeek.exceptionDateStart}"
                 description="${uiLabelMap.CommonSelected}" />
         </field> 
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="RemoveCalendarExceptionWeek?calendarId=${calendarExceptionWeek.calendarId}&amp;exceptionDateStart=${calendarExceptionWeek.exceptionDateStart}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>

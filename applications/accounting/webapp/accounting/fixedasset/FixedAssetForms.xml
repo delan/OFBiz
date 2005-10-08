@@ -96,7 +96,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"><date-time/></field>
         <field name="fixedAssetId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeFixedAssetProduct?fixedAssetId=${fixedAssetId}&amp;productId=${productId}&amp;fixedAssetProductTypeId=${fixedAssetProductTypeId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
         </field>
@@ -134,19 +134,19 @@
             default-title-style="calendarHeader" default-title-area-style="calendarHeader" default-widget-style="calendarContent" default-tooltip-style="tabletext">
 
         <field name="week" title="${uiLabelMap.Common${month}} ${year}" widget-area-style="calendarWeek" widget-style="calendarWeek"><display description="Week ${week}"/></field>
-        <field name="Monday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="Monday" title=" " widget-style="calendarDayNumber"><display/></field>
         <field name="MondayData" title="${uiLabelMap.CommonMonday}"><display/></field>
-        <field name="Tuesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="Tuesday" title=" " widget-style="calendarDayNumber"><display/></field>
         <field name="TuesdayData" title="${uiLabelMap.CommonTuesday}"><display/></field>
-        <field name="Wednesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="Wednesday" title=" " widget-style="calendarDayNumber"><display/></field>
         <field name="WednesdayData" title="${uiLabelMap.CommonWednesday}"><display/></field>
-        <field name="Thursday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="Thursday" title=" " widget-style="calendarDayNumber"><display/></field>
         <field name="ThursdayData" title="${uiLabelMap.CommonThursday}"><display/></field>
-        <field name="Friday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="Friday" title=" " widget-style="calendarDayNumber"><display/></field>
         <field name="FridayData" title="${uiLabelMap.CommonFriday}"><display/></field>
-        <field name="Saturday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="Saturday" title=" " widget-style="calendarDayNumber"><display/></field>
         <field name="SaturdayData" title="${uiLabelMap.CommonSaturday}"><display/></field>
-        <field name="Sunday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="Sunday" title=" " widget-style="calendarDayNumber"><display/></field>
         <field name="SundayData" title="${uiLabelMap.CommonSunday}"><display/></field>
     </form>
 

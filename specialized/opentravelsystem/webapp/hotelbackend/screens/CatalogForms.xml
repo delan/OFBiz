@@ -61,7 +61,7 @@
         <field name="sequenceNum" widget-style="inputBox" title="Seq Number"><text size="2" maxlength="2"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"> <date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeCategoryProductMember" description="[Remove Product from Category]" also-hidden="false"/>
         </field>
     </form>
@@ -249,7 +249,7 @@
         <field name="sequenceNum"><hidden/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeProductFromCategory?productId=${productId}&amp;productCategoryId=${productCategoryId}&amp;fromDate=${fromDate}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>

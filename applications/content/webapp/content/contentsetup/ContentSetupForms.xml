@@ -50,7 +50,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentType?contentTypeId=${contentTypeId}"/>
         </field>
     </form>
@@ -88,7 +88,7 @@
         <field name="attrName" title="Attribute Name" widget-style="buttontext">
             <display/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentTypeAttr?contentTypeId=${contentTypeId}&amp;attrName=${attrName}"/>
         </field>
     </form>
@@ -120,7 +120,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssocType?contentAssocTypeId=${contentAssocTypeId}"/>
         </field>
     </form>
@@ -152,7 +152,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeType?contentPurposeTypeId=${contentPurposeTypeId}"/>
         </field>
     </form>
@@ -186,7 +186,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssocPredicate?contentAssocPredicateId=${contentAssocPredicateId}"/>
         </field>
     </form>
@@ -218,7 +218,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentOperation?contentOperationId=${contentOperationId}"/>
         </field>
     </form>
@@ -261,7 +261,7 @@
         <entity-and entity-name="ContentPurposeOperation" use-cache="true" />
         </actions>
         <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeTypeId=${contentPurposeTypeId}&amp;contentOperationId=${contentOperationId}&amp;roleTypeId=${roleTypeId}&amp;statusId=${statusId}&amp;privilegeEnumId=${privilegeEnumId}"/>
         </field>
     </form>

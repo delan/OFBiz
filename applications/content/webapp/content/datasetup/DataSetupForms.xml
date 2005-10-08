@@ -47,7 +47,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceType?dataResourceTypeId=${dataResourceTypeId}"/>
         </field>
     </form>
@@ -83,7 +83,7 @@
         <field name="attrName" title="Attribute Name" widget-style="buttontext">
             <display/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceTypeAttr?dataResourceTypeId=${dataResourceTypeId}&amp;attrName=${attrName}"/>
         </field>
     </form>
@@ -112,7 +112,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeCharacterSet?characterSetId=${characterSetId}"/>
         </field>
     </form>
@@ -155,7 +155,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataCategory?dataCategoryId=${dataCategoryId}"/>
         </field>
     </form>
@@ -196,7 +196,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeFileExtension?fileExtensionId=${fileExtensionId}"/>
         </field>
     </form>
@@ -225,7 +225,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeMetaDataPredicate?metaDataPredicateId=${metaDataPredicateId}"/>
         </field>
     </form>
@@ -254,7 +254,7 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeMimeType?mimeTypeId=${mimeTypeId}"/>
         </field>
     </form>

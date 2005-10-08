@@ -158,7 +158,7 @@
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
-        <field name="editRouting" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="editRouting" title=" " widget-style="buttontext">
             <hyperlink target="EditRouting?workEffortId=${workEffortIdFrom}" description="${uiLabelMap.ManufacturingEditRouting}" also-hidden="false"/>
         </field>
     </form>
@@ -178,7 +178,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ><display/></field>
         <field name="workEffortToSetup" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
         <field name="workEffortToRun" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="RemoveRoutingTaskAssoc?workEffortId=${workEffortIdFrom}&amp;workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;fromDate=${fromDate}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
         <sort-order>
@@ -235,10 +235,10 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
-        <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="editLink" title=" " widget-style="buttontext">
             <hyperlink target="EditRoutingProductLink?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
         </field>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>

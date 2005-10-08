@@ -44,7 +44,7 @@
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
         </actions>
-        <field name="workEffortId" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="workEffortId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${workEffortId}" target="javascript:set_value('${workEffortId}')"/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}"><display/></field>
@@ -77,7 +77,7 @@
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
         </actions>
-        <field name="workEffortId" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="workEffortId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${workEffortId}" target="javascript:set_value('${workEffortId}')"/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}"><display/></field>

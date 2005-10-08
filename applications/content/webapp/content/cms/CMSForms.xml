@@ -35,7 +35,7 @@
         <field name="dataResourceId" title="Data Resource Id" ><text-find/></field>
         <field name="contentName" title="Name" ><text-find/></field>
         <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="createLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create New"  target="EditAddContent"/>
         </field>
 
@@ -178,7 +178,7 @@
         list-name="contentList"
         target="updateContentPurposeOperation" title="" type="list">
         <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
-        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeTypeId=${contentPurposeTypeId}&amp;contentOperationId=${contentOperationId}&amp;roleTypeId=${roleTypeId}&amp;statusId=${statusId}&amp;privilegeEnumId=${privilegeEnumId}"/>
         </field>
     </form>
