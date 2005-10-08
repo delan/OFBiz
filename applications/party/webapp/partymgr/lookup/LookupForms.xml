@@ -92,6 +92,7 @@
         <field name="suffix" title="${uiLabelMap.PartySuffix}"><display/></field>
         <field name="nickname" title="${uiLabelMap.PartyNickname}"><display/></field>
     </form>
+    
     <form name="lookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupPerson" title="" type="single">
@@ -124,6 +125,7 @@
         </field>
         <field name="lastName" title="${uiLabelMap.PartyName}"><display description="${firstName} ${middleName} ${lastName} ${groupName}"/></field>
     </form>
+    
     <form name="lookupPartyGroup" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="LookupPartyGroup" 
         title="" type="single">
         <!--<auto-fields-entity entity-name="PartyGroup" default-field-type="find"/>-->
@@ -149,20 +151,34 @@
         </field>
     </form>
 
-    <form name="listLookupSegmentGroup" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
-            paginate-target="" title="" type="list" view-size="100">
-        <!--    
-        <actions>
-            <entity-and entity-name="SegmentGroup">
-            </entity-and>
-        </actions>
-        -->
-        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.PartySegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="content" description="${segmentGroupId}" target="javascript:set_value('${segmentGroupId}')"/>
+    <form name="LookupPartyClassificationGroup" target="LookupPartyClassificationGroup" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="PartyClassificationGroup" default-field-type="find"/>
+        <field name="partyClassificationTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyClassificationType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
         </field>
-        <field name="segmentGroupTypeId" title="${uiLabelMap.PartySegmentGroupTypeId}"><display/></field>
-        <field name="description" title="${uiLabelMap.PartySegmentGroupDescription}"><display/></field>
-        <field name="productStoreId" title="${uiLabelMap.PartySegmentGroupProductStoreId}"><display/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupPartyClassificationGroup" list-iterator-name="listIt" target="" paginate-target="" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="PartyClassificationGroup"/>
+                <field-map field-name="orderBy" value="description"/>
+            </service>
+        </actions>
+        
+        <field name="partyClassificationGroupId" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${partyClassificationGroupId}" target="javascript:set_value('${partyClassificationGroupId}')"/>
+        </field>
+        <field name="partyClassificationTypeId"><display/></field>
+        <field name="parentGroupId"><display/></field>
+        <field name="description"><display/></field>
     </form>
 </forms>
