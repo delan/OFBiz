@@ -34,6 +34,8 @@
     <field-type-def type="time" sql-type="DATETIME" java-type="java.sql.Time"></field-type-def>
 
     <field-type-def type="currency-amount" sql-type="MONEY" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
+    <!-- TODO: find a better type for this, some with fixed precision with 3 decimal places... -->
+    <field-type-def type="currency-precise" sql-type="FLOAT" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
     <field-type-def type="floating-point" sql-type="FLOAT" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
     <field-type-def type="numeric" sql-type="INT" java-type="Long"><validate method="isSignedLong" /></field-type-def>
 

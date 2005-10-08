@@ -42,6 +42,7 @@
 
     <!-- For the ADT type tables (this is the only decent way to go for OFBiz -->
     <field-type-def type="currency-amount" sql-type="Money" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
+    <field-type-def type="currency-precise" sql-type="Double" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
     <field-type-def type="floating-point" sql-type="Double" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
     <field-type-def type="numeric" sql-type="Integer" java-type="Long"><validate method="isSignedLong" /></field-type-def>
 
