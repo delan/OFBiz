@@ -459,7 +459,7 @@
 
             <iterate list-name="allReservations" entry-name="oisgir">
                 <!-- cancel the reservation -->
-                <set from-field="oisgir.orderId" field="cancelOisgirMap"/>
+                <set from-field="oisgir.orderId" field="cancelOisgirMap.orderId"/>
                 <set from-field="oisgir.orderItemSeqId" field="cancelOisgirMap.orderItemSeqId"/>
                 <set from-field="oisgir.inventoryItemId" field="cancelOisgirMap.inventoryItemId"/>
                 <set from-field="oisgir.shipGroupSeqId" field="cancelOisgirMap.shipGroupSeqId"/>
