@@ -75,12 +75,6 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     public static final GenericEntity NULL_ENTITY = new NullGenericEntity();
     public static final NullField NULL_FIELD = new NullField();
 
-    public static NumberFormat nf = NumberFormat.getInstance();
-    static {
-        nf.setMaximumFractionDigits(100);
-        nf.setGroupingUsed(false);
-    }
-                
     /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
     protected String delegatorName = null;
 
@@ -533,8 +527,6 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         if (object == null) return null;
         if (object instanceof java.lang.String) {
             return (String) object;
-        } else if (object instanceof Number) {
-            return nf.format(object);
         } else {
             return object.toString();
         }
