@@ -96,8 +96,29 @@ public class ModelScreen implements Serializable {
 
         // wrap the whole screen rendering in a transaction, should improve performance in querying and such
         boolean beganTransaction = false;
+        Map parameters = (Map)context.get("parameters");
+        int transactionTimeout = -1;
+        if (parameters != null) {
+            String transactionTimeoutPar = (String) parameters.get("TRANSACTION_TIMEOUT");
+            if (transactionTimeoutPar != null) {
+                try {
+                    transactionTimeout = Integer.parseInt(transactionTimeoutPar);
+                } catch(NumberFormatException nfe) {
+                    String msg = "TRANSACTION_TIMEOUT parameter for screen [" + this.name + "] is invalid and it will be ignored: " + nfe.toString();
+                    Debug.logWarning(msg, module);
+                }
+            }
+        }
         try {
-            beganTransaction = TransactionUtil.begin();
+            // If transaction timeout is not present (i.e. is equal to -1), the default transaction timeout is used
+            // If transaction timeout is present, use it to start the transaction
+            // If transaction timeout is set to zero, no transaction is started
+            if (transactionTimeout < 0) {
+                beganTransaction = TransactionUtil.begin();
+            }
+            if (transactionTimeout > 0) {
+                beganTransaction = TransactionUtil.begin(transactionTimeout);
+            }
 
             // render the screen, starting with the top-level section
             this.section.renderWidgetString(writer, context, screenStringRenderer);
