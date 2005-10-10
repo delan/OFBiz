@@ -26,6 +26,7 @@
 
     <form name="DataExchange" target="uploadDataFile" title="Upload data file" type="upload"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <!--field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field-->
         <field name="localFile" title="Local file name">
             <file />
         </field>
@@ -35,9 +36,17 @@
     </form>
     <form name="CreateInvoicesFromPayments" target="CreateInvoicesFromPayments" title="Create Invoices from Payments" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <!--field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field-->
         <field name="submitButton" title="Copy" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="PostInvoicesStatements" target="PostInvoicesStatements" title="Post Invoices and Payments" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="submitButton" title="Post" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

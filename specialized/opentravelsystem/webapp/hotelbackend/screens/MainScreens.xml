@@ -40,7 +40,7 @@
                 <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--content content-id="otsfrontpage"/--> <!-- get page from internal cms instead of main.ftl below-->
                         <content content-id="testcontent"/> <!-- xml/xsl test-->
@@ -69,7 +69,7 @@
                 <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--content content-id="otsfrontpage"/--> <!-- get page from internal cms instead of main.ftl below-->
                         <!--content content-id="otsxmlxsl"/--> <!-- xml/xsl test-->
@@ -90,7 +90,7 @@
                 <set field="page.headerItem" value="intro"/>
             </actions>
             <widgets>
-                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
@@ -109,7 +109,7 @@
                 <set field="page.headerItem" value="main"/>
             </actions>
             <widgets>
-                <decorator-screen name="SettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>

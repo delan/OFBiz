@@ -109,7 +109,7 @@ public class mt940 {
 	       
 		boolean debug = true;
 		
-		if (getFile(request).compareTo("error") == 0 || localFile.length() == 0) { // get the content of the uploaded file...
+		if (getFile(request).equals("error") || localFile == null || localFile.length() == 0) { // get the content of the uploaded file...
 			request.setAttribute("_ERROR_MESSAGE_", "Uploaded file not found or an empty file......");
 			return "error";
 		}
@@ -128,17 +128,20 @@ public class mt940 {
 		if (debug) Debug.logInfo("Start processing payments...", module);
 		while (getPayment(request) != null) {
 			if (debet  == false)	{
-				payment.put("statusId","PMNT_NOT_PAID");
+				payment.put("paymentTypeId","CUSTOMER_PAYMENT");
+				payment.put("statusId","PMNT_RECEIVED");	// will start the posting service
 				payment.put("partyIdFrom",getParty(delegator));
 				payment.put("partyIdTo", accountPartyId);    		}
 			else	{ // credit
-				payment.put("statusId","PMNT_NOT_PAID");
+				payment.put("paymentTypeId","VENDOR_PAYMENT");
+				payment.put("statusId","PMNT_SENT");		// will start the posting service
 				payment.put("partyIdTo",getParty(delegator));
 				payment.put("partyIdFrom", accountPartyId);    		}
 			
 			// check to see if the parties where found, when not create
 			if (payment.get("partyIdTo") == null || payment.get("partyIdFrom") == null)	{ 
-				if (createParty(delegator) == null) 	return "error"; // party creation error
+				if (createParty(delegator) == null) 	
+					return "error"; // party creation error
 				if (debet == false)	{ 
 					payment.put("partyIdFrom",party.getString("partyId"));
 				}
@@ -147,7 +150,6 @@ public class mt940 {
 				}
 			}
 			// set other fields in payment record
-			payment.put("paymentTypeId","RECEIPT");
 			payment.put("paymentMethodId", paymentMethod.get("paymentMethodId"));
 			payment.put("paymentMethodTypeId","EFT_ACCOUNT");
 			// check if the payment was already uploaded.....
@@ -158,14 +160,15 @@ public class mt940 {
 			}
 			else	{
 				// finally create payment record.
-				// TODO use services here in order to trigger ledger routines....
 				payment.put("userLogin",userLogin);
 				payment.put("locale", loc);
                 try {
                     dispatcher.runSync("createPayment", payment);
                 } catch (GenericServiceException e1) {
                     Debug.logError(e1, "Error creating payment", module);
+                    continue;
                 }
+                
 				paymentsCreated++;
 			}
 		}
@@ -337,19 +340,17 @@ public class mt940 {
 				Debug.logWarning("[DataExchange.mt940] No files uploaded", module);
 				return "error";
 			}
-			Map passedParams = new HashMap();
 			FileItem fi = null;
-			byte[] imageBytes = {};
 			for (int i = 0; i < lst.size(); i++) {
 				fi = (FileItem) lst.get(i);
 				String fieldName = fi.getFieldName();
-				//      Debug.logInfo("DataExchange fieldName: " + fieldName, module);
-				//      Debug.logInfo("DataExchange in isInMem: " + fi.isInMemory(), module);
-				//     Debug.logInfo("DataExchange in getstring: " + fi.getString(), module);
-				//     Debug.logInfo("DataExchange in getSize: " + fi.getSize(), module);
-				//      Debug.logInfo("DataExchange in get: " + fi.get(), module);
-				//      Debug.logInfo("DataExchange in getContentType: " + fi.getContentType(), module);
-				//      Debug.logInfo("DataExchange in isFormField: " + fi.isFormField(), module);
+				 //     Debug.logInfo("DataExchange fieldName: " + fieldName, module);
+				 //     Debug.logInfo("DataExchange in isInMem: " + fi.isInMemory(), module);
+ 				 //     Debug.logInfo("DataExchange in getstring: " + fi.getString(), module);
+				 //     Debug.logInfo("DataExchange in getSize: " + fi.getSize(), module);
+				 //     Debug.logInfo("DataExchange in get: " + fi.get(), module);
+				 //     Debug.logInfo("DataExchange in getContentType: " + fi.getContentType(), module);
+				 //     Debug.logInfo("DataExchange in isFormField: " + fi.isFormField(), module);
 				
 				if (fi.getFieldName().compareTo("localFile") == 0)  // uploaded file found....
 					localFile = fi.getString();

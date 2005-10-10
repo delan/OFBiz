@@ -50,6 +50,8 @@
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
                 <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <set field="requestParameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <set field="parameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="activeApp" value="hotelbackend" global="true"/>
             </actions>
             <widgets>
@@ -66,9 +68,10 @@
         </section>
     </screen>
 
-<!--  second level decorator  for each tab like product, customer, settings etc -->
+<!--  second level decorator  for each tab like product, customeretc -->
 
-    <screen name="SettingsDecorator">
+<!-- setting is moved a level deeper.. -->
+    <!--screen name="SettingsDecorator">
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Settings"/>
@@ -79,6 +82,32 @@
                         
                         <container style="centerarea">
                             <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/settings/appheaderSettings.ftl"/></html></platform-specific>
+                            <container style="contentarea">
+                                <container style="${MainColumnStyle}">
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
+                            </container>
+                        </container>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen-->
+
+    <screen name="CatalogDecorator">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Product"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        
+                        <container style="centerarea">
+                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/appheaderCatalog.ftl"/></html></platform-specific>
                             <container style="contentarea">
                                 <container style="${MainColumnStyle}">
                                     <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
@@ -106,32 +135,6 @@
                         
                         <container style="centerarea">
                             <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/party/appheaderCustomer.ftl"/></html></platform-specific>
-                            <container style="contentarea">
-                                <container style="${MainColumnStyle}">
-                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
-                                    <decorator-section-include name="body"/>
-                                </container>
-                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
-                                <!--/container-->
-                            </container>
-                        </container>
-                        
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CatalogDecorator">
-        <section>
-            <actions>
-                <set field="page.appTabButtonItem" value="Product"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator">
-                    <decorator-section name="body">
-                        
-                        <container style="centerarea">
-                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/appheaderCatalog.ftl"/></html></platform-specific>
                             <container style="contentarea">
                                 <container style="${MainColumnStyle}">
                                     <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
@@ -180,7 +183,7 @@
                 <set field="page.appTabButtonItem" value="Accounting"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="main-decorator">
                     <decorator-section name="body">
                         
                         <container style="centerarea">
@@ -377,8 +380,7 @@
     <screen name="CommonAdminDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Accounting"/>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator">
