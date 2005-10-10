@@ -59,6 +59,18 @@
 
         <!-- finally create the record (should not exist already)-->
         <create-value value-name="newEntity"/>
+
+        <!-- If the logged in partyId that is creating the quote is not equal to the partyId
+             then we associate it to the quote as the request taker.
+             This is not done if they are the same e.g. a logged in customer that is creating a quote for its
+             own sake. -->
+        <if-compare-field field-name="parameters.partyId" operator="not-equals" to-field-name="userLogin.partyId">
+            <field-to-field field-name="quoteId" map-name="newEntity" to-map-name="takerMap"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="takerMap"/>
+            <string-to-field string="REQ_TAKER" map-name="takerMap" field-name="roleTypeId"/>
+            <call-service service-name="createQuoteRole" in-map-name="takerMap"/>
+        </if-compare-field>
+
         <check-errors/>
     </simple-method>
 
