@@ -44,6 +44,7 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/hotelfrontend/data/HotelDemoStore.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HaagscheSuites/data/HaagscheSuites.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HotelSimple/data/HotelSimple.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="webapp/anet/data/anet.xml"/>
     
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
@@ -95,6 +96,13 @@
         server="default-server"
         location="webapp/HotelSimple"
         mount-point="/HotelSimple"
+        app-bar-display="false"/>        
+
+    <webapp name="anet"
+        title="A-NeT Internet Services"
+        server="default-server"
+        location="webapp/anet"
+        mount-point="/anet"
         app-bar-display="false"/>        
 </ofbiz-component>
 

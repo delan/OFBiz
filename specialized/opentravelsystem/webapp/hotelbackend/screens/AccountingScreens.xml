@@ -30,7 +30,6 @@
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="main"/>
                 <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"/>
-                <set field="productStoreId" from-scope="user" from-field="productStoreId" global="true"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
             </actions>
             <widgets>
@@ -49,37 +48,47 @@
         </section>
     </screen>
 
-    <screen name="DataExchange">
+    <!--screen name="DataExchange">
         <section>            
             <actions>
                 <set field="title" value="Data Exchange"/>
                 <set field="headerItem" value="DataExchange"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" to-scope="application"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1">MT940 file upload.</label>
+                            <label style="head1">Bankstatement MT940 file upload.</label>
                         </container>
                         <include-form name="DataExchange" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen-->
     <screen name="Utilities">
         <section>            
             <actions>
                 <set field="title" value="Utilities"/>
                 <set field="headerItem" value="Utilities"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
+                            <label style="head1">Bankstatement MT940 file upload.</label>
+                        </container>
+                        <include-form name="DataExchange" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                        <container>
                             <label style="head1">Create Invoices from payments.</label>
                         </container>
                         <include-form name="CreateInvoicesFromPayments" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                        <container>
+                            <label style="head1">Post Invoices and payments by changing the status.</label>
+                        </container>
+                        <include-form name="PostInvoicesStatements" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -93,15 +102,13 @@
                 <set field="page.appTabButtonItem" value="Reservations"/>
                 <set field="page.headerItem" value="Reports"/>
                 <set field="title" value="Accounting Report Options"/>
-                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
-                <!-- <set field="titleProperty" value=""/> -->
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1" text="Accounting Reports"/>
+                            <label style="head1" text="Accounting Reports for ${organizationPartyId}"/>
                         </container>
                         <container>
                             <label style="head2" text="VAT report"/>
@@ -129,6 +136,7 @@
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="Vat Report"/>
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" to-scope="application"/>
                 <entity-condition entity-name="Invoice" list-name="invoices">
                     <condition-list combine="or">
                         <condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>

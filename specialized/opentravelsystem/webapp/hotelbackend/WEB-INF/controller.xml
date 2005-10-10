@@ -2246,19 +2246,18 @@
         <response name="success" type="view" value="editPaymentApplications"/>
         <response name="error" type="view" value="editPaymentApplications"/>
     </request-map>
-    <!-- =============== Data exchange =================-->
-    <request-map uri="DataExchange">
+    <!-- =============== Accouting Utilities =================-->
+    <request-map uri="Utilities">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Utilities"/>
+    </request-map>    
+    <!--request-map uri="DataExchange">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DataExchange"/>
-    </request-map>    
+    </request-map-->    
     <request-map uri="uploadDataFile">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.opentravelsystem.mt940" invoke="importData"/>
-        <response name="success" type="view" value="DataExchange"/>
-    </request-map>    
-    <!-- =============== Data exchange =================-->
-    <request-map uri="Utilities">
-        <security https="true" auth="true"/>
         <response name="success" type="view" value="Utilities"/>
     </request-map>    
     <request-map uri="CreateInvoicesFromPayments">
@@ -2266,9 +2265,17 @@
         <event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="CreateInvoicesFromPayments"/>
         <response name="success" type="view" value="Utilities"/>
     </request-map>    
-    <!-- Accounting Setup -->
+    <request-map uri="PostInvoicesStatements">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="PostInvoicesStatements"/>
+        <response name="success" type="view" value="Utilities"/>
+    </request-map>    
     <!-- ================ Administratvie Requests ================ -->
     <request-map uri="AdminMain">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdminMain"/>
+    </request-map>
+    <request-map uri="TimePeriods">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AdminMain"/>
     </request-map>
@@ -2309,6 +2316,26 @@
         <response name="success" type="view" value="ViewFXConversions"/>
         <response name="error" type="view" value="ViewFXConversions"/>
     </request-map>
+
+    <request-map uri="GlAccountAssignment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountAssignment"/>
+    </request-map>
+    
+    <request-map uri="addPaymentGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addPaymentGlAssignment"/>
+        <response name="success" type="view" value="GlAccountAssignment"/>
+        <response name="error" type="view" value="GlAccountAssignment"/>
+    </request-map>
+    
+    <request-map uri="removePaymentGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentGlAssignment"/>
+        <response name="success" type="view" value="GlAccountAssignment"/>
+        <response name="error" type="view" value="GlAccountAssignment"/>
+    </request-map>
+    
     <!-- =============== Accounting Reports =================-->
     <request-map uri="AccountingReports">
         <security https="true" auth="true"/>
@@ -2358,6 +2385,14 @@
         <!-- security https="true" auth="true"/ -->
         <response name="success" type="view" value="ListGlAccountOrganization"/>
     </request-map>
+    <request-map uri="ListGlAccountEntries">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListGlAccountEntries"/>
+    </request-map>
+    <request-map uri="ListAcctgTransEntries">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListAcctgTransEntries"/>
+    </request-map>
     <request-map uri="Ledger">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListGlAccountOrganization"/>
@@ -2367,6 +2402,32 @@
         <event type="service" invoke="createGlAccountOrganization"/>
         <response name="success" type="view" value="ListGlAccountOrganization"/>
         <response name="error" type="view" value="ListGlAccountOrganization"/>
+    </request-map>
+
+    <!-- Select account to reconcile -->
+    <request-map uri="reconcileAccounts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReconcileAccounts"/>
+        <response name="error" type="view" value="AdminMain"/>
+    </request-map>
+    <request-map uri="ReconcileGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReconcileGlAccountOrganization"/>
+    </request-map>
+    <!-- Actually reconcile account -->
+    <request-map uri="reconcileGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="reconcileGlAccount"/>
+        <response name="success" type="view" value="ViewGlAccountBalance"/>
+        <response name="error" type="view" value="ReconcileAccounts"/>
+    </request-map>
+    <request-map uri="viewGlAccountBalance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGlAccountBalance"/>
+    </request-map>
+    <request-map uri="viewGlReconciliation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGlReconciliation"/>
     </request-map>
     
     <!-- end of request mappings -->
@@ -2410,8 +2471,8 @@
     <view-map name="updateFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#updateFixedAssetProduct"/> 
     <view-map name="removeFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#removeFixedAssetProduct"/> 
     <view-map name="ListFixedAssetCalendar" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssetCalendar"/> 
-    <!-- Settings  screens -->
-    <view-map name="mainSettings" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#main"/>
+    <!-- Settings  screens not used? -->
+    <!--view-map name="mainSettings" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#main"/-->
     <!-- reservations /orders -->
     <view-map name="findorders" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#main"/>
     <view-map name="orderview" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#orderview"/>
@@ -2446,10 +2507,9 @@
     <view-map name="paymentOverview" type="screen" page="component://accountingext/widget/PaymentScreens.xml#PaymentOverview"/>
     <view-map name="editPayment" type="screen" page="component://accountingext/widget/PaymentScreens.xml#EditPayment"/>
     <view-map name="editPaymentApplications" type="screen" page="component://accountingext/widget/PaymentScreens.xml#EditPaymentApplications"/>
-    <!-- data exchange -->
-    <view-map name="DataExchange" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#DataExchange"/>
-    <!-- Utilities -->
+    <!-- Accounting Utilities -->
     <view-map name="Utilities" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#Utilities"/>
+    <!--view-map name="DataExchange" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#DataExchange"/-->
     <!-- accounting reports -->
     <view-map name="AccountingReports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#reports"/>
     <view-map name="VatReport" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#VatReport" content-type="application/pdf" encoding="none"/>
@@ -2463,8 +2523,17 @@
     <view-map name="PartyAcctgPreference" type="screen" page="component://accountingext/widget/AdminScreens.xml#PartyAcctgPreference"/>
     <view-map name="ViewFXConversions" type="screen" page="component://accountingext/widget/AdminScreens.xml#ViewFXConversions"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListUnpostedAcctgTrans"/>
+    <view-map name="GlAccountAssignment" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountAssignment"/>
     <!-- GL organisation -->
     <view-map name="ListGlAccountOrganization" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccountOrganization"/>
     <view-map name="AssignGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AssignGlAccount"/>
+    <view-map name="ListGlAccountEntries" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccountEntries"/>
+    <view-map name="ListAcctgTransEntries" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListAcctgTransEntries"/>
+    <!-- Reconciliation viewmaps -->
+    <view-map name="ReconcileGlAccountOrganization" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ReconcileGlAccountOrganization"/>
+    <view-map name="ReconcileAccounts" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ReconcileAccounts"/>
+    <view-map name="ViewGlAccountBalance" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ViewGlAccountBalance"/>
+    <view-map name="ViewGlReconciliation" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ViewGlReconciliation"/>
+    
     <!-- end of view mappings -->
 </site-conf>
