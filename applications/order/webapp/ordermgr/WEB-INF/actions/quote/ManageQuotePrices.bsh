@@ -58,6 +58,9 @@ while (quoteItemsIt.hasNext()) {
     if (quoteItem.get("selectedAmount") != null) {
         selectedAmount = (quoteItem.getDouble("selectedAmount")).doubleValue();
     }
+    if (selectedAmount == 0.0) {
+        selectedAmount = 1.0;
+    }
     if (quoteItem.get("quoteUnitPrice") != null) {
         unitPrice = (quoteItem.getDouble("quoteUnitPrice")).doubleValue();
     }

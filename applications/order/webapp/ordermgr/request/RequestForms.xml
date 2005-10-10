@@ -183,7 +183,7 @@
             </drop-down>
         </field>
         <field name="productStoreId" title="${uiLabelMap.QuoteProductStoreId}">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
                 <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId"/>
             </drop-down>
         </field>
@@ -276,6 +276,7 @@
         </field>
         <field name="quantity" map-name="parameters" use-when="quoteItem==null"><text/></field>
         <field name="selectedAmount" map-name="parameters" use-when="quoteItem==null"><text/></field>
+        <field name="comments" map-name="parameters" use-when="quoteItem==null"><text/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>

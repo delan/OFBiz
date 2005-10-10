@@ -355,6 +355,7 @@
                 <entity-one entity-name="QuoteItem" value-name="quoteItem"/>
                 <set field="parameters.quantity" from-field="custRequestItem.quantity"/>
                 <set field="parameters.selectedAmount" from-field="custRequestItem.selectedAmount"/>
+                <set field="parameters.comments" from-field="custRequestItem.story"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
