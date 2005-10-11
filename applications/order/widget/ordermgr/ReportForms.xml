@@ -34,6 +34,15 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="orderTypeId"  title="Order Type">
+            <drop-down allow-empty="false">
+                <option key="" description="- Any -"/>
+                <entity-options entity-name="OrderType" description="${description}">
+                    <entity-order-by field-name="orderTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
         <field name="originFacilityId"  title="Origin Facility">
             <drop-down allow-empty="false">
                 <option key="" description="- Any -"/>
