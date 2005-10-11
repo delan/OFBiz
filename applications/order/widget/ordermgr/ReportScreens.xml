@@ -92,6 +92,7 @@
                 <entity-condition entity-name="OrderPurchaseProductSummary" list-name="orderPurchaseProductSummaryList">
                     <condition-list combine="and">
                         <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderTypeId" operator="equals" env-name="parameters.orderTypeId" ignore-if-empty="true"/>
                         <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-empty="true"/>
                         <condition-expr field-name="terminalId" operator="equals" env-name="parameters.terminalId" ignore-if-empty="true"/>
                         <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId" ignore-if-empty="true"/>
