@@ -280,7 +280,7 @@ public class OrderServices {
                 continue;
             }
 
-            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId) || "RENTAL_ORDER_ITEM".equals(orderTypeId)) {
+            if ("SALES_ORDER".equals(orderTypeId)) {
                 // check to see if introductionDate hasn't passed yet
                 if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
                     String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale",
@@ -291,7 +291,7 @@ public class OrderServices {
                 }
             }
 
-            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId) || "RENTAL_ORDER_ITEM".equals(orderTypeId)) {
+            if ("SALES_ORDER".equals(orderTypeId)) {
                 // check to see if salesDiscontinuationDate has passed
                 if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
                     String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale",
@@ -302,7 +302,7 @@ public class OrderServices {
                 }
             }
 
-            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
+            if ("SALES_ORDER".equals(orderTypeId)) {
                 // check to see if we have inventory available
                 try {
                     Map invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "quantity", currentQuantity));
@@ -731,10 +731,6 @@ public class OrderServices {
             userOrderRoleTypes = UtilMisc.toList("END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", "BILL_TO_CUSTOMER", "PLACING_CUSTOMER");
         } else if ("PURCHASE_ORDER".equals(orderTypeId)) {
             userOrderRoleTypes = UtilMisc.toList("SHIP_FROM_VENDOR", "BILL_FROM_VENDOR", "SUPPLIER_AGENT");
-        } else if ("RENTAL_ORDER_ITEM".equals(orderTypeId)) {
-                userOrderRoleTypes = UtilMisc.toList("END_USER_CUSTOMER", "BILL_TO_CUSTOMER");
-        } else if ("WORK_ORDER".equals(orderTypeId)) {
-            // TODO: set the work order roles
         } else {
             // TODO: some default behavior
         }
@@ -902,7 +898,7 @@ public class OrderServices {
             isImmediatelyFulfilled = "Y".equals(productStore.getString("isImmediatelyFulfilled"));
         }
 
-        boolean reserveInventory = ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId));
+        boolean reserveInventory = ("SALES_ORDER".equals(orderTypeId));
         if (reserveInventory && isImmediatelyFulfilled) {
             // don't reserve inventory if the product store has isImmediatelyFulfilled set, ie don't if in this store things are immediately fulfilled
             reserveInventory = false;

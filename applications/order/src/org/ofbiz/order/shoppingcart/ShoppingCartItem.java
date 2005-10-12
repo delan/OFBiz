@@ -661,10 +661,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, Locale locale) {
         this._product = product;
         this.productId = _product.getString("productId");
-        if (_product.getString("productTypeId").equals("ASSET_USAGE"))
+        if (_product.getString("productTypeId").equals("ASSET_USAGE")) {
             this.itemType = "RENTAL_ORDER_ITEM";  // will create additional workeffort/asset usage records
-        else
+        } else {
             this.itemType = "PRODUCT_ORDER_ITEM";
+        }
         this.prodCatalogId = prodCatalogId;
         this.attributes = attributes;
         this.delegator = _product.getDelegator();

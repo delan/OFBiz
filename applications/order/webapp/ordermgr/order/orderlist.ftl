@@ -1,21 +1,43 @@
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<#--
+ *  Copyright (c) 2005-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
-        <table border=0 cellspacing='0' cellpadding='0' class='boxbottom'>
+        <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td><div class="tableheadtext">Status:</div></td>
             <td>&nbsp;&nbsp;</td>
             <td nowrap>
                 <div class="tabletext">
-                    <input type="checkbox" name="viewall" value="Y" <#if viewall?exists>CHECKED</#if> />${uiLabelMap.CommonAll}
-                    <input type="checkbox" name="viewcreated" value="Y" <#if viewcreated?exists>CHECKED</#if> />${uiLabelMap.CommonCreated}
-                    <input type="checkbox" name="viewprocessing" value="Y" <#if viewprocessing?exists>CHECKED</#if> />${uiLabelMap.CommonProcessing}
-                    <input type="checkbox" name="viewapproved" value="Y" <#if viewapproved?exists>CHECKED</#if> />${uiLabelMap.CommonApproved}
-                    <input type="checkbox" name="viewcompleted" value="Y" <#if viewcompleted?exists>CHECKED</#if> />${uiLabelMap.CommonCompleted}
-                    <input type="checkbox" name="viewsent" value="Y" <#if viewsent?exists>CHECKED</#if> />${uiLabelMap.CommonSent}
-                    <input type="checkbox" name="viewrejected" value="Y" <#if viewrejected?exists>CHECKED</#if> />${uiLabelMap.CommonRejected}
-                    <input type="checkbox" name="viewcancelled" value="Y" <#if viewcancelled?exists>CHECKED</#if> />${uiLabelMap.CommonCancelled}
+                    <input type="checkbox" name="viewall" value="Y" <#if viewall?exists>checked="checked"</#if> />${uiLabelMap.CommonAll}
+                    <input type="checkbox" name="viewcreated" value="Y" <#if viewcreated?exists>checked="checked"</#if> />${uiLabelMap.CommonCreated}
+                    <input type="checkbox" name="viewprocessing" value="Y" <#if viewprocessing?exists>checked="checked"</#if> />${uiLabelMap.CommonProcessing}
+                    <input type="checkbox" name="viewapproved" value="Y" <#if viewapproved?exists>checked="checked"</#if> />${uiLabelMap.CommonApproved}
+                    <input type="checkbox" name="viewcompleted" value="Y" <#if viewcompleted?exists>checked="checked"</#if> />${uiLabelMap.CommonCompleted}
+                    <input type="checkbox" name="viewsent" value="Y" <#if viewsent?exists>checked="checked"</#if> />${uiLabelMap.CommonSent}
+                    <input type="checkbox" name="viewrejected" value="Y" <#if viewrejected?exists>checked="checked"</#if> />${uiLabelMap.CommonRejected}
+                    <input type="checkbox" name="viewcancelled" value="Y" <#if viewcancelled?exists>checked="checked"</#if> />${uiLabelMap.CommonCancelled}
                 </div>
             </td>            
             <td rowspan="2">&nbsp;&nbsp;</td>
@@ -28,33 +50,31 @@
             <td>&nbsp;&nbsp;</td>
             <td nowrap>
                 <div class="tabletext">
-                    <input type="checkbox" name="view_SALES_ORDER" value="Y" <#if view_SALES_ORDER?exists>CHECKED</#if> />
+                    <input type="checkbox" name="view_SALES_ORDER" value="Y" <#if view_SALES_ORDER?exists>checked="checked"</#if>/>
                     ${descr_SALES_ORDER}
-                    <input type="checkbox" name="view_PURCHASE_ORDER" value="Y" <#if view_PURCHASE_ORDER?exists>CHECKED</#if> />
+                    <input type="checkbox" name="view_PURCHASE_ORDER" value="Y" <#if view_PURCHASE_ORDER?exists>checked="checked"</#if>/>
                     ${descr_PURCHASE_ORDER}
-                    <input type="checkbox" name="view_WORK_ORDER" value="Y" <#if view_WORK_ORDER?exists>CHECKED</#if> />
-                    ${descr_WORK_ORDER}
                 </div>
             </td>            
           </tr>
         </table>
-        <br>&nbsp;
+        <br/>&nbsp;
       </form>
     </td>
   </tr>
 <#if hasPermission>
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <td align='left'><div class="boxhead">${uiLabelMap.OrderOrderList}</div></td>
+          <td align="left"><div class="boxhead">${uiLabelMap.OrderOrderList}</div></td>
         </tr>
       </table>      
     </td>
   </tr>
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
             <table width="100%" cellpadding="1" cellspacing="0" border="0">
@@ -95,13 +115,13 @@
                 <#if billFromParty != "">
                   <#assign billFrom = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billFromParty, true)?if_exists>
                 </#if>
-                <tr><td colspan="8"><hr class='sepbar'></td></tr>
+                <tr><td colspan="8"><hr class="sepbar"></td></tr>
                 <tr>
                   <td>
                     <div class="tabletext"><nobr>${orderHeader.orderDate.toString()}</nobr></div>
                   </td>
                   <td>
-                    <div class="tabletext"><a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a>
+                    <div class="tabletext"><a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">${orderHeader.orderId}</a>
                     </div>
                   </td>
                   <td>
@@ -136,7 +156,7 @@
                 </tr>
               </#list>
               <#if !orderHeaderList?has_content>
-                <tr><td colspan="8"><div class='head3'>${uiLabelMap.OrderNoOrderFound}</div></td></tr>
+                <tr><td colspan="8"><div class="head3">${uiLabelMap.OrderNoOrderFound}</div></td></tr>
               </#if>
             </table>
           </td>
@@ -144,7 +164,6 @@
       </table>
     </td>
   </tr>
-
 <#else>
 <tr><td><div class="tableheadtext">${uiLabelMap.OrderViewPermissionError}</div></td></tr>
 </#if>
