@@ -100,7 +100,7 @@
 			<div class="tabletext">
 				<form action="<@ofbizUrl>month</@ofbizUrl>" name="partyform" method="post">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
-					 ${uiLabelMap.WorkEffortByPartyId}: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputbox"/>
+					 ${uiLabelMap.WorkEffortByPartyId}: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputBox"/>
                                          <a href="javascript:call_fieldlookup2(document.partyform.partyId,'<@ofbizUrl>LookupPartyName</@ofbizUrl>');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
 					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
 				</form>
@@ -111,7 +111,7 @@
 				<form action="<@ofbizUrl>month</@ofbizUrl>" method="post">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
 					${uiLabelMap.WorkEffortByFacility}: 
-						<select name="facilityId" class="selectbox">
+						<select name="facilityId" class="selectBox">
 							<#list allFacilities as facility>
 								<option value="${facility.facilityId}"<#if requestParameters.facilityId?has_content && requestParameters.facilityId == facility.facilityId>${uiLabelMap.WorkEffortSelected}</#if>>${facility.facilityName}</option>
 							</#list>

@@ -21,7 +21,7 @@
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="ListWorkEffortCommEvents" separate-columns="true" target="updateCommunicationEventWorkEff" title="" type="list"
+    <form name="ListWorkEffortCommEvents" separate-columns="false" target="updateCommunicationEventWorkEff" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <entity-condition entity-name="WorkEffortCommunicationEventView">
@@ -31,25 +31,23 @@
                 <order-by field-name="communicationEventId"/>
             </entity-condition>
         </actions>
-        <field name="workEffortId" widget-style="buttontext">
-            <hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}"/>
-        </field>
+        <field name="workEffortId"><hidden/></field>
         <field name="communicationEventId"  widget-style="buttontext">
             <hyperlink target="/partymgr/control/EditCommunicationEvent?communicationEventId=${communicationEventId}" target-type="inter-app" description="${communicationEventId}"/>
         </field>
         <field name="statusId"><display-entity entity-name="StatusItem"/></field>
         <field name="contactMechTypeId"><display-entity entity-name="ContactMechType"/></field>
-        <field name="description"><textarea rows="2" cols="30"/></field>
-        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteCommunicationEventWorkEff?workEffortId=${workEffortId}&amp;communicationEventId=${communicationEventId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]" link-style="linktext"/></field>
+        <field name="description"><text size="40"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteCommunicationEventWorkEff?workEffortId=${workEffortId}&amp;communicationEventId=${communicationEventId}" also-hidden="false" description="${uiLabelMap.CommonDelete}"/></field>
     </form>
     <form name="AddWorkEffortCommEvent" default-map-name="communicationEvent" target="createWorkEffortCommEvent" title="" type="single"
             default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" 
             extends="EditCommEvent" extends-resource="component://party/webapp/partymgr/communication/CommForms.xml">
-        <field name="workEffortId"><display/></field>
+        <field name="workEffortId"><hidden/></field>
         <field name="description"><textarea/></field>
-        <field name="communicationEventId"><lookup target-form-name="/marketing/control/LookupCommEvent"/></field>
-        <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="communicationEventId"><lookup target-form-name="LookupCommEvent"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="buttontext"><submit button-type="text-link"/></field>
         <sort-order>
             <sort-field name="workEffortId"/>
             <banner left-text-style="tabletext" left-text="Enter existing CommunicationEvent Id below"/>

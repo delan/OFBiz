@@ -31,16 +31,14 @@
                 </condition-list>
             </entity-condition>
         </actions>
-        <field name="workEffortId">
-            <hyperlink also-hidden="false" description="[${workEffortId}]" target="EditWorkEffortPartyAssign?workEffortId=${workEffortId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}&amp;fromDate=${fromDate}"  link-style="linktext"/>
-        </field>
+        <field name="workEffortId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.WorkEffortParty}" widget-style="buttontext">
             <display-entity entity-name="Person" description="${firstName} ${lastName}">
                 <sub-hyperlink target="/party/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" link-style="linktext"/>
             </display-entity>
         </field>
         <field name="fromDate"><display/></field>
-        <field name="roleTypeId"><display-entity entity-name="RoleType"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}"><display-entity entity-name="RoleType"/></field>
         <field name="statusDateTime"><display/></field>
         
         <field name="thruDate"><date-time/></field>
@@ -52,8 +50,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
-        <field name="expectationEnumId">
+        <field name="expectationEnumId" title="${uiLabelMap.CommonExpectation}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="WORK_EFF_EXPECT"/>
@@ -61,15 +58,16 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="mustRsvp"><check/></field>
-        <field name="comments"><textarea/></field>
+        <field name="comments"><text size="60" maxlength="255"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditWorkEffortPartyAssign" default-map-name="workEffortPartyAssignment" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="updateWorkEffortPartyAssign" title="" type="single">
         <alt-target target="createWorkEffortPartyAssign" use-when="workEffortPartyAssignment==null"/>
-        <field name="workEffortId"><display/></field>
+        <field name="workEffortId"><hidden/></field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
             <drop-down>
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -87,8 +85,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
-        <field name="expectationEnumId">
+        <field name="expectationEnumId" title="${uiLabelMap.CommonExpectation}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="WORK_EFF_EXPECT"/>
@@ -96,8 +93,9 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="mustRsvp" widget-style="tabletext"><check/></field>
-        <field name="comments"><textarea/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="comments"><text size="60" maxlength="255"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

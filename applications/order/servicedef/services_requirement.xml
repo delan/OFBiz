@@ -30,7 +30,12 @@
     <!-- Requirement Services -->
     <service name="requirementInterface" engine="interface" location="" invoke="">
         <description>Requirement Interface</description>
-        <auto-attributes mode="IN" entity-name="Requirement" include="nonpk" optional="true"/>
+        <auto-attributes mode="IN" entity-name="Requirement" include="nonpk" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
     </service>
     <service name="createRequirement" engine="simple"
             location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="createRequirement">
