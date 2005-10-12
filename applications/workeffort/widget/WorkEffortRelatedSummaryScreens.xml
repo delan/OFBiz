@@ -53,76 +53,62 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} for workEffortId=${workEffortId}</label>
-                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.PartyAssignments}</label></container>
+                        <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} for ID [${workEffortId}]</label>
+                        <container style="indent10Wrapper"><label style="head1">Party Assignments</label></container>
                         <iterate-section list-name="relatedPartyAssigns" entry-name="partyAssign">
                             <section>
-                                <condition>
-                                    <if-compare field-name="partyAssign.partyTypeId" operator="equals" value="PERSON"/>
-                                </condition>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="EditWorkEffortPartyAssign?workEffortId=${partyAssign.workEffortId}&amp;partyId=${partyAssign.partyId}" text="[${partyAssign.partyId}]" style="linktext"/>
-                                        <label text="${partyAssign.firstName} ${partyAssign.lastName}"/>
-                                    </container>
-                                </widgets>
-                            </section>
-                            <section>
-                                <condition>
-                                    <if-compare field-name="partyAssign.partyTypeId" operator="equals" value="PARTY_GROUP"/>
-                                </condition>
-                                <widgets>
-                                    <container style="treeWrapper">
-                                        <link target="EditWorkEffortPartyAssign?workEffortId=${partyAssign.workEffortId}&amp;partyId=${partyAssign.partyId}" text="[${partyAssign.partyId}]" style="linktext"/>
-                                        <label text="${partyAssign.groupName}"/>
+                                        <link target="/partymgr/control/viewprofile?partyId=${partyAssign.partyId}" url-mode="inter-app" text="[${partyAssign.partyId}]" style="linktext"/>
+                                        <label text="${partyAssign.firstName} ${partyAssign.lastName} ${partyAssign.groupName}" style="tabletext"/>
                                     </container>
                                 </widgets>
                             </section>
                         </iterate-section>
                         
-                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.CommunicationEvents}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">Communication Events</label></container>
                         <iterate-section list-name="commEvents" entry-name="commEvent">
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="EditWorkEffortCommEvent?workEffortId=${commEvent.workEffortId}&amp;communicationEventId=${commEvent.communicationEventId}" text="[${commEvent.communicationEventId}]" style="linktext"/>
-                                        <label text="${commEvent.subject} ${commEvent.content}"/>
+                                        <link target="/partymgr/control/EditCommunicationEvent?communicationEventId=${commEvent.communicationEventId}" url-mode="inter-app" text="[${commEvent.communicationEventId}]" style="linktext"/>
+                                        <label text="${commEvent.subject}" style="tabletext"/>
                                     </container>
                                 </widgets>
                             </section>
                         </iterate-section>
                         
-                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.ShoppingLists}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">Shopping Lists</label></container>
                         <iterate-section list-name="shoppingLists" entry-name="shopList">
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="EditWorkEffortShopList?workEffortId=${shopList.workEffortId}&amp;shoppingListId=${shopList.shoppingListId}" text="[${shopList.shoppingListId}]" style="linktext"/>
-                                        <label text="${shopList.listName} ${shopList.description}"/>
+                                        <link target="/partymgr/control/editShoppingList?shoppingListId=${shopList.shoppingListId}" url-mode="inter-app" text="[${shopList.shoppingListId}]" style="linktext"/>
+                                        <label text="${shopList.listName} ${shopList.description}" style="tabletext"/>
                                     </container>
                                 </widgets>
                             </section>
                         </iterate-section>
                         
-                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.Quotes}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">Quotes</label></container>
                         <iterate-section list-name="quotes" entry-name="quote">
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="EditWorkEffortQuote?workEffortId=${quote.workEffortId}&amp;quoteId=${quote.quoteId}" text="[${quote.quoteId}]" style="linktext"/>
-                                        <label text="${quote.quoteName} ${quote.description}"/>
+                                        <link target="/ordermgr/control/EditQuote?quoteId=${quote.quoteId}" url-mode="inter-app" text="[${quote.quoteId}]" style="linktext"/>
+                                        <label text="${quote.quoteName} ${quote.description}" style="tabletext"/>
                                     </container>
                                 </widgets>
                             </section>
                         </iterate-section>
                         
-                        <container style="indent10Wrapper"><label style="head1">${uiLabelMap.OrderHeaders}</label></container>
+                        <container style="indent10Wrapper"><label style="head1">Orders</label></container>
                         <iterate-section list-name="orderHeaders" entry-name="orderHeader">
                             <section>
                                 <widgets>
                                     <container style="treeWrapper">
-                                        <link target="EditWorkEffortOrderHeader?workEffortId=${orderHeader.workEffortId}&amp;orderId=${orderHeader.orderId}" 
-                                            text="[${orderHeader.orderId}] orderType: ${orderHeader.orderTypeDescription},  status: ${orderHeader.statusItemDescription}, orderDate: ${orderHeader.orderDate}" style="linktext"/>
+                                        <link target="/ordermgr/control/orderview?orderId=${orderHeader.orderId}&amp;order_id=${orderHeader.orderId}" url-mode="inter-app" text="[${orderHeader.orderId}]" style="linktext"/>
+                                        <label text="type: ${orderHeader.orderTypeDescription}, status: ${orderHeader.statusItemDescription}, total: ${orderHeader.grandTotal}, date: ${orderHeader.orderDate}" style="tabletext"/>
                                     </container>
                                 </widgets>
                             </section>
@@ -132,6 +118,4 @@
             </widgets>
         </section>
     </screen>
-
 </screens>
-
