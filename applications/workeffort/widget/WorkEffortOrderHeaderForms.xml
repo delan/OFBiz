@@ -32,7 +32,7 @@
         </actions>
         <field name="workEffortId"><hidden/></field>
         <field name="orderId" widget-style="buttontext">
-            <hyperlink target="/ordermgr/control/orderview?order_id=${orderId}&amp;orderId=${orderId}&amp;workEffortId=${workEffortId}" target-type="inter-app" description="[${orderId}]"/>
+            <hyperlink description="${orderId}" target="/ordermgr/control/orderview?order_id=${orderId}&amp;orderId=${orderId}&amp;workEffortId=${workEffortId}" target-type="inter-app"/>
         </field>
         <field name="statusItemDescription"><display/></field>
         <field name="orderTypeDescription"><display/></field>
@@ -40,7 +40,6 @@
         <field name="grandTotal"><display/></field>
         <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteWorkEffortOrderHeader?workEffortId=${workEffortId}&amp;orderId=${orderId}" also-hidden="false" description="${uiLabelMap.CommonDelete}"/></field>
     </form>
-  
     <form name="AddWorkEffortOrderHeader" target="createWorkEffortOrderHeader" title="" type="single"
             default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="workEffortId"><hidden/></field>

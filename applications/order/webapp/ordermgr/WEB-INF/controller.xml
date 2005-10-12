@@ -1187,6 +1187,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupVariantProduct"/>
     </request-map>
+
+    <request-map uri="LookupShoppingList">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupShoppingList"/>
+    </request-map>
     <request-map uri="LookupCustRequest">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupCustRequest"/>
@@ -1195,6 +1200,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupCustRequestItem"/>
     </request-map>
+    <request-map uri="LookupRequirement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupRequirement"/>
+    </request-map>
     <request-map uri="LookupQuote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupQuote"/>
@@ -1202,14 +1211,6 @@
     <request-map uri="LookupQuoteItem">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupQuoteItem"/>
-    </request-map>
-    <request-map uri="LookupRequirement">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupRequirement"/>
-    </request-map>
-    <request-map uri="LookupShoppingList">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupShoppingList"/>
     </request-map>
     <request-map uri="LookupOrderHeader">
         <security https="true" auth="true"/>
@@ -1332,12 +1333,13 @@
     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
     <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
     <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
+
+    <view-map name="LookupShoppingList" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupShoppingList"/>
     <view-map name="LookupCustRequest" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequest"/>
     <view-map name="LookupCustRequestItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequestItem"/>
+    <view-map name="LookupRequirement" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupRequirement"/>
     <view-map name="LookupQuote" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuote"/>
     <view-map name="LookupQuoteItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuoteItem"/>
-    <view-map name="LookupRequirement" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupRequirement"/>
-    <view-map name="LookupShoppingList" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupShoppingList"/>
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
 
     <!-- PDFs  -->

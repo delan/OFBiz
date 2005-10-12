@@ -24,27 +24,25 @@
     <form name="ListWorkEffortShopLists" target="" title="" type="list" separate-columns="false"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <entity-and entity-name="WorkEffortShoppingListView" >
+            <entity-and entity-name="WorkEffortShoppingListView">
                 <field-map field-name="workEffortId" />
                 <order-by field-name="shoppingListId"/>
             </entity-and>
         </actions>
-        <field name="workEffortId" widget-style="linktext">
-            <hyperlink  description="[${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}" />
+        <field name="workEffortId"><hidden/></field>
+        <field name="shoppingListId" title="${uiLabelMap.WorkEffortShopListId}" widget-style="buttontext">
+            <hyperlink target="/partymgr/control/editShoppingList?shoppingListId=${shoppingListId}" target-type="inter-app" description="${shoppingListId}"/>
         </field>
-        <field name="shoppingListId" title="${uiLabelMap.WorkEffortShopListId}" widget-style="linktext">
-            <hyperlink target="EditWorkEffortShopList?shoppingListId=${shoppingListId}&amp;workEffortId=${workEffortId}" target-type="inter-app"   description="[${shoppingListId}]"/>
-        </field>
+        <field name="shoppingListTypeDescription" title="${uiLabelMap.CommonType}"><display/></field>
         <field name="listName"><display/></field>
         <field name="description"><display/></field>
-        <field name="shoppingListTypeDescription"><display/></field>
-        <field name="partyId"><display/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteShoppingListWorkEffort?workEffortId=${workEffortId}&amp;shoppingListId=${shoppingListId}" also-hidden="false" description="[${uiLabelMap.CommonDelete}]"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${groupName} [${partyId}]"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteShoppingListWorkEffort?workEffortId=${workEffortId}&amp;shoppingListId=${shoppingListId}" also-hidden="false" description="${uiLabelMap.CommonDelete}"/></field>
     </form>
     <form name="AddWorkEffortShopList" target="createShoppingListWorkEffort" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <field name="workEffortId" map-name="parameters"><hidden/></field>
+        <field name="workEffortId"><hidden/></field>
         <field name="shoppingListId" ><lookup target-form-name="LookupShoppingList"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 </forms>

@@ -85,7 +85,7 @@
             target="updateRequirement" title="" default-map-name="requirement"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="requirement==null" target="createRequirement"/>
-        <auto-fields-entity entity-name="Requirement" default-field-type="edit"/>
+        <auto-fields-service service-name="updateRequirement" default-field-type="edit"/>
         <field name="requirementId"><hidden/></field>
         <field name="requirementTypeId">
             <drop-down allow-empty="false">
@@ -100,9 +100,9 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
+        <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
+        <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="custRequestId" map-name="parameters"><text/></field>
         <field name="custRequestItemSeqId" map-name="parameters"><text/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit">
@@ -121,5 +121,4 @@
             <hyperlink description="${custRequestItemSeqId}" target="requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>
     </form>
-
 </forms>

@@ -46,40 +46,34 @@
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
         orientation="horizontal" type="simple">
         <menu-item name="WorkEffort" title="${uiLabelMap.WorkEffort}">
-            <link target="/EditWorkEffort?workEffortId=${workEffortId}"/>
+            <link target="EditWorkEffort?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortRelatedSummary" title="${uiLabelMap.WorkEffortRelatedSummary}">
-            <link target="/ListWorkEffortRelatedSummary?workEffortId=${workEffortId}"/>
+            <link target="ListWorkEffortRelatedSummary?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortAssocs" title="${uiLabelMap.WorkEffortChildren}">
-            <link target="/ChildWorkEfforts?workEffortId=${workEffortId}&amp;trail=${workEffortId}"/>
+            <link target="ChildWorkEfforts?workEffortId=${workEffortId}&amp;trail=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortPartyAssigns" title="${uiLabelMap.WorkEffortParties}">
-            <link target="/ListWorkEffortPartyAssigns?workEffortId=${workEffortId}"/>
+            <link target="ListWorkEffortPartyAssigns?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortCommEvents" title="${uiLabelMap.WorkEffortCommEvents}">
-            <link target="/ListWorkEffortCommEvents?workEffortId=${workEffortId}"/>
-        </menu-item>
-        <menu-item name="WorkEffortRequests" title="${uiLabelMap.WorkEffortRequests}">
-            <link target="/ListWorkEffortRequests?workEffortId=${workEffortId}"/>
-        </menu-item>
-        <menu-item name="WorkEffortRequestItems" title="${uiLabelMap.WorkEffortRequestItems}">
-            <link target="/ListWorkEffortRequestItems?workEffortId=${workEffortId}"/>
-        </menu-item>
-        <menu-item name="WorkEffortQuotes" title="${uiLabelMap.WorkEffortQuotes}">
-            <link target="/ListWorkEffortQuotes?workEffortId=${workEffortId}"/>
-        </menu-item>
-        <menu-item name="WorkEffortQuoteItems" title="${uiLabelMap.WorkEffortQuoteItems}">
-            <link target="/ListWorkEffortQuoteItems?workEffortId=${workEffortId}"/>
-        </menu-item>
-        <menu-item name="WorkEffortRequirements" title="${uiLabelMap.WorkEffortRequirements}">
-            <link target="/ListWorkEffortRequirements?workEffortId=${workEffortId}"/>
+            <link target="ListWorkEffortCommEvents?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortShopLists" title="${uiLabelMap.WorkEffortShopLists}">
-            <link target="/ListWorkEffortShopLists?workEffortId=${workEffortId}"/>
+            <link target="ListWorkEffortShopLists?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortRequests" title="${uiLabelMap.WorkEffortRequests}">
+            <link target="ListWorkEffortRequests?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortRequirements" title="${uiLabelMap.WorkEffortRequirements}">
+            <link target="ListWorkEffortRequirements?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortQuotes" title="${uiLabelMap.WorkEffortQuotes}">
+            <link target="ListWorkEffortQuotes?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortOrderHeaders" title="${uiLabelMap.WorkEffortOrderHeaders}">
-            <link target="/ListWorkEffortOrderHeaders?workEffortId=${workEffortId}"/>
+            <link target="ListWorkEffortOrderHeaders?workEffortId=${workEffortId}"/>
         </menu-item>
     </menu>
 </menus>
