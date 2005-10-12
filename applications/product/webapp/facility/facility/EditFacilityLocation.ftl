@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -122,7 +122,7 @@
         <#list productFacilityLocations?if_exists as productFacilityLocation>
 	        <#assign product = productFacilityLocation.getRelatedOne("Product")?if_exists>
 	        <tr valign="middle">
-	            <td><div class="tabletext"><#if product?exists>${product.internalName}</#if>[${productFacilityLocation.productId}]</div></td>
+	            <td><div class="tabletext"><#if product?exists>${(product.internalName)?if_exists}</#if>[${productFacilityLocation.productId}]</div></td>
 	            <td align="center">
 	                <FORM method="post" action="<@ofbizUrl>updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
 	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
