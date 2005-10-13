@@ -232,6 +232,14 @@
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>
+
+    <request-map uri="addpromocode">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addProductPromoCode"/>
+        <response name="success" type="view" value="showcart"/>
+        <response name="error" type="view" value="showcart"/>
+    </request-map>
+
     <request-map uri="updateTrackingNumber">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateTrackingNumber"/>
