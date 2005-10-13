@@ -207,11 +207,11 @@ Here is a good place to put boilerplate terms and conditions for a purchase orde
                         <fo:table-cell>
                             <fo:block>
                                <#if productId?exists>
-                                ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?if_exists}
+                                ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?xml?if_exists}
                               <#elseif orderItemType?exists>
-                                ${orderItemType.description} - ${orderItem.itemDescription?if_exists}
+                                ${orderItemType.description} - ${orderItem.itemDescription?xml?if_exists}
                               <#else>
-                                ${orderItem.itemDescription?if_exists}
+                                ${orderItem.itemDescription?xml?if_exists}
                               </#if>
                                </fo:block>
                           </fo:table-cell>
