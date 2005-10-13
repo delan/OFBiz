@@ -24,7 +24,7 @@ VMARGS="$MEMIF $DEBUG $RMIIF $ADMIN"
 #VMARGS="-Xbootclasspath/p:applications/accounting/lib/cryptix.jar $VMARGS"
 
 # location of java executable
-if [ -e $JAVA_HOME ]; then
+if [ -f "$JAVA_HOME/bin/java" ]; then
   JAVA=$JAVA_HOME/bin/java
 else
   JAVA=java
