@@ -24,6 +24,7 @@
  *@version    1.0
 -->
 
+
 <div class="screenlet">
     <div class="screenlet-header">
         <div class="boxhead">Find Products by ID Value</div>
@@ -35,7 +36,9 @@
     </div>
 </div>
 
+
 <div class="head1">Search Results for Product with ID Value: [${idValue?if_exists}]</div>
+
 
 <#if !goodIdentifications?has_content && !idProduct?has_content>
     <br/>
@@ -48,7 +51,7 @@
         </td>
         <td>&nbsp;&nbsp;</td>
         <td>
-            <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="buttontext">${idProduct.internalName}</a>
+            <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="buttontext">${(idProduct.internalName)?if_exists}</a>
             <span class="tabletext">(ID Value was the actual productId of this product.)</span>
         </td>
     </#if>
@@ -61,7 +64,7 @@
             </td>
             <td>&nbsp;&nbsp;</td>
             <td>
-                <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">${product.internalName}</a>
+                <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">${(product.internalName)?if_exists}</a>
                 <span class="tabletext">(ID Value was the <b>${goodIdentificationType.description?default(goodIdentification.goodIdentificationTypeId)}</b>.)</span>
             </td>
         </tr>
