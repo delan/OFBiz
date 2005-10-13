@@ -59,7 +59,7 @@ function lookupReturn(click) {
                     <a href="<@ofbizUrl>findreturn?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
                   <#else>
                     <#if returnHeaderList?exists><a href="<@ofbizUrl>findreturn?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
-                    <a href="javascript:void();" onclick="javascript:lookupReturn(true);" class="submenutext">${uiLabelMap.OrderLookupReturn}</a><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateReturn}</a>
+                    <a href="#" onclick="javascript:lookupReturn(true);" class="submenutext">${uiLabelMap.OrderLookupReturn}</a><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateReturn}</a>
                   </#if>
                 </div>
               </td>
