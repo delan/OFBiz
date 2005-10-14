@@ -355,9 +355,9 @@
     
     
     <!--  WorkEffort Related Summary request mappings -->
-    <request-map uri="ListWorkEffortRelatedSummary">
+    <request-map uri="WorkEffortSummary">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListWorkEffortRelatedSummary"/>
+        <response name="success" type="view" value="WorkEffortSummary"/>
     </request-map>
 
     <!-- Lookup request mappings -->
@@ -450,6 +450,8 @@
     <view-map name="upcoming" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarUpcoming"/>
 
     <!-- end project management views -->
+    <view-map name="WorkEffortSummary" type="screen" page="component://workeffort/widget/WorkEffortRelatedSummaryScreens.xml#WorkEffortSummary"/>
+    
     <view-map name="FindWorkEffort" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#FindWorkEffort"/>
     <view-map name="EditWorkEffort" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#EditWorkEffort"/>
     <view-map name="ListWorkEfforts" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEfforts"/>
@@ -458,8 +460,6 @@
     <view-map name="AddWorkEffortAndAssoc" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#AddWorkEffortAndAssoc"/>
     <view-map name="EditWorkEffortAndAssoc" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#EditWorkEffortAndAssoc"/>
 
-    <view-map name="ListWorkEffortRelatedSummary" type="screen" page="component://workeffort/widget/WorkEffortRelatedSummaryScreens.xml#ListWorkEffortRelatedSummary"/>
-    
     <view-map name="ListWorkEffortPartyAssigns" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEffortPartyAssigns"/>
     <view-map name="ListWorkEffortCommEvents" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEffortCommEvents"/>
     <view-map name="ListWorkEffortShopLists" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEffortShopLists"/>

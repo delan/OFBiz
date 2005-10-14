@@ -45,11 +45,11 @@
     <menu name="WorkEffortTabBar" default-menu-item-name="WorkEffort" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
         orientation="horizontal" type="simple">
+        <menu-item name="WorkEffortRelatedSummary" title="${uiLabelMap.WorkEffortSummary}">
+            <link target="WorkEffortSummary?workEffortId=${workEffortId}"/>
+        </menu-item>
         <menu-item name="WorkEffort" title="${uiLabelMap.WorkEffort}">
             <link target="EditWorkEffort?workEffortId=${workEffortId}"/>
-        </menu-item>
-        <menu-item name="WorkEffortRelatedSummary" title="${uiLabelMap.WorkEffortRelatedSummary}">
-            <link target="ListWorkEffortRelatedSummary?workEffortId=${workEffortId}"/>
         </menu-item>
         <menu-item name="WorkEffortAssocs" title="${uiLabelMap.WorkEffortChildren}">
             <link target="ChildWorkEfforts?workEffortId=${workEffortId}&amp;trail=${workEffortId}"/>

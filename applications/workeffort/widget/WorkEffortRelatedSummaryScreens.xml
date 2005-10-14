@@ -25,15 +25,20 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="ListWorkEffortRelatedSummary">
+    <screen name="WorkEffortSummary">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleWorkEffortRelatedSummary"/>
                 <set field="tabButtonItem" value="WorkEffortRelatedSummary"/>
                 <set field="labelTitleProperty" value="PageTitleWorkEffortRelatedSummary"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <entity-one entity-name="WorkEffort" value-name="workEffort"/>
+                <get-related-one value-name="workEffort" relation-name="WorkEffortType" to-value-name="workEffortType"/>
+                <get-related-one value-name="workEffort" relation-name="CurrentStatusItem" to-value-name="currentStatusItem"/>
+                <get-related-one value-name="workEffort" relation-name="WorkEffortPurposeType" to-value-name="workEffortPurposeType"/>
+                <get-related-one value-name="workEffort" relation-name="ScopeEnumeration" to-value-name="scopeEnumeration"/>
+                
                 <entity-and entity-name="WorkEffortPartyAssignView" list-name="relatedPartyAssigns">
                     <field-map field-name="workEffortId"/>
                 </entity-and>
@@ -54,23 +59,46 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} for ID [${workEffortId}]</label>
-                        <container style="indent10Wrapper"><label style="head1">Party Assignments</label></container>
+                        <container><label style="head2">${uiLabelMap.WorkEffort}</label></container>
+                        <container>
+                            <label text="Name: " style="tableheadtext"/><label text="${workEffort.workEffortName}" style="tabletext"/>
+                            <label text="Type: " style="tableheadtext"/><label text="${workEffortType.description}" style="tabletext"/>
+                            <label text="Purpose: " style="tableheadtext"/><label text="${workEffortPurposeType.description}" style="tabletext"/>
+                        </container>
+                        <container>
+                            <label text="Status: " style="tableheadtext"/><label text="${currentStatusItem.description}" style="tabletext"/>
+                            <label text="Percent Complete: " style="tableheadtext"/><label text="${workEffort.percentComplete}" style="tabletext"/>
+                            <label text="Priority: " style="tableheadtext"/><label text="${workEffort.priority}" style="tabletext"/>
+                        </container>
+                        <container>
+                            <label text="Estimated Start Date: " style="tableheadtext"/><label text="${workEffort.estimatedStartDate}" style="tabletext"/>
+                            <label text="Estimated Completion Date: " style="tableheadtext"/><label text="${workEffort.estimatedCompletionDate}" style="tabletext"/>
+                        </container>
+                        <container><label style="head2">Party Assignments</label></container>
                         <iterate-section list-name="relatedPartyAssigns" entry-name="partyAssign">
                             <section>
+                                <actions>
+                                    <get-related-one value-name="partyAssign" relation-name="RoleType" to-value-name="partyAssignRoleType" use-cache="true"/>
+                                    <get-related-one value-name="partyAssign" relation-name="StatusItem" to-value-name="partyAssignStatusItem" use-cache="true"/>
+                                    <get-related-one value-name="partyAssign" relation-name="ExpectationEnumeration" to-value-name="partyAssignExpectationEnumeration" use-cache="true"/>
+                                </actions>
                                 <widgets>
-                                    <container style="treeWrapper">
+                                    <container>
                                         <link target="/partymgr/control/viewprofile?partyId=${partyAssign.partyId}" url-mode="inter-app" text="[${partyAssign.partyId}]" style="linktext"/>
                                         <label text="${partyAssign.firstName} ${partyAssign.lastName} ${partyAssign.groupName}" style="tabletext"/>
+                                        <label text="Role:" style="tableheadtext"/><label text="${partyAssignRoleType.description}" style="tabletext"/>
+                                        <label text="Status:" style="tableheadtext"/><label text="${partyAssignStatusItem.description}" style="tabletext"/>
+                                        <label text="Expectation:" style="tableheadtext"/><label text="${partyAssignExpectationEnumeration.description}" style="tabletext"/>
                                     </container>
                                 </widgets>
                             </section>
                         </iterate-section>
                         
-                        <container style="indent10Wrapper"><label style="head1">Communication Events</label></container>
+                        <container><label style="head2">Communication Events</label></container>
                         <iterate-section list-name="commEvents" entry-name="commEvent">
                             <section>
                                 <widgets>
-                                    <container style="treeWrapper">
+                                    <container>
                                         <link target="/partymgr/control/EditCommunicationEvent?communicationEventId=${commEvent.communicationEventId}" url-mode="inter-app" text="[${commEvent.communicationEventId}]" style="linktext"/>
                                         <label text="${commEvent.subject}" style="tabletext"/>
                                     </container>
@@ -78,11 +106,11 @@
                             </section>
                         </iterate-section>
                         
-                        <container style="indent10Wrapper"><label style="head1">Shopping Lists</label></container>
+                        <container><label style="head2">Shopping Lists</label></container>
                         <iterate-section list-name="shoppingLists" entry-name="shopList">
                             <section>
                                 <widgets>
-                                    <container style="treeWrapper">
+                                    <container>
                                         <link target="/partymgr/control/editShoppingList?shoppingListId=${shopList.shoppingListId}" url-mode="inter-app" text="[${shopList.shoppingListId}]" style="linktext"/>
                                         <label text="${shopList.listName} ${shopList.description}" style="tabletext"/>
                                     </container>
@@ -90,11 +118,11 @@
                             </section>
                         </iterate-section>
                         
-                        <container style="indent10Wrapper"><label style="head1">Quotes</label></container>
+                        <container><label style="head2">Quotes</label></container>
                         <iterate-section list-name="quotes" entry-name="quote">
                             <section>
                                 <widgets>
-                                    <container style="treeWrapper">
+                                    <container>
                                         <link target="/ordermgr/control/EditQuote?quoteId=${quote.quoteId}" url-mode="inter-app" text="[${quote.quoteId}]" style="linktext"/>
                                         <label text="${quote.quoteName} ${quote.description}" style="tabletext"/>
                                     </container>
@@ -102,11 +130,11 @@
                             </section>
                         </iterate-section>
                         
-                        <container style="indent10Wrapper"><label style="head1">Orders</label></container>
+                        <container><label style="head2">Orders</label></container>
                         <iterate-section list-name="orderHeaders" entry-name="orderHeader">
                             <section>
                                 <widgets>
-                                    <container style="treeWrapper">
+                                    <container>
                                         <link target="/ordermgr/control/orderview?orderId=${orderHeader.orderId}&amp;order_id=${orderHeader.orderId}" url-mode="inter-app" text="[${orderHeader.orderId}]" style="linktext"/>
                                         <label text="type: ${orderHeader.orderTypeDescription}, status: ${orderHeader.statusItemDescription}, total: ${orderHeader.grandTotal}, date: ${orderHeader.orderDate}" style="tabletext"/>
                                     </container>
