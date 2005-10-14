@@ -29,7 +29,7 @@
         <section>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="headerItem" value="contactlist"/>
+                <set field="headerItem" value="ContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
                 <entity-one entity-name="ContactList" value-name="contactList"/>
             </actions>
