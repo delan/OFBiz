@@ -31,21 +31,21 @@
         <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${workEffortId}]" widget-style="tabletext"><display/></field>
 
         <field name="workEffortName" title="${uiLabelMap.CommonName}*"/>
-        <field name="workEffortTypeId" title="${uiLabelMap.CommonType}*">
+        <field name="workEffortTypeId" title="${uiLabelMap.CommonType}*" position="1">
             <drop-down>
                 <entity-options description="${description}" entity-name="WorkEffortType" key-field-name="workEffortTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="workEffortPurposeTypeId" title="${uiLabelMap.CommonPurpose}">
+        <field name="workEffortPurposeTypeId" title="${uiLabelMap.CommonPurpose}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="WorkEffortPurposeType" key-field-name="workEffortPurposeTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}*">
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}*" position="1">
             <drop-down>
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="[General] ${description}">
                     <entity-constraint name="statusTypeId" value="CALENDAR_STATUS"/>
@@ -61,23 +61,31 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="priority">
+        <field name="percentComplete" position="2"/>
+        
+        <field name="priority" position="1">
             <drop-down allow-empty="true">
                 <option key="1" description="1 (High)"/><option key="2"/><option key="3"/><option key="4"/><option key="5"/>
                 <option key="6"/><option key="7"/><option key="8"/><option key="9" description="9 (Low)"/>
             </drop-down>
         </field>
-
-        <field name="workEffortParentId"><lookup target-form-name="LookupWorkEffort"/></field>
-        <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
-        <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
-        <field name="scopeEnumId">
-            <drop-down>
+        <field name="scopeEnumId" title="Scope" position="2">
+            <drop-down no-current-selected-key="WES_PRIVATE">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
                     <entity-constraint name="enumTypeId" value="WORK_EFF_SCOPE"/>
                 </entity-options>
             </drop-down>
         </field>
+        
+        <field name="estimatedStartDate" position="1"/>
+        <field name="estimatedCompletionDate" position="2"/>
+        <field name="actualStartDate" position="1"/>
+        <field name="actualCompletionDate" position="2"/>
+        
+
+        <field name="workEffortParentId"><lookup target-form-name="LookupWorkEffort"/></field>
+        <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
+        <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="moneyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down allow-empty="true">
                 <entity-options description="[${uomId}] - ${description}" entity-name="Uom" key-field-name="uomId">
@@ -86,6 +94,21 @@
             </drop-down>
         </field>
 
+        <field name="estimatedMilliSeconds" position="1"/>
+        <field name="estimatedSetupMillis" position="2"/>
+        <field name="actualMilliSeconds" position="1"/>
+        <field name="actualSetupMillis" position="2"/>
+        <field name="totalMilliSecondsAllowed" position="1"/>
+        <field name="totalMoneyAllowed" position="2"/>
+
+        <field name="quantityToProduce" position="1"/>
+        <field name="quantityProduced" position="1"/>
+        <field name="quantityRejected" position="2"/>
+
+        <field name="reservPersons" position="1"/>
+        <field name="reserv2ndPPPerc" position="1"/>
+        <field name="reservNthPPPerc" position="2"/>
+        
         <field use-when="workEffort==null" name="quickAssignPartyId"><lookup target-form-name="LookupPartyName" default-value="${userLogin.partyId}"/></field>
         <field use-when="workEffort==null" name="requirementId"><lookup target-form-name="LookupRequirement"/></field>
         <field name="communicationEventId" title="Quick Add Comm. Event Id" map-name="context"><lookup target-form-name="LookupCommunicationEvent"/></field><!-- TODO: need to implement this -->
@@ -109,11 +132,15 @@
             <sort-field name="workEffortName"/>
             <sort-field name="description"/>
             <sort-field name="workEffortTypeId"/>
+            <sort-field name="workEffortPurposeTypeId"/>
             <sort-field name="currentStatusId"/>
-            <sort-field name="priority"/>
             <sort-field name="percentComplete"/>
+            <sort-field name="priority"/>
+            <sort-field name="scopeEnumId"/>
             <sort-field name="estimatedStartDate"/>
             <sort-field name="estimatedCompletionDate"/>
+            <sort-field name="actualStartDate"/>
+            <sort-field name="actualCompletionDate"/>
         </sort-order>
     </form>
   

@@ -1128,6 +1128,12 @@
       <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_PA_EXP_ENUM" title="Expectation" rel-entity-name="Enumeration">
+        <key-map field-name="expectationEnumId" rel-field-name="enumId"/>
+      </relation>
     </view-entity>
     <view-entity entity-name="WorkEffortCommunicationEventView"
             package-name="org.ofbiz.workeffort.workeffort"

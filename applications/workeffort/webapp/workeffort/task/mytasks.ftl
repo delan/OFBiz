@@ -34,7 +34,7 @@
             <div class="boxhead">${uiLabelMap.WorkEffortMyCurrentTaskList}</div>
           </td>
           <td align="right" width="60%">
-            <a href="<@ofbizUrl>mytasks</@ofbizUrl>" class="submenutext">${uiLabelMap.WorkEffortTaskList}</a><a href="<@ofbizUrl>EditWorkEffort</@ofbizUrl>" class="submenutextright">${uiLabelMap.WorkEffortNewTask}</a>
+            <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="submenutextright">${uiLabelMap.WorkEffortNewTask}</a>
           </td>
         </tr>
       </table>
@@ -60,8 +60,8 @@
                     <td><div class="tabletext">${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                     <td><div class="tabletext">${workEffort.priority?if_exists}</div></td>
                     <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
-                    <td><A class="buttontext" href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
-                    <td align="right" width="1%"><A class="buttontext" href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${uiLabelMap.CommonEdit} [${workEffort.workEffortId}]</a></div></td>
+                    <td><A class="linktext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
+                    <td align="right" width="1%"><A class="buttontext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortId}</a></div></td>
                   </tr>
                 </#list>
               </table>
@@ -97,10 +97,8 @@
                         <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
                         <#-- <td><div class="tabletext">${workEffort.partyId}</div></td> -->
                         <td><div class="tabletext">${workEffort.roleTypeId}</div></td>
-                        <td><A class="buttontext" href="<@ofbizUrl>activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">
-                            ${workEffort.workEffortName}</a></div></td>
-                        <td align="right"><A class="buttontext" href="<@ofbizUrl>activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">
-                            ${uiLabelMap.CommonEdit}&nbsp;[${workEffort.workEffortId}]</a></div></td>
+                        <td><A class="linktext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
+                        <td align="right"><A class="buttontext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortId}</a></div></td>
                       </tr>
                     </#list>
                   </table>
@@ -137,10 +135,8 @@
                         <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
                         <#-- <td><div class="tabletext">${workEffort.partyId}</div></td> -->
                         <td><div class="tabletext">${workEffort.roleTypeId}</div></td>
-                        <td><A class="buttontext" href="<@ofbizUrl>activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">
-                            ${workEffort.workEffortName}</a></div></td>
-                        <td align="right"><A class="buttontext" href="<@ofbizUrl>acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&partyId=${workEffort.partyId}&roleTypeId=${workEffort.roleTypeId}&fromDate=${workEffort.fromDate.toString()}</@ofbizUrl>">
-                            ${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></div></td>
+                        <td><A class="buttontext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
+                        <td align="right"><A class="buttontext" href="<@ofbizUrl>acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&partyId=${workEffort.partyId}&roleTypeId=${workEffort.roleTypeId}&fromDate=${workEffort.fromDate.toString()}</@ofbizUrl>">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></div></td>
                       </tr>
                     </#list>
                   </table>
@@ -177,7 +173,7 @@
                         <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
                         <td><div class="tabletext">${workEffort.groupPartyId}</div></td>
                         <#-- <td><div class="tabletext">${workEffort.roleTypeId}</div></td> -->
-                        <td><A class="buttontext" href="<@ofbizUrl>activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">
+                        <td><A class="buttontext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">
                             ${workEffort.workEffortName}</a></div></td>
                         <td align="right"><A class="buttontext" href="<@ofbizUrl>acceptassignment?workEffortId=${workEffort.workEffortId}&partyId=${workEffort.partyId}&roleTypeId=${workEffort.roleTypeId}&fromDate=${workEffort.fromDate}</@ofbizUrl>">
                             ${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></div></td>
