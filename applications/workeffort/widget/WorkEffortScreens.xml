@@ -173,7 +173,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffort"/>
-                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="tabButtonItem" value="WorkEffortAssocs"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffort"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
