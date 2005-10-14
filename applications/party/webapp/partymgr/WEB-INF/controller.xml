@@ -149,7 +149,6 @@
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="updatePostalAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyPostalAddress"/>
@@ -163,7 +162,6 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="updateTelecomNumber">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyTelecomNumber"/>
@@ -177,7 +175,6 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="updateEmailAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyEmailAddress"/>
@@ -191,7 +188,6 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="deletePartyContactMechPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyContactMechPurpose"/>
@@ -206,7 +202,6 @@
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
-
     <request-map uri="updateShoppingList">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateShoppingList"/>
@@ -220,14 +215,12 @@
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
-
     <request-map uri="addBulkToShoppingList">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addBulkFromCart"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
-
     <request-map uri="addListToCart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addListToCart"/>
@@ -241,14 +234,12 @@
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
-
     <request-map uri="removeFromShoppingList">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
-
     <request-map uri="replaceShoppingListItem">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="replaceShoppingListItem"/>
@@ -656,6 +647,11 @@
     </request-map>
 
     <!-- communication event requests -->
+    <request-map uri="FindCommunicationEvents">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindCommunicationEvents"/>
+    </request-map>
+
     <request-map uri="PendingCommunications">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PendingCommunications"/>
@@ -668,6 +664,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewCommunicationEvent"/>
     </request-map>
+
     <request-map uri="EditCommunication">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCommunicationEvent"/>
@@ -690,12 +687,14 @@
         <response name="success" type="view" value="ListLookupCommEvents"/>
         <response name="success" type="view" value="ListLookupCommEvents"/>
     </request-map>
+
     <request-map uri="deletePartyCommunicationEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteCommunicationEvent"/>
         <response name="success" type="view" value="ListPartyCommEvents"/>
         <response name="success" type="view" value="ListPartyCommEvents"/>
     </request-map>
+
     <request-map uri="UpdateCommPurposes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="UpdateCommPurposes"/>
@@ -712,6 +711,7 @@
         <response name="success" type="view" value="UpdateCommPurposes"/>
         <response name="success" type="view" value="UpdateCommPurposes"/>
     </request-map>
+
     <request-map uri="UpdateCommRoles">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="UpdateCommRoles"/>
@@ -728,10 +728,7 @@
         <response name="success" type="view" value="UpdateCommRoles"/>
         <response name="success" type="view" value="UpdateCommRoles"/>
     </request-map>
-    <request-map uri="FindCommEvents">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindCommunications"/>
-    </request-map>
+
     <request-map uri="ListPartyCommEvents">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListPartyCommEvents"/>
@@ -947,7 +944,7 @@
     <view-map name="PendingCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#PendingCommunications"/>
     <view-map name="ListPartyCommEvents" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListPartyCommEvents"/>
     <view-map name="ListLookupCommEvents" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ListLookupCommEvents"/>
-    <view-map name="FindCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#FindCommunications"/>
+    <view-map name="FindCommunicationEvents" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#FindCommunicationEvents"/>
     <view-map name="EditCommunicationEvent" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#EditCommunicationEvent"/>
     <view-map name="ViewCommunicationEvent" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#ViewCommunicationEvent"/>
     <view-map name="UpdateCommPurposes" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#UpdateCommPurposes"/>
