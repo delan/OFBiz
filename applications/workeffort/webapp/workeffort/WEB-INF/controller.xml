@@ -449,7 +449,6 @@
     <view-map name="month" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarMonth"/>
     <view-map name="upcoming" type="screen" page="component://workeffort/widget/CalendarScreens.xml#CalendarUpcoming"/>
 
-    <!-- end project management views -->
     <view-map name="WorkEffortSummary" type="screen" page="component://workeffort/widget/WorkEffortRelatedSummaryScreens.xml#WorkEffortSummary"/>
     
     <view-map name="FindWorkEffort" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#FindWorkEffort"/>
