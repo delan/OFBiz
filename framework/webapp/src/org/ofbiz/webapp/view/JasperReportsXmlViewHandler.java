@@ -36,8 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 
 import org.ofbiz.base.util.Debug;
@@ -103,7 +103,7 @@ public class JasperReportsXmlViewHandler implements ViewHandler {
             } else {
                 JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, new JREmptyDataSource());
             }
-            JasperPrintManager.printReportToXmlStream(fillToPrintInputStream, response.getOutputStream());
+            JasperExportManager.exportReportToXmlStream(fillToPrintInputStream, response.getOutputStream());
         } catch (IOException ie) {
             throw new ViewHandlerException("IO Error in region", ie);
         } catch (java.sql.SQLException e) {

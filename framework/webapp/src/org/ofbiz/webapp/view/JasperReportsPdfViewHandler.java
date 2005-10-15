@@ -35,7 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
@@ -111,14 +112,14 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
                 String datasourceName = delegator.getEntityHelperName(info);
                 if (datasourceName != null && datasourceName.length() > 0) {
                     Debug.logInfo("Filling report with connection from datasource: " + datasourceName, module);
-                    jp = JasperManager.fillReport(report, parameters, ConnectionFactory.getConnection(datasourceName));
+                    jp = JasperFillManager.fillReport(report, parameters, ConnectionFactory.getConnection(datasourceName));
                 } else {
                     Debug.logInfo("Filling report with an empty JR datasource", module);
-                    jp = JasperManager.fillReport(report, parameters, new JREmptyDataSource());
+                    jp = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
                 }
             } else {
                 Debug.logInfo("Filling report with a passed in jrDataSource", module);
-                jp = JasperManager.fillReport(report, parameters, jrDataSource);
+                jp = JasperFillManager.fillReport(report, parameters, jrDataSource);
             }
 
             if (jp.getPages().size() < 1) {
@@ -126,7 +127,7 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
             } else {
                 Debug.logInfo("Got report, there are " + jp.getPages().size() + " pages.", module);
             }
-            JasperManager.printReportToPdfStream(jp, response.getOutputStream());
+            JasperExportManager.exportReportToPdfStream(jp, response.getOutputStream());
         } catch (IOException ie) {
             throw new ViewHandlerException("IO Error in report", ie);
         } catch (java.sql.SQLException e) {
