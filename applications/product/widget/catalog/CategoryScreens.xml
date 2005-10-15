@@ -157,7 +157,7 @@
                 <set field="headerItem" value="category"/>
                 <set field="tabButtonItem" value="EditCategoryRollup"/>
                 <set field="labelTitleProperty" value="ProductRollup"/>
-                <set field="productCategoryId" from-field="parameters.productCategoryId" default-value="${productCategoryId}"/>
+                <set field="productCategoryId" from-field="parameters.showProductCategoryId"/>
 
                 <entity-one entity-name="ProductCategory" value-name="productCategory"/>
 
@@ -173,8 +173,6 @@
                 <entity-condition entity-name="ProductCategory" list-name="productCategoryCol">
                     <order-by field-name="description"/>
                 </entity-condition>
-
-                <set field="productCategoryId" from-field="parameters.showProductCategoryId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator">
