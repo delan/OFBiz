@@ -75,16 +75,8 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map uri="view">
-        <security https="false" auth="false"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="error"/>
-    </request-map>
-    <request-map uri="authview">
-        <security https="false" auth="true"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="main"/>
-    </request-map>
+    <request-map uri="view"><security https="false" auth="false"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="authview"><security https="false" auth="true"/><response name="success" type="view" value="main"/></request-map>
 
     <request-map uri="setSessionLocale">
         <security https="true" auth="false"/>
@@ -93,30 +85,13 @@
         <response name="error" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="main">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="main"/>
-    </request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
 
-    <request-map uri="viewprofile">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewprofile"/>
-    </request-map>
+    <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
+    <request-map uri="EditPartyRelationships"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyRelationships"/></request-map>
+    <request-map uri="viewroles"><security https="true" auth="true"/><response name="success" type="view" value="viewroles"/></request-map>
 
-    <request-map uri="EditPartyRelationships">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPartyRelationships"/>
-    </request-map>
-
-    <request-map uri="viewroles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewroles"/>
-    </request-map>
-
-    <request-map uri="editcontactmech">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="editcontactmech"/>
-    </request-map>
+    <request-map uri="editcontactmech"><security https="true" auth="true"/><response name="success" type="view" value="editcontactmech"/></request-map>
     <request-map uri="createContactMech">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyContactMech"/>
@@ -196,6 +171,7 @@
     </request-map>
 
 <!-- Shoppinglist request mappings -->
+    <request-map uri="editShoppingList"><security https="true" auth="true"/><response name="success" type="view" value="editShoppingList"/></request-map>
     <request-map uri="createEmptyShoppingList">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createShoppingList"/>
@@ -247,11 +223,6 @@
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
-    <request-map uri="editShoppingList">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="editShoppingList"/>
-    </request-map>
-
     <request-map uri="restoreCartFromList">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
@@ -260,10 +231,7 @@
     </request-map>
 <!-- End Shoppinglist request mappings -->
 
-    <request-map uri="editcreditcard">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="editcreditcard"/>
-    </request-map>
+    <request-map uri="editcreditcard"><security https="true" auth="true"/><response name="success" type="view" value="editcreditcard"/></request-map>
     <request-map uri="createCreditCard">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createCreditCard"/>
@@ -278,10 +246,7 @@
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
 
-    <request-map uri="editgiftcard">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="editgiftcard"/>
-    </request-map>
+    <request-map uri="editgiftcard"><security https="true" auth="true"/><response name="success" type="view" value="editgiftcard"/></request-map>
     <request-map uri="createGiftCard">
         <security https="true" auth="true"/>
         <event type="service" invoke="createGiftCard"/>
@@ -295,10 +260,7 @@
         <response name="error" type="view" value="editgiftcard"/>
     </request-map>
 
-    <request-map uri="editeftaccount">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="editeftaccount"/>
-    </request-map>
+    <request-map uri="editeftaccount"><security https="true" auth="true"/><response name="success" type="view" value="editeftaccount"/></request-map>
     <request-map uri="createEftAccount">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createEftAccount"/>
@@ -312,10 +274,7 @@
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
 
-    <request-map uri="editAvsOverride">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="editavsoverride"/>
-    </request-map>
+    <request-map uri="editAvsOverride"><security https="true" auth="true"/><response name="success" type="view" value="editavsoverride"/></request-map>
     <request-map uri="updateAvsOverride">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/party/party/PartySimpleMethods.xml" invoke="updateAVSOverride"/>
@@ -336,15 +295,9 @@
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
-    <request-map uri="createnew">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="CreateNewParty"/>
-    </request-map>
+    <request-map uri="createnew"><security https="true" auth="true"/><response name="success" type="view" value="CreateNewParty"/></request-map>
 
-    <request-map uri="NewCustomer">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="NewCustomer"/>
-    </request-map>
+    <request-map uri="NewCustomer"><security https="true" auth="true"/><response name="success" type="view" value="NewCustomer"/></request-map>
     <request-map uri="createCustomer">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/party/user/UserEvents.xml" invoke="createCustomer"/>
@@ -352,10 +305,7 @@
         <response name="error" type="view" value="NewCustomer"/>
     </request-map>
 
-    <request-map uri="NewProspect">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="NewProspect"/>
-    </request-map>
+    <request-map uri="NewProspect"><security https="true" auth="true"/><response name="success" type="view" value="NewProspect"/></request-map>
     <request-map uri="createProspect">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/party/user/UserEvents.xml" invoke="createProspect"/>
@@ -363,10 +313,7 @@
         <response name="error" type="view" value="NewProspect"/>
     </request-map>
 
-    <request-map uri="NewEmployee">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="NewEmployee"/>
-    </request-map>
+    <request-map uri="NewEmployee"><security https="true" auth="true"/><response name="success" type="view" value="NewEmployee"/></request-map>
     <request-map uri="createEmployee">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/party/user/UserEvents.xml" invoke="createEmployee"/>
@@ -374,10 +321,7 @@
         <response name="error" type="view" value="NewEmployee"/>
     </request-map>
 
-    <request-map uri="editperson">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPerson"/>
-    </request-map>
+    <request-map uri="editperson"><security https="true" auth="true"/><response name="success" type="view" value="EditPerson"/></request-map>
     <request-map uri="createPerson">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPerson"/>
@@ -391,10 +335,7 @@
         <response name="error" type="view" value="EditPerson"/>
     </request-map>
 
-    <request-map uri="editpartygroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPartyGroup"/>
-    </request-map>
+    <request-map uri="editpartygroup"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyGroup"/></request-map>
     <request-map uri="createPartyGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyGroup"/>
@@ -408,10 +349,7 @@
         <response name="error" type="view" value="EditPartyGroup"/>
     </request-map>
 
-    <request-map uri="viewvendor">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewvendor"/>
-    </request-map>
+    <request-map uri="viewvendor"><security https="true" auth="true"/><response name="success" type="view" value="viewvendor"/></request-map>
     <request-map uri="createVendor">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createVendor"/>
@@ -425,10 +363,7 @@
         <response name="error" type="view" value="viewvendor"/>
     </request-map>
 
-    <request-map uri="EditPartyTaxInfos">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPartyTaxInfos"/>
-    </request-map>
+    <request-map uri="EditPartyTaxInfos"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyTaxInfos"/></request-map>
     <request-map uri="createPartyTaxInfo">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyTaxInfo"/>
@@ -448,10 +383,7 @@
         <response name="error" type="view" value="EditPartyTaxInfos"/>
     </request-map>
 
-    <request-map uri="editlogin">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditUserLogin"/>
-    </request-map>
+    <request-map uri="editlogin"><security https="true" auth="true"/><response name="success" type="view" value="EditUserLogin"/></request-map>
     <request-map uri="updatePassword">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updatePassword"/>
@@ -465,10 +397,7 @@
         <response name="error" type="view" value="EditUserLogin"/>
     </request-map>
 
-    <request-map uri="EditUserLoginSecurityGroups">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditUserLoginSecurityGroups"/>
-    </request-map>
+    <request-map uri="EditUserLoginSecurityGroups"><security https="true" auth="true"/><response name="success" type="view" value="EditUserLoginSecurityGroups"/></request-map>
     <request-map uri="userLogin_addUserLoginToSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addUserLoginToSecurityGroup"/>
@@ -488,11 +417,7 @@
         <response name="error" type="view" value="EditUserLoginSecurityGroups"/>
     </request-map>
 
-    <request-map uri="createnewlogin">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="createnewlogin"/>
-    </request-map>
-
+    <request-map uri="createnewlogin"><security https="true" auth="true"/><response name="success" type="view" value="createnewlogin"/></request-map>
     <request-map uri="createUserLogin">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createUserLogin"/>
@@ -500,28 +425,16 @@
         <response name="error" type="view" value="createnewlogin"/>
     </request-map>
 
-    <request-map uri="findparty">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="findparty"/>
-    </request-map>
+    <request-map uri="findparty"><security https="true" auth="true"/><response name="success" type="view" value="findparty"/></request-map>
 
-    <request-map uri="FindSecurityGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindSecurityGroup"/>
-    </request-map>
-
-    <request-map uri="EditSecurityGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditSecurityGroup"/>
-    </request-map>
-
+    <request-map uri="FindSecurityGroup"><security https="true" auth="true"/><response name="success" type="view" value="FindSecurityGroup"/></request-map>
+    <request-map uri="EditSecurityGroup"><security https="true" auth="true"/><response name="success" type="view" value="EditSecurityGroup"/></request-map>
     <request-map uri="createSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSecurityGroup"/>
         <response name="success" type="view" value="FindSecurityGroup"/>
         <response name="error" type="view" value="FindSecurityGroup"/>
     </request-map>
-
     <request-map uri="updateSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateSecurityGroup"/>
@@ -529,10 +442,7 @@
         <response name="error" type="view" value="EditSecurityGroup"/>
     </request-map>
 
-    <request-map uri="EditSecurityGroupPermissions">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditSecurityGroupPermissions"/>
-    </request-map>
+    <request-map uri="EditSecurityGroupPermissions"><security https="true" auth="true"/><response name="success" type="view" value="EditSecurityGroupPermissions"/></request-map>
     <request-map uri="addSecurityPermissionToSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addSecurityPermissionToSecurityGroup"/>
@@ -546,10 +456,7 @@
         <response name="error" type="view" value="EditSecurityGroupPermissions"/>
     </request-map>
 
-    <request-map uri="EditSecurityGroupUserLogins">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditSecurityGroupUserLogins"/>
-    </request-map>
+    <request-map uri="EditSecurityGroupUserLogins"><security https="true" auth="true"/><response name="success" type="view" value="EditSecurityGroupUserLogins"/></request-map>
     <request-map uri="addUserLoginToSecurityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addUserLoginToSecurityGroup"/>
@@ -569,10 +476,7 @@
         <response name="error" type="view" value="EditSecurityGroupUserLogins"/>
     </request-map>
 
-    <request-map uri="AddPartyNote">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="AddPartyNote"/>
-    </request-map>
+    <request-map uri="AddPartyNote"><security https="true" auth="true"/><response name="success" type="view" value="AddPartyNote"/></request-map>
     <request-map uri="createPartyNote">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyNote"/>
@@ -626,14 +530,8 @@
         <response name="error" type="view" value="EditPartyRelationships"/>
     </request-map>
 
-    <request-map uri="showvisits">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="showvisits"/>
-    </request-map>
-    <request-map uri="visitdetail">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="visitdetail"/>
-    </request-map>
+    <request-map uri="showvisits"><security https="true" auth="true"/><response name="success" type="view" value="showvisits"/></request-map>
+    <request-map uri="visitdetail"><security https="true" auth="true"/><response name="success" type="view" value="visitdetail"/></request-map>
 
     <request-map uri="pushPage">
         <security https="true" auth="true"/>
@@ -647,28 +545,12 @@
     </request-map>
 
     <!-- communication event requests -->
-    <request-map uri="FindCommunicationEvents">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindCommunicationEvents"/>
-    </request-map>
+    <request-map uri="FindCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="FindCommunicationEvents"/></request-map>
+    <request-map uri="PendingCommunications"><security https="true" auth="true"/><response name="success" type="view" value="PendingCommunications"/></request-map>
+    <request-map uri="EditCommunicationEvent"><security https="true" auth="true"/><response name="success" type="view" value="EditCommunicationEvent"/></request-map>
+    <request-map uri="ViewCommunicationEvent"><security https="true" auth="true"/><response name="success" type="view" value="ViewCommunicationEvent"/></request-map>
 
-    <request-map uri="PendingCommunications">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="PendingCommunications"/>
-    </request-map>
-    <request-map uri="EditCommunicationEvent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCommunicationEvent"/>
-    </request-map>
-    <request-map uri="ViewCommunicationEvent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewCommunicationEvent"/>
-    </request-map>
-
-    <request-map uri="EditCommunication">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCommunicationEvent"/>
-    </request-map>
+    <request-map uri="EditCommunication"><security https="true" auth="true"/><response name="success" type="view" value="EditCommunicationEvent"/></request-map>
     <request-map uri="createCommunicationEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEvent"/>
@@ -695,10 +577,7 @@
         <response name="success" type="view" value="ListPartyCommEvents"/>
     </request-map>
 
-    <request-map uri="UpdateCommPurposes">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="UpdateCommPurposes"/>
-    </request-map>
+    <request-map uri="UpdateCommPurposes"><security https="true" auth="true"/><response name="success" type="view" value="UpdateCommPurposes"/></request-map>
     <request-map uri="createCommunicationEventPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventPurpose"/>
@@ -712,10 +591,7 @@
         <response name="success" type="view" value="UpdateCommPurposes"/>
     </request-map>
 
-    <request-map uri="UpdateCommRoles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="UpdateCommRoles"/>
-    </request-map>
+    <request-map uri="UpdateCommRoles"><security https="true" auth="true"/><response name="success" type="view" value="UpdateCommRoles"/></request-map>
     <request-map uri="createCommunicationEventRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEventRole"/>
@@ -729,25 +605,18 @@
         <response name="success" type="view" value="UpdateCommRoles"/>
     </request-map>
 
-    <request-map uri="ListPartyCommEvents">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListPartyCommEvents"/>
-    </request-map>
-    <request-map uri="ListLookupCommEvents">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListLookupCommEvents"/>
-    </request-map>
-    <request-map uri="ListCommCustRequests">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListCommCustRequests"/>
-    </request-map>
+    <request-map uri="ListPartyCommEvents"><security https="true" auth="true"/><response name="success" type="view" value="ListPartyCommEvents"/></request-map>
+    <request-map uri="ListLookupCommEvents"><security https="true" auth="true"/><response name="success" type="view" value="ListLookupCommEvents"/></request-map>
+    <request-map uri="ListCommCustRequests"><security https="true" auth="true"/><response name="success" type="view" value="ListCommCustRequests"/></request-map>
 
     <!-- ContactList request mappings -->
-    <request-map uri="ListPartyContactLists">
+    <request-map uri="ListPartyContactLists"><security https="true" auth="true"/><response name="success" type="view" value="ListPartyContactLists"/></request-map>
+    <request-map uri="createContactListParty">
         <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createContactListParty"/>
         <response name="success" type="view" value="ListPartyContactLists"/>
+        <response name="error" type="view" value="ListPartyContactLists"/>
     </request-map>
-
     <request-map uri="updateContactListParty">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateContactListParty"/>
@@ -755,17 +624,7 @@
         <response name="error" type="view" value="ListPartyContactLists"/>
     </request-map>
 
-    <request-map uri="createContactListParty">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createContactListParty"/>
-        <response name="success" type="view" value="ListPartyContactLists"/>
-        <response name="error" type="view" value="ListPartyContactLists"/>
-    </request-map>
-
-    <request-map uri="ViewSegmentRoles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewSegmentRoles"/>
-    </request-map>
+    <request-map uri="ViewSegmentRoles"><security https="true" auth="true"/><response name="success" type="view" value="ViewSegmentRoles"/></request-map>
     <request-map uri="createSegmentRole">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroupRole"/>
@@ -778,22 +637,11 @@
         <response name="success" type="view" value="ViewSegmentRoles"/>
         <response name="error" type="view" value="ViewSegmentRoles"/>
     </request-map>
-    <request-map uri="showclassgroups">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindPartyClassificationGroups"/>
-    </request-map>
-    <request-map uri="EditPartyClassifications">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPartyClassifications"/>
-    </request-map>
-    <request-map uri="EditPartyClassificationGroupParties">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPartyClassificationGroupParties"/>
-    </request-map>
-    <request-map uri="EditPartyClassificationGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPartyClassificationGroup"/>
-    </request-map>
+
+    <request-map uri="showclassgroups"><security https="true" auth="true"/><response name="success" type="view" value="FindPartyClassificationGroups"/></request-map>
+    <request-map uri="EditPartyClassifications"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyClassifications"/></request-map>
+    <request-map uri="EditPartyClassificationGroupParties"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyClassificationGroupParties"/></request-map>
+    <request-map uri="EditPartyClassificationGroup"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyClassificationGroup"/></request-map>
     <request-map uri="createPartyClassification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyClassification"/>
@@ -844,20 +692,9 @@
     </request-map>
 
     <!--  WorkEffort CommunicationEvents requests -->
-    <request-map uri="ListCommWorkEfforts">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListCommWorkEfforts"/>
-    </request-map>
-    
-    <request-map uri="AddCommEventWorkEffort">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="AddCommEventWorkEffort"/>
-    </request-map>
-    
-    <request-map uri="EditCommEventWorkEffort">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCommEventWorkEffort"/>
-    </request-map>
+    <request-map uri="ListCommWorkEfforts"><security https="true" auth="true"/><response name="success" type="view" value="ListCommWorkEfforts"/></request-map>
+    <request-map uri="AddCommEventWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="AddCommEventWorkEffort"/></request-map>
+    <request-map uri="EditCommEventWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="EditCommEventWorkEffort"/></request-map>
     
     <request-map uri="createCommEventWorkEffort">
         <security https="true" auth="true"/>
@@ -880,38 +717,14 @@
     </request-map>
     
     <!-- Lookup request mappings -->
-    <request-map uri="LookupPartyName">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyName"/>
-    </request-map>
-    <request-map uri="LookupPerson">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPerson"/>
-    </request-map>
-    <request-map uri="LookupPartyAndUserLoginAndPerson">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/>
-    </request-map>
-    <request-map uri="LookupPartyGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyGroup"/>
-    </request-map>
-    <request-map uri="LookupCommEvent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCommEvent"/>
-    </request-map>
-    <request-map uri="LookupCustRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCustRequest"/>
-    </request-map>
-    <request-map uri="LookupSegmentGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupSegmentGroup"/>
-    </request-map>
-    <request-map uri="LookupContactList">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupContactList"/>
-    </request-map>
+    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupPartyAndUserLoginAndPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/></request-map>
+    <request-map uri="LookupPartyGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
+    <request-map uri="LookupCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
+    <request-map uri="LookupCustRequest"><security https="true" auth="true"/><response name="success" type="view" value="LookupCustRequest"/></request-map>
+    <request-map uri="LookupSegmentGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupSegmentGroup"/></request-map>
+    <request-map uri="LookupContactList"><security https="true" auth="true"/><response name="success" type="view" value="LookupContactList"/></request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->

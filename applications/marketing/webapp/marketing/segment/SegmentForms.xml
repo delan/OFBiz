@@ -38,7 +38,7 @@
             <hyperlink also-hidden="false" description="${segmentGroupId}" target="viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
         </field>
         <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><display-entity entity-name="SegmentGroupType" description="${description}"/></field>
-        <field name="description" title="${uiLabelMap.SegmentGroupDescription}"><display/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><display/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteSegmentGroup?segmentGroupId=${segmentGroupId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
@@ -54,14 +54,14 @@
         <field use-when="segmentGroup==null&amp;&amp;segmentGroupId==null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}"><ignored/></field>
         <field use-when="segmentGroup==null&amp;&amp;segmentGroupId!=null" name="segmentGroupId" title="${uiLabelMap.SegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${segmentGroupId}]" widget-style="tabletext"><display/></field>
 
-        <field name="segmentGroupTypeId">
+        <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}">
             <drop-down>
                 <entity-options description="${description}" entity-name="SegmentGroupType" key-field-name="segmentGroupTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreId">
+        <field name="productStoreId" title="${uiLabelMap.CatalogProductStoreId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
                     <entity-order-by field-name="storeName"/>
@@ -69,7 +69,7 @@
                 <sub-hyperlink target="/catalog/control/EditProductStore?productStoreId=${segmentGroup.productStoreId}" target-type="inter-app" description="${segmentGroup.productStoreId}" link-style="buttontext"/>
             </drop-down>
         </field>
-        <field name="description"><text size="55"/></field>
+        <field name="description" title="${uiLabelMap.ContactListDescription}"><text size="55"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
@@ -81,7 +81,7 @@
         
         <field name="segmentGroupId"><hidden/></field>
 
-        <field name="partyClassificationGroupId">
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyPartyClassificationGroupId}">
             <lookup target-form-name="LookupPartyClassificationGroup"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
@@ -109,7 +109,7 @@
         
         <field name="segmentGroupId"><hidden/></field>
         
-        <field name="geoId"><lookup target-form-name="LookupGeo"/></field>
+        <field name="geoId" title="${uiLabelMap.CommonGeoId}"><lookup target-form-name="LookupGeo"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="listSegmentGroupGeo" default-title-style="tableheadtext"
@@ -156,12 +156,12 @@
             </service>
         </actions>
         <field name="segmentGroupId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.SegmentGroupPartyId}">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${groupName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" description="${partyId}" link-style="buttontext" target-type="inter-app"/>
             </display-entity>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.SegmentGroupRoleTypeId}"><display-entity entity-name="RoleType"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}"><display-entity entity-name="RoleType"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteSegmentGroupRole?segmentGroupId=${segmentGroupId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
