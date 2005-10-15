@@ -310,7 +310,7 @@
             <hyperlink also-hidden="false" target-type="inter-app" description="${segmentGroupId}" target="/marketing/control/viewSegmentGroup?segmentGroupId=${segmentGroupId}"/>
         </field>
         <field name="segmentGroupTypeId" title="${uiLabelMap.ProductSegmentGroupTypeId}"><display-entity entity-name="SegmentGroupType"/></field>
-        <field name="description" title="${uiLabelMap.ProductSegmentGroupDescription}"><display/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="/marketing/control/deleteSegmentGroup?segmentGroupId=${segmentGroupId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false" target-type="inter-app"/>

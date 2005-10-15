@@ -45,13 +45,13 @@
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.webapp.view.JasperReportsXmlViewHandler"/>
     
     <preprocessor>
-    	<!-- Events to run on every request before security (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
-    	<event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
+        <!-- Events to run on every request before security (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
-    	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <!-- Events to run on every request after all other processing (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
     <!-- Security Mappings -->
@@ -79,22 +79,9 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map uri="view">
-        <security https="true" auth="false"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="error"/>
-    </request-map>
-    
-    <request-map uri="authview">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="error"/>
-    </request-map>
-    
-    <request-map uri="main">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindMarketingCampaign"/>
-    </request-map>    
+    <request-map uri="view"><security https="true" auth="false"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="authview"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>    
     
     <request-map uri="changeDelegator">
         <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="changeDelegator"/>
@@ -103,93 +90,100 @@
     </request-map>    
     
     <!-- =========== DataSource =========== -->
-    <request-map uri="EditDataSources"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditDataSources"/>
-    </request-map>
+    <request-map uri="EditDataSources"><security https="true" auth="true"/><response name="success" type="view" value="EditDataSources"/></request-map>
     <request-map uri="createDataSource"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createDataSource"/>
-    	<response name="success" type="view" value="EditDataSources"/>
-    	<response name="error" type="view" value="EditDataSources"/>
+         <response name="success" type="view" value="EditDataSources"/>
+        <response name="error" type="view" value="EditDataSources"/>
     </request-map>
     <request-map uri="updateDataSource"><security https="true" auth="true"/>
         <event type="service" path="" invoke="updateDataSource"/>
-    	<response name="success" type="view" value="EditDataSources"/>
-    	<response name="error" type="view" value="EditDataSources"/>
+        <response name="success" type="view" value="EditDataSources"/>
+        <response name="error" type="view" value="EditDataSources"/>
     </request-map>
     <request-map uri="deleteDataSource"><security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteDataSource"/>
-    	<response name="success" type="view" value="EditDataSources"/>
-    	<response name="error" type="view" value="EditDataSources"/>
+        <response name="success" type="view" value="EditDataSources"/>
+        <response name="error" type="view" value="EditDataSources"/>
     </request-map>
     
     <!-- =========== TrackingCode =========== -->
-    <request-map uri="FindTrackingCode"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindTrackingCode"/>
-    </request-map>
-    
-    <request-map uri="EditTrackingCode"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditTrackingCode"/>
-    </request-map>
+    <request-map uri="FindTrackingCode"><security https="true" auth="true"/><response name="success" type="view" value="FindTrackingCode"/></request-map>
+    <request-map uri="EditTrackingCode"><security https="true" auth="true"/><response name="success" type="view" value="EditTrackingCode"/></request-map>
     <request-map uri="createTrackingCode"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createTrackingCode"/>
-    	<response name="success" type="view" value="EditTrackingCode"/>
-    	<response name="error" type="view" value="EditTrackingCode"/>
+        <response name="success" type="view" value="EditTrackingCode"/>
+        <response name="error" type="view" value="EditTrackingCode"/>
     </request-map>
     <request-map uri="updateTrackingCode"><security https="true" auth="true"/>
         <event type="service" path="" invoke="updateTrackingCode"/>
-    	<response name="success" type="view" value="EditTrackingCode"/>
-    	<response name="error" type="view" value="EditTrackingCode"/>
+        <response name="success" type="view" value="EditTrackingCode"/>
+        <response name="error" type="view" value="EditTrackingCode"/>
     </request-map>
     
-    <request-map uri="FindTrackingCodeOrders"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindTrackingCodeOrders"/>
-    </request-map>
-    <request-map uri="FindTrackingCodeVisits"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindTrackingCodeVisits"/>
-    </request-map>
+    <request-map uri="FindTrackingCodeOrders"><security https="true" auth="true"/><response name="success" type="view" value="FindTrackingCodeOrders"/></request-map>
+    <request-map uri="FindTrackingCodeVisits"><security https="true" auth="true"/><response name="success" type="view" value="FindTrackingCodeVisits"/></request-map>
     
     <!-- =========== MarketingCampaign =========== -->
     <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindMarketingCampaign"/>
+        <response name="success" type="view" value="FindMarketingCampaign"/>
     </request-map>
     
     <request-map uri="EditMarketingCampaign"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditMarketingCampaign"/>
+        <response name="success" type="view" value="EditMarketingCampaign"/>
     </request-map>
     <request-map uri="createMarketingCampaign"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createMarketingCampaign"/>
-    	<response name="success" type="view" value="EditMarketingCampaign"/>
-    	<response name="error" type="view" value="EditMarketingCampaign"/>
+        <response name="success" type="view" value="EditMarketingCampaign"/>
+        <response name="error" type="view" value="EditMarketingCampaign"/>
     </request-map>
     <request-map uri="updateMarketingCampaign"><security https="true" auth="true"/>
         <event type="service" path="" invoke="updateMarketingCampaign"/>
-    	<response name="success" type="view" value="EditMarketingCampaign"/>
-    	<response name="error" type="view" value="EditMarketingCampaign"/>
+        <response name="success" type="view" value="EditMarketingCampaign"/>
+        <response name="error" type="view" value="EditMarketingCampaign"/>
     </request-map>
     
-    <request-map uri="EditMarketingCampaignRoles"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditMarketingCampaignRoles"/>
-    </request-map>
+    <request-map uri="EditMarketingCampaignRoles"><security https="true" auth="true"/><response name="success" type="view" value="EditMarketingCampaignRoles"/></request-map>
     <request-map uri="addRoleToMarketingCampaign"><security https="true" auth="true"/>
         <event type="service" path="" invoke="addRoleToMarketingCampaign"/>
-    	<response name="success" type="view" value="EditMarketingCampaignRoles"/>
-    	<response name="error" type="view" value="EditMarketingCampaignRoles"/>
+        <response name="success" type="view" value="EditMarketingCampaignRoles"/>
+        <response name="error" type="view" value="EditMarketingCampaignRoles"/>
     </request-map>
     <request-map uri="removeRoleFromMarketingCampaign"><security https="true" auth="true"/>
         <event type="service" path="" invoke="removeRoleFromMarketingCampaign"/>
-    	<response name="success" type="view" value="EditMarketingCampaignRoles"/>
-    	<response name="error" type="view" value="EditMarketingCampaignRoles"/>
+        <response name="success" type="view" value="EditMarketingCampaignRoles"/>
+        <response name="error" type="view" value="EditMarketingCampaignRoles"/>
+    </request-map>
+    <request-map uri="FindMarketingCampaignRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindMarketingCampaignRoles"/>
+    </request-map>
+    <request-map uri="ListMarketingCampaignRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListMarketingCampaignRoles"/>
+    </request-map>
+    <request-map uri="createMarketingCampaignRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMarketingCampaignRole"/>
+        <response name="success" type="view" value="EditMarketingCampaignRoles"/>
+        <response name="error" type="view" value="EditMarketingCampaignRoles"/>
+    </request-map>
+    <request-map uri="updateMarketingCampaignRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateMarketingCampaignRole"/>
+        <response name="success" type="view" value="EditMarketingCampaignRoles"/>
+        <response name="error" type="view" value="EditMarketingCampaignRoles"/>
+    </request-map>
+    <request-map uri="removeMarketingCampaignRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteMarketingCampaignRole"/>
+        <response name="success" type="view" value="ListMarketingCampaignRoles"/>
+        <response name="error" type="view" value="ListMarketingCampaignRoles"/>
     </request-map>
     
     <!--  SegmentGroup requests -->
-    <request-map uri="viewSegmentGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewSegmentGroup"/>
-    </request-map>
-    <request-map uri="FindSegmentGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindSegmentGroup"/>
-    </request-map>
+    <request-map uri="viewSegmentGroup"><security https="true" auth="true"/><response name="success" type="view" value="viewSegmentGroup"/></request-map>
+    <request-map uri="FindSegmentGroup"><security https="true" auth="true"/><response name="success" type="view" value="FindSegmentGroup"/></request-map>
     <request-map uri="createSegmentGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroup"/>
@@ -210,10 +204,7 @@
     </request-map>
     
     <!--  SegmentGroupClassification requests -->
-    <request-map uri="listSegmentGroupClass">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="listSegmentGroupClass"/>
-    </request-map>
+    <request-map uri="listSegmentGroupClass"><security https="true" auth="true"/><response name="success" type="view" value="listSegmentGroupClass"/></request-map>
     <request-map uri="createSegmentGroupClassification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroupClassification"/>
@@ -235,10 +226,7 @@
     
     
     <!--  SegmentGroupGeo requests -->
-    <request-map uri="listSegmentGroupGeo">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="listSegmentGroupGeo"/>
-    </request-map>
+    <request-map uri="listSegmentGroupGeo"><security https="true" auth="true"/><response name="success" type="view" value="listSegmentGroupGeo"/></request-map>
     <request-map uri="createSegmentGroupGeo">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroupGeo"/>
@@ -259,10 +247,7 @@
     </request-map>
     
     <!--  SegmentGroupRole requests -->
-    <request-map uri="listSegmentGroupRole">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="listSegmentGroupRole"/>
-    </request-map>
+    <request-map uri="listSegmentGroupRole"><security https="true" auth="true"/><response name="success" type="view" value="listSegmentGroupRole"/></request-map>
     <request-map uri="createSegmentGroupRole">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroupRole"/>
@@ -282,64 +267,22 @@
         <response name="error" type="view" value="listSegmentGroupRole"/>
     </request-map>
     
-   <!-- Lookup request mappings -->
-    <request-map uri="LookupSegmentGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupSegmentGroup"/>
-    </request-map>
-     
-    <request-map uri="LookupProductStore">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupProductStore"/>
-    </request-map>
-     
-    <request-map uri="LookupPartyClassificationGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyClassificationGroup"/>
-    </request-map>
-     
-    <request-map uri="LookupGeo">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupGeo"/>
-    </request-map>
-
-    <request-map uri="LookupPartyName">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyName"/>
-    </request-map>
-
-    <request-map uri="LookupRoleType">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupRoleType"/>
-    </request-map>
-    
     <!--  ContactList request mappings -->
-    <request-map uri="ListContactLists">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListContactLists"/>
-    </request-map>
-    <request-map uri="EditContactList">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditContactList"/>
-    </request-map>
-    <request-map uri="LookupContactList">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupContactList"/>
-    </request-map>
+    <request-map uri="ListContactLists"><security https="true" auth="true"/><response name="success" type="view" value="ListContactLists"/></request-map>
+    <request-map uri="EditContactList"><security https="true" auth="true"/><response name="success" type="view" value="EditContactList"/></request-map>
+    <request-map uri="LookupContactList"><security https="true" auth="true"/><response name="success" type="view" value="LookupContactList"/></request-map>
     <request-map uri="createContactList">
         <security https="true" auth="true"/>
         <event type="service" invoke="createContactList"/>
         <response name="success" type="view" value="EditContactList"/>
         <response name="error" type="view" value="EditContactList"/>
     </request-map>
-    
     <request-map uri="updateContactList">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateContactList"/>
         <response name="success" type="view" value="EditContactList"/>
         <response name="error" type="view" value="EditContactList"/>
     </request-map>
-    
     <request-map uri="removeContactList">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeContactList"/>
@@ -347,33 +290,21 @@
         <response name="error" type="view" value="ListContactLists"/>
     </request-map>
     
-    <request-map uri="EditContactListParty">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditContactListParty"/>
-    </request-map>
-    <request-map uri="FindContactListParties">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindContactListParties"/>
-    </request-map>
-    <request-map uri="ListContactListParties">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListContactListParties"/>
-    </request-map>
-    
+    <request-map uri="EditContactListParty"><security https="true" auth="true"/><response name="success" type="view" value="EditContactListParty"/></request-map>
+    <request-map uri="FindContactListParties"><security https="true" auth="true"/><response name="success" type="view" value="FindContactListParties"/></request-map>
+    <request-map uri="ListContactListParties"><security https="true" auth="true"/><response name="success" type="view" value="ListContactListParties"/></request-map>
     <request-map uri="createContactListParty">
         <security https="true" auth="true"/>
         <event type="service" invoke="createContactListParty"/>
         <response name="success" type="view" value="EditContactListParty"/>
         <response name="error" type="view" value="EditContactListParty"/>
     </request-map>
-    
     <request-map uri="updateContactListParty">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateContactListParty"/>
         <response name="success" type="view" value="EditContactListParty"/>
         <response name="error" type="view" value="EditContactListParty"/>
     </request-map>
-    
     <request-map uri="removeContactListParty">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteContactListParty"/>
@@ -381,18 +312,9 @@
         <response name="error" type="view" value="ListContactListParties"/>
     </request-map>
     
-    <request-map uri="ListContactListCommEvents">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListContactListCommEvents"/>
-    </request-map>
-    <request-map uri="EditContactListCommEvent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditContactListCommEvent"/>
-    </request-map>
-    <request-map uri="FindContactListCommEvents">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindContactListCommEvents"/>
-    </request-map>
+    <request-map uri="ListContactListCommEvents"><security https="true" auth="true"/><response name="success" type="view" value="ListContactListCommEvents"/></request-map>
+    <request-map uri="EditContactListCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="EditContactListCommEvent"/></request-map>
+    <request-map uri="FindContactListCommEvents"><security https="true" auth="true"/><response name="success" type="view" value="FindContactListCommEvents"/></request-map>
     <request-map uri="createContactListCommEvent">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommunicationEvent"/>
@@ -412,18 +334,18 @@
         <response name="error" type="view" value="ListContactListEvents"/>
     </request-map>
     
-    <request-map uri="LookupCommEvent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCommEvent"/>
-    </request-map>
-    <request-map uri="LookupPreferredContactMech">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPreferredContactMech"/>
-    </request-map>
-    <request-map uri="LookupCommEvent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCommEvent"/>
-    </request-map>
+    <!-- Lookup request mappings -->
+    <request-map uri="LookupSegmentGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupSegmentGroup"/></request-map>
+    <request-map uri="LookupProductStore"><security https="true" auth="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
+    <request-map uri="LookupGeo"><security https="true" auth="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
+    
+    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupRoleType"><security https="true" auth="true"/><response name="success" type="view" value="LookupRoleType"/></request-map>
+    <request-map uri="LookupPartyClassificationGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyClassificationGroup"/></request-map>
+    
+    <request-map uri="LookupCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
+    <request-map uri="LookupPreferredContactMech"><security https="true" auth="true"/><response name="success" type="view" value="LookupPreferredContactMech"/></request-map>
+    <request-map uri="LookupCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -438,9 +360,10 @@
     <view-map name="FindTrackingCodeOrders" type="region"/>
     <view-map name="FindTrackingCodeVisits" type="region"/>
 
-    <view-map name="FindMarketingCampaign" type="region"/>
-    <view-map name="EditMarketingCampaign" type="region"/>
-    <view-map name="EditMarketingCampaignRoles" type="region"/>
+    <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#ListMarketingCampaign"/>
+    <view-map name="EditMarketingCampaign" type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#EditMarketingCampaign"/>
+    <view-map name="FindMarketingCampaignRoles"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#ListMarketingCampaignRoles"/>
+    <view-map name="EditMarketingCampaignRoles" type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#EditMarketingCampaignRoles"/>
 
     <view-map name="FindSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#FindSegmentGroup"/>
     <view-map name="viewSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroup"/>
