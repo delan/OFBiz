@@ -57,10 +57,10 @@
             </drop-down>
         </field>
         <field name="primaryOrderId" title="${uiLabelMap.ProductPrimaryOrderId}"><text/></field>
-		<field name="primaryShipGroupSeqId" title="${uiLabelMap.ProductPrimaryShipGroupSeqId}truc"><text/></field>
-		<field name="estimatedReadyDate" title="${uiLabelMap.ProductEstimatedReadyDate}"><text/></field>
-		<field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}"><text/></field>
-		
+        <field name="primaryShipGroupSeqId" title="${uiLabelMap.ProductPrimaryShipGroupSeqId}"><text/></field>
+        <field name="estimatedReadyDate" title="${uiLabelMap.ProductEstimatedReadyDate}"><text/></field>
+        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}"><text/></field>
+        
         <field use-when="productStoreId!=null" name="originFacilityId" title="${uiLabelMap.ProductOriginFacility} [${shipment.primaryOrderId}]" widget-style="selectBox">
             <drop-down allow-empty="true" current="first-in-list">
                 <entity-options entity-name="ProductStoreFacilityByOrder" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
@@ -85,9 +85,9 @@
             </drop-down>
         </field>
 
-        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedShipWorkEffId}" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app"/></field>
+        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/WorkEffortSummary?workEffortId=${shipment.estimatedShipWorkEffId}" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app"/></field>
         <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><date-time/></field>
-        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app"/></field>
+        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="buttontext"><hyperlink target="/workeffort/control/WorkEffortSummary?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app"/></field>
         <field name="latestCancelDate" title="${uiLabelMap.ProductLatestCancelDate}"><date-time/></field>
         <field name="estimatedShipCost" title="${uiLabelMap.ProductEstimatedShipCost}"><text/></field>
         <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}">
@@ -99,7 +99,7 @@
             </drop-down>
         </field>
         <field name="handlingInstructions" title="${uiLabelMap.ProductHandlingInstructions}"><text/></field>
-		 
+         
         <field name="originContactMechId" title="${uiLabelMap.ProductOriginPostalAddressId}" 
                 tooltip="To: ${originPostalAddress.toName}, Attn: ${originPostalAddress.attnName}, ${originPostalAddress.address1}, ${originPostalAddress.address2}, ${originPostalAddress.city}, ${originPostalAddress.stateProvinceGeoId}, ${originPostalAddress.postalCode}, ${originPostalAddress.countryGeoId}" tooltip-style="tabletext">
         </field>
