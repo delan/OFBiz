@@ -31,7 +31,6 @@
     <entity-group group="org.ofbiz" entity="PartyRate" />
     <entity-group group="org.ofbiz" entity="RateType" />
     <entity-group group="org.ofbiz" entity="TimeEntry" />
-    <entity-group group="org.ofbiz" entity="TimeEntryBilling" />
     <entity-group group="org.ofbiz" entity="Timesheet" />
     <entity-group group="org.ofbiz" entity="TimesheetRole" />
     <entity-group group="org.ofbiz" entity="WorkEffortAssignmentRate" />

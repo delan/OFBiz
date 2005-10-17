@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -30,10 +30,8 @@
         
     <simple-method method-name="createWorkEffort" short-description="Create Work Effort">
         <make-value value-name="newEntity" entity-name="WorkEffort"/>
-        <sequenced-id-to-env sequence-name="WorkEffort" env-name="workEffortId"/>
-        <to-string field-name="workEffortId"/>
-        <set from-field="workEffortId" field="newEntity.workEffortId"/>
-        <field-to-result field-name="workEffortId" result-name="workEffortId"/>
+        <sequenced-id-to-env sequence-name="WorkEffort" env-name="newEntity.workEffortId"/>
+        <field-to-result field-name="newEntity.workEffortId" result-name="workEffortId"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>
@@ -75,9 +73,7 @@
             <check-errors/>
         </if-empty>-->
         
-        <make-value value-name="lookupPKMap" entity-name="WorkEffort"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="WorkEffort" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <entity-one entity-name="WorkEffort" value-name="lookedUpValue"/>
         <clone-value value-name="lookedUpValue" new-value-name="savedValue"/>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>

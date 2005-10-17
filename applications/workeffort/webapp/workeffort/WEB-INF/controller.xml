@@ -133,6 +133,12 @@
         <response name="success" type="view" value="upcoming"/>
     </request-map>
     
+    <!--  WorkEffort Related Summary request mappings -->
+    <request-map uri="WorkEffortSummary">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="WorkEffortSummary"/>
+    </request-map>
+    
     <request-map uri="FindWorkEffort">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindWorkEffort"/>
@@ -334,7 +340,6 @@
         <response name="error" type="view" value="ListWorkEffortShopLists"/>
     </request-map>
     
-    
     <!--  WorkEffort OrderHeader request mappings -->
     <request-map uri="ListWorkEffortOrderHeaders">
         <security https="true" auth="true"/>
@@ -352,14 +357,59 @@
         <response name="success" type="view" value="ListWorkEffortOrderHeaders"/>
         <response name="error" type="view" value="ListWorkEffortOrderHeaders"/>
     </request-map>
-    
-    
-    <!--  WorkEffort Related Summary request mappings -->
-    <request-map uri="WorkEffortSummary">
+
+    <!-- Timesheet Requests -->
+    <request-map uri="MyTimesheets"><security https="true" auth="true"/><response name="success" type="view" value="MyTimesheets"/></request-map>
+
+    <request-map uri="FindTimesheet"><security https="true" auth="true"/><response name="success" type="view" value="FindTimesheet"/></request-map>
+    <request-map uri="EditTimesheet"><security https="true" auth="true"/><response name="success" type="view" value="EditTimesheet"/></request-map>
+    <request-map uri="createTimesheet">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="WorkEffortSummary"/>
+        <event type="service" invoke="createTimesheet"/>
+        <response name="success" type="view" value="EditTimesheet"/>
+        <response name="error" type="view" value="EditTimesheet"/>
+    </request-map>
+    <request-map uri="updateTimesheet">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTimesheet"/>
+        <response name="success" type="view" value="EditTimesheet"/>
+        <response name="error" type="view" value="EditTimesheet"/>
     </request-map>
 
+    <request-map uri="EditTimesheetRoles"><security https="true" auth="true"/><response name="success" type="view" value="EditTimesheetRoles"/></request-map>
+    <request-map uri="createTimesheetRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTimesheetRole"/>
+        <response name="success" type="view" value="EditTimesheetRoles"/>
+        <response name="error" type="view" value="EditTimesheetRoles"/>
+    </request-map>
+    <request-map uri="updateTimesheetRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTimesheetRole"/>
+        <response name="success" type="view" value="EditTimesheetRoles"/>
+        <response name="error" type="view" value="EditTimesheetRoles"/>
+    </request-map>
+
+    <request-map uri="EditTimesheetEntries"><security https="true" auth="true"/><response name="success" type="view" value="EditTimesheetEntries"/></request-map>
+    <request-map uri="createTimesheetEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTimeEntry"/>
+        <response name="success" type="view" value="EditTimesheetEntries"/>
+        <response name="error" type="view" value="EditTimesheetEntries"/>
+    </request-map>
+    <request-map uri="updateTimesheetEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTimeEntry"/>
+        <response name="success" type="view" value="EditTimesheetEntries"/>
+        <response name="error" type="view" value="EditTimesheetEntries"/>
+    </request-map>
+    <request-map uri="deleteTimesheetEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTimeEntry"/>
+        <response name="success" type="view" value="EditTimesheetEntries"/>
+        <response name="error" type="view" value="EditTimesheetEntries"/>
+    </request-map>
+    
     <!-- Lookup request mappings -->
     <request-map uri="LookupPartyName">
         <security https="true" auth="true"/>
@@ -467,6 +517,12 @@
     <view-map name="ListWorkEffortRequirements" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEffortRequirements"/>
     <view-map name="ListWorkEffortQuotes" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEffortQuotes"/>
     <view-map name="ListWorkEffortOrderHeaders" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEffortOrderHeaders"/>
+
+    <view-map name="MyTimesheets" type="screen" page="component://workeffort/widget/TimesheetScreens.xml#MyTimesheets"/>
+    <view-map name="FindTimesheet" type="screen" page="component://workeffort/widget/TimesheetScreens.xml#FindTimesheet"/>
+    <view-map name="EditTimesheet" type="screen" page="component://workeffort/widget/TimesheetScreens.xml#EditTimesheet"/>
+    <view-map name="EditTimesheetRoles" type="screen" page="component://workeffort/widget/TimesheetScreens.xml#EditTimesheetRoles"/>
+    <view-map name="EditTimesheetEntries" type="screen" page="component://workeffort/widget/TimesheetScreens.xml#EditTimesheetEntries"/>
     
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
     <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>

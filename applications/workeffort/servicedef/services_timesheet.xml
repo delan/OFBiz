@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2005-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
+    <description>WorkEffort Timesheet Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Timesheet Services -->
+    <service name="createTimesheet" default-entity-name="Timesheet" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="createTimesheet">
+        <description>Creates Timesheet</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateTimesheet" default-entity-name="Timesheet" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="updateTimesheet">
+        <description>Updates Timesheet</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTimesheet" default-entity-name="Timesheet" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="deleteTimesheet">
+        <description>Deletes Timesheet</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- TimesheetRole Services -->
+    <service name="createTimesheetRole" default-entity-name="TimesheetRole" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="createTimesheetRole">
+        <description>Creates TimesheetRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTimesheetRole" default-entity-name="TimesheetRole" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="deleteTimesheetRole">
+        <description>Deletes TimesheetRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- TimeEntry Services -->
+    <service name="createTimeEntry" default-entity-name="TimeEntry" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="createTimeEntry">
+        <description>Creates TimeEntry</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateTimeEntry" default-entity-name="TimeEntry" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="updateTimeEntry">
+        <description>Updates TimeEntry</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTimeEntry" default-entity-name="TimeEntry" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="deleteTimeEntry">
+        <description>Deletes TimeEntry</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- PartyRate Services -->
+    <service name="createPartyRate" default-entity-name="PartyRate" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/RateServices.xml" invoke="createPartyRate">
+        <description>Creates PartyRate</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updatePartyRate" default-entity-name="PartyRate" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/RateServices.xml" invoke="updatePartyRate">
+        <description>Updates PartyRate</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePartyRate" default-entity-name="PartyRate" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/RateServices.xml" invoke="deletePartyRate">
+        <description>Deletes PartyRate</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- RateType Services -->
+    <service name="createRateType" default-entity-name="RateType" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/RateServices.xml" invoke="createRateType">
+        <description>Creates RateType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    
+    <!-- WorkEffortAssignmentRate Services -->
+    <service name="createWorkEffortAssignmentRate" default-entity-name="WorkEffortAssignmentRate" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/RateServices.xml" invoke="createWorkEffortAssignmentRate">
+        <description>Creates WorkEffortAssignmentRate</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateWorkEffortAssignmentRate" default-entity-name="WorkEffortAssignmentRate" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/RateServices.xml" invoke="updateWorkEffortAssignmentRate">
+        <description>Updates WorkEffortAssignmentRate</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteWorkEffortAssignmentRate" default-entity-name="WorkEffortAssignmentRate" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/RateServices.xml" invoke="deleteWorkEffortAssignmentRate">
+        <description>Deletes WorkEffortAssignmentRate</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+</services>
