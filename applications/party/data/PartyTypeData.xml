@@ -96,6 +96,7 @@
     <RoleType description="Distribution Channel" hasTable="N" parentTypeId="" roleTypeId="DISTRIBUTION_CHANNEL"/>
     <RoleType description="ISP" hasTable="N" parentTypeId="" roleTypeId="ISP"/>
     <RoleType description="Hosting Server" hasTable="N" parentTypeId="" roleTypeId="HOSTING_SERVER"/>
+    <RoleType description="Lead" hasTable="N" parentTypeId="" roleTypeId="LEAD"/>
     <RoleType description="Not Applicable" hasTable="N" parentTypeId="" roleTypeId="_NA_"/>
     <RoleType description="Organization" hasTable="N" parentTypeId="" roleTypeId="ORGANIZATION_ROLE"/>
     <RoleType description="Owner" hasTable="N"  parentTypeId="" roleTypeId="OWNER"/>
