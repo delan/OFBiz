@@ -185,7 +185,7 @@
         <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="scopeEnumId">
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
                     <entity-constraint name="enumTypeId" value="WORK_EFF_SCOPE"/>
                 </entity-options>
@@ -288,8 +288,8 @@
     <form name="ListWorkEfforts" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="ListWorkEfforts" title="" type="list" list-iterator-name="listIt">
         <actions>
             <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
-                <field-map env-name="parameters" field-name="inputFields"/>
-                <field-map env-name="entityName" field-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="WorkEffort"/>
             </service>
         </actions>
         <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="buttontext">
