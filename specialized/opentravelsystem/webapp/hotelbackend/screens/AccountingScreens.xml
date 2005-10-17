@@ -78,15 +78,19 @@
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1">Bankstatement MT940 file upload.</label>
+                            <label style="head1">Bankstatement MT940 file upload to payment file with status 'not-paid' and create parties.</label>
                         </container>
                         <include-form name="DataExchange" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                         <container>
-                            <label style="head1">Create Invoices from payments.</label>
+                            <label style="head1">Create Invoices from payments with status not paid and not applied.</label>
                         </container>
                         <include-form name="CreateInvoicesFromPayments" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                         <container>
-                            <label style="head1">Post Invoices and payments by changing the status.</label>
+                            <label style="head1">Post payments by changing the status of all 'non-paid' payments to send/received.</label>
+                        </container>
+                        <include-form name="SendReceivePayments" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                        <container>
+                            <label style="head1">Post Invoices by changing the status to.</label>
                         </container>
                         <include-form name="PostInvoicesStatements" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                     </decorator-section>

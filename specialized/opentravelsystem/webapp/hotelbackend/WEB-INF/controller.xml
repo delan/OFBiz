@@ -2260,6 +2260,11 @@
         <event type="java" path="org.ofbiz.opentravelsystem.mt940" invoke="importData"/>
         <response name="success" type="view" value="Utilities"/>
     </request-map>    
+    <request-map uri="SendReceivePayments">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="SendReceivePayments"/>
+        <response name="success" type="view" value="Utilities"/>
+    </request-map>    
     <request-map uri="CreateInvoicesFromPayments">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="CreateInvoicesFromPayments"/>
@@ -2322,20 +2327,47 @@
         <response name="success" type="view" value="GlAccountAssignment"/>
     </request-map>
     
-    <request-map uri="addPaymentGlAssignment">
+    <request-map uri="addInvoiceItemTypeGlAssignment">
         <security https="true" auth="true"/>
-        <event type="service" invoke="addPaymentGlAssignment"/>
+        <event type="service" invoke="addInvoiceItemTypeGlAssignment"/>
         <response name="success" type="view" value="GlAccountAssignment"/>
         <response name="error" type="view" value="GlAccountAssignment"/>
     </request-map>
     
-    <request-map uri="removePaymentGlAssignment">
+    <request-map uri="removeInvoiceItemTypeGlAssignment">
         <security https="true" auth="true"/>
-        <event type="service" invoke="removePaymentGlAssignment"/>
+        <event type="service" invoke="removeInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountAssignment"/>
+        <response name="error" type="view" value="GlAccountAssignment"/>
+    </request-map>
+
+    <request-map uri="addPaymentTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addPaymentTypeGlAssignment"/>
         <response name="success" type="view" value="GlAccountAssignment"/>
         <response name="error" type="view" value="GlAccountAssignment"/>
     </request-map>
     
+    <request-map uri="addPaymentMethodTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addPaymentMethodTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountAssignment"/>
+        <response name="error" type="view" value="GlAccountAssignment"/>
+    </request-map>
+    
+    <request-map uri="removePaymentTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountAssignment"/>
+        <response name="error" type="view" value="GlAccountAssignment"/>
+    </request-map>
+    
+    <request-map uri="removePaymentMethodTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentMethodTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountAssignment"/>
+        <response name="error" type="view" value="GlAccountAssignment"/>
+    </request-map>
     <!-- =============== Accounting Reports =================-->
     <request-map uri="AccountingReports">
         <security https="true" auth="true"/>
@@ -2382,7 +2414,7 @@
         <response name="success" type="view" value="GlAccountNavigate"/>
     </request-map>
     <request-map uri="ListGlAccountOrganization">
-        <!-- security https="true" auth="true"/ -->
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="ListGlAccountOrganization"/>
     </request-map>
     <request-map uri="ListGlAccountEntries">

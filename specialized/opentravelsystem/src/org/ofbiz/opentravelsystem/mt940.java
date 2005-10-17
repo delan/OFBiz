@@ -49,6 +49,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
@@ -125,31 +126,56 @@ public class mt940 {
 		}
 		if (debug) Debug.logInfo("Company Party found:" + accountPartyId, module);
 		
+		// find the related tax party to enable the correct payment type
+		// find the taxGeoId of the company
+		String taxAuthPartyId = null;
+		try	{
+			List partyTaxInfos = EntityUtil.filterByDate(delegator.findByAnd("PartyTaxInfo",UtilMisc.toMap("partyId",accountPartyId)));
+			if (partyTaxInfos != null && partyTaxInfos.size() > 0)	{
+				GenericValue partyTaxInfo = (GenericValue) partyTaxInfos.get(0);
+					List taxAuthorities = delegator.findByAnd("TaxAuthority",UtilMisc.toMap("taxAuthGeoId",partyTaxInfo.getString("geoId")));
+					if (taxAuthorities != null && taxAuthorities.size() > 0)	{
+						taxAuthPartyId = ((GenericValue) taxAuthorities.get(0)).getString("taxAuthPartyId");
+						if (debug)Debug.logInfo("taxAuthPartyId found:" + taxAuthPartyId.toString(),module);
+					}
+			}
+		} catch (GenericEntityException e) {	
+			request.setAttribute("_ERROR_MESSAGE_", "The company " + accountPartyId + " has no related taxauthority");
+			return "error";
+		}
+		if (taxAuthPartyId == null)	{
+			request.setAttribute("_ERROR_MESSAGE_", "The company " + accountPartyId + " has no related taxauthority");
+			return "error";
+		}
+		
 		if (debug) Debug.logInfo("Start processing payments...", module);
 		while (getPayment(request) != null) {
-			if (debet  == false)	{
-				payment.put("paymentTypeId","CUSTOMER_PAYMENT");
-				payment.put("statusId","PMNT_RECEIVED");	// will start the posting service
-				payment.put("partyIdFrom",getParty(delegator));
-				payment.put("partyIdTo", accountPartyId);    		}
-			else	{ // credit
-				payment.put("paymentTypeId","VENDOR_PAYMENT");
-				payment.put("statusId","PMNT_SENT");		// will start the posting service
-				payment.put("partyIdTo",getParty(delegator));
-				payment.put("partyIdFrom", accountPartyId);    		}
-			
+			String otherParty = getParty(delegator);
 			// check to see if the parties where found, when not create
-			if (payment.get("partyIdTo") == null || payment.get("partyIdFrom") == null)	{ 
+			if (otherParty == null)	{ 
 				if (createParty(delegator) == null) 	
 					return "error"; // party creation error
-				if (debet == false)	{ 
-					payment.put("partyIdFrom",party.getString("partyId"));
-				}
-				else {	
-					payment.put("partyIdTo",party.getString("partyId"));
-				}
+				otherParty = party.getString("partyId");
 			}
+			if (debet  == false)	{
+/*				if (otherParty.equals(taxAuthPartyId) || accountPartyId.equals(taxAuthPartyId))
+					payment.put("paymentTypeId","TAX_PAYMENT");
+				else */
+					payment.put("paymentTypeId","CUSTOMER_PAYMENT");
+				payment.put("partyIdFrom",otherParty);
+				payment.put("partyIdTo", accountPartyId);    		
+				}
+			else	{ // credit
+/*				if (otherParty.equals(taxAuthPartyId) || accountPartyId.equals(taxAuthPartyId))
+					payment.put("paymentTypeId","TAX_PAYMENT");
+				else */
+					payment.put("paymentTypeId","VENDOR_PAYMENT");
+				payment.put("partyIdTo",otherParty);
+				payment.put("partyIdFrom", accountPartyId);    		
+				}
+			
 			// set other fields in payment record
+			payment.put("statusId","PMNT_NOT_PAID");  // it is always loaded with this status....needs tobe changed to send/received....	
 			payment.put("paymentMethodId", paymentMethod.get("paymentMethodId"));
 			payment.put("paymentMethodTypeId","EFT_ACCOUNT");
 			// check if the payment was already uploaded.....
