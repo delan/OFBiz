@@ -28,7 +28,7 @@
         
         <field name="workEffortId" use-when="workEffort!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonNotModifRecreat}" widget-style="tabletext"><display/></field>
         <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId==null" title="${uiLabelMap.WorkEffortWorkEffortId}"><ignored/></field>
-        <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${workEffortId}]" widget-style="tabletext"><display/></field>
+        <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId!=null" title="${uiLabelMap.WorkEffortWorkEffortId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${workEffortId}]" widget-style="tabletext"><display also-hidden="false"/></field>
 
         <field name="workEffortName" title="${uiLabelMap.CommonName}*"/>
         <field name="workEffortTypeId" title="${uiLabelMap.CommonType}*" position="1">
@@ -207,13 +207,15 @@
         <field name="recurrenceInfoId"><ignored/></field>
         <field name="runtimeDataId"><ignored/></field>
         <field name="noteId"><ignored/></field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="ListLookupWorkEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
         <actions>
             <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
-                <field-map env-name="parameters" field-name="inputFields"/>
-                <field-map env-name="entityName" field-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="WorkEffort"/>
             </service>
         </actions>
         <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="buttontext">
@@ -308,7 +310,6 @@
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeWorkEffort?workEffortId=${workEffortId}"/>
         </field>
     </form>
-  
     <form name="WorkEffortTreeLine"  hide-header="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="ListWorkEfforts" title="" type="list" list-iterator-name="listIt">
         <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}"/>

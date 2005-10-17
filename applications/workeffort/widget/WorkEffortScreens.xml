@@ -131,15 +131,14 @@
                 <set field="tabButtonItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleFindWorkEffort"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator">
                     <decorator-section name="body">
-                                <container><label style="head1">${uiLabelMap.PageTitleFindWorkEffort}</label></container>
-                                <container><link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
-                                <include-form name="FindWorkEffort" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleFindWorkEffort}</label></container>
+                        <container><link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
+                        <include-form name="FindWorkEffort" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -153,17 +152,15 @@
                 <set field="tabButtonItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffort"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
-                <set field="entityName" value="WorkEffort"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator">
                     <decorator-section name="body">
-                                <container><label style="head1">${uiLabelMap.PageTitleListWorkEfforts}</label></container>
-                                <container><link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
-                                <container><link  text="${uiLabelMap.CommonFind}" target="FindWorkEffort" style="linktext"/></container>
-                                <include-form name="ListWorkEfforts" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEfforts}</label></container>
+                        <container><link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
+                        <container><link  text="${uiLabelMap.CommonFind}" target="FindWorkEffort" style="linktext"/></container>
+                        <include-form name="ListWorkEfforts" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

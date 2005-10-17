@@ -83,6 +83,8 @@
       <field name="rateTypeId" type="id"></field>
       <field name="workEffortId" type="id"></field>
       <field name="timesheetId" type="id"></field>
+      <field name="invoiceId" type="id"></field>
+      <field name="invoiceItemSeqId" type="id"></field>
       <field name="hours" type="floating-point"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="timeEntryId"/>
@@ -98,23 +100,10 @@
       <relation type="one" fk-name="TIME_ENT_TSHT" rel-entity-name="Timesheet">
         <key-map field-name="timesheetId"/>
       </relation>
-    </entity>
-    <entity entity-name="TimeEntryBilling"
-            package-name="org.ofbiz.workeffort.timesheet"
-            title="Time Entry Billing Entity">
-      <field name="timeEntryId" type="id-ne"></field>
-      <field name="invoiceId" type="id-ne"></field>
-      <field name="invoiceItemSeqId" type="id-ne"></field>
-      <prim-key field="timeEntryId"/>
-      <prim-key field="invoiceId"/>
-      <prim-key field="invoiceItemSeqId"/>
-      <relation type="one" fk-name="TIME_ENTBL_TENT" rel-entity-name="TimeEntry">
-        <key-map field-name="timeEntryId"/>
-      </relation>
       <relation type="one-nofk" rel-entity-name="Invoice">
         <key-map field-name="invoiceId"/>
       </relation>
-      <relation type="one" fk-name="TIME_ENTBL_INVITM" rel-entity-name="InvoiceItem">
+      <relation type="one" fk-name="TIME_ENT_INVIT" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
       </relation>

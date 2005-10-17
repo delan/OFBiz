@@ -206,14 +206,14 @@
         <attribute name="workEffortIdFrom" type="java.lang.String" mode="INOUT" optional="true"/>
         <attribute name="workEffortIdTo" type="java.lang.String" mode="INOUT" optional="true"/>
     </service>
-    <service name="createWorkEffortAndAssoc" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortAssoc" auth="true"  >
+    <service name="createWorkEffortAndAssoc" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortAssoc" auth="true">
         <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffortAssoc"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffortAssoc"/>
     </service>
-    <service name="updateWorkEffortAndAssoc" engine="group" location="updateWorkEffortAndAssoc" invoke="" auth="true"  >
+    <service name="updateWorkEffortAndAssoc" engine="group" location="updateWorkEffortAndAssoc" invoke="" auth="true">
         <description>Creates a WorkEffort entity and WorkEffortAssoc</description>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
@@ -253,98 +253,103 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="createCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="makeCommunicationEventWorkEffort" auth="true"  >
+    <service name="createCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="makeCommunicationEventWorkEffort" auth="true">
         <description>Creates a CommunicationEvent entity and CommunicationEventWorkEff</description>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="CommunicationEvent"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEvent"/>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="CommunicationEventWorkEff"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEventWorkEff"/>
     </service>
-    <service name="updateCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateCommunicationEventWorkEff" auth="true"  >
+    <service name="updateCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateCommunicationEventWorkEff" auth="true">
         <description>Updates CommunicationEventWorkEff</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CommunicationEventWorkEff"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEventWorkEff"/>
     </service>
-    <service name="deleteCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteCommunicationEventWorkEff" auth="true"  >
+    <service name="deleteCommunicationEventWorkEff" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteCommunicationEventWorkEff" auth="true">
         <description>Deletes CommunicationEventWorkEff</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CommunicationEventWorkEff"/>
     </service>
-    <service name="createWorkEffortRequest" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequest" auth="true"  >
+    <service name="createWorkEffortRequest" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequest" auth="true">
         <description>Creates a CustRequestWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestWorkEffort"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="CustRequest"/>
         <override name="custRequestId" optional="true" mode="INOUT"/>
     </service>
-    <service name="deleteWorkEffortRequest" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortRequest" auth="true"  >
+    <service name="deleteWorkEffortRequest" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortRequest" auth="true">
         <description>Deletes a CustRequestWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestWorkEffort"/>
     </service>
-    <service name="createWorkEffortRequestItemAndRequestItem" engine="group" location="createWorkEffortRequestItemAndRequestItem" invoke="" auth="true"  >
+    <service name="createWorkEffortRequestItemAndRequestItem" engine="group" location="createWorkEffortRequestItemAndRequestItem" invoke="" auth="true">
         <description>Creates a CustRequestItem entity and CustRequestItemWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestItemWorkEffort"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="CustRequestItem"/>
         <attribute name="custRequestItemExists" type="java.lang.String" mode="OUT" optional="true"/>
     </service>
-    <service name="createWorkEffortRequestItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequestItem" auth="true"  >
+    <service name="createWorkEffortRequestItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortRequestItem" auth="true">
         <description>Creates a CustRequestItemWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestItemWorkEffort"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="CustRequestItem"/>
         <attribute name="custRequestItemExists" type="java.lang.String" mode="IN" optional="true"/>
     </service>
-    <service name="deleteWorkEffortRequestItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortRequestItem" auth="true"  >
+    <service name="deleteWorkEffortRequestItem" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortRequestItem" auth="true">
         <description>Deletes a CustRequestItemWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="CustRequestItemWorkEffort"/>
     </service>
-    <service name="checkCustRequestItemExists" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="checkCustRequestItemExists" auth="true"  >
+    <service name="checkCustRequestItemExists" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="checkCustRequestItemExists" auth="true">
         <description>Checks to see if a CustRequestItem exists</description>
         <auto-attributes include="pk" mode="IN" optional="true" entity-name="CustRequestItem"/>
         <attribute name="custRequestItemExists" type="java.lang.String" mode="OUT" optional="true"/>
     </service>
     
-    <service name="createWorkEffortQuote" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortQuote" auth="true"  >
+    <service name="createWorkEffortQuote" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortQuote" auth="true">
         <description>Creates a QuoteWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="QuoteWorkEffort"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="Quote"/>
         <override name="quoteId" optional="true" mode="INOUT"/>
     </service>
-    <service name="deleteWorkEffortQuote" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortQuote" auth="true"  >
+    <service name="deleteWorkEffortQuote" default-entity-name="QuoteWorkEffort" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffortQuote">
         <description>Deletes a QuoteWorkEffort</description>
-        <auto-attributes include="pk" mode="IN" optional="false" entity-name="QuoteWorkEffort"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="createWorkRequirementFulfillment" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkRequirementFulfillment" auth="true"  >
+    <service name="createWorkRequirementFulfillment" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkRequirementFulfillment">
         <description>Creates a WorkRequirementFulfillment</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="WorkRequirementFulfillment"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkRequirementFulfillment"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="Requirement"/>
         <override name="requirementId" optional="true" mode="INOUT"/>
     </service>
-    <service name="deleteWorkRequirementFulfillment" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkRequirementFulfillment" auth="true"  >
+    <service name="deleteWorkRequirementFulfillment" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkRequirementFulfillment">
         <description>Deletes a WorkRequirementFulfillment</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="WorkRequirementFulfillment"/>
     </service>
 
-    <service name="createShoppingListWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createShoppingListWorkEffort" auth="true"  >
+    <service name="createShoppingListWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createShoppingListWorkEffort" auth="true">
         <description>Creates a ShoppingListWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="ShoppingListWorkEffort"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="ShoppingListWorkEffort"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="ShoppingList"/>
         <override name="shoppingListId" optional="true" mode="INOUT"/>
     </service>
-    <service name="deleteShoppingListWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteShoppingListWorkEffort" auth="true"  >
+    <service name="deleteShoppingListWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteShoppingListWorkEffort" auth="true">
         <description>Deletes a ShoppingListWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="ShoppingListWorkEffort"/>
     </service>
-    <service name="createOrderHeaderWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createOrderHeaderWorkEffort" auth="true"  >
+
+    <service name="createOrderHeaderWorkEffort" engine="simple" auth="true" 
+        location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createOrderHeaderWorkEffort">
         <description>Creates a OrderHeaderWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false" entity-name="OrderHeaderWorkEffort"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="OrderHeaderWorkEffort"/>
         <auto-attributes include="all" mode="IN" optional="true" entity-name="OrderHeader"/>
         <override name="orderId" optional="true" mode="INOUT"/>
     </service>
-    <service name="deleteOrderHeaderWorkEffort" engine="simple" location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteOrderHeaderWorkEffort" auth="true"  >
+    <service name="deleteOrderHeaderWorkEffort" default-entity-name="OrderHeaderWorkEffort" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteOrderHeaderWorkEffort">
         <description>Deletes a OrderHeaderWorkEffort</description>
-        <auto-attributes include="pk" mode="IN" optional="false" entity-name="OrderHeaderWorkEffort"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-
 </services>
