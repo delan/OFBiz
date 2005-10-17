@@ -90,7 +90,7 @@
     <!-- Request Mappings -->
         
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -102,7 +102,7 @@
     </request-map>
 
     <request-map uri="main">
-        <security https="false" auth="true"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="mytasks"/>
     </request-map>
 
