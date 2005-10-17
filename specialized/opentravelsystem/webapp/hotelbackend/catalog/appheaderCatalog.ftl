@@ -33,7 +33,7 @@
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
-
+<#if requestAttributes.userLogin?has_content>
 <div class="apptitle">&nbsp;${uiLabelMap.opentravelsystemCatalog}</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>mainCatalog</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemMain}</a></div>  
@@ -50,3 +50,4 @@
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>
+</#if>

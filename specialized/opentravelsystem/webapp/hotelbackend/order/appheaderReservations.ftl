@@ -33,7 +33,7 @@
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
-
+<#if requestAttributes.userLogin?has_content>
 <div class="apptitle">&nbsp;Reservations</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">List Reservations</a></div>  
@@ -48,3 +48,4 @@
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>
+</#if>

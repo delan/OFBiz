@@ -33,7 +33,7 @@
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
-
+<#if requestAttributes.userLogin?has_content>
 <div class="apptitle">Customers</div>
 <div class="row">
   <!--div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
@@ -49,3 +49,4 @@
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>
+</#if>
