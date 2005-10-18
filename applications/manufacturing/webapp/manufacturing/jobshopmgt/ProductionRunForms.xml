@@ -26,9 +26,8 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="findProductionRun" 
-            default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-            target="FindProductionRun" title="" type="single">
+    <form name="findProductionRun" target="FindProductionRun" title="" type="single"
+            default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingProductionRunId}"><text-find/></field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
@@ -51,9 +50,9 @@
                 </entity-options>
              </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="listFindProductionRun"
@@ -61,10 +60,9 @@
             list-iterator-name="listIt" paginate-target="/FindProductionRun" 
             title="" type="list">
         <actions>
-            <set field="entityName" value="WorkEffortAndGoods"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="entityName" value="WorkEffortAndGoods"/>
             </service>
         </actions>
         <field name="workEffortId" title=" " widget-style="buttontext">
