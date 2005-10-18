@@ -336,6 +336,17 @@ function gwAll(e) {
                   <td align="left"><div class="tabletext">${cartLine.getDesiredDeliveryDate()?if_exists}</div>
               </td></tr>
             </#if>
+            <#-- inventory summary -->
+            <#if cartLine.getProductId()?exists>
+              <tr>
+                <td colspan="2" align="left">
+                  <div class="tabletext">
+                    <a href="/catalog/control/EditProductInventoryItems?productId=${cartLine.getProductId()}"><b>${uiLabelMap.ProductInventory}</b></a>: 
+                    ATP = ${inventoryAtpMap.get(cartLine.getProductId())}, QOH = ${inventoryQohMap.get(cartLine.getProductId())}
+                  </div>
+                </td>
+              </tr>
+            </#if>
           </table>
 
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
