@@ -199,13 +199,16 @@ public class OrderServices {
         if (orderItems.size() < 1) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "items.none", locale));
         }
+
+        // these need to be retrieved now because they might be needed for exploding MARKETING_PKG_AUTO
         List orderAdjustments = (List) context.get("orderAdjustments");
         List orderItemShipGroupInfo = (List) context.get("orderItemShipGroupInfo");
+        List orderItemPriceInfo = (List) context.get("orderItemPriceInfos");
 
-        // explode items which are MKTG_PKG_AUTO
+        // explode items which are MARKETINGG_PKG_AUTO
         if (!orderTypeId.equals("PURCHASE_ORDER")) {
             try {
-                explodeMarketingPkgAutoItem(orderItems, orderAdjustments, orderItemShipGroupInfo, orderTypeId, delegator, dispatcher, locale);
+                explodeMarketingPkgAutoItem(orderItems, orderAdjustments, orderItemShipGroupInfo, orderItemPriceInfo, orderTypeId, delegator, dispatcher, locale);
             } catch (Exception e) {
                Debug.logError(e, "Error calling explodeMarketingPkgAutoItem " + e.getMessage(), module);
                return ServiceUtil.returnError("Error on exploding marketing_pkg_auto item.[" + e.toString() + "]");
@@ -685,7 +688,6 @@ public class OrderServices {
         }
 
         // set the item price info; NOTE: this must be after the orderItems are stored for referential integrity
-        List orderItemPriceInfo = (List) context.get("orderItemPriceInfos");
         if (orderItemPriceInfo != null && orderItemPriceInfo.size() > 0) {
             Iterator oipii = orderItemPriceInfo.iterator();
 
@@ -4372,13 +4374,14 @@ public class OrderServices {
      * @param orderItems
      * @param orderAdjustments
      * @param orderItemShipGroupInfo
+     * @param orderItemPriceInfo
      * @param orderTypeId
      * @param delegator
      * @param dispatcher
      * @param locale
      * @return
      */
-    public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, String orderTypeId,
+    public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, List orderItemPriceInfo, String orderTypeId, 
         GenericDelegator delegator, LocalDispatcher dispatcher, Locale locale) throws Exception {
 
         List newOrderItems = new ArrayList();
@@ -4604,6 +4607,33 @@ public class OrderServices {
                         assocOrderItem.remove("cancelQuantity");
                         newOrderItems.add(assocOrderItem);
                     }//for
+
+                    // Deal with price rules: get all price rules for this line item by filtering the input price infos for this order item's seq id
+                    List andCondList = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, orderItem.getString("orderItemSeqId")));
+                    List lineItemPriceInfos = EntityUtil.filterByAnd(orderItemPriceInfo, andCondList);
+                    if ((lineItemPriceInfos != null) && (lineItemPriceInfos.size() > 0)) {
+
+                        // loop through the exploded items
+                        Iterator expItemIter = assocOrderItems.iterator();
+                        while (expItemIter.hasNext()) {
+                            GenericValue expItem = (GenericValue) expItemIter.next();
+
+                            // apply price rules
+                            List newOrderItemPriceInfos = new LinkedList();
+                            Iterator oipii = lineItemPriceInfos.iterator();
+                            while (oipii.hasNext()) {
+                                GenericValue oipi = (GenericValue) oipii.next();
+                                GenericValue newoipi = (GenericValue) oipi.clone();
+                                newoipi.set("orderItemSeqId", expItem.getString("orderItemSeqId"));
+                                newOrderItemPriceInfos.add(newoipi);
+                                Debug.logInfo("Applying price rule " + oipi.getString("productPriceRuleId") + " to order item seq Id " + expItem.getString("orderItemSeqId"), module);
+                            }
+                            // add the new order item price infos
+                            orderItemPriceInfo.addAll(newOrderItemPriceInfos);
+                        }
+                        // finally, remove the price infos for the marketing package
+                        orderItemPriceInfo.removeAll(lineItemPriceInfos);
+                    }
                 } else {
                     //deal with the orderItem which cannot be explode - just carry them with their adjustments over in the same ship group
                     newOrderItems.add(orderItem);
