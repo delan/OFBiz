@@ -979,6 +979,7 @@
     </xs:element>
     <xs:attributeGroup name="attlist.entity-and">
         <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="optional"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1026,6 +1027,7 @@
     </xs:element>
     <xs:attributeGroup name="attlist.entity-condition">
         <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="optional"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">

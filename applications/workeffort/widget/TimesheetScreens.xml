@@ -30,15 +30,86 @@
             <actions>
                 <set field="headerItem" value="mytime"/>
                 <set field="title" value="My Timesheets"/>
+                
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="10"/>
+                <entity-condition entity-name="Timesheet" list-name="currentTimesheetList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="partyId" env-name="userLogin.partyId"/>
+                        <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="thruDate" operator="greater-equals" env-name="nowTimestamp"/>
+                            <condition-expr field-name="thruDate" env-name="null"/>
+                        </condition-list>
+                    </condition-list>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <container><label text="My Timesheets" style="head2"/></container>
-                        <container><link text="${uiLabelMap.TimesheetCreate}" target="EditTimesheet?partyId=${userLogin.partyId}" style="buttontext"/></container>
-                        <include-form name="ListMyTimesheets" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        <container><label text="My Current Timesheets" style="head2"/></container>
+                        <container>
+                            <link text="Create Timesheet for This Week" target="createTimesheetForThisWeek?partyId=${userLogin.partyId}" style="buttontext"/>
+                            <link text="${uiLabelMap.TimesheetCreate}" target="EditTimesheet?partyId=${userLogin.partyId}" style="buttontext"/>
+                        </container>
+                        <iterate-section entry-name="currentTimesheet" list-name="currentTimesheetList">
+                            <section>
+                                <actions>
+                                    <entity-condition entity-name="TimeEntry" list-name="currentTimeEntryList">
+                                        <condition-list combine="and">
+                                            <condition-expr field-name="partyId" env-name="userLogin.partyId"/>
+                                            <condition-expr field-name="timesheetId" env-name="currentTimesheet.timesheetId"/>
+                                        </condition-list>
+                                    </entity-condition>
+                                </actions>
+                                <widgets>
+                                    <container>
+                                        <label style="tableheadtext" text="Timesheet: ${currentTimesheet.fromDate} thru ${currentTimesheet.thruDate} ${currentTimesheet.comments}"/>
+                                        <link target="EditTimesheet?timesheetId=${currentTimesheet.timesheetId}" text="${currentTimesheet.timesheetId}" style="buttontext"></link>
+                                    </container>
+                                    <iterate-section entry-name="currentTimeEntry" list-name="currentTimeEntryList">
+                                        <section>
+                                            <actions>
+                                                <entity-one entity-name="RateType" value-name="currentRateType" auto-field-map="false">
+                                                    <field-map field-name="rateTypeId" env-name="currentTimeEntry.rateTypeId"/>
+                                                </entity-one>
+                                            </actions>
+                                            <widgets>
+                                                <container>
+                                                    <label style="tabletext" text="Entry for ${currentTimeEntry.fromDate} "/>
+                                                    <label style="tableheadtext" text="${currentTimeEntry.hours} hours "/>
+                                                    <label style="tabletext" text="${currentTimeEntry.comments} [${currentRateType.description}]"/>
+                                                    <section>
+                                                        <condition><not><if-empty field-name="currentTimeEntry.workEffortId"/></not></condition>
+                                                        <widgets><link target="WorkEffortSummary?workEffortId=${currentTimeEntry.workEffortId}" text="WE: ${currentTimeEntry.workEffortId}" style="linktext"/></widgets>
+                                                    </section>
+                                                </container>
+                                            </widgets>
+                                        </section>
+                                    </iterate-section>
+                                    <section>
+                                        <condition><if-compare-field field-name="parameters.showQuickEntry" operator="equals" to-field-name="currentTimesheet.timesheetId"/></condition>
+                                        <widgets>
+                                            <include-form name="QuickCreateTimeEntry" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <container>
+                                                <link target="MyTimesheets?showQuickEntry=${currentTimesheet.timesheetId}" text="Quick Time Entry" style="buttontext"></link>
+                                                <link target="EditTimesheetEntries?timesheetId=${currentTimesheet.timesheetId}" text="Timesheet Entries" style="buttontext"></link>
+                                            </container>
+                                        </fail-widgets>
+                                    </section>
+                                </widgets>
+                            </section>
+                        </iterate-section>
+                        
+                        <!-- createQuickTimeEntry -->
+                        
                         <container><label text="My Rates" style="head2"/></container>
                         <include-form name="ListMyRates" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        <container><label text="My Timesheets" style="head2"/></container>
+                        <include-form name="ListMyTimesheets" location="component://workeffort/widget/TimesheetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -135,6 +206,9 @@
                                 <container><label style="head1">${uiLabelMap.PageTitleEditTimesheet}</label></container>
                                 <container><link  text="${uiLabelMap.TimesheetCreate}" target="EditTimesheet" style="linktext"/></container>
                                 <include-form name="EditTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                <include-form name="DisplayTimesheetEntries" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                <include-form name="AddTimesheetToInvoice" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                <include-form name="AddTimesheetToNewInvoice" location="component://workeffort/widget/TimesheetForms.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

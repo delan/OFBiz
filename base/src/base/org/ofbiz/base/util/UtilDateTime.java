@@ -287,6 +287,18 @@ public class UtilDateTime {
         return retStamp;
     }
 
+    public static java.sql.Timestamp getWeekEnd(java.sql.Timestamp stamp) {
+        Calendar tempCal = Calendar.getInstance();
+        tempCal.setTime(new java.util.Date(stamp.getTime()));
+        tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        tempCal.add(Calendar.WEEK_OF_MONTH, 1);
+        tempCal.set(Calendar.DAY_OF_WEEK, tempCal.getFirstDayOfWeek());
+        tempCal.add(Calendar.SECOND, -1);
+        java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
+        retStamp.setNanos(0);
+        return retStamp;
+    }
+    
     public static java.util.Calendar toCalendar(java.sql.Timestamp stamp) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(stamp.getTime());
