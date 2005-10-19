@@ -360,7 +360,19 @@
 
     <!-- Timesheet Requests -->
     <request-map uri="MyTimesheets"><security https="true" auth="true"/><response name="success" type="view" value="MyTimesheets"/></request-map>
-
+    <request-map uri="createTimesheetForThisWeek">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTimesheetForThisWeek"/>
+        <response name="success" type="view" value="MyTimesheets"/>
+        <response name="error" type="view" value="MyTimesheets"/>
+    </request-map>
+    <request-map uri="createQuickTimeEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTimeEntry"/>
+        <response name="success" type="view" value="MyTimesheets"/>
+        <response name="error" type="view" value="MyTimesheets"/>
+    </request-map>
+    
     <request-map uri="FindTimesheet"><security https="true" auth="true"/><response name="success" type="view" value="FindTimesheet"/></request-map>
     <request-map uri="EditTimesheet"><security https="true" auth="true"/><response name="success" type="view" value="EditTimesheet"/></request-map>
     <request-map uri="createTimesheet">
@@ -375,7 +387,19 @@
         <response name="success" type="view" value="EditTimesheet"/>
         <response name="error" type="view" value="EditTimesheet"/>
     </request-map>
-
+    <request-map uri="addTimesheetToInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addTimesheetToInvoice"/>
+        <response name="success" type="view" value="EditTimesheet"/>
+        <response name="error" type="view" value="EditTimesheet"/>
+    </request-map>
+    <request-map uri="addTimesheetToNewInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addTimesheetToNewInvoice"/>
+        <response name="success" type="view" value="EditTimesheet"/>
+        <response name="error" type="view" value="EditTimesheet"/>
+    </request-map>
+    
     <request-map uri="EditTimesheetRoles"><security https="true" auth="true"/><response name="success" type="view" value="EditTimesheetRoles"/></request-map>
     <request-map uri="createTimesheetRole">
         <security https="true" auth="true"/>
@@ -411,76 +435,27 @@
     </request-map>
     
     <!-- Lookup request mappings -->
-    <request-map uri="LookupPartyName">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyName"/>
-    </request-map>
-    <request-map uri="LookupPerson">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPerson"/>
-    </request-map>
-    <request-map uri="LookupPartyGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyGroup"/>
-    </request-map>
-    <request-map uri="LookupCommEvent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCommEvent"/>
-    </request-map>
+    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupPartyGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
+    <request-map uri="LookupCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
     
-    <request-map uri="LookupProduct">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupProduct"/>
-    </request-map>
-    <request-map uri="LookupVariantProduct">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupVariantProduct"/>
-    </request-map>
-    <request-map uri="LookupProductFeature">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupProductFeature"/>
-    </request-map>
-    <request-map uri="LookupWorkEffort">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupWorkEffort"/>
-    </request-map>
-    <request-map uri="LookupFacility">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupFacility"/>
-    </request-map>
-    <request-map uri="LookupFixedAsset">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupFixedAsset"/>
-    </request-map>
+    <request-map uri="LookupProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    <request-map uri="LookupVariantProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
+    <request-map uri="LookupProductFeature"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductFeature"/></request-map>
+    <request-map uri="LookupWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="LookupWorkEffort"/></request-map>
+    <request-map uri="LookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="LookupFacility"/></request-map>
+    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
 
-    <request-map uri="LookupShoppingList">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupShoppingList"/>
-    </request-map>
-    <request-map uri="LookupCustRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCustRequest"/>
-    </request-map>
-    <request-map uri="LookupCustRequestItem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCustRequestItem"/>
-    </request-map>
-    <request-map uri="LookupRequirement">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupRequirement"/>
-    </request-map>
-    <request-map uri="LookupQuote">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupQuote"/>
-    </request-map>
-    <request-map uri="LookupQuoteItem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupQuoteItem"/>
-    </request-map>
-    <request-map uri="LookupOrderHeader">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupOrderHeader"/>
-    </request-map>
+    <request-map uri="LookupShoppingList"><security auth="true" https="true"/><response name="success" type="view" value="LookupShoppingList"/></request-map>
+    <request-map uri="LookupCustRequest"><security https="true" auth="true"/><response name="success" type="view" value="LookupCustRequest"/></request-map>
+    <request-map uri="LookupCustRequestItem"><security https="true" auth="true"/><response name="success" type="view" value="LookupCustRequestItem"/></request-map>
+    <request-map uri="LookupRequirement"><security auth="true" https="true"/><response name="success" type="view" value="LookupRequirement"/></request-map>
+    <request-map uri="LookupQuote"><security https="true" auth="true"/><response name="success" type="view" value="LookupQuote"/></request-map>
+    <request-map uri="LookupQuoteItem"><security https="true" auth="true"/><response name="success" type="view" value="LookupQuoteItem"/></request-map>
+    <request-map uri="LookupOrderHeader"><security https="true" auth="true"/><response name="success" type="view" value="LookupOrderHeader"/></request-map>
+    
+    <request-map uri="LookupInvoice"><security https="true" auth="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
     
     <!-- end of request mappings -->
 
@@ -544,5 +519,8 @@
     <view-map name="LookupQuote" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuote"/>
     <view-map name="LookupQuoteItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuoteItem"/>
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
+
+    <!-- note that this won't work if the accountingext component is not in place -->
+    <view-map name="LookupInvoice" page="component://accountingext/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>

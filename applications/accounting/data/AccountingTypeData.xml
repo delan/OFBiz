@@ -276,7 +276,7 @@
     <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_CANCELLED" transitionName="Payment Cancelled"/>
 
     <!-- invoice status -->
-    <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
+    <StatusType description="Invoice Status" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
     <StatusItem description="In-Process" sequenceId="01" statusCode="IN_PROCESS" statusId="INVOICE_IN_PROCESS" statusTypeId="INVOICE_STATUS"/>
     <StatusItem description="Ready to Send" sequenceId="02" statusCode="READY" statusId="INVOICE_READY" statusTypeId="INVOICE_STATUS"/>
     <StatusItem description="Sent" sequenceId="03" statusCode="SENT" statusId="INVOICE_SENT" statusTypeId="INVOICE_STATUS"/>
@@ -294,7 +294,7 @@
     <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
 
     <!-- payment status -->
-    <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="PMNT_STATUS"/>
+    <StatusType description="Payment Status" hasTable="N" parentTypeId="" statusTypeId="PMNT_STATUS"/>
     <StatusItem description="Not Paid" sequenceId="01" statusCode="NOT_PAID" statusId="PMNT_NOT_PAID" statusTypeId="PMNT_STATUS"/>
     <StatusItem description="Sent" sequenceId="03" statusCode="SENT" statusId="PMNT_SENT" statusTypeId="PMNT_STATUS"/>
     <StatusItem description="Received" sequenceId="04" statusCode="RECEIVED" statusId="PMNT_RECEIVED" statusTypeId="PMNT_STATUS"/>

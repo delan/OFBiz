@@ -113,11 +113,15 @@
             title="Timesheet Entity">
       <field name="timesheetId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
+      <field name="clientPartyId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="timesheetId"/>
       <relation type="one" fk-name="TIMESHEET_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="TIMESHEET_CPTY" title="Client" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
     </entity>
@@ -150,14 +154,12 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="rateTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="rate" type="currency-amount"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="rateTypeId"/>
       <prim-key field="partyId"/>
-      <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="WEFF_ASRT_WEFF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
@@ -167,13 +169,6 @@
       </relation>
       <relation type="one" fk-name="WEFF_ASRT_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="WEFF_ASRT_ROLETP" rel-entity-name="RoleType">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
 

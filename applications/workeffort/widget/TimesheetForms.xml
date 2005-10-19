@@ -34,7 +34,8 @@
         <field name="timesheetId" title="${uiLabelMap.TimesheetTimesheetId}" widget-style="buttontext">
             <hyperlink description="${timesheetId}" target="EditTimesheet?timesheetId=${timesheetId}" also-hidden="false"/>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="clientPartyId"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]"/></field>
     </form>
     <form name="ListMyRates" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" 
         target="" title="" type="list" paginate="false" list-name="partyRates">
@@ -46,7 +47,23 @@
         </actions>
         <auto-fields-entity entity-name="PartyRate" default-field-type="display"/>
         <field name="rateTypeId" title="${uiLabelMap.TimesheetRateType}"><display-entity entity-name="RateType"/></field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+    </form>
+    <form name="QuickCreateTimeEntry" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" 
+        target="createQuickTimeEntry" title="" type="single">
+        <field name="timesheetId" map-name="currentTimesheet"><hidden/></field>
+        <field name="partyId" map-name="userLogin"><hidden/></field>
+        <field name="rateTypeId" title="${uiLabelMap.TimesheetRateType}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="RateType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
+        <field name="hours"><text size="5"/></field>
+        <field name="comments"><text size="40"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="FindTimesheet" default-map-name="timesheet" target="FindTimesheet" title="" type="single"
@@ -83,9 +100,45 @@
         <field name="timesheetId" use-when="timesheet==null&amp;&amp;timesheetId!=null" title="${uiLabelMap.TimesheetTimesheetId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${timesheetId}]" widget-style="tabletext"><display also-hidden="false"/></field>
 
         <field name="partyId" title="${uiLabelMap.PartyParty}*"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="clientPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
+    <form name="DisplayTimesheetEntries" type="list" list-name="timesheetEntries"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="TimeEntry">
+                <condition-expr field-name="timesheetId" env-name="timesheetId"/>
+                <order-by field-name="partyId"/>
+                <order-by field-name="rateTypeId"/>
+                <order-by field-name="-fromDate"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="TimeEntry" default-field-type="display"/>
+        
+        <field name="timeEntryId"><hidden/></field>
+        <field name="timesheetId"><hidden/></field>
+        
+        <field name="partyId" title="${uiLabelMap.PartyParty}"/>
+        <field name="rateTypeId" title="${uiLabelMap.TimesheetRateType}"><display-entity entity-name="RateType"/></field>
+        <field name="workEffortId"><display-entity entity-name="WorkEffort" description="${workEffortName}"><sub-hyperlink target="WorkEffortSummary?workEffortId=${workEffortId}" description="${workEffortId}" link-style="buttontext"/></display-entity></field>
+        <field name="invoiceId" widget-style="buttontext"><hyperlink target="/accounting/control/viewInvoice?invoiceId=${invoiceId}" target-type="inter-app" description="${invoiceId}"/></field>
+    </form>
+    <form name="AddTimesheetToInvoice" target="addTimesheetToInvoice" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="timesheetId"><hidden/></field>
+        <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
+        <field name="submitButton" title="Add Timesheet to Existing Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="AddTimesheetToNewInvoice" target="addTimesheetToNewInvoice" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="timesheetId"><hidden/></field>
+        <field name="partyIdFrom" title="Bill From Party"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Bill To Party"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
+        <field name="submitButton" title="Add Timesheet to New Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
     <!-- TimesheetRole -->
     <form name="ListTimesheetRoles" type="list" list-name="timesheetRoles" target=""
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
@@ -122,7 +175,7 @@
     </form>
 
     <!-- TimesheetEntry -->
-    <form name="ListTimesheetEntries" type="list" list-name="timesheetRoles" target="updateTimesheetEntry"
+    <form name="ListTimesheetEntries" type="list" list-name="timesheetEntries" target="updateTimesheetEntry"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="TimeEntry">
@@ -133,8 +186,11 @@
             </entity-condition>
         </actions>
         <auto-fields-service service-name="updateTimeEntry"/>
+
+        <field name="timeEntryId"><hidden/></field>
+        <field name="timesheetId"><hidden/></field>
         
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName" default-value="${timesheet.partyId}"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup size="12" target-form-name="LookupPartyName" default-value="${timesheet.partyId}"/></field>
         <field name="rateTypeId" title="${uiLabelMap.TimesheetRateType}" widget-style="selectBox">
             <drop-down>
                 <entity-options entity-name="RateType" description="${description}">
@@ -143,11 +199,12 @@
             </drop-down>
         </field>
         
-        <field name="workEffortId"><lookup target-form-name="LookWorkEffort"/></field>
-        <field name="timesheetId"><hidden/></field>
+        <field name="workEffortId"><lookup size="10" target-form-name="LookupWorkEffort"/></field>
 
         <field name="invoiceId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
         <field name="invoiceItemSeqId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
+        
+        <field name="comments"><text size="60"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         
@@ -161,6 +218,7 @@
         <auto-fields-service service-name="createTimeEntry"/>
         
         <field name="timeEntryId"><ignored/><!-- don't pass, will be sequenced --></field>
+        <field name="timesheetId"><hidden/></field>
         
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName" default-value="${timesheet.partyId}"/></field>
         <field name="rateTypeId" title="${uiLabelMap.TimesheetRateType}" widget-style="selectBox">
@@ -171,8 +229,7 @@
             </drop-down>
         </field>
         
-        <field name="workEffortId"><lookup target-form-name="LookWorkEffort"/></field>
-        <field name="timesheetId"><hidden/></field>
+        <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
 
         <field name="invoiceId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
         <field name="invoiceItemSeqId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
@@ -180,16 +237,3 @@
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
-<!-- 
-    <field name="timeEntryId" type="id-ne"></field>
-    <field name="partyId" type="id"></field>
-    <field name="fromDate" type="date-time"></field>
-    <field name="thruDate" type="date-time"></field>
-    <field name="rateTypeId" type="id"></field>
-    <field name="workEffortId" type="id"></field>
-    <field name="timesheetId" type="id"></field>
-    <field name="invoiceId" type="id"></field>
-    <field name="invoiceItemSeqId" type="id"></field>
-    <field name="hours" type="floating-point"></field>
-    <field name="comments" type="comment"></field>
--->
