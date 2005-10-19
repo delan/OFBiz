@@ -75,8 +75,8 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map uri="view"><security https="false" auth="false"/><response name="success" type="view" value="main"/></request-map>
-    <request-map uri="authview"><security https="false" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="view"><security https="true" auth="false"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="authview"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
 
     <request-map uri="setSessionLocale">
         <security https="true" auth="false"/>
