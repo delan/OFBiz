@@ -81,7 +81,7 @@
 
     <!-- Request Mappings -->
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
