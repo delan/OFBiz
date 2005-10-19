@@ -36,6 +36,18 @@
         </field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><hidden/></field>
     </form>
+    <form name="ListMyRates" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" 
+        target="" title="" type="list" paginate="false" list-name="partyRates">
+        <actions>
+            <entity-and entity-name="PartyRate" list-name="partyRates">
+                <field-map field-name="partyId" env-name="userLogin.partyId"/>
+                <order-by field-name="-fromDate"/>
+            </entity-and>
+        </actions>
+        <auto-fields-entity entity-name="PartyRate" default-field-type="display"/>
+        <field name="rateTypeId" title="${uiLabelMap.TimesheetRateType}"><display-entity entity-name="RateType"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><hidden/></field>
+    </form>
     
     <form name="FindTimesheet" default-map-name="timesheet" target="FindTimesheet" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">

@@ -48,7 +48,7 @@
                                         </not>
                                     </condition>
                                     <widgets>
-                                        <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="ProfileTabBar"/>
+                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
                                 <container><label style="head1" text="${uiLabelMap.PartyContactList}"/></container>

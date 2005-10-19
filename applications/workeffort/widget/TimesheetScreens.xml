@@ -37,6 +37,8 @@
                         <container><label text="My Timesheets" style="head2"/></container>
                         <container><link text="${uiLabelMap.TimesheetCreate}" target="EditTimesheet?partyId=${userLogin.partyId}" style="buttontext"/></container>
                         <include-form name="ListMyTimesheets" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        <container><label text="My Rates" style="head2"/></container>
+                        <include-form name="ListMyRates" location="component://workeffort/widget/TimesheetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

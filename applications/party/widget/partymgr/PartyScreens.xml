@@ -81,9 +81,54 @@
                                 <section>
                                     <condition><not><if-empty field-name="partyId"/></not></condition>
                                     <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://party/webapp/partymgr/party/ProfileTabBar.ftl"/></html>
-                                        </platform-specific>
+                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
+                                        
+                                        <container>
+                                            <link target="/accounting/control/FindBillingAccount?partyId=${partyId}" url-mode="inter-app" 
+                                                text="${uiLabelMap.AccountingBillingAccount}" style="buttontext"/>
+                                            <section>
+                                                <condition><if-has-permission permission="ORDERMGR" action="_VIEW"/></condition>
+                                                <widgets>
+                                                    <link target="/ordermgr/control/findorders?lookupFlag=Y&amp;hideFields=Y&amp;partyId=${partyId}" url-mode="inter-app" 
+                                                        text="${uiLabelMap.OrderOrders}" style="buttontext"/>
+                                                </widgets>
+                                            </section>
+                                            <section>
+                                                <condition><if-has-permission permission="ORDERMGR" action="_CREATE"/></condition>
+                                                <widgets>
+                                                    <link target="/ordermgr/control/checkinits?partyId=${partyId}" url-mode="inter-app" 
+                                                        text="${uiLabelMap.OrderNewOrder}" style="buttontext"/>
+                                                </widgets>
+                                            </section>
+                                            <section>
+                                                <condition><if-has-permission permission="ACCOUNTING" action="_VIEW"/></condition>
+                                                <widgets>
+                                                    <link target="/accounting/control/findPayment?lookupFlag=Y&amp;hideFields=Y&amp;toPartyId=${partyId}" url-mode="inter-app" 
+                                                        text="${uiLabelMap.AccountingPaymentsSent}" style="buttontext"/>
+                                                    <link target="/accounting/control/findPayment?lookupFlag=Y&amp;hideFields=Y&amp;fromPartyId=${partyId}" url-mode="inter-app" 
+                                                        text="${uiLabelMap.AccountingPaymentsReceived}" style="buttontext"/>
+                                                </widgets>
+                                            </section>
+                                        </container>
+                                        
+                                        <container>
+                                            <section>
+                                                <condition>
+                                                    <or>
+                                                        <not><if-empty field-name="lookupPerson"/></not>
+                                                        <not><if-empty field-name="lookupGroup"/></not>
+                                                    </or>
+                                                </condition>
+                                                <widgets>
+                                                    <label style="head1" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName}"/>
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <label style="head1" text="${uiLabelMap.PartyNewUser}"/>
+                                                </fail-widgets>
+                                            </section>
+                                            
+                                            <label style="head1" text="[${partyId}]"/>
+                                        </container>
                                     </widgets>
                                 </section>
 
@@ -446,7 +491,59 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="EditPartyRates">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPartyRates"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="EditPartyRates"/>
+                <set field="labelTitleProperty" value="PageTitleEditPartyRates"/>
 
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container><label style="head1" text="${uiLabelMap.PageTitleEditPartyRates}"/></container>
+                        <include-form name="ListPartyRates" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                        <include-form name="AddPartyRate" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ViewSegmentRoles">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartySegmentRoles"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="ViewPartySegmentRoles"/>
+                
+                <set field="labelTitleProperty" value="PartyViewSegmentRoles"/>
+                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-name="party"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="${uiLabelMap.PartySegmentRoles}"/>
+                            </container>
+                            <container style="screenlet-body">
+                                <include-form name="ListSegmentRoles" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                                <include-form name="AddSegmentRole" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- Create New Party Screen -->
     <screen name="CreateNewParty">
         <section>
@@ -571,159 +668,6 @@
                                 <label style="head3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="ViewSegmentRoles">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleViewPartySegmentRoles"/>
-                <set field="headerItem" value="find"/>
-                <set field="tabButtonItem" value="ViewPartySegmentRoles"/>
-
-                <set field="labelTitleProperty" value="PartyViewSegmentRoles"/>
-
-                <set field="partyId" from-field="parameters.partyId"/>
-                <entity-one entity-name="Party" value-name="party"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonPartyDecorator">
-                    <decorator-section name="body">
-                        <container style="screenlet">
-                            <container style="screenlet-header">
-                                <label style="boxhead" text="${uiLabelMap.PartySegmentRoles}"/>
-                            </container>
-                            <container style="screenlet-body">
-                                <include-form name="ListSegmentRoles" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                                <include-form name="AddSegmentRole" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                            </container>
-                        </container>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="EditPartyClassifications">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleViewPartyClassifications"/>
-                <set field="headerItem" value="find"/>
-                <set field="tabButtonItem" value="EditPartyClassifications"/>
-
-                <set field="labelTitleProperty" value="PartyClassifications"/>
-
-                <set field="partyId" from-field="parameters.partyId"/>
-                <entity-one entity-name="Party" value-name="party"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonPartyDecorator">
-                    <decorator-section name="body">
-                        <container style="screenlet">
-                            <container style="screenlet-header">
-                                <label style="boxhead" text="${uiLabelMap.PartyClassifications}"/>
-                            </container>
-                            <container style="screenlet-body">
-                                <include-form name="ListPartyClassifications" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                                <include-form name="AddPartyClassification" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                            </container>
-                        </container>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="EditPartyClassificationGroupParties">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleViewPartyClassificationGroupParties"/>
-                <set field="headerItem" value="classification"/>
-                <set field="tabButtonItem" value="EditPartyClassificationGroupParties"/>
-
-                <set field="labelTitleProperty" value="PartyClassificationGroupParties"/>
-
-                <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId"/>
-                <entity-one entity-name="PartyClassificationGroup" value-name="partyClassificationGroup"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonPartyDecorator">
-                    <decorator-section name="body">
-                        <container style="screenlet">
-                            <container style="screenlet-header">
-                                <label style="boxhead" text="${uiLabelMap.PartyClassificationGroups}"/>
-                            </container>
-                            <platform-specific>
-                                <html><html-template location="component://party/webapp/partymgr/party/ClassificationTabBar.ftl"/></html>
-                            </platform-specific>
-                            <container style="screenlet-body">
-                                <include-form name="ListPartyClassificationGroupParties" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                                <include-form name="AddPartyClassificationParty" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                            </container>
-                        </container>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="FindPartyClassificationGroups">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleFindPartyClassificationGroups"/>
-                <set field="headerItem" value="classification"/>
-                <set field="tabButtonItem" value="FindPartyClassificationGroups"/>
-
-                <set field="labelTitleProperty" value="PartyClassificationGroups"/>
-
-                <set field="partyId" from-field="parameters.partyId"/>
-                <entity-one entity-name="Party" value-name="party"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonPartyDecorator">
-                    <decorator-section name="body">
-                        <container style="screenlet">
-                            <container style="screenlet-header">
-                                <label style="boxhead" text="${uiLabelMap.PartyClassificationGroups}"/>
-                            </container>
-                            <container><link target="EditPartyClassificationGroup" style="buttontextbig" text="${uiLabelMap.PartyCreateNewPartyClassificationGroup}"></link></container>
-                            <container style="screenlet-body">
-                                <include-form name="ListPartyClassificationGroups" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                            </container>
-                        </container>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="EditPartyClassificationGroup">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleEditPartyClassificationGroup"/>
-                <set field="headerItem" value="classification"/>
-                <set field="tabButtonItem" value="EditPartyClassificationGroup"/>
-
-                <set field="labelTitleProperty" value="PartyClassificationGroup"/>
-
-                <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId"/>
-                <set field="partyId" value="" />
-                <entity-one entity-name="PartyClassificationGroup" value-name="partyClassificationGroup"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonPartyDecorator">
-                    <decorator-section name="body">
-                        <container style="screenlet">
-                            <container style="screenlet-header">
-                                <label style="boxhead" text="${uiLabelMap.PartyClassificationGroup}"/>
-                            </container>
-                            <platform-specific>
-                                <html><html-template location="component://party/webapp/partymgr/party/ClassificationTabBar.ftl"/></html>
-                            </platform-specific>
-
-                            <container style="screenlet-body">
-                                <include-form name="EditPartyClassificationGroup" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                            </container>
-                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
