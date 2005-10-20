@@ -122,10 +122,16 @@ function lookupShipments() {
                     <option value="${currentStatus.statusId}">${currentStatus.description}</option>
                     <option value="${currentStatus.statusId}">---</option>
                     </#if>                                     
-                    <option value="">${uiLabelMap.ProductAnyShipmentStatus}</option>                   
+                    <option value="">${uiLabelMap.ProductSalesShipmentStatus}</option>                   
                     <#list shipmentStatuses as shipmentStatus>
                       <option value="${shipmentStatus.statusId}">${shipmentStatus.description}</option>
                     </#list>
+                    <option value="">---</option>
+                    <option value="">${uiLabelMap.ProductPurchaseShipmentStatus}</option>                   
+                    <#list purchaseShipmentStatuses as shipmentStatus>
+                      <option value="${shipmentStatus.statusId}">${shipmentStatus.description}</option>
+                    </#list>
+
                   </select>
                 </td>
               </tr>                            
