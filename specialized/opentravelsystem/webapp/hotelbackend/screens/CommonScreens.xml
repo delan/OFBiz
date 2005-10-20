@@ -124,10 +124,10 @@
         </section>
     </screen>
 
-    <screen name="CustomerDecorator">
+    <screen name="CommonPartyDecorator">
         <section>
             <actions>
-                <set field="page.appTabButtonItem" value="Customers"/>
+                <set field="page.appTabButtonItem" value="Parties"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -380,33 +380,21 @@
     <screen name="CommonAdminDecorator">
         <section>
             <actions>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <set field="headerItem" value="companies"/>
+                <set field="title" value="GL Account defaults"/>
+                <set field="requestParameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="ACCOUNTING" action="_VIEW"/>
-                            </condition>
                             <widgets>
-                                <section>
-                                    <widgets>
-                                        <container>
-                                            <label style="head1">For organization: ${organizationPartyId}</label>
-                                        </container>
-                                        <platform-specific>
-                                            <html><html-template location="component://accountingext/webapp/accountingext/admin/AdminTabBar.ftl"/></html>
-                                        </platform-specific>
-                                    </widgets>
-                                </section>
+                                <platform-specific>
+                                    <html><html-template location="component://accountingext/webapp/accountingext/admin/AdminTabBar.ftl"/></html>
+                                </platform-specific>
                                 <decorator-section-include name="body"/>
                             </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>                    
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

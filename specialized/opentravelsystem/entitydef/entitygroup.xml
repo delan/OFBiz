@@ -28,7 +28,7 @@
   <!-- org.ofbiz.opentravelsystem -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz" entity="CustomerSummary" />
-
+ <entity-group group="org.ofbiz" entity="CustomerSummary" />
+ <entity-group group="org.ofbiz" entity="PartyRelationshipAndPartyDetail" />
 </entitygroup>
 

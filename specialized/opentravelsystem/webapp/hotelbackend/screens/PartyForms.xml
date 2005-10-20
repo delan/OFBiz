@@ -2,6 +2,56 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
 
+    <form name="FindParties" type="single" 
+        target="findParties" title="Find and list parties"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="partyIdFrom"><hidden value="${organizationPartyId}"/></field>
+        <field name="partyId" ><text-find/></field>
+        <field name="groupName"><text-find/></field>
+        <field name="lastName" ><text-find/></field>
+        <field position="1" name="partyRelationshipTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${partyRelationshipTypeId}" entity-name="PartyRelationshipType">
+                    <entity-order-by field-name="partyRelationshipTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="ListParties" type="list" separate-columns="true" 
+        title="Party List"  default-title-style="tableheadtext"
+        default-widget-style="tabletext" default-tooltip-style="tabletext"
+        paginate-target="findparties" list-iterator-name="listIt" default-entity-name="PartyRelationshipAndPartyDetail">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="PartyRelationshipAndPartyDetail"/>
+                <field-map field-name="orderBy" value="partyId"/>
+            </service>
+        </actions>
+        <field name="partyId" widget-style="buttontext" >
+            <hyperlink description="${partyId}" target="viewprofile?partyId=${partyId}" target-window="new"/>
+        </field>
+        <field name="partyRelationshipTypeId" title="Relation"><display/></field>
+        <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
+        <field name="paymentsReceived" title=" " widget-style="buttontext" >
+            <hyperlink description="Paym.Rec" target="listPaymentsReceived?partyId=${partyId}" target-window="new"/>
+        </field>
+        <field name="paymentsSend" title=" " widget-style="buttontext" >
+            <hyperlink description="Paym.Snd" target="listPaymentsSend?partyId=${partyId}" target-window="new"/>
+        </field>
+        <field name="salesInvoices" title=" " widget-style="buttontext" >
+            <hyperlink description="Sls Inv" target="listSalesInvoices?partyId=${partyId}" target-window="new"/>
+        </field>
+        <field name="purchaseInvoices" title=" " widget-style="buttontext" >
+            <hyperlink description="Pur Inv" target="listPurchaseInvoices?partyId=${partyId}" target-window="new"/>
+        </field>
+    </form>
+    
     <form name="ListCustomers" type="list" list-name="customers" 
          default-title-style="tableheadtext" default-widget-style="inputBox" 
          default-tooltip-style="tabletext" target="updateCategoryProductMember">

@@ -78,6 +78,10 @@
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
+                            <label style="head1">Bankstatement MT940 file upload to create parties only.</label>
+                        </container>
+                        <include-form name="DataExchangePartyOnly" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                        <container>
                             <label style="head1">Bankstatement MT940 file upload to payment file with status 'not-paid' and create parties.</label>
                         </container>
                         <include-form name="DataExchange" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
