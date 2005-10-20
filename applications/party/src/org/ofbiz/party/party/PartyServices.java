@@ -122,7 +122,7 @@ public class PartyServices {
         String partyId = (String) context.get("partyId");
 
         // if specified partyId starts with a number, return an error
-        if (partyId != null && Character.isDigit(partyId.charAt(0))) {
+        if (partyId != null && partyId.length() > 0 && Character.isDigit(partyId.charAt(0))) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "party.id_is_digit", locale));
         }
 

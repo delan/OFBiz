@@ -37,7 +37,7 @@
                 <service service-name="findParty" auto-field-map="parameters"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
@@ -60,89 +60,6 @@
     </screen>
 
     <!-- Party Profile Screens -->
-    <screen name="CommonPartyDecorator">
-        <section>
-            <actions>
-
-                <set field="partyId" from-field="parameters.partyId"/>
-                <entity-one entity-name="Party" value-name="party"/>
-                <entity-one entity-name="Person" value-name="lookupPerson"/>
-                <entity-one entity-name="PartyGroup" value-name="lookupGroup"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for PARTYMGR, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field-name="partyId"/></not></condition>
-                                    <widgets>
-                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
-                                        
-                                        <container>
-                                            <link target="/accounting/control/FindBillingAccount?partyId=${partyId}" url-mode="inter-app" 
-                                                text="${uiLabelMap.AccountingBillingAccount}" style="buttontext"/>
-                                            <section>
-                                                <condition><if-has-permission permission="ORDERMGR" action="_VIEW"/></condition>
-                                                <widgets>
-                                                    <link target="/ordermgr/control/findorders?lookupFlag=Y&amp;hideFields=Y&amp;partyId=${partyId}" url-mode="inter-app" 
-                                                        text="${uiLabelMap.OrderOrders}" style="buttontext"/>
-                                                </widgets>
-                                            </section>
-                                            <section>
-                                                <condition><if-has-permission permission="ORDERMGR" action="_CREATE"/></condition>
-                                                <widgets>
-                                                    <link target="/ordermgr/control/checkinits?partyId=${partyId}" url-mode="inter-app" 
-                                                        text="${uiLabelMap.OrderNewOrder}" style="buttontext"/>
-                                                </widgets>
-                                            </section>
-                                            <section>
-                                                <condition><if-has-permission permission="ACCOUNTING" action="_VIEW"/></condition>
-                                                <widgets>
-                                                    <link target="/accounting/control/findPayment?lookupFlag=Y&amp;hideFields=Y&amp;toPartyId=${partyId}" url-mode="inter-app" 
-                                                        text="${uiLabelMap.AccountingPaymentsSent}" style="buttontext"/>
-                                                    <link target="/accounting/control/findPayment?lookupFlag=Y&amp;hideFields=Y&amp;fromPartyId=${partyId}" url-mode="inter-app" 
-                                                        text="${uiLabelMap.AccountingPaymentsReceived}" style="buttontext"/>
-                                                </widgets>
-                                            </section>
-                                        </container>
-                                        
-                                        <container>
-                                            <section>
-                                                <condition>
-                                                    <or>
-                                                        <not><if-empty field-name="lookupPerson"/></not>
-                                                        <not><if-empty field-name="lookupGroup"/></not>
-                                                    </or>
-                                                </condition>
-                                                <widgets>
-                                                    <label style="head1" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName}"/>
-                                                </widgets>
-                                                <fail-widgets>
-                                                    <label style="head1" text="${uiLabelMap.PartyNewUser}"/>
-                                                </fail-widgets>
-                                            </section>
-                                            
-                                            <label style="head1" text="[${partyId}]"/>
-                                        </container>
-                                    </widgets>
-                                </section>
-
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
 
     <screen name="viewprofile">
         <section>
@@ -155,7 +72,7 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://party/webapp/partymgr/party/viewprofile.ftl"/></html>
@@ -178,7 +95,7 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewroles.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://party/webapp/partymgr/party/viewroles.ftl"/></html>
@@ -217,7 +134,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://party/webapp/partymgr/party/EditPartyRelationships.ftl"/></html>
@@ -257,7 +174,7 @@
                 <entity-one entity-name="Vendor" value-name="vendor"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="screenlet">
                             <container style="screenlet-header">
@@ -289,7 +206,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="UpdatePartyTaxInfo" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                         <include-form name="AddPartyTaxInfo" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
@@ -310,7 +227,7 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/editShoppingList.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://party/webapp/partymgr/party/editShoppingList.ftl"/></html>
@@ -333,7 +250,7 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/editcontactmech.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
@@ -375,7 +292,7 @@
                 <entity-one entity-name="Person" value-name="person"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditPerson" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                     </decorator-section>
@@ -395,7 +312,7 @@
                 <entity-one entity-name="PartyGroup" value-name="partyGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditPartyGroup" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                     </decorator-section>
@@ -416,7 +333,7 @@
                 <entity-one entity-name="UserLogin" value-name="editUserLogin"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label text="Change UserLogin Password" style="head2"/></container>
                         <include-form name="updatePassword" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
@@ -438,7 +355,7 @@
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label text="${uiLabelMap.PartyCreateUserLogin}" style="head2"/></container>
                         <include-form name="AddUserLogin" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
@@ -459,7 +376,7 @@
                 <set field="partyId" from-field="parameters.partyId" default-value="${editUserLogin.partyId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head2" text="${uiLabelMap.PageTitleEditUserLoginSecurityGroups}"/></container>
                         <include-form name="ListUserLoginSecurityGroups" location="component://party/widget/partymgr/SecurityForms.xml"/>
@@ -482,7 +399,7 @@
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label text="${uiLabelMap.PageTitleNewPartyNote}" style="head2"/></container>
                         <include-form name="AddPartyNote" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
@@ -503,7 +420,7 @@
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1" text="${uiLabelMap.PageTitleEditPartyRates}"/></container>
                         <include-form name="ListPartyRates" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
@@ -527,7 +444,7 @@
                 <entity-one entity-name="Party" value-name="party"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="screenlet">
                             <container style="screenlet-header">
@@ -552,7 +469,7 @@
                 <set field="headerItem" value="create"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -592,7 +509,7 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -623,7 +540,7 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -654,7 +571,7 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
