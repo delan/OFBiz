@@ -15,5 +15,4 @@
     <SecurityGroupPermission groupId="POSCLERK" permissionId="CATALOG_VIEW"/>  
     <SecurityGroupPermission groupId="POSCLERK" permissionId="ACCOUNTING_CREATE"/>
     <SecurityGroupPermission groupId="POSCLERK" permissionId="ACCOUNTING_UPDATE"/>
-    
 </entity-engine-xml>

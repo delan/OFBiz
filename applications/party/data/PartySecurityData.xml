@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- Party Manager security -->
-    <!-- Target file: applications/party/data/PartySecurityData.xml -->
     <SecurityPermission description="View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
     <SecurityPermission description="Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
     <SecurityPermission description="Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
@@ -16,11 +15,12 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_UPDATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_NOTE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_VIEW"/>
+
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_NOTE"/>
-
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="PARTYMGR_ADMIN"/>
+    
     <!-- Security Management security -->
-    <!-- Target file: applications/party/data/PartySecurityData.xml -->
     <SecurityPermission description="View operations in the Security Management Screens." permissionId="SECURITY_VIEW"/>
     <SecurityPermission description="Create operations in the Security Management Screens." permissionId="SECURITY_CREATE"/>
     <SecurityPermission description="Update operations in the Security Management Screens." permissionId="SECURITY_UPDATE"/>
@@ -32,5 +32,4 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_UPDATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SECURITY_VIEW"/>
-
 </entity-engine-xml>
