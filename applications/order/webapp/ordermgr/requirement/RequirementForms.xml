@@ -60,9 +60,11 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <set field="entityName" value="Requirement"/>
+            <set field="orderBy" value="statusId"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="orderBy" env-name="orderBy"/>
             </service>
         </actions>
         <field name="requirementId" widget-style="buttontext">
