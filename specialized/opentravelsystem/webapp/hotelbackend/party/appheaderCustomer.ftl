@@ -34,8 +34,9 @@
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 <#if requestAttributes.userLogin?has_content>
-<div class="apptitle">Customers</div>
+<div class="apptitle">Customers, Suppliers, Partners, Employees</div>
 <div class="row">
+  <div class="col"><a href="<@ofbizUrl>findParties</@ofbizUrl>" class="${selectedLeftClassMap.find?default(unselectedLeftClassName)}">${uiLabelMap.CommonFind}</a></div>  
   <!--div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
   <div class="col"><a href="<@ofbizUrl>selectStore</@ofbizUrl>" class="${selectedLeftClassMap.selectStore?default(unselectedLeftClassName)}">${uiLabelMap.selectStore}</a></div>  
   <div class="col"><a href="<@ofbizUrl>EditProductStore</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemStore}</a></div-->  

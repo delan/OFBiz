@@ -38,7 +38,7 @@
 <#--		 {"title":"Main", 				"url":"main"} -->
  		{"title":"Product",				"url":"mainCatalog"}
 		,{"title":"Reservations",		"url":"findorders"}
-		,{"title":"Customers",			"url":"findparty"}
+		,{"title":"Parties",			"url":"findParties"}
 		,{"title":"Accounting",			"url":"mainAccounting"}
 		,{"title":"Website", 			"url":"/${productStoreId?if_exists}"}
 		,{"title":"Logout", 				"url":"logout"}

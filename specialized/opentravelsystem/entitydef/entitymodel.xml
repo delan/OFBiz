@@ -23,8 +23,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     David E. Jones (jonesde@ofbiz.org)
- * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @author     Hans Bakker h.bakker@antwebsystems.com
  * @version    $Rev$
  */
 -->
@@ -59,6 +58,38 @@
         <key-map field-name="orderId"/>
       </view-link>
     </view-entity>
+
+  <view-entity entity-name="PartyRelationshipAndPartyDetail"
+    package-name="org.ofbiz.party.party"
+    title="Party Relationship and Party Detail (Person, PartyGroup, etc) View Entity">
+    <member-entity entity-alias="PTY" entity-name="Party"/>
+    <member-entity entity-alias="PERSON" entity-name="Person"/>
+    <member-entity entity-alias="PTYGRP" entity-name="PartyGroup"/>
+    <member-entity entity-alias="PR" entity-name="PartyRelationship"/>
+    <alias-all entity-alias="PTY"/>
+    <alias-all entity-alias="PERSON">
+      <exclude field="comments"/>
+    </alias-all>
+    <alias-all entity-alias="PTYGRP">
+      <exclude field="comments"/>
+    </alias-all>
+    <alias entity-alias="PR" name="partyIdFrom"/>
+    <alias entity-alias="PR" name="partyRelationshipTypeId"/>
+    <alias entity-alias="PR" name="fromDate"/>
+    <alias entity-alias="PR" name="thruDate"/>
+    <view-link entity-alias="PTY" rel-entity-alias="PR">
+      <key-map field-name="partyId" rel-field-name="partyIdTo"/>
+    </view-link>
+    <view-link entity-alias="PTY" rel-entity-alias="PERSON" rel-optional="true">
+      <key-map field-name="partyId"/>
+    </view-link>
+    <view-link entity-alias="PTY" rel-entity-alias="PTYGRP" rel-optional="true">
+      <key-map field-name="partyId"/>
+    </view-link>
+  </view-entity>
+  
+
+
 
 </entitymodel>
 

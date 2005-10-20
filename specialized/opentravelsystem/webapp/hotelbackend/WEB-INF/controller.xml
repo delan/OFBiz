@@ -291,11 +291,27 @@
     </request-map>
     
     <!-- ================ Partys ================= -->
-    <request-map uri="findparty"><!-- show a tabular list of products connected -->
+    <request-map uri="findParties">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="findparty"/>
+        <response name="success" type="view" value="findParties"/>
     </request-map>
-
+    <request-map uri="listPaymentsSend">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listPaymentsSend"/>
+    </request-map>
+    <request-map uri="listPaymentsReceived">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listPaymentsReceived"/>
+    </request-map>
+    <request-map uri="listPurchaseInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listPurchaseInvoices"/>
+    </request-map>
+    <request-map uri="listSalesInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listSalesInvoices"/>
+    </request-map>
+    
     <request-map uri="viewprofile">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="viewprofile"/>
@@ -2200,7 +2216,12 @@
         <response name="success" type="view" value="invoiceRoles"/>
         <response name="error" type="view" value="invoiceRoles"/>
     </request-map>
-    
+    <request-map uri="setInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
     
     <!-- payment requests -->
     <request-map uri="findPayments">
@@ -2255,6 +2276,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DataExchange"/>
     </request-map-->    
+    <request-map uri="uploadDataFilePartyOnly">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.opentravelsystem.mt940" invoke="importDataPartyOnly"/>
+        <response name="success" type="view" value="Utilities"/>
+    </request-map>    
     <request-map uri="uploadDataFile">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.opentravelsystem.mt940" invoke="importData"/>
@@ -2324,49 +2350,79 @@
 
     <request-map uri="GlAccountAssignment">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="GlAccountAssignment"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+    <request-map uri="GlAccountSalInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+    <request-map uri="GlAccountPurInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+    <request-map uri="GlAccountTypePaymentType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+    </request-map>
+    <request-map uri="GlAccountNrPaymentMethod">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
     </request-map>
     
-    <request-map uri="addInvoiceItemTypeGlAssignment">
+    <request-map uri="addSalInvoiceItemTypeGlAssignment">
         <security https="true" auth="true"/>
         <event type="service" invoke="addInvoiceItemTypeGlAssignment"/>
-        <response name="success" type="view" value="GlAccountAssignment"/>
-        <response name="error" type="view" value="GlAccountAssignment"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+        <response name="error" type="view" value="GlAccountSalInvoice"/>
     </request-map>
     
-    <request-map uri="removeInvoiceItemTypeGlAssignment">
+    <request-map uri="removeSalInvoiceItemTypeGlAssignment">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeInvoiceItemTypeGlAssignment"/>
-        <response name="success" type="view" value="GlAccountAssignment"/>
-        <response name="error" type="view" value="GlAccountAssignment"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+        <response name="error" type="view" value="GlAccountSalInvoice"/>
     </request-map>
-
+    
+    <request-map uri="addPurInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+        <response name="error" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+    
+    <request-map uri="removePurInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+        <response name="error" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+    
     <request-map uri="addPaymentTypeGlAssignment">
         <security https="true" auth="true"/>
         <event type="service" invoke="addPaymentTypeGlAssignment"/>
-        <response name="success" type="view" value="GlAccountAssignment"/>
-        <response name="error" type="view" value="GlAccountAssignment"/>
-    </request-map>
-    
-    <request-map uri="addPaymentMethodTypeGlAssignment">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="addPaymentMethodTypeGlAssignment"/>
-        <response name="success" type="view" value="GlAccountAssignment"/>
-        <response name="error" type="view" value="GlAccountAssignment"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+        <response name="error" type="view" value="GlAccountTypePaymentType"/>
     </request-map>
     
     <request-map uri="removePaymentTypeGlAssignment">
         <security https="true" auth="true"/>
         <event type="service" invoke="removePaymentTypeGlAssignment"/>
-        <response name="success" type="view" value="GlAccountAssignment"/>
-        <response name="error" type="view" value="GlAccountAssignment"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+        <response name="error" type="view" value="GlAccountTypePaymentType"/>
+    </request-map>
+    
+    <request-map uri="addPaymentMethodTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addPaymentMethodTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
+        <response name="error" type="view" value="GlAccountNrPaymentMethod"/>
     </request-map>
     
     <request-map uri="removePaymentMethodTypeGlAssignment">
         <security https="true" auth="true"/>
         <event type="service" invoke="removePaymentMethodTypeGlAssignment"/>
-        <response name="success" type="view" value="GlAccountAssignment"/>
-        <response name="error" type="view" value="GlAccountAssignment"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
+        <response name="error" type="view" value="GlAccountNrPaymentMethod"/>
     </request-map>
     <!-- =============== Accounting Reports =================-->
     <request-map uri="AccountingReports">
@@ -2408,15 +2464,74 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AssignGlAccount"/>
     </request-map>
-    <!-- GL account actions -->    
+    <!-- GlAccount requests -->
+    <request-map uri="createGlJournalEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlJournalEntry"/>
+        <response name="success" type="view" value="EditGlJournalEntry"/>
+        <response name="error" type="view" value="EditGlJournalEntry"/>
+    </request-map>
+    
+    <request-map uri="EditGlJournalEntry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlJournalEntry"/>
+    </request-map>
+    
+    <request-map uri="AssignGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AssignGlAccount"/>
+    </request-map>
+    
     <request-map uri="GlAccountNavigate">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GlAccountNavigate"/>
     </request-map>
+    <request-map uri="ListGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListGlobalGlAccount"/>
+    </request-map>
+    <request-map uri="FindGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGlobalGlAccount"/>
+    </request-map>
+    <request-map uri="AddGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddGlAccount"/>
+    </request-map> 
+    <request-map uri="EditGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+    </request-map> 
+    <request-map uri="createGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/>
+    </request-map>
+    <request-map uri="updateGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/>
+    </request-map>
+    
+    <request-map uri="EditGlobalGlAccountOrganizations">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
+    </request-map> 
+    
+    <request-map uri="createGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountOrganization"/>
+        <response name="success" type="view" value="ListGlAccountOrganization"/>
+        <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
+    </request-map>
+    
     <request-map uri="ListGlAccountOrganization">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListGlAccountOrganization"/>
     </request-map>
+    
     <request-map uri="ListGlAccountEntries">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListGlAccountEntries"/>
@@ -2425,17 +2540,38 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListAcctgTransEntries"/>
     </request-map>
-    <request-map uri="Ledger">
+    
+    <request-map uri="updateGlAccountOrganization">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListGlAccountOrganization"/>
+        <event type="service" invoke="updateGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
+        <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
     </request-map>
-    <request-map uri="createGlAccountOrganization">
+    
+    <request-map uri="EditGlobalGlAccountRoles">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createGlAccountOrganization"/>
-        <response name="success" type="view" value="ListGlAccountOrganization"/>
-        <response name="error" type="view" value="ListGlAccountOrganization"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+    </request-map> 
+    <request-map uri="createGlAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountRole"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+        <response name="error" type="view" value="EditGlobalGlAccountRoles"/>
     </request-map>
-
+    <request-map uri="updateGlAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccountRole"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+        <response name="error" type="view" value="EditGlobalGlAccountRoles"/>
+    </request-map>
+    
+    <request-map uri="updateAcctgTransEntries">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateAcctgTransEntry"/>
+        <response name="success" type="view" value="ViewGlAccountBalance"/>
+        <response name="error" type="view" value="ReconcileAccounts"/>
+    </request-map>
+    
     <!-- Select account to reconcile -->
     <request-map uri="reconcileAccounts">
         <security https="true" auth="true"/>
@@ -2513,9 +2649,14 @@
     <view-map name="reports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#reports"/>
     <view-map name="OrderPurchaseReportPayment" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportPayment" content-type="application/pdf" encoding="none"/>
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
-    <!-- customers -->
-    <view-map name="findparty" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#main"/>
-    <view-map name="viewprofile" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#viewprofile"/>
+    <!-- parties -->
+    <view-map name="findParties" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findParties"/>
+    <view-map name="listPaymentsReceived" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsReceived"/>
+    <view-map name="listPaymentsSend" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsSend"/>
+    <view-map name="listSalesInvoices" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listSalesInvoices"/>
+    <view-map name="listPurchaseInvoices" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPurchaseInvoices"/>
+    <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
+    <!--view-map name="viewprofile" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#viewprofile"/-->
     <view-map name="visitdetail" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#visitdetail"/>
     <view-map name="findordersCust" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findordersCust"/>
     <!--display by the frontend -->
@@ -2555,12 +2696,24 @@
     <view-map name="PartyAcctgPreference" type="screen" page="component://accountingext/widget/AdminScreens.xml#PartyAcctgPreference"/>
     <view-map name="ViewFXConversions" type="screen" page="component://accountingext/widget/AdminScreens.xml#ViewFXConversions"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListUnpostedAcctgTrans"/>
-    <view-map name="GlAccountAssignment" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountAssignment"/>
-    <!-- GL organisation -->
+    <view-map name="GlAccountPurInvoice" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountPurInvoice"/>
+    <view-map name="GlAccountSalInvoice" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountSalInvoice"/>
+    <view-map name="GlAccountTypePaymentType" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountTypePaymentType"/>
+    <view-map name="GlAccountNrPaymentMethod" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountNrPaymentMethod"/>
+    <!-- New Screen Widget for EditGlobalGlAccount -->
+    <view-map name="EditGlJournalEntry" type="screen" page="component://accountingext/widget/AccountingScreens.xml#EditGlJournalEntry"/>
+    <view-map name="AddGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AddGlAccount"/>
+    <view-map name="FindGlobalGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#FindGlobalGlAccount"/>
+    <view-map name="ListGlobalGlAccounts" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccounts"/>
     <view-map name="ListGlAccountOrganization" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccountOrganization"/>
-    <view-map name="AssignGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AssignGlAccount"/>
+    <view-map name="GlAccountNavigate" type="screen" page="component://accountingext/widget/AccountingScreens.xml#GlAccountNavigate"/>
     <view-map name="ListGlAccountEntries" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccountEntries"/>
     <view-map name="ListAcctgTransEntries" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListAcctgTransEntries"/>
+    <view-map name="AssignGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AssignGlAccount"/>
+    
+    <view-map name="EditGlobalGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AddGlAccount"/>
+    <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
+    <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
     <!-- Reconciliation viewmaps -->
     <view-map name="ReconcileGlAccountOrganization" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ReconcileGlAccountOrganization"/>
     <view-map name="ReconcileAccounts" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ReconcileAccounts"/>

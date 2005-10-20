@@ -39,7 +39,7 @@
   <div class="col"><a href="<@ofbizUrl>mainAccounting</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
   <div class="col"><a href="<@ofbizUrl>findInvoices</@ofbizUrl>" class="${selectedLeftClassMap.invoices?default(unselectedLeftClassName)}">${uiLabelMap.AccountingInvoicesMenu}</a></div>
   <div class="col"><a href="<@ofbizUrl>findPayments</@ofbizUrl>" class="${selectedLeftClassMap.payments?default(unselectedLeftClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a></div>
-  <div class="col"><a href="<@ofbizUrl>Ledger</@ofbizUrl>" class="${selectedLeftClassMap.Ledger?default(unselectedLeftClassName)}">Gen.Ledger</a></div>
+  <div class="col"><a href="<@ofbizUrl>ListGlAccountOrganization</@ofbizUrl>" class="${selectedLeftClassMap.Ledger?default(unselectedLeftClassName)}">Gen.Ledger</a></div>
   <div class="col"><a href="<@ofbizUrl>AccountingReports</@ofbizUrl>" class="${selectedLeftClassMap.Reports?default(unselectedLeftClassName)}">Reports</a></div>
   <!--div class="col"><a href="<@ofbizUrl>DataExchange</@ofbizUrl>" class="${selectedLeftClassMap.DataExchange?default(unselectedLeftClassName)}">Bank Upload</a></div-->
   <div class="col"><a href="<@ofbizUrl>Utilities</@ofbizUrl>" class="${selectedLeftClassMap.Utilities?default(unselectedLeftClassName)}">Utilities</a></div>
