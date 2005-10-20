@@ -65,6 +65,89 @@
             </widgets>
         </section>
     </screen>
+    <screen name="CommonPartyDecorator">
+        <section>
+            <actions>
+                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-name="party"/>
+                <entity-one entity-name="Person" value-name="lookupPerson"/>
+                <entity-one entity-name="PartyGroup" value-name="lookupGroup"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field-name="partyId"/></not></condition>
+                                    <widgets>
+                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
+                                        
+                                        <container>
+                                            <link target="/accounting/control/FindBillingAccount?partyId=${partyId}" url-mode="inter-app" 
+                                                text="${uiLabelMap.AccountingBillingAccount}" style="buttontext"/>
+                                            <section>
+                                                <condition><if-has-permission permission="ORDERMGR" action="_VIEW"/></condition>
+                                                <widgets>
+                                                    <link target="/ordermgr/control/findorders?lookupFlag=Y&amp;hideFields=Y&amp;partyId=${partyId}" url-mode="inter-app" 
+                                                        text="${uiLabelMap.OrderOrders}" style="buttontext"/>
+                                                </widgets>
+                                            </section>
+                                            <section>
+                                                <condition><if-has-permission permission="ORDERMGR" action="_CREATE"/></condition>
+                                                <widgets>
+                                                    <link target="/ordermgr/control/checkinits?partyId=${partyId}" url-mode="inter-app" 
+                                                        text="${uiLabelMap.OrderNewOrder}" style="buttontext"/>
+                                                </widgets>
+                                            </section>
+                                            <section>
+                                                <condition><if-has-permission permission="ACCOUNTING" action="_VIEW"/></condition>
+                                                <widgets>
+                                                    <link target="/accounting/control/findPayment?lookupFlag=Y&amp;hideFields=Y&amp;toPartyId=${partyId}" url-mode="inter-app" 
+                                                        text="${uiLabelMap.AccountingPaymentsSent}" style="buttontext"/>
+                                                    <link target="/accounting/control/findPayment?lookupFlag=Y&amp;hideFields=Y&amp;fromPartyId=${partyId}" url-mode="inter-app" 
+                                                        text="${uiLabelMap.AccountingPaymentsReceived}" style="buttontext"/>
+                                                </widgets>
+                                            </section>
+                                        </container>
+                                        
+                                        <container>
+                                            <section>
+                                                <condition>
+                                                    <or>
+                                                        <not><if-empty field-name="lookupPerson"/></not>
+                                                        <not><if-empty field-name="lookupGroup"/></not>
+                                                    </or>
+                                                </condition>
+                                                <widgets>
+                                                    <label style="head1" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName}"/>
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <label style="head1" text="${uiLabelMap.PartyNewUser}"/>
+                                                </fail-widgets>
+                                            </section>
+                                            
+                                            <label style="head1" text="[${partyId}]"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="login">
         <section>
             <widgets>
