@@ -30,5 +30,7 @@
     <classpath type="dir" location="config"/>
     <classpath type="dir" location="script"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/SecurityExtData.xml"/>
+    <!-- NOTE: comment this line out to avoid resetting passwords in seed data loads, or change passwords here -->
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/PasswordSecurityData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 </ofbiz-component>

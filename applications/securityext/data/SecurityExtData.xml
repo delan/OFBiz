@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- OFBiz Core security -->
-    <!-- Target file: applications/securityext/data/SecurityExtData.xml -->
     <Party partyId="_NA_" partyTypeId="PERSON"/>
     <Person partyId="_NA_"/>
     <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
@@ -30,15 +29,27 @@
     <PartyRole partyId="externaluser" roleTypeId="SUPPLIER"/>
     <PartyContactMech partyId="externaluser" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
-    <UserLogin userLoginId="anonymous" currentPassword="anonymous" passwordHint=""/>
-    <UserLogin userLoginId="admin" partyId="admin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
-    <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
-    <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
-    <UserLogin userLoginId="ltdadmin" partyId="ltdadmin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
-    <UserLogin userLoginId="system" partyId="admin" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint="Do Not Enable This Account" enabled="N" isSystem="Y"/>
-
+    <Party partyId="bizadmin" partyTypeId="PERSON"/>
+    <Person partyId="bizadmin" firstName="Business" lastName="Administrator"/>
+    <PartyRole partyId="bizadmin" roleTypeId="BUYER"/>
+    <PartyRole partyId="bizadmin" roleTypeId="MANAGER"/>
+    <PartyRole partyId="bizadmin" roleTypeId="ORDER_CLERK"/>
+    <PartyRole partyId="bizadmin" roleTypeId="SHIPMENT_CLERK"/>
+    <PartyRole partyId="bizadmin" roleTypeId="SALES_REP"/>
+    <PartyRole partyId="bizadmin" roleTypeId="_NA_"/>
+    <ContactMech contactMechId="5001" contactMechTypeId="EMAIL_ADDRESS" infoString="ofbiztest@yahoo.com"/>
+    <PartyContactMech partyId="bizadmin" contactMechId="5001" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
+    
+    <UserLogin userLoginId="anonymous" partyId=""/>
+    <UserLogin userLoginId="admin" partyId="admin"/>
+    <UserLogin userLoginId="flexadmin" partyId="admin"/>
+    <UserLogin userLoginId="demoadmin" partyId="admin"/>
+    <UserLogin userLoginId="ltdadmin" partyId="ltdadmin"/>
+    <UserLogin userLoginId="bizadmin" partyId="bizadmin"/>
+    
     <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>    
     <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
     <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="demoadmin" fromDate="2001-01-01 12:00:00.0"/>
     <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
+    <UserLoginSecurityGroup groupId="BIZADMIN" userLoginId="bizadmin" fromDate="2001-01-01 12:00:00.0"/>    
 </entity-engine-xml>

@@ -12,4 +12,5 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EXAMPLE_UPDATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EXAMPLE_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="EXAMPLE_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="EXAMPLE_ADMIN"/>
 </entity-engine-xml>

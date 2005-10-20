@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-
     <Party partyId="BLOGUSER_ADMIN" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="BLOGUSER_ADMIN" lastName="Blog" firstName="Admin"/>
     <UserLogin userLoginId="blog_admin" partyId="BLOGUSER_ADMIN" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a"/>
