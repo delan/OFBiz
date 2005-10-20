@@ -139,8 +139,11 @@ context.put("shipmentTypes", shipmentTypes);
 facilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
 context.put("facilities", facilities);
 
+// since purchase and sales shipments have different status codes, we'll need to make two separate lists
 shipmentStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "SHIPMENT_STATUS"), UtilMisc.toList("sequenceId"));
 context.put("shipmentStatuses", shipmentStatuses);
+purchaseShipmentStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "PURCH_SHIP_STATUS"), UtilMisc.toList("sequenceId"));
+context.put("purchaseShipmentStatuses", purchaseShipmentStatuses);
 
 // create the fromDate for calendar
 fromCal = Calendar.getInstance();
