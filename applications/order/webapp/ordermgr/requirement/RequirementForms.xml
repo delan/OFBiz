@@ -68,10 +68,11 @@
         <field name="requirementId" widget-style="buttontext">
             <hyperlink target-type="inter-app" also-hidden="true" description="${requirementId}" target="/ordermgr/control/EditRequirement?requirementId=${requirementId}"/>
         </field>
-        <field name="requirementTypeId">
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}" /></field>
+        <field name="requirementTypeId" title="Requirement Type">
             <display-entity entity-name="RequirementType" also-hidden="true"/>
         </field>
-        <field name="productId">
+        <field name="productId" title="Product">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
         <field name="requirementStartDate"><display/></field>
