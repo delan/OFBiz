@@ -420,6 +420,16 @@ public class BOMServices {
         }
         result.put("components", components);
 
+        // also return a componentMap (useful in scripts and simple language code)
+        List componentsMap = new ArrayList();
+        Iterator componentsIt = components.iterator();
+        while (componentsIt.hasNext()) {
+            Map componentMap = new HashMap();
+            BOMNode node = (BOMNode)componentsIt.next();
+            componentMap.put("product", node.getProduct());
+            componentMap.put("quantity", new Double(node.getQuantity()));
+        }
+        result.put("componentsMap", componentsMap);
         return result;
     }
 

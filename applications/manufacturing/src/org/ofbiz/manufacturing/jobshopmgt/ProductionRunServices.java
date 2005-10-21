@@ -43,6 +43,9 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.manufacturing.bom.BOMTree;
 import org.ofbiz.manufacturing.techdata.TechDataServices;
 import org.ofbiz.product.config.ProductConfigWrapper;
@@ -81,7 +84,7 @@ public class ProductionRunServices {
         
         String productionRunId = (String) context.get("productionRunId");
         
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         if (!productionRun.exist()){
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotExists", locale));
         }
@@ -92,7 +95,7 @@ public class ProductionRunServices {
             try {
                 // First of all, make sure that there aren't production runs that depend on this one.
                 List mandatoryWorkEfforts = new ArrayList();
-                ProductionRunHelper.getLinkedProductionRuns(delegator, productionRunId, mandatoryWorkEfforts);
+                ProductionRunHelper.getLinkedProductionRuns(delegator, dispatcher, productionRunId, mandatoryWorkEfforts);
                 for (int i = 1; i < mandatoryWorkEfforts.size(); i++) {
                     GenericValue mandatoryWorkEffort = ((ProductionRun)mandatoryWorkEfforts.get(i)).getGenericValue();
                     if (!(mandatoryWorkEffort.getString("currentStatusId").equals("PRUN_CANCELLED"))) {
@@ -293,7 +296,7 @@ public class ProductionRunServices {
                     Debug.logError(e.getMessage(),  module);
                 }
                 // Calculate the estimatedCompletionDate
-                long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, pRQuantity);
+                long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, pRQuantity, dispatcher);
                 Timestamp endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, totalTime);
                 
                 serviceContext.clear();
@@ -387,6 +390,7 @@ public class ProductionRunServices {
     public static Map updateProductionRun(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
         Security security = ctx.getSecurity();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -399,7 +403,7 @@ public class ProductionRunServices {
          */
         String productionRunId = (String) context.get("productionRunId");
         if (!UtilValidate.isEmpty(productionRunId)) {
-            ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+            ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
             if (productionRun.exist()){
                 
                 if (!productionRun.getGenericValue().getString("currentStatusId").equals("PRUN_CREATED")) {
@@ -444,7 +448,7 @@ public class ProductionRunServices {
         String productionRunId = (String) context.get("productionRunId");
         String statusId = (String) context.get("statusId");
         
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         if (!productionRun.exist()){
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotExists", locale));
         }
@@ -587,7 +591,7 @@ public class ProductionRunServices {
         String taskId = (String) context.get("taskId");
         String statusId = (String) context.get("statusId");
         
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         if (!productionRun.exist()){
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotExists", locale));
         }
@@ -749,6 +753,7 @@ public class ProductionRunServices {
     public static Map checkUpdatePrunRoutingTask(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
         Security security = ctx.getSecurity();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -762,7 +767,7 @@ public class ProductionRunServices {
         String productionRunId = (String) context.get("productionRunId");
         String routingTaskId = (String) context.get("routingTaskId");
         if (! UtilValidate.isEmpty(productionRunId) && ! UtilValidate.isEmpty(routingTaskId)) {
-            ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+            ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
             if (productionRun.exist()){
                 
                 if (!productionRun.getGenericValue().getString("currentStatusId").equals("PRUN_CREATED")) {
@@ -834,7 +839,7 @@ public class ProductionRunServices {
         // Optional input fields
         String workEffortId = (String)context.get("workEffortId");
         
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         List tasks = productionRun.getProductionRunRoutingTasks();
         if (tasks == null || tasks.size() == 0){
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunTaskNotExists", locale));
@@ -904,7 +909,7 @@ public class ProductionRunServices {
         String workEffortId = (String)context.get("workEffortId"); // the production run task
         Double quantity = (Double) context.get("estimatedQuantity");
         
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         List components = productionRun.getProductionRunComponents();
         if (components == null || components.size() == 0){
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunComponentNotExists", locale));
@@ -986,7 +991,7 @@ public class ProductionRunServices {
         Double estimatedMilliSeconds = (Double)context.get("estimatedMilliSeconds");
         
         // The production run is loaded
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         Double pRQuantity = productionRun.getQuantity();
         if (pRQuantity == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunTaskNotExists", locale));
@@ -1033,7 +1038,7 @@ public class ProductionRunServices {
         }
         if (estimatedCompletionDate == null) {
             // Calculate the estimatedCompletionDate
-            long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, pRQuantity);
+            long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, pRQuantity, dispatcher);
             estimatedCompletionDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask), estimatedStartDate, totalTime);
         }
         Map serviceContext = new HashMap();
@@ -1106,7 +1111,7 @@ public class ProductionRunServices {
         }
        
         // The production run is loaded
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         // The last task is loaded
         GenericValue lastTask = productionRun.getLastProductionRunRoutingTask();
         if (lastTask == null) {
@@ -1305,7 +1310,7 @@ public class ProductionRunServices {
             comments = "";
         }
         
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         if (!productionRun.exist()){
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotExists", locale));
         }
@@ -1705,7 +1710,7 @@ public class ProductionRunServices {
         
         String productionRunId = (String) context.get("productionRunId");
 
-        ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+        ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         if (!productionRun.exist()){
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotExists", locale));
         }
@@ -1786,6 +1791,54 @@ public class ProductionRunServices {
             Debug.logError(e, "Problem calling the changeProductionRunStatus service", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
         }
+        return result;
+    }
+
+    /**
+     * Given a productId and an optional date, returns the total qty
+     * of productId reserved by production runs. 
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
+     */
+    public static Map getProductionRunTotResQty(DispatchContext ctx, Map context) {
+        Map result = ServiceUtil.returnSuccess();
+        GenericDelegator delegator = ctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+
+        String productId = (String) context.get("productId");
+        Timestamp startDate = (Timestamp) context.get("startDate");
+        if (startDate == null) {
+            startDate = UtilDateTime.nowTimestamp();
+        }
+        double totQty = 0.0;
+        try {
+            List findOutgoingProductionRunsConds = new LinkedList();
+
+            findOutgoingProductionRunsConds.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+            findOutgoingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WIP_INCOMING_FULFIL"));
+            findOutgoingProductionRunsConds.add(new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN_EQUAL_TO, startDate));
+
+            List findOutgoingProductionRunsStatusConds = new LinkedList();
+            findOutgoingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_CREATED"));
+            findOutgoingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_DOC_PRINTED"));
+            findOutgoingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_RUNNING"));
+            findOutgoingProductionRunsConds.add(new EntityConditionList(findOutgoingProductionRunsStatusConds, EntityOperator.OR));
+
+            List outgoingProductionRuns = delegator.findByCondition("WorkEffortAndGoods", new EntityConditionList(findOutgoingProductionRunsConds, EntityOperator.AND), null, UtilMisc.toList("-estimatedStartDate"));
+            if (outgoingProductionRuns != null) {
+                for (int i = 0; i < outgoingProductionRuns.size(); i++) {
+                    GenericValue outgoingProductionRun = (GenericValue)outgoingProductionRuns.get(i);
+                    Double dblQty = outgoingProductionRun.getDouble("estimatedQuantity");
+                    double qty = (dblQty != null? dblQty.doubleValue(): 0.0);
+                    totQty += qty;
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem calling the getProductionRunTotResQty service", module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionResQtyCalc", locale));
+        }
+        result.put("reservedQuantity", new Double(totQty));
         return result;
     }
 

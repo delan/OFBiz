@@ -38,12 +38,11 @@ import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
 
 delegator = request.getAttribute("delegator");
 
-// requestParams = UtilHttp.getParameterMap(request);
 HashMap productionRunData= new HashMap();
 
 productionRunId = request.getParameter("productionRunId");
 if (!UtilValidate.isEmpty(productionRunId)) {
-    ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+    ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
     if (productionRun.exist()){
         context.put("productionRunId", productionRunId);
         context.put("productionRun", productionRun.getGenericValue());

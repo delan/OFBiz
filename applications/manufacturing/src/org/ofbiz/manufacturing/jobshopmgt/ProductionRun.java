@@ -31,6 +31,7 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -39,6 +40,8 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.manufacturing.techdata.TechDataServices;
 
 
@@ -67,6 +70,7 @@ public class ProductionRun {
     protected GenericValue currentStatus;
     protected List productionRunComponents;
     protected List productionRunRoutingTasks;
+    protected LocalDispatcher dispatcher;
     
     /**
      * indicate if quantity or estimatedStartDate has been modified and
@@ -78,10 +82,10 @@ public class ProductionRun {
      */
     private boolean quantityIsUpdated = false;
     
-    
-    public ProductionRun(GenericDelegator delegator, String productionRunId) {
+    public ProductionRun(String productionRunId, GenericDelegator delegator, LocalDispatcher dispatcher) {
         try {
             if (! UtilValidate.isEmpty(productionRunId)) {
+                this.dispatcher = dispatcher;
                 this.productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
                 if (exist()) {
                     this.estimatedStartDate = productionRun.getTimestamp("estimatedStartDate");
@@ -259,7 +263,7 @@ public class ProductionRun {
                 GenericValue routingTask = (GenericValue) iter.next();
                 if (priority.compareTo(routingTask.getLong("priority")) <= 0){
                     // Calculate the estimatedCompletionDate
-                    long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, quantity);
+                    long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, quantity, dispatcher);
                     endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, totalTime);
                     // update the routingTask
                     routingTask.set("estimatedStartDate",startDate);
@@ -389,20 +393,42 @@ public class ProductionRun {
         this.productionRunRoutingTasks = null;
     }
     
-    public static long getEstimatedTaskTime(GenericValue task, Double quantity) {
-        return getEstimatedTaskTime(task, (quantity != null? quantity.doubleValue(): 1));
+    public static long getEstimatedTaskTime(GenericValue task, Double quantity, LocalDispatcher dispatcher) {
+        return getEstimatedTaskTime(task, (quantity != null? quantity.doubleValue(): 1), dispatcher);
     }
-    public static long getEstimatedTaskTime(GenericValue task, double quantity) {
+    public static long getEstimatedTaskTime(GenericValue task, double quantity, LocalDispatcher dispatcher) {
         if (task == null) return 0;
         double setupTime = 0;
         double taskTime = 1;
+        double totalTaskTime = 0;
         if (task.get("estimatedSetupMillis") != null) {
             setupTime = task.getDouble("estimatedSetupMillis").doubleValue();
         }
         if (task.get("estimatedMilliSeconds") != null) {
             taskTime = task.getDouble("estimatedMilliSeconds").doubleValue();
         }
-        return (long)(setupTime + taskTime * quantity);
+        totalTaskTime = (setupTime + taskTime * quantity);
+        // TODO
+        if (task.get("estimateCalcMethod") != null) {
+            String serviceName = null;
+            try {
+                GenericValue genericService = task.getRelatedOne("CustomMethod");
+                if (genericService != null && genericService.getString("customMethodName") != null) {
+                    serviceName = genericService.getString("customMethodName");
+                    // call the service
+                    // and put the value in totalTaskTime
+                    Map estimateCalcServiceMap = UtilMisc.toMap("workEffort", task, "quantity", quantity);
+                    Map serviceContext = UtilMisc.toMap("arguments", estimateCalcServiceMap);
+                    // serviceContext.put("userLogin", userLogin);
+                    Map resultService = dispatcher.runSync(serviceName, serviceContext);
+                    totalTaskTime = ((Double)resultService.get("totalTime")).doubleValue();
+                }
+            } catch(Exception exc) {
+                Debug.logError(exc, "Problem calling the customMethod service " + serviceName);
+            }
+        }
+        
+        return (long)totalTaskTime;
     }
 
 }

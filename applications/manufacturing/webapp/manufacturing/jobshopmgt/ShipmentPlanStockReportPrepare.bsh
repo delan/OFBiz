@@ -29,7 +29,7 @@ dispatcher = request.getAttribute("dispatcher");
 userLogin = request.getSession().getAttribute("userLogin");
 
 jrParameters = new HashMap();
-inventoryStock = new HashMap();  // MC01
+inventoryStock = new HashMap();
 shipmentId = request.getParameter("shipmentId");
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
@@ -56,21 +56,14 @@ if (shipment != null) {
             recordGroup.put("QUANTITY", shipmentPlan.getDouble("quantity"));
             product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", orderLine.getString("productId")));
             recordGroup.put("PRODUCT_NAME", product.getString("internalName"));
-            // -----------------------------
-            // Viene invocato il servizio di esplosione
-            // context contiene i dati di input per il servizio
             Map context = UtilMisc.toMap("productId", orderLine.getString("productId"),
                                          "quantity", shipmentPlan.getDouble("quantity"),
                                          "fromDate", "" + new Date(),
                                          "userLogin", userLogin);
-            // result conterrà i dati di output
             Map result = null;
-            // qui viene invocato il servizio
             result = dispatcher.runSync("getNotAssembledComponents",context);
             if (result != null)
-                // qui viene recuperato uno dei parametri di output (una lista di componenti)
                 components = (List)result.get("notAssembledComponents");
-            // I componenti vengono letti
             componentsIt = components.iterator();
             while(componentsIt.hasNext()) {
                 oneComponent = (org.ofbiz.manufacturing.bom.BOMNode)componentsIt.next();
@@ -78,8 +71,7 @@ if (shipment != null) {
                 record.put("componentId", oneComponent.getProduct().getString("productId"));
                 record.put("componentName", oneComponent.getProduct().getString("internalName"));
                 record.put("componentQuantity", new Float(oneComponent.getQuantity()));
-                // QUI DEVO AGGIUNGERE LA QUANTITA' DI MAGAZZINO  MC01
-                facilityId = shipment.getString("originFacilityId"); // MOBILIA
+                facilityId = shipment.getString("originFacilityId");
                 float qty = 0;
                 if (facilityId != null) {
                     if (!inventoryStock.containsKey(oneComponent.getProduct().getString("productId"))) {
@@ -94,7 +86,11 @@ if (shipment != null) {
                     inventoryStock.put(oneComponent.getProduct().getString("productId"), new Double(qty));
                 }
                 record.put("componentOnHand", new Float(qty));
-                // FINE ROUTINE QUANTITA' DI MAGAZZINO  MC01
+                // Now we get the product's qty already reserved by production runs
+                serviceInput = UtilMisc.toMap("productId", oneComponent.getProduct().getString("productId"));
+                serviceOutput = dispatcher.runSync("getProductionRunTotResQty", serviceInput);
+                resQty = serviceOutput.get("reservedQuantity");
+                record.put("reservedQuantity", new Double(resQty));
 
                 records.add(record);
             }
