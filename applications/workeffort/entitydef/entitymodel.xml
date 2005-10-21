@@ -256,6 +256,7 @@
       <field name="actualCompletionDate" type="date-time"></field>
       <field name="estimatedMilliSeconds" type="floating-point"></field>
       <field name="estimatedSetupMillis" type="floating-point"></field>
+      <field name="estimateCalcMethod" type="id"></field>
       <field name="actualMilliSeconds" type="floating-point"></field>
       <field name="actualSetupMillis" type="floating-point"></field>
       <field name="totalMilliSecondsAllowed" type="floating-point"></field>
@@ -338,6 +339,9 @@
         <key-map field-name="workflowProcessId" rel-field-name="processId"/>
         <key-map field-name="workflowProcessVersion" rel-field-name="processVersion"/>
         <key-map field-name="workflowActivityId" rel-field-name="activityId"/>
+      </relation>
+      <relation type="one" fk-name="WK_EFFRT_CUS_MET" rel-entity-name="CustomMethod">
+        <key-map field-name="estimateCalcMethod" rel-field-name="customMethodId"/>
       </relation>
     </entity>
     <view-entity entity-name="WorkEffortAndFulfillment"
