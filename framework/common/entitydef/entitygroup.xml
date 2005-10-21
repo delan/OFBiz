@@ -62,6 +62,13 @@
 
     <entity-group group="org.ofbiz" entity="StandardLanguage" />
 
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.common.method -->
+    <!-- ========================================================= -->
+    
+    <entity-group group="org.ofbiz" entity="CustomMethod" />
+    <entity-group group="org.ofbiz" entity="CustomMethodType" />
+    
   <!-- ========================================================= -->
   <!-- org.ofbiz.common.note -->
   <!-- ========================================================= -->

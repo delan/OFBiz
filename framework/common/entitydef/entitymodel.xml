@@ -48,6 +48,7 @@
   <!--  - org.ofbiz.common.geo -->
   <!--  - org.ofbiz.common.keyword -->
   <!--  - org.ofbiz.common.language -->
+  <!--  - org.ofbiz.common.method -->
   <!--  - org.ofbiz.common.note -->
   <!--  - org.ofbiz.common.period -->
   <!--  - org.ofbiz.common.status -->
@@ -230,6 +231,35 @@
       <prim-key field="standardLanguageId"/>
     </entity>
 
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.common.method -->
+    <!-- ========================================================= -->
+
+    <entity entity-name="CustomMethod"
+        package-name="org.ofbiz.common.method"
+        title="Custom Method Entity">
+        <field name="customMethodId" type="id-ne"></field>
+        <field name="customMethodTypeId" type="id"></field>
+        <field name="customMethodName" type="long-varchar"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="customMethodId"/>
+        <relation type="one" fk-name="CME_TO_TYPE" rel-entity-name="CustomMethodType">
+            <key-map field-name="customMethodTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="CustomMethodType"
+        package-name="org.ofbiz.common.method"
+        title="Custom Method Type Entity">
+        <field name="customMethodTypeId" type="id-ne"></field>
+        <field name="parentTypeId" type="id-ne"></field>
+        <field name="hasTable" type="indicator"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="customMethodTypeId"/>
+        <relation type="one" fk-name="CME_TYPE_PARENT" title="Parent" rel-entity-name="CustomMethodType">
+            <key-map field-name="parentTypeId" rel-field-name="customMethodTypeId"/>
+        </relation>
+    </entity>
+    
   <!-- ========================================================= -->
   <!-- org.ofbiz.common.note -->
   <!-- ========================================================= -->
