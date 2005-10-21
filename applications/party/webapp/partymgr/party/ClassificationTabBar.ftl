@@ -31,20 +31,12 @@
 
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 <#-- Main Heading -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="left">
-      <div class="head1">
-      </div>
-    </td>
-    <td align="right">
-      <div class="tabContainer">
-        <a href="<@ofbizUrl>EditPartyClassificationGroup?partyClassificationGroupId=<#if partyClassificationGroup?has_content>${partyClassificationGroup.partyClassificationGroupId}</#if></@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroup?default(unselectedClassName)}">${uiLabelMap.PartyClassificationGroups}</a>
-        <a href="<@ofbizUrl>EditPartyClassificationGroupParties?partyClassificationGroupId=<#if partyClassificationGroup?has_content>${partyClassificationGroup.partyClassificationGroupId}</#if></@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroupParties?default(unselectedClassName)}">${uiLabelMap.Parties}</a>
-      </div>
-    </td>
-  </tr>
-</table>
+<#if partyClassificationGroup?has_content>
+<div class="tabContainer">
+    <a href="<@ofbizUrl>EditPartyClassificationGroup?partyClassificationGroupId=${partyClassificationGroup.partyClassificationGroupId}</@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroup?default(unselectedClassName)}">${uiLabelMap.PartyClassificationGroups}</a>
+    <a href="<@ofbizUrl>EditPartyClassificationGroupParties?partyClassificationGroupId=${partyClassificationGroup.partyClassificationGroupId}</@ofbizUrl>" class="${selectedClassMap.EditPartyClassificationGroupParties?default(unselectedClassName)}">${uiLabelMap.Parties}</a>
+</div>
+</#if>
 
 <#else>
   <div class="head2">${uiLabelMap.PartyMgrViewPermissionError}</div>

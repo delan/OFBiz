@@ -740,6 +740,7 @@
     <request-map uri="LookupPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
     <request-map uri="LookupPartyAndUserLoginAndPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/></request-map>
     <request-map uri="LookupPartyGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
+    <request-map uri="LookupPartyClassificationGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyClassificationGroup"/></request-map>
     <request-map uri="LookupCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
     <request-map uri="LookupCustRequest"><security https="true" auth="true"/><response name="success" type="view" value="LookupCustRequest"/></request-map>
     <request-map uri="LookupSegmentGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupSegmentGroup"/></request-map>
