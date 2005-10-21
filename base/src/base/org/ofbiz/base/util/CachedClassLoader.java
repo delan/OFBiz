@@ -65,6 +65,8 @@ public class CachedClassLoader extends URLClassLoader {
         globalClassNameClassMap.put("Boolean", java.lang.Boolean.class);
         globalClassNameClassMap.put("java.lang.Boolean", java.lang.Boolean.class);
 
+        globalClassNameClassMap.put("BigDecimal", java.math.BigDecimal.class);
+        globalClassNameClassMap.put("java.math.BigDecimal", java.math.BigDecimal.class);
         globalClassNameClassMap.put("Double", java.lang.Double.class);
         globalClassNameClassMap.put("java.lang.Double", java.lang.Double.class);
         globalClassNameClassMap.put("Float", java.lang.Float.class);

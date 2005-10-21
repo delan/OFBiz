@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -510,7 +511,7 @@ public class SqlJdbcUtil {
             ResultSetMetaData rsmd = rs.getMetaData();
             int colType = rsmd.getColumnType(ind);
             
-            if (typeValue <= 4 || typeValue == 10 || typeValue == 11) {
+            if (typeValue <= 4 || typeValue >= 11) {
                 switch (typeValue) {
                 case 1:
                     if (java.sql.Types.CLOB == colType) {
@@ -558,7 +559,7 @@ public class SqlJdbcUtil {
                     entity.dangerousSetNoCheckButFast(curField, rs.getDate(ind));
                     break;
 
-                case 10:
+                case 11:
                     Object obj = null;
                     InputStream binaryInput = null;
 
@@ -600,13 +601,14 @@ public class SqlJdbcUtil {
                     binaryInput = null;
                     entity.dangerousSetNoCheckButFast(curField, obj);
                     break;
-                case 11:
+                case 12:
                     entity.dangerousSetNoCheckButFast(curField, rs.getBlob(ind));
                     break;
-                case 12:
+                case 13:
                     entity.dangerousSetNoCheckButFast(curField, rs.getClob(ind));
                     break;
-                case 13:
+                case 14:
+                case 15:
                     entity.dangerousSetNoCheckButFast(curField, rs.getObject(ind));
                     break;
                 }
@@ -614,7 +616,6 @@ public class SqlJdbcUtil {
                 switch (typeValue) {
                 case 5:
                     int intValue = rs.getInt(ind);
-
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
@@ -624,7 +625,6 @@ public class SqlJdbcUtil {
 
                 case 6:
                     long longValue = rs.getLong(ind);
-
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
@@ -634,7 +634,6 @@ public class SqlJdbcUtil {
 
                 case 7:
                     float floatValue = rs.getFloat(ind);
-
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
@@ -644,7 +643,6 @@ public class SqlJdbcUtil {
 
                 case 8:
                     double doubleValue = rs.getDouble(ind);
-
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
@@ -653,8 +651,16 @@ public class SqlJdbcUtil {
                     break;
 
                 case 9:
-                    boolean booleanValue = rs.getBoolean(ind);
+                    BigDecimal bigDecimalValue = rs.getBigDecimal(ind);
+                    if (rs.wasNull()) {
+                        entity.dangerousSetNoCheckButFast(curField, null);
+                    } else {
+                        entity.dangerousSetNoCheckButFast(curField, bigDecimalValue);
+                    }
+                    break;
 
+                case 10:
+                    boolean booleanValue = rs.getBoolean(ind);
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
@@ -742,26 +748,30 @@ public class SqlJdbcUtil {
                 break;
 
             case 9:
-                sqlP.setValue((java.lang.Boolean) fieldValue);
+                sqlP.setValue((java.math.BigDecimal) fieldValue);
                 break;
 
             case 10:
-                sqlP.setBinaryStream(fieldValue);
+                sqlP.setValue((java.lang.Boolean) fieldValue);
                 break;
 
             case 11:
-                sqlP.setValue((java.sql.Blob) fieldValue);
+                sqlP.setBinaryStream(fieldValue);
                 break;
 
             case 12:
-                sqlP.setValue((java.sql.Clob) fieldValue);
+                sqlP.setValue((java.sql.Blob) fieldValue);
                 break;
 
             case 13:
-                sqlP.setValue(new java.sql.Date(((java.util.Date) fieldValue).getTime()));
+                sqlP.setValue((java.sql.Clob) fieldValue);
                 break;
 
             case 14:
+                sqlP.setValue(new java.sql.Date(((java.util.Date) fieldValue).getTime()));
+                break;
+
+            case 15:
                 sqlP.setValue((java.util.Collection) fieldValue);
                 break;
             }
@@ -790,19 +800,25 @@ public class SqlJdbcUtil {
         fieldTypeMap.put("Float", new Integer(7));
         fieldTypeMap.put("java.lang.Double", new Integer(8));
         fieldTypeMap.put("Double", new Integer(8));
-        fieldTypeMap.put("java.lang.Boolean", new Integer(9));
-        fieldTypeMap.put("Boolean", new Integer(9));
-        fieldTypeMap.put("java.lang.Object", new Integer(10));
-        fieldTypeMap.put("Object", new Integer(10));
-        fieldTypeMap.put("java.sql.Blob", new Integer(11));
-        fieldTypeMap.put("Blob", new Integer(11));
-        fieldTypeMap.put("java.sql.Clob", new Integer(12));
-        fieldTypeMap.put("Clob", new Integer(12));
-        fieldTypeMap.put("java.util.Date", new Integer(13));
-        fieldTypeMap.put("java.util.ArrayList", new Integer(14));
-        fieldTypeMap.put("java.util.HashSet", new Integer(14));
-        fieldTypeMap.put("java.util.LinkedHashSet", new Integer(14));
-        fieldTypeMap.put("java.util.LinkedList", new Integer(14));
+        fieldTypeMap.put("java.math.BigDecimal", new Integer(9));
+        fieldTypeMap.put("BigDecimal", new Integer(9));
+        fieldTypeMap.put("java.lang.Boolean", new Integer(10));
+        fieldTypeMap.put("Boolean", new Integer(10));
+        
+        fieldTypeMap.put("java.lang.Object", new Integer(11));
+        fieldTypeMap.put("Object", new Integer(11));
+        fieldTypeMap.put("java.sql.Blob", new Integer(12));
+        fieldTypeMap.put("Blob", new Integer(12));
+        fieldTypeMap.put("java.sql.Clob", new Integer(13));
+        fieldTypeMap.put("Clob", new Integer(13));
+
+        fieldTypeMap.put("java.util.Date", new Integer(14));
+
+        // all of these treated as Collection
+        fieldTypeMap.put("java.util.ArrayList", new Integer(15));
+        fieldTypeMap.put("java.util.HashSet", new Integer(15));
+        fieldTypeMap.put("java.util.LinkedHashSet", new Integer(15));
+        fieldTypeMap.put("java.util.LinkedList", new Integer(15));
     }
 
     public static int getType(String fieldType) throws GenericNotImplementedException {
