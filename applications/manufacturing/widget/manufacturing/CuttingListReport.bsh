@@ -78,7 +78,7 @@ if (shipmentPlans != null) {
         ArrayList productionRunTree = new ArrayList();
         // TODO
         if (weId != null) {
-            ProductionRunHelper.getLinkedProductionRuns(delegator, weId.getString("workEffortId"), productionRunTree);
+            ProductionRunHelper.getLinkedProductionRuns(delegator, dispatcher, weId.getString("workEffortId"), productionRunTree);
             for (int i = 0; i < productionRunTree.size(); i++) {
                 ProductionRun oneProductionRun = (ProductionRun)productionRunTree.get(i);
                 if (ProductionRunHelper.hasTask(delegator, selectWorkEffortNameParameter, oneProductionRun.getGenericValue().getString("workEffortId"))) {

@@ -130,7 +130,7 @@ public class ProposedOrder {
                             Debug.logError(e.getMessage(),  module);
                         }
                         // Calculate the estimatedStartDate
-                        long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, quantity);
+                        long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, quantity, dispatcher);
                         startDate = TechDataServices.addBackward(TechDataServices.getTechDataCalendar(routingTask),endDate, totalTime);
                         // record the routingTask with the startDate associated
                         result.put(routingTask.getString("workEffortId"),startDate);

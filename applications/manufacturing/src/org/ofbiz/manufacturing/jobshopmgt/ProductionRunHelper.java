@@ -34,6 +34,8 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.service.LocalDispatcher;
+
 
 /**
  * Helper for Production Run maintenance
@@ -87,12 +89,12 @@ public class ProductionRunHelper {
         return (tasks != null && tasks.size() > 0);
     }
 
-    public static void getLinkedProductionRuns(GenericDelegator delegator, String productionRunId, List productionRuns)  throws GenericEntityException {
-        productionRuns.add(new ProductionRun(delegator, productionRunId));
+    public static void getLinkedProductionRuns(GenericDelegator delegator, LocalDispatcher dispatcher, String productionRunId, List productionRuns)  throws GenericEntityException {
+        productionRuns.add(new ProductionRun(productionRunId, delegator, dispatcher));
         List linkedWorkEfforts = EntityUtil.filterByDate(delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY")));
         for (int i = 0; i < linkedWorkEfforts.size(); i++) {
             GenericValue link = (GenericValue)linkedWorkEfforts.get(i);
-            getLinkedProductionRuns(delegator, link.getString("workEffortIdFrom"), productionRuns);
+            getLinkedProductionRuns(delegator, dispatcher, link.getString("workEffortIdFrom"), productionRuns);
         }
     }
 

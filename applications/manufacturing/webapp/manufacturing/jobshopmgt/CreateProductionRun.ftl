@@ -62,7 +62,6 @@
             <option value="${currentFacilityId.facilityId}">${currentFacilityId.facilityName} [${currentFacilityId.facilityId}]</option>
             <option value="${currentFacilityId.facilityId}">---</option>
           </#if>
-          <option value=""></option>
           <#list warehouses as warehouse>
             <option value="${warehouse.facilityId}">${warehouse.facilityName} [${warehouse.facilityId}]</option>
           </#list>
