@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -680,6 +681,22 @@ public class SQLProcessor {
     public void setValue(Double field) throws SQLException {
         if (field != null) {
             _ps.setDouble(_ind, field.doubleValue());
+        } else {
+            _ps.setNull(_ind, Types.NUMERIC);
+        }
+        _ind++;
+    }
+
+    /**
+     * Set the next binding variable of the currently active prepared statement.
+     *
+     * @param field
+     *
+     * @throws SQLException
+     */
+    public void setValue(BigDecimal field) throws SQLException {
+        if (field != null) {
+            _ps.setBigDecimal(_ind, field);
         } else {
             _ps.setNull(_ind, Types.NUMERIC);
         }

@@ -25,6 +25,7 @@ package org.ofbiz.entity;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -557,7 +558,24 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     public Double getDouble(String name) {
-        return (Double) get(name);
+        // this "hack" is needed for now until the Double/BigDecimal issues are all resolved
+        Object value = get(name);
+        if (value instanceof BigDecimal) {
+            return new Double(((BigDecimal) value).doubleValue());
+        } else {
+            return (Double) get(name);
+        }
+    }
+
+    public BigDecimal getBigDecimal(String name) {
+        // this "hack" is needed for now until the Double/BigDecimal issues are all resolved
+        // NOTE: for this to be used properly it should really be used as the java-type in the field type def XML files
+        Object value = get(name);
+        if (value instanceof Double) {
+            return new BigDecimal(((Double) value).doubleValue());
+        } else {
+            return (BigDecimal) get(name);
+        }
     }
 
     public byte[] getBytes(String name) {
