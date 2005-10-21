@@ -23,20 +23,29 @@
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
-    <description>Manufacturing Services - Misc</description>
+    <description>Manufacturing Services - Formula</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <service name="createShipmentPackages" engine="java" auth="true"
-            location="org.ofbiz.manufacturing.bom.BOMServices" invoke="createShipmentPackages">
-        <description>Runs the package configurator.</description>
-        <attribute mode="IN" name="shipmentId" optional="false" type="String"/>
+    <!-- BOM Formulas -->
+    <service name="interfaceBomFormula" engine="interface" location="" invoke="">
+        <attribute mode="IN" name="arguments" optional="false" type="java.util.Map"/>
+        <attribute mode="OUT" name="quantity" optional="false" type="Double"/>
+    </service>
+    <service name="linearComponentFormula" engine="simple" auth="true"
+            location="org/ofbiz/manufacturing/bom/BomFormulas.xml" invoke="linearComponentConsumptionFormula">
+        <description>Formula that computes the quantity of linear component in bom</description>
+        <implements service="interfaceBomFormula"/>
+    </service>
+    <!-- Task Formulas -->
+    <service name="interfaceTaskFormula" engine="interface" location="" invoke="">
+        <attribute mode="IN" name="arguments" optional="false" type="java.util.Map"/>
+        <attribute mode="OUT" name="totalTime" optional="false" type="Double"/>
+    </service>
+    <service name="exampleTaskFormula" engine="simple" auth="true"
+            location="org/ofbiz/manufacturing/techdata/TaskFormulae.xml" invoke="exampleTaskFormula">
+        <description>Formula that computes the estimated manufacturing time of a given task</description>
+        <implements service="interfaceTaskFormula"/>
     </service>
 
-    <service name="approveRequirement" engine="java"
-            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="approveRequirement" auth="true">
-        <description>Approves a requirement.</description>
-        <attribute mode="IN" name="requirementId" optional="false" type="String"/>
-        <attribute mode="IN" name="quantity" optional="true" type="Double"/>
-    </service>
 </services>
