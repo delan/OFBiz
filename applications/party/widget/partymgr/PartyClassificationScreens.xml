@@ -39,7 +39,7 @@
                 <entity-one entity-name="Party" value-name="party"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="screenlet">
                             <container style="screenlet-header">
@@ -68,7 +68,7 @@
                 <entity-one entity-name="PartyClassificationGroup" value-name="partyClassificationGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="screenlet">
                             <container style="screenlet-header">
@@ -100,7 +100,7 @@
                 <entity-one entity-name="Party" value-name="party"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="screenlet">
                             <container style="screenlet-header">
@@ -130,7 +130,7 @@
                 <entity-one entity-name="PartyClassificationGroup" value-name="partyClassificationGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="screenlet">
                             <container style="screenlet-header">

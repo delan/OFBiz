@@ -80,7 +80,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="parentGroupId" title="${uiLabelMap.ParentGroupId}"><text/></field>
+        <field name="parentGroupId" title="${uiLabelMap.ParentGroupId}"><lookup target-form-name="LookupPartyClassificationGroup"/></field>
         <field name="description" title="${uiLabelMap.Description}"><text size="55"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
@@ -88,7 +88,7 @@
             target="createPartyClassification" title="" default-map-name="partyClassification"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
-        <field name="partyId"  title="${uiLabelMap.PartyPartyId}"><display/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display/></field>
         <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}">
             <drop-down>
                 <entity-options description="${description}" entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId">
