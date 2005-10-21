@@ -1006,9 +1006,10 @@ public class ModelFormField {
 
                 return condTrue;
             } catch (EvalError e) {
-                String errMsg = "Error evaluating BeanShell use-when condition [" + this.useWhen + "] on the field "
+                String errMsg = "Error evaluating BeanShell use-when condition [" + useWhenStr + "] on the field "
                         + this.name + " of form " + this.modelForm.name + ": " + e.toString();
                 Debug.logError(e, errMsg, module);
+                //Debug.logError("For use-when eval error context is: " + context, module);
                 throw new IllegalArgumentException(errMsg);
             }
         }

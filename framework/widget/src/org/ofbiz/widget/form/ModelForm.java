@@ -571,24 +571,6 @@ public class ModelForm {
     public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
         ModelFormAction.runSubActions(this.actions, context);
         
-        // Check to see if there is a field, same name and same use-when (could come from extended form)
-        for (int j = 0; j < this.fieldList.size(); j++) {
-            ModelFormField modelFormField = (ModelFormField) this.fieldList.get(j);
-            if (!modelFormField.isUseWhenEmpty()) {
-                boolean shouldUse1 = modelFormField.shouldUse(context);
-                for (int i = j+1; i < this.fieldList.size(); i++) {
-                    ModelFormField curField = (ModelFormField) this.fieldList.get(i);
-                    if (curField.getName() != null && curField.getName().equals(modelFormField.getName())) {
-                        boolean shouldUse2 = curField.shouldUse(context);
-                        if (shouldUse1 == shouldUse2) {
-                            this.fieldList.remove(i--);
-                        }
-                    } else {
-                        continue;
-                    }
-                }
-            }
-        }
         // if this is a list form, don't useRequestParameters
         if ("list".equals(this.type) || "multi".equals(this.type)) {
             context.put("useRequestParameters", Boolean.FALSE);
@@ -628,7 +610,24 @@ public class ModelForm {
     }
 
     public void renderSingleFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, int positions) {
-        Iterator fieldIter = null;
+        // Check to see if there is a field, same name and same use-when (could come from extended form)
+        for (int j = 0; j < this.fieldList.size(); j++) {
+            ModelFormField modelFormField = (ModelFormField) this.fieldList.get(j);
+            if (!modelFormField.isUseWhenEmpty()) {
+                boolean shouldUse1 = modelFormField.shouldUse(context);
+                for (int i = j+1; i < this.fieldList.size(); i++) {
+                    ModelFormField curField = (ModelFormField) this.fieldList.get(i);
+                    if (curField.getName() != null && curField.getName().equals(modelFormField.getName())) {
+                        boolean shouldUse2 = curField.shouldUse(context);
+                        if (shouldUse1 == shouldUse2) {
+                            this.fieldList.remove(i--);
+                        }
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
 
         Set alreadyRendered = new TreeSet();
         FieldGroup lastFieldGroup = null;
@@ -643,7 +642,7 @@ public class ModelForm {
         //formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
 
         // render each field row, except hidden & ignored rows
-        fieldIter = this.fieldList.iterator();
+        Iterator fieldIter = this.fieldList.iterator();
         ModelFormField lastFormField = null;
         ModelFormField currentFormField = null;
         ModelFormField nextFormField = null;
@@ -1064,6 +1063,7 @@ public class ModelForm {
                     Map itemMap = (Map) item;
                     localContext.putAll(itemMap);
                 }
+                this.resetBshInterpreter(localContext);
                 
                 localContext.put("itemIndex", new Integer(itemIndex - lowIndex));
                 
@@ -1071,6 +1071,25 @@ public class ModelForm {
 
                 if (Debug.verboseOn()) Debug.logVerbose("In form got another row, context is: " + localContext, module);
 
+                // Check to see if there is a field, same name and same use-when (could come from extended form)
+                for (int j = 0; j < this.fieldList.size(); j++) {
+                    ModelFormField modelFormField = (ModelFormField) this.fieldList.get(j);
+                    if (!modelFormField.isUseWhenEmpty()) {
+                        boolean shouldUse1 = modelFormField.shouldUse(localContext);
+                        for (int i = j+1; i < this.fieldList.size(); i++) {
+                            ModelFormField curField = (ModelFormField) this.fieldList.get(i);
+                            if (curField.getName() != null && curField.getName().equals(modelFormField.getName())) {
+                                boolean shouldUse2 = curField.shouldUse(localContext);
+                                if (shouldUse1 == shouldUse2) {
+                                    this.fieldList.remove(i--);
+                                }
+                            } else {
+                                continue;
+                            }
+                        }
+                    }
+                }
+                
                 // render row formatting open
                 formStringRenderer.renderFormatItemRowOpen(buffer, localContext, this);
 
@@ -1466,6 +1485,10 @@ public class ModelForm {
         return this.type;
     }
 
+    public void resetBshInterpreter(Map context) {
+        context.remove("bshInterpreter");
+    }
+    
     public Interpreter getBshInterpreter(Map context) throws EvalError {
         Interpreter bsh = (Interpreter) context.get("bshInterpreter");
         if (bsh == null) {
