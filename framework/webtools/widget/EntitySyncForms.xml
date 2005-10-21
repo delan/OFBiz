@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,10 @@
 -->
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="EntitySyncStatus" type="list" target="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" paginate-target="EntitySyncStatus" view-size="20">
+    <form name="EntitySyncStatus" type="list" list-name="entitySyncList" target="" paginate-target="EntitySyncStatus" view-size="20"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-            <entity-condition entity-name="EntitySync" use-cache="false">
+            <entity-condition entity-name="EntitySync" list-name="entitySyncList" use-cache="false">
                 <!-- No conditions, is a find all -->
                 <order-by field-name="runStatusId"/>
                 <order-by field-name="entitySyncId"/>
@@ -35,7 +36,7 @@
         <field name="runStatusId" title="Run Status">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        
+
         <field use-when="&quot;ESR_RUNNING&quot;.equals(runStatusId)" name="resetStatus" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="Reset Run Status" target="resetEntitySyncStatusToNotStarted?entitySyncId=${entitySyncId}"/>
         </field>

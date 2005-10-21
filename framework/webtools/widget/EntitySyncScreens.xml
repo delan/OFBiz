@@ -40,7 +40,7 @@
                                     <label style="head1">${uiLabelMap.${labelTitleProperty}}</label>
                                 </container>
                                 <container>
-                                    <link target="EntitySyncStatus" style="buttontext" text="[Refresh]"/>
+                                    <link target="EntitySyncStatus" style="buttontext" text="Refresh"/>
                                 </container>
 
 								<!-- Now call the SimpleScreen form -->
