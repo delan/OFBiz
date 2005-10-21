@@ -84,7 +84,7 @@
             <make-value value-name="newWorkEffortStatus" entity-name="WorkEffortStatus"/>
             <set from-field="lookedUpValue.workEffortId" field="newWorkEffortStatus.workEffortId"/>
             <set from-field="lookedUpValue.currentStatusId" field="newWorkEffortStatus.statusId"/>
-            <set from-field="nowTimestamp" field="statusDatetime.newWorkEffortStatus"/>
+            <set from-field="nowTimestamp" field="newWorkEffortStatus.statusDatetime"/>
             <set from-field="userLogin.userLoginId" field="newWorkEffortStatus.setByUserLogin"/>
             <create-value value-name="newWorkEffortStatus"/>
         </if-compare-field>
