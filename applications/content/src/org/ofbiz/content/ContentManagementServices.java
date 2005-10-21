@@ -1389,10 +1389,10 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericValue contentRole = null;
         try {
             List contentRoleList = delegator.findByAndCache("ContentRole", UtilMisc.toMap("partyId", partyId, "contentId", webPubPt, "roleTypeId", roleTypeId));
-            List listFiltered = EntityUtil.filterByDate(contentRoleList);
+            List listFiltered = EntityUtil.filterByDate(contentRoleList, true);
             List listOrdered = EntityUtil.orderBy(listFiltered, UtilMisc.toList("fromDate DESC"));
             if (listOrdered.size() > 0) {
-                contentRole = (GenericValue)listOrdered.get(0);
+                contentRole = (GenericValue) listOrdered.get(0);
                 hasExistingContentRole = true;
             }
         } catch (GenericEntityException e) {
@@ -1433,8 +1433,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             Debug.logWarning("Don't know anything about useTimeUomId [" + useTimeUomId + "], defaulting to month", module);
         }
         calendar.add(field, useTime.intValue());
-        long date = calendar.getTimeInMillis();
-        thruDate = new Timestamp(date);
+        thruDate = new Timestamp(calendar.getTimeInMillis());
         contentRole.set("thruDate", thruDate);
         try {
             if (hasExistingContentRole) {
@@ -1459,8 +1458,9 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productId");
         Integer qty = (Integer) context.get("quantity");
-        if (qty == null)
+        if (qty == null) {
             qty = new Integer(1);
+        }
         
         Timestamp orderCreatedDate = (Timestamp) context.get("orderCreatedDate");
         if (orderCreatedDate == null) {
@@ -1470,7 +1470,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
            try {
             List lst = delegator.findByAndCache("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", "ONLINE_ACCESS"));
             List listFiltered = EntityUtil.filterByDate(lst, orderCreatedDate, "purchaseFromDate", "purchaseThruDate", true);
-            List listOrdered = EntityUtil.orderBy(lst, UtilMisc.toList("purchaseFromDate ASC", "purchaseThruDate ASC"));
+            List listOrdered = EntityUtil.orderBy(listFiltered, UtilMisc.toList("purchaseFromDate", "purchaseThruDate"));
             List listThrusOnly = EntityUtil.filterOutByCondition(listOrdered, new EntityExpr("purchaseThruDate", EntityOperator.EQUALS, null));
             if (listThrusOnly.size() > 0) {
                 productContent = (GenericValue) listThrusOnly.get(0);   
