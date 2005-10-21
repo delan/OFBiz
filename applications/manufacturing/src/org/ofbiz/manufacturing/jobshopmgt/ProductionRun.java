@@ -417,7 +417,7 @@ public class ProductionRun {
                     serviceName = genericService.getString("customMethodName");
                     // call the service
                     // and put the value in totalTaskTime
-                    Map estimateCalcServiceMap = UtilMisc.toMap("workEffort", task, "quantity", quantity);
+                    Map estimateCalcServiceMap = UtilMisc.toMap("workEffort", task, "quantity", new Double(quantity));
                     Map serviceContext = UtilMisc.toMap("arguments", estimateCalcServiceMap);
                     // serviceContext.put("userLogin", userLogin);
                     Map resultService = dispatcher.runSync(serviceName, serviceContext);
