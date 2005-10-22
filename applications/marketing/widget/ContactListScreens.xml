@@ -233,7 +233,6 @@
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
-                <set field="entityName" value="CommunicationEvent"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContactListDecorator">
