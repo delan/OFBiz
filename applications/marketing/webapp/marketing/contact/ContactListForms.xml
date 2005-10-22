@@ -189,7 +189,7 @@
         </field>
         
         <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" title="${uiLabelMap.PartyPartyFrom}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="statusId" use-when="communicationEvent==null" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
             <drop-down>
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
@@ -254,18 +254,20 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/>        </field>
         <field name="cancelLink" title="${uiLabelMap.CommonCancel}" widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
-    <form name="FindContactListCommEvents"  default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="ListContactListCommEvents" title="" type="single">
+    <form name="FindContactListCommEvents" target="ListContactListCommEvents" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="contactListId" title="${uiLabelMap.ContactListContactListId}"><text/></field>
         <field name="commEventId" title="${uiLabelMap.ContactListCommEventId}"><lookup target-form-name="LookupCommEvent"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-find/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListContactListCommEvents" list-iterator-name="listIt" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
+    <form name="ListContactListCommEvents" list-iterator-name="listIt" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <actions>
             <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
-                <field-map env-name="requestParameters" field-name="inputFields"/>
-                <field-map env-name="entityName" field-name="entityName"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="CommunicationEvent"/>
             </service>
         </actions>
         <field name="communicationEventId" title="${uiLabelMap.ContactListCommEventId}">
