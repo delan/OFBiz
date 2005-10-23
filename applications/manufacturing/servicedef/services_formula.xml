@@ -38,11 +38,11 @@
         <implements service="interfaceBomFormula"/>
     </service>
     <!-- Task Formulas -->
-    <service name="interfaceTaskFormula" engine="interface" location="" invoke="">
+    <service name="interfaceTaskFormula" engine="interface" location="" invoke="" auth="false">
         <attribute mode="IN" name="arguments" optional="false" type="java.util.Map"/>
         <attribute mode="OUT" name="totalTime" optional="false" type="Double"/>
     </service>
-    <service name="exampleTaskFormula" engine="simple" auth="true"
+    <service name="exampleTaskFormula" engine="simple" auth="false"
             location="org/ofbiz/manufacturing/techdata/TaskFormulae.xml" invoke="exampleTaskFormula">
         <description>Formula that computes the estimated manufacturing time of a given task</description>
         <implements service="interfaceTaskFormula"/>
