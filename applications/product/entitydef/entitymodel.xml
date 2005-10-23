@@ -1847,7 +1847,7 @@
       <field name="scrapFactor" type="floating-point"></field>
       <field name="instruction" type="long-varchar"></field>
       <field name="routingWorkEffortId" type="id"></field>
-      <field name="formula" type="long-varchar"></field>
+      <field name="estimateCalcMethod" type="id"></field>
       <prim-key field="productId"/>
       <prim-key field="productIdTo"/>
       <prim-key field="productAssocTypeId"/>
@@ -1863,6 +1863,9 @@
       </relation>
       <relation type="one" fk-name="PROD_ASSOC_RTWE" title="Routing" rel-entity-name="WorkEffort">
         <key-map field-name="routingWorkEffortId" rel-field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_ASSOC_CUSM" rel-entity-name="CustomMethod">
+        <key-map field-name="estimateCalcMethod" rel-field-name="customMethodId"/>
       </relation>
     </entity>
     <entity entity-name="ProductAssocType"

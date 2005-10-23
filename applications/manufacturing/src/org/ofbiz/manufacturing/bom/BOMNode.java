@@ -388,7 +388,17 @@ public class BOMNode {
         // in this breakdown.
         this.depth = depth;
         //this.quantity = Math.floor(quantity * quantityMultiplier / scrapFactor + 0.5);
-        if (this.productAssoc != null && this.productAssoc.getString("formula") != null) {
+        String serviceName = null;
+        if (this.productAssoc != null && this.productAssoc.getString("estimateCalcMethod") != null) {
+            try {
+                GenericValue genericService = productAssoc.getRelatedOne("CustomMethod");
+                if (genericService != null && genericService.getString("customMethodName") != null) {
+                    serviceName = genericService.getString("customMethodName");
+                }
+            } catch(Exception exc) {
+            }
+        }
+        if (serviceName != null) {
             Map resultContext = null;
             Map arguments = UtilMisc.toMap("neededQuantity", new Double(quantity), "amount", new Double((tree!=null? tree.getRootAmount():0)));
             Double width = null;
@@ -401,7 +411,7 @@ public class BOMNode {
             arguments.put("width", width);
             Map inputContext = UtilMisc.toMap("arguments", arguments, "userLogin", userLogin);
             try {
-                resultContext = dispatcher.runSync(this.productAssoc.getString("formula"), inputContext);
+                resultContext = dispatcher.runSync(serviceName, inputContext);
                 Double calcQuantity = (Double)resultContext.get("quantity");
                 if (calcQuantity != null) {
                     this.quantity = calcQuantity.doubleValue();
