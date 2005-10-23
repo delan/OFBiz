@@ -28,7 +28,7 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
         
-    <simple-method method-name="linearComponentFormula" short-description="Formula that the number of linear components in bom">
+    <simple-method method-name="linearComponentConsumptionFormula" short-description="Formula that the number of linear components in bom">
         <set field="arguments" from-field="parameters.arguments"/>
         <calculate field-name="totQuantity">
             <calcop operator="multiply">

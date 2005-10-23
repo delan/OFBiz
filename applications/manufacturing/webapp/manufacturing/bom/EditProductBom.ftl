@@ -212,15 +212,17 @@ function lookupBom() {
         <td width="26%" align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingFormula}:</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-            <select name="formula">
+            <select name="estimateCalcMethod">
             <option value=""></option>
             <#assign selectedFormula = "">
             <#if useValues>
-                <#assign selectedFormula = (productAssoc.formula)?if_exists>
+                <#assign selectedFormula = (productAssoc.estimateCalcMethod)?if_exists>
             <#else>
-                <#assign selectedFormula = (request.getParameter("formula"))?if_exists>
+                <#assign selectedFormula = (request.getParameter("estimateCalcMethod"))?if_exists>
             </#if>
-            <option value="linearComponentFormula" <#if selectedFormula = "linearComponentFormula">selected</#if>>Linear product</option>
+            <#list formulae as formula>
+                <option value="${formula.customMethodId}" <#if selectedFormula = formula.customMethodId>selected</#if>>${formula.description?if_exists}</option>
+            </#list>
             </select>
         </td>
     </tr>
