@@ -145,6 +145,13 @@
         </field>
         <field name="estimatedSetupMillis"><text/></field>
         <field name="estimatedMilliSeconds"><text/></field>
+        <field name="estimateCalcMethod">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="CustomMethod" key-field-name="customMethodId" description="${description}">
+                    <entity-constraint name="customMethodTypeId" operator="equals" value="TASK_FORMULA"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
