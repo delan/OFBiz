@@ -23,7 +23,6 @@
  */
 package org.ofbiz.securityext.login;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -42,10 +41,6 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.webapp.stats.VisitHandler;
-import org.ofbiz.webapp.control.LoginWorker;
-import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -56,6 +51,9 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.stats.VisitHandler;
 
 /**
  * LoginEvents - Events for UserLogin and Security handling.
@@ -297,6 +295,7 @@ public class LoginEvents {
     public static void doBasicLogout(GenericValue userLogin, HttpServletRequest request) {
         HttpSession session = request.getSession();
 
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
         if (security != null && userLogin != null) {
@@ -304,7 +303,7 @@ public class LoginEvents {
         }
 
         // set the logged out flag
-        LoginWorker.setLoggedOut(userLogin);
+        LoginWorker.setLoggedOut(userLogin.getString("userLoginId"), delegator);
 
         // this is a setting we don't want to lose, although it would be good to have a more general solution here...
         String currCatalog = (String) session.getAttribute("CURRENT_CATALOG_ID");

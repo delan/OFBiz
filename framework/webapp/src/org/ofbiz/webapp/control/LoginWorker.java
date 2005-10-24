@@ -36,6 +36,8 @@ import javax.transaction.Transaction;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
@@ -129,11 +131,7 @@ public class LoginWorker {
         }
     }
 
-    public static void setLoggedOut(GenericValue userLogin) {
-        // set the logged out flag - need a mutable object first
-        userLogin = GenericValue.create(userLogin);
-        userLogin.set("hasLoggedOut", "Y");
-
+    public static void setLoggedOut(String userLoginId, GenericDelegator delegator) {
         Transaction parentTx = null;
         boolean beganTransaction = false;
 
@@ -146,6 +144,9 @@ public class LoginWorker {
 
             try {
                 beganTransaction = TransactionUtil.begin();
+
+                GenericValue userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+                userLogin.set("hasLoggedOut", "Y");
                 userLogin.store();
             } catch (GenericEntityException e) {
                 String errMsg = "Unable to set logged out flag on UserLogin";
