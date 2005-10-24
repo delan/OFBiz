@@ -1717,7 +1717,7 @@
       <field name="bankName" type="name"></field>
       <field name="routingNumber" type="short-varchar"></field>
       <field name="accountType" type="short-varchar"></field>
-      <field name="accountNumber" type="long-varchar" encrypt="true"></field>
+      <field name="accountNumber" type="long-varchar"></field>
       <field name="nameOnAccount" type="name"></field>
       <field name="companyNameOnAccount" type="name"></field>
       <field name="contactMechId" type="id-ne"></field>

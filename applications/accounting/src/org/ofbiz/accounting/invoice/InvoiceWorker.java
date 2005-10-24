@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.List;
+import java.math.BigDecimal;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -53,6 +54,10 @@ public class InvoiceWorker {
      * @return the invoice total as double
      */
     public static double getInvoiceTotal(GenericDelegator delegator, String invoiceId) {
+        return getInvoiceTotalBd(delegator, invoiceId).doubleValue();
+    }
+
+    public static BigDecimal getInvoiceTotalBd(GenericDelegator delegator, String invoiceId) {
         if (delegator == null) {
             throw new IllegalArgumentException("Null delegator is not allowed in this method");
         }
@@ -68,7 +73,7 @@ public class InvoiceWorker {
             throw new IllegalArgumentException("The invoiceId passed does not match an existing invoice");
         }
         
-        return getInvoiceTotal(invoice);
+        return getInvoiceTotalBd(invoice);
     }
     
     /**
@@ -76,8 +81,12 @@ public class InvoiceWorker {
      * @param invoice GenericValue object of the Invoice
      * @return the invoice total as double
      */
-    public static double getInvoiceTotal(GenericValue invoice) {
-        double invoiceTotal = 0.00;
+        public static double getInvoiceTotal(GenericValue invoice) {
+            return getInvoiceTotalBd(invoice).doubleValue();
+        }
+        
+        public static BigDecimal getInvoiceTotalBd(GenericValue invoice) {
+        BigDecimal invoiceTotal = new BigDecimal("0");
         List invoiceItems = null;
         try {
             invoiceItems = invoice.getRelated("InvoiceItem");
@@ -88,28 +97,16 @@ public class InvoiceWorker {
             Iterator invoiceItemsIter = invoiceItems.iterator();
             while (invoiceItemsIter.hasNext()) {
                 GenericValue invoiceItem = (GenericValue) invoiceItemsIter.next();
-                Double amount = invoiceItem.getDouble("amount");
-                Double quantity = invoiceItem.getDouble("quantity");
+                BigDecimal amount = invoiceItem.getBigDecimal("amount");
+                BigDecimal quantity = invoiceItem.getBigDecimal("quantity");
                 if (amount == null)
-                    amount = new Double(0.00);
+                    amount = new BigDecimal("0");
                 if (quantity == null)
-                    quantity = new Double(1);
-                invoiceTotal += amount.doubleValue() * quantity.doubleValue();
+                    quantity = new BigDecimal("1");
+                invoiceTotal = invoiceTotal.add( amount.multiply(quantity)).setScale(2,4);
             }
         }
-
-        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
-        DecimalFormat formatter = new DecimalFormat(currencyFormat);
-        String invoiceTotalString = formatter.format(invoiceTotal);
-        Double formattedTotal = null;
-        try {
-            formattedTotal = new Double(formatter.parse(invoiceTotalString).doubleValue());
-        } catch (ParseException e) {
-            Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
-            formattedTotal = new Double(invoiceTotal);
-        }
-        
-        return formattedTotal.doubleValue();        
+        return invoiceTotal;        
     }
 
     /**
