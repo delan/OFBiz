@@ -23,10 +23,14 @@
  */
 package org.ofbiz.minilang.operation;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-import org.w3c.dom.*;
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
+import org.w3c.dom.Element;
 
 /**
  * Convert the current field from the in-map and place it in the out-map
@@ -36,6 +40,7 @@ import org.ofbiz.base.util.*;
  * @since      2.0
  */
 public class Convert extends SimpleMapOperation {
+    public static final String module = Convert.class.getName();
     
     String toField;
     String type;
@@ -83,7 +88,8 @@ public class Convert extends SimpleMapOperation {
         try {
             convertedObject = ObjectType.simpleTypeConvert(fieldObject, type, format, locale);
         } catch (GeneralException e) {
-            messages.add(e.getMessage());
+            addMessage(messages, loader, locale);
+            Debug.logError(e, "Error in convert simple-map-processor operation: " + e.toString(), module);
             return;
         }
 
