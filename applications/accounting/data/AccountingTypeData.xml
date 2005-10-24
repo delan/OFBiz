@@ -286,6 +286,7 @@
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_READY" transitionName="Mark Ready"/>
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_RECEIVED" transitionName="Receive"/>
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_IN_PROCESS" transitionName="Correct"/>
     <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_SENT" transitionName="Send"/>
     <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_PAID" transitionName="Pay"/>
     <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
@@ -300,7 +301,12 @@
     <StatusItem description="Received" sequenceId="04" statusCode="RECEIVED" statusId="PMNT_RECEIVED" statusTypeId="PMNT_STATUS"/>
     <StatusItem description="Confirmed" sequenceId="05" statusCode="CONFIRMED" statusId="PMNT_CONFIRMED" statusTypeId="PMNT_STATUS"/>
     <StatusItem description="Cancelled" sequenceId="10" statusCode="CANCELLED" statusId="PMNT_CANCELLED" statusTypeId="PMNT_STATUS"/>
-
+    <StatusValidChange condition="" statusId="PMNT_NOT_PAID" statusIdTo="PMNT_SENT" transitionName="Payment Send"/>
+    <StatusValidChange condition="" statusId="PMNT_NOT_PAID" statusIdTo="PMNT_RECEIVED" transitionName="Payment Received"/>
+    <StatusValidChange condition="" statusId="PMNT_NOT_PAID" statusIdTo="PMNT_CANCELLED" transitionName="Payment cancelled"/>
+    <StatusValidChange condition="" statusId="PMNT_SENT" statusIdTo="PMNT_CONFIRMED" transitionName="Payment Confirmed"/>
+    <StatusValidChange condition="" statusId="PMNT_RECEIVED" statusIdTo="PMNT_CONFIRMED" transitionName="Payment Confirmed"/>
+    
     <SettlementTerm settlementTermId="COD" termName="Cash Due on Delivery" termValue="0" uomId="TF_day"/>
     <SettlementTerm settlementTermId="NET_15" termName="Net Due in 15 Days" termValue="15" uomId="TF_day"/>
     <SettlementTerm settlementTermId="NET_30" termName="Net Due in 30 Days" termValue="30" uomId="TF_day"/>
