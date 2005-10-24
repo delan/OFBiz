@@ -103,7 +103,7 @@ public class XuiSession {
 
     public void logout() {
         if (this.userLogin != null) {
-            LoginWorker.setLoggedOut(this.userLogin);
+            LoginWorker.setLoggedOut(this.userLogin.getString("userLoginId"), this.getDelegator());
             this.userLogin = null;
         }
     }
