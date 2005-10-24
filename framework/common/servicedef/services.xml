@@ -94,6 +94,27 @@
         <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
     </service>
 
+    <!-- DataSourceType Services -->
+    <service name="interfaceDataSourceType" engine="interface" location="" invoke="">
+        <attribute name="dataSourceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createDataSourceType" engine="simple"
+            location="org/ofbiz/common/datasource/DataSourceTypeServices.xml" invoke="createDataSourceType" auth="true">
+        <description>Create a DataSourceType record</description>
+        <implements service="interfaceDataSourceType"/>
+    </service>
+    <service name="updateDataSourceType" engine="simple"
+            location="org/ofbiz/common/datasource/DataSourceTypeServices.xml" invoke="updateDataSourceType" auth="true">
+        <description>Update a DataSourceType record</description>
+        <implements service="interfaceDataSourceType"/>
+    </service>
+    <service name="deleteDataSourceType" engine="simple"
+            location="org/ofbiz/common/datasource/DataSourceTypeServices.xml" invoke="deleteDataSourceType" auth="true">
+        <description>Delete a DataSourceType record</description>
+        <attribute name="dataSourceTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+
     <!-- CustomTimePeriod Services -->
     <service name="createCustomTimePeriod" default-entity-name="CustomTimePeriod" engine="simple"
             location="org/ofbiz/common/period/PeriodServices.xml" invoke="createCustomTimePeriod" auth="true">

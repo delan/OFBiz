@@ -84,29 +84,56 @@
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>    
     
     <request-map uri="changeDelegator">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>    
+    <request-map uri="setSessionLocale">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
     
     <!-- =========== DataSource =========== -->
-    <request-map uri="EditDataSources"><security https="true" auth="true"/><response name="success" type="view" value="EditDataSources"/></request-map>
+    <request-map uri="FindDataSource"><security https="true" auth="true"/><response name="success" type="view" value="FindDataSource"/></request-map>
+    <request-map uri="EditDataSource"><security https="true" auth="true"/><response name="success" type="view" value="EditDataSource"/></request-map>
     <request-map uri="createDataSource"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createDataSource"/>
-         <response name="success" type="view" value="EditDataSources"/>
-        <response name="error" type="view" value="EditDataSources"/>
+        <response name="success" type="view" value="EditDataSource"/>
+        <response name="error" type="view" value="EditDataSource"/>
     </request-map>
     <request-map uri="updateDataSource"><security https="true" auth="true"/>
         <event type="service" path="" invoke="updateDataSource"/>
-        <response name="success" type="view" value="EditDataSources"/>
-        <response name="error" type="view" value="EditDataSources"/>
+        <response name="success" type="view" value="EditDataSource"/>
+        <response name="error" type="view" value="EditDataSource"/>
     </request-map>
     <request-map uri="deleteDataSource"><security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteDataSource"/>
-        <response name="success" type="view" value="EditDataSources"/>
-        <response name="error" type="view" value="EditDataSources"/>
+        <response name="success" type="view" value="FindDataSource"/>
+        <response name="error" type="view" value="FindDataSource"/>
     </request-map>
     
+    <!-- =========== DataSourceType =========== -->
+    <request-map uri="FindDataSourceType"><security https="true" auth="true"/><response name="success" type="view" value="FindDataSourceType"/></request-map>
+    <request-map uri="EditDataSourceType"><security https="true" auth="true"/><response name="success" type="view" value="EditDataSourceType"/></request-map>
+    <request-map uri="createDataSourceType"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createDataSourceType"/>
+        <response name="success" type="view" value="EditDataSourceType"/>
+        <response name="error" type="view" value="EditDataSourceType"/>
+    </request-map>
+    <request-map uri="updateDataSourceType"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateDataSourceType"/>
+        <response name="success" type="view" value="EditDataSourceType"/>
+        <response name="error" type="view" value="EditDataSourceType"/>
+    </request-map>
+    <request-map uri="deleteDataSourceType"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteDataSourceType"/>
+        <response name="success" type="view" value="FindDataSourceType"/>
+        <response name="error" type="view" value="FindDataSourceType"/>
+    </request-map>
+
     <!-- =========== TrackingCode =========== -->
     <request-map uri="FindTrackingCode"><security https="true" auth="true"/><response name="success" type="view" value="FindTrackingCode"/></request-map>
     <request-map uri="EditTrackingCode"><security https="true" auth="true"/><response name="success" type="view" value="EditTrackingCode"/></request-map>
@@ -125,13 +152,8 @@
     <request-map uri="FindTrackingCodeVisits"><security https="true" auth="true"/><response name="success" type="view" value="FindTrackingCodeVisits"/></request-map>
     
     <!-- =========== MarketingCampaign =========== -->
-    <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/>
-        <response name="success" type="view" value="FindMarketingCampaign"/>
-    </request-map>
-    
-    <request-map uri="EditMarketingCampaign"><security https="true" auth="true"/>
-        <response name="success" type="view" value="EditMarketingCampaign"/>
-    </request-map>
+    <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>
+    <request-map uri="EditMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="EditMarketingCampaign"/></request-map>
     <request-map uri="createMarketingCampaign"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createMarketingCampaign"/>
         <response name="success" type="view" value="EditMarketingCampaign"/>
@@ -154,14 +176,8 @@
         <response name="success" type="view" value="EditMarketingCampaignRoles"/>
         <response name="error" type="view" value="EditMarketingCampaignRoles"/>
     </request-map>
-    <request-map uri="FindMarketingCampaignRoles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindMarketingCampaignRoles"/>
-    </request-map>
-    <request-map uri="ListMarketingCampaignRoles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListMarketingCampaignRoles"/>
-    </request-map>
+    <request-map uri="FindMarketingCampaignRoles"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaignRoles"/></request-map>
+    <request-map uri="ListMarketingCampaignRoles"><security https="true" auth="true"/><response name="success" type="view" value="ListMarketingCampaignRoles"/></request-map>
     <request-map uri="createMarketingCampaignRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createMarketingCampaignRole"/>
@@ -353,7 +369,10 @@
     <view-map name="main" type="screen" page="component://marketing/widget/CommonScreens.xml#main"/>
     <view-map name="login" type="screen" page="component://marketing/widget/CommonScreens.xml#login"/>
     
-    <view-map name="EditDataSources" type="region"/>
+    <view-map name="FindDataSource"  type="screen" page="component://marketing/widget/DataSourceScreens.xml#ListDataSource"/>
+    <view-map name="EditDataSource" type="screen" page="component://marketing/widget/DataSourceScreens.xml#EditDataSource"/>
+    <view-map name="FindDataSourceType"  type="screen" page="component://marketing/widget/DataSourceScreens.xml#ListDataSourceType"/>
+    <view-map name="EditDataSourceType" type="screen" page="component://marketing/widget/DataSourceScreens.xml#EditDataSourceType"/>
     
     <view-map name="FindTrackingCode" type="region"/>
     <view-map name="EditTrackingCode" type="region"/>

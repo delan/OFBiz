@@ -175,6 +175,30 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="deleteTrackingCode" default-entity-name="TrackingCode" engine="simple"
+            location="org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="deleteTrackingCode" auth="true">
+        <description>Update a TrackingCode record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+        
+    <!-- TrackingCodeType Services -->
+    <service name="createTrackingCodeType" default-entity-name="TrackingCodeType" engine="simple"
+            location="org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="createTrackingCodeType" auth="true">
+        <description>Create a TrackingCodeType record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateTrackingCodeType" default-entity-name="TrackingCodeType" engine="simple"
+            location="org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="updateTrackingCodeType" auth="true">
+        <description>Update a TrackingCodeType record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTrackingCodeType" default-entity-name="TrackingCodeType" engine="simple"
+            location="org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="deleteTrackingCodeType" auth="true">
+        <description>Update a TrackingCodeType record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     
     <!-- SegmentGroup Services -->
     <service name="createSegmentGroup" default-entity-name="SegmentGroup" engine="simple"

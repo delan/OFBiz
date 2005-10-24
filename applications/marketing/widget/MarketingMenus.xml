@@ -25,26 +25,20 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">
     <menu name="MarketingAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
-        default-align-style="col" menu-container-style="row" selected-menuitem-context-field-name="headerItem"
-        fill-style="col-fill"
-        orientation="horizontal" type="simple">
-        <menu-item name="main" title="Main"><link target="main"/></menu-item>
-        <menu-item name="DataSource" title="DataSource"><link target="EditDataSources"/></menu-item>
-        <menu-item name="Campaign" title="Campaign"><link target="FindMarketingCampaign"/></menu-item>
-        <menu-item name="Tracking" title="Tracking"><link target="FindTrackingCode"/></menu-item>
-        <menu-item name="Segment" title="Segment"><link target="FindSegmentGroup"/></menu-item>
-        <menu-item name="ContactList" title="ContactList"><link target="ListContactLists"/></menu-item>
+        default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
+        <menu-item name="main" title="${uiLabelMap.MarketingMainPage}"><link target="main"/></menu-item>
+        <menu-item name="DataSource" title="${uiLabelMap.DataSource}"><link target="FindDataSource"/></menu-item>
+        <menu-item name="Campaign" title="${uiLabelMap.MarketingCampaign}"><link target="FindMarketingCampaign"/></menu-item>
+        <menu-item name="Tracking" title="${uiLabelMap.Tracking}"><link target="FindTrackingCode"/></menu-item>
+        <menu-item name="Segment" title="${uiLabelMap.Segment}"><link target="LookupSegmentGroup"/></menu-item>
+        <menu-item name="ContactList" title="${uiLabelMap.ContactList}"><link target="ListContactLists"/></menu-item>
         
-        <menu-item name="Logout" title="Logout" align-style="col-right" >
-            <condition>
-                <not><if-empty field-name="userLogin"/></not>
-            </condition>
+        <menu-item name="Logout" title="${uiLabelMap.CommonLogout}" align-style="col-right">
+            <condition><not><if-empty field-name="requestAttributes.userLogin"/></not></condition>
             <link target="logout"/>
         </menu-item>
-        <menu-item name="Login" title="Login" align-style="col-right" >
-            <condition>
-                <if-empty field-name="userLogin"/>
-            </condition>
+        <menu-item name="Login" title="${uiLabelMap.CommonLogin}" align-style="col-right">
+            <condition><if-empty field-name="requestAttributes.userLogin"/></condition>
             <link target="${requestAttributes.checkLoginUrl}"/>
         </menu-item>
     </menu>
