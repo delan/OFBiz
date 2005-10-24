@@ -138,7 +138,7 @@
                 </#if>
               </tr>
               <#-- show info from workeffort -->
-              <#assign workOrderItemFulfillments = orderItem.getRelatedCache("WorkOrderItemFulfillment")?if_exists>
+              <#assign workOrderItemFulfillments = orderItem.getRelated("WorkOrderItemFulfillment")?if_exists>
               <#if workOrderItemFulfillments?has_content>
                   <#list workOrderItemFulfillments as workOrderItemFulfillment>
                       <#assign workEffort = workOrderItemFulfillment.getRelatedOneCache("WorkEffort")>
@@ -159,9 +159,9 @@
               </#if>
               <#-- show linked order lines -->
               <#if orderHeader?has_content && orderHeader.orderTypeId = "SALES_ORDER">
-                <#assign linkedOrderItems = orderItem.getRelatedCache("SalesOrderItemAssociation")?if_exists>
+                <#assign linkedOrderItems = orderItem.getRelated("SalesOrderItemAssociation")?if_exists>
               <#else>
-                <#assign linkedOrderItems = orderItem.getRelatedCache("PurchaseOrderItemAssociation")?if_exists>
+                <#assign linkedOrderItems = orderItem.getRelated("PurchaseOrderItemAssociation")?if_exists>
               </#if>
 
               <#if linkedOrderItems?has_content>
@@ -185,7 +185,7 @@
                 </#list>
               </#if>
               <#-- show linked requirements -->
-              <#assign linkedRequirements = orderItem.getRelatedCache("OrderRequirementCommitment")?if_exists>
+              <#assign linkedRequirements = orderItem.getRelated("OrderRequirementCommitment")?if_exists>
 
               <#if linkedRequirements?has_content>
                 <#list linkedRequirements as linkedRequirement>

@@ -84,7 +84,7 @@
             </tr>
             <#-- show info from workeffort if it was a rental item -->
             <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
-                <#assign WorkOrderItemFulfillments = orderItem.getRelatedCache("WorkOrderItemFulfillment")?if_exists>
+                <#assign WorkOrderItemFulfillments = orderItem.getRelated("WorkOrderItemFulfillment")?if_exists>
                 <#if WorkOrderItemFulfillments?has_content>
                     <#list WorkOrderItemFulfillments as WorkOrderItemFulfillment>
                         <#assign workEffort = WorkOrderItemFulfillment.getRelatedOneCache("WorkEffort")?if_exists>
