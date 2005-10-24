@@ -23,7 +23,7 @@
 -->
 <span class="head1">SQL Processor</span>
 
-<form method="post" action="EntitySQLProcessor"  name="EntitySQLCommand" style="margin: 0;">
+<form method="post" action="EntitySQLProcessor" name="EntitySQLCommand" style="margin: 0;">
 <table border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td width="20%" align="right">
@@ -45,6 +45,15 @@
         <td>&nbsp;</td>
         <td width="80%" align="left">
             <textarea class="textAreaBox" name="sqlCommand" cols="100" rows="5">${sqlCommand?if_exists}</textarea>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%" align="right">
+            <span class="tableheadtext">Limit Rows To</span>
+        </td>
+        <td>&nbsp;</td>
+        <td width="80%" align="left">
+            <input class="tabletext" name="rowLimit" value="${rowLimit?default(200)}"/>
         </td>
     </tr>
     <tr>
