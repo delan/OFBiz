@@ -1,8 +1,5 @@
-<%
-/**
- *  Title: Entity Maintenance Page
- *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+<%--
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -23,10 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    May 22 2001
- *@version    1.0
- */
-%> 
+--%>
 
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
@@ -45,68 +39,73 @@
 %>
 
 <h3 style='margin:0;'>Entity Data Maintenance</h3>
-<%if(security.hasPermission("ENTITY_MAINT", session)){%>
+<%if (security.hasPermission("ENTITY_MAINT", session)) {%>
 
 <%
   String rowColor1 = "viewManyTR2";
   String rowColor2 = "viewManyTR1";
   String rowColor = "";
 %>
-<TABLE cellpadding='1' cellspacing='1' border='0'>
-  <TR>
-    <TD valign="top">
-        <TABLE cellpadding='1' cellspacing='1' border='0'>
-          <TR class='viewOneTR1'>
-            <TD>Entity&nbsp;Name</TD>
-            <TD>&nbsp;</TD>
-            <TD>&nbsp;</TD>
-            <TD>&nbsp;</TD>
-          </TR>
+<table cellpadding='1' cellspacing='1' border='0'>
+  <tr>
+    <td valign="top">
+        <table cellpadding='1' cellspacing='1' border='0'>
+          <tr class='viewOneTR1'>
+            <td>Entity Name</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
         
         <%int colSize = entities.size()/3 + 1;%>
         <%int kIdx = 0;%>
         <%while (classNamesIterator != null && classNamesIterator.hasNext()) { ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());%>
             <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-              <TD><div class='tabletext' style='FONT-SIZE: xx-small;'><%=entity.getEntityName()%></div></TD>
+              <td><div class='tabletext' style='FONT-SIZE: xx-small;'><%=entity.getEntityName()%></div></td>
               <%if (entity instanceof ModelViewEntity) {%>
-                    <TD colspan='3' align="center"><div class='tabletext' style='FONT-SIZE: xx-small;'>View Entity</div></TD>
+                  <%if (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(entity.getPlainTableName(), "_VIEW", session)) {%>
+                    <td colspan='2' align="center"><div class='tabletext' style='FONT-SIZE: xx-small;'>View Entity</div></td>
+                    <td><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0</ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>All</a></td>
+                  <%} else {%>
+                    <td colspan='3' align="center"><div class='tabletext' style='FONT-SIZE: xx-small;'>View Entity</div></td>
+                  <%}%>
               <%} else {%>
                   <%if (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(entity.getPlainTableName(), "_CREATE", session)) {%>
-                    <TD><a href='<ofbiz:url>/ViewGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Crt</a></TD>
+                    <td><a href='<ofbiz:url>/ViewGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Crt</a></td>
                   <%} else {%>
-                    <TD><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></TD>
+                    <td><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></td>
                   <%}%>
                   <%if (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(entity.getPlainTableName(), "_VIEW", session)) {%>
-                    <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Fnd</a></TD>
-                    <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0</ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>All</a></TD>
+                    <td><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Fnd</a></td>
+                    <td><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0</ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>All</a></td>
                   <%} else {%>
-                    <TD><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></TD>
-                    <TD><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></TD>
+                    <td><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></td>
+                    <td><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></td>
                   <%}%>
               <%}%>
-            </TR>
+            </tr>
         
             <%kIdx++;%>
             <%if(kIdx >= colSize) {%>
               <%colSize += colSize;%>
-              </TABLE>
-            </TD>
-            <TD valign="top">
-              <TABLE cellpadding='1' cellspacing='1' border='0'>
+              </table>
+            </td>
+            <td valign="top">
+              <table cellpadding='1' cellspacing='1' border='0'>
               <%rowColor = "";%>
-              <TR class='viewOneTR1'>
-                <TD>Entity&nbsp;Name</TD>
-                <TD>&nbsp;</TD>
-                <TD>&nbsp;</TD>
-                <TD>&nbsp;</TD>
-              </TR>
+              <tr class='viewOneTR1'>
+                <td>Entity&nbsp;Name</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
             <%}%>
         <%}%>
-          </TR>
-        </TABLE>
-    </TD>
-  </TR>
-</TABLE>
+          </tr>
+        </table>
+    </td>
+  </tr>
+</table>
 <%}else{%>
   <h3>You do not have permission to view this page (ENTITY_MAINT needed).</h3>
 <%}%>
