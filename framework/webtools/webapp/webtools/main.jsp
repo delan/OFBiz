@@ -99,9 +99,9 @@
                 <li><div class="tabletext">Entity XML Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/xmldsdump</ofbiz:url>" class="linktext">XML Data Export</a>
-                  <li><a href="<ofbiz:url>/xmldsdumpall</ofbiz:url>" class="linktext">XML Data Export All</a>
-                  <li><a href="<ofbiz:url>/xmldsimport</ofbiz:url>" class="linktext">XML Data Import</a>
-                  <li><a href="<ofbiz:url>/xmldsimportdir</ofbiz:url>" class="linktext">XML Data Import Dir</a>
+                  <li><a href="<ofbiz:url>/EntityExportAll</ofbiz:url>" class="linktext">XML Data Export All</a>
+                  <li><a href="<ofbiz:url>/EntityImport</ofbiz:url>" class="linktext">XML Data Import</a>
+                  <li><a href="<ofbiz:url>/EntityImportDir</ofbiz:url>" class="linktext">XML Data Import Dir</a>
                 </ul>
               <%}%>
               <%if(security.hasPermission("SERVICE_MAINT", session)) {%>

@@ -46,6 +46,7 @@
   URL dataFileUrl = null;
   try { dataFileUrl = dataFileIsUrl?new URL(dataFileLoc):UtilURL.fromFilename(dataFileLoc); }
   catch (java.net.MalformedURLException e) { messages.add(e.getMessage()); }
+
   URL definitionUrl = null;
   try { definitionUrl = definitionIsUrl?new URL(definitionLoc):UtilURL.fromFilename(definitionLoc); }
   catch (java.net.MalformedURLException e) { messages.add(e.getMessage()); }
@@ -75,54 +76,54 @@
   }
 
 %>
-<h3>Work With Data Files</h3>
-<div>This page is used to view and export data from data files parsed by the configurable data file parser.</div>
-
+<div class="head1">Work With Data Files</div>
+<div class="tabletext">This page is used to view and export data from data files parsed by the configurable data file parser.</div>
+<hr>
 <%if(security.hasPermission("DATAFILE_MAINT", session)) {%>
-  <FORM method="post" action="<ofbiz:url>/viewdatafile</ofbiz:url>">
-    Data Filename or URL: <INPUT name="DATAFILE_LOCATION" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileLoc)%>"> Is URL?:<INPUT type="checkbox" name="DATAFILE_IS_URL" <%=dataFileIsUrl?"checked":""%>><BR>
-    Definition Filename or URL: <INPUT name="DEFINITION_LOCATION" class="inputBox" type="text" size="60" value="<%=UtilFormatOut.checkNull(definitionLoc)%>"> Is URL?:<INPUT type="checkbox" name="DEFINITION_IS_URL" <%=definitionIsUrl?"checked":""%>><BR>
-    Data File Definition Name: <INPUT name="DEFINITION_NAME" type="text" class="inputBox" size="30" value="<%=UtilFormatOut.checkNull(definitionName)%>"><BR>
-    Save to file: <INPUT name="DATAFILE_SAVE" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileSave)%>"/><br/>
-    Save to entity xml file: <INPUT name="ENTITYXML_FILE_SAVE" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(entityXmlFileSave)%>"><br/>
-    <INPUT type="submit" value="Run">
-  </FORM>
+  <form method="post" action="<ofbiz:url>/viewdatafile</ofbiz:url>">
+    <div class="tabletext">Data Filename or URL: <input name="DATAFILE_LOCATION" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileLoc)%>"> Is URL?:<INPUT type="checkbox" name="DATAFILE_IS_URL" <%=dataFileIsUrl?"checked":""%>></div>
+    <div class="tabletext">Definition Filename or URL: <input name="DEFINITION_LOCATION" class="inputBox" type="text" size="60" value="<%=UtilFormatOut.checkNull(definitionLoc)%>"> Is URL?:<INPUT type="checkbox" name="DEFINITION_IS_URL" <%=definitionIsUrl?"checked":""%>></div>
+    <div class="tabletext">Data File Definition Name: <input name="DEFINITION_NAME" type="text" class="inputBox" size="30" value="<%=UtilFormatOut.checkNull(definitionName)%>"></div>
+    <div class="tabletext">Save to file: <input name="DATAFILE_SAVE" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileSave)%>"/></div>
+    <div class="tabletext">Save to entity xml file: <input name="ENTITYXML_FILE_SAVE" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(entityXmlFileSave)%>"></div>
+    <div><input type="submit" value="Run"></div>
+  </form>
 
   <hr>
 
   <%if (messages.size() > 0) {%>
-    <H4>The following occurred:</H4>
-    <UL>
+    <div class="head1">The following occurred:</div>
+    <ul>
     <%Iterator errMsgIter = messages.iterator();%>
     <%while (errMsgIter.hasNext()) {%>
-      <LI><%=errMsgIter.next()%>
+      <li><%=errMsgIter.next()%>
     <%}%>
-    </UL>
+    </ul>
   <%}%>
 
   <%if (dataFile != null && modelDataFile != null && (entityXmlFileSave == null || entityXmlFileSave.length() == 0) && (dataFileSave == null || dataFileSave.length() == 0)) {%>
 
-    <TABLE cellpadding="2" cellspacing="0" border="1">
-      <TR>
-        <TD><B>Name</B></TD>
-        <TD><B>Type-Code</B></TD>
-        <TD><B>Sender</B></TD>
-        <TD><B>Receiver</B></TD>
-        <TD><B>Record Length</B></TD>
-        <TD><B>Separator Style</B></TD>
-      </TR>
-      <TR>
-        <TD><%=modelDataFile.name%></TD>
-        <TD><%=modelDataFile.typeCode%></TD>
-        <TD><%=modelDataFile.sender%></TD>
-        <TD><%=modelDataFile.receiver%></TD>
-        <TD><%=modelDataFile.recordLength%></TD>
-        <TD><%=modelDataFile.separatorStyle%></TD>
-      </TR>
-      <TR>
-        <TD colspan="6">Description: <%=modelDataFile.description%></TD>
-      </TR>
-    </TABLE>
+    <table cellpadding="2" cellspacing="0" border="1">
+      <tr>
+        <td><B>Name</B></td>
+        <td><B>Type-Code</B></td>
+        <td><B>Sender</B></td>
+        <td><B>Receiver</B></td>
+        <td><B>Record Length</B></td>
+        <td><B>Separator Style</B></td>
+      </tr>
+      <tr>
+        <td><%=modelDataFile.name%></td>
+        <td><%=modelDataFile.typeCode%></td>
+        <td><%=modelDataFile.sender%></td>
+        <td><%=modelDataFile.receiver%></td>
+        <td><%=modelDataFile.recordLength%></td>
+        <td><%=modelDataFile.separatorStyle%></td>
+      </tr>
+      <tr>
+        <td colspan="6">Description: <%=modelDataFile.description%></td>
+      </tr>
+    </table>
     <BR>
     <%request.setAttribute("CUR_RECORD_LIST", dataFile.getRecords());%>
     <%pageContext.include("/datafile/showrecords.jsp");%>
@@ -130,5 +131,5 @@
 
 <%}else{%>
   <hr>
-  <div>You do not have permission to use this page (DATAFILE_MAINT needed)</div>
+  <div class="tabletext">You do not have permission to use this page (DATAFILE_MAINT needed)</div>
 <%}%>

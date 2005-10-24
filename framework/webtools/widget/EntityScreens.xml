@@ -33,9 +33,10 @@
                 <set field="title" value="Entity SQL Processor"/>
                 <set field="titleProperty" value="PageTitleEntitySQLProcessor"/>
                 <set field="labelTitleProperty" value="PageTitleEntitySQLProcessor"/>
-                <set field="rowLimit" value="200" type="Integer"/>
                 <set field="sqlCommand" from-field="parameters.sqlCommand"/>
                 <set field="selGroup" from-field="parameters.group"/>
+                <set field="rowLimit" from-field="parameters.rowLimit" type="Integer"/>
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
                 
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntitySQLProcessor.bsh"/>
             </actions>
@@ -44,6 +45,84 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://webtools/webapp/webtools/entity/EntitySQLProcessor.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+                <label style="head3">${uiLabelMap.WebtoolsPermissionError}</label>
+            </fail-widgets>
+        </section>
+    </screen>
+    <screen name="EntityExportAll">
+        <section>
+            <condition>
+                <if-has-permission permission="ENTITY_MAINT"/>
+            </condition>
+            <actions>
+                <set field="title" value="XML Export from DataSource(s)"/>
+                <set field="titleProperty" value="PageTitleEntityExportAll"/>
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityExportAll.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main" location="component://webtools/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://webtools/webapp/webtools/entity/EntityExportAll.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+                <label style="head3">${uiLabelMap.WebtoolsPermissionError}</label>
+            </fail-widgets>
+        </section>
+    </screen>
+    <screen name="EntityImportDir">
+        <section>
+            <condition>
+                <if-has-permission permission="ENTITY_MAINT"/>
+            </condition>
+            <actions>
+                <set field="title" value="XML Import Dir"/>
+                <set field="titleProperty" value="PageTitleEntityImportDir"/>
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityImportDir.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main" location="component://webtools/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://webtools/webapp/webtools/entity/EntityImportDir.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+                <label style="head3">${uiLabelMap.WebtoolsPermissionError}</label>
+            </fail-widgets>
+        </section>
+    </screen>
+    <screen name="EntityImport">
+        <section>
+            <condition>
+                <if-has-permission permission="ENTITY_MAINT"/>
+            </condition>
+            <actions>
+                <set field="title" value="XML Import"/>
+                <set field="titleProperty" value="PageTitleEntityImport"/>
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityImport.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main" location="component://webtools/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://webtools/webapp/webtools/entity/EntityImport.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
