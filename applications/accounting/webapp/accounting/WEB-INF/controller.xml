@@ -229,13 +229,53 @@
         <response name="success" type="view" value="manualTx"/>
     </request-map>
 
+    <!-- transaction page requests -->
+    <request-map uri="FindGatewayResponses">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGatewayResponses"/>
+    </request-map>
+    <request-map uri="ViewGatewayResponse">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+    </request-map>
+    <request-map uri="AuthorizeTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AuthorizeTransaction"/>
+    </request-map>
+    <request-map uri="CaptureTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CaptureTransaction"/>
+    </request-map>
+    <request-map uri="ManualTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="manualTx"/>
+    </request-map>
+    <request-map uri="TransactionReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TransactionReports"/>
+    </request-map>
+
+    <!-- transaction action requests -->
+    <request-map uri="processAuthorizeTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="authOrderPaymentPreference"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+        <response name="error" type="view" value="AuthorizeTransaction"/>
+    </request-map>
+    <request-map uri="processCaptureTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="captureOrderPayments"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+        <response name="error" type="view" value="CaptureTransaction"/>
+    </request-map>
+
     <!-- GlAccount requests -->
     <request-map uri="createGlJournalEntry">
         <security https="true" auth="true"/>
         <event type="service" invoke="createGlAccountRole"/>
         <response name="success" type="view" value="EditGlJournalEntry"/>
         <response name="error" type="view" value="EditGlJournalEntry"/>
-	</request-map>
+    </request-map>
 	
     <request-map uri="EditGlJournalEntry">
         <security https="true" auth="true"/>
@@ -621,5 +661,12 @@
     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
     <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
     <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
+
+    <!-- Transaction request mappings -->
+    <view-map name="FindGatewayResponses" page="component://accounting/widget/TransactionScreens.xml#FindGatewayResponses" type="screen"/>
+    <view-map name="ViewGatewayResponse" page="component://accounting/widget/TransactionScreens.xml#ViewGatewayResponse" type="screen"/>
+    <view-map name="AuthorizeTransaction" page="component://accounting/widget/TransactionScreens.xml#AuthorizeTransaction" type="screen"/>
+    <view-map name="CaptureTransaction" page="component://accounting/widget/TransactionScreens.xml#CaptureTransaction" type="screen"/>
+    <view-map name="TransactionReports" page="component://accounting/widget/TransactionScreens.xml#TransactionReports" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>

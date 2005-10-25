@@ -45,7 +45,7 @@
   <div class="col"><a href="<@ofbizUrl>ListFixedAssets</@ofbizUrl>" class="${selectedLeftClassMap.ListFixedAssets?default(unselectedLeftClassName)}">${uiLabelMap.AccountingFixedAssets}</a></div>
 
   <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
-    <div class="col"><a href="<@ofbizUrl>manualETx</@ofbizUrl>" class="${selectedLeftClassMap.manualTx?default(unselectedLeftClassName)}">Manual Tx</a></div>
+    <div class="col"><a href="<@ofbizUrl>FindGatewayResponses</@ofbizUrl>" class="${selectedLeftClassMap.transaction?default(unselectedLeftClassName)}">${uiLabelMap.AccountingTransactions}</a></div>
   </#if>
   <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
