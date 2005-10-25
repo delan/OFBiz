@@ -267,10 +267,20 @@ public class PaymentGatewayServices {
 
             Map results = null;
             try {
-                dispatcher.runSync("authOrderPaymentPreference", authContext);
+                results = dispatcher.runSync("authOrderPaymentPreference", authContext);
             } catch (GenericServiceException se) {
                 Debug.logError(se, "Error in calling authOrderPaymentPreference from authOrderPayments: " + se.getMessage(), module);
-                return ServiceUtil.returnError("Could not authorize the order payment preference with ID [" + paymentPref.getString("orderPaymentPreferenceId") + "] for order [" + orderId + "]");
+                hadError += 1;
+                messages.add("Could not authorize OrderPaymentPreference [" + paymentPref.getString("orderPaymentPreferenceId") + "] for order [" + orderId + "]: "
+                    + se.getMessage());
+                continue;
+            }
+
+            if (ServiceUtil.isError(results)) {
+                hadError += 1;
+                messages.add("Could not authorize OrderPaymentPreference [" + paymentPref.getString("orderPaymentPreferenceId") + "] for order [" + orderId + "]: " 
+                    + results.get(ModelService.ERROR_MESSAGE)); 
+                continue;
             }
 
             if (((Boolean)results.get("finished")).booleanValue()) finished += 1;
