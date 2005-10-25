@@ -476,5 +476,40 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ViewQuoteProfit">
+        <section>
+            <actions>
+                <set field="title" value="View Quote Profit"/>
+                <set field="titleProperty" value="PageTitleViewQuoteProfit"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="ViewQuoteProfit"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+    
+                <entity-one entity-name="Quote" value-name="quote" auto-field-map="true"/>
+                <entity-and entity-name="QuoteItem" list-name="quoteItems">
+                    <field-map env-name="quote.quoteId" field-name="quoteId"/>
+                    <order-by field-name="custRequestId"/>
+                    <order-by field-name="custRequestItemSeqId"/>
+                </entity-and>
+                <entity-and entity-name="QuoteCoefficient" list-name="quoteCoefficients">
+                    <field-map env-name="quote.quoteId" field-name="quoteId"/>
+                </entity-and>
+                <set from-field="quote.quoteId" field="quoteId"/>
+
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/quote/ViewQuoteProfit.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonQuotePriceDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/quote/ViewQuoteProfit.ftl"/></html>
+                        </platform-specific>
+                        <include-form name="ViewQuoteProfit" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
 

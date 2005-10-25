@@ -38,6 +38,7 @@
         <a href="<@ofbizUrl>ListQuoteCoefficients?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteCoefficients?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteCoefficients}</a>
         <a href="<@ofbizUrl>ManageQuotePrices?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ManageQuotePrices?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuotePrices}</a>
         <a href="<@ofbizUrl>ListQuoteAdjustments?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ListQuoteAdjustments?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteAdjustments}</a>
+        <a href="<@ofbizUrl>ViewQuoteProfit?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.ViewQuoteProfit?default(unselectedClassName)}">${uiLabelMap.OrderViewQuoteProfit}</a>
         </#if>
         <a href="<@ofbizUrl>ListQuoteWorkEfforts?quoteId=${quote.quoteId}</@ofbizUrl>" class="${selectedClassMap.QuoteWorkEfforts?default(unselectedClassName)}">${uiLabelMap.OrderOrderQuoteWorkEfforts}</a>
     </div>

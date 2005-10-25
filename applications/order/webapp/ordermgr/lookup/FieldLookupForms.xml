@@ -306,7 +306,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreId" title="${uiLabelMap.QuoteProductStoreId}">
+        <field name="productStoreId" title="${uiLabelMap.ProductProductStore}">
             <drop-down allow-empty="true">
                 <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId"/>
             </drop-down>
