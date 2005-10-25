@@ -167,6 +167,7 @@
     <entity-group group="org.ofbiz" entity="ProductTypeAttr" />
     <entity-group group="org.ofbiz" entity="ProductVirtualAndAssocPrices" />
     <entity-group group="org.ofbiz" entity="ProductVirtualAndVariantInfo" />
+    <entity-group group="org.ofbiz" entity="ProductAndPriceView" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.promo -->

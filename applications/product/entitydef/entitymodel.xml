@@ -2216,6 +2216,25 @@
         <key-map field-name="productId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="ProductAndPriceView"
+            package-name="org.ofbiz.product.product"
+            title="Product And Price View">
+      <member-entity entity-alias="PR" entity-name="Product"/>
+      <member-entity entity-alias="PP" entity-name="ProductPrice"/>
+      <alias entity-alias="PR" name="productId"/>
+      <alias entity-alias="PR" name="productTypeId"/>
+      <alias entity-alias="PR" name="productName"/>
+      <alias entity-alias="PR" name="internalName"/>
+      <alias entity-alias="PP" name="productPriceTypeId"/>
+      <alias entity-alias="PP" name="productPricePurposeId"/>
+      <alias entity-alias="PP" name="currencyUomId"/>
+      <alias entity-alias="PP" name="fromDate"/>
+      <alias entity-alias="PP" name="thruDate"/>
+      <alias entity-alias="PP" name="price"/>
+      <view-link entity-alias="PR" rel-entity-alias="PP">
+        <key-map field-name="productId"/>
+      </view-link>
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.promo -->
