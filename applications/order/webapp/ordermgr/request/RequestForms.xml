@@ -222,6 +222,8 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field use-when="custRequestItem==null" name="sequenceNum" entry-name="nextSequenceNum"><text/></field>
+        <field use-when="custRequestItem!=null" name="sequenceNum"><text/></field>
         <field name="priority" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <option key="9"/>
