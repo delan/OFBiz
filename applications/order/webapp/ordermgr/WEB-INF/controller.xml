@@ -922,6 +922,7 @@
     <!-- =============== Quote mapping =================-->
     <request-map uri="FindQuote"><security https="true" auth="true"/><response name="success" type="view" value="FindQuote"/></request-map>
     <request-map uri="ViewQuote"><security https="true" auth="true"/><response name="success" type="view" value="ViewQuote"/></request-map>
+    <request-map uri="ViewQuoteProfit"><security https="true" auth="true"/><response name="success" type="view" value="ViewQuoteProfit"/></request-map>
 
     <request-map uri="EditQuote"><security https="true" auth="true"/><response name="success" type="view" value="EditQuote"/></request-map>
     <request-map uri="createQuote">
@@ -1203,6 +1204,7 @@
     <view-map name="ManageQuotePrices" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ManageQuotePrices"/>
     <view-map name="ListQuoteAdjustments" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteAdjustments"/>
     <view-map name="EditQuoteAdjustment" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteAdjustment"/>
+    <view-map name="ViewQuoteProfit" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteProfit"/>
 
     <view-map name="FindRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#FindRequest"/>
     <view-map name="ViewRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#ViewRequest"/>

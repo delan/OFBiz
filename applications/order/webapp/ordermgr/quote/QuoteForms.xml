@@ -57,6 +57,13 @@
         <field name="description"><hidden/></field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
+        <field name="productStoreId" title="${uiLabelMap.ProductProductStore}">
+            <drop-down allow-empty="true">
+                <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId">
+                    <entity-order-by field-name="storeName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -106,7 +113,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreId" title="${uiLabelMap.QuoteProductStoreId}">
+        <field name="productStoreId" title="${uiLabelMap.ProductProductStore}">
             <drop-down allow-empty="false">
                 <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId">
                     <entity-order-by field-name="storeName"/>
@@ -357,5 +364,25 @@
             </drop-down>
         </field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ViewQuoteProfit" title="" type="list"
+            list-name="quoteItemAndCostInfos" target="" paginate-target="ViewQuoteProfit"
+            default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
+        <field name="custRequestId" title="${uiLabelMap.OrderOrderQuoteViewRequest}" widget-style="buttontext">
+            <hyperlink target-type="inter-app" also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="/workeffort/control/requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
+        </field>
+        <field name="custRequestItemSeqId"><hidden/></field>
+        <field name="quoteId"><hidden/></field>
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="buttontext">
+            <hyperlink also-hidden="true" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
+        </field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+        <field name="averageCost" title="${uiLabelMap.OrderOrderQuoteAverageCost}"><display/></field>
+        <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}"><display/></field>
+        <field name="profit" title="${uiLabelMap.OrderOrderQuoteProfit}"><display/></field>
+        <field name="percProfit" title="${uiLabelMap.OrderOrderQuotePercProfit}"><display/></field>
     </form>
 </forms>
