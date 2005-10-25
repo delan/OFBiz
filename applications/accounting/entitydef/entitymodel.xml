@@ -2390,10 +2390,9 @@
     <entity entity-name="TaxAuthority" package-name="org.ofbiz.accounting.tax" title="Tax Authority Entity">
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>
-        <field name="requireTaxIdForOrder" type="indicator"></field>
+        <field name="requireTaxIdForExemption" type="indicator"></field>
         <field name="taxIdFormatPattern" type="long-varchar"></field>
         <field name="includeTaxInPrice" type="indicator"><!-- this is mainly for VAT tax authorities --></field>
-        <field name="useMainItemRate" type="indicator"><!-- in some places it is required to use the rate for the "main" item for all items on an invoice --></field>
         <prim-key field="taxAuthGeoId"/>
         <prim-key field="taxAuthPartyId"/>
         <relation type="one" fk-name="TAXAUTH_TAGEO" title="TaxAuth" rel-entity-name="Geo">
