@@ -338,10 +338,15 @@
     <!-- Standard Industrial Cost Types -->
     <FixedAssetStdCostType description="Standard Setup Cost" hasTable="N" parentTypeId="" fixedAssetStdCostTypeId="SETUP_COST"/>
     <FixedAssetStdCostType description="Standard Usage Cost" hasTable="N" parentTypeId="" fixedAssetStdCostTypeId="USAGE_COST"/>
+
+    <!-- Example: California is a tax exemption inheritor of the USA, there is a tax exemption inheritance from USA to CA, taxAuthGeoId=USA toTaxAuthGeoId=CA -->    
+    <TaxAuthorityAssocType taxAuthorityAssocTypeId="EXEMPT_INHER" description="Exemption Inheritance"/>
+    <TaxAuthorityAssocType taxAuthorityAssocTypeId="COLLECT_AGENT" description="Collection Agent"/>
     
     <TaxAuthorityRateType taxAuthorityRateTypeId="SALES_TAX" description="Sales Tax"/>
     <TaxAuthorityRateType taxAuthorityRateTypeId="USE_TAX" description="Use Tax"/>
-
+    <TaxAuthorityRateType taxAuthorityRateTypeId="INCOME_TAX" description="Income Tax"/>
+    
     <!-- Points of Title Transfer -->
     <EnumerationType description="Points of Title Transfer" enumTypeId="PTSOFTTFR" hasTable="N" parentTypeId=""/>
     <Enumeration description="Desination" enumCode="DEST" enumId="POTT_DEST" sequenceId="01" enumTypeId="PTSOFTTFR"/>
