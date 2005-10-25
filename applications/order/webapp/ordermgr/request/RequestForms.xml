@@ -29,15 +29,6 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="EditWorkEffort" type="single"
-            target="updateworkeffort" title="" default-map-name="workEffort"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <alt-target use-when="workEffort==null" target="createworkeffort"/>
-        <auto-fields-entity entity-name="WorkEffort" default-field-type="edit" />
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
     <form name="FindRequests" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="inputBox"
             target="FindRequest" title="" type="single" default-map-name="parameters">
@@ -330,7 +321,7 @@
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
         <field name="remove" widget-style="buttontext">
-            <hyperlink description="${uiLabelMap.CommonRemove}" target="removerequestrole?custRequestId=${custRequestId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"/>
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="removerequestrole?custRequestId=${custRequestId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"/>
         </field>
     </form>
 
@@ -347,9 +338,7 @@
                 <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListRequestItemRequirements" type="list"
             title="" list-name="custRequestRequirements" paginate-target="RequestItemRequirements"
@@ -359,5 +348,28 @@
             <hyperlink description="${requirementId}" target="EditRequirement?requirementId=${requirementId}"/>
         </field>
     </form>
-</forms>
+    <form name="ListCustRequestItemWorkEfforts" type="list" target="" title=""
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
 
+        <field name="custRequestId"><hidden/></field>
+        <field name="custRequestItemSeqId"><hidden/></field>
+        <field name="workEffortId">
+            <display-entity entity-name="WorkEffort" description="${workEffortName}">
+                <sub-hyperlink description="[${workEffortId}]" target="/workeffort/control/EditWorkEffort?workEffortId=${workEffortId}" target-type="inter-app" link-style="buttontext"/>
+            </display-entity>
+        </field>
+        
+        <field name="deleteLink" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestItemWorkEffort?custRequestId=${custRequestId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"/>
+        </field>
+    </form>
+    <form name="AddCustRequestItemWorkEffort" type="single" target="createCustRequestItemWorkEffort" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="workEffort==null" target="createworkeffort"/>
+        <field name="custRequestId"><hidden/></field>
+        <field name="custRequestItemSeqId"><hidden/></field>
+        <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+</forms>

@@ -818,23 +818,11 @@
     </request-map>
 
     <!-- =============== CustRequest mapping =================-->
-    <request-map uri="FindRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindRequest"/>
-    </request-map>
-    <request-map uri="ViewRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewRequest"/>
-    </request-map>
-    <request-map uri="EditRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditRequest"/>
-    </request-map>
+    <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>
+    <request-map uri="ViewRequest"><security https="true" auth="true"/><response name="success" type="view" value="ViewRequest"/></request-map>
+    <request-map uri="EditRequest"><security https="true" auth="true"/><response name="success" type="view" value="EditRequest"/></request-map>
     <!-- deprecated: use EditRequest instead -->
-    <request-map uri="request">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditRequest"/>
-    </request-map>
+    <request-map uri="request"><security https="true" auth="true"/><response name="success" type="view" value="EditRequest"/></request-map>
     <request-map uri="createrequest">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequest"/>
@@ -848,10 +836,7 @@
         <response name="error" type="view" value="EditRequest"/>
     </request-map>
 
-    <request-map uri="requestroles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="RequestRoles"/>
-    </request-map>
+    <request-map uri="requestroles"><security https="true" auth="true"/><response name="success" type="view" value="RequestRoles"/></request-map>
     <request-map uri="createrequestrole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestRole"/>
@@ -865,19 +850,10 @@
         <response name="error" type="view" value="RequestRoles"/>
     </request-map>
 
-    <request-map uri="requestitems">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="RequestItems"/>
-    </request-map>
-    <request-map uri="EditRequestItem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditRequestItem"/>
-    </request-map>
+    <request-map uri="requestitems"><security https="true" auth="true"/><response name="success" type="view" value="RequestItems"/></request-map>
+    <request-map uri="EditRequestItem"><security https="true" auth="true"/><response name="success" type="view" value="EditRequestItem"/></request-map>
     <!-- deprecated: use EditRequestItem instead -->
-    <request-map uri="requestitem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditRequestItem"/>
-    </request-map>
+    <request-map uri="requestitem"><security https="true" auth="true"/><response name="success" type="view" value="EditRequestItem"/></request-map>
     <request-map uri="createrequestitem">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItem"/>
@@ -891,28 +867,30 @@
         <response name="error" type="view" value="RequestItems"/>
     </request-map>
 
-    <request-map uri="requestitemnotes">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="RequestItemNotes"/>
-    </request-map>
+    <request-map uri="requestitemnotes"><security https="true" auth="true"/><response name="success" type="view" value="RequestItemNotes"/></request-map>
     <request-map uri="createrequestitemnote">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItemNote"/>
         <response name="success" type="view" value="RequestItemNotes"/>
         <response name="error" type="view" value="RequestItemNotes"/>
     </request-map>
-    <request-map uri="RequestItemQuotes">
+    <request-map uri="requestitemrequirements"><security https="true" auth="true"/><response name="success" type="view" value="RequestItemRequirements"/></request-map>
+
+    <request-map uri="EditRequestItemWorkEfforts"><security https="true" auth="true"/><response name="success" type="view" value="EditRequestItemWorkEfforts"/></request-map>
+    <request-map uri="createCustRequestItemWorkEffort">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="RequestItemQuotes"/>
+        <event type="service" invoke="createWorkEffortRequestItem"/>
+        <response name="success" type="view" value="EditRequestItemWorkEfforts"/>
+        <response name="error" type="view" value="EditRequestItemWorkEfforts"/>
     </request-map>
-    <request-map uri="requestitemrequirements">
+    <request-map uri="deleteCustRequestItemWorkEffort">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="RequestItemRequirements"/>
+        <event type="service" invoke="deleteWorkEffortRequestItem"/>
+        <response name="success" type="view" value="EditRequestItemWorkEfforts"/>
+        <response name="error" type="view" value="EditRequestItemWorkEfforts"/>
     </request-map>
-    <request-map uri="EditRequestItemWorkEffort">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditRequestItemWorkEffort"/>
-    </request-map>
+    
+    <request-map uri="RequestItemQuotes"><security https="true" auth="true"/><response name="success" type="view" value="RequestItemQuotes"/></request-map>
     <request-map uri="CreateQuoteAndQuoteItemForRequest">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateQuoteAndQuoteItemForRequest"/>
@@ -921,7 +899,9 @@
         <security https="true" auth="true"/>
         <event type="service" invoke="createQuoteAndQuoteItemForRequest"/>
         <response name="success" type="view" value="RequestItemQuotes"/>
+        <response name="error" type="view" value="RequestItemQuotes"/>
     </request-map>
+
     <request-map uri="EditQuoteItemForRequest">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditQuoteItemForRequest"/>
@@ -930,96 +910,56 @@
         <security https="true" auth="true"/>
         <event type="service" invoke="createQuoteItem"/>
         <response name="success" type="view" value="RequestItemQuotes"/>
+        <response name="error" type="view" value="RequestItemQuotes"/>
     </request-map>
     <request-map uri="updateQuoteItemForRequest">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateQuoteItem"/>
         <response name="success" type="view" value="RequestItemQuotes"/>
+        <response name="error" type="view" value="RequestItemQuotes"/>
     </request-map>
 
     <!-- =============== Quote mapping =================-->
-    <request-map uri="FindQuote">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindQuote"/>
-    </request-map>
-    <request-map uri="ViewQuote">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewQuote"/>
-    </request-map>
-    <request-map uri="EditQuote">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditQuote"/>
-    </request-map>
-    <request-map uri="ListQuoteRoles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListQuoteRoles"/>
-    </request-map>
-    <request-map uri="EditQuoteRole">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditQuoteRole"/>
-    </request-map>
-    <request-map uri="ListQuoteItems">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListQuoteItems"/>
-    </request-map>
-    <request-map uri="EditQuoteItem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditQuoteItem"/>
-    </request-map>
-    <request-map uri="ListQuoteAttributes">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListQuoteAttributes"/>
-    </request-map>
-    <request-map uri="EditQuoteAttribute">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditQuoteAttribute"/>
-    </request-map>
-    <request-map uri="ListQuoteCoefficients">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListQuoteCoefficients"/>
-    </request-map>
-    <request-map uri="EditQuoteCoefficient">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditQuoteCoefficient"/>
-    </request-map>
-    <request-map uri="ManageQuotePrices">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ManageQuotePrices"/>
-    </request-map>
-    <request-map uri="ListQuoteAdjustments">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListQuoteAdjustments"/>
-    </request-map>
-    <request-map uri="EditQuoteAdjustment">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditQuoteAdjustment"/>
-    </request-map>
+    <request-map uri="FindQuote"><security https="true" auth="true"/><response name="success" type="view" value="FindQuote"/></request-map>
+    <request-map uri="ViewQuote"><security https="true" auth="true"/><response name="success" type="view" value="ViewQuote"/></request-map>
 
+    <request-map uri="EditQuote"><security https="true" auth="true"/><response name="success" type="view" value="EditQuote"/></request-map>
     <request-map uri="createQuote">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createQuote"/>
         <response name="success" type="view" value="EditQuote"/>
+        <response name="error" type="view" value="EditQuote"/>
     </request-map>
     <request-map uri="updateQuote">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateQuote"/>
         <response name="success" type="view" value="EditQuote"/>
+        <response name="error" type="view" value="EditQuote"/>
     </request-map>
     <request-map uri="copyQuote">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="copyQuote"/>
         <response name="success" type="view" value="EditQuote"/>
+        <response name="error" type="view" value="EditQuote"/>
     </request-map>
+    
+    <request-map uri="ListQuoteRoles"><security https="true" auth="true"/><response name="success" type="view" value="ListQuoteRoles"/></request-map>
+    <request-map uri="EditQuoteRole"><security https="true" auth="true"/><response name="success" type="view" value="EditQuoteRole"/></request-map>
     <request-map uri="createQuoteRole">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createQuoteRole"/>
         <response name="success" type="view" value="EditQuoteRole"/>
+        <response name="error" type="view" value="EditQuoteRole"/>
     </request-map>
     <request-map uri="removeQuoteRole">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeQuoteRole"/>
         <response name="success" type="view" value="ListQuoteRoles"/>
+        <response name="error" type="view" value="ListQuoteRoles"/>
     </request-map>
+    
+    <request-map uri="ListQuoteItems"><security https="true" auth="true"/><response name="success" type="view" value="ListQuoteItems"/></request-map>
+    <request-map uri="EditQuoteItem"><security https="true" auth="true"/><response name="success" type="view" value="EditQuoteItem"/></request-map>
     <request-map uri="createQuoteItem">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createQuoteItem"/>
@@ -1035,6 +975,9 @@
         <event type="service" path="" invoke="removeQuoteItem"/>
         <response name="success" type="view" value="ListQuoteItems"/>
     </request-map>
+    
+    <request-map uri="ListQuoteAttributes"><security https="true" auth="true"/><response name="success" type="view" value="ListQuoteAttributes"/></request-map>
+    <request-map uri="EditQuoteAttribute"><security https="true" auth="true"/><response name="success" type="view" value="EditQuoteAttribute"/></request-map>
     <request-map uri="createQuoteAttribute">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createQuoteAttribute"/>
@@ -1050,6 +993,9 @@
         <event type="service" path="" invoke="removeQuoteAttribute"/>
         <response name="success" type="view" value="ListQuoteAttributes"/>
     </request-map>
+    
+    <request-map uri="ListQuoteCoefficients"><security https="true" auth="true"/><response name="success" type="view" value="ListQuoteCoefficients"/></request-map>
+    <request-map uri="EditQuoteCoefficient"><security https="true" auth="true"/><response name="success" type="view" value="EditQuoteCoefficient"/></request-map>
     <request-map uri="createQuoteCoefficient">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createQuoteCoefficient"/>
@@ -1065,6 +1011,11 @@
         <event type="service" path="" invoke="removeQuoteCoefficient"/>
         <response name="success" type="view" value="ListQuoteCoefficients"/>
     </request-map>
+    
+    <request-map uri="ManageQuotePrices"><security https="true" auth="true"/><response name="success" type="view" value="ManageQuotePrices"/></request-map>
+
+    <request-map uri="ListQuoteAdjustments"><security https="true" auth="true"/><response name="success" type="view" value="ListQuoteAdjustments"/></request-map>
+    <request-map uri="EditQuoteAdjustment"><security https="true" auth="true"/><response name="success" type="view" value="EditQuoteAdjustment"/></request-map>
     <request-map uri="autoUpdateQuotePrices">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="autoUpdateQuotePrice"/>
@@ -1099,21 +1050,10 @@
     </request-map>
     
     <!--  WorkEffort Quote request mappings -->
-    <request-map uri="ListQuoteWorkEfforts">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListQuoteWorkEfforts"/>
-    </request-map>
-    
-    <request-map uri="AddQuoteWorkEffort">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="AddQuoteWorkEffort"/>
-    </request-map>
-    
-    <request-map uri="EditQuoteWorkEffort">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditQuoteWorkEffort"/>
-    </request-map>
-    
+    <request-map uri="ListQuoteWorkEfforts"><security https="true" auth="true"/><response name="success" type="view" value="ListQuoteWorkEfforts"/></request-map>
+    <request-map uri="AddQuoteWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="AddQuoteWorkEffort"/></request-map>
+
+    <request-map uri="EditQuoteWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="EditQuoteWorkEffort"/></request-map>
     <request-map uri="createQuoteWorkEffort">
         <security https="true" auth="true"/>
         <event type="service" invoke="createQuoteWorkEffort"/>
@@ -1133,23 +1073,11 @@
         <response name="error" type="view" value="ListQuoteWorkEfforts"/>
     </request-map>
     
-    
     <!--  OrderHeader request mappings -->
-    <request-map uri="ListOrderHeaders">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListOrderHeaders"/>
-    </request-map>
+    <request-map uri="ListOrderHeaders"><security https="true" auth="true"/><response name="success" type="view" value="ListOrderHeaders"/></request-map>
+    <request-map uri="AddOrderHeader"><security https="true" auth="true"/><response name="success" type="view" value="EditOrderHeader"/></request-map>
     
-    <request-map uri="AddOrderHeader">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditOrderHeader"/>
-    </request-map>
-    
-    <request-map uri="EditOrderHeader">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditOrderHeader"/>
-    </request-map>
-    
+    <request-map uri="EditOrderHeader"><security https="true" auth="true"/><response name="success" type="view" value="EditOrderHeader"/></request-map>
     <request-map uri="createOrderHeader">
         <security https="true" auth="true"/>
         <event type="service" invoke="createOrderHeader"/>
@@ -1171,69 +1099,29 @@
     
 
     <!-- Lookup request mappings -->
-    <request-map uri="LookupPerson">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPerson"/>
-    </request-map>
-    <request-map uri="LookupPartyGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyGroup"/>
-    </request-map>
-    <request-map uri="LookupPartyName">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupPartyName"/>
-    </request-map>
-    <request-map uri="LookupProduct">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupProduct"/>
-    </request-map>
-    <request-map uri="LookupProductFeature">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupProductFeature"/>
-    </request-map>
-    <request-map uri="LookupVariantProduct">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupVariantProduct"/>
-    </request-map>
+    <request-map uri="LookupPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupPartyGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
+    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    <request-map uri="LookupProductFeature"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductFeature"/></request-map>
+    <request-map uri="LookupVariantProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
 
-    <request-map uri="LookupShoppingList">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupShoppingList"/>
-    </request-map>
-    <request-map uri="LookupCustRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCustRequest"/>
-    </request-map>
-    <request-map uri="LookupCustRequestItem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupCustRequestItem"/>
-    </request-map>
-    <request-map uri="LookupRequirement">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupRequirement"/>
-    </request-map>
-    <request-map uri="LookupQuote">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupQuote"/>
-    </request-map>
-    <request-map uri="LookupQuoteItem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupQuoteItem"/>
-    </request-map>
-    <request-map uri="LookupOrderHeader">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupOrderHeader"/>
-    </request-map>
+    <request-map uri="LookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="LookupFacility"/></request-map>
+    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
 
+    <request-map uri="LookupShoppingList"><security https="true" auth="true"/><response name="success" type="view" value="LookupShoppingList"/></request-map>
+    <request-map uri="LookupCustRequest"><security https="true" auth="true"/><response name="success" type="view" value="LookupCustRequest"/></request-map>
+    <request-map uri="LookupCustRequestItem"><security https="true" auth="true"/><response name="success" type="view" value="LookupCustRequestItem"/></request-map>
+    <request-map uri="LookupRequirement"><security https="true" auth="true"/><response name="success" type="view" value="LookupRequirement"/></request-map>
+    <request-map uri="LookupQuote"><security https="true" auth="true"/><response name="success" type="view" value="LookupQuote"/></request-map>
+    <request-map uri="LookupQuoteItem"><security https="true" auth="true"/><response name="success" type="view" value="LookupQuoteItem"/></request-map>
+    <request-map uri="LookupOrderHeader"><security https="true" auth="true"/><response name="success" type="view" value="LookupOrderHeader"/></request-map>
+
+    <request-map uri="LookupWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="LookupWorkEffort"/></request-map>
+    
     <!-- PDFs -->
-    <request-map uri="order.pdf">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="OrderPDF"/>
-    </request-map>
-    <request-map uri="return.pdf">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReturnPDF"/>
-    </request-map>
+    <request-map uri="order.pdf"><security https="true" auth="true"/><response name="success" type="view" value="OrderPDF"/></request-map>
+    <request-map uri="return.pdf"><security https="true" auth="true"/><response name="success" type="view" value="ReturnPDF"/></request-map>
 
     <!-- end of request mappings -->
 
@@ -1325,7 +1213,7 @@
     <view-map name="RequestItemNotes" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#RequestItemNotes"/>
     <view-map name="RequestItemQuotes" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#RequestItemQuotes"/>
     <view-map name="RequestItemRequirements" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#RequestItemRequirements"/>
-    <view-map name="EditRequestItemWorkEffort" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditRequestItemWorkEffort"/>
+    <view-map name="EditRequestItemWorkEfforts" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditRequestItemWorkEfforts"/>
     <view-map name="CreateQuoteAndQuoteItemForRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#CreateQuoteAndQuoteItemForRequest"/>
     <view-map name="EditQuoteItemForRequest" type="screen" page="component://order/widget/ordermgr/RequestScreens.xml#EditQuoteItemForRequest"/>
 
@@ -1342,6 +1230,9 @@
     <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
     <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
 
+    <view-map name="LookupFacility" type="screen" page="component://product/widget/facility/LookupScreens.xml#LookupFacility"/>
+    <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
+    
     <view-map name="LookupShoppingList" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupShoppingList"/>
     <view-map name="LookupCustRequest" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequest"/>
     <view-map name="LookupCustRequestItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupCustRequestItem"/>
@@ -1349,6 +1240,8 @@
     <view-map name="LookupQuote" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuote"/>
     <view-map name="LookupQuoteItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuoteItem"/>
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
+
+    <view-map name="LookupWorkEffort" type="screen" page="component://workeffort/widget/LookupScreens.xml#LookupWorkEffort"/>
 
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintForms.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
