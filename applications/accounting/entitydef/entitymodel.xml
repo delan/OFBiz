@@ -2341,9 +2341,7 @@
     <!-- org.ofbiz.accounting.tax -->
     <!-- ========================================================= -->
     
-    <entity entity-name="PartyTaxAuthInfo"
-        package-name="org.ofbiz.accounting.tax"
-        title="Party Tax Information Entity">
+    <entity entity-name="PartyTaxAuthInfo" package-name="org.ofbiz.accounting.tax" title="Party Tax Information Entity">
         <description></description>
         <field name="partyId" type="id-ne"></field>
         <field name="taxAuthGeoId" type="id-ne"></field>
@@ -2365,9 +2363,7 @@
             <key-map field-name="taxAuthPartyId"/>
         </relation>
     </entity>
-    <entity entity-name="SimpleSalesTaxLookup"
-        package-name="org.ofbiz.accounting.tax"
-        title="Simple Sales Tax Lookup Entity">
+    <entity entity-name="SimpleSalesTaxLookup" package-name="org.ofbiz.accounting.tax" title="Simple Sales Tax Lookup Entity">
         <description>NOTE: this entity is deprecated by TaxAuthorityRateProduct</description>
         <field name="productStoreId" type="id-ne"></field>
         <field name="countryGeoId" type="id-ne"></field>
@@ -2391,9 +2387,7 @@
             <key-map field-name="taxCategory"/>
         </relation>
     </entity>
-    <entity entity-name="TaxAuthority"
-        package-name="org.ofbiz.accounting.tax"
-        title="Tax Authority Entity">
+    <entity entity-name="TaxAuthority" package-name="org.ofbiz.accounting.tax" title="Tax Authority Entity">
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>
         <field name="requireTaxIdForOrder" type="indicator"></field>
@@ -2409,9 +2403,37 @@
             <key-map field-name="taxAuthPartyId" rel-field-name="partyId"/>
         </relation>
     </entity>
-    <entity entity-name="TaxAuthorityCategory"
-        package-name="org.ofbiz.accounting.tax"
-        title="Tax Authority Product Category Entity">
+    <entity entity-name="TaxAuthorityAssoc" package-name="org.ofbiz.accounting.tax" title="Tax Authority Association Entity">
+        <field name="taxAuthGeoId" type="id-ne"></field>
+        <field name="taxAuthPartyId" type="id-ne"></field>
+        <field name="toTaxAuthGeoId" type="id-ne"></field>
+        <field name="toTaxAuthPartyId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="taxAuthorityAssocTypeId" type="id-ne"></field>
+        <prim-key field="taxAuthGeoId"/>
+        <prim-key field="taxAuthPartyId"/>
+        <prim-key field="toTaxAuthGeoId"/>
+        <prim-key field="toTaxAuthPartyId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="TAXAUTHASC_TXA" rel-entity-name="TaxAuthority">
+            <key-map field-name="taxAuthGeoId"/>
+            <key-map field-name="taxAuthPartyId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTHASC_TOTXA" title="To" rel-entity-name="TaxAuthority">
+            <key-map field-name="toTaxAuthGeoId" rel-field-name="taxAuthGeoId"/>
+            <key-map field-name="toTaxAuthPartyId" rel-field-name="taxAuthPartyId"/>
+        </relation>
+        <relation type="one" fk-name="TAXAUTHASC_ASTP" rel-entity-name="TaxAuthorityAssocType">
+            <key-map field-name="taxAuthorityAssocTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="TaxAuthorityAssocType" package-name="org.ofbiz.accounting.tax" title="Tax Authority Assoc Type Entity">
+        <field name="taxAuthorityAssocTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="taxAuthorityAssocTypeId"/>
+    </entity>
+    <entity entity-name="TaxAuthorityCategory" package-name="org.ofbiz.accounting.tax" title="Tax Authority Product Category Entity">
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>
         <field name="productCategoryId" type="id-ne"></field>
@@ -2426,9 +2448,7 @@
             <key-map field-name="productCategoryId"/>
         </relation>
     </entity>
-    <entity entity-name="TaxAuthorityGlAccount"
-        package-name="org.ofbiz.accounting.tax"
-        title="Tax Authority GL Account Entity">
+    <entity entity-name="TaxAuthorityGlAccount" package-name="org.ofbiz.accounting.tax" title="Tax Authority GL Account Entity">
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>
         <field name="organizationPartyId" type="id-ne"></field>
@@ -2447,9 +2467,7 @@
             <key-map field-name="glAccountId"/>
         </relation>
     </entity>
-    <entity entity-name="TaxAuthorityRateProduct"
-        package-name="org.ofbiz.accounting.tax"
-        title="Tax Authority Rate Entity">
+    <entity entity-name="TaxAuthorityRateProduct" package-name="org.ofbiz.accounting.tax" title="Tax Authority Rate Entity">
         <field name="taxAuthorityRateSeqId" type="id-ne"></field>
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>
@@ -2479,16 +2497,12 @@
             <key-map field-name="productCategoryId"/>
         </relation>
     </entity>
-    <entity entity-name="TaxAuthorityRateType"
-        package-name="org.ofbiz.accounting.tax"
-        title="Tax Authority Rate Type Entity">
+    <entity entity-name="TaxAuthorityRateType" package-name="org.ofbiz.accounting.tax" title="Tax Authority Rate Type Entity">
         <field name="taxAuthorityRateTypeId" type="id-ne"></field>
         <field name="description" type="description"></field>
         <prim-key field="taxAuthorityRateTypeId"/>
     </entity>
-    <entity entity-name="ZipSalesRuleLookup"
-        package-name="org.ofbiz.accounting.tax"
-        title="Zip Sales Tax Lookup Entity">
+    <entity entity-name="ZipSalesRuleLookup" package-name="org.ofbiz.accounting.tax" title="Zip Sales Tax Lookup Entity">
         <field name="stateCode" type="short-varchar"></field>
         <field name="city" type="short-varchar"></field>
         <field name="county" type="short-varchar"></field>
@@ -2501,9 +2515,7 @@
         <prim-key field="county"/>
         <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="ZipSalesTaxLookup"
-        package-name="org.ofbiz.accounting.tax"
-        title="Zip Sales Tax Lookup Entity">
+    <entity entity-name="ZipSalesTaxLookup" package-name="org.ofbiz.accounting.tax" title="Zip Sales Tax Lookup Entity">
         <field name="zipCode" type="short-varchar"></field>
         <field name="stateCode" type="short-varchar"></field>
         <field name="city" type="short-varchar"></field>
