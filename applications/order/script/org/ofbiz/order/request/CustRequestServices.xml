@@ -120,6 +120,8 @@
             <string-to-field string="CRQ_SUBMITTED" field-name="statusId" map-name="newEntity"/>
         </if-empty>
         <create-value value-name="newEntity"/>
+        <field-to-result field-name="newEntity.custRequestId" result-name="custRequestId"/>
+        <field-to-result field-name="newEntity.custRequestItemSeqId" result-name="custRequestItemSeqId"/>
     </simple-method>
     <simple-method method-name="updateCustRequestItem" short-description="Update Customer Request Item">
         <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -220,6 +222,46 @@
         </call-service>
         <check-errors/>
         <field-to-result field-name="custRequestId" result-name="custRequestId"/>
+    </simple-method>
+
+    <!-- copy an existing CustRequestItem -->
+    <simple-method method-name="copyCustRequestItem" short-description="Copy an existing CustRequestItem">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCopyCustRequestItem"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="CustRequestItem" value-name="custRequestItem" auto-field-map="true"/>
+        <check-errors/>
+        
+        <set-service-fields service-name="createCustRequestItem" to-map-name="createCustRequestItemInMap" map-name="custRequestItem"/>
+        <set field="createCustRequestItemInMap.custRequestId" from-field="parameters.custRequestIdTo"/>
+        <set field="createCustRequestItemInMap.custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
+        <if-empty field-name="parameters.custRequestIdTo">
+            <if-empty field-name="parameters.custRequestItemSeqIdTo">
+                <clear-field field-name="createCustRequestItemInMap.custRequestItemSeqId"/>
+            </if-empty>
+        </if-empty>
+       
+        <call-service service-name="createCustRequestItem" in-map-name="createCustRequestItemInMap">
+            <result-to-field result-name="custRequestId" field-name="custRequestIdTo"/>
+            <result-to-field result-name="custRequestItemSeqId" field-name="custRequestItemSeqId"/>
+        </call-service>
+
+        <check-errors/>
+                
+        <if-compare field-name="parameters.copyLinkedQuotes" value="Y" operator="equals">
+            <get-related value-name="custRequestItem" relation-name="QuoteItem" list-name="quoteItems"/>
+            <iterate list-name="quoteItems" entry-name="quoteItem">
+                <clear-field field-name="createQuoteItemInMap"/>
+                <set-service-fields service-name="createQuoteItem" to-map-name="createQuoteItemInMap" map-name="quoteItem"/>
+                <set field="createQuoteItemInMap.custRequestId" from-field="custRequestIdTo"/>
+                <set field="createQuoteItemInMap.custRequestItemSeqId" from-field="custRequestItemSeqId"/>
+                <clear-field field-name="createQuoteItemInMap.quoteItemSeqId"/>
+                <call-service service-name="createQuoteItem" in-map-name="createQuoteItemInMap"/>
+            </iterate>
+        </if-compare>
+
+        <check-errors/>
     </simple-method>
 
 </simple-methods>

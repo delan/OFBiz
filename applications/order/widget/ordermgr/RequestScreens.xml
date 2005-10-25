@@ -213,6 +213,9 @@
                             <link target="requestitem?custRequestId=${custRequestId}" text="${uiLabelMap.OrderNewRequestItem}" style="buttontext"/>
                         </container>
                         <include-form name="EditCustRequestItem" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/request/CopyRequestItem.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

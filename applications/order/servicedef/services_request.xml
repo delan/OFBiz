@@ -61,7 +61,7 @@
     <service name="createCustRequestItem" engine="simple" default-entity-name="CustRequestItem"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
         <description>Create a CustRequestItem record</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="custRequestItemSeqId" optional="true"/>
     </service>
@@ -70,6 +70,15 @@
         <description>Update a CustRequestItem record</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="copyCustRequestItem" default-entity-name="CustRequestItem" engine="simple"
+                location="org/ofbiz/order/request/CustRequestServices.xml" invoke="copyCustRequestItem" auth="true">
+        <description>Copy a CustRequest</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="custRequestIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="custRequestItemSeqIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="copyLinkedQuotes" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createCustRequestRole" engine="simple"
