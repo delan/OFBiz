@@ -2890,6 +2890,9 @@
       <field name="autoInvoiceDigitalItems" type="indicator"></field>
       <field name="showCheckoutGiftOptions" type="indicator"></field>
       <field name="selectPaymentTypePerItem" type="indicator"></field>
+      <field name="showPricesWithVatTax" type="indicator"></field>
+      <field name="vatTaxAuthGeoId" type="id"></field>
+      <field name="vatTaxAuthPartyId" type="id"></field>
       <prim-key field="productStoreId"/>
       <relation type="one" fk-name="PROD_STR_PRSTRGP" title="Primary" rel-entity-name="ProductStoreGroup">
         <key-map field-name="primaryStoreGroupId" rel-field-name="productStoreGroupId"/>
@@ -2929,6 +2932,10 @@
       </relation>
       <relation type="one" fk-name="PROD_STR_ICNSTS" title="ItemCancel" rel-entity-name="StatusItem">
         <key-map field-name="itemCancelStatus" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_VATTXA" title="Vat" rel-entity-name="TaxAuthority">
+        <key-map field-name="vatTaxAuthGeoId" rel-field-name="taxAuthGeoId"/>
+        <key-map field-name="vatTaxAuthPartyId" rel-field-name="taxAuthPartyId"/>
       </relation>
     </entity>
     <entity entity-name="ProductStoreCatalog"
