@@ -217,6 +217,17 @@
         <attribute name="authResultMsgs" type="List" mode="OUT" optional="true"/>
     </service>
 
+    <service name="authOrderPaymentPreference" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="authOrderPaymentPreference" auth="true">
+        <description>Process (authorizes/re-authorizes) a single payment for an order with an optional overrideAmount</description>
+        <attribute name="orderPaymentPreferenceId" type="String" mode="IN" optional="false"/>
+        <attribute name="overrideAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="finished" type="Boolean" mode="OUT" optional="false"/>
+        <attribute name="errors" type="Boolean" mode="OUT" optional="false"/>
+        <attribute name="messages" type="List" mode="OUT" optional="true"/>
+        <attribute name="processAmount" type="Double" mode="OUT" optional="true"/>
+    </service>
+
     <service name="authOrderPayments" engine="java"
             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="authOrderPayments" auth="true">
         <description>Process (authorizes/re-authorizes) payments for an order</description>

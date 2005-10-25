@@ -82,13 +82,140 @@ public class PaymentGatewayServices {
     private static final int TX_TIME = 300;
 
     /**
+     * Helper method to parse total remaining balance in an order from order read helper.
+     */
+    private static double getTotalRemaining(OrderReadHelper orh) throws ParseException, NumberFormatException {
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+        String grandTotalString = formatter.format(orh.getOrderGrandTotal());
+        Double grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
+        return grandTotal.doubleValue();
+    }
+
+    /**
+     * Authorizes a single order preference with an option to specify an amount. The result map has the Booleans
+     * "errors" and "finished" which notify the user if there were any errors and if the authorizatoin was finished.
+     * There is also a List "messages" for the authorization response messages and a Double, "processAmount" as the 
+     * amount processed. TODO: it might be nice to return the paymentGatewayResponseId
+     */
+    public static Map authOrderPaymentPreference(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String orderPaymentPreferenceId = (String) context.get("orderPaymentPreferenceId");
+        Double overrideAmount = (Double) context.get("overrideAmount");
+
+        // validate overrideAmount if its available
+        if (overrideAmount != null) {
+            if (overrideAmount.doubleValue()  < 0) return ServiceUtil.returnError("Amount entered (" + overrideAmount + ") is negative.");
+            if (overrideAmount.doubleValue()  == 0) return ServiceUtil.returnError("Amount entered (" + overrideAmount + ") is zero.");
+        }
+
+        GenericValue orderHeader = null;
+        GenericValue orderPaymentPreference = null;
+        try {
+            orderPaymentPreference = delegator.findByPrimaryKey("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId));
+            orderHeader = orderPaymentPreference.getRelatedOne("OrderHeader");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Problems getting required information: orderPaymentPreference [" + orderPaymentPreferenceId + "]");
+        }
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+
+        // get the total remaining
+        double totalRemaining = 0.0;
+        try {
+            totalRemaining = getTotalRemaining(orh);
+        } catch (Exception e) {
+            Debug.logError(e, "Problem getting parsed grand total amount", module);
+            return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
+        }
+
+        // get the process attempts so far
+        Long procAttempt = orderPaymentPreference.getLong("processAttempt");
+        if (procAttempt == null) {
+            procAttempt = new Long(0);
+        }
+
+        // update the process attempt count
+        orderPaymentPreference.set("processAttempt", new Long(procAttempt.longValue() + 1));
+        try {
+            orderPaymentPreference.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to update OrderPaymentPreference record!");
+        }
+
+        // if we are already authorized, then this is a re-auth request
+        boolean reAuth = false;
+        if (orderPaymentPreference.get("statusId") != null && "PAYMENT_AUTHORIZED".equals(orderPaymentPreference.getString("statusId"))) {
+            reAuth = true;
+        }
+
+        // use overrideAmount or maxAmount
+        Double transAmount = null;
+        if (overrideAmount != null) {
+            transAmount = overrideAmount;
+        } else {
+            transAmount = orderPaymentPreference.getDouble("maxAmount");
+        }
+
+        // prepare the return map (always return success, default finished=false, default errors=false
+        Map results = UtilMisc.toMap(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS, "finished", new Boolean(false), "errors", new Boolean(false)); 
+
+        // if our transaction amount exists and is zero, there's nothing to process, so return
+        if ((transAmount != null) && (transAmount.doubleValue() <= 0)) {
+            return results;
+        }
+
+        // call the authPayment method
+        Map processorResult = authPayment(dispatcher, userLogin, orh, orderPaymentPreference, totalRemaining, reAuth, overrideAmount);
+
+        // handle the response
+        if (processorResult != null) {
+
+            // get the customer messages
+            if (processorResult.get("customerRespMsgs") != null) {
+                results.put("messages", processorResult.get("customerRespMsgs"));
+            }
+
+            // not null result means either an approval or decline; null would mean error
+            Double thisAmount = (Double) processorResult.get("processAmount");
+
+            // process the auth results
+            boolean processResult = false;
+            try {
+                processResult = processResult(dctx, processorResult, userLogin, orderPaymentPreference);
+                if (processResult) {
+                    results.put("processAmount", thisAmount);
+                    results.put("finished", new Boolean(true));
+                }
+            } catch (GeneralException e) {
+                Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
+                results.put("errors", new Boolean(true));
+            }
+        } else {
+            // error with payment processor; will try later
+            Debug.logInfo("Invalid OrderPaymentPreference; maxAmount is 0", module);
+            orderPaymentPreference.set("statusId", "PAYMENT_CANCELLED");
+            try {
+                orderPaymentPreference.store();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "ERROR: Problem setting OrderPaymentPreference status to CANCELLED", module);
+            }
+            results.put("errors", new Boolean(true));
+        }
+        return results;
+    }
+
+    /**
      * Processes payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
      * @return APPROVED|FAILED|ERROR for complete processing of ALL payment methods.
      */
     public static Map authOrderPayments(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
         Map result = new HashMap();
 
@@ -117,119 +244,70 @@ public class PaymentGatewayServices {
         }
 
         // get the order amounts
-        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        DecimalFormat formatter = new DecimalFormat(currencyFormat);
-        String grandTotalString = formatter.format(orh.getOrderGrandTotal());
-        Double grandTotal = null;
+        double totalRemaining = 0.0;
         try {
-            grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
-        } catch (ParseException e) {
+            totalRemaining = getTotalRemaining(orh);
+        } catch (Exception e) {
             Debug.logError(e, "Problem getting parsed grand total amount", module);
             return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
         }
 
-        double totalRemaining = grandTotal.doubleValue();
-
-        // loop through and auth each payment
-        List finished = new ArrayList();
-        List hadError = new ArrayList();
+        // loop through and auth each order payment preference
+        int finished = 0;
+        int hadError = 0;
         List messages = new ArrayList();
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
-            Long procAttempt = paymentPref.getLong("processAttempt");
-            if (procAttempt == null) {
-                procAttempt = new Long(0);
-            }
-            // update the process attempt cout
-            paymentPref.set("processAttempt", new Long(procAttempt.longValue() + 1));
+
+            Map authContext = new HashMap();
+            authContext.put("orderPaymentPreferenceId", paymentPref.getString("orderPaymentPreferenceId"));
+            authContext.put("userLogin", context.get("userLogin"));
+
+            Map results = null;
             try {
-                paymentPref.store();
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError("Unable to update OrderPaymentPreference record!");
+                dispatcher.runSync("authOrderPaymentPreference", authContext);
+            } catch (GenericServiceException se) {
+                Debug.logError(se, "Error in calling authOrderPaymentPreference from authOrderPayments: " + se.getMessage(), module);
+                return ServiceUtil.returnError("Could not authorize the order payment preference with ID [" + paymentPref.getString("orderPaymentPreferenceId") + "] for order [" + orderId + "]");
             }
 
-            boolean reAuth = false;
-
-            // if we are already authorized, then this is a re-auth request
-            if (paymentPref.get("statusId") != null && "PAYMENT_AUTHORIZED".equals(paymentPref.getString("statusId"))) {
-                reAuth = true;
-            }
-
-            // check the maxAmount for 0.00
-            Double maxAmount = paymentPref.getDouble("maxAmount");
-            if (maxAmount == null || maxAmount.doubleValue() > 0) {
-                // call the authPayment method
-                Map processorResult = authPayment(dispatcher, userLogin, orh, paymentPref, totalRemaining, reAuth);
-
-                // handle the response
-                if (processorResult != null) {
-                    // get the customer messages
-                    if (processorResult.get("customerRespMsgs") != null) {
-                        messages.addAll((List) processorResult.get("customerRespMsgs"));
-                    }
-
-                    // not null result means either an approval or decline; null would mean error
-                    Double thisAmount = (Double) processorResult.get("processAmount");
-
-                    // process the auth results
-                    boolean processResult = false;
-                    try {
-                        processResult = processResult(dctx, processorResult, userLogin, paymentPref);
-                        if (processResult) {
-                            totalRemaining -= thisAmount.doubleValue();
-                            finished.add(processorResult);
-                        }
-                    } catch (GeneralException e) {
-                        Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
-                        hadError.add(paymentPref);
-                        continue;
-                        //return ServiceUtil.returnError("Trouble processing the auth results"); -- HANDLED BELOW
-                    }
-                } else {
-                    // error with payment processor; will try later
-                    hadError.add(paymentPref);
-                    continue;
-                }
-            } else {
-                Debug.logInfo("Invalid OrderPaymentPreference; maxAmount is 0", module);
-                paymentPref.set("statusId", "PAYMENT_CANCELLED");
-                try {
-                    paymentPref.store();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "ERROR: Problem setting OrderPaymentPreference status to CANCELLED", module);
-                }
-                finished.add(null);
-            }
+            if (((Boolean)results.get("finished")).booleanValue()) finished += 1;
+            if (((Boolean)results.get("errors")).booleanValue()) hadError += 1;
+            if (results.get("messages") != null) messages.addAll((List) results.get("messages"));
+            if (results.get("processAmount") != null) totalRemaining -= ((Double) results.get("processAmount")).doubleValue();
         }
 
         Debug.logInfo("Finished with auth(s) checking results", module);
 
-        // add the messages to the result
+        // add messages to the result
         result.put("authResultMsgs", messages);
 
-        if (hadError.size() > 0) {
-            Debug.logError("Error(s) (" + hadError.size() + ") during auth; returning ERROR", module);
+        if (hadError > 0) {
+            Debug.logError("Error(s) (" + hadError + ") during auth; returning ERROR", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put("processResult", "ERROR");
             return result;
-
-        } else if (finished.size() == paymentPrefs.size()) {
+        } else if (finished == paymentPrefs.size()) {
             Debug.logInfo("All auth(s) passed total remaining : " + totalRemaining, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put("processResult", "APPROVED");
             return result;
         } else {
-            Debug.logInfo("Only (" + finished.size() + ") passed auth; returning FAILED", module);
+            Debug.logInfo("Only (" + finished + ") passed auth; returning FAILED", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put("processResult", "FAILED");
             return result;
         }
     }
 
+
     private static Map authPayment(LocalDispatcher dispatcher, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double totalRemaining, boolean reauth) {
+        return authPayment(dispatcher, userLogin, orh, paymentPref, totalRemaining, reauth, null);
+    }
+
+    private static Map authPayment(LocalDispatcher dispatcher, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double totalRemaining, boolean reauth, Double overrideAmount) {
         String paymentConfig = null;
         String serviceName = null;
 
@@ -257,7 +335,7 @@ public class PaymentGatewayServices {
         // get the process context
         Map processContext = null;
         try {
-            processContext = makeAuthContext(orh, userLogin, paymentPref, paymentConfig, totalRemaining);
+            processContext = makeAuthContext(orh, userLogin, paymentPref, paymentConfig, totalRemaining, overrideAmount);
         } catch (GeneralException e) {
             Debug.logError(e, "Problems creating the context for the auth service", module);
             return null;
@@ -329,7 +407,7 @@ public class PaymentGatewayServices {
         return payToPartyId;
     }
 
-    private static Map makeAuthContext(OrderReadHelper orh, GenericValue userLogin, GenericValue paymentPreference, String paymentConfig, double totalRemaining) throws GeneralException {
+    private static Map makeAuthContext(OrderReadHelper orh, GenericValue userLogin, GenericValue paymentPreference, String paymentConfig, double totalRemaining, Double overrideAmount) throws GeneralException {
         Map processContext = new HashMap();
 
         // get the visit record to obtain the client's IP address
@@ -364,9 +442,13 @@ public class PaymentGatewayServices {
         // get the billing information
         getBillingInformation(orh, paymentPreference, processContext);
 
-        // get the process amount
+        // default charge is totalRemaining
         double thisAmount = totalRemaining;
-        if (paymentPreference.get("maxAmount") != null) {
+
+        // use override or max amount available
+        if (overrideAmount != null) {
+            thisAmount = overrideAmount.doubleValue();
+        } else if (paymentPreference.get("maxAmount") != null) {
             thisAmount = paymentPreference.getDouble("maxAmount").doubleValue();
         }
 
