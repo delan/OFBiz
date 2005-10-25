@@ -184,13 +184,14 @@ public class TransactionUtil implements Status {
                 Debug.logVerbose("[TransactionUtil.commit] current status : " + getTransactionStateString(status), module);
 
                 if (status != STATUS_NO_TRANSACTION) {
+                    ut.commit();
+
                     // clear out the stamps to keep it clean
                     clearTransactionStamps();
                     // clear out the stack too
                     clearTransactionBeginStack();
                     clearSetRollbackOnlyCause();
 
-                    ut.commit();
                     Debug.logVerbose("[TransactionUtil.commit] transaction committed", module);
                 } else {
                     Debug.logInfo("[TransactionUtil.commit] Not committing transaction, status is STATUS_NO_TRANSACTION", module);
