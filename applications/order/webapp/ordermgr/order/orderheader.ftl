@@ -276,6 +276,7 @@
                     </#if>
                   <#else>
                     <#if paymentMethod.paymentMethodTypeId?if_exists == "CREDIT_CARD">
+                      <#assign gatewayResponses = orderPaymentPreference.getRelated("PaymentGatewayResponse")>
                       <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")?if_exists>
                       <#if creditCard?has_content>
                         <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")?if_exists>
@@ -305,21 +306,34 @@
                                 ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                 &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                               </#if>
+                              <br/>
+                              
+                              <#-- Authorize and Capture transactions -->
+		                          <div class="tabletext">
+                                <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
+                                  [<a href="/accounting/control/AuthorizeTransaction?orderId=${orderId?if_exists}&orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}">${uiLabelMap.AccountingAuthorize}</a>]
+                                </#if>
+                                <#if orderPaymentPreference.statusId == "PAYMENT_AUTHORIZED">
+                                  [<a href="/accounting/control/CaptureTransaction?orderId=${orderId?if_exists}&orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}">${uiLabelMap.AccountingCapture}</a>]
+                                </#if>
+                              </div>
+
                             <#else>
                               ${uiLabelMap.CommonInformationNotAvailable}
                             </#if>
                           </div>
-                          <#assign gatewayResponses = orderPaymentPreference.getRelated("PaymentGatewayResponse")>
                           <#if gatewayResponses?has_content>
                             <div class="tabletext">
                               <hr />
                               <#list gatewayResponses as gatewayResponse>
                                 <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration")>
                                 ${(transactionCode.description)?default("Unknown")}:
-                                ${gatewayResponse.transactionDate.toString()}<br />
+                                ${gatewayResponse.transactionDate.toString()}
+                                <@ofbizCurrency amount=gatewayResponse.amount isoCode=currencyUomId/><br/>
                                 (<b>Ref:</b> ${gatewayResponse.referenceNum?if_exists}
                                 <b>AVS:</b> ${gatewayResponse.gatewayAvsResult?default("N/A")}
                                 <b>Score:</b> ${gatewayResponse.gatewayScoreResult?default("N/A")})
+                                [<a href="/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}">${uiLabelMap.CommonDetails}</a>]
                                 <#if gatewayResponse_has_next><hr /></#if>
                               </#list>
                             </div>
