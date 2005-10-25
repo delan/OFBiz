@@ -44,11 +44,11 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.entity.util.EntitySaxReader;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
-String filename = request.getParameter("filename");
-String fmfilename = request.getParameter("fmfilename");
-boolean isUrl = request.getParameter("IS_URL") != null;
+String filename = parameters.get("filename");
+String fmfilename = parameters.get("fmfilename");
+boolean isUrl = parameters.get("IS_URL") != null;
 
-String txTimeoutStr = UtilFormatOut.checkEmpty(request.getParameter("txTimeout"), "7200");
+String txTimeoutStr = UtilFormatOut.checkEmpty(parameters.get("txTimeout"), "7200");
 Integer txTimeout = null;
 try {
     txTimeout = Integer.valueOf(txTimeoutStr);
@@ -56,12 +56,10 @@ try {
     txTimeout = new Integer(7200);
     errorMessageList.add("ERROR: TX Timeout not a valid number, setting to 7200 seconds (2 hours): " + e.getMessage());
 }
-boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
-boolean keepStamps = request.getParameter("maintainTimeStamps") != null;
-boolean createDummyFks = request.getParameter("createDummyFks") != null;
-String fulltext = request.getParameter("fulltext");
-
-
+boolean mostlyInserts = parameters.get("mostlyInserts") != null;
+boolean keepStamps = parameters.get("maintainTimeStamps") != null;
+boolean createDummyFks = parameters.get("createDummyFks") != null;
+String fulltext = parameters.get("fulltext");
 
 List messages = new ArrayList();
 
