@@ -1464,6 +1464,7 @@
       <field name="custRequestResolutionId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="priority" type="numeric"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <field name="requiredByDate" type="date-time"></field>
       <field name="productId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
