@@ -92,6 +92,7 @@
             title="" list-name="custRequestItems" paginate-target="RequestItems"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
+        <field name="sequenceNum"></field>
         <field name="custRequestId" widget-style="buttontext">
             <hyperlink description="${custRequestItemSeqId}" target="requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
         </field>

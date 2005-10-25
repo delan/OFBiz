@@ -173,6 +173,8 @@
                 <entity-one entity-name="CustRequest" value-name="custRequest"/>
                 <entity-and entity-name="CustRequestItem" list-name="custRequestItems">
                     <field-map env-name="custRequestId" field-name="custRequestId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="custRequestItemSeqId"/>
                 </entity-and>
             </actions>
             <widgets>
