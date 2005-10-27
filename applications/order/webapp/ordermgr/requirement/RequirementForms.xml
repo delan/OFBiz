@@ -78,6 +78,12 @@
         <field name="requirementStartDate"><display/></field>
         <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+        <field name="requestsLink" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.OrderRequests}" target="ListRequirementCustRequests?requirementId=${requirementId}"/>
+        </field>
+        <field name="ordersLink" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonOrders}" target="ListRequirementOrders?requirementId=${requirementId}"/>
+        </field>
         <field name="deleteLink" widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteRequirement?requirementId=${requirementId}"/>
         </field>
@@ -120,6 +126,16 @@
         </field>
         <field name="custRequestItemSeqId" widget-style="buttontext">
             <hyperlink description="${custRequestItemSeqId}" target="requestitem?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}"/>
+        </field>
+    </form>
+
+    <!-- lists the orders associated with a requirement -->
+    <form name="ListRequirementOrders" type="list"
+            title="" list-name="orderRequirements" paginate-target="ListRequirementOrders"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="OrderRequirementCommitment" default-field-type="display"/>
+        <field name="orderId" widget-style="buttontext">
+            <hyperlink description="${orderId}" target-type="inter-app" target="/ordermgr/control/orderview?orderId=${orderId}"/>
         </field>
     </form>
 </forms>
