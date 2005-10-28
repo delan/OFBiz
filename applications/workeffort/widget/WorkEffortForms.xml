@@ -650,6 +650,7 @@
         
         <field name="invoiceId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
         <field name="invoiceItemSeqId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
+        <field name="invoiceInfo" widget-style="tabletext"><display description="${invoiceId}:${invoiceItemSeqId}" also-hidden="false"/></field>
         
         <field name="comments"><text size="60"/></field>
         
@@ -681,5 +682,20 @@
         <field name="invoiceItemSeqId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="AddWorkEffortTimeToInvoice" target="addWorkEffortTimeToInvoice" title="" type="single"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <field name="workEffortId"><hidden/></field>
+        <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
+        <field name="submitButton" title="Add Work Effort Time to Existing Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="AddWorkEffortTimeToNewInvoice" target="addWorkEffortTimeToNewInvoice" title="" type="single"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <field name="workEffortId"><hidden/></field>
+        <field name="partyIdFrom" title="Bill From Party"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Bill To Party"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
+        <field name="submitButton" title="Add Work Effort Time to New Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

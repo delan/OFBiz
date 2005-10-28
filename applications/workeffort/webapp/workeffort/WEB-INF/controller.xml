@@ -337,6 +337,19 @@
         <response name="success" type="view" value="EditWorkEffortTimeEntries"/>
         <response name="error" type="view" value="EditWorkEffortTimeEntries"/>
     </request-map>
+    <request-map uri="addWorkEffortTimeToInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addWorkEffortTimeToInvoice"/>
+        <response name="success" type="view" value="EditWorkEffortTimeEntries"/>
+        <response name="error" type="view" value="EditWorkEffortTimeEntries"/>
+    </request-map>
+    <request-map uri="addWorkEffortTimeToNewInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addWorkEffortTimeToNewInvoice"/>
+        <response name="success" type="view" value="EditWorkEffortTimeEntries"/>
+        <response name="error" type="view" value="EditWorkEffortTimeEntries"/>
+    </request-map>
+    
     
     <!-- Timesheet Requests -->
     <request-map uri="MyTimesheets"><security https="true" auth="true"/><response name="success" type="view" value="MyTimesheets"/></request-map>

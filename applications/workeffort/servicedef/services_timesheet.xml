@@ -69,6 +69,21 @@
         <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
     </service>
     
+    <service name="addWorkEffortTimeToNewInvoice" default-entity-name="Timesheet" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="addWorkEffortTimeToInvoice">
+        <description>Add WorkEffort Time to Invoice</description>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="addWorkEffortTimeToNewInvoice" default-entity-name="Timesheet" engine="simple" auth="true"
+        location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="addWorkEffortTimeToInvoice">
+        <description>Add WorkEffort Time to Invoice</description>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
     <!-- TimesheetRole Services -->
     <service name="createTimesheetRole" default-entity-name="TimesheetRole" engine="simple" auth="true"
         location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="createTimesheetRole">
@@ -107,7 +122,6 @@
         <attribute name="rateAmount" type="Double" mode="OUT" optional="true"></attribute>
     </service>
     
-
     <!-- PartyRate Services -->
     <service name="createPartyRate" default-entity-name="PartyRate" engine="simple" auth="true"
         location="org/ofbiz/workeffort/timesheet/RateServices.xml" invoke="createPartyRate">
