@@ -1319,6 +1319,30 @@
       <prim-key field="varianceReasonId"/>
     </entity>
 
+    <view-entity entity-name="InventoryReportGroupByFacilityAndProduct"
+        package-name="org.ofbiz.product.inventory"
+        never-cache="true"
+        title="Inventory Report Grouped by Product and Facility View Entity">
+      <member-entity entity-alias="PR" entity-name="Product"/>
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <member-entity entity-alias="FC" entity-name="Facility"/>
+      <!-- group by -->
+      <alias entity-alias="II" name="productId" group-by="true"/>
+      <alias entity-alias="PR" name="internalName" group-by="true"/>
+      <!-- condition and display fields -->
+      <alias entity-alias="FC" name="facilityId" group-by="false"/>
+      <alias entity-alias="FC" name="ownerPartyId" group-by="false"/>
+      <alias entity-alias="II" name="quantityOnHandTotal" function="sum"/>
+      <alias entity-alias="II" name="availableToPromiseTotal" function="sum"/>
+      <!-- links -->
+      <view-link entity-alias="II" rel-entity-alias="PR">
+        <key-map field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="II" rel-entity-alias="FC">
+        <key-map field-name="facilityId"/>
+      </view-link>
+    </view-entity>
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.location -->
   <!-- ========================================================= -->

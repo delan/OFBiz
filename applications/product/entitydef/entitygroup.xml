@@ -113,6 +113,7 @@
     <entity-group group="org.ofbiz" entity="PhysicalInventory" />
     <entity-group group="org.ofbiz" entity="PhysicalInventoryAndVariance" />
     <entity-group group="org.ofbiz" entity="VarianceReason" />
+    <entity-group group="org.ofbiz" entity="InventoryReportGroupByFacilityAndProduct"/>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.location -->
