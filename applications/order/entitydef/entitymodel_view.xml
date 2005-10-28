@@ -892,7 +892,73 @@
       </view-link>
     </view-entity>
 
+    <view-entity entity-name="OrderReportSalesGroupByProduct"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Report Group By Product View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <member-entity entity-alias="RL" entity-name="OrderRole"/>
+      <member-entity entity-alias="PR" entity-name="Product"/>
+      <member-entity entity-alias="PS" entity-name="ProductStore"/>
+      <alias entity-alias="OH" name="productStoreId" group-by="true"/>
+      <alias entity-alias="PS" name="storeName" group-by="true"/>
+      <alias entity-alias="OI" name="productId" group-by="true"/>
+      <alias entity-alias="PR" name="internalName" group-by="true"/>
+      <alias entity-alias="OH" name="orderDate" group-by="false"/>
+      <alias entity-alias="OH" name="orderStatusId" field="statusId" group-by="false"/>
+      <alias entity-alias="OH" name="orderTypeId" group-by="false"/>
+      <alias entity-alias="RL" name="partyId" group-by="false"/>
+      <alias entity-alias="RL" name="roleTypeId" group-by="false"/>
+      <alias entity-alias="OI" name="quantity" function="sum"/>
+      <alias entity-alias="OI" name="unitPrice" function="sum"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="RL">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="PR">
+        <key-map field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="PS">
+        <key-map field-name="productStoreId"/>
+      </view-link>
+    </view-entity>
 
+    <view-entity entity-name="OrderReportPurchasesGroupByProduct"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Report Group By Product View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <member-entity entity-alias="RT" entity-name="OrderRole"/>
+      <member-entity entity-alias="RF" entity-name="OrderRole"/>
+      <member-entity entity-alias="PR" entity-name="Product"/>
+      <alias entity-alias="OI" name="productId" group-by="true"/>
+      <alias entity-alias="PR" name="internalName" group-by="true"/>
+      <alias entity-alias="OH" name="orderDate" group-by="false"/>
+      <alias entity-alias="OH" name="orderStatusId" field="statusId" group-by="false"/>
+      <alias entity-alias="OH" name="orderTypeId" group-by="false"/>
+      <alias entity-alias="RT" name="toPartyId" field="partyId" group-by="false"/>
+      <alias entity-alias="RT" name="toRoleTypeId" field="roleTypeId" group-by="false"/>
+      <alias entity-alias="RF" name="fromPartyId" field="partyId" group-by="false"/>
+      <alias entity-alias="RF" name="fromRoleTypeId" field="roleTypeId" group-by="false"/>
+      <alias entity-alias="OI" name="quantity" function="sum"/>
+      <alias entity-alias="OI" name="unitPrice" function="sum"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="RT"> <!-- to party join -->
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="RF"> <!-- from party join -->
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="PR"> <!-- product info join -->
+        <key-map field-name="productId"/>
+      </view-link>
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.request -->
