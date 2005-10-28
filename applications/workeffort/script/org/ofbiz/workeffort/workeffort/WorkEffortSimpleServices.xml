@@ -471,7 +471,7 @@
             <set from-field="parameters.workEffortId" field="newWorkEffortPartyAssignment.workEffortId"/>
             <set from-field="parameters.quickAssignPartyId" field="newWorkEffortPartyAssignment.partyId"/>
             <set value="CAL_OWNER" field="newWorkEffortPartyAssignment.roleTypeId"/>
-            <set value="CAL_ACCEPTED" field="newWorkEffortPartyAssignment.statusId"/>
+            <set value="PRTYASGN_ASSIGNED" field="newWorkEffortPartyAssignment.statusId"/>
             <set from-field="nowTimestamp" field="newWorkEffortPartyAssignment.fromDate"/>
             <create-value value-name="newWorkEffortPartyAssignment"/>
         </if-not-empty>

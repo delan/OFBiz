@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+    *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
     *
     *  Permission is hereby granted, free of charge, to any person obtaining a
     *  copy of this software and associated documentation files (the "Software"),
@@ -26,15 +26,14 @@
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <entity-condition entity-name="WorkEffortPartyAssignment">
-                <condition-list combine="and">
-                    <condition-expr field-name="workEffortId" operator="equals" env-name="workEffortId"/>
-                </condition-list>
+                <condition-expr field-name="workEffortId" operator="equals" env-name="workEffortId"/>
+                <order-by field-name="roleTypeId"/>
             </entity-condition>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.WorkEffortParty}" widget-style="buttontext">
-            <display-entity entity-name="Person" description="${firstName} ${lastName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" link-style="linktext"/>
+        <field name="partyId" title="${uiLabelMap.PartyParty}" widget-style="buttontext">
+            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" link-style="buttontext"/>
             </display-entity>
         </field>
         <field name="fromDate"><display/></field>

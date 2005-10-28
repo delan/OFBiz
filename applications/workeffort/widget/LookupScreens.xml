@@ -35,8 +35,6 @@
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
                 
                 <set field="title" value="Lookup WorkEffort by Name"/>
-                <set field="entityName" value="WorkEffort"/>
-                <set field="orderBy" value="workEffortId"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
@@ -52,4 +50,29 @@
         </section>
     </screen>
 
+    <screen name="LookupTimesheet">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <set field="title" value="Lookup Timesheet by Name"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupTimesheet" location="component://workeffort/widget/LookupForms.xml"/>
+                        <include-form name="listLookupTimesheet" location="component://workeffort/widget/LookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

@@ -279,7 +279,6 @@
                 <set field="tabButtonItem" value="WorkEffortPartyAssigns"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
                 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
@@ -289,6 +288,27 @@
                         <include-form name="ListWorkEffortPartyAssigns" location="component://workeffort/widget/WorkEffortPartyAssignForms.xml"/>
                         <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortPartyAssign}</label></container>
                         <include-form name="EditWorkEffortPartyAssign" location="component://workeffort/widget/WorkEffortPartyAssignForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditWorkEffortAssignmentRates">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleListWorkEffortAssignmentRates"/>
+                <set field="tabButtonItem" value="WorkEffortAssignmentRates"/>
+                <set field="labelTitleProperty" value="PageTitleListWorkEffortAssignmentRates"/>
+                
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                    <decorator-section name="body">
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortAssignmentRates}</label></container>
+                        <include-form name="ListWorkEffortAssignmentRates" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortAssignmentRate}</label></container>
+                        <include-form name="AddWorkEffortAssignmentRate" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -428,6 +448,27 @@
                         <include-form name="ListWorkEffortOrderHeaders" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
                         <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortOrderHeader}</label></container>
                         <include-form name="AddWorkEffortOrderHeader" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditWorkEffortTimeEntries">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleListWorkEffortTimeEntries"/>
+                <set field="tabButtonItem" value="WorkEffortTimeEntries"/>
+                <set field="labelTitleProperty" value="PageTitleListWorkEffortTimeEntries"/>
+                
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                    <decorator-section name="body">
+                        <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortTimeEntries}</label></container>
+                        <include-form name="ListWorkEffortTimeEntries" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortTimeEntry}</label></container>
+                        <include-form name="AddWorkEffortTimeEntry" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

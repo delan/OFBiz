@@ -59,6 +59,9 @@
         <menu-item name="WorkEffortPartyAssigns" title="${uiLabelMap.WorkEffortParties}">
             <link target="ListWorkEffortPartyAssigns?workEffortId=${workEffortId}"/>
         </menu-item>
+        <menu-item name="WorkEffortAssignmentRates" title="${uiLabelMap.TimesheetRates}">
+            <link target="EditWorkEffortAssignmentRates?workEffortId=${workEffortId}"/>
+        </menu-item>
         <menu-item name="WorkEffortCommEvents" title="${uiLabelMap.WorkEffortCommEvents}">
             <link target="ListWorkEffortCommEvents?workEffortId=${workEffortId}"/>
         </menu-item>
@@ -76,6 +79,9 @@
         </menu-item>
         <menu-item name="WorkEffortOrderHeaders" title="${uiLabelMap.WorkEffortOrderHeaders}">
             <link target="ListWorkEffortOrderHeaders?workEffortId=${workEffortId}"/>
+        </menu-item>
+        <menu-item name="WorkEffortTimeEntries" title="${uiLabelMap.TimesheetTimeEntries}">
+            <link target="EditWorkEffortTimeEntries?workEffortId=${workEffortId}"/>
         </menu-item>
     </menu>
 </menus>
