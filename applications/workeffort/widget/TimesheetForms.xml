@@ -199,7 +199,11 @@
             </drop-down>
         </field>
         
-        <field name="workEffortId"><lookup size="10" target-form-name="LookupWorkEffort"/></field>
+        <field name="workEffortId">
+            <lookup size="10" target-form-name="LookupWorkEffort">
+                <sub-hyperlink target="EditWorkEffort?workEffortId=${workEffortId}" link-style="buttontext" description="WE:${workEffortId}"/>
+            </lookup>
+        </field>
 
         <field name="invoiceId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
         <field name="invoiceItemSeqId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
