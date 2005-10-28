@@ -889,6 +889,12 @@
         <event type="bsf" path="/shipmentreports/" invoke="ShipmentItemReportPrepare.bsh"/>
         <response name="success" type="view" value="ShipmentManifestReport"/>
     </request-map>
+
+    <!-- ================ Inventory Reports Requests ================= -->
+    <request-map uri="InventoryReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InventoryReports"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -943,5 +949,7 @@
     <view-map name="QuickShipOrder" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#QuickShipOrder"/>
 
     <view-map name="ShipmentManifestReport" type="jasperreportspdf" page="/shipmentreports/ShipmentManifestReport.xml" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="InventoryReports" type="screen" page="component://product/widget/facility/ReportScreens.xml#InventoryReports"/>
     <!-- end of view mappings -->
 </site-conf>
