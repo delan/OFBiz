@@ -95,36 +95,70 @@
             <add-error><fail-message message="Could not find invoice with ID [${invoiceId}], not adding Timesheet Entries to it."/></add-error>
             <check-errors/>
         </if-empty>
-        
-        <iterate entry-name="timeEntry" list-name="timeEntryList">
-            <clear-field field-name="createInvoiceItemMap"/>
-            <clear-field field-name="getTimeEntryRate"/>
-            <clear-field field-name="rateAmount"/>
 
-            <set field="getTimeEntryRate.timeEntryId" from-field="timeEntry.timeEntryId"/>
-            <call-service service-name="getTimeEntryRate" in-map-name="getTimeEntryRate">
-                <result-to-field result-name="rateAmount"/>
+        <call-simple-method method-name="createTimeEntryInvoiceItemsInline"/>
+    </simple-method>
+    <simple-method method-name="addWorkEffortTimeToInvoice" short-description="Add Work Effort Time to Invoice">
+        <check-permission permission="WORKEFFORTMGR" action="_CREATE"><fail-message message="You do not have permission to perform this operation: ${methodShortDescription}."/></check-permission>
+        <check-errors/>
+        
+        <entity-one entity-name="WorkEffort" value-name="workEffort"/>
+        <get-related value-name="workEffort" relation-name="TimeEntry" list-name="timeEntryList"/>
+        
+        <if-empty field-name="parameters.invoiceId">
+            <set-service-fields service-name="createInvoice" map-name="parameters" to-map-name="createInvoiceMap"/>
+            <set field="createInvoiceMap.invoiceTypeId" value="SALES_INVOICE"/>
+            <set field="createInvoiceMap.statusId" value="INVOICE_IN_PROCESS"/>
+            <call-service service-name="createInvoice" in-map-name="createInvoiceMap">
+                <result-to-field result-name="invoiceId"/>
             </call-service>
-            
-            <set field="createInvoiceItemMap.invoiceId" from-field="invoiceId"/>
-            <set field="createInvoiceItemMap.taxableFlag" value="N"/>
-            <set field="createInvoiceItemMap.invoiceItemTypeId" value="INV_TE_ITEM"/>
-            
-            <set field="createInvoiceItemMap.quantity" from-field="timeEntry.hours"/>
-            <set field="createInvoiceItemMap.uomId" value="TF_hr"/>
-            <set field="createInvoiceItemMap.amount" from-field="rateAmount"/>
-            
-            <set field="createInvoiceItemMap.description" from-field="timeEntry.comments"/>
-            
-            <!-- NOTE: this will only work with the createInvoiceItem service in accountingext which can generate and return an invoiceItemSeqId -->
-            <call-service service-name="createInvoiceItem" in-map-name="createInvoiceItemMap">
-                <result-to-field result-name="invoiceItemSeqId" field-name="timeEntry.invoiceItemSeqId"/>
-            </call-service>
-            <set field="timeEntry.invoiceId" from-field="invoiceId"/>
-            <store-value value-name="timeEntry"/>
+            <field-to-result field-name="invoiceId"/>
+        <else>
+            <set field="invoiceId" from-field="parameters.invoiceId"/>
+        </else>
+        </if-empty>
+        
+        <entity-one entity-name="Invoice" value-name="invoice"/>
+        <if-empty field-name="invoice">
+            <add-error><fail-message message="Could not find invoice with ID [${invoiceId}], not adding Timesheet Entries to it."/></add-error>
+            <check-errors/>
+        </if-empty>
+        
+        <call-simple-method method-name="createTimeEntryInvoiceItemsInline"/>
+    </simple-method>
+    <simple-method method-name="createTimeEntryInvoiceItemsInline" short-description="createTimeEntryInvoiceItemsInline">
+        <iterate entry-name="timeEntry" list-name="timeEntryList">
+            <!-- only add to invoice if it is not already on an invoice; may want to make this smarter in the future to see if invoice cancelled or some such -->
+            <if-empty field-name="timeEntry.invoiceId">
+                <clear-field field-name="createInvoiceItemMap"/>
+                <clear-field field-name="getTimeEntryRate"/>
+                <clear-field field-name="rateAmount"/>
+                
+                <set field="getTimeEntryRate.timeEntryId" from-field="timeEntry.timeEntryId"/>
+                <call-service service-name="getTimeEntryRate" in-map-name="getTimeEntryRate">
+                    <result-to-field result-name="rateAmount"/>
+                </call-service>
+                
+                <set field="createInvoiceItemMap.invoiceId" from-field="invoiceId"/>
+                <set field="createInvoiceItemMap.taxableFlag" value="N"/>
+                <set field="createInvoiceItemMap.invoiceItemTypeId" value="INV_TE_ITEM"/>
+                
+                <set field="createInvoiceItemMap.quantity" from-field="timeEntry.hours"/>
+                <set field="createInvoiceItemMap.uomId" value="TF_hr"/>
+                <set field="createInvoiceItemMap.amount" from-field="rateAmount"/>
+                
+                <set field="createInvoiceItemMap.description" from-field="timeEntry.comments"/>
+                
+                <!-- NOTE: this will only work with the createInvoiceItem service in accountingext which can generate and return an invoiceItemSeqId -->
+                <call-service service-name="createInvoiceItem" in-map-name="createInvoiceItemMap">
+                    <result-to-field result-name="invoiceItemSeqId" field-name="timeEntry.invoiceItemSeqId"/>
+                </call-service>
+                <set field="timeEntry.invoiceId" from-field="invoiceId"/>
+                <store-value value-name="timeEntry"/>
+            </if-empty>
         </iterate>
     </simple-method>
-        
+    
     <!-- TimesheetRole Services -->
     <simple-method method-name="createTimesheetRole" short-description="Create TimesheetRole">
         <check-permission permission="WORKEFFORTMGR" action="_CREATE"><fail-message message="You do not have permission to perform this operation: ${methodShortDescription}."/></check-permission>

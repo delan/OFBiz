@@ -469,6 +469,11 @@
                         <include-form name="ListWorkEffortTimeEntries" location="component://workeffort/widget/WorkEffortForms.xml"/>
                         <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortTimeEntry}</label></container>
                         <include-form name="AddWorkEffortTimeEntry" location="component://workeffort/widget/WorkEffortForms.xml"/>
+
+                        <container><label style="head1">Add Work Effort Time to Invoice</label></container>
+                        <include-form name="AddWorkEffortTimeToInvoice" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        <container><label style="head1">Add Work Effort Time to New Invoice</label></container>
+                        <include-form name="AddWorkEffortTimeToNewInvoice" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
