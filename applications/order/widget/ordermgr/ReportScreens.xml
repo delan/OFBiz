@@ -39,6 +39,14 @@
                             <label style="head1" text="Order Reports"/>
                         </container>
                         <container>
+                            <label style="head2" text="Sales by Store Report"/>
+                            <include-form name="SalesByStoreReport" location="component://order/widget/ordermgr/ReportForms.xml"/>
+                        </container>
+                        <container>
+                            <label style="head2" text="Purchases by Organization Report"/>
+                            <include-form name="PurchasesByOrganizationReport" location="component://order/widget/ordermgr/ReportForms.xml"/>
+                        </container>
+                        <container>
                             <label style="head2" text="Purchases by Product Report"/>
                             <include-form name="OrderPurchaseProductOptions" location="component://order/widget/ordermgr/ReportForms.xml"/>
                         </container>
@@ -122,5 +130,80 @@
             </widgets>
         </section>
     </screen>
+
+    <!-- generates the pdf for report of sales by store and customer, grouped by product -->
+    <screen name="SalesByStoreReport">
+        <section>
+            <actions>
+                <set field="title" value="Sales By Store Report"/>
+                <set field="toPartyId" from-field="parameters.toPartyId"/>
+                <entity-condition entity-name="OrderReportSalesGroupByProduct" list-name="productReportList">
+                    <condition-list combine="and">
+                        <!-- this can use the other view, so long as the filter is by SALES_ORDER and fromPartyId = ProductStore.payToPartyId if provided -->
+                        <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="partyId" operator="equals" env-name="parameters.toPartyId" ignore-if-empty="true"/>
+                        <condition-expr field-name="roleTypeId" operator="equals" value="BILL_TO_CUSTOMER"/>
+                        <condition-expr field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
+                        <!-- possible bug: using env-name="parameters.orderStatusId" did not work for the following line -->
+                        <condition-expr field-name="orderStatusId" operator="equals" value="${parameters.orderStatusId}" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromOrderDate" ignore-if-null="true"/>
+                        <condition-expr field-name="orderDate" operator="less" env-name="parameters.thruOrderDate" ignore-if-null="true"/>
+                    </condition-list>
+                    <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
+                    <select-field field-name="productStoreId"/>
+                    <select-field field-name="storeName"/>
+                    <select-field field-name="productId"/>
+                    <select-field field-name="internalName"/>
+                    <select-field field-name="quantity"/>
+                    <select-field field-name="unitPrice"/>
+                    <order-by field-name="storeName"/>
+                    <order-by field-name="internalName"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
+                    <html><html-template location="component://order/webapp/ordermgr/reports/SalesByStoreReport.fo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- generates the pdf for report of purchases by organization, grouped by product -->
+    <screen name="PurchasesByOrganizationReport">
+        <section>
+            <actions>
+                <set field="title" value="Purchases By Organziation"/>
+                <set field="toPartyId" from-field="parameters.toPartyId"/>
+                <set field="fromPartyId" from-field="parameters.fromPartyId"/>
+                <entity-condition entity-name="OrderReportPurchasesGroupByProduct" list-name="productReportList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="toPartyId" operator="equals" env-name="parameters.toPartyId" ignore-if-empty="true"/>
+                        <condition-expr field-name="toRoleTypeId" operator="equals" value="BILL_TO_CUSTOMER"/>
+                        <condition-expr field-name="fromPartyId" operator="equals" env-name="parameters.fromPartyId" ignore-if-empty="true"/>
+                        <condition-expr field-name="fromRoleTypeId" operator="equals" value="BILL_FROM_VENDOR"/>
+                        <condition-expr field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
+                        <condition-expr field-name="orderStatusId" operator="equals" value="${parameters.orderStatusId}" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromOrderDate" ignore-if-null="true"/>
+                        <condition-expr field-name="orderDate" operator="less" env-name="parameters.thruOrderDate" ignore-if-null="true"/>
+                    </condition-list>
+                    <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
+                    <select-field field-name="productId"/>
+                    <select-field field-name="internalName"/>
+                    <select-field field-name="quantity"/>
+                    <select-field field-name="unitPrice"/>
+                    <order-by field-name="internalName"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
+                    <html><html-template location="component://order/webapp/ordermgr/reports/PurchasesByOrganizationReport.fo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
 </screens>
 

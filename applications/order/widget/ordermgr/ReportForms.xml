@@ -76,4 +76,63 @@
 
         <field name="submitButton" title="Run Payment Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <!-- form for generating a report of total product sales (quantity and value) -->
+    <form name="SalesByStoreReport" type="single" target="SalesByStoreReport.pdf" title=""
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="productStoreId"  title="${uiLabelMap.ProductProductStore}">
+            <drop-down allow-empty="false">
+                <option key="" description="- ${uiLabelMap.CommonAny} -"/>
+                <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
+                    <entity-order-by field-name="storeName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="toPartyId" title="${uiLabelMap.AccountingToPartyId}">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="orderStatusId"  title="${uiLabelMap.OrderOrderStatus}">
+            <drop-down allow-empty="false">
+                <option key="" description="- ${uiLabelMap.CommonAny} -"/>
+                <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="equals" value="ORDER_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromOrderDate" title="${uiLabelMap.CommonFromDate}"><date-time type="timestamp"/></field>
+        <field name="thruOrderDate" title="${uiLabelMap.CommonThruDate}"><date-time type="timestamp"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <!-- form for generating a report of total product purchases (quantity and value) -->
+    <form name="PurchasesByOrganizationReport" type="single" target="PurchasesByOrganizationReport.pdf" title=""
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="fromPartyId" title="${uiLabelMap.AccountingFromParty}">
+            <drop-down allow-empty="false">
+                <option key="" description="- ${uiLabelMap.CommonAny} -"/>
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName} ${firstName} ${lastName} [${partyId}]" key-field-name="partyId">
+                    <entity-constraint name="roleTypeId" operator="equals" value="SUPPLIER"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="toPartyId" title="${uiLabelMap.AccountingToParty}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName} ${firstName} ${lastName} [${partyId}]" key-field-name="partyId">
+                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="orderStatusId"  title="${uiLabelMap.OrderOrderStatus}">
+            <drop-down allow-empty="false">
+                <option key="" description="- ${uiLabelMap.CommonAny} -"/>
+                <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="equals" value="ORDER_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromOrderDate" title="${uiLabelMap.CommonFromDate}"><date-time type="timestamp"/></field>
+        <field name="thruOrderDate" title="${uiLabelMap.CommonThruDate}"><date-time type="timestamp"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
 </forms>
