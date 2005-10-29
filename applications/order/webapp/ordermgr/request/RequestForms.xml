@@ -89,7 +89,7 @@
         </field>
     </form>
     <form name="ListRequestItems" type="list" use-row-submit="true" 
-            title="" list-name="custRequestItems" paginate-target="RequestItems"
+            title="" list-name="custRequestItems" paginate-target="requestitems"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
         <field name="sequenceNum"></field>
