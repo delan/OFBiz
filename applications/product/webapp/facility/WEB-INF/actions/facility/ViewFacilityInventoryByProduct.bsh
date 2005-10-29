@@ -32,6 +32,7 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.transaction.*;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.util.EntityFindOptions;
 
 import org.ofbiz.widget.html.*;
 
@@ -72,6 +73,15 @@ if (action != null) {
         conditionMap.put("productCategoryId", productCategoryId);
     }
 
+    if (productSupplierId != null && productSupplierId.length() > 0) {
+        prodView.addMemberEntity("SPPR", "SupplierProduct");
+        prodView.addViewLink("PRFA", "SPPR", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+        prodView.addAlias("SPPR", "partyId");
+        conditionMap.put("partyId", productSupplierId);
+    }
+
+    // set distinct on so we only get one row per product
+    EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
     EntityCondition searchCondition = new EntityFieldMap(conditionMap, EntityOperator.AND);
     EntityCondition notVirtualCondition = new EntityExpr(new EntityExpr("isVirtual", EntityOperator.EQUALS, null),
                                                          EntityOperator.OR,
@@ -82,7 +92,7 @@ if (action != null) {
     List prods = null;
     try {
         beganTransaction = TransactionUtil.begin();
-        prodsEli = delegator.findListIteratorByCondition(prodView, whereCondition, null, null, UtilMisc.toList("productId"), null);
+        prodsEli = delegator.findListIteratorByCondition(prodView, whereCondition, null, null, UtilMisc.toList("productId"), findOpts);
         prods = prodsEli.getCompleteList();
         prodsEli.close();
     } catch (GenericEntityException e) {

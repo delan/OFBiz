@@ -43,6 +43,14 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="productSupplierId" title="${uiLabelMap.ProductSupplier}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyRoleAndPartyDetail" key-field-name="partyId" description="${groupName} [${partyId}]">
+                    <entity-constraint name="roleTypeId"  value="SUPPLIER" operator="equals"/>
+                    <entity-order-by field-name="partyId"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="offsetQty" title="${uiLabelMap.ProductQtyOffset}"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
