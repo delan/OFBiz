@@ -271,7 +271,6 @@
         <if-not-empty field-name="removeAssocs" map-name="parameters">
             <remove-by-and entity-name="ProductAssoc" map-name="productFindContext"/>
             <!-- small difference here, also do the reverse assocs... -->
-            <set from-field="parameters.oldProductId" field="reverseProductFindContext.productIdTo"/>
             <remove-by-and entity-name="ProductAssoc" map-name="reverseProductFindContext"/>
         </if-not-empty>
         <if-not-empty field-name="removeAttributes" map-name="parameters">
