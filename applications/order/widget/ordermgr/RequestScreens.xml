@@ -171,7 +171,7 @@
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="2"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
                 <entity-one entity-name="CustRequest" value-name="custRequest"/>
                 <entity-and entity-name="CustRequestItem" list-name="custRequestItems">
                     <field-map env-name="custRequestId" field-name="custRequestId"/>
