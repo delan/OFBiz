@@ -173,6 +173,10 @@
         <set from-field="parameters.productId" field="newProduct.productId"/>
         <create-value value-name="newProduct"/>
 
+        <!-- set up entity filter -->
+        <set field="productFindContext.productId" from-field="parameters.oldProductId"/>
+        <set field="reverseProductFindContext.productIdTo" from-field="parameters.oldProductId"/>
+        
         <!-- if requested, duplicate related data as well -->
         <if-not-empty field-name="duplicatePrices" map-name="parameters">
             <find-by-and entity-name="ProductPrice" map-name="productFindContext" list-name="foundValues"/>
