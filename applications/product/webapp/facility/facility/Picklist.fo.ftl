@@ -28,7 +28,7 @@
  *@since      3.0
 -->
 
-<#macro pickInfoDetail pickQuantity picklistBinInfoList product facilityLocation>
+<#macro pickInfoDetail pickQuantity picklistBinInfoList product facilityLocation facilityLocationInfo>
     <fo:table-row>
         <fo:table-cell padding="2pt" background-color="${rowColor}">
             <#if facilityLocation?has_content>
@@ -42,6 +42,9 @@
                 <fo:block>${product.internalName?default("Internal Name Not Set!")} [${product.productId}]</fo:block>
             <#else>
                 <fo:block> </fo:block>
+            </#if>
+            <#if (facilityLocationInfo.message)?has_content>
+                <fo:block>${facilityLocationInfo.message?if_exists}</fo:block>
             </#if>
         </fo:table-cell>
         <fo:table-cell padding="2pt" background-color="${rowColor}">
@@ -162,7 +165,7 @@
                 <#assign rowColor = "white">
                 <#if facilityLocationInfoList?has_content>
                 <#list facilityLocationInfoList as facilityLocationInfo>
-                    <@pickInfoDetail pickQuantity=facilityLocationInfo.pickQuantity picklistBinInfoList=facilityLocationInfo.picklistBinInfoList product=facilityLocationInfo.product facilityLocation=facilityLocationInfo.facilityLocation/>
+                    <@pickInfoDetail pickQuantity=facilityLocationInfo.pickQuantity picklistBinInfoList=facilityLocationInfo.picklistBinInfoList product=facilityLocationInfo.product facilityLocation=facilityLocationInfo.facilityLocation facilityLocationInfo=facilityLocationInfo/>
                   <#-- Not display details here, just the summary info for the bins
                     <#list facilityLocationInfo.picklistItemInfoList as picklistItemInfo>
                         <@picklistItemInfoDetail picklistItemInfo=picklistItemInfo product=picklistItemInfo.product facilityLocation=facilityLocationInfo.facilityLocation/>
@@ -173,7 +176,7 @@
 
                 <#if noLocationProductInfoList?has_content>
                 <#list noLocationProductInfoList as noLocationProductInfo>
-                    <@pickInfoDetail pickQuantity=noLocationProductInfo.pickQuantity picklistBinInfoList=noLocationProductInfo.picklistBinInfoList product=noLocationProductInfo.product facilityLocation=null/>
+                    <@pickInfoDetail pickQuantity=noLocationProductInfo.pickQuantity picklistBinInfoList=noLocationProductInfo.picklistBinInfoList product=noLocationProductInfo.product facilityLocation=null facilityLocationInfo=null/>
                   <#-- Not display details here, just the summary info for the bins
                     <#list noLocationProductInfo.picklistItemInfoList as picklistItemInfo>
                         <@picklistItemInfoDetail picklistItemInfo=picklistItemInfo product=noLocationProductInfo.product facilityLocation=null/>
