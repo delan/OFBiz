@@ -797,6 +797,7 @@
                     <if-compare-field field-name="facilityLocationInfo.product.productId" operator="not-equals" to-field-name="picklistItemInfo.product.productId">
                         <!-- Uh oh, have different products in the same location... what to do about this? -->
                         <log level="error" message="When creating picklist report found in the same location [${facilityLocation.locationSeqId}] two different products: ${facilityLocationInfo.product.productId} and ${picklistItemInfo.product.productId}"/>
+                        <string-append string=" WARNING: products with different IDs are sharing the same bin location, you must check products and quantities required against orders : ${facilityLocationInfo.product.productId} and ${picklistItemInfo.product.productId}" field-name="facilityLocationInfo.message"/>
                     </if-compare-field>
                 </else>
                 </if-empty>
