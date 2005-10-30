@@ -91,7 +91,7 @@
         list-name="segmentGroupClassList" target="" paginate-target="listSegmentGroupClass" title="" type="list">
         <actions>
             <entity-and entity-name="SegmentGroupClassification">
-                <field-map env-name="segmentGroupId"/>
+                <field-map field-name="segmentGroupId"/>
             </entity-and>
         </actions>
         <field name="segmentGroupId"><hidden/></field>
@@ -117,7 +117,7 @@
         list-name="segmentGroupGeos" target="" paginate-target="listSegmentGroupGeo" title="" type="list">
         <actions>
             <entity-and entity-name="SegmentGroupGeo">
-                <field-map env-name="segmentGroupId"/>
+                <field-map field-name="segmentGroupId"/>
             </entity-and>
         </actions>
         <field name="segmentGroupId"><hidden/></field>
