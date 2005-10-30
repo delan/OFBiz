@@ -934,8 +934,8 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
-        String destroyCart = (String) request.getAttribute("destroyCart");
-        
+        String destroyCart = request.getParameter("destroyCart");
+
         ShoppingCart cart = getCartObject(request);
         Map result = null;
         String quoteId = null;
@@ -964,7 +964,7 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
-        String destroyCart = (String) request.getAttribute("destroyCart");
+        String destroyCart = request.getParameter("destroyCart");
         
         ShoppingCart cart = getCartObject(request);
         Map result = null;
