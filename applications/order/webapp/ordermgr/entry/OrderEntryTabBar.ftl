@@ -35,10 +35,12 @@
             <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
                 <a href="<@ofbizUrl>finalizeOrder?finalizeMode=purchase&finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
             <#else>
+                <a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderQuickFinalizeOrder}</a>
                 <a href="<@ofbizUrl>finalizeOrder?finalizeMode=init</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
             </#if>
         <#else>
             <span class="submenutextdisabled">${uiLabelMap.OrderRecalculateOrder}</span>
+            <span class="submenutextdisabled">${uiLabelMap.OrderQuickFinalizeOrder}</span>
             <span class="submenutextrightdisabled">${uiLabelMap.OrderFinalizeOrder}</span>
         </#if>
     </div>

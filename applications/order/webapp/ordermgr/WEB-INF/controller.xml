@@ -502,6 +502,45 @@
         <response name="success" type="view" value="addrsetting"/>
     </request-map>
 
+    <!-- 
+        Quick Finalize Order reuses the ecommerce checkoutoptions widget and template. We need to
+        translate the controller requests here for use by ordermgr.
+    -->
+    <request-map uri="quickcheckout">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="quickcheckout"/>
+    </request-map>
+    <request-map uri="updateCheckoutOptions">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setPartialCheckOutOptions"/>
+        <response name="success" type="view" value="checkoutshippingaddress"/>
+        <response name="error" type="request" value="showcart"/>
+    </request-map>
+    <request-map uri="checkout">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>
+        <response name="success" type="request" value="calcShipping"/>
+        <response name="error" type="request" value="showcart"/>
+    </request-map>
+    <request-map uri="createPostalAddressAndPurpose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="createPartyContactMechPurpose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyContactMechPurpose"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="deletePartyContactMechPurpose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyContactMechPurpose"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
     <!-- ================================================================= -->
     <!-- ==================  MultiParty Modifs =========================== -->
     <!-- ================================================================= -->
@@ -1167,6 +1206,13 @@
     <view-map name="addfromshoppinglist" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#AddFromShoppingList"/>
     <view-map name="keywordsearch" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#keywordsearch"/>
     <view-map name="advancedsearch" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#advancedsearch"/>
+
+    <view-map name="quickcheckout" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#quickFinalizeOrder"/>
+    <view-map name="checkoutshippingaddress" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutshippingaddress"/>
+    <view-map name="editcontactmech" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcontactmech"/>
+    <view-map name="editcreditcard" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcreditcard"/>
+    <view-map name="editeftaccount" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editeftaccount"/>
+    <view-map name="checkoutpayment" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutpayment"/>
 
     <view-map name="category" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#category"/>
     <view-map name="product" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#product"/>
