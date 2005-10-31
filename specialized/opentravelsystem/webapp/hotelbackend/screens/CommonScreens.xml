@@ -138,6 +138,7 @@
                             <container style="contentarea">
                                 <container style="${MainColumnStyle}">
                                     <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                                     <decorator-section-include name="body"/>
                                 </container>
                                 <container style="endcolumns"><label text="&amp;nbsp;"/></container>

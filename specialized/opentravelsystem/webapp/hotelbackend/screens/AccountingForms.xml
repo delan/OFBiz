@@ -22,7 +22,7 @@
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="file:/home/Hans/ofbiz/framework/widget/dtd/widget-form.xsd">
+ xsi:noNamespaceSchemaLocation="file:/home/hans/ofbiz/framework/widget/dtd/widget-form.xsd">
 
     <form name="DataExchangePartyOnly" target="uploadDataFilePartyOnly" title="Upload data file" type="upload"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
@@ -40,17 +40,18 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="CreateInvoicesFromPayments" target="CreateInvoicesFromPayments" title="Create Invoices from Payments" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="generateSalesInvoicesToo"><check/></field>
+        <field name="submitButton" title="Copy" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
     <form name="SendReceivePayments" target="SendReceivePayments" title="Set all payments with the 'not paid' status to send/received" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="submitButton" title="change status to received/send" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-    <form name="CreateInvoicesFromPayments" target="CreateInvoicesFromPayments" title="Create Invoices from Payments" type="single"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="submitButton" title="Copy" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -60,6 +61,30 @@
         <field name="submitButton" title="Post" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+    </form>
+    <form name="ListInvoices" target="ListInvoices" title="List invoices" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="submitButton" title="submit" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="InvoicesList" target="InvoicesList" title="Invoice List" type="list" list-name="invoiceList" default-widget-style="tabletext"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext">
+        <actions>
+            <script location="component://opentravelsystem/webapp/hotelbackend/script/ListInvoices.bsh"/>
+        </actions>
+        <field name="company" widget-style="buttontext" >
+            <hyperlink description="${company}" target="viewprofile?partyId=${company}" target-window="new"/>
+        </field>
+        <field name="name"><display/></field>
+        <field name="revenue"><display/></field>
+        <field name="salesTaxIn"><display/></field>
+        <field name="expenses"><display/></field>
+        <field name="salesTaxOut"><display/></field>
+        <field name="miscIn"><display/></field>
+        <field name="miscOut"><display/></field>
+        <field name="totalValue"><display/></field>
     </form>
     
 </forms>
