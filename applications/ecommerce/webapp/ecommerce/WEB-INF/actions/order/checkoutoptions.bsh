@@ -34,7 +34,8 @@ import org.ofbiz.order.shoppingcart.shipping.*;
 
 shoppingCart = session.getAttribute("shoppingCart");
 currencyUomId = shoppingCart.getCurrency();
-party = userLogin.getRelatedOne("Party");
+partyId = shoppingCart.getPartyId();
+party = delegator.findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", partyId));
 productStore = ProductStoreWorker.getProductStore(request);
 
 shippingEstWpr = null;

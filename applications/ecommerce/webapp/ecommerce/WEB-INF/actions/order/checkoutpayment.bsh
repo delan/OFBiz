@@ -34,9 +34,9 @@ import org.ofbiz.product.store.*;
 cart = session.getAttribute("shoppingCart");
 currencyUomId = cart.getCurrency();
 userLogin = session.getAttribute("userLogin");
-party = userLogin.getRelatedOne("Party");
+partyId = cart.getPartyId();
+party = delegator.findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", partyId));
 productStoreId = ProductStoreWorker.getProductStoreId(request);
-partyId = userLogin.getString("partyId");
 
 checkOutPaymentId = "";
 if (cart != null) {
