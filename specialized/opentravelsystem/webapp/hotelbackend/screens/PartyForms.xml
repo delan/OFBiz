@@ -25,7 +25,7 @@
     <form name="ListParties" type="list" separate-columns="true" 
         title="Party List"  default-title-style="tableheadtext"
         default-widget-style="tabletext" default-tooltip-style="tabletext"
-        paginate-target="findparties" list-iterator-name="listIt" default-entity-name="PartyRelationshipAndPartyDetail">
+        paginate-target="findParties" list-iterator-name="listIt" default-entity-name="PartyRelationshipAndPartyDetail">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>

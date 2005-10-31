@@ -187,7 +187,7 @@ public class mt940 {
 			else	{ // credit
 			if (otherParty.equals(taxAuthPartyId) || accountPartyId.equals(taxAuthPartyId))
 					payment.put("paymentTypeId","SALES_TAX_PAYMENT");
-				else 
+						else 
 					payment.put("paymentTypeId","VENDOR_PAYMENT");
 				payment.put("partyIdTo",otherParty);
 				payment.put("partyIdFrom", accountPartyId);    		
@@ -200,26 +200,23 @@ public class mt940 {
 			if (debug) Debug.logInfo("Creating payment with reference number: " + payment.get("paymentRefNum"),module);
 			if (checkPayment() == true)	{
 				paymentAlreadyUploaded++;
-				if (debug) Debug.logInfo("Payment already exists....",module);
+				if (debug) Debug.logInfo("Payment already exists...so delete first.",module);
 			}
-			else	{
-				if (!partyOnly)	{	// input parameter.....
-					// finally create payment record.
-					payment.put("userLogin",userLogin);
-					payment.put("locale", loc);
-					try {
-						dispatcher.runSync("createPayment", payment);
-					} catch (GenericServiceException e1) {
-						Debug.logError(e1, "Error creating payment", module);
-						continue;
-					}
-					
-					paymentsCreated++;
+			if (!partyOnly)	{	// input parameter.....
+				// finally create payment record.
+				payment.put("userLogin",userLogin);
+				payment.put("locale", loc);
+				try {
+					dispatcher.runSync("createPayment", payment);
+				} catch (GenericServiceException e1) {
+					Debug.logError(e1, "Error creating payment", module);
+					continue;
 				}
+				paymentsCreated++;
 			}
 		}
 		String mess = "Upload ended... " + partiesCreated + " partyGroups created, ";
-		if (!partyOnly) mess = mess.concat(paymentsCreated + " payment records created, " + paymentAlreadyUploaded + " payments already uploaded....");
+		if (!partyOnly) mess = mess.concat(paymentsCreated + " payment records created, " + paymentAlreadyUploaded + " payments deleted....");
 		request.setAttribute("_EVENT_MESSAGE_", mess);
 		
 		return "success";
@@ -234,9 +231,16 @@ public class mt940 {
 		catch (GenericEntityException e) {	Debug.logError("Find payment exception:" + e.getMessage(), module); }
 		if (payments == null || payments.size() == 0)	
 			return false;
-		else
+		else	{
+			try {
+				((GenericValue) payments.get(0)).remove();
+			} catch (GenericEntityException e1) {
+				Debug.logError(e1, "Error deleting payment record", module);
+			}
 			return true;
+		}
 	}
+
 	/**
 	 *  create party with payment method and eftAccount for an eftAccount that was not found.
 	 *  create roles for customer or supplier...
@@ -532,11 +536,13 @@ public class mt940 {
 					if (tagData.charAt(10) == 'D')	debet = true; else debet = false;
 					int x=11; while( x < 19 && tagData.charAt(x) != ',' && tagData.charAt(x) != '.')  x++;	// find end of amount string
 					if (x < 19)		{
-						payment.put("amount",new Double(tagData.substring(11,x).concat(".").
-								concat( tagData.charAt(x+1) == 'N'? "0": tagData.substring(x+1,x+2)).
-								concat( tagData.charAt(x+2) == 'N'? "0": tagData.substring(x+2,x+3))));
+						String amount = new String(tagData.substring(11,x));
+						if (tagData.charAt(x+2) == 'N')	amount = amount.concat(".").concat(tagData.substring(x+1,x+2));
+						if (tagData.charAt(x+3) == 'N')	amount = amount.concat(".").concat(tagData.substring(x+1,x+3));
+						payment.put("amount",new Double(amount));
 					}
 					else payment.put("amount",new Double("00.00"));
+					if (debug) Debug.logInfo("Line: " + lineNumber + " Value of 'x':" + x + " Char at 'x+3':" + tagData.charAt(x+3) + "  Payment amount: " + payment.get("amount"), module);
 					break;
 				case 86:  // more information. For ABN-AMRO account info other party.
 					payment.put("comments","");

@@ -23,8 +23,8 @@
  * @version 1.0
  -->
  
- <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-     xsi:noNamespaceSchemaLocation="file:/home/hans/ofbiz/framework/minilang/dtd/simple-methods.xsd">
+ <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="file:/home/hans/ofbiz/framework/minilang/dtd/simple-methods.xsd">
      
      <!-- create an invoice from a payment and apply the payment -->
      <simple-method method-name="CreateInvoicesFromPayments" short-description="--Create an Invoice header and detail records from a payment">
@@ -44,125 +44,148 @@
                  </condition-list>
              </condition-list>
          </entity-condition>
-         <calculate field-name="invoicesCreated"><number value="0"/></calculate>
+         <calculate field-name="invoicesCreated"><number value="0"/></calculate><!-- counter for totals..... -->
          <iterate entry-name="payment" list-name="payments">
-             <!-- only select payments which do not have been (partly) applied -->
+             <!-- only select payments which do not have been (partly) applied and optionally generate also sales invoices-->
              <get-related value-name="payment" relation-name="PaymentApplication" list-name="paymentApplications"/>
-             <if-empty field-name="paymentApplications">     
-                 <transaction-begin/>
-                 <!--  create invoice header -->
-                 <set from-field="payment.partyIdFrom" field="invoice.partyId"/>
-                 <set from-field="payment.partyIdTo" field="invoice.partyIdFrom"/>
-                 <set from-field="payment.currencyUomId" field="invoice.currencyUomId"/>
-                 <set from-field="payment.effectiveDate" field="invoice.invoiceDate"/>
-                 <set from-field="payment.effectiveDate" field="invoice.dueDate"/>
-                 <set value="Generated from Payment ${payment.paymentId}" field="invoice.description"/>
-                 <set value="INVOICE_IN_PROCESS" field="invoice.statusId"/>
-                 <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
-                     <set value="PURCHASE_INVOICE" field="invoice.invoiceTypeId"/>
-                     <else>
-                         <set value="SALES_INVOICE" field="invoice.invoiceTypeId"/>
-                     </else>
-                 </if-compare>
-                 <call-service service-name="createInvoice" in-map-name="invoice">
-                     <result-to-field result-name="invoiceId" field-name="invoiceId"/>
-                 </call-service>
-                 
-                 <calculate field-name="invoicesCreated">
-                     <calcop operator="add">
-                         <calcop operator="get" field-name="invoicesCreated"/>
-                         <number value="1"/>
-                     </calcop>
-                 </calculate>
-
-                 <!-- check if party does not need a sales tax -->
-                 <make-value value-name="partyTaxInfo" entity-name="PartyTaxInfo"/>
-                 <set field="partyTaxInfo.partyId" from-field="payment.partyIdTo"/>
-                 <set field="partyTaxInfo.geoId" value="NLD"/>
-                 <find-by-and entity-name="PartyTaxInfo" map-name="partyTaxInfo" list-name="partyTaxInfos"/>
-                 <filter-list-by-date list-name="partyTaxInfos"/>
-                 <first-from-list entry-name="partyTaxInfo" list-name="partyTaxInfos"/>
-                 
-                 <set value="${invoiceId}" field="invoiceItem.invoiceId"/>
-                
-                 <if-compare field-name="partyTaxInfo.isExempt" value="Y" operator="equals">
-                     <!--  create one item record only  -->
-                     <set value="N" field="invoiceItem.taxableFlag"/>
-                     <set field="invoiceItem.amount" from-field="payment.amount"/>
+             <if>
+                 <condition>
+                     <and>
+                         <if-empty field-name="paymentApplications"/>
+                         <or>
+                             <not>
+                                 <if-empty field-name="parameters.generateSalesInvoicesToo"/>
+                             </not>
+                             <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}"/>
+                         </or>     
+                     </and>
+                 </condition>
+                 <then>
+                     
+                     <transaction-begin/>
+                     <!--  create invoice header -->
+                     <set from-field="payment.partyIdFrom" field="invoice.partyId"/>
+                     <set from-field="payment.partyIdTo" field="invoice.partyIdFrom"/>
+                     <set from-field="payment.currencyUomId" field="invoice.currencyUomId"/>
+                     <set from-field="payment.effectiveDate" field="invoice.invoiceDate"/>
+                     <set from-field="payment.effectiveDate" field="invoice.dueDate"/>
+                     <set value="Generated from Payment ${payment.paymentId}" field="invoice.description"/>
+                     <set value="INVOICE_IN_PROCESS" field="invoice.statusId"/>
                      <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
-                         <set value="PINV_MISC_CHARGE" field="invoiceItem.invoiceItemTypeId"/>
-                     <else>
-                         <set value="INV_MISC_CHARGE" field="invoiceItem.invoiceItemTypeId"/>
-                     </else>
+                         <set value="PURCHASE_INVOICE" field="invoice.invoiceTypeId"/>
+                         <else>
+                             <set value="SALES_INVOICE" field="invoice.invoiceTypeId"/>
+                         </else>
                      </if-compare>
-                     <set value="Amount no VAT required" field="invoiceItem.description"/>
-                     <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
-
-                 <else> <!-- apply the sales tax -->
-                                                 
-                         <!-- first invoiceItem -->
-                         <set value="Y" field="invoiceItem.taxableFlag"/>
-                         <calculate field-name="invoiceItem.amount" rounding-mode="HalfUp" >
-                             <calcop operator="divide">
-                                 <calcop operator="multiply">
-                                     <calcop operator="get" field-name="payment.amount"/>
-                                     <number value="100"/>
-                                 </calcop>
-                                 <number value="119"/>
-                             </calcop>
-                         </calculate>
+                     <call-service service-name="createInvoice" in-map-name="invoice">
+                         <result-to-field result-name="invoiceId" field-name="invoiceId"/>
+                     </call-service>
+                     
+                     <calculate field-name="invoicesCreated">
+                         <calcop operator="add">
+                             <calcop operator="get" field-name="invoicesCreated"/>
+                             <number value="1"/>
+                         </calcop>
+                     </calculate>
+                     
+                     <!-- check if party does not need a sales tax -->
+                     <make-value value-name="partyTaxInfo" entity-name="PartyTaxInfo"/>
+                     <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
+                         <set field="partyTaxInfo.partyId" from-field="payment.partyIdTo"/>
+                         <else>
+                             <set field="partyTaxInfo.partyId" from-field="payment.partyIdFrom"/>
+                         </else>
+                     </if-compare>
+                     <set field="partyTaxInfo.geoId" value="NLD"/>
+                     <find-by-and entity-name="PartyTaxInfo" map-name="partyTaxInfo" list-name="partyTaxInfos"/>
+                     <filter-list-by-date list-name="partyTaxInfos"/>
+                     <first-from-list entry-name="partyTaxInfo" list-name="partyTaxInfos"/>
+                     
+                     <set value="${invoiceId}" field="invoiceItem.invoiceId"/>
+                     
+                     <if-compare field-name="partyTaxInfo.isExempt" value="Y" operator="equals">
+                         <!--  create one item record only  -->
+                         <set value="N" field="invoiceItem.taxableFlag"/>
+                         <set field="invoiceItem.amount" from-field="payment.amount"/>
                          <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
-                             <set value="PINV_SPROD_ITEM" field="invoiceItem.invoiceItemTypeId"/>
+                             <if-compare field-name="payment.paymentTypeId" value="SALES_TAX_PAYMENT" operator="equals">
+                                 <set value="PINV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
+                                 <else>
+                                     <set value="PINV_SPROD_ITEM" field="invoiceItem.invoiceItemTypeId"/>
+                                 </else>
+                             </if-compare>
                              <else>
-                                 <set value="INV_SPROD_ITEM" field="invoiceItem.invoiceItemTypeId"/>
+                                 <if-compare field-name="payment.paymentTypeId" value="SALES_TAX_PAYMENT" operator="equals">
+                                     <set value="INV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
+                                     <else>
+                                         <set value="INV_MISC_CHARGE" field="invoiceItem.invoiceItemTypeId"/>
+                                     </else>
+                                 </if-compare>
                              </else>
                          </if-compare>
-                         <set value="Amount ex. VAT" field="invoiceItem.description"/>
+                         <set value="Amount no VAT required" field="invoiceItem.description"/>
                          <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
                          
-                         <!-- second record: create VAT record -->            
-                         <calculate field-name="invoiceItem.amount" rounding-mode="HalfUp" >
-                             <calcop operator="divide">
-                                 <calcop operator="multiply">
-                                     <calcop operator="get" field-name="payment.amount"/>
-                                     <number value="19"/>
+                         <else> <!-- apply the sales tax -->
+                             
+                             <!-- first invoiceItem -->
+                             <set value="Y" field="invoiceItem.taxableFlag"/>
+                             <calculate field-name="invoiceItem.amount" rounding-mode="HalfUp" >
+                                 <calcop operator="divide">
+                                     <calcop operator="multiply">
+                                         <calcop operator="get" field-name="payment.amount"/>
+                                         <number value="100"/>
+                                     </calcop>
+                                     <number value="119"/>
                                  </calcop>
-                                 <number value="119"/>
-                             </calcop>
-                         </calculate>
-                         <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
-                             <set value="PINV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
-                             <else>
-                                 <set value="INV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
-                             </else>
-                         </if-compare>
-                         <set value="VAT 19%" field="invoiceItem.description"/>
-                         <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
-                 </else>                     
-                 </if-compare>
-                 
-                 <!-- apply the payment to the invoice -->
-                 <set value="${invoiceId}" field="application.invoiceId"/>
-                 <set from-field="payment.paymentId" field="application.paymentId"/>
-                 <call-service service-name="updatePaymentApplication" in-map-name="application"/>
-                 
-                 <!-- change the payment status to confirmed if fully applied -->
-                 <set field="notApplied" value="${bsh:org.ofbiz.accounting.payment.PaymentExtWorker.getPaymentApplied(payment)}"/>
-                 <if-compare field-name="notApplied" value="0.000001" operator="less" format="Double">
-                     <set-service-fields service-name="updatePayment" map-name="payment" to-map-name="updPayment"/>
-                     <set field="updPayment.statusId" value="PMNT_CONFIRMED"/>
-                     <call-service service-name="updatePayment"/>
-                 </if-compare>
-             </if-empty>
-             <if-compare field-name="invoicesCreated" value="100" operator="greater" type="Double">
+                             </calculate>
+                             <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
+                                 <set value="PINV_SPROD_ITEM" field="invoiceItem.invoiceItemTypeId"/>
+                                 <else>
+                                     <set value="INV_SPROD_ITEM" field="invoiceItem.invoiceItemTypeId"/>
+                                 </else>
+                             </if-compare>
+                             <set value="Amount ex. VAT" field="invoiceItem.description"/>
+                             <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
+                             
+                             <!-- second record: create VAT record -->            
+                             <calculate field-name="invoiceItem.amount" rounding-mode="HalfUp" >
+                                 <calcop operator="divide">
+                                     <calcop operator="multiply">
+                                         <calcop operator="get" field-name="payment.amount"/>
+                                         <number value="19"/>
+                                     </calcop>
+                                     <number value="119"/>
+                                 </calcop>
+                             </calculate>
+                             <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
+                                 <set value="PINV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
+                                 <else>
+                                     <set value="INV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
+                                 </else>
+                             </if-compare>
+                             <set value="VAT 19%" field="invoiceItem.description"/>
+                             <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
+                         </else>                     
+                     </if-compare>
+                     
+                     <!-- apply the payment to the invoice -->
+                     <set value="${invoiceId}" field="application.invoiceId"/>
+                     <set from-field="payment.paymentId" field="application.paymentId"/>
+                     <clear-field field-name="application.amountApplied"/>
+                     <call-service service-name="updatePaymentApplication" in-map-name="application"/>
+                     
+                 </then>
+             </if>
+             <if-compare field-name="invoicesCreated" value="100" operator="greater-equals" type="Double">
                  <to-string field-name="invoicesCreated"/>
-                 <string-append field-name="invoicesCreated" string=" invoices created"/>
+                 <string-append field-name="invoicesCreated" string=" invoices created, more to be processed, rerun action....."/>
                  <set value="${invoicesCreated}" field="_event_message_"/>
                  <return/>                 
              </if-compare>
          </iterate>
          <to-string field-name="invoicesCreated"/>
-         <string-append field-name="invoicesCreated" string=" invoices created"/>
+         <string-append field-name="invoicesCreated" string=" invoices created, all processed."/>
          <set value="${invoicesCreated}" field="_event_message_"/>
      </simple-method>
 
@@ -196,7 +219,7 @@
                  <set field="param.statusId" value="PMNT_RECEIVED"/>
              </if-compare-field>
              
-             <call-service service-name="updatePayment" in-map-name="param">
+             <call-service service-name="setPaymentStatus" in-map-name="param">
                  <result-to-result result-name="result" service-result-name="result"/>
              </call-service>
              
@@ -209,7 +232,7 @@
              </calculate>
              
              <transaction-commit/>
-             <if-compare field-name="paymentsUpdated" value="100" operator="greater"  type="Double">
+             <if-compare field-name="paymentsUpdated" value="100" operator="greater-equals"  type="Double">
                  <to-string field-name="paymentsUpdated"/>
                  <string-append field-name="paymentsUpdated" string=" payments updated"/>
                  <set value="${paymentsUpdated}" field="_event_message_"/>
@@ -243,90 +266,78 @@
          <calculate field-name="invoicesUpdated"><number value="0"/></calculate>
          <calculate field-name="paymentsUpdated"><number value="0"/></calculate>
          <iterate entry-name="payment" list-name="payments">
+             <log level="always" message="Processing Payment ${payment.paymentId}"></log>
              <!-- only process fully applied payments -->
-             <set field="applied" value="${bsh:org.ofbiz.accounting.payment.PaymentExtWorker.getPaymentApplied(payment)}" type="Double"/>
-             <calculate field-name="notApplied">
-                 <calcop operator="subtract">
-                     <calcop operator="get" field-name="payment.amount"></calcop>
-                     <calcop operator="get" field-name="applied"></calcop>
-                 </calcop>
-             </calculate>
-             <if-compare field-name="notApplied" operator="less" value="0.000001" type="Double">
-                 <transaction-begin/>
-                 <set field="payment.statusId" value="PMNT_CONFIRMED"/>
-                 <store-value value-name="payment"/>
-                 <check-errors/>                 
+             <set field="applied" value="${bsh:org.ofbiz.accounting.payment.PaymentExtWorker.getPaymentAppliedBd(payment)}" />
+             <if-compare-field field-name="applied" operator="equals" to-field-name="payment.amount" type="Double">
+                 <set field="updStatus.statusId" value="PMNT_CONFIRMED"/>
+                 <set field="updStatus.paymentId" from-field="payment.paymentId"/>
+                 <call-service service-name="setPaymentStatus" in-map-name="updStatus"/>
                  <calculate field-name="paymentsUpdated">
                      <calcop operator="add">
                          <calcop operator="get" field-name="paymentsUpdated"/>
                          <number value="1"/>
                      </calcop>
                  </calculate>
-                 <!-- find related invoices -->
-                 <get-related value-name="payment" relation-name="PaymentApplication" list-name="paymentApplications"/>
-                 <first-from-list entry-name="paymentApplication" list-name="paymentApplications"/>
-                 <get-related value-name="paymentApplication" relation-name="Invoice" list-name="invoices"/>
-                 <first-from-list entry-name="invoice" list-name="invoices"/>
-                 <set field="applied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceExtWorker.getInvoiceApplied(invoice)}" type="Double"/>
-                 <set field="total" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice)}" type="Double"/>
-                 <calculate field-name="notApplied" type="Double">
-                     <calcop operator="subtract">
-                         <calcop operator="get" field-name="total"/>
-                         <calcop operator="get" field-name="applied"/>
-                     </calcop>
-                 </calculate>
-                 <if-compare field-name="notApplied" operator="less" value="0.000001" type="Double">
-                     
-                     <set-service-fields service-name="setInvoiceStatus" map-name="invoice" to-map-name="param"/>
-                     <if-compare field-name="invoice.invoiceTypeId" value="SALES_INVOICE" operator="equals">
-                         <if-compare field-name="param.statusId" value="INVOICE_IN_PROCESS" operator="equals">
-                             <set field="param.statusId" value="INVOICE_READY"/>
-                             <call-service service-name="setInvoiceStatus" in-map-name="param"/>
-                         </if-compare>
-                         <if-compare field-name="param.statusId" value="INVOICE_READY" operator="equals">
-                             <set field="param.statusId" value="INVOICE_SENT"/>
-                             <call-service service-name="setInvoiceStatus" in-map-name="param"/>
-                         </if-compare>
-                         <if-compare field-name="param.statusId" value="INVOICE_SENT" operator="equals">
-                             <set field="param.statusId" value="INVOICE_PAID"/>
-                             <call-service service-name="setInvoiceStatus" in-map-name="param"/>
-                         </if-compare>
+             </if-compare-field>
+         </iterate>
+         <!-- find invoices with the status non paid and which are fully applied -->
+         <entity-condition entity-name="Invoice" list-name="invoices">
+             <condition-list combine="and">
+                 <condition-expr field-name="statusId" operator="not-equals" value="INVOICE_PAID"/>
+             </condition-list>
+         </entity-condition>
+         <iterate entry-name="invoice" list-name="invoices">
+             <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceExtWorker.getInvoiceNotApplied(invoice)}"/>
+             <log level="always" message="Looking at Invoice ${invoice.invoiceId} not applied value: ${notApplied}"></log>
+             <if-compare field-name="notApplied" operator="equals" value="0.00"> <!-- only fully applied invoices required -->
+                 <log level="always" message="Processing Invoice ${invoice.invoiceId}"></log>
+                 <set-service-fields service-name="setInvoiceStatus" map-name="invoice" to-map-name="param"/>
+                 <if-compare field-name="invoice.invoiceTypeId" value="SALES_INVOICE" operator="equals">
+                     <if-compare field-name="param.statusId" value="INVOICE_IN_PROCESS" operator="equals">
+                         <set field="param.statusId" value="INVOICE_READY"/>
+                         <call-service service-name="setInvoiceStatus" in-map-name="param"/>
                      </if-compare>
-                     
-                     <if-compare field-name="invoice.invoiceTypeId" value="PURCHASE_INVOICE" operator="equals">
-                         <if-compare field-name="param.statusId" value="INVOICE_IN_PROCESS" operator="equals">
-                             <set field="param.statusId" value="INVOICE_RECEIVED"/>
-                             <call-service service-name="setInvoiceStatus" in-map-name="param"/>
-                         </if-compare>
-                         <if-compare field-name="param.statusId" value="INVOICE_RECEIVED" operator="equals">
-                             <set field="param.statusId" value="INVOICE_PAID"/>
-                             <call-service service-name="setInvoiceStatus" in-map-name="param"/>
-                         </if-compare>
+                     <if-compare field-name="param.statusId" value="INVOICE_READY" operator="equals">
+                         <set field="param.statusId" value="INVOICE_SENT"/>
+                         <call-service service-name="setInvoiceStatus" in-map-name="param"/>
                      </if-compare>
-                     
-                     <check-errors/>                 
-
-                     <calculate field-name="invoicesUpdated">
-                         <calcop operator="add">
-                             <calcop operator="get" field-name="invoicesUpdated"/>
-                             <number value="1"/>
-                         </calcop>
-                     </calculate>
-                     <if-compare field-name="invoicesUpdated" operator="greater" value="100" type="Double">
-                         <set field="message" value="Posting payments and related invoices. "/>
-                         <to-string field-name="invoicesUpdated"/>
-                         <string-append field-name="message"  string="${invoicesUpdated}"/>
-                         <string-append field-name="message" string=" invoices updated"/>
-                         <to-string field-name="paymentsUpdated"/>
-                         <string-append field-name="message"  string="${paymentsUpdated}"/>
-                         <string-append field-name="message" string=" payments updated"/>
-                         <set value="${message}" field="_event_message_"/>
-                         <return/>
+                     <if-compare field-name="param.statusId" value="INVOICE_SENT" operator="equals">
+                         <set field="param.statusId" value="INVOICE_PAID"/>
+                         <call-service service-name="setInvoiceStatus" in-map-name="param"/>
                      </if-compare>
-
-                     
                  </if-compare>
-              <transaction-commit/>
+                 
+                 <if-compare field-name="invoice.invoiceTypeId" value="PURCHASE_INVOICE" operator="equals">
+                     <if-compare field-name="param.statusId" value="INVOICE_IN_PROCESS" operator="equals">
+                         <set field="param.statusId" value="INVOICE_RECEIVED"/>
+                         <call-service service-name="setInvoiceStatus" in-map-name="param"/>
+                     </if-compare>
+                     <if-compare field-name="param.statusId" value="INVOICE_RECEIVED" operator="equals">
+                         <set field="param.statusId" value="INVOICE_PAID"/>
+                         <call-service service-name="setInvoiceStatus" in-map-name="param"/>
+                     </if-compare>
+                 </if-compare>
+             </if-compare>
+             
+             <check-errors/>                 
+             
+             <calculate field-name="invoicesUpdated">
+                 <calcop operator="add">
+                     <calcop operator="get" field-name="invoicesUpdated"/>
+                     <number value="1"/>
+                 </calcop>
+             </calculate>
+             <if-compare field-name="invoicesUpdated" operator="greater" value="99" type="Double">
+                 <set field="message" value="Posting payments and related invoices. "/>
+                 <to-string field-name="invoicesUpdated"/>
+                 <string-append field-name="message"  string="${invoicesUpdated}"/>
+                 <string-append field-name="message" string=" invoices updated"/>
+                 <to-string field-name="paymentsUpdated"/>
+                 <string-append field-name="message"  string="${paymentsUpdated}"/>
+                 <string-append field-name="message" string=" payments updated"/>
+                 <set value="${message}" field="_event_message_"/>
+                 <return/>
              </if-compare>
          </iterate>
          <set field="message" value="Posting payments and related invoices. "/>
@@ -338,4 +349,5 @@
          <string-append field-name="message" string=" payments updated"/>
          <set value="${message}" field="_event_message_"/>
      </simple-method>    
+     
  </simple-methods>

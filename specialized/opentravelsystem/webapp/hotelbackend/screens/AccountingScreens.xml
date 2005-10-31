@@ -48,25 +48,6 @@
         </section>
     </screen>
 
-    <!--screen name="DataExchange">
-        <section>            
-            <actions>
-                <set field="title" value="Data Exchange"/>
-                <set field="headerItem" value="DataExchange"/>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" to-scope="application"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <container>
-                            <label style="head1">Bankstatement MT940 file upload.</label>
-                        </container>
-                        <include-form name="DataExchange" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen-->
     <screen name="Utilities">
         <section>            
             <actions>
@@ -94,7 +75,7 @@
                         </container>
                         <include-form name="SendReceivePayments" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                         <container>
-                            <label style="head1">Post Invoices by changing the status to.</label>
+                            <label style="head1">Post Invoices and Confirm Payments.</label>
                         </container>
                         <include-form name="PostInvoicesStatements" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                     </decorator-section>
@@ -119,6 +100,10 @@
                             <label style="head1" text="Accounting Reports for ${organizationPartyId}"/>
                         </container>
                         <container>
+                            <label style="head2" text="Invoices Test report"/>
+                            <include-form name="ListInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                        </container>
+                        <container>
                             <label style="head2" text="VAT report"/>
                             <include-form name="VatReportOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
@@ -137,34 +122,24 @@
             </widgets>
         </section>
     </screen>
-    
-    <screen name="VatReport">
+    <screen name="InvoicesList">
         <section>
             <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="Vat Report"/>
-                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" to-scope="application"/>
-                <entity-condition entity-name="Invoice" list-name="invoices">
-                    <condition-list combine="or">
-                        <condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
-                        <condition-expr field-name="partyId" operator="equals" value="Company"/>
-                    </condition-list>
-                    <select-field field-name="invoiceId" />
-                    <select-field field-name="description"/>
-                    <!--select-field name="invoiceDate"><display/></select-field>
-                    <select-field name="currencyUomId" title="Curr."><display/></select-field>
-                    <select-field name="total"><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)}" also-hidden="false"/></select-field>
-                    <select-field name="applied"><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceExtWorker.getInvoiceApplied(delegator,invoiceId)}" also-hidden="false"/></select-field-->
-                    <order-by field-name="paymentId"/>
-                </entity-condition>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <set field="salesTaxIn" from-field="requestAttributes.salesTaxIn"/> 
+                <set field="salesTaxOut" from-field="requestAttributes.salesTaxOut"/> 
             </actions>
             <widgets>
-                <platform-specific>
-                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
-                    <html><html-template location="component://order/webapp/ordermgr/reports/OrderPurchaseReportPayment.fo.ftl"/></html>
-                </platform-specific>
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1" text="List of invoices"/>
+                            <include-form name="InvoicesList" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
 </screens>
