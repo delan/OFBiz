@@ -138,6 +138,13 @@
         <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
     </service>
+    <service name="getProductInventorySummaryForItems" engine="java"
+                location="org.ofbiz.product.inventory.InventoryServices" invoke="getProductInventorySummaryForItems" auth="false">
+        <description>Get Inventory Availability for a list of OrderItems.</description>
+        <attribute name="orderItems" type="List" mode="IN" optional="false"/>
+        <attribute name="quantityOnHandMap" type="Map" mode="OUT" optional="false"/>
+        <attribute name="availableToPromiseMap" type="Map" mode="OUT" optional="false"/>
+    </service>
 
     <service name="checkInventoryAvailability" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="checkInventoryAvailability">
