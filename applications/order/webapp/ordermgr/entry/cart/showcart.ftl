@@ -342,7 +342,7 @@ function gwAll(e) {
                 <td colspan="2" align="left">
                   <div class="tabletext">
                     <a href="/catalog/control/EditProductInventoryItems?productId=${cartLine.getProductId()}"><b>${uiLabelMap.ProductInventory}</b></a>: 
-                    ATP = ${inventoryAtpMap.get(cartLine.getProductId())}, QOH = ${inventoryQohMap.get(cartLine.getProductId())}
+                    ATP = ${availableToPromiseMap.get(cartLine.getProductId())}, QOH = ${quantityOnHandMap.get(cartLine.getProductId())}
                   </div>
                 </td>
               </tr>

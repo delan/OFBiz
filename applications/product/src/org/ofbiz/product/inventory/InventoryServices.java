@@ -23,6 +23,7 @@
  */
 package org.ofbiz.product.inventory;
 
+import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -625,5 +626,59 @@ public class InventoryServices {
         result.put("availableToPromiseTotal", availableToPromiseTotal);
         result.put("quantityOnHandTotal", quantityOnHandTotal);
         return result;
+    }
+    
+    /**
+     * Given a set of order items, returns a hashmap with the ATP and QOH for each product. The default method is to sum
+     * inventories over all Facilities.
+     */
+    public static Map getProductInventorySummaryForItems(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+    	List orderItems = (List) context.get("orderItems");
+    	Map atpMap = new HashMap();
+    	Map qohMap = new HashMap();
+    	Map results = ServiceUtil.returnSuccess();
+    	results.put("availableToPromiseMap", atpMap);
+    	results.put("quantityOnHandMap", qohMap);
+    	
+    	List facilities = null;
+    	try {
+    	    facilities = delegator.findAll("Facility");
+    	} catch (GenericEntityException e) {
+    		Debug.logError(e, "Couldn't get list of facilities.", module);
+    		return ServiceUtil.returnError("Unable to locate facilities.");
+    	}
+    	    	
+    	Iterator iter = orderItems.iterator();
+    	while (iter.hasNext()) {
+    		GenericValue orderItem = (GenericValue) iter.next();
+    		String productId = orderItem.getString("productId");
+    		
+    		if ((productId == null) || productId.equals("")) continue;
+    		
+    		double atp = 0.0;
+    		double qoh = 0.0;
+    		Iterator facilityIter = facilities.iterator();
+    		while (facilityIter.hasNext()) {
+    			GenericValue facility = (GenericValue) facilityIter.next();
+    			Map params = UtilMisc.toMap("productId", productId, "facilityId", facility.getString("facilityId"));
+    			Map invResult = null;
+    			try {
+    				invResult = dispatcher.runSync("getInventoryAvailableByFacility", params);
+    			} catch (GenericServiceException e) {
+    				String msg = "Could not find inventory for facility [" + facility.getString("facilityId") + "]";
+    				Debug.logError(e, msg, module);
+    				return ServiceUtil.returnError(msg);
+    			}
+    			Double fatp = (Double) invResult.get("availableToPromiseTotal");
+    			Double fqoh = (Double) invResult.get("quantityOnHandTotal");
+    			if (fatp != null) atp += fatp.doubleValue();
+    			if (fqoh != null) qoh += fqoh.doubleValue();
+    		}
+    		atpMap.put(productId, new Double(atp));
+    		qohMap.put(productId, new Double(qoh));
+    	}
+    	return results;
     }
 }

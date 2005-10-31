@@ -86,33 +86,6 @@ if (partyId != null) {
 }
 
 // get product inventory summary for each shopping cart item
-// TODO: get inventory only for facility of the store or organization of the order.  Right now it'll show everything.
-facilityList = delegator.findAll("Facility");
-inventoryAtpMap = new HashMap();
-inventoryQohMap = new HashMap();
-scIter = shoppingCart.iterator();
-while (scIter.hasNext()) {
-    scItem = scIter.next();
-    productId = scItem.getProductId();
-    if ((productId == null) || productId.equals("")) continue;
-
-    atp = 0.0;
-    qoh = 0.0;
-    facilityIterator = facilityList.iterator();
-    // For every warehouse the product's atp and qoh are obtained (calling the "getInventoryAvailableByFacility" service)
-    while (facilityIterator.hasNext()) {
-        facility = facilityIterator.next();
-        contextInput = UtilMisc.toMap("productId",productId, "facilityId", facility.getString("facilityId"));
-        resultOutput = dispatcher.runSync("getInventoryAvailableByFacility",contextInput);
-        fatp = resultOutput.get("availableToPromiseTotal");
-        fqoh = resultOutput.get("quantityOnHandTotal");
-        if (fatp != null) atp += fatp.doubleValue();
-        if (fqoh != null) qoh += fqoh.doubleValue();
-    }
-
-    inventoryAtpMap.put(productId, new Double(atp));
-    inventoryQohMap.put(productId, new Double(qoh));
-}
-
-context.put("inventoryAtpMap", inventoryAtpMap);
-context.put("inventoryQohMap", inventoryQohMap);
+inventorySummary = dispatcher.runSync("getProductInventorySummaryForItems", UtilMisc.toMap("orderItems", shoppingCart.makeOrderItems()));
+context.put("availableToPromiseMap", inventorySummary.get("availableToPromiseMap"));
+context.put("quantityOnHandMap", inventorySummary.get("availableToPromiseMap"));
