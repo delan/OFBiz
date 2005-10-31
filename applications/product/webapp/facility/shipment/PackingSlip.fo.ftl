@@ -131,7 +131,7 @@
                             <fo:table-row>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
                                     <#if product?has_content>
-                                        <fo:block>${product.internalName?default("Internal Name Not Set!")} [${product.productId}]</fo:block>
+                                        <fo:block>${product.internalName?xml?default("Internal Name Not Set!")} [${product.productId}]</fo:block>
                                     <#else/>
                                         <fo:block>&nbsp;</fo:block>
                                     </#if>
