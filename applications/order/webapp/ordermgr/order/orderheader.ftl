@@ -751,7 +751,7 @@
                     <td width="5">&nbsp;</td>
                     <td align="left" valign="top" width="80%">
                         <#list shipGroupShipments as shipment>
-                            <div class="tabletext">${uiLabelMap.OrderNbr}<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext">${shipment.shipmentId}</a></div>
+                            <div class="tabletext">${uiLabelMap.OrderNbr}<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext">${shipment.shipmentId}</a>&nbsp;&nbsp;<a href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext">Packing Slip</a></div>
                         </#list>
                     </td>
                   </tr>
