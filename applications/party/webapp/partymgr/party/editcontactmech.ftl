@@ -119,6 +119,7 @@
         <input type="hidden" name="contactMechId" value="${contactMechId}">
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}">
         <input type="hidden" name="partyId" value="${partyId}">
+        <input type="hidden" name="DONE_PAGE" value="${donePage?if_exists}">
     </#if>
   
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId?if_exists>
