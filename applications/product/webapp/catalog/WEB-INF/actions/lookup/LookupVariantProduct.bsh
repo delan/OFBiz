@@ -73,6 +73,15 @@ context.put("product", product);
 context.put("searchFeatures", searchFeatures);
 context.put("variants", variants);
 
+// also need the variant products themselves
+variantProducts = new ArrayList();
+iter = variants.iterator();
+while (iter.hasNext()) {
+    variantId = iter.next();
+    variantProducts.add(delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", variantId)));
+}
+context.put("variantProducts", variantProducts);
+
 if(security.hasEntityPermission("CATALOG", "_CREATE", session)) {
     if (selectedFeatureTypeValues.size() == featureTypes.size() && variants.size() == 0) {
         context.put("productFeatureIds", productFeatureIds);

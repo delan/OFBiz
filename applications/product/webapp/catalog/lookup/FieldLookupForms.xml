@@ -34,6 +34,7 @@
         target="LookupProduct" title="" type="single">
         <!-- <auto-fields-entity entity-name="Product" default-field-type="hidden" /> -->
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
+        <field name="brandName" title="${uiLabelMap.ProductBrandName}"><text-find/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find/></field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down allow-empty="true">
@@ -62,9 +63,11 @@
                 <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
-        <field name="productId" title=" " widget-style="buttontext">
+        <field name="productId" title=" " widget-style="buttontext" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
+        <field name="productId" title=" " use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><hidden/></field>
+        <field name="brandName"><display/></field>
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
         <field name="searchVariants" title=" " widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
@@ -91,6 +94,9 @@
         <field name="productId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
+        <field name="brandName"><display/></field>
+        <field name="internalName"><display/></field>
+        <field name="productTypeId"><display/></field>
     </form>
 
     <form name="lookupProductAndPrice" target="LookupProductAndPrice" title="" type="single"
