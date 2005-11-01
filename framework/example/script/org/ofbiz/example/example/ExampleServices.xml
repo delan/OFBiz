@@ -66,7 +66,7 @@
             <call-service service-name="createExampleStatus" in-map-name="createExampleStatusMap"/>
         </if-compare-field>
 
-        <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteExample" short-description="delete a Example">
