@@ -23,8 +23,8 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="ListExamples" type="list"  list-name="examples" paginate-target="FindExample"
-             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+    <form name="ListExamples" type="list" list-name="examples" paginate-target="FindExample"
+             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="Example">
                 <order-by field-name="description"/>
@@ -32,15 +32,14 @@
         </actions>
         
         <field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[${exampleId}]" target="EditExample?exampleId=${exampleId}"/>
+            <hyperlink also-hidden="false" description="${exampleId}" target="EditExample?exampleId=${exampleId}"/>
         </field>
         <field name="exampleName" title="${uiLabelMap.CommonName}"><display/></field>
         <field name="exampleTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="ExampleType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
     </form>
-    <form name="EditExample" type="single" 
-            target="updateExample" title="" default-map-name="example"
+    <form name="EditExample" type="single" target="updateExample" title="" default-map-name="example"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
             <entity-one entity-name="StatusItem" value-name="currentStatus" auto-field-map="false">
@@ -50,9 +49,9 @@
         <alt-target use-when="example==null" target="createExample"/>
         <auto-fields-service service-name="updateExample"/>
  
-        <field use-when="example!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="example!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}" tooltip="${uiLabelMap.CommonNotModifRecreat}" widget-style="tabletext"><display/></field>
         <field use-when="example==null&amp;&amp;exampleId==null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><ignored/></field>
-        <field use-when="example==null&amp;&amp;exampleId!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><display description="${uiLabelMap.CommonCannotBeFound}: [${exampleId}]" also-hidden="false"/></field>
+        <field use-when="example==null&amp;&amp;exampleId!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="tabletext"><display description="${uiLabelMap.CommonCannotBeFound}: [${exampleId}]" also-hidden="false"/></field>
 
         <field name="exampleTypeId" title="${uiLabelMap.CommonType}" widget-style="selectBox">
             <drop-down allow-empty="false">
