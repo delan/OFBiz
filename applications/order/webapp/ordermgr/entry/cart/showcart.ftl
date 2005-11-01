@@ -98,6 +98,13 @@ function gwAll(e) {
     }
     cform.submit();
 }
+function quicklookup_popup(element) {
+    target = element;  // note: global var target comes from fieldlookup.js
+    var searchTerm = element.value;
+    var obj_lookupwindow = window.open('LookupProduct?productId_op=like&productId_ic=Y&productId=' + searchTerm,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,resizable=yes,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+    obj_lookupwindow.opener = window;
+    obj_lookupwindow.focus();
+}
 </script>
 
 <div class="screenlet">
@@ -111,6 +118,7 @@ function gwAll(e) {
                   <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :</div></td>
                   <td><input type="text" class="inputBox" size="25" name="add_product_id" value="${requestParameters.add_product_id?if_exists}"/>
                     <span class='tabletext'>
+                      <a href="javascript:quicklookup_popup(document.quickaddform.add_product_id)" class="buttontext">${uiLabelMap.OrderQuickLookup}</a>
                       <a href="javascript:call_fieldlookup2(document.quickaddform.add_product_id,'LookupProduct');">
                         <img src="/images/fieldlookup.gif" width="15" height="14" border="0" alt="Click here For Field Lookup"/>
                       </a>
