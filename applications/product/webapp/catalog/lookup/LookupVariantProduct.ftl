@@ -50,16 +50,28 @@
                 </td>
             </tr>
         </#list>
-        <tr><td colspan=2><input type="submit" value="Search" class="smallSubmit"></td></tr>
+        <tr>
+            <td><input type="submit" value="Search" class="smallSubmit"></td>
         </form>
+        <form method="post" action="<@ofbizUrl>LookupProduct</@ofbizUrl>" name="">
+            <td><input type="submit" value="Back" class="smallSubmit"></td>
+        </form>
+    </tr>
     </table>
 </#if>
 <br/>
-<#if variants?exists>
+<#if variantProducts?exists>
     <table border="1" cellpadding="2" cellspacing="0">
-        <#list variants as variant>
+        <tr>
+            <th>&nbsp;</th>
+            <th><div class="tabletext">Brand Name</div></th>
+            <th><div class="tabletext">Internal Name</div></th>
+        </tr>
+        <#list variantProducts as variant>
             <tr>
-                <td><a class="buttontext" href="javascript:set_value('${variant}')">${variant}</a></td>
+                <td><a class="buttontext" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></td>
+                <td><div class="tabletext">${variant.brandName?if_exists}</div></td>
+                <td><div class="tabletext">${variant.internalName?if_exists}</div></td>
             </tr>
         </#list>
     </table>
