@@ -127,7 +127,7 @@
             </table>  
             <#else>
               <#if postalAddress?has_content>            
-              <form method="post" action="<@ofbizUrl>updatePostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>updatePostalAddressOrderEntry</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="contactMechId" value="${shipContactMechId?if_exists}">
               <#else>
               <form method="post" action="<@ofbizUrl>createPostalAddress</@ofbizUrl>" name="checkoutsetupform">

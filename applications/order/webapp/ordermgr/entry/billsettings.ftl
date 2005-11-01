@@ -150,7 +150,7 @@ function makeExpDate() {
                 <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId?if_exists}"/>
                 <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}"/>
             <#elseif requestParameters.useShipAddr?exists>
-              <form method="post" action="<@ofbizUrl>createCreditCard</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@ofbizUrl>createCreditCardOrderEntry</@ofbizUrl>" name="checkoutsetupform">
             <#else>
               <form method="post" action="<@ofbizUrl>createCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
             </#if>

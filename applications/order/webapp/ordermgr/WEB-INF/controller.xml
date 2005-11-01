@@ -540,6 +540,23 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
+    <request-map uri="checkoutoptions">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="calcShipping"/>
+    </request-map>
+    <request-map uri="updatePostalAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyPostalAddress"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="createCreditCard">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createCreditCard"/>
+        <response name="success" type="view" value="editcreditcard"/>
+        <response name="address" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcreditcard"/>
+    </request-map>
 
     <!-- ================================================================= -->
     <!-- ==================  MultiParty Modifs =========================== -->
@@ -599,7 +616,7 @@
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="shipsetting"/>
     </request-map>
-    <request-map uri="updatePostalAddress">
+    <request-map uri="updatePostalAddressOrderEntry">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyPostalAddress"/>
         <response name="success" type="request" value="finalizeOrder"/>
@@ -619,11 +636,18 @@
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="billsetting"/>
     </request-map>
-    <request-map uri="createCreditCard">
+    <request-map uri="createCreditCardOrderEntry">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createCreditCard"/>
+        <event type="service" path="" invoke="createCreditCardOrderEntry"/>
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="billsetting"/>
+    </request-map>
+    <request-map uri="updateCreditCard">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="updateCreditCard"/>
+        <response name="success" type="view" value="editcreditcard"/>
+        <response name="address" type="view" value="editcreditcard"/>
+        <response name="error" type="view" value="editcreditcard"/>
     </request-map>
     <request-map uri="updateCreditCardAndPostalAddress">
         <security https="true" auth="true"/>
@@ -1209,9 +1233,9 @@
 
     <view-map name="quickcheckout" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#quickFinalizeOrder"/>
     <view-map name="checkoutshippingaddress" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutshippingaddress"/>
-    <view-map name="editcontactmech" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcontactmech"/>
-    <view-map name="editcreditcard" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcreditcard"/>
-    <view-map name="editeftaccount" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editeftaccount"/>
+    <view-map name="editcontactmech" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editcontactmech"/>
+    <view-map name="editcreditcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editcreditcard"/>
+    <view-map name="editeftaccount" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editeftaccount"/>
     <view-map name="checkoutpayment" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutpayment"/>
 
     <view-map name="category" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#category"/>
