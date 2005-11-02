@@ -165,10 +165,37 @@
         </field>
     </form>
 
-    <form name="lookupProductFeature"
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupProductFeature" title="" type="single">
+    <form name="lookupProductCategory" target="LookupProductCategory" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="ProductCategory" default-field-type="find" />
+        <field name="productCategoryTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductCategoryType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupProductCategory" list-iterator-name="listIt" paginate-target="LookupProductCategory" title="" type="list"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="ProductCategory"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="ProductCategory" default-field-type="display"/>
+        <field name="productCategoryTypeId"><display-entity entity-name="ProductCategoryType"/></field>
+        <field name="productCategoryId" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productCategoryId}" target="javascript:set_value('${productCategoryId}')"/>
+        </field>
+    </form>
+    
+    <form name="lookupProductFeature" target="LookupProductFeature" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="ProductFeature" default-field-type="find" />
         <field name="productFeatureTypeId">
             <drop-down allow-empty="true">
@@ -202,8 +229,8 @@
         </field>
     </form>
 
-    <form name="LookupProductStore" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupProductStore" title="" type="single">
+    <form name="LookupProductStore" target="LookupProductStore" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="ProductStore" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
