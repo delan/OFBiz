@@ -124,6 +124,29 @@
             </widgets>
         </section>
     </screen>
+    <screen name="LookupProductCategory">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="CATALOG" action="_VIEW"/>
+                </or>
+            </condition>
+            <actions>
+                <set field="title" value="Lookup Product Category"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupProductCategory" location="component://product/webapp/catalog/lookup/FieldLookupForms.xml"/>
+                        <include-form name="listLookupProductCategory" location="component://product/webapp/catalog/lookup/FieldLookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="LookupProductFeature">
         <section>
             <condition>
@@ -133,7 +156,6 @@
             </condition>
             <actions>
                 <set field="title" value="Lookup Product Feature"/>
-                <set field="entityName" value="ProductFeature"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
