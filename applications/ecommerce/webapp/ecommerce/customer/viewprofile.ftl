@@ -145,9 +145,9 @@
                       <#if contactMechPurposeType?exists>
                         <b>${contactMechPurposeType.description}</b>
                         <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
-                          <span class="buttontextdisabled">${uiLabelMap.EcommerceIsDefaul}</span>
+                          <span class="buttontextdisabled">${uiLabelMap.EcommerceIsDefault}</span>
                         <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
-                          <a href="<@ofbizUrl>setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceSetDefault}</a>
+                          <a href="<@ofbizUrl>setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}&partyId=${party.partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceSetDefault}</a>
                         </#if>
                       <#else>
                         <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
@@ -322,7 +322,7 @@
                         <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
                           <div class="buttontextdisabled">${uiLabelMap.EcommerceIsDefault}</span>
                         <#else>
-                          <div><a href="<@ofbizUrl>setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">
+                          <div><a href="<@ofbizUrl>setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultPayMeth=${paymentMethod.paymentMethodId}&partyId=${party.partyId}</@ofbizUrl>" class="buttontext">
                           ${uiLabelMap.EcommerceSetDefault}</a></div>
                         </#if>
                       </td>
