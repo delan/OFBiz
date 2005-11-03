@@ -7,8 +7,11 @@
     <SecurityPermission description="Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
     <SecurityPermission description="ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
     <SecurityPermission description="Create notes in the Party Manager." permissionId="PARTYMGR_NOTE"/>
+
     <SecurityGroup description="Party Admin group, has all party permissions." groupId="PARTYADMIN"/>
     <SecurityGroupPermission groupId="PARTYADMIN" permissionId="PARTYMGR_ADMIN"/>
+    <SecurityGroupPermission groupId="PARTYADMIN" permissionId="OFBTOOLS_VIEW"/>
+    
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="PARTYMGR_ADMIN"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CREATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_DELETE"/>
