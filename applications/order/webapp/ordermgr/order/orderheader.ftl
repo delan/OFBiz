@@ -756,23 +756,40 @@
                     </td>
                   </tr>
                </#if>
-               <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                 <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
-                   <tr><td colspan="7"><hr class="sepbar"></td></tr>
-                   <tr>
-                     <td align="right" valign="top" width="15%">
-                       <div class="tabletext">&nbsp;</div>
-                     </td>
-                     <td width="5">&nbsp;</td>
-                     <td align="left" valign="top" width="80%">
-                       <div class="tabletext"><a href="/facility/control/PackOrder?facilityId=${orderHeader.originFacilityId?if_exists}&orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">Pack Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
-                       <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
-                     </td>
-                   </tr>
-                 </#if>
-               </#if>
 
-               <#if !shipGroup_has_next>
+               <#-- shipment actions -->
+               <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
+
+                 <#-- Special shipment options -->
+                 <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                 <tr>
+                   <td align="right" valign="top" width="15%">
+                     <div class="tabletext">&nbsp;<#if orderHeader.orderTypeId == "PURCHASE_ORDER"><b>${uiLabelMap.ProductDestinationFacility}</b></#if></div>
+                   </td>
+                   <td width="5">&nbsp;</td>
+                   <td align="left" valign="top" width="80%">
+                     <div class="tabletext">
+                       <#if orderHeader.orderTypeId == "SALES_ORDER">
+                         <a href="<@ofbizUrl>quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Entire Order</a>
+                       <#else> <#-- PURCHASE_ORDER -->
+                         <form action="/facility/control/quickShipPurchaseOrder">
+                           <input type="hidden" name="initialSelected" value="Y"/>
+                           <input type="hidden" name="orderId" value="${orderId}"/>
+                           <#-- destination form (/facility/control/ReceiveInventory) wants purchaseOrderId instead of orderId, so we set it here as a workaround -->
+                           <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
+                           <select name="facilityId" class="selectBox">
+                             <#list facilities as facility>
+                               <option value="${facility.facilityId}">${facility.facilityName}</option>
+                             </#list>
+                           </select>
+                           <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}">
+                         </form>
+                       </#if>
+                     </div>
+                   </td>
+                 </tr>
+
+                 <#-- Manual shipment options -->
                  <tr><td colspan="7"><hr class="sepbar"></td></tr>
                  <tr>
                    <td align="right" valign="top" width="15%">
@@ -780,10 +797,25 @@
                    </td>
                    <td width="5">&nbsp;</td>
                    <td align="left" valign="top" width="80%">
+                     <div class="tabletext"><a href="/facility/control/PackOrder?facilityId=${orderHeader.originFacilityId?if_exists}&orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">Pack Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
+                     <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
+                   </td>
+                 </tr>
+
+               </#if>
+
+               <#-- Refunds/Returns for Sales Orders and Delivery Schedules -->
+               <#if !shipGroup_has_next>
+                 <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                 <tr>
+                   <td align="right" valign="top" width="15%">
+                     <div class="tabletext">
+                       &nbsp;
+                     </div>
+                   </td>
+                   <td width="5">&nbsp;</td>
+                   <td align="left" valign="top" width="80%">
                      <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                       <#if (orderHeader.orderTypeId == "SALES_ORDER") && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
-                         <div class="tabletext"><a href="<@ofbizUrl>quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Entire Order</a></div>
-                       </#if>
                        <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
                          <div class="tabletext"><a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
                          <div class="tabletext"><a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderViewEditDelivery}</a></div>
@@ -796,6 +828,7 @@
                    </td>
                  </tr>
                </#if>
+
               </table>
             </div>
         </div>

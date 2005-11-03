@@ -226,6 +226,11 @@ if (orderHeader != null) {
     inventorySummary = dispatcher.runSync("getProductInventorySummaryForItems", UtilMisc.toMap("orderItems", orderItems));
     context.put("availableToPromiseMap", inventorySummary.get("availableToPromiseMap"));
     context.put("quantityOnHandMap", inventorySummary.get("availableToPromiseMap"));
+
+    // get a list of facilities for purchase orders to receive against
+    if ("PURCHASE_ORDER".equals(orderType)) {
+        context.put("facilities", delegator.findAllCache("Facility"));
+    }
 }
 
 paramString = "";

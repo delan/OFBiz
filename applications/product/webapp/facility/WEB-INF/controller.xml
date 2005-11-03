@@ -629,6 +629,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="QuickShipOrder"/>
     </request-map>
+    <request-map uri="quickShipPurchaseOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="quickShipPurchaseOrder"/>
+        <response name="success" type="view" value="ReceiveInventory"/>
+        <response name="error" type="view" value="ReceiveInventory"/>
+    </request-map>
     <request-map uri="createQuickShipment">
         <security https="true" auth="true"/>
         <event type="service" invoke="quickShipEntireOrder"/>
