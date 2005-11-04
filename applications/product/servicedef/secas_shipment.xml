@@ -88,6 +88,10 @@
         <condition field-name="orderId" operator="is-not-empty"/>
         <action service="updateOrderStatusFromReceipt" mode="sync"/>
     </eca>
+    <eca service="createShipmentReceipt" event="commit">
+        <condition field-name="shipmentId" operator="is-not-empty"/>
+        <action service="updatePurchaseShipmentFromReceipt" mode="sync"/>
+    </eca>
 
     <eca service="createShipmentPackageContent" event="in-validate">
         <condition field-name="shipmentPackageSeqId" operator="equals" value="New"/>
