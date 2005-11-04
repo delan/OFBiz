@@ -227,9 +227,10 @@ if (orderHeader != null) {
     context.put("availableToPromiseMap", inventorySummary.get("availableToPromiseMap"));
     context.put("quantityOnHandMap", inventorySummary.get("availableToPromiseMap"));
 
-    // get a list of facilities for purchase orders to receive against
+    // get a list of facilities for purchase orders to receive against.  These facilities must be owned by the bill-to party of the purchase order.
     if ("PURCHASE_ORDER".equals(orderType)) {
-        context.put("facilities", delegator.findAllCache("Facility"));
+        facilities = delegator.findByAndCache("Facility", UtilMisc.toMap("ownerPartyId", orderReadHelper.getBillToParty().getString("partyId")));
+        context.put("facilities", facilities);
     }
 }
 
