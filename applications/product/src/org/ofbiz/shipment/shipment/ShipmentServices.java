@@ -792,4 +792,61 @@ public class ShipmentServices {
         }
         return ServiceUtil.returnSuccess();
     }
+
+    /**
+     * Whenever a ShipmentReceipt is generated, check the Shipment associated
+     * with it to see if all items were received. If so, change its status to
+     * PURCH_SHIP_RECEIVED. The check is accomplished by counting the 
+     * products shipped (from ShipmentAndItem) and matching them with the 
+     * products received (from ShipmentReceipt).
+     */
+    public static Map updatePurchaseShipmentFromReceipt(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String shipmentId = (String) context.get("shipmentId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        try {
+            List shipmentAndItems = delegator.findByAnd("ShipmentAndItem", UtilMisc.toMap("shipmentId", shipmentId, "statusId", "PURCH_SHIP_SHIPPED"));
+            if (shipmentAndItems.size() == 0) return ServiceUtil.returnSuccess();
+            List shipmentReceipts = delegator.findByAnd("ShipmentReceipt", UtilMisc.toMap("shipmentId", shipmentId));
+            if (shipmentReceipts.size() == 0) return ServiceUtil.returnSuccess();
+
+            // store the quanitity of each product shipped in a hashmap keyed to productId
+            Map shippedCountMap = new HashMap();
+            Iterator iter = shipmentAndItems.iterator();
+            while (iter.hasNext()) {
+                GenericValue item = (GenericValue) iter.next();
+                double shippedQuantity = item.getDouble("quantity").doubleValue();
+                Double quantity = (Double) shippedCountMap.get(item.getString("productId"));
+                quantity = new Double(quantity == null ? shippedQuantity : shippedQuantity + quantity.doubleValue());
+                shippedCountMap.put(item.getString("productId"), quantity);
+            }
+
+            // store the quanitity of each product received in a hashmap keyed to productId
+            Map receivedCountMap = new HashMap();
+            iter = shipmentReceipts.iterator();
+            while (iter.hasNext()) {
+                GenericValue item = (GenericValue) iter.next();
+                double receivedQuantity = item.getDouble("quantityAccepted").doubleValue();
+                Double quantity = (Double) receivedCountMap.get(item.getString("productId"));
+                quantity = new Double(quantity == null ? receivedQuantity : receivedQuantity + quantity.doubleValue());
+                receivedCountMap.put(item.getString("productId"), quantity);
+            }
+
+            // let Map.equals do all the hard comparison work
+            if (!shippedCountMap.equals(receivedCountMap)) {
+                return ServiceUtil.returnSuccess();
+            }
+
+            // now update the shipment
+            dispatcher.runSync("updateShipment", UtilMisc.toMap("shipmentId", shipmentId, "statusId", "PURCH_SHIP_RECEIVED", "userLogin", userLogin));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException se) {
+            Debug.logError(se, module);
+            return ServiceUtil.returnError(se.getMessage());
+        }
+        return ServiceUtil.returnSuccess("Intentional error at end to keep from committing.");
+    }
 }

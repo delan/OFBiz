@@ -422,6 +422,17 @@
         <implements service="interfaceShipmentReceipt"/>
         <attribute name="receiptId" type="String" mode="OUT" optional="false"/>
     </service>
+    <service name="updatePurchaseShipmentFromReceipt" engine="java"
+      location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="updatePurchaseShipmentFromReceipt" auth="true">
+        <description>
+          Whenever a ShipmentReceipt is generated, check the Shipment associated
+          with it to see if all items were received. If so, change its status to
+          PURCH_SHIP_RECEIVED. The check is accomplished by counting the 
+          products shipped (from ShipmentAndItem) and matching them with the 
+          products received (from ShipmentReceipt).
+        </description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <service name="prepareInventoryReceipt" engine="simple"
             location="org/ofbiz/shipment/receipt/ShipmentReceiptServices.xml" invoke="prepareInventoryReceipt" auth="true">
