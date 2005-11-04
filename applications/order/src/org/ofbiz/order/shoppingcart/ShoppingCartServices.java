@@ -403,20 +403,41 @@ public class ShoppingCartServices {
             return ServiceUtil.returnError(e.getMessage());
         }
 
-        // set the role information
-        cart.setOrderPartyId(quote.getString("partyId"));
-
         cart.setQuoteId(quoteId);
         
         List quoteItems = null;
         List quoteAdjs = null;
+        List quoteRoles = null;
         try {
             quoteItems = quote.getRelated("QuoteItem");
             quoteAdjs = quote.getRelated("QuoteAdjustment");
+            quoteRoles = quote.getRelated("QuoteRole");
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
+        // set the role information
+        cart.setOrderPartyId(quote.getString("partyId"));
+        if (quoteRoles != null) {
+            Iterator quoteRolesIt = quoteRoles.iterator();
+            while (quoteRolesIt.hasNext()) {
+                GenericValue quoteRole = (GenericValue)quoteRolesIt.next();
+                String quoteRoleTypeId = quoteRole.getString("roleTypeId");
+                String quoteRolePartyId = quoteRole.getString("partyId");
+                if ("PLACING_CUSTOMER".equals(quoteRoleTypeId)) {
+                    cart.setPlacingCustomerPartyId(quoteRolePartyId);
+                } else if ("BILL_TO_CUSTOMER".equals(quoteRoleTypeId)) {
+                    cart.setBillToCustomerPartyId(quoteRolePartyId);
+                } else if ("SHIP_TO_CUSTOMER".equals(quoteRoleTypeId)) {
+                    cart.setShipToCustomerPartyId(quoteRolePartyId);
+                } else if ("END_USER_CUSTOMER".equals(quoteRoleTypeId)) {
+                    cart.setEndUserCustomerPartyId(quoteRolePartyId);
+                } else {
+                    cart.addAdditionalPartyRole(quoteRolePartyId, quoteRoleTypeId);
+                }
+            }
+        }
+
         // Convert the quote adjustment to order header adjustments and
         // put them in a map: the key/values pairs are quoteItemSeqId/List of adjs
         Map orderAdjsMap = new HashMap();
