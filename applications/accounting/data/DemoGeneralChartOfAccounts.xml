@@ -262,7 +262,7 @@
   <GlAccount parentGlAccountId="210000" glAccountId="212000" accountCode="212000" 
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCOUNTS PAYABLE - OPERATING" description="" postedBalance="0.0"/>
-  
+
   <GlAccount parentGlAccountId="210000" glAccountId="213000" accountCode="213000" 
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="CUSTOMER CREDITS" description="" postedBalance="0.0"/>
@@ -278,7 +278,10 @@
   <GlAccount parentGlAccountId="213000" glAccountId="213400" accountCode="213400" 
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="MAIL ORDER DEPOSITS" description="" postedBalance="0.0"/>
-  
+  <GlAccount parentGlAccountId="210000" glAccountId="214000" accountCode="214000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+    accountName="UNINVOICED ITEM RECEIPTS" description="" postedBalance="0.0"/>
+      
   <GlAccount parentGlAccountId="200000" glAccountId="220000" accountCode="220000" 
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED EXPENSES" description="" postedBalance="0.0"/>    
@@ -573,7 +576,10 @@ according to which type of entity.
   <GlAccount parentGlAccountId="515000" glAccountId="515200" accountCode="515200" 
     glAccountClassId="REVENUE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="WRITE DOWNS BELOW COST - CAT 2" description="" postedBalance="0.0"/>
-    
+  <GlAccount parentGlAccountId="510000" glAccountId="516000" accountCode="516000" 
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+    accountName="PURCHASE PRICE VARIANCE" description="" postedBalance="0.0"/>
+        
   <GlAccount parentGlAccountId="510000" glAccountId="519000" accountCode="519000" 
     glAccountClassId="REVENUE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="INVENTORY ADJUSTMENT" description="" postedBalance="0.0"/>  
