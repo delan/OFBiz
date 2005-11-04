@@ -243,12 +243,13 @@
                   <TR>
                     <TD NOWRAP><div class='tabletext'><b>${uiLabelMap.PartyProduct}</b></div></TD>
                     <TD NOWRAP align="center"><div class='tabletext'><b>${uiLabelMap.PartyQuantity}</b></div></TD>
+                    <TD NOWRAP align="center"><div class='tabletext'><b>${uiLabelMap.PartyQuantityPurchased}</b></div></TD>
                     <TD NOWRAP align="right"><div class='tabletext'><b>${uiLabelMap.PartyPrice}</b></div></TD>
                     <TD NOWRAP align="right"><div class='tabletext'><b>${uiLabelMap.PartyTotal}</b></div></TD>
                     <td>&nbsp;</td>
                   </TR>
                   <TR>
-                    <td colspan="6"><hr class="sepbar"></td>
+                    <td colspan="7"><hr class="sepbar"></td>
                   </TR>
                   <#list shoppingListItemDatas as shoppingListItemData>
                     <#assign shoppingListItem = shoppingListItemData.shoppingListItem>
@@ -266,15 +267,20 @@
                              ${productContentWrapper.get("PRODUCT_NAME")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")?if_exists}
                           </div>
                         </td>
-                        <td nowrap align="center">
 						  <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
 						    <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
 						    <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
-                            <div class='tabletext'>
-                              <input size="6" class='inputBox' type="text" name="quantity" value="${shoppingListItem.quantity?string.number}">
+                         <td nowrap align="center">
+                              <div class='tabletext'>
+                                <input size="6" class='inputBox' type="text" name="quantity" value="${shoppingListItem.quantity?string.number}">
+                              </div>
+                         </td>
+                         <td nowrap align="center">
+                             <div class='tabletext'>
+                               <input size="6" class='inputBox' type="text" name="quantityPurchased" value="${shoppingListItem.quantityPurchased?if_exists?string.number}">
                             </div>
+                         </td>
 		                  </form>
-                        </td>
                         <td nowrap align="right">
                           <div class="tabletext"><@ofbizCurrency amount=unitPrice isoCode=currencyUomId/></div>
                         </td>
@@ -287,8 +293,9 @@
                         </td>
                       </tr>
                   </#list>
-                  <tr><td colspan="6"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="7"><hr class='sepbar'></td></tr>
                   <tr>
+                    <td><div class="tabletext">&nbsp;</div></td>
                     <td><div class="tabletext">&nbsp;</div></td>
                     <td><div class="tabletext">&nbsp;</div></td>
                     <td><div class="tabletext">&nbsp;</div></td>
