@@ -128,8 +128,8 @@
                 
                 <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
                 <get-related value-name="quote" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
-                <!--
                 <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
+                <!--
                 <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
                 <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
                 -->
@@ -138,6 +138,11 @@
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
+                        <!--
+                        <container>
+                            <link target="QuoteReport?quoteId=${quote.quoteId}" text="${uiLabelMap.CommonReport}" style="buttontext"/>
+                        </container>
+                        -->
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/quote/CreateOrderQuote.ftl"/></html>
                         </platform-specific>
@@ -152,6 +157,41 @@
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="QuoteReport">
+        <section>
+            <actions>
+                <set field="title" value="Quote Report"/>
+                <set field="titleProperty" value="PageTitleQuoteReport"/>
+
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-one entity-name="Quote" value-name="quote"/>
+                <get-related-one value-name="quote" relation-name="QuoteType" to-value-name="quoteType"/>
+                <get-related-one value-name="quote" relation-name="StatusItem" to-value-name="statusItem"/>
+                <get-related-one value-name="quote" relation-name="Uom" to-value-name="currency"/>
+                <get-related-one value-name="quote" relation-name="ProductStore" to-value-name="store"/>
+                
+                <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
+                <get-related value-name="quote" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
+                <!--
+                <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
+                <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
+                <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
+                -->
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/quote/QuoteReport.fo.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

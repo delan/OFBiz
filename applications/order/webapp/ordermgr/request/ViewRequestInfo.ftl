@@ -159,6 +159,29 @@
                     </table>
                 </div>
             </div>
+            <div class="screenlet">
+                <div class="screenlet-header">
+                    <div class="boxhead">&nbsp;${uiLabelMap.OrderRequestRoles}</div>
+                </div>
+                <div class="screenlet-body">
+                    <table width="100%" border="0" cellpadding="1">
+                        <#list requestRoles as requestRole>
+                            <#assign roleType = requestRole.getRelatedOne("RoleType")>
+                            <#assign party = requestRole.getRelatedOne("Party")>
+                            <tr>
+                                <td align="right" valign="top" width="15%">
+                                    <div class="tabletext">&nbsp;<b>${roleType.description?if_exists}</b></div>
+                                </td>
+                                <td width="5">&nbsp;</td>
+                                <td align="left" valign="top" width="80%">
+                                    <div class="tabletext">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(party)}</div>
+                                </td>
+                            </tr>
+                            <tr><td colspan="7"><hr class="sepbar"/></td></tr>
+                        </#list>
+                    </table>
+                </div>
+            </div>
         </td>
     </tr>
 </table>
