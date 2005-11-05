@@ -157,6 +157,24 @@ public class InvoiceServices {
             // call service, not direct entity op: delegator.create(invoice);
             String invoiceId = (String) createInvoiceResult.get("invoiceId");
 
+            // order roles to invoice roles
+            List orderRoles = orderHeader.getRelated("OrderRole");
+            if (orderRoles != null) {
+                Iterator orderRolesIt = orderRoles.iterator();
+                Map createInvoiceRoleContext = FastMap.newInstance();
+                createInvoiceRoleContext.put("invoiceId", invoiceId);
+                createInvoiceRoleContext.put("userLogin", userLogin);
+                while (orderRolesIt.hasNext()) {
+                    GenericValue orderRole = (GenericValue)orderRolesIt.next();
+                    createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
+                    createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
+                    Map createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createInvoiceRoleContext);
+                    if (ServiceUtil.isError(createInvoiceRoleResult)) {
+                        return ServiceUtil.returnError("Error creating invoice role from order", null, null, createInvoiceRoleResult);
+                    }
+                }
+            }
+
             // order terms to invoice terms.  Implemented for purchase orders, although it may be useful
             // for sales orders as well.  Later it might be nice to filter OrderTerms to only copy over financial terms.
             List orderTerms = orderHeader.getRelated("OrderTerm");
