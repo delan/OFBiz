@@ -436,9 +436,9 @@
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySegmentRoles"/>
                 <set field="headerItem" value="find"/>
-                <set field="tabButtonItem" value="ViewPartySegmentRoles"/>
+                <set field="tabButtonItem" value="ViewSegmentRoles"/>
                 
-                <set field="labelTitleProperty" value="PartyViewSegmentRoles"/>
+                <set field="labelTitleProperty" value="ViewSegmentRoles"/>
                 
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
