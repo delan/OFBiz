@@ -69,6 +69,7 @@
                 <get-related-one value-name="custRequest" relation-name="ProductStore" to-value-name="store"/>
                 
                 <get-related value-name="custRequest" relation-name="CustRequestItem" list-name="requestItems"/>
+                <get-related value-name="custRequest" relation-name="CustRequestRole" list-name="requestRoles"/>
 
             </actions>
             <widgets>
