@@ -34,8 +34,7 @@ import org.ofbiz.common.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.webapp.control.*;
 
-String partyId = request.getParameter("party_id");
-if (partyId == null) partyId = request.getParameter("partyId");
+String partyId = parameters.get("party_id");
 context.put("partyId", partyId);
 
 Map mechMap = new HashMap();
@@ -43,18 +42,15 @@ ContactMechWorker.getContactMechAndRelated(request, partyId, mechMap);
 context.put("mechMap", mechMap);
 
 String contactMechId = (String) mechMap.get("contactMechId");
-if(contactMechId != null) context.put("contactMechId", contactMechId);
+context.put("contactMechId", contactMechId);
 
-preContactMechTypeId = request.getParameter("preContactMechTypeId");
-if (preContactMechTypeId == null) preContactMechTypeId = request.getAttribute("preContactMechTypeId");
-if (preContactMechTypeId != null) context.put("preContactMechTypeId", preContactMechTypeId);
+preContactMechTypeId = parameters.get("preContactMechTypeId");
+context.put("preContactMechTypeId", preContactMechTypeId);
 
-paymentMethodId = request.getParameter("paymentMethodId");
-if (paymentMethodId == null) paymentMethodId = request.getAttribute("paymentMethodId");
-if (paymentMethodId != null) context.put("paymentMethodId", paymentMethodId);
+paymentMethodId = parameters.get("paymentMethodId");
+context.put("paymentMethodId", paymentMethodId);
 
-cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");
-if (cmNewPurposeTypeId == null) cmNewPurposeTypeId = request.getAttribute("contactMechPurposeTypeId");
+cmNewPurposeTypeId = parameters.get("contactMechPurposeTypeId");
 if (cmNewPurposeTypeId != null) {
     contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));
     if (contactMechPurposeType != null) {
@@ -65,7 +61,6 @@ if (cmNewPurposeTypeId != null) {
     context.put("cmNewPurposeTypeId", cmNewPurposeTypeId);
 }
 
-String donePage = request.getParameter("DONE_PAGE");
-if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
+String donePage = parameters.get("DONE_PAGE");
 if (donePage == null || donePage.length() <= 0) donePage = "viewprofile?party_id=" + partyId + "&partyId=" + partyId;
 context.put("donePage", donePage);

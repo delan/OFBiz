@@ -328,17 +328,19 @@
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListSegmentRoles" type="list"
-        target="updateSegmentGroupRole" title=""
+    <form name="ListSegmentRoles" type="list" target="updateSegmentGroupRole" title=""
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <entity-and entity-name="SegmentGroupRole">
                 <field-map field-name="partyId" />
             </entity-and>
         </actions>
-        <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.PartySegmentGroupId}"><display/></field>
-        <field name="partyId" title="${uiLabelMap.PartyId}"><display/></field>
-        <field name="roleTypeId" title="${uiLabelMap.PartySegmentGroupTypeId}">
+        <field name="segmentGroupId" title="${uiLabelMap.PartySegmentGroupId}">
+            <display-entity entity-name="SegmentGroup">
+                <sub-hyperlink description="${segmentGroupId}" target="/marketing/control/viewSegmentGroup?segmentGroupId=${segmentGroupId}" target-type="inter-app" link-style="buttontext"/>
+            </display-entity>
+        </field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRole}">
             <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
@@ -354,7 +356,7 @@
             <lookup target-form-name="LookupSegmentGroup"/>
         </field>
 
-        <field name="partyId"><display/></field>
+        <field name="partyId"><hidden/></field>
         <field name="roleTypeId">
             <drop-down>
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
