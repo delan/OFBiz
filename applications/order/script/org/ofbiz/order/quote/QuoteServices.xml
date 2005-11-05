@@ -49,13 +49,12 @@
         <make-value value-name="newEntity" entity-name="Quote"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <if-empty field-name="newEntity.statusId">
-            <string-to-field string="QUO_CREATED" field-name="newEntity.statusId"/>
+            <set value="QUO_CREATED" field="newEntity.statusId"/>
         </if-empty>
 
         <!-- create a non existing ID -->
-        <sequenced-id-to-env sequence-name="Quote" env-name="quoteId"/>
-        <env-to-field env-name="quoteId" map-name="newEntity"/>
-        <field-to-result field-name="quoteId" result-name="quoteId"/>
+        <sequenced-id-to-env sequence-name="Quote" env-name="newEntity.quoteId"/>
+        <field-to-result field-name="newEntity.quoteId" result-name="quoteId"/>
 
         <!-- finally create the record (should not exist already)-->
         <create-value value-name="newEntity"/>
@@ -65,9 +64,9 @@
              This is not done if they are the same e.g. a logged in customer that is creating a quote for its
              own sake. -->
         <if-compare-field field-name="parameters.partyId" operator="not-equals" to-field-name="userLogin.partyId">
-            <field-to-field field-name="quoteId" map-name="newEntity" to-map-name="takerMap"/>
-            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="takerMap"/>
-            <string-to-field string="REQ_TAKER" map-name="takerMap" field-name="roleTypeId"/>
+            <set from-field="newEntity.quoteId" field="takerMap.quoteId"/>
+            <set from-field="userLogin.partyId" field="takerMap.partyId"/>
+            <set value="REQ_TAKER" field="takerMap.roleTypeId"/>
             <call-service service-name="createQuoteRole" in-map-name="takerMap"/>
         </if-compare-field>
 
@@ -105,8 +104,8 @@
             <iterate list-name="quoteItems" entry-name="quoteItem">
                 <clear-field field-name="createQuoteItemInMap"/>
                 <set-service-fields service-name="createQuoteItem" to-map-name="createQuoteItemInMap" map-name="quoteItem"/>
-                <env-to-field env-name="quoteIdTo" field-name="createQuoteItemInMap.quoteIdTo"/>
-                <field-to-field field-name="parameters.copyQuoteAdjustments" to-field-name="createQuoteItemInMap.copyQuoteAdjustments"/>
+                <set from-field="quoteIdTo" field="createQuoteItemInMap.quoteIdTo"/>
+                <set from-field="parameters.copyQuoteAdjustments" field="createQuoteItemInMap.copyQuoteAdjustments"/>
                 <call-service service-name="copyQuoteItem" in-map-name="createQuoteItemInMap"/>
             </iterate>
         </if-compare>
@@ -117,7 +116,7 @@
                 <if-empty field-name="quoteAdjustment.quoteItemSeqId">
                     <clear-field field-name="createQuoteAdjustmentInMap"/>
                     <set-service-fields service-name="createQuoteAdjustment" to-map-name="createQuoteAdjustmentInMap" map-name="quoteAdjustment"/>
-                    <env-to-field env-name="quoteIdTo" field-name="createQuoteAdjustmentInMap.quoteId"/>
+                    <set from-field="quoteIdTo" field="createQuoteAdjustmentInMap.quoteId"/>
                     <call-service service-name="createQuoteAdjustment" in-map-name="createQuoteAdjustmentInMap"/>
                 </if-empty>
             </iterate>
@@ -128,7 +127,7 @@
             <iterate list-name="quoteRoles" entry-name="quoteRole">
                 <clear-field field-name="createQuoteRoleInMap"/>
                 <set-service-fields service-name="createQuoteRole" to-map-name="createQuoteRoleInMap" map-name="quoteRole"/>
-                <env-to-field env-name="quoteIdTo" field-name="createQuoteRoleInMap.quoteId"/>
+                <set from-field="quoteIdTo" field="createQuoteRoleInMap.quoteId"/>
                 <call-service service-name="createQuoteRole" in-map-name="createQuoteRoleInMap"/>
             </iterate>
         </if-compare>
@@ -138,7 +137,7 @@
             <iterate list-name="quoteAttributes" entry-name="quoteAttribute">
                 <clear-field field-name="createQuoteAttributeInMap"/>
                 <set-service-fields service-name="createQuoteAttribute" to-map-name="createQuoteAttributeInMap" map-name="quoteAttribute"/>
-                <env-to-field env-name="quoteIdTo" field-name="createQuoteAttributeInMap.quoteId"/>
+                <set from-field="quoteIdTo" field="createQuoteAttributeInMap.quoteId"/>
                 <call-service service-name="createQuoteAttribute" in-map-name="createQuoteAttributeInMap"/>
             </iterate>
         </if-compare>
@@ -148,7 +147,7 @@
             <iterate list-name="quoteCoefficients" entry-name="quoteCoefficient">
                 <clear-field field-name="createQuoteCoefficientInMap"/>
                 <set-service-fields service-name="createQuoteCoefficient" to-map-name="createQuoteCoefficientInMap" map-name="quoteCoefficient"/>
-                <env-to-field env-name="quoteIdTo" field-name="createQuoteCoefficientInMap.quoteId"/>
+                <set from-field="quoteIdTo" field="createQuoteCoefficientInMap.quoteId"/>
                 <call-service service-name="createQuoteCoefficient" in-map-name="createQuoteCoefficientInMap"/>
             </iterate>
         </if-compare>
@@ -173,8 +172,8 @@
             <fail-message message="Security Error: to run createQuoteRole you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
-        <field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set from-field="parameters.partyId" field="lookupPKMap.partyId"/>
+        <set from-field="parameters.roleTypeId" field="lookupPKMap.roleTypeId"/>
         <find-by-primary-key entity-name="PartyRole" map-name="lookupPKMap" value-name="partyRole"/>
         <if-empty map-name="partyRole" field-name="partyId">
             <make-value value-name="partyRole" entity-name="PartyRole"/>
@@ -221,12 +220,12 @@
         <make-value value-name="newEntity" entity-name="QuoteItem"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <field-to-field field-name="parameters.quoteId" to-field-name="newEntity.quoteId"/>
-        <field-to-field field-name="parameters.quoteItemSeqId" to-field-name="newEntity.quoteItemSeqId"/>
+        <set from-field="parameters.quoteId" field="newEntity.quoteId"/>
+        <set from-field="parameters.quoteItemSeqId" field="newEntity.quoteItemSeqId"/>
         <if-empty field-name="newEntity.quoteItemSeqId">
             <!-- create a non existing ID -->
             <make-next-seq-id value-name="newEntity" seq-field-name="quoteItemSeqId"/>
-            <env-to-field env-name="quoteItemSeqId" map-name="newEntity"/>
+            <set from-field="quoteItemSeqId" field="newEntity.quoteItemSeqId"/>
         </if-empty>
         <field-to-result field-name="newEntity.quoteId" result-name="quoteId"/>
         <field-to-result field-name="newEntity.quoteItemSeqId" result-name="quoteItemSeqId"/>
@@ -271,8 +270,8 @@
         <check-errors/>
         
         <set-service-fields service-name="createQuoteItem" to-map-name="createQuoteItemInMap" map-name="quoteItem"/>
-        <field-to-field field-name="parameters.quoteIdTo" to-field-name="createQuoteItemInMap.quoteId"/>
-        <field-to-field field-name="parameters.quoteItemSeqId" to-field-name="createQuoteItemInMap.quoteItemSeqId"/>
+        <set from-field="parameters.quoteIdTo" field="createQuoteItemInMap.quoteId"/>
+        <set from-field="parameters.quoteItemSeqId" field="createQuoteItemInMap.quoteItemSeqId"/>
         <if-empty field-name="parameters.quoteIdTo">
             <if-empty field-name="parameters.quoteItemSeqIdTo">
                 <clear-field field-name="createQuoteItemInMap.quoteItemSeqId"/>
@@ -291,8 +290,8 @@
             <iterate list-name="quoteAdjustments" entry-name="quoteAdjustment">
                 <clear-field field-name="createQuoteAdjustmentInMap"/>
                 <set-service-fields service-name="createQuoteAdjustment" to-map-name="createQuoteAdjustmentInMap" map-name="quoteAdjustment"/>
-                <env-to-field env-name="quoteIdTo" field-name="createQuoteAdjustmentInMap.quoteId"/>
-                <env-to-field env-name="quoteItemSeqId" field-name="createQuoteAdjustmentInMap.quoteItemSeqId"/>
+                <set from-field="quoteIdTo" field="createQuoteAdjustmentInMap.quoteId"/>
+                <set from-field="quoteItemSeqId" field="createQuoteAdjustmentInMap.quoteItemSeqId"/>
                 <call-service service-name="createQuoteAdjustment" in-map-name="createQuoteAdjustmentInMap"/>
             </iterate>
         </if-compare>
@@ -387,8 +386,8 @@
         <entity-one entity-name="CustRequest" value-name="custRequest" auto-field-map="true"/>
         <entity-one entity-name="CustRequestItem" value-name="custRequestItem" auto-field-map="true"/>
         <make-value value-name="lookupRequestRole" entity-name="CustRequestRole"/>
-        <field-to-field field-name="parameters.custRequestId" to-field-name="lookupRequestRole.custRequestId"/>
-        <string-to-field string="REQ_REQUESTER" field-name="lookupRequestRole.roleTypeId"/>
+        <set from-field="parameters.custRequestId" field="lookupRequestRole.custRequestId"/>
+        <set value="REQ_REQUESTER" field="lookupRequestRole.roleTypeId"/>
         <find-by-and entity-name="CustRequestRole" map-name="lookupRequestRole" list-name="roles"/>
         <first-from-list entry-name="requester" list-name="roles"/>
         
@@ -404,35 +403,35 @@
         <set-nonpk-fields map-name="parameters" value-name="newQuote"/>
         <set-nonpk-fields map-name="parameters" value-name="newQuoteItem"/>
         <if-empty field-name="newQuote.statusId">
-            <string-to-field string="QUO_CREATED" field-name="newQuote.statusId"/>
+            <set value="QUO_CREATED" field="newQuote.statusId"/>
         </if-empty>
-        <string-to-field string="PROPOSAL" field-name="newQuote.quoteTypeId"/>
+        <set value="PROPOSAL" field="newQuote.quoteTypeId"/>
 
         <!-- create a non existing ID -->
         <sequenced-id-to-env sequence-name="Quote" env-name="quoteId"/>
         <make-next-seq-id value-name="newQuoteItem" seq-field-name="quoteItemSeqId"/>
-        <env-to-field env-name="quoteId" map-name="newQuote"/>
-        <env-to-field env-name="quoteId" map-name="newQuoteItem"/>
+        <set from-field="quoteId" field="newQuote.quoteId"/>
+        <set from-field="quoteId" field="newQuoteItem.quoteId"/>
         <field-to-result field-name="quoteId" result-name="quoteId"/>
         <field-to-result field-name="newQuoteItem.quoteItemSeqId" result-name="quoteItemSeqId"/>
         
-        <field-to-field field-name="requester.partyId" to-field-name="newQuote.partyId"/>
-        <field-to-field field-name="custRequest.custRequestName" to-field-name="newQuote.quoteName"/>
-        <field-to-field field-name="custRequest.description" to-field-name="newQuote.description"/>
-        <field-to-field field-name="custRequest.maximumAmountUomId" to-field-name="newQuote.currencyUomId"/>
-        <field-to-field field-name="custRequestItem.story" to-field-name="newQuoteItem.comments"/>
+        <set from-field="requester.partyId" field="newQuote.partyId"/>
+        <set from-field="custRequest.custRequestName" field="newQuote.quoteName"/>
+        <set from-field="custRequest.description" field="newQuote.description"/>
+        <set from-field="custRequest.maximumAmountUomId" field="newQuote.currencyUomId"/>
+        <set from-field="custRequestItem.story" field="newQuoteItem.comments"/>
         <create-value value-name="newQuote"/>
         <create-value value-name="newQuoteItem"/>
         <!-- copy the roles from the request to the quote-->
         <clear-field field-name="lookupRequestRole"/>
         <clear-field field-name="roles"/>
-        <field-to-field field-name="parameters.custRequestId" to-field-name="lookupRequestRole.custRequestId"/>
+        <set from-field="parameters.custRequestId" field="lookupRequestRole.custRequestId"/>
         <find-by-and entity-name="CustRequestRole" map-name="lookupRequestRole" list-name="roles"/>
         <iterate entry-name="role" list-name="roles">
             <clear-field field-name="cqrContext"/>
-            <field-to-field field-name="quoteId" to-field-name="cqrContext.quoteId"/>
-            <field-to-field field-name="role.partyId" to-field-name="cqrContext.partyId"/>
-            <field-to-field field-name="role.roleTypeId" to-field-name="cqrContext.roleTypeId"/>
+            <set from-field="quoteId" field="cqrContext.quoteId"/>
+            <set from-field="role.partyId" field="cqrContext.partyId"/>
+            <set from-field="role.roleTypeId" field="cqrContext.roleTypeId"/>
             <call-service service-name="createQuoteRole" in-map-name="cqrContext"></call-service>
         </iterate>
         <check-errors/>
@@ -445,11 +444,11 @@
         <entity-one entity-name="QuoteItem" value-name="quoteItem" auto-field-map="true"/>
         <check-errors/>
         <if-not-empty field-name="parameters.manualQuoteUnitPrice">
-            <field-to-field field-name="parameters.manualQuoteUnitPrice" to-field-name="quoteItem.quoteUnitPrice"/>
+            <set from-field="parameters.manualQuoteUnitPrice" field="quoteItem.quoteUnitPrice"/>
         </if-not-empty>
         <if-empty field-name="parameters.manualQuoteUnitPrice">
             <if-not-empty field-name="parameters.defaultQuoteUnitPrice">
-                <field-to-field field-name="parameters.defaultQuoteUnitPrice" to-field-name="quoteItem.quoteUnitPrice"/>
+                <set from-field="parameters.defaultQuoteUnitPrice" field="quoteItem.quoteUnitPrice"/>
             </if-not-empty>
             <!--
             <calculate field-name="quoteItem.quoteUnitPrice" type="Double">
@@ -476,7 +475,7 @@
             <if-compare field-name="quoteItem.isPromo" value="Y" operator="equals">
                 <clear-field field-name="removeQuoteItemInMap"/>
                 <set-service-fields service-name="removeQuoteItem" to-map-name="removeQuoteItemInMap" map-name="parameters"/>
-                <field-to-field field-name="quoteItem.quoteItemSeqId" to-field-name="removeQuoteItemInMap.quoteItemSeqId"/>
+                <set from-field="quoteItem.quoteItemSeqId" field="removeQuoteItemInMap.quoteItemSeqId"/>
                 <call-service service-name="removeQuoteItem" in-map-name="removeQuoteItemInMap"/>
             </if-compare>
         </iterate>
@@ -487,12 +486,12 @@
             <if-not-empty field-name="quoteAdjustment.productPromoId">
                 <clear-field field-name="removeQuoteAdjustmentInMap"/>
                 <set-service-fields service-name="removeQuoteAdjustment" to-map-name="removeQuoteAdjustmentInMap" map-name="parameters"/>
-                <field-to-field field-name="quoteAdjustment.quoteAdjustmentId" to-field-name="removeQuoteAdjustmentInMap.quoteAdjustmentId"/>
+                <set from-field="quoteAdjustment.quoteAdjustmentId" field="removeQuoteAdjustmentInMap.quoteAdjustmentId"/>
                 <call-service service-name="removeQuoteAdjustment" in-map-name="removeQuoteAdjustmentInMap"/>
             </if-not-empty>
         </iterate>
         <set-service-fields service-name="loadCartFromQuote" to-map-name="loadCartFromQuoteInMap" map-name="parameters"/>
-        <string-to-field string="false" field-name="loadCartFromQuoteInMap.applyQuoteAdjustments"/>
+        <set value="false" field="loadCartFromQuoteInMap.applyQuoteAdjustments"/>
         <call-service service-name="loadCartFromQuote" in-map-name="loadCartFromQuoteInMap">
             <result-to-field result-name="shoppingCart" field-name="cart"/>
         </call-service>
@@ -507,7 +506,7 @@
                 <set-service-fields service-name="createQuoteItem" to-map-name="createQuoteItemInMap" map-name="parameters"/>
                 <call-object-method obj-field-name="item" method-name="getProductId" ret-field-name="createQuoteItemInMap.productId"/>
                 <call-object-method obj-field-name="item" method-name="getQuantity" ret-field-name="createQuoteItemInMap.quantity"/>
-                <string-to-field string="Y" field-name="createQuoteItemInMap.isPromo"/>
+                <set value="Y" field="createQuoteItemInMap.isPromo"/>
                 <call-service service-name="createQuoteItem" in-map-name="createQuoteItemInMap">
                     <result-to-field result-name="quoteItemSeqId" field-name="quoteItemSeqId"/>
                 </call-service>
@@ -533,8 +532,8 @@
                         <field field-name="quoteItem.quoteItemSeqId" type="String"/>
                     </call-object-method>
                     <clear-field field-name="updateQuoteItemInMap"/>
-                    <field-to-field field-name="quoteItem.quoteId" to-field-name="updateQuoteItemInMap.quoteId"/>
-                    <field-to-field field-name="quoteItem.quoteItemSeqId" to-field-name="updateQuoteItemInMap.quoteItemSeqId"/>
+                    <set from-field="quoteItem.quoteId" field="updateQuoteItemInMap.quoteId"/>
+                    <set from-field="quoteItem.quoteItemSeqId" field="updateQuoteItemInMap.quoteItemSeqId"/>
                     <call-object-method obj-field-name="item" method-name="getBasePrice" ret-field-name="updateQuoteItemInMap.quoteUnitPrice"/>
                     <call-service service-name="updateQuoteItem" in-map-name="updateQuoteItemInMap"/>
                 </then>
@@ -544,9 +543,8 @@
         <call-object-method obj-field-name="cart" method-name="makeAllQuoteAdjustments" ret-field-name="adjustments"/>
 
         <iterate list-name="adjustments" entry-name="adjustment">
-            <field-to-field field-name="parameters.quoteId" to-field-name="adjustment.quoteId"/>
-            <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="quoteAdjustmentId"/>
-            <field-to-field field-name="quoteAdjustmentId" to-field-name="adjustment.quoteAdjustmentId"/>
+            <set from-field="parameters.quoteId" field="adjustment.quoteId"/>
+            <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="adjustment.quoteAdjustmentId"/>
             <create-value value-name="adjustment"/>
         </iterate>
     </simple-method>
@@ -560,10 +558,9 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="quoteAdjustmentId"/>
-        <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-field env-name="quoteAdjustmentId" map-name="newEntity"/>
-        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>                
-        <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.createdByUserLogin"/>
+        <now-timestamp-to-env env-name="newEntity.createdDate"/>
+        <set from-field="quoteAdjustmentId" field="newEntity.quoteAdjustmentId"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
         <field-to-result field-name="quoteAdjustmentId" result-name="quoteAdjustmentId"/>
 
         <create-value value-name="newEntity"/>
@@ -608,8 +605,8 @@
 
         <call-object-method obj-field-name="parameters.cart" method-name="getCurrency" ret-field-name="createQuoteInMap.currencyUomId"/>
         <call-object-method obj-field-name="parameters.cart" method-name="getProductStoreId" ret-field-name="createQuoteInMap.productStoreId"/>
-        <string-to-field string="PRODUCT_QUOTE" field-name="createQuoteInMap.quoteTypeId"/>
-        <string-to-field string="QUO_CREATED" field-name="createQuoteInMap.statusId"/>
+        <set value="PRODUCT_QUOTE" field="createQuoteInMap.quoteTypeId"/>
+        <set value="QUO_CREATED" field="createQuoteInMap.statusId"/>
         <call-service service-name="createQuote" in-map-name="createQuoteInMap">
             <result-to-field result-name="quoteId" field-name="quoteId"/>
         </call-service>
@@ -622,7 +619,7 @@
             <clear-field field-name="createQuoteItemInMap"/>
             <call-object-method obj-field-name="item" method-name="getIsPromo" ret-field-name="isPromo"/>
             <if-compare field-name="isPromo" value="true" operator="equals" type="Boolean">
-                <string-to-field string="Y" field-name="createQuoteItemInMap.isPromo"/>
+                <set value="Y" field="createQuoteItemInMap.isPromo"/>
             </if-compare>
             <if>
                 <condition>
@@ -632,7 +629,7 @@
                     </or>
                 </condition>
                 <then>
-                    <field-to-field field-name="quote.quoteId" to-field-name="createQuoteItemInMap.quoteId"/>
+                    <set from-field="quote.quoteId" field="createQuoteItemInMap.quoteId"/>
                     <call-object-method obj-field-name="item" method-name="getProductId" ret-field-name="createQuoteItemInMap.productId"/>
                     <call-object-method obj-field-name="item" method-name="getQuantity" ret-field-name="createQuoteItemInMap.quantity"/>
                     <call-object-method obj-field-name="item" method-name="getSelectedAmount" ret-field-name="createQuoteItemInMap.selectedAmount"/>
@@ -656,9 +653,8 @@
             <then>
                 <call-object-method obj-field-name="parameters.cart" method-name="makeAllQuoteAdjustments" ret-field-name="adjustments"/>
                 <iterate list-name="adjustments" entry-name="adjustment">
-                    <field-to-field field-name="quote.quoteId" to-field-name="adjustment.quoteId"/>
-                    <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="quoteAdjustmentId"/>
-                    <field-to-field field-name="quoteAdjustmentId" to-field-name="adjustment.quoteAdjustmentId"/>
+                    <set from-field="quote.quoteId" field="adjustment.quoteId"/>
+                    <sequenced-id-to-env sequence-name="QuoteAdjustment" env-name="adjustment.quoteAdjustmentId"/>
                     <create-value value-name="adjustment"/>
                 </iterate>
             </then>
@@ -671,8 +667,8 @@
         <call-service service-name="loadCartFromShoppingList" in-map-name="parameters">
             <result-to-field result-name="shoppingCart" field-name="cart"/>
         </call-service>
-        <field-to-field field-name="cart" to-field-name="createQuoteFromCartInMap.cart"/>
-        <field-to-field field-name="parameters.applyStorePromotions" to-field-name="createQuoteFromCartInMap.applyStorePromotions"/>
+        <set from-field="cart" field="createQuoteFromCartInMap.cart"/>
+        <set from-field="parameters.applyStorePromotions" field="createQuoteFromCartInMap.applyStorePromotions"/>
         <call-service service-name="createQuoteFromCart" in-map-name="createQuoteFromCartInMap">
             <result-to-field result-name="quoteId" field-name="quoteId"/>
         </call-service>
