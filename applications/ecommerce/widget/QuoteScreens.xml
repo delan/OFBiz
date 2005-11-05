@@ -70,6 +70,7 @@
                 
                 <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
                 <get-related value-name="quote" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
+                <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
 
             </actions>
             <widgets>
