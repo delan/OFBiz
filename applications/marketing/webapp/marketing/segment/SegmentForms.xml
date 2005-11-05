@@ -61,7 +61,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreId" title="${uiLabelMap.CatalogProductStoreId}">
+        <field name="productStoreId" title="${uiLabelMap.CatalogProductStore}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
                     <entity-order-by field-name="storeName"/>
@@ -69,7 +69,7 @@
                 <sub-hyperlink target="/catalog/control/EditProductStore?productStoreId=${segmentGroup.productStoreId}" target-type="inter-app" description="${segmentGroup.productStoreId}" link-style="buttontext"/>
             </drop-down>
         </field>
-        <field name="description" title="${uiLabelMap.ContactListDescription}"><text size="55"/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text size="55"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>

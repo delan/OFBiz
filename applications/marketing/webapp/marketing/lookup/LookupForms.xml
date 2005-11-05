@@ -42,7 +42,7 @@
             </service>
         </actions>
         <field name="segmentGroupId"  widget-style="buttontext" title="${uiLabelMap.SegmentGroupSegmentGroupId}">
-            <hyperlink also-hidden="false" target-type="plain" description="${segmentGroupId}" target="javascript:set_value('${partyClassificationGroupId}')"/>
+            <hyperlink also-hidden="false" target-type="plain" description="${segmentGroupId}" target="javascript:set_value('${segmentGroupId}')"/>
         </field>
         <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
