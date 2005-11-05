@@ -525,6 +525,9 @@
       <prim-key field="fixedAssetId"/>
       <prim-key field="fixedAssetStdCostTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="FIXASTCO_FIXAST" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
       <relation type="one" fk-name="FIXASTCO_TYPCOS" rel-entity-name="FixedAssetStdCostType">
         <key-map field-name="fixedAssetStdCostTypeId"/>
       </relation>
