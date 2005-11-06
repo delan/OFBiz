@@ -52,7 +52,8 @@
     <service-resource type="model" loader="main" location="servicedef/services_ledger.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_payment.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_paymentmethod.xml"/>
-
+    <service-resource type="model" loader="main" location="servicedef/services_tax.xml"/>
+    
     <!-- Payment Processor/Gateway Service Definitions -->
     <service-resource type="model" loader="main" location="servicedef/services_clearcommerce.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_cybersource.xml"/>

@@ -171,6 +171,7 @@
     <entity-group group="org.ofbiz" entity="TaxAuthorityAssoc" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityAssocType" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityCategory" />
+    <entity-group group="org.ofbiz" entity="TaxAuthorityCategoryView" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityGlAccount" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityGlAccountBalance" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityRateProduct" />

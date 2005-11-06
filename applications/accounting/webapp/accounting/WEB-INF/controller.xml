@@ -320,23 +320,14 @@
         <response name="error" type="view" value="EditGlobalGlAccount"/>
     </request-map>
 
-    <request-map uri="EditGlobalGlAccountOrganizations">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
-    </request-map> 
-
+    <request-map uri="ListGlAccountOrganization"><security https="true" auth="true"/><response name="success" type="view" value="ListGlAccountOrganization"/></request-map>
+    <request-map uri="EditGlobalGlAccountOrganizations"><security https="true" auth="true"/><response name="success" type="view" value="EditGlobalGlAccountOrganizations"/></request-map> 
     <request-map uri="createGlAccountOrganization">
         <security https="true" auth="true"/>
         <event type="service" invoke="createGlAccountOrganization"/>
         <response name="success" type="view" value="ListGlAccountOrganization"/>
         <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
     </request-map>
-
-    <request-map uri="ListGlAccountOrganization">
-        <!-- security https="true" auth="true"/ -->
-        <response name="success" type="view" value="ListGlAccountOrganization"/>
-    </request-map>
-
     <request-map uri="updateGlAccountOrganization">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateGlAccount"/>
@@ -344,10 +335,7 @@
         <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
     </request-map>
 
-    <request-map uri="EditGlobalGlAccountRoles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
-    </request-map> 
+    <request-map uri="EditGlobalGlAccountRoles"><security https="true" auth="true"/><response name="success" type="view" value="EditGlobalGlAccountRoles"/></request-map> 
     <request-map uri="createGlAccountRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createGlAccountRole"/>
@@ -362,21 +350,15 @@
     </request-map>
     
     <!-- =============== Fixed Asset mapping =================-->
-    <request-map uri="ListFixedAssets"><!-- show a tabular list -->
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListFixedAssets"/>
-    </request-map>
-    <request-map uri="EditFixedAsset"> <!-- add/create command -->
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditFixedAsset"/>
-    </request-map>
-   <request-map uri="createFixedAsset"> <!-- create new -->
+    <request-map uri="ListFixedAssets"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssets"/></request-map>
+    <request-map uri="EditFixedAsset"><security https="true" auth="true"/><response name="success" type="view" value="EditFixedAsset"/></request-map>
+   <request-map uri="createFixedAsset">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFixedAsset"/>
         <response name="success" type="view" value="EditFixedAsset"/>
         <response name="error" type="view" value="EditFixedAsset"/>
     </request-map>
-    <request-map uri="updateFixedAsset"><!-- update existing -->
+    <request-map uri="updateFixedAsset">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFixedAsset"/>
         <response name="success" type="view" value="EditFixedAsset"/>
@@ -384,10 +366,7 @@
     </request-map>
 
    <!-- ================ Fixed Asset to Product Requests ================= -->
-    <request-map uri="ListFixedAssetProducts"><!-- show a tabular list of products connected -->
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListFixedAssetProducts"/>
-    </request-map>
+    <request-map uri="ListFixedAssetProducts"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssetProducts"/></request-map>
     <request-map uri="addFixedAssetProduct">
         <security https="true" auth="true"/>
         <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="addFixedAssetProduct"/>
@@ -408,7 +387,7 @@
     </request-map>
 
    <!-- ================ Fixed Asset Calendar Requests ================= -->
-    <request-map uri="ListFixedAssetCalendar"><!-- show a tabular list of products connected -->
+    <request-map uri="ListFixedAssetCalendar">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListFixedAssetCalendar"/>
     </request-map>
@@ -419,7 +398,7 @@
         <response name="error" type="view" value="ListFixedAssetCalendar"/>
     </request-map>
    <!-- ================ FixedAsset Roles Requests ================= -->
-    <request-map uri="ListFixedAssetParties"><!-- show a tabular list of products connected -->
+    <request-map uri="ListFixedAssetParties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListFixedAssetParties"/>
     </request-map>
@@ -447,14 +426,8 @@
     </request-map>    
 
     <!-- ================ FixedAsset Rollup Requests ================= -->
-    <request-map uri="ListFixedAssetRollUp"><!-- show a tabular list of products connected -->
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListFixedAssetRollUp"/>
-    </request-map>
-    <request-map uri="EditFixedAssetRollup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditFixedAssetRollup"/>
-    </request-map>
+    <request-map uri="ListFixedAssetRollUp"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssetRollUp"/></request-map>
+    <request-map uri="EditFixedAssetRollup"><security https="true" auth="true"/><response name="success" type="view" value="EditFixedAssetRollup"/></request-map>
     <request-map uri="addFixedAssetToFixedAsset">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="safeAddFixedAssetToFixedAsset"/>
@@ -474,14 +447,8 @@
         <response name="error" type="view" value="EditFixedAssetRollup"/>
     </request-map>
    <!-- ================ FixedAsset Standard Costs Requests ================= -->
-    <request-map uri="ListFixedAssetStdCosts">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListFixedAssetStdCosts"/>
-    </request-map>
-    <request-map uri="EditFixedAssetStdCost">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditFixedAssetStdCost"/>
-    </request-map>
+    <request-map uri="ListFixedAssetStdCosts"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssetStdCosts"/></request-map>
+    <request-map uri="EditFixedAssetStdCost"><security https="true" auth="true"/><response name="success" type="view" value="EditFixedAssetStdCost"/></request-map>
     
     <request-map uri="createFixedAssetStdCost">
         <security https="true" auth="true"/>
@@ -499,103 +466,198 @@
         <response name="success" type="view" value="ListFixedAssetStdCosts"/>
     </request-map>
     <!-- =============== Agreement mapping =================-->
-    <request-map uri="FindAgreement">
+    <request-map uri="FindAgreement"><security https="true" auth="true"/><response name="success" type="view" value="FindAgreement"/></request-map>
+    <request-map uri="cancelAgreement">
         <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelAgreement"/>
         <response name="success" type="view" value="FindAgreement"/>
-    </request-map>
-    <request-map uri="EditAgreement">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditAgreement"/>
-    </request-map>
-    <request-map uri="ListAgreementItems">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListAgreementItems"/>
-    </request-map>
-    <request-map uri="EditAgreementItem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditAgreementItem"/>
-    </request-map>
-    <request-map uri="ListAgreementTerms">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListAgreementTerms"/>
-    </request-map>
-    <request-map uri="EditAgreementTerm">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditAgreementTerm"/>
+        <response name="error" type="view" value="FindAgreement"/>
     </request-map>
     
+    <request-map uri="EditAgreement"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreement"/></request-map>
     <request-map uri="createAgreement">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createAgreement"/>
         <response name="success" type="view" value="EditAgreement"/>
+        <response name="error" type="view" value="EditAgreement"/>
     </request-map>
     <request-map uri="updateAgreement">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateAgreement"/>
         <response name="success" type="view" value="EditAgreement"/>
+        <response name="error" type="view" value="EditAgreement"/>
     </request-map>
-    <request-map uri="cancelAgreement">
+    
+    <request-map uri="ListAgreementItems"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItems"/></request-map>
+    <request-map uri="removeAgreementItem">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="cancelAgreement"/>
-        <response name="success" type="view" value="FindAgreement"/>
+        <event type="service" path="" invoke="removeAgreementItem"/>
+        <response name="success" type="view" value="ListAgreementItems"/>
+        <response name="error" type="view" value="ListAgreementItems"/>
     </request-map>
+    
+    <request-map uri="EditAgreementItem"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementItem"/></request-map>
     <request-map uri="createAgreementItem">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createAgreementItem"/>
         <response name="success" type="view" value="EditAgreementItem"/>
+        <response name="error" type="view" value="EditAgreementItem"/>
     </request-map>
     <request-map uri="updateAgreementItem">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateAgreementItem"/>
         <response name="success" type="view" value="EditAgreementItem"/>
+        <response name="error" type="view" value="EditAgreementItem"/>
     </request-map>
-    <request-map uri="removeAgreementItem">
+    
+    <request-map uri="ListAgreementTerms"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementTerms"/></request-map>
+    <request-map uri="removeAgreementTerm">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="removeAgreementItem"/>
-        <response name="success" type="view" value="ListAgreementItems"/>
+        <event type="service" path="" invoke="removeAgreementTerm"/>
+        <response name="success" type="view" value="ListAgreementTerms"/>
+        <response name="error" type="view" value="ListAgreementTerms"/>
     </request-map>
+
+    <request-map uri="EditAgreementTerm"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementTerm"/></request-map>
     <request-map uri="createAgreementTerm">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createAgreementTerm"/>
         <response name="success" type="view" value="EditAgreementTerm"/>
+        <response name="error" type="view" value="EditAgreementTerm"/>
     </request-map>
     <request-map uri="updateAgreementTerm">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateAgreementTerm"/>
         <response name="success" type="view" value="EditAgreementTerm"/>
+        <response name="error" type="view" value="EditAgreementTerm"/>
     </request-map>
-    <request-map uri="removeAgreementTerm">
+
+    <!-- TaxAuthority Requests -->
+    <request-map uri="FindTaxAuthority"><security https="true" auth="true"/><response name="success" type="view" value="FindTaxAuthority"/></request-map>
+    <request-map uri="EditTaxAuthority"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthority"/></request-map>
+    <request-map uri="createTaxAuthority">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="removeAgreementTerm"/>
-        <response name="success" type="view" value="ListAgreementTerms"/>
+        <event type="service" path="" invoke="createTaxAuthority"/>
+        <response name="success" type="view" value="EditTaxAuthority"/>
+        <response name="error" type="view" value="EditTaxAuthority"/>
+    </request-map>
+    <request-map uri="updateTaxAuthority">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateTaxAuthority"/>
+        <response name="success" type="view" value="EditTaxAuthority"/>
+        <response name="error" type="view" value="EditTaxAuthority"/>
     </request-map>
 
+    <request-map uri="EditTaxAuthorityCategories"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityCategories"/></request-map>
+    <request-map uri="createTaxAuthorityCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createTaxAuthorityCategory"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+    </request-map>
+    <request-map uri="updateTaxAuthorityCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateTaxAuthorityCategory"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+    </request-map>
+    <request-map uri="deleteTaxAuthorityCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteTaxAuthorityCategory"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+    </request-map>
+    
+    <request-map uri="EditTaxAuthorityAssocs"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityAssocs"/></request-map>
+    <request-map uri="createTaxAuthorityAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createTaxAuthorityAssoc"/>
+        <response name="success" type="view" value="EditTaxAuthorityAssocs"/>
+        <response name="error" type="view" value="EditTaxAuthorityAssocs"/>
+    </request-map>
+    <request-map uri="updateTaxAuthorityAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateTaxAuthorityAssoc"/>
+        <response name="success" type="view" value="EditTaxAuthorityAssocs"/>
+        <response name="error" type="view" value="EditTaxAuthorityAssocs"/>
+    </request-map>
+    <request-map uri="deleteTaxAuthorityAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteTaxAuthorityAssoc"/>
+        <response name="success" type="view" value="EditTaxAuthorityAssocs"/>
+        <response name="error" type="view" value="EditTaxAuthorityAssocs"/>
+    </request-map>
+    
+    <request-map uri="EditTaxAuthorityGlAccounts"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityGlAccounts"/></request-map>
+    <request-map uri="createTaxAuthorityGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createTaxAuthorityCategory"/>
+        <response name="success" type="view" value="EditTaxAuthorityGlAccounts"/>
+        <response name="error" type="view" value="EditTaxAuthorityGlAccounts"/>
+    </request-map>
+    <request-map uri="deleteTaxAuthorityGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteTaxAuthorityCategory"/>
+        <response name="success" type="view" value="EditTaxAuthorityGlAccounts"/>
+        <response name="error" type="view" value="EditTaxAuthorityGlAccounts"/>
+    </request-map>
+    
+    <request-map uri="EditTaxAuthorityRateProducts"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityRateProducts"/></request-map>
+    <request-map uri="createTaxAuthorityRateProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createTaxAuthorityRateProduct"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+    </request-map>
+    <request-map uri="updateTaxAuthorityRateProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateTaxAuthorityRateProduct"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+    </request-map>
+    <request-map uri="deleteTaxAuthorityRateProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteTaxAuthorityRateProduct"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+    </request-map>
+
+    <request-map uri="ListTaxAuthorityParties"><security https="true" auth="true"/><response name="success" type="view" value="ListTaxAuthorityParties"/></request-map>
+    <request-map uri="deleteTaxAuthorityPartyInfo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyTaxAuthInfo"/>
+        <response name="success" type="view" value="ListTaxAuthorityParties"/>
+        <response name="error" type="view" value="ListTaxAuthorityParties"/>
+    </request-map>
+    <request-map uri="EditTaxAuthorityPartyInfo"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityPartyInfo"/></request-map>
+    <request-map uri="createTaxAuthorityPartyInfo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyTaxAuthInfo"/>
+        <response name="success" type="view" value="EditTaxAuthorityPartyInfo"/>
+        <response name="error" type="view" value="EditTaxAuthorityPartyInfo"/>
+    </request-map>
+    <request-map uri="updateTaxAuthorityPartyInfo">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyTaxAuthInfo"/>
+        <response name="success" type="view" value="EditTaxAuthorityPartyInfo"/>
+        <response name="error" type="view" value="EditTaxAuthorityPartyInfo"/>
+    </request-map>
+    
     <!-- ================ Entity Lookup Requests ================= -->
-    <request-map uri="LookupProduct">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupProduct"/>
-    </request-map>
-    <request-map uri="LookupVariantProduct">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupVariantProduct"/>
-    </request-map>
-    <request-map uri="LookupPerson">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupPerson"/>
-    </request-map>
-    <request-map uri="LookupPartyGroup">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupPartyGroup"/>
-    </request-map>
-    <request-map uri="LookupPartyName">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupPartyName"/>
-    </request-map>
-    <request-map uri="LookupFixedAsset">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupFixedAsset"/>
-    </request-map>
+    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
+    <request-map uri="LookupProductCategory"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductCategory"/></request-map>
+    <request-map uri="LookupProductStore"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
+    
+    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupPartyGroup"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
+    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
 
+    <request-map uri="LookupGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
+
+    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
+    <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -654,19 +716,35 @@
     <view-map name="ListAgreementTerms" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementTerms"/>
     <view-map name="EditAgreementTerm" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementTerm"/>
 
-    <!-- Lookup request mappings -->
-    <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
-    <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
-    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
-    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
-    <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
-    <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
-
-    <!-- Transaction request mappings -->
+    <view-map name="FindTaxAuthority" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#FindTaxAuthority"/>
+    <view-map name="EditTaxAuthority" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthority"/>
+    <view-map name="EditTaxAuthorityCategories" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityCategories"/>
+    <view-map name="EditTaxAuthorityAssocs" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityAssocs"/>
+    <view-map name="EditTaxAuthorityGlAccounts" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityGlAccounts"/>
+    <view-map name="EditTaxAuthorityRateProducts" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityRateProducts"/>
+    <view-map name="ListTaxAuthorityParties" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#ListTaxAuthorityParties"/>
+    <view-map name="EditTaxAuthorityPartyInfo" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityPartyInfo"/>
+    
+    <!-- Transaction mappings -->
     <view-map name="FindGatewayResponses" page="component://accounting/widget/TransactionScreens.xml#FindGatewayResponses" type="screen"/>
     <view-map name="ViewGatewayResponse" page="component://accounting/widget/TransactionScreens.xml#ViewGatewayResponse" type="screen"/>
     <view-map name="AuthorizeTransaction" page="component://accounting/widget/TransactionScreens.xml#AuthorizeTransaction" type="screen"/>
     <view-map name="CaptureTransaction" page="component://accounting/widget/TransactionScreens.xml#CaptureTransaction" type="screen"/>
     <view-map name="TransactionReports" page="component://accounting/widget/TransactionScreens.xml#TransactionReports" type="screen"/>
+    
+    <!-- Lookup mappings -->
+    <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
+    <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+
+    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+    <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
+    <view-map name="LookupProductCategory" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductCategory"/>
+    <view-map name="LookupProductStore" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductStore"/>
+    
+    <view-map name="LookupGeo" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeo"/>
+
+    <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
+    <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
     <!-- end of view mappings -->
 </site-conf>

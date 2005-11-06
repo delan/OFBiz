@@ -2450,6 +2450,15 @@
             <key-map field-name="productCategoryId"/>
         </relation>
     </entity>
+    <view-entity entity-name="TaxAuthorityCategoryView" package-name="org.ofbiz.accounting.tax">
+        <member-entity entity-alias="TAC" entity-name="TaxAuthorityCategory"/>
+        <member-entity entity-alias="PC" entity-name="ProductCategory"/>
+        <alias-all entity-alias="TAC"/>
+        <alias-all entity-alias="PC"/>
+        <view-link entity-alias="TAC" rel-entity-alias="PC">
+            <key-map field-name="productCategoryId"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="TaxAuthorityGlAccount" package-name="org.ofbiz.accounting.tax" title="Tax Authority GL Account Entity">
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>
@@ -2479,11 +2488,11 @@
         <field name="titleTransferEnumId" type="id-ne"></field>
         <field name="minItemPrice" type="currency-amount"></field>
         <field name="minPurchase" type="currency-amount"></field>
+        <field name="taxShipping" type="indicator"></field>
+        <field name="taxPercentage" type="floating-point"></field>
         <field name="fromDate" type="date-time"></field>
         <field name="thruDate" type="date-time"></field>
         <field name="description" type="description"></field>
-        <field name="taxShipping" type="indicator"></field>
-        <field name="taxPercentage" type="floating-point"></field>
         <prim-key field="taxAuthorityRateSeqId"/>
         <relation type="one" fk-name="TAXAUTHRTEP_TXA" rel-entity-name="TaxAuthority">
             <key-map field-name="taxAuthGeoId"/>
