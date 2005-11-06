@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
+    <description>Accounting Services: TaxAuthority and related </description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+    
+    <!-- TaxAuthority -->
+    <service name="createTaxAuthority" default-entity-name="TaxAuthority" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createTaxAuthority">
+        <description>Create TaxAuthority</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateTaxAuthority" default-entity-name="TaxAuthority" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="updateTaxAuthority">
+        <description>Update TaxAuthority</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTaxAuthority" default-entity-name="TaxAuthority" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthority">
+        <description>Delete TaxAuthority</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- TaxAuthorityAssoc -->
+    <service name="createTaxAuthorityAssoc" default-entity-name="TaxAuthorityAssoc" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createTaxAuthorityAssoc">
+        <description>Create TaxAuthorityAssoc</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateTaxAuthorityAssoc" default-entity-name="TaxAuthorityAssoc" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="updateTaxAuthorityAssoc">
+        <description>Update TaxAuthorityAssoc</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTaxAuthorityAssoc" default-entity-name="TaxAuthorityAssoc" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthorityAssoc">
+        <description>Delete TaxAuthorityAssoc</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- TaxAuthorityCategory -->
+    <service name="createTaxAuthorityCategory" default-entity-name="TaxAuthorityCategory" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createTaxAuthorityCategory">
+        <description>Create TaxAuthorityCategory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTaxAuthorityCategory" default-entity-name="TaxAuthorityCategory" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthorityCategory">
+        <description>Delete TaxAuthorityCategory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- TaxAuthorityGlAccount -->
+    <service name="createTaxAuthorityGlAccount" default-entity-name="TaxAuthorityGlAccount" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createTaxAuthorityGlAccount">
+        <description>Create TaxAuthorityGlAccount</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateTaxAuthorityGlAccount" default-entity-name="TaxAuthorityGlAccount" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="updateTaxAuthorityGlAccount">
+        <description>Update TaxAuthorityGlAccount</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTaxAuthorityGlAccount" default-entity-name="TaxAuthorityGlAccount" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthorityGlAccount">
+        <description>Delete TaxAuthorityGlAccount</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
+    <!-- TaxAuthorityRateProduct -->
+    <service name="createTaxAuthorityRateProduct" default-entity-name="TaxAuthorityRateProduct" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createTaxAuthorityRateProduct">
+        <description>Create TaxAuthorityRateProduct</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateTaxAuthorityRateProduct" default-entity-name="TaxAuthorityRateProduct" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="updateTaxAuthorityRateProduct">
+        <description>Update TaxAuthorityRateProduct</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteTaxAuthorityRateProduct" default-entity-name="TaxAuthorityRateProduct" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deleteTaxAuthorityRateProduct">
+        <description>Delete TaxAuthorityRateProduct</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
+    <!-- PartyTaxAuthInfo -->
+    <service name="createPartyTaxAuthInfo" default-entity-name="PartyTaxAuthInfo" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createPartyTaxAuthInfo">
+        <description>Create PartyTaxAuthInfo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updatePartyTaxAuthInfo" default-entity-name="PartyTaxAuthInfo" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="updatePartyTaxAuthInfo">
+        <description>Update PartyTaxAuthInfo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePartyTaxAuthInfo" default-entity-name="PartyTaxAuthInfo" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="deletePartyTaxAuthInfo">
+        <description>Delete PartyTaxAuthInfo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+</services>

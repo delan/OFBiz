@@ -149,7 +149,6 @@
         <field name="Sunday" title=" " widget-style="calendarDayNumber"><display/></field>
         <field name="SundayData" title="${uiLabelMap.CommonSunday}"><display/></field>
     </form>
-
     <!-- update the availability on a date basis of a fixed asset -->
     <form name="updateFixedAssetCalendar" type="single" 
             target="updateFixedAssetCalendar" title="Update the fixed Asset calendar" default-map-name="fixedAssetCalendar"
@@ -176,7 +175,6 @@
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCancel}" target="cancelFixedAssetStdCost?fixedAssetId=${fixedAssetId}&amp;fixedAssetStdCostTypeId=${fixedAssetStdCostTypeId}&amp;fromDate=${fromDate}"/>
         </field>
     </form>
-
     <form name="EditFixedAssetStdCost" type="single"
             target="updateFixedAssetStdCost" title="" default-map-name="fixedAssetStdCost"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -194,12 +192,10 @@
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="uomId"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
 </forms>

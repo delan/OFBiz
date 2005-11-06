@@ -56,7 +56,6 @@
         <section>
             <actions>
                 <set field="title" value="Edit Fixed Asset"/>
-                <set field="headerItem" value="ListFixedAssets"/>
                 <set field="tabButtonItem" value="EditFixedAsset"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
@@ -77,7 +76,6 @@
     <screen name="ListFixedAssetProducts">
         <section>
             <actions>
-                <set field="title" value="Edit Fixed Asset related Products"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
                 <set field="tabButtonItem" value="ListFixedAssetProducts"/>
                 <set field="labelTitleProperty" value="Products"/>
@@ -87,7 +85,7 @@
                     <select-field field-name="fixedAssetName"/>
                 </entity-one>
                 <entity-condition entity-name="FixedAssetProduct" list-name="fixedAssetProducts" >
-                    <condition-expr field-name="fixedAssetId" operator="equals" value="${fixedAssetId}" />
+                    <condition-expr field-name="fixedAssetId" env-name="fixedAssetId"/>
                     <order-by field-name="productId"/>
                     <order-by field-name="fixedAssetProductTypeId"/>
                     <order-by field-name="fromDate"/>
@@ -110,7 +108,6 @@
         <section>
             <actions>
                 <set field="layoutSettings.extraHead" value="&lt;link rel='stylesheet' href='/images/calendarTable.css' type='text/css'&gt;" global="true"/>
-                <set field="title" value="Edit Fixed Asset Calendar"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
                 <set field="tabButtonItem" value="ListFixedAssetCalendar"/>
                 <set field="labelTitleProperty" value="Calendar"/>
@@ -145,7 +142,6 @@
     <screen name="ListFixedAssetStdCosts">
         <section>
             <actions>
-                <set field="title" value="List Fixed Asset Standard Costs"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetStdCosts"/>
                 <set field="tabButtonItem" value="ListFixedAssetStdCosts"/>
                 <set field="labelTitleProperty" value="Standard costs"/>
@@ -168,7 +164,6 @@
     <screen name="EditFixedAssetStdCost">
         <section>
             <actions>
-                <set field="title" value="Edit Fixed Asset Standard Cost"/>
                 <set field="titleProperty" value="PageTitleEditFixedAssetStdCost"/>
                 <set field="tabButtonItem" value="ListFixedAssetStdCosts"/>
                 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project and repective authors.
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

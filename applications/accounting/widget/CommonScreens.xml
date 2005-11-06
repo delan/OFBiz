@@ -30,6 +30,8 @@
             <actions>
                 <!-- base/top/specific map first, then more common map added for shared labels --> 
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.AccountingCompanyName" global="true"/>
@@ -88,6 +90,52 @@
                                             <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
                                         </platform-specific>
                                         <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]  ${${extraFunctionName}}</label>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonTaxAuthorityDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="TaxAuthorities"/>
+                
+                <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
+                <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
+                <entity-one entity-name="TaxAuthority" value-name="taxAuthority"/>
+                <entity-one entity-name="PartyNameView" value-name="taxAuthPartyName" auto-field-map="false">
+                    <field-map field-name="partyId" env-name="taxAuthority.taxAuthPartyId"/>
+                </entity-one>
+                <get-related-one value-name="taxAuthority" relation-name="TaxAuthGeo" to-value-name="taxAuthGeo" use-cache="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="ACCOUNTING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <not><if-empty field-name="taxAuthPartyId"/></not>
+                                            <not><if-empty field-name="taxAuthGeoId"/></not>
+                                        </and>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="TaxAuthorityTabBar" location="component://accounting/widget/TaxAuthorityMenus.xml"/>
+                                        <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="buttontext"/></container>
+                                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: Tax Authority Party &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], Geo &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}</label>
                                     </widgets>
                                 </section>
                             </widgets>

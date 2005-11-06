@@ -92,6 +92,7 @@
         <set value="_CREATE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
+
         <make-value entity-name="ExampleItem" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <make-next-seq-id value-name="newEntity" seq-field-name="exampleItemSeqId"/> <!-- this finds the next sub-sequence ID -->
@@ -103,6 +104,7 @@
         <set value="_UPDATE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
+
         <entity-one entity-name="ExampleItem" value-name="lookedUpValue"/>
         <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
         <store-value value-name="lookedUpValue"/>
@@ -111,6 +113,7 @@
         <set value="_DELETE" field="securityAction"/>
         <check-permission permission="EXAMPLE" action="${securityAction}"><fail-property resource="ExampleUiLabels" property="ExamplePermissionError"/></check-permission>
         <check-errors/>
+
         <entity-one entity-name="ExampleItem" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>

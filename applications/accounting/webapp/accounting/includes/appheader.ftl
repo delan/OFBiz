@@ -43,6 +43,7 @@
   <div class="col"><a href="<@ofbizUrl>findPayment</@ofbizUrl>" class="${selectedLeftClassMap.payments?default(unselectedLeftClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a></div>
   <div class="col"><a href="<@ofbizUrl>FindGlobalGlAccount</@ofbizUrl>" class="${selectedLeftClassMap.chartofaccounts?default(unselectedLeftClassName)}">${uiLabelMap.AccountingChartOfAcctsMenu}</a></div>
   <div class="col"><a href="<@ofbizUrl>ListFixedAssets</@ofbizUrl>" class="${selectedLeftClassMap.ListFixedAssets?default(unselectedLeftClassName)}">${uiLabelMap.AccountingFixedAssets}</a></div>
+  <div class="col"><a href="<@ofbizUrl>FindTaxAuthority</@ofbizUrl>" class="${selectedLeftClassMap.TaxAuthorities?default(unselectedLeftClassName)}">${uiLabelMap.AccountingTaxAuthorities}</a></div>
 
   <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
     <div class="col"><a href="<@ofbizUrl>FindGatewayResponses</@ofbizUrl>" class="${selectedLeftClassMap.transaction?default(unselectedLeftClassName)}">${uiLabelMap.AccountingTransactions}</a></div>

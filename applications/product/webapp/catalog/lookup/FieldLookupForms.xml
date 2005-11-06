@@ -192,6 +192,11 @@
         <field name="productCategoryId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productCategoryId}" target="javascript:set_value('${productCategoryId}')"/>
         </field>
+        <field name="longDescription"><ignored/></field>
+        <field name="categoryImageUrl"><ignored/></field>
+        <field name="linkOneImageUrl"><ignored/></field>
+        <field name="linkTwoImageUrl"><ignored/></field>
+        <field name="detailScreen"><ignored/></field>
     </form>
     
     <form name="lookupProductFeature" target="LookupProductFeature" title="" type="single"
@@ -231,12 +236,18 @@
 
     <form name="LookupProductStore" target="LookupProductStore" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <auto-fields-entity entity-name="ProductStore" default-field-type="find"/>
+        <!-- <auto-fields-entity entity-name="ProductStore" default-field-type="find"/> -->
+        
+        <field name="productStoreId"><text-find/></field>
+        <field name="storeName"><text-find/></field>
+        <field name="companyName"><text-find/></field>
+        <field name="payToPartyId"><text-find/></field>
+        
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductStore" list-iterator-name="listIt" target="" paginate-target="LookupProductStore" title="" type="list"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display">
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
