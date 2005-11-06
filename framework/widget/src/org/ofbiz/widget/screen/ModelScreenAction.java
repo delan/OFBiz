@@ -541,16 +541,16 @@ public abstract class ModelScreenAction implements Serializable {
 
         public void runAction(Map context) {
             Object valueObject = valueNameAcsr.get(context);
+            if (valueObject == null) {
+                Debug.logVerbose("Value not found with name: " + valueNameAcsr + ", not getting related...", module);
+                return;
+            }
             if (!(valueObject instanceof GenericValue)) {
                 String errMsg = "Env variable for value-name " + valueNameAcsr.toString() + " is not a GenericValue object; for the relation-name: " + relationName + "]";
                 Debug.logError(errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
             GenericValue value = (GenericValue) valueObject;
-            if (value == null) {
-                Debug.logWarning("Value not found with name: " + valueNameAcsr + ", not getting related...", module);
-                return;
-            }
             try {
                 if (useCache) {
                     toValueNameAcsr.put(context, value.getRelatedOneCache(relationName));
