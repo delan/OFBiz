@@ -208,9 +208,12 @@
                 <get-related-one value-name="quote" relation-name="StatusItem" to-value-name="statusItem"/>
                 <get-related-one value-name="quote" relation-name="Uom" to-value-name="currency"/>
                 <get-related-one value-name="quote" relation-name="ProductStore" to-value-name="store"/>
+                <get-related-one value-name="quote" relation-name="Party" to-value-name="party"/>
                 
                 <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
                 <get-related value-name="quote" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
+                
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/quote/getPartyAddress.bsh"/>
                 <!--
                 <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
                 <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
