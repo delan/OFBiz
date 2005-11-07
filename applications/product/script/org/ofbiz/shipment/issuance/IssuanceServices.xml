@@ -26,7 +26,7 @@
  * @since      2.2
 -->
 
-<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- ItemIssuance services -->
     <simple-method method-name="createItemIssuance" short-description="Create ItemIssuance">
@@ -42,7 +42,7 @@
         <field-to-result field-name="itemIssuanceId" map-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <now-timestamp-to-env env-name="newEntity.issuedDateTime"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateItemIssuance" short-description="Update ItemIssuance">
@@ -81,7 +81,7 @@
         <make-value value-name="newEntity" entity-name="ItemIssuanceRole"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="deleteItemIssuanceRole" short-description="Delete ItemIssuanceRole">
@@ -109,7 +109,7 @@
 
         <!-- get orderHeader -->
         <entity-one entity-name="OrderHeader" value-name="orderHeader" auto-field-map="true"/>
-        
+
         <!-- make sure the order is NOT of orderTypeId: SALES_ORDER -->
         <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="SALES_ORDER">
             <string-to-list string="Not issuing Order Item to shipment [${parameters.shipmentId}] because the order is a Sales Order for order [${orderHeader.orderId}] order item [${parameters.orderItemSeqId}] (should call the issueOrderItemShipGrpInvResToShipment service)" list-name="error_list"/>
@@ -122,12 +122,12 @@
         <entity-one entity-name="OrderItemShipGroupAssoc" value-name="orderItemShipGroupAssoc" auto-field-map="true"/>
         <!-- get shipment -->
         <entity-one entity-name="Shipment" value-name="shipment" auto-field-map="true"/>
-        
+
         <call-simple-method method-name="findCreateIssueShipmentItem"/>
         <call-simple-method method-name="callCreateItemIssuance"/>
         <call-simple-method method-name="associateIssueRoles"/>
     </simple-method>
-    
+
     <simple-method method-name="issueOrderItemShipGrpInvResToShipment" short-description="Issue OrderItemShipGrpInvRes to Shipment">
         <set value="Issue OrderItemShipGrpInvRes to Shipment" field="operationName"/>
         <check-permission permission="FACILITY" action="_CREATE">
@@ -142,11 +142,13 @@
         <make-value entity-name="OrderItemShipGrpInvRes" value-name="OrderItemShipGrpInvResLookupPk"/>
         <set-pk-fields value-name="OrderItemShipGrpInvResLookupPk" map-name="parameters"/>
         <find-by-primary-key map-name="OrderItemShipGrpInvResLookupPk" value-name="orderItemShipGrpInvRes"/>
+        <log level="info" message="order item ship grp inv res info: ${orderItemShipGrpInvRes}"/>
+
         <!-- get orderHeader -->
         <make-value entity-name="OrderHeader" value-name="orderHeaderLookupPk"/>
         <set-pk-fields value-name="orderHeaderLookupPk" map-name="parameters"/>
         <find-by-primary-key map-name="orderHeaderLookupPk" value-name="orderHeader"/>
-        
+
         <!-- make sure the order is of orderTypeId: SALES_ORDER -->
         <if-compare field-name="orderTypeId" map-name="orderHeader" operator="not-equals" value="SALES_ORDER">
             <string-to-list string="Not issuing Order Item Ship Group Inventory Reservation to shipment [${parameters.shipmentId}] because the order is not a Sales Order for order [${orderItemShipGrpInvRes.orderId}] order item [${orderItemShipGrpInvRes.orderItemSeqId}] inventoryItem [${orderItemShipGrpInvRes.inventoryItemId}] (should call the issueOrderItemToShipment service)" list-name="error_list"/>
@@ -156,6 +158,10 @@
         <if-empty field-name="parameters.quantity">
             <string-to-list string="Not issuing Order Item Ship Group Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue is empty for order [${orderItemShipGrpInvRes.orderId}] order item [${orderItemShipGrpInvRes.orderItemSeqId}] inventoryItem [${orderItemShipGrpInvRes.inventoryItemId}]" list-name="error_list"/>
         </if-empty>
+        <if-empty field-name="orderItemShipGrpInvRes.quantity">
+            <log level="info" message="Order item reservation amount is null! PK lookup: ${OrderItemShipGrpInvResLookupPk}"/>
+        </if-empty>
+
         <!-- make sure specified quantity is not less than or equal to 0 -->
         <if-compare field-name="parameters.quantity" operator="less-equals" value="0" type="Double">
             <string-to-list string="Not issuing Order Item Ship Group Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is less than or equal to 0 for order [${orderItemShipGrpInvRes.orderId}] order item [${orderItemShipGrpInvRes.orderItemSeqId}] inventoryItem [${orderItemShipGrpInvRes.inventoryItemId}]" list-name="error_list"/>
@@ -218,11 +224,11 @@
             <find-by-primary-key map-name="shipmentItemLookupPk" value-name="shipmentItem"/>
         </else>
         </if-compare>
-        
+
         <!--<call-simple-method method-name="findCreateIssueShipmentItem"/>-->
         <call-simple-method method-name="callCreateItemIssuance"/>
         <call-simple-method method-name="associateIssueRoles"/>
-        
+
         <!-- decrement quantity still reserved -->
         <calculate field-name="orderItemShipGrpInvRes.quantity">
             <calcop operator="subtract">
@@ -245,7 +251,7 @@
             <store-value value-name="orderItemShipGrpInvRes"/>
         </else>
         </if-compare>
-        
+
         <!-- Decrement InventoryItem quantityOnHand -->
         <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
         <set from-field="inventoryItem.inventoryItemId" field="createDetailMap.inventoryItemId"/>
@@ -277,7 +283,7 @@
             </entity-condition>
             <first-from-list entry-name="shipmentItem" list-name="shipmentItems"/>
         </if-not-empty>
-        
+
         <if-empty field-name="shipmentItem">
             <set from-field="orderItem.productId" field="shipmentItemCreate.productId"/>
             <set from-field="parameters.shipmentId" field="shipmentItemCreate.shipmentId"/>
@@ -305,7 +311,7 @@
         <set from-field="shipmentItem.shipmentItemSeqId" field="itemIssuanceCreate.shipmentItemSeqId"/>
         <set from-field="orderItem.orderId" field="itemIssuanceCreate.orderId"/>
         <set from-field="orderItem.orderItemSeqId" field="itemIssuanceCreate.orderItemSeqId"/>
-        
+
         <if-not-empty field-name="orderItemShipGrpInvRes">
             <!-- if this is coming from an OrderItem issue instead of an OrderItemShipGrpInvRes issue, we won't have this info -->
             <set from-field="orderItemShipGrpInvRes.inventoryItemId" field="itemIssuanceCreate.inventoryItemId"/>
@@ -315,7 +321,7 @@
             <!-- If we have a ShipGroup Assoc for this Item to focus on, set that; this is mostly the case for purchase orders and such -->
             <set from-field="orderItemShipGroupAssoc.shipGroupSeqId" field="itemIssuanceCreate.shipGroupSeqId"/>
         </if-not-empty>
-        
+
         <set from-field="userLogin.userLoginId" field="itemIssuanceCreate.issuedByUserLoginId"/>
         <call-service service-name="createItemIssuance" in-map-name="itemIssuanceCreate" >
             <result-to-field result-name="itemIssuanceId"/>
@@ -331,7 +337,7 @@
         <if-empty field-name="checkPartyRole">
             <create-value value-name="partyRole"/>
         </if-empty>
-        
+
         <!-- Add ItemIssuanceRole for party that issues this... -->
         <set from-field="itemIssuanceId" field="itemIssuanceRoleCreate.itemIssuanceId"/>
         <set from-field="userLogin.partyId" field="itemIssuanceRoleCreate.partyId"/>
