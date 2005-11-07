@@ -276,6 +276,7 @@
             title="Order Header Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderTypeId" type="id"></field>
+      <field name="externalId" type="id"></field>
       <field name="salesChannelEnumId" type="id"></field>
       <field name="orderDate" type="date-time"></field>
       <field name="entryDate" type="date-time"></field>
@@ -293,6 +294,7 @@
       <field name="transactionId" type="id-long"></field>
       <field name="needsInventoryIssuance" type="indicator"></field>
       <field name="isRushOrder" type="indicator"></field>
+      <field name="internalCode" type="id-long"></field>
       <field name="remainingSubTotal" type="currency-amount"></field>
       <field name="grandTotal" type="currency-amount"></field>
       <prim-key field="orderId"/>
@@ -332,6 +334,9 @@
       <relation type="many" rel-entity-name="OrderItemAndShipGroupAssoc">
         <key-map field-name="orderId"/>
       </relation>
+      <index name="ORDEREXT_ID_IDX">
+        <index-field name="externalId"/>
+      </index>
     </entity>
     <entity entity-name="OrderHeaderNote"
             package-name="org.ofbiz.order.order"
@@ -390,7 +395,7 @@
       <field name="unitListPrice" type="currency-amount"></field>
       <field name="unitAverageCost" type="currency-amount"></field>
       <field name="unitRecurringPrice" type="currency-amount"></field>
-      <field name="isModifiedPrice" type="indicator"></field>		
+      <field name="isModifiedPrice" type="indicator"></field>
       <field name="recurringFreqUomId" type="id"></field>
       <field name="itemDescription" type="description"></field>
       <field name="comments" type="comment"></field>
@@ -1621,11 +1626,11 @@
             <key-map field-name="workEffortId"/>
         </relation>
     </entity>
-    
+
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.requirement -->
     <!-- ========================================================= -->
-    
+
     <entity entity-name="DesiredFeature"
             package-name="org.ofbiz.order.requirement"
             title="Desired Feature Entity">
@@ -1880,7 +1885,7 @@
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.return -->
     <!-- ========================================================= -->
-    
+
     <entity entity-name="ReturnHeader"
         package-name="org.ofbiz.order.return"
         title="Return Entity">
@@ -2032,7 +2037,7 @@
         <field name="sequenceId" type="id"></field>
         <prim-key field="returnTypeId"/>
     </entity>
-    
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.shoppingcart -->
   <!-- ========================================================= -->

@@ -1018,7 +1018,7 @@
             <key-map field-name="contactMechId"/>
         </relation>
     </view-entity>
-    
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.party.need -->
   <!-- ========================================================= -->
@@ -1124,7 +1124,7 @@
       <relation type="many" rel-entity-name="PartyTypeAttr">
         <key-map field-name="partyTypeId"/>
       </relation>
-      <index name="EXTERNAL_ID_IDX">
+      <index name="PARTYEXT_ID_IDX">
         <index-field name="externalId"/>
       </index>
     </entity>
