@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,6 +24,7 @@
 package org.ofbiz.securityext.login;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.component.ComponentConfig;
@@ -190,10 +192,22 @@ public class LoginEvents {
 
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
-        String errMsg = null;
 
         if (username == null) username = (String) session.getAttribute("USERNAME");
         if (password == null) password = (String) session.getAttribute("PASSWORD");
+
+        List unpwErrMsgList = FastList.newInstance();
+        if (UtilValidate.isEmpty(username)) {
+            unpwErrMsgList.add(UtilProperties.getMessage(resource, "loginevents.username_was_empty_reenter", UtilHttp.getLocale(request)));
+        }
+        if (UtilValidate.isEmpty(password)) {
+            unpwErrMsgList.add(UtilProperties.getMessage(resource, "loginevents.password_was_empty_reenter", UtilHttp.getLocale(request)));
+        }
+        if (!unpwErrMsgList.isEmpty()) {
+            request.setAttribute("_ERROR_MESSAGE_LIST_", unpwErrMsgList);
+            return "error";
+        }
+        
 
         if ((username != null) && ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             username = username.toLowerCase();
@@ -213,8 +227,8 @@ public class LoginEvents {
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error calling userLogin service", module);
             Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            errMsg = UtilProperties.getMessage(resource, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", errMsg );
+            String errMsg = UtilProperties.getMessage(resource, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -225,8 +239,8 @@ public class LoginEvents {
             if (userLogin != null && hasBasePermission(userLogin, request)) {
                 doBasicLogin(userLogin, request);
             } else {
-                errMsg = UtilProperties.getMessage(resource, "loginevents.unable_to_login_this_application", UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg );
+                String errMsg = UtilProperties.getMessage(resource, "loginevents.unable_to_login_this_application", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
 
@@ -235,7 +249,7 @@ public class LoginEvents {
             }
         } else {
             Map messageMap = UtilMisc.toMap("errorMessage", (String) result.get(ModelService.ERROR_MESSAGE));
-            errMsg = UtilProperties.getMessage(resource, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
