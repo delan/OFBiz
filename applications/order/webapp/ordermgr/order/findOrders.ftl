@@ -328,7 +328,7 @@ document.lookuporder.order_id.focus();
           </td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderType}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderId}</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.PartyUserLoginId}</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.PartyName}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderSurvey}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsOrdered}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsBackOrdered}</div></td>
