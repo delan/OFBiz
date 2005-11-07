@@ -69,7 +69,7 @@
         <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
     </service>
     
-    <service name="addWorkEffortTimeToNewInvoice" default-entity-name="Timesheet" engine="simple" auth="true"
+    <service name="addWorkEffortTimeToInvoice" default-entity-name="Timesheet" engine="simple" auth="true"
         location="org/ofbiz/workeffort/timesheet/TimesheetServices.xml" invoke="addWorkEffortTimeToInvoice">
         <description>Add WorkEffort Time to Invoice</description>
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
