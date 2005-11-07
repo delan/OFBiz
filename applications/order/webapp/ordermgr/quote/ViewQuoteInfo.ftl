@@ -24,6 +24,7 @@
 -->
 
 <#if quote?exists>
+<#if note?exists><p class="tabletext">${note}</p></#if>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <#-- left side -->

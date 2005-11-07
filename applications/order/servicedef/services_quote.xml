@@ -210,5 +210,14 @@
         <attribute name="quoteTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="quoteId" type="String" mode="OUT" optional="false"/>
     </service>
-
+    <service name="sendQuoteReportMail" engine="java" require-new-transaction="true" max-retry="3"
+            location="org.ofbiz.order.quote.QuoteServices" invoke="sendQuoteReportMail">
+        <description>Send a quote report mail</description>
+        <attribute name="emailType" type="String" mode="INOUT" optional="false"/>
+        <attribute name="quoteId" type="String" mode="IN" optional="false"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="note" type="String" mode="IN" optional="true"/>
+        <attribute name="body" type="String" mode="OUT" optional="true"/>
+    </service>
 </services>

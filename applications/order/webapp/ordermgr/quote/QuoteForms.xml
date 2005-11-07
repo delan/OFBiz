@@ -385,4 +385,13 @@
         <field name="profit" title="${uiLabelMap.OrderOrderQuoteProfit}"><display/></field>
         <field name="percProfit" title="${uiLabelMap.OrderOrderQuotePercProfit}"><display/></field>
     </form>
+    <form name="EditQuoteReportMail" type="single" target="sendQuoteReportMail" title=""
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="quoteId"><hidden/></field>
+        <field name="emailType"><hidden/></field>
+        <field name="sendTo"><text/></field>
+        <field name="sendCc"><text/></field>
+        <field name="note"><textarea/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>
