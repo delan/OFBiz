@@ -182,7 +182,7 @@
       <tr>
         <td align="right"><div class="tabletext">${uiLabelMap.ProductPerUnitPrice}</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" name="binNumber" value="${inventoryItemData.unitCost?default(0)?string("##0.00")}" size="20" maxlength="20" class="inputBox"></td>
+        <td><input type="text" name="unitCost" value="${inventoryItemData.unitCost?default(0)?string("##0.00")}" size="20" maxlength="20" class="inputBox"></td>
       </tr>
       <tr>
         <td align="right"><div class="tabletext">${uiLabelMap.ProductComments}</div></td>
