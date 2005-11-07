@@ -138,11 +138,10 @@
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
-                        <!--
                         <container>
                             <link target="QuoteReport?quoteId=${quote.quoteId}" text="${uiLabelMap.CommonReport}" style="buttontext"/>
+                            <link target="EditQuoteReportMail?quoteId=${quote.quoteId}&amp;emailType=PRDS_QUO_CONFIRM" text="${uiLabelMap.SendReportByMail}" style="buttontext"/>
                         </container>
-                        -->
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/quote/CreateOrderQuote.ftl"/></html>
                         </platform-specific>
@@ -157,6 +156,37 @@
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ViewQuoteSimple">
+        <section>
+            <actions>
+                <set field="showQuoteManagementLinks" value="N"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-one entity-name="Quote" value-name="quote"/>
+                <get-related-one value-name="quote" relation-name="QuoteType" to-value-name="quoteType"/>
+                <get-related-one value-name="quote" relation-name="StatusItem" to-value-name="statusItem"/>
+                <get-related-one value-name="quote" relation-name="Uom" to-value-name="currency"/>
+                <get-related-one value-name="quote" relation-name="ProductStore" to-value-name="store"/>
+                
+                <get-related value-name="quote" relation-name="QuoteItem" list-name="quoteItems"/>
+                <get-related value-name="quote" relation-name="QuoteAdjustment" list-name="quoteAdjustments"/>
+                <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
+
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/quote/ViewQuoteInfo.ftl"/></html>
+                </platform-specific>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/quote/ViewQuoteItemInfo.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -546,6 +576,28 @@
                             <html><html-template location="component://order/webapp/ordermgr/quote/ViewQuoteProfit.ftl"/></html>
                         </platform-specific>
                         <include-form name="ViewQuoteProfit" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditQuoteReportMail">
+        <section>
+            <actions>
+                <set field="title" value="Edit Quote Report Mail"/>
+                <set field="titleProperty" value="PageTitleEditQuoteReportMail"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="ViewQuote"/>
+                
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-one entity-name="Quote" value-name="quote"/>
+                <get-related-one value-name="quote" relation-name="Party" to-value-name="party"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/quote/getPartyEmailAddress.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonQuoteDecorator">
+                    <decorator-section name="body">
+                        <include-form name="EditQuoteReportMail" location="component://order/webapp/ordermgr/quote/QuoteForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
