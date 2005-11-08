@@ -45,6 +45,7 @@
     <entity-group group="org.ofbiz" entity="CountryCapital" />
     <entity-group group="org.ofbiz" entity="CountryCode" />
     <entity-group group="org.ofbiz" entity="CountryTeleCode" />
+    <entity-group group="org.ofbiz" entity="CountryTeleCodeAndName" />
     <entity-group group="org.ofbiz" entity="Geo" />
     <entity-group group="org.ofbiz" entity="GeoAssoc" />
     <entity-group group="org.ofbiz" entity="GeoAssocType" />

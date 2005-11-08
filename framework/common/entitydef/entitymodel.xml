@@ -147,6 +147,18 @@
         <key-map field-name="countryCode"/>
       </relation>
     </entity>
+    <view-entity entity-name="CountryTeleCodeAndName"
+        package-name="org.ofbiz.common.geo"
+        title="Telephone country code and country name">
+        <member-entity entity-alias="CC" entity-name="CountryCode"/>
+        <member-entity entity-alias="CT" entity-name="CountryTeleCode"/>
+        <alias entity-alias="CT" name="teleCode"/>
+        <alias entity-alias="CC" name="countryCode" prim-key="countryCodeId"/>
+        <alias entity-alias="CC" name="countryName"/>
+        <view-link entity-alias="CC" rel-entity-alias="CT">
+            <key-map field-name="countryCode"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="Geo"
             package-name="org.ofbiz.common.geo"
             title="Geographic Boundary Entity">
