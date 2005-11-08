@@ -1,0 +1,179 @@
+/*
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Rev: 5462 $
+ *@since      3.0
+ */
+
+import java.util.*;
+import java.math.*;
+import java.sql.Timestamp;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.securityext.login.*;
+import org.ofbiz.common.*;
+import org.ofbiz.webapp.control.*;
+import org.ofbiz.accounting.invoice.*;
+
+delegator = parameters.get("delegator");
+organizationPartyId = parameters.get("organizationPartyId");
+
+// Create totals:
+BigDecimal salesTaxInTot = new BigDecimal("0");
+BigDecimal salesTaxOutTot = new BigDecimal("0");
+BigDecimal revenueTot = new BigDecimal("0");
+BigDecimal expensesTot = new BigDecimal("0");
+BigDecimal MiscInTot = new BigDecimal("0");
+BigDecimal MiscOutTot = new BigDecimal("0");
+BigDecimal totalValueTot = new BigDecimal("0");
+
+// first get the list of companies
+List invoiceList = new LinkedList();
+
+
+/*
+// check companies who have invoices from/to thye organizationParty but no relation
+
+parties = delegator.findAll("Party");
+Iterator p = parties.iterator();
+while (p.hasNext())	{
+	party = p.next();
+	List rel = delegator.findByAnd("PartyRelationship",UtilMisc.toMap("partyIdTo",party.getString("partyId")));
+	if (rel == null || rel.size() == 0)	{
+		invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyIdFrom",party.getString("partyId")));
+		if (invoices != null && invoices.size() != 0) Debug.logInfo("!!!!!!!!!!(partyIdFrom)" + party.getString("partyId") + " InvoiceId:" + invoices.get(0).getString("invoiceId"),"???????");
+		invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyId",party.getString("partyId")));
+		if (invoices != null  && invoices.size() != 0) Debug.logInfo("!!!!!!!!!!(party)" + party.getString("partyId") + " InvoiceId:" + invoices.get(0).getString("invoiceId"),"???????");
+	}
+}
+*/
+companies = delegator.findByAnd("PartyRelationshipAndPartyDetail",UtilMisc.toMap("partyIdFrom",organizationPartyId));
+Iterator comp = companies.iterator();
+while (comp.hasNext())	{
+	company = comp.next();
+	partyId = company.getString("partyId");
+	name = company.getString("groupName");
+	if (name == null) 	{
+		if (company.getString("lastName") != null)	{
+			name = company.getString("lastName");
+			if (company.getString("firstName") != null)	{
+				name = name.concat(", ").concat(company.getString("lastName"));
+			}
+		}
+	}
+	BigDecimal salesTaxIn = new BigDecimal("0");
+	BigDecimal salesTaxOut = new BigDecimal("0");
+	BigDecimal revenue = new BigDecimal("0");
+	BigDecimal expenses = new BigDecimal("0");
+	BigDecimal MiscIn = new BigDecimal("0");
+	BigDecimal MiscOut = new BigDecimal("0");
+	BigDecimal totalValue = new BigDecimal("0");
+
+	// purchase invoices
+	invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyIdFrom",partyId));
+	Iterator inv = invoices.iterator();
+	while (inv.hasNext())	{
+		invoice = inv.next();
+		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue;
+
+		invoiceItems = invoice.getRelated("InvoiceItem");
+		Iterator invit = invoiceItems.iterator();
+		while (invit.hasNext())	{
+			invoiceItem = invit.next();
+			if (invoiceItem.getString("invoiceItemTypeId").equals("PINV_SALES_TAX"))	{
+				salesTaxOut = salesTaxOut.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+				salesTaxOutTot = salesTaxOutTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+			}
+			else if (invoiceItem.getString("invoiceItemTypeId").equals("PINV_SPROD_ITEM"))	{
+				expenses = expenses.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+				expensesTot = expensesTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+			}
+			else if (invoiceItem.getString("invoiceItemTypeId").equals("PINV_MISC_CHARGE"))	{
+				MiscOut = MiscOut.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+				MiscOutTot = MiscOutTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+			}
+			else	{	Debug.logInfo(" not registered payment: " + invoiceItem.getString("invoiceItemTypeId"),"????????"); }
+		}
+	}
+			
+	// Sales invoices
+	invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyId",partyId));
+	Iterator inv = invoices.iterator();
+	while (inv.hasNext())	{
+		invoice = inv.next();
+		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue; // ignore cancelled invoices
+		invoiceItems = invoice.getRelated("InvoiceItem");
+		Iterator invit = invoiceItems.iterator();
+		while (invit.hasNext())	{
+			invoiceItem = invit.next();
+			if (invoiceItem.getString("invoiceItemTypeId").equals("INV_SALES_TAX"))	{
+				salesTaxIn = salesTaxIn.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+				salesTaxInTot = salesTaxInTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+			}
+			else if (invoiceItem.getString("invoiceItemTypeId").equals("INV_SPROD_ITEM"))	{
+				revenue = revenue.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+				revenueTot = revenueTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+			}
+			else if (invoiceItem.getString("invoiceItemTypeId").equals("INV_MISC_CHARGE"))	{
+				MiscIn = MiscIn.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+				MiscInTot = MiscInTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+			}
+			 else	{	Debug.logInfo(" not registered payment: " + invoiceItem.getString("invoiceItemTypeId"),"????????"); }
+		}
+	}
+			
+	Map listItem = UtilMisc.toMap("company",partyId,"name", name, "salesTaxIn",salesTaxIn,"salesTaxOut",salesTaxOut);
+	listItem.put("expenses", expenses);
+	listItem.put("revenue", revenue);
+	listItem.put("miscIn", MiscIn);
+	listItem.put("miscOut", MiscOut);
+	BigDecimal totalValue = salesTaxIn.add(salesTaxOut).add(revenue).add(expenses).add(MiscOut).add(MiscIn);
+	listItem.put("totalValue", totalValue);
+	invoiceList.add(listItem);
+}
+
+Map listItem = UtilMisc.toMap("company","Total.","name", " ", "salesTaxIn",salesTaxInTot,"salesTaxOut",salesTaxOutTot);
+listItem.put("expenses", expensesTot);
+listItem.put("revenue", revenueTot);
+listItem.put("miscIn", MiscInTot);
+listItem.put("miscOut", MiscOutTot);
+BigDecimal totalValueTot = salesTaxInTot.add(salesTaxOutTot).add(revenueTot).add(expensesTot).add(MiscOutTot).add(MiscInTot);
+listItem.put("totalValue", totalValueTot);
+invoiceList.add(listItem);
+
+// create total check of all values
+BigDecimal generalTotal = new BigDecimal("0");
+ii = delegator.findAll("InvoiceItem");
+	Iterator it = ii.iterator();
+	while (it.hasNext())	{
+		invoiceItem = it.next();
+		GenericValue invoice = invoiceItem.getRelatedOne("Invoice");
+			if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue; // ignore cancelled items
+		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue; // ignore cancelled items
+		if (!invoice.getString("partyIdFrom").equals(organizationPartyId) &&
+					!invoice.getString("partyId").equals(organizationPartyId)) continue; // only items from organization party id
+		generalTotal = generalTotal.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+	}
+Map listItem = UtilMisc.toMap("company","GeneralTotal","totalValue", generalTotal);
+invoiceList.add(listItem);
+
+context.put("invoiceList",invoiceList);
