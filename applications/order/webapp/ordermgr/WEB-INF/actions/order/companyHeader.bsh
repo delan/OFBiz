@@ -61,7 +61,7 @@ if (partyGroup != null && UtilValidate.isNotEmpty(partyGroup.getString("logoImag
 
 // the company name
 String companyName = "not found";
-if (UtilValidate.isNotEmpty(partyGroup.get("groupName"))) {
+if (partyGroup != null && UtilValidate.isNotEmpty(partyGroup.get("groupName"))) {
     companyName = partyGroup.getString("groupName");
 }
 
