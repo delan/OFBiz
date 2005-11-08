@@ -47,6 +47,7 @@
 </head>
 
 <body>
+<#if !parameters.popup?exists>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <tr>
     <td width='100%'>
@@ -85,4 +86,5 @@
     </td>
   </tr>
 </table>
+</#if>
 

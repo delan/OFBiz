@@ -26,7 +26,7 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
 
-<!-- Top level decorator taking care of header and main tab bar.... -->
+    <!-- Top level decorator taking care of header and main tab bar.... -->
     <screen name="main-decorator">
         <section>
             <actions>
@@ -57,45 +57,23 @@
             <widgets>
                 <!-- render header -->
                 <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/header.ftl"/></html></platform-specific>
-                <!-- render appbar -->
-                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
-                
-                            <decorator-section-include name="body"/>
-                
+                <section>
+                    <condition>
+                        <if-empty field-name="parameters.popup"/>
+                    </condition>
+                    <widgets>
+                        <!-- render appbar -->
+                        <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
+                    </widgets>
+                </section>
+                <decorator-section-include name="body"/>
                 <!-- render footer -->
                 <platform-specific><html><html-template location="component://opentravelsystem/includes/footer.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
-
-<!--  second level decorator  for each tab like product, customeretc -->
-
-<!-- setting is moved a level deeper.. -->
-    <!--screen name="SettingsDecorator">
-        <section>
-            <actions>
-                <set field="page.appTabButtonItem" value="Settings"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator">
-                    <decorator-section name="body">
-                        
-                        <container style="centerarea">
-                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/settings/appheaderSettings.ftl"/></html></platform-specific>
-                            <container style="contentarea">
-                                <container style="${MainColumnStyle}">
-                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
-                                    <decorator-section-include name="body"/>
-                                </container>
-                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
-                            </container>
-                        </container>
-                        
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen-->
+    
+<!--  second level decorator  for each tab like product, customer etc -->
 
     <screen name="CatalogDecorator">
         <section>
@@ -132,13 +110,31 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        
                         <container style="centerarea">
-                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/party/appheaderCustomer.ftl"/></html></platform-specific>
+                            <section>
+                                <condition>
+                                    <if-empty field-name="parameters.popup"/>
+                                </condition>
+                                <widgets>
+                                    <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/party/appheaderCustomer.ftl"/></html></platform-specific>
+                                </widgets>
+                                <fail-widgets>
+                                    <container>
+                                        <label style="head1">Party Information for: ${person.firstName} ${person.lastName}${partyGroup.groupName} [${partyId}]</label>
+                                    </container>
+                                </fail-widgets>
+                            </section>
                             <container style="contentarea">
                                 <container style="${MainColumnStyle}">
                                     <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
-                                    <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
+                                    <section>
+                                        <condition>
+                                            <if-compare field-name="partyId" operator="not-equals" value=""/>
+                                        </condition>
+                                        <widgets>
+                                            <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="PartyTabBar"/>
+                                        </widgets>
+                                    </section>
                                     <decorator-section-include name="body"/>
                                 </container>
                                 <container style="endcolumns"><label text="&amp;nbsp;"/></container>
@@ -151,6 +147,7 @@
             </widgets>
         </section>
     </screen>
+    
     <screen name="ReservationsDecorator">
         <section>
             <actions>
@@ -204,8 +201,6 @@
             </widgets>
         </section>
     </screen>
-    
-    
 
 <!-- Lowest level decorators for fixes asset, productstore etc..... -->
     <screen name="CommonProductStoreDecorator">

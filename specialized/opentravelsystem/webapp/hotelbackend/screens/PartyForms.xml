@@ -34,7 +34,7 @@
             </service>
         </actions>
         <field name="partyId" widget-style="buttontext" >
-            <hyperlink description="${partyId}" target="viewprofile?partyId=${partyId}" target-window="new"/>
+            <hyperlink description="${partyId}" target="viewprofile?popup=yes&amp;partyId=${partyId}" target-window="new"/>
         </field>
         <field name="partyRelationshipTypeId" title="Relation"><display/></field>
         <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
