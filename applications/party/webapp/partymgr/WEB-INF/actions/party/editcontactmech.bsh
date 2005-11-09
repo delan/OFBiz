@@ -34,7 +34,7 @@ import org.ofbiz.common.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.webapp.control.*;
 
-String partyId = parameters.get("party_id");
+String partyId = parameters.get("partyId");
 context.put("partyId", partyId);
 
 Map mechMap = new HashMap();
