@@ -31,7 +31,12 @@ import java.sql.Timestamp;
 
 orderHeader = (GenericValue) parameters.get("orderHeader");
 invoice = (GenericValue) parameters.get("invoice");
+invoiceId = parameters.get("invoiceId");
 nowTimestamp = UtilDateTime.nowTimestamp();
+
+if (invoice == null && invoiceId != null)	{
+    invoice = (GenericValue) delegator.findByPrimaryKey("Invoice",UtilMisc.toMap("invoiceId",invoiceId));
+}
 
 // defaults:
 logoImageUrl = null; // "http://localhost:8080/images/ofbiz_powered.gif"; // set default value......
@@ -44,26 +49,26 @@ if (orderHeader != null) {
     }
 } else if (invoice != null) {
     if (invoice.get("invoiceTypeId").equals("SALES_INVOICE") && invoice.get("partyIdFrom") != null) {
-        company = invoice.getString("partyIdFrom");
+        partyId = invoice.getString("partyIdFrom");
     }
-    if (invoice.get("invoiceTypeId").equals("PURCHASE_INVOICE") && invoice.get("partyIdTo") != null) {
-        company = invoice.getString("partyIdTo");
+    if (invoice.get("invoiceTypeId").equals("PURCHASE_INVOICE") && invoice.get("partyId") != null) {
+        partyId = invoice.getString("partyId");
     }
 }
-
-Debug.logInfo("For order/invoice company header for PDF using partyId: " + partyId, "companyHeader.bsh");
 
 // the logo
 GenericValue partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId",partyId));
 if (partyGroup != null && UtilValidate.isNotEmpty(partyGroup.getString("logoImageUrl"))) {
     logoImageUrl = partyGroup.getString("logoImageUrl");
 }
+context.put("logoImageUrl", logoImageUrl);
 
 // the company name
 String companyName = "not found";
 if (partyGroup != null && UtilValidate.isNotEmpty(partyGroup.get("groupName"))) {
     companyName = partyGroup.getString("groupName");
 }
+context.put("companyName", companyName);
 
 // the address
 List addresses = delegator.findByAnd("PartyContactMechPurpose",
@@ -73,7 +78,61 @@ GenericValue address = null;
 if (addresses != null && addresses.size() > 0) {
     address = delegator.findByPrimaryKey("PostalAddress",UtilMisc.toMap("contactMechId",selAddresses.iterator().next().getString("contactMechId")));
 }
-
-context.put("logoImageUrl", logoImageUrl);
-context.put("companyName", companyName);
+if (address != null)	{
+	context.put("countryName",delegator.findByPrimaryKey("Geo",UtilMisc.toMap("geoId",address.getString("countryGeoId"))).getString("geoName"));
+}
 context.put("postalAddress", address);
+
+//telephone
+List phones = delegator.findByAnd("PartyContactMechPurpose",
+        UtilMisc.toMap("partyId",partyId,"contactMechPurposeTypeId","PRIMARY_PHONE"));
+List selPhones = EntityUtil.filterByDate(phones, nowTimestamp, "fromDate", "thruDate", true);        
+if (phones != null && phones.size() > 0) {
+    context.put("phone",delegator.findByPrimaryKey("TelecomNumber",UtilMisc.toMap("contactMechId",selPhones.iterator().next().getString("contactMechId"))));
+}
+
+//Email
+List emails = delegator.findByAnd("PartyContactMechPurpose",
+        UtilMisc.toMap("partyId",partyId,"contactMechPurposeTypeId","PRIMARY_EMAIL"));
+List selEmails = EntityUtil.filterByDate(emails, nowTimestamp, "fromDate", "thruDate", true);        
+if (emails != null && emails.size() > 0) {
+    context.put("email",delegator.findByPrimaryKey("ContactMech",UtilMisc.toMap("contactMechId",selEmails.iterator().next().getString("contactMechId"))));
+}
+else	{	//get email address from party contact mech
+	List contacts = delegator.findByAnd("PartyContactMech",
+	        UtilMisc.toMap("partyId",partyId));
+	List selContacts = EntityUtil.filterByDate(contacts, nowTimestamp, "fromDate", "thruDate", true);        
+	if (selContacts != null && selContacts.size() > 0) {
+		Iterator i = selContacts.iterator();
+		while (i.hasNext())	{
+			email = i.next().getRelatedOne("ContactMech");
+			if (email.getString("contactMechTypeId").equals("ELECTRONIC_ADDRESS"))	{
+				context.put("email",email);
+				break;
+			}
+		}
+	}
+}
+
+// website
+List contacts = delegator.findByAnd("PartyContactMech",
+	        UtilMisc.toMap("partyId",partyId));
+List selContacts = EntityUtil.filterByDate(contacts, nowTimestamp, "fromDate", "thruDate", true);        
+if (selContacts != null && selContacts.size() > 0) {
+	Iterator i = selContacts.iterator();
+	while (i.hasNext())	{
+		website = i.next().getRelatedOne("ContactMech");
+		if (website.getString("contactMechTypeId").equals("WEB_ADDRESS"))	{
+			context.put("website",website);
+			break;
+		}
+	}
+}
+
+//Bank account
+List paymentMethods = delegator.findByAnd("PaymentMethod",UtilMisc.toMap("partyId",partyId,"paymentMethodTypeId", "EFT_ACCOUNT"));
+List selPayments = EntityUtil.filterByDate(paymentMethods, nowTimestamp, "fromDate", "thruDate", true);        
+if (selPayments != null && selPayments.size() > 0)
+    context.put("eftAccount",delegator.findByPrimaryKey("EftAccount",UtilMisc.toMap("paymentMethodId",selPayments.iterator().next().getString("paymentMethodId"))));
+
+
