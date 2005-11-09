@@ -212,25 +212,59 @@ public class InvoiceWorker {
     public static GenericValue getInvoiceAddressByType(GenericValue invoice, String contactMechPurposeTypeId) {
         GenericDelegator delegator = invoice.getDelegator();
         List locations = null;
+        // first try InvoiceContactMech to see if we can find the address needed
         try {
             locations = invoice.getRelated("InvoiceContactMech", UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId), null);
         } catch (GenericEntityException e) {
             Debug.logError("Touble getting InvoiceContactMech entity list", module);           
         }
-        
-        GenericValue postalAddress = null;
-        if (locations != null && locations.size() > 0) {
-            GenericValue purpose = EntityUtil.getFirst(locations);                      
+
+        if (locations == null || locations.size() == 0)    {
+            // if no locations found get it from the PartyAndContactMech using the from and to party on the invoice
+            String destinationPartyId = null;
+            if (invoice.getString("invoiceTypeId").equals("SALES_INVOICE"))
+                destinationPartyId = invoice.getString("partyId");
+            if (invoice.getString("invoiceTypeId").equals("PURCHASE_INVOICE"))
+                destinationPartyId = new String("partyFrom");
             try {
-                postalAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", purpose.getString("contactMechId")));
+                locations = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
+                        UtilMisc.toMap("partyId", destinationPartyId, "contactMechPurposeTypeId", contactMechPurposeTypeId)));
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Trouble getting PostalAddress for contactMechId: " + purpose.getString("contactMechId"), module);
+                Debug.logError("Trouble getting contact party purpose list", module);           
+            }
+            //if still not found get it from the general location
+            if (locations == null || locations.size() == 0)    {
+                try {
+                    locations = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
+                            UtilMisc.toMap("partyId", destinationPartyId, "contactMechPurposeTypeId", "GENERAL_LOCATION")));
+                } catch (GenericEntityException e) {
+                    Debug.logError("Trouble getting contact party purpose list", module);           
+                }
+            }
+        }        
+        
+        // now return the first PostalAddress from the locations
+        GenericValue postalAddress = null;
+        GenericValue contactMech = null;
+        if (locations != null && locations.size() > 0) {
+            try {
+                contactMech = ((GenericValue) locations.get(0)).getRelatedOne("ContactMech");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting Contact for contactMechId: " + contactMech.getString("contactMechId"), module);
+            }
+            
+            if (contactMech.getString("contactMechTypeId").equals("POSTAL_ADDRESS"))    {
+                try {
+                    postalAddress = contactMech.getRelatedOne("PostalAddress");
+                    return postalAddress;
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Trouble getting PostalAddress for contactMechId: " + contactMech.getString("contactMechId"), module);
+                }
             }
         }
+        return contactMech;
+    }
         
-        return postalAddress;
-    }    
-    
     private static GenericValue getAddressFromParty(GenericValue party, String purposeTypeId) {
         if (party == null) return null;
         
