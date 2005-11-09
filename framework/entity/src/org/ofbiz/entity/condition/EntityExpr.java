@@ -31,6 +31,7 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.EntityCryptoException;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
@@ -62,7 +63,7 @@ public class EntityExpr extends EntityCondition {
             throw new IllegalArgumentException("The operator argument cannot be null");
         }
 
-        if (rhs == null) {
+        if (rhs == null || rhs == GenericEntity.NULL_FIELD) {
             if (!EntityOperator.NOT_EQUAL.equals(operator) && !EntityOperator.EQUALS.equals(operator)) {
                 throw new IllegalArgumentException("Operator must be EQUALS or NOT_EQUAL when right/rhs argument is NULL ");
             }
@@ -77,10 +78,13 @@ public class EntityExpr extends EntityCondition {
         this.lhs = lhs;
         this.operator = operator;
         this.rhs = rhs;
+
+        //Debug.logInfo("new EntityExpr internal field=" + lhs + ", value=" + rhs + ", value type=" + (rhs == null ? "null object" : rhs.getClass().getName()), module);
     }
 
     public EntityExpr(String lhs, EntityComparisonOperator operator, Object rhs) {
         this(new EntityFieldValue(lhs), operator, rhs);
+        //Debug.logInfo("new EntityExpr field=" + lhs + ", value=" + rhs + ", value type=" + (rhs == null ? "null object" : rhs.getClass().getName()), module);
     }
 
     public EntityExpr(String lhs, boolean leftUpper, EntityComparisonOperator operator, Object rhs, boolean rightUpper) {

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
@@ -90,8 +91,10 @@ public abstract class EntityOperator extends EntityConditionBase {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareEqual(lhs, rhs); }
         protected void makeRHSWhereString(ModelEntity entity, List entityConditionParams, StringBuffer sb, ModelField field, Object rhs) {
             if (rhs == null || rhs == GenericEntity.NULL_FIELD) {
+                //Debug.logInfo("makeRHSWhereString: field IS NULL: " + field.getName(), module);
                 sb.append(" IS NULL");
             } else {
+                //Debug.logInfo("makeRHSWhereString: field not null, doing super: " + field.getName() + ", type: " + rhs.getClass().getName() + ", value: " + rhs, module);
                 super.makeRHSWhereString(entity, entityConditionParams, sb, field, rhs);
             }
         }
@@ -170,10 +173,11 @@ public abstract class EntityOperator extends EntityConditionBase {
     }
 
     public String getCode() {
-        if (codeString == null)
+        if (codeString == null) {
             return "null";
-        else
+        } else {
             return codeString;
+        }
     }
 
     public int getId() {

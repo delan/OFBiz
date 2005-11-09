@@ -92,6 +92,7 @@ public class EntityComparisonOperator extends EntityOperator {
     }
 
     public void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, boolean compat, Object lhs, Object rhs) {
+        //Debug.logInfo("EntityComparisonOperator.addSqlValue field=" + lhs + ", value=" + rhs + ", value type=" + (rhs == null ? "null object" : rhs.getClass().getName()), module);
         ModelField field;
         if (lhs instanceof EntityConditionValue) {
             EntityConditionValue ecv = (EntityConditionValue) lhs;
@@ -108,6 +109,7 @@ public class EntityComparisonOperator extends EntityOperator {
             addValue(sql, null, lhs, entityConditionParams);
             field = null;
         }
+
         makeRHSWhereString(entity, entityConditionParams, sql, field, rhs);
     }
 
