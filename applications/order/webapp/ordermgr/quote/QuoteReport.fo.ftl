@@ -51,28 +51,6 @@
                     </fo:table-cell>
                     <#-- Top Right cell -->
                     <fo:table-cell>
-                        <fo:table>
-                            <fo:table-column column-width="1.5in"/>
-                            <fo:table-column column-width="1.5in"/>
-                            <fo:table-body>
-                                <fo:table-row>
-                                    <fo:table-cell><fo:block white-space-collapse="false"> </fo:block></fo:table-cell>
-                                    <fo:table-cell><fo:block white-space-collapse="false"> </fo:block></fo:table-cell>
-                                </fo:table-row>
-                                <fo:table-row>
-                                    <fo:table-cell><fo:block white-space-collapse="false"> </fo:block></fo:table-cell>
-                                    <fo:table-cell><fo:block white-space-collapse="false"> </fo:block></fo:table-cell>
-                                </fo:table-row>
-                                <fo:table-row>
-                                    <fo:table-cell><fo:block>${uiLabelMap.CommonType}</fo:block></fo:table-cell>
-                                    <fo:table-cell><fo:block>${(quoteType.description)?default(quote.quoteTypeId?if_exists)}</fo:block></fo:table-cell>
-                                </fo:table-row>
-                                <fo:table-row>
-                                    <fo:table-cell><fo:block>${uiLabelMap.OrderOrderQuoteId}</fo:block></fo:table-cell>
-                                    <fo:table-cell><fo:block>${quote.quoteId}</fo:block></fo:table-cell>
-                                </fo:table-row>
-                            </fo:table-body>
-                        </fo:table>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-body>
@@ -113,6 +91,14 @@
             <fo:table-column column-width="1.5in"/>
             <fo:table-column column-width="3.75in"/>
             <fo:table-body>
+                <fo:table-row>
+                    <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.CommonType}</fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block>${(quoteType.description)?default(quote.quoteTypeId?if_exists)}</fo:block></fo:table-cell>
+                </fo:table-row>
+                <fo:table-row>
+                    <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.OrderOrderQuoteId}</fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block>${quote.quoteId}</fo:block></fo:table-cell>
+                </fo:table-row>
                 <fo:table-row>
                     <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.CommonStatus}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block>${(statusItem.get("description", locale))?default(quote.statusId?if_exists)}</fo:block></fo:table-cell>
