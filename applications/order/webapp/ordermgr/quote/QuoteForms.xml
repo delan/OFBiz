@@ -256,7 +256,7 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="quoteAttribute==null" target="createQuoteAttribute"/>
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="edit"/>
-        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}"></field>
+        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" use-when="quoteAttribute==null"><text/></field>
         <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" use-when="quoteAttribute!=null"><display/></field>
         <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
@@ -282,6 +282,7 @@
         <alt-target use-when="quoteCoefficient==null" target="createQuoteCoefficient"/>
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
+        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoefficientName}" use-when="quoteCoefficient==null"><text/></field>
         <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoefficientName}" use-when="quoteCoefficient!=null"><display/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
