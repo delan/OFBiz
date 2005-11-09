@@ -261,7 +261,7 @@ public class SqlJdbcUtil {
             }
 
             Object fieldValue = fields.get(name);
-            if (fieldValue != null) {
+            if (fieldValue != null && fieldValue != GenericEntity.NULL_FIELD) {
                 returnString.append('=');
                 addValue(returnString, modelField, fieldValue, entityConditionParams);
             } else {

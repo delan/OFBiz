@@ -1132,6 +1132,9 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
     }
     
     public Object convertFieldValue(ModelField modelField, Object value, GenericDelegator delegator) {
+        if (value == null || value == GenericEntity.NULL_FIELD) {
+            return null;
+        }
         String fieldJavaType = null;
         try {
             fieldJavaType = delegator.getEntityFieldType(this, modelField.getType()).getJavaType();
