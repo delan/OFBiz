@@ -96,9 +96,11 @@
                     <fo:table-cell>
                         <fo:block>
                             <fo:block font-weight="bold">Address: </fo:block>
+                            <#if toPostalAddress?exists>
                             <fo:block font-weight="bold">${toPostalAddress.address1?if_exists}</fo:block>
                             <fo:block font-weight="bold">${toPostalAddress.address2?if_exists}</fo:block>
                             <fo:block font-weight="bold">${toPostalAddress.city}<#if toPostalAddress.stateProvinceGeoId?has_content>, ${toPostalAddress.stateProvinceGeoId}</#if> ${toPostalAddress.postalCode?if_exists}</fo:block>
+                            </#if>
                         </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
