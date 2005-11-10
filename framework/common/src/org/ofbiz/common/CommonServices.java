@@ -142,11 +142,15 @@ public class CommonServices {
     public static Map createNote(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Timestamp now = UtilDateTime.nowTimestamp();
+        Timestamp noteDate = (Timestamp) context.get("noteDate");
         String partyId = (String) context.get("partyId");
         String noteName = (String) context.get("noteName");
         String note = (String) context.get("note");
         String noteId = delegator.getNextSeqId("NoteData");
+        if (noteDate == null) {
+            noteDate = UtilDateTime.nowTimestamp();
+        }
+
 
         // check for a party id
         if (partyId == null) {
@@ -155,7 +159,7 @@ public class CommonServices {
         }
 
         Map fields = UtilMisc.toMap("noteId", noteId, "noteName", noteName, "noteInfo", note,
-                "noteParty", partyId, "noteDateTime", now);
+                "noteParty", partyId, "noteDateTime", noteDate);
 
         try {
             GenericValue newValue = delegator.makeValue("NoteData", fields);
@@ -218,7 +222,7 @@ public class CommonServices {
     }
 
     public static Map forceGc(DispatchContext dctx, Map context) {
-        System.gc();        
+        System.gc();
         return ServiceUtil.returnSuccess();
     }
 
