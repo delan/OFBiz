@@ -34,7 +34,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -46,13 +45,11 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityFieldValue;
 import org.ofbiz.entity.condition.EntityFunction;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
-import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityTypeUtil;
@@ -112,7 +109,7 @@ public class PartyServices {
      */
     public static Map createPerson(DispatchContext ctx, Map context) {
         Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();        
+        GenericDelegator delegator = ctx.getDelegator();
         Timestamp now = UtilDateTime.nowTimestamp();
         List toBeStored = new LinkedList();
         Locale locale = (Locale) context.get("locale");
@@ -523,10 +520,10 @@ public class PartyServices {
         String partyId = (String) context.get("partyId");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
-        Map noteCtx = UtilMisc.toMap("note", noteString, "userLogin", userLogin);
+        //Map noteCtx = UtilMisc.toMap("note", noteString, "userLogin", userLogin);
 
         // Store the note.
-        Map noteRes = org.ofbiz.common.CommonServices.createNote(dctx, noteCtx);
+        Map noteRes = org.ofbiz.common.CommonServices.createNote(dctx, context);
 
         if (noteRes.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
             return noteRes;
@@ -835,7 +832,7 @@ public class PartyServices {
             viewIndex = 1;
         }
         result.put("viewIndex", new Integer(viewIndex));
-    
+
         int viewSize = 20;
         try {
             viewSize = Integer.parseInt((String) context.get("VIEW_SIZE"));
@@ -843,36 +840,36 @@ public class PartyServices {
             viewSize = 20;
         }
         result.put("viewSize", new Integer(viewSize));
-    
+
         // get the lookup flag
         String lookupFlag = (String) context.get("lookupFlag");
-    
+
         // blank param list
         String paramList = "";
-    
+
         List partyList = null;
         int partyListSize = 0;
         int lowIndex = 0;
         int highIndex = 0;
-    
+
         if ("Y".equals(lookupFlag)) {
             String showAll = (context.get("showAll") != null ? (String) context.get("showAll") : "N");
             paramList = paramList + "&lookupFlag=" + lookupFlag + "&showAll=" + showAll + "&extInfo=" + extInfo;
-    
+
             // create the dynamic view entity
             DynamicViewEntity dynamicView = new DynamicViewEntity();
-    
+
             // default view settings
             dynamicView.addMemberEntity("PT", "Party");
             dynamicView.addAlias("PT", "partyId");
             dynamicView.addAlias("PT", "partyTypeId");
             dynamicView.addRelation("one-nofk", "", "PartyType", ModelKeyMap.makeKeyMapList("partyTypeId"));
             dynamicView.addRelation("many", "", "UserLogin", ModelKeyMap.makeKeyMapList("partyId"));
-    
+
             // define the main condition & expression list
             List andExprs = FastList.newInstance();
             EntityCondition mainCond = null;
-            
+
             List orderBy = FastList.newInstance();
             List fieldsToSelect = FastList.newInstance();
             // fields we need to select; will be used to set distinct
@@ -892,47 +889,47 @@ public class PartyServices {
                     paramList = paramList + "&partyId=" + partyId;
                     andExprs.add(new EntityExpr("partyId", true, EntityOperator.LIKE, "%"+partyId+"%", true));
                 }
-        
+
                 // ----
                 // UserLogin Fields
                 // ----
-       
+
                 // filter on user login
                 if (userLoginId != null && userLoginId.length() > 0) {
                     paramList = paramList + "&userLoginId=" + userLoginId;
-        
+
                     // modify the dynamic view
                     dynamicView.addMemberEntity("UL", "UserLogin");
                     dynamicView.addAlias("UL", "userLoginId");
                     dynamicView.addViewLink("PT", "UL", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
-        
+
                     // add the expr
                     andExprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%"+userLoginId+"%", true));
 
                     fieldsToSelect.add("userLoginId");
                 }
-        
+
                 // ----
                 // PartyGroup Fields
                 // ----
-        
+
                 // filter on groupName
                 if (groupName != null && groupName.length() > 0) {
                     paramList = paramList + "&groupName=" + groupName;
-        
+
                     // modify the dynamic view
                     dynamicView.addMemberEntity("PG", "PartyGroup");
                     dynamicView.addAlias("PG", "groupName");
                     dynamicView.addViewLink("PT", "PG", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
-        
+
                     // add the expr
                     andExprs.add(new EntityExpr("groupName", true, EntityOperator.LIKE, "%"+groupName+"%", true));
                 }
-        
+
                 // ----
                 // Person Fields
                 // ----
-        
+
                 // modify the dynamic view
                 if ((firstName != null && firstName.length() > 0) || (lastName != null && lastName.length() > 0)) {
                     dynamicView.addMemberEntity("PE", "Person");
@@ -945,38 +942,38 @@ public class PartyServices {
                     orderBy.add("lastName");
                     orderBy.add("firstName");
                 }
-        
+
                 // filter on firstName
                 if (firstName != null && firstName.length() > 0) {
                     paramList = paramList + "&firstName=" + firstName;
                     andExprs.add(new EntityExpr("firstName", true, EntityOperator.LIKE, "%"+firstName+"%", true));
                 }
-        
+
                 // filter on lastName
                 if (lastName != null && lastName.length() > 0) {
                     paramList = paramList + "&lastName=" + lastName;
                     andExprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%"+lastName+"%", true));
                 }
-        
+
                 // ----
                 // RoleType Fields
                 // ----
-        
+
                 // filter on role member
                 if (roleTypeId != null && !"ANY".equals(roleTypeId)) {
                     paramList = paramList + "&roleTypeId=" + roleTypeId;
-       
+
                     // add role to view
                     dynamicView.addMemberEntity("PR", "PartyRole");
                     dynamicView.addAlias("PR", "roleTypeId");
                     dynamicView.addViewLink("PT", "PR", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
-       
+
                     // add the expr
                     andExprs.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, roleTypeId));
 
                     fieldsToSelect.add("roleTypeId");
                 }
-        
+
                 // ----
                 // PostalAddress fields
                 // ----
@@ -993,34 +990,34 @@ public class PartyServices {
                     dynamicView.addAlias("PA", "postalCode");
                     dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
                     dynamicView.addViewLink("PC", "PA", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId"));
-        
+
                     // filter on address1
                     String address1 = (String) context.get("address1");
                     if (address1 != null && address1.length() > 0) {
                         paramList = paramList + "&address1=" + address1;
                         andExprs.add(new EntityExpr("address1", true, EntityOperator.LIKE, "%"+address1+"%", true));
                     }
-        
+
                     // filter on address2
                     String address2 = (String) context.get("address2");
                     if (address2 != null && address2.length() > 0) {
                         paramList = paramList + "&address2=" + address2;
                         andExprs.add(new EntityExpr("address2", true, EntityOperator.LIKE, "%"+address2+"%", true));
                     }
-        
+
                     // filter on city
                     String city = (String) context.get("city");
                     if (city != null && city.length() > 0) {
                         paramList = paramList + "&city=" + city;
                         andExprs.add(new EntityExpr("city", true, EntityOperator.EQUALS, city, true));
                     }
-        
+
                     // filter on state geo
                     if (stateProvinceGeoId != null && !"ANY".equals(stateProvinceGeoId)) {
                         paramList = paramList + "&stateProvinceGeoId=" + stateProvinceGeoId;
                         andExprs.add(new EntityExpr("stateProvinceGeoId", EntityOperator.EQUALS, stateProvinceGeoId));
                     }
-        
+
                     // filter on postal code
                     String postalCode = (String) context.get("postalCode");
                     if (postalCode != null && postalCode.length() > 0) {
@@ -1030,7 +1027,7 @@ public class PartyServices {
 
                     fieldsToSelect.add("postalCode");
                 }
-        
+
                 // ----
                 // Generic CM Fields
                 // ----
@@ -1042,7 +1039,7 @@ public class PartyServices {
                     dynamicView.addAlias("CM", "infoString");
                     dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
                     dynamicView.addViewLink("PC", "CM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId"));
-       
+
                     // filter on infoString
                     String infoString = (String) context.get("infoString");
                     if (infoString != null && infoString.length() > 0) {
@@ -1052,7 +1049,7 @@ public class PartyServices {
 
                     fieldsToSelect.add("infoString");
                 }
-        
+
                 // ----
                 // TelecomNumber Fields
                 // ----
@@ -1066,21 +1063,21 @@ public class PartyServices {
                     dynamicView.addAlias("TM", "contactNumber");
                     dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
                     dynamicView.addViewLink("PC", "TM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId"));
-       
+
                     // filter on countryCode
                     String countryCode = (String) context.get("countryCode");
                     if (countryCode != null && countryCode.length() > 0) {
                         paramList = paramList + "&countryCode=" + countryCode;
                         andExprs.add(new EntityExpr("countryCode", true, EntityOperator.EQUALS, countryCode, true));
                     }
-       
+
                     // filter on areaCode
                     String areaCode = (String) context.get("areaCode");
                     if (areaCode != null && areaCode.length() > 0) {
                         paramList = paramList + "&areaCode=" + areaCode;
                         andExprs.add(new EntityExpr("areaCode", true, EntityOperator.EQUALS, areaCode, true));
                     }
-       
+
                     // filter on contact number
                     String contactNumber = (String) context.get("contactNumber");
                     if (contactNumber != null && contactNumber.length() > 0) {
@@ -1090,15 +1087,15 @@ public class PartyServices {
 
                     fieldsToSelect.add("areaCode");
                 }
-       
+
                 // ---- End of Dynamic View Creation
-        
+
                 // build the main condition
                 if (andExprs.size() > 0) mainCond = new EntityConditionList(andExprs, EntityOperator.AND);
             }
-            
+
             Debug.logInfo("In findParty mainCond=" + mainCond, module);
-    
+
             // do the lookup
             if (mainCond != null || "Y".equals(showAll)) {
                 try {
@@ -1106,21 +1103,21 @@ public class PartyServices {
                     EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
                     // using list iterator
                     EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
-             
+
                     // get the indexes for the partial list
                     lowIndex = (((viewIndex - 1) * viewSize) + 1);
                     highIndex = viewIndex * viewSize;
-             
+
                     // get the partial list for this page
                     partyList = pli.getPartialList(lowIndex, viewSize);
-             
+
                     // attempt to get the full size
                     pli.last();
                     partyListSize = pli.currentIndex();
                     if (highIndex > partyListSize) {
                         highIndex = partyListSize;
                     }
-            
+
                     // close the list iterator
                     pli.close();
                 } catch (GenericEntityException e) {
@@ -1139,7 +1136,7 @@ public class PartyServices {
         result.put("paramList", paramList);
         result.put("highIndex", new Integer(highIndex));
         result.put("lowIndex", new Integer(lowIndex));
-        
+
         return result;
     }
 }
