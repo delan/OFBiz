@@ -106,6 +106,8 @@
         <attribute name="transactionId" type="String" mode="IN" optional="true"/>
         <attribute name="terminalId" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="externalId" type="String" mode="IN" optional="true"/>
+        <attribute name="internalCode" type="String" mode="IN" optional="true"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>
         <attribute name="orderTypeId" type="String" mode="INOUT" optional="false"/>
         <attribute name="salesChannelEnumId" type="String" mode="IN" optional="true"/>
@@ -121,6 +123,8 @@
         <attribute name="grandTotal" type="Double" mode="IN" optional="true"/>
         <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="orderItemShipGroupInfo" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderItemAttributes" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderAttributes" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderPaymentInfo" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemContactMechs" type="java.util.List" mode="IN" optional="true"/>

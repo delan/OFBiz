@@ -79,6 +79,8 @@ public class ShoppingCart implements Serializable {
     private String poNumber = null;
     private String orderId = null;
     private String firstAttemptOrderId = null;
+    private String externalId = null;
+    private String internalCode = null;
     private String billingAccountId = null;
     private double billingAccountAmt = 0.00;
     private String agreementId = null;
@@ -105,6 +107,7 @@ public class ShoppingCart implements Serializable {
     private List paymentInfo = new LinkedList();
     private List shipInfo = new LinkedList();
     private Map contactMechIdsMap = new HashMap();
+    private Map orderAttributes = new HashMap();
     private Map attributes = new HashMap(); // user defined attributes
 
     /** contains a list of partyId for each roleTypeId (key) */
@@ -539,6 +542,8 @@ public class ShoppingCart implements Serializable {
         this.productPromoCodes = new HashSet(cart.productPromoCodes);
         this.locale = cart.getLocale();
         this.currencyUom = cart.getCurrency();
+        this.externalId = cart.getExternalId();
+        this.internalCode = cart.getInternalCode();
         this.viewCartOnAdd = cart.viewCartOnAdd();
 
         // clone the additionalPartyRoleMap
@@ -670,6 +675,18 @@ public class ShoppingCart implements Serializable {
 
     public Object getAttribute(String name) {
         return this.attributes.get(name);
+    }
+
+    public void removeOrderAttribute(String name) {
+        this.orderAttributes.remove(name);
+    }
+
+    public void setOrderAttribute(String name, String value) {
+        this.orderAttributes.put(name, value);
+    }
+
+    public String getOrderAttribute(String name) {
+        return (String) this.orderAttributes.get(name);
     }
 
     /** Sets the currency for the cart. */
@@ -1025,6 +1042,22 @@ public class ShoppingCart implements Serializable {
             // rerun promotions
             ProductPromoWorker.doPromotions(this, dispatcher);
         }
+    }
+
+    public String getExternalId() {
+        return this.externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getInternalCode() {
+        return this.internalCode;
+    }
+
+    public void setInternalCode(String internalCode) {
+        this.internalCode = internalCode;
     }
 
     public String getWebSiteId() {
@@ -3154,6 +3187,40 @@ public class ShoppingCart implements Serializable {
         return groups;
     }
 
+    public List makeAllOrderItemAttributes() {
+        List allOrderItemAttributes = new LinkedList();
+
+        Iterator itemIter = cartLines.iterator();
+        while (itemIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+            Map attrs = item.getOrderItemAttributes();
+            Iterator i = attrs.entrySet().iterator();
+            while (i.hasNext()) {
+                Map.Entry entry = (Map.Entry) i.next();
+                GenericValue itemAtt = this.getDelegator().makeValue("OrderItemAttribute", null);
+                itemAtt.set("orderItemSeqId", item.getOrderItemSeqId());
+                itemAtt.set("attrName", entry.getKey());
+                itemAtt.set("attrValue", entry.getValue());
+                allOrderItemAttributes.add(itemAtt);
+            }
+        }
+        return allOrderItemAttributes;
+    }
+
+    public List makeAllOrderAttributes() {
+        List allOrderAttributes = new LinkedList();
+
+        Iterator i = orderAttributes.entrySet().iterator();
+        while (i.hasNext()) {
+            Map.Entry entry = (Map.Entry) i.next();
+            GenericValue orderAtt = this.getDelegator().makeValue("OrderAttribute", null);
+            orderAtt.put("attrName", entry.getKey());
+            orderAtt.put("attrValue", entry.getValue());
+            allOrderAttributes.add(orderAtt);
+        }
+        return allOrderAttributes;
+    }
+
     public List makeAllOrderItemAssociations() {
         List allOrderItemAssociations = new LinkedList();
 
@@ -3190,6 +3257,8 @@ public class ShoppingCart implements Serializable {
         Map result = new HashMap();
 
         result.put("orderTypeId", this.getOrderType());
+        result.put("externalId", this.getExternalId());
+        result.put("internalCode", this.getInternalCode());
         result.put("salesChannelEnumId", this.getChannelType());
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
         result.put("workEfforts", this.makeWorkEfforts());
@@ -3198,6 +3267,8 @@ public class ShoppingCart implements Serializable {
         result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());
         result.put("orderProductPromoUses", this.makeProductPromoUses());
 
+        result.put("orderAttributes", this.makeAllOrderAttributes());
+        result.put("orderItemAttributes", this.makeAllOrderItemAttributes());
         result.put("orderContactMechs", this.makeAllOrderContactMechs());
         result.put("orderItemContactMechs", this.makeAllOrderItemContactMechs());
         result.put("orderPaymentInfo", this.makeAllOrderPaymentInfos());
