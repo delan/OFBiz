@@ -27,21 +27,10 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javolution.util.FastMap;
 import javolution.util.FastSet;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -50,9 +39,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -61,14 +48,13 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
+import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
-import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.party.party.PartyWorker;
@@ -420,6 +406,14 @@ public class OrderServices {
             orderHeader.set("visitId", context.get("visitId"));
         }
 
+        if (UtilValidate.isNotEmpty((String) context.get("internalCode"))) {
+            orderHeader.set("internalCode", context.get("internalCode"));
+        }
+
+        if (UtilValidate.isNotEmpty((String) context.get("externalId"))) {
+            orderHeader.set("externalId", context.get("externalId"));
+        }
+
         if (UtilValidate.isNotEmpty((String) context.get("originFacilityId"))) {
             orderHeader.set("originFacilityId", context.get("originFacilityId"));
         }
@@ -453,7 +447,7 @@ public class OrderServices {
         }
 
         // create the order status record
-        String orderStatusSeqId = delegator.getNextSeqId("OrderStatus").toString();
+        String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
         GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
         orderStatus.set("orderId", orderId);
         orderStatus.set("statusId", orderHeader.getString("statusId"));
@@ -469,7 +463,7 @@ public class OrderServices {
             toBeStored.add(orderItem);
 
             // create the item status record
-            String itemStatusId = delegator.getNextSeqId("OrderStatus").toString();
+            String itemStatusId = delegator.getNextSeqId("OrderStatus");
             GenericValue itemStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", itemStatusId));
             itemStatus.put("statusId", orderItem.get("statusId"));
             itemStatus.put("orderId", orderId);
@@ -477,6 +471,28 @@ public class OrderServices {
             itemStatus.put("statusDatetime", nowTimestamp);
             itemStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
             toBeStored.add(itemStatus);
+        }
+
+        // set the order attributes
+        List orderAttributes = (List) context.get("orderAttributes");
+        if (orderAttributes != null && orderAttributes.size() > 0) {
+            Iterator oattr = orderAttributes.iterator();
+            while (oattr.hasNext()) {
+                GenericValue oatt = (GenericValue) oattr.next();
+                oatt.set("orderId", orderId);
+                toBeStored.add(oatt);
+            }
+        }
+
+        // set the order item attributes
+        List orderItemAttributes = (List) context.get("orderItemAttributes");
+        if (orderItemAttributes != null && orderItemAttributes.size() > 0) {
+            Iterator oiattr = orderItemAttributes.iterator();
+            while (oiattr.hasNext()) {
+                GenericValue oiatt = (GenericValue) oiattr.next();
+                oiatt.set("orderId", orderId);
+                toBeStored.add(oiatt);
+            }
         }
 
         // create the workeffort records
@@ -2442,7 +2458,7 @@ public class OrderServices {
                             GenericValue partyRelationship = (GenericValue) partyRelationshipIter.next();
                             billToPartyIdSet.add(partyRelationship.get("partyIdFrom"));
                         }
-                        
+
                         List ptiConditionList = UtilMisc.toList(
                                 new EntityExpr("partyId", EntityOperator.IN, billToPartyIdSet),
                                 new EntityExpr("geoId", EntityOperator.EQUALS, primaryGeoId));
@@ -3811,7 +3827,7 @@ public class OrderServices {
                 item.setBasePrice(basePrice.doubleValue());
                 item.setIsModifiedPrice(true);
             }
-            
+
 
             // set the item in the selected ship group
             cart.setItemShipGroupQty(item, item.getQuantity(), shipGroupIdx);
@@ -3907,7 +3923,7 @@ public class OrderServices {
                 if(cartItem.getIsModifiedPrice())
                     cartItem.setBasePrice(priceSave);
                 // set price
-                
+
                 if (overridePriceMap.containsKey(itemSeqId)) {
                     String priceStr = (String) itemPriceMap.get(itemSeqId);
                     if (UtilValidate.isNotEmpty(priceStr)) {
@@ -3929,7 +3945,7 @@ public class OrderServices {
                         cartItem.setIsModifiedPrice(true);
                         Debug.log("Set item price: [" + itemSeqId + "] " + price, module);
                     }
-                     
+
                 }
             } else {
                 Debug.logInfo("Unable to locate shopping cart item for seqId #" + itemSeqId, module);
@@ -4379,9 +4395,8 @@ public class OrderServices {
      * @param delegator
      * @param dispatcher
      * @param locale
-     * @return
      */
-    public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, List orderItemPriceInfo, String orderTypeId, 
+    public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, List orderItemPriceInfo, String orderTypeId,
         GenericDelegator delegator, LocalDispatcher dispatcher, Locale locale) throws Exception {
 
         List newOrderItems = new ArrayList();
