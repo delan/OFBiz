@@ -605,7 +605,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.reservLength = item.getReservLength();
         this.reservPersons = item.getReservPersons();
         this.selectedAmount = item.getSelectedAmount();
-        this.basePrice = item.getBasePrice();
+        this.setBasePrice(item.getBasePrice());
         this.listPrice = item.getListPrice();
         this.reserv2ndPPPerc = item.getReserv2ndPPPerc();
         this.reservNthPPPerc = item.getReservNthPPPerc();
@@ -681,7 +681,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.itemType = itemTypeId;
         this.itemDescription = description;
         this.productCategoryId = categoryId;
-        this.basePrice = basePrice;
+        this.setBasePrice(basePrice);
         this.attributes = attributes;
         this.prodCatalogId = prodCatalogId;
         this.delegatorName = delegator.getDelegatorName();
@@ -917,7 +917,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                     }
                     List productSuppliers = (List) priceResult.get("supplierProducts");
                     if ((productSuppliers != null) && (productSuppliers.size() > 0)) {
-                        this.basePrice = ((Double) ((GenericValue) productSuppliers.get(0)).get("lastPrice")).doubleValue();
+                        this.setBasePrice(((Double) ((GenericValue) productSuppliers.get(0)).get("lastPrice")).doubleValue());
                     } else throw new CartItemModifyException("There was an error when retreive Supplier for product: " + priceResult.get(ModelService.ERROR_MESSAGE));
                     
                 } else {
@@ -938,7 +938,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                     if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
 
                     if (priceResult.get("price") != null) {
-                        this.basePrice = ((Double) priceResult.get("price")).doubleValue();
+                        this.setBasePrice(((Double) priceResult.get("price")).doubleValue());
                     }
 
 
@@ -946,7 +946,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
                     // If product is configurable, the price is taken from the configWrapper.
                     if (configWrapper != null) {
-                        this.basePrice = configWrapper.getTotalPrice();
+                        this.setBasePrice(configWrapper.getTotalPrice());
                     }
                 }
             } catch (GenericServiceException e) {
