@@ -408,10 +408,12 @@ public class ShoppingCartServices {
         List quoteItems = null;
         List quoteAdjs = null;
         List quoteRoles = null;
+        List quoteAttributes = null;
         try {
             quoteItems = quote.getRelated("QuoteItem");
             quoteAdjs = quote.getRelated("QuoteAdjustment");
             quoteRoles = quote.getRelated("QuoteRole");
+            quoteAttributes = quote.getRelated("QuoteAttribute");
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -435,6 +437,15 @@ public class ShoppingCartServices {
                 } else {
                     cart.addAdditionalPartyRole(quoteRolePartyId, quoteRoleTypeId);
                 }
+            }
+        }
+
+        // set the attribute information
+        if (quoteAttributes != null) {
+            Iterator quoteAttributesIt = quoteAttributes.iterator();
+            while (quoteAttributesIt.hasNext()) {
+                GenericValue quoteAttribute = (GenericValue)quoteAttributesIt.next();
+                cart.setOrderAttribute(quoteAttribute.getString("attrName"), quoteAttribute.getString("attrValue"));
             }
         }
 
