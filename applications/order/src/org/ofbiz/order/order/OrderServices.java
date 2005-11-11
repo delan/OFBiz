@@ -2430,6 +2430,8 @@ public class OrderServices {
 
                     String primaryGeoId = taxLookup.getString("stateProvinceGeoId");
                     String secondaryGeoId = taxLookup.getString("countryGeoId");
+                    String taxAuthPartyId = taxLookup.getString("taxAuthPartyId");
+                    String taxAuthGlAccountId = taxLookup.getString("taxAuthGlAccountId");
 
                     // if no state/province, the country is the primary
                     if (primaryGeoId == null || "_NA_".equals(primaryGeoId)) {
@@ -2445,6 +2447,9 @@ public class OrderServices {
                     adjMap.put("primaryGeoId", primaryGeoId);
                     if (secondaryGeoId != null) adjMap.put("secondaryGeoId", secondaryGeoId);
                     adjMap.put("comments", taxLookup.getString("description"));
+                    if (taxAuthPartyId != null) adjMap.put("taxAuthPartyId", taxAuthPartyId);
+                    if (taxAuthGlAccountId != null) adjMap.put("overrideGlAccountId", taxAuthGlAccountId);
+                    if (primaryGeoId != null) adjMap.put("taxAuthGeoId", primaryGeoId);
 
                     // check to see if this party has a tax ID for this, and if the party is tax exempt in the primary (most-local) jurisdiction
                     if (UtilValidate.isNotEmpty(billToPartyId) && primaryGeoId != null) {
