@@ -534,7 +534,7 @@ public class ShoppingCartServices {
                 int itemIndex = -1;
                 if (item.get("productId") == null) {
                     // non-product item
-                    String desc = item.getString("description");
+                    String desc = item.getString("comments");
                     try {
                         itemIndex = cart.addNonProductItem(null, desc, null, 0.00, quantity.doubleValue(), null, null, dispatcher);
                     } catch (CartItemModifyException e) {
