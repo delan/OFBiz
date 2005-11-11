@@ -419,6 +419,7 @@
         <set from-field="custRequest.custRequestName" field="newQuote.quoteName"/>
         <set from-field="custRequest.description" field="newQuote.description"/>
         <set from-field="custRequest.maximumAmountUomId" field="newQuote.currencyUomId"/>
+        <set from-field="custRequest.productStoreId" field="newQuote.productStoreId"/>
         <set from-field="custRequestItem.story" field="newQuoteItem.comments"/>
         <create-value value-name="newQuote"/>
         <create-value value-name="newQuoteItem"/>
@@ -718,10 +719,13 @@
         <get-related value-name="custRequest" relation-name="CustRequestRole" list-name="custRequestRoles"/>
         <iterate list-name="custRequestRoles" entry-name="custRequestRole">
             <clear-field field-name="createQuoteRoleInMap"/>
-            <set field="createQuoteRoleInMap.quoteId" from-field="quoteId"/>
-            <set field="createQuoteRoleInMap.partyId" from-field="custRequestRole.partyId"/>
-            <set field="createQuoteRoleInMap.roleTypeId" from-field="custRequestRole.roleTypeId"/>
-            <call-service service-name="createQuoteRole" in-map-name="createQuoteRoleInMap"/>
+            <!-- The REQ_TAKER role is automatically added by the createQuote service -->
+            <if-compare field-name="custRequestRole.roleTypeId" value="REQ_TAKER" operator="not-equals">
+                <set field="createQuoteRoleInMap.quoteId" from-field="quoteId"/>
+                <set field="createQuoteRoleInMap.partyId" from-field="custRequestRole.partyId"/>
+                <set field="createQuoteRoleInMap.roleTypeId" from-field="custRequestRole.roleTypeId"/>
+                <call-service service-name="createQuoteRole" in-map-name="createQuoteRoleInMap"/>
+            </if-compare>
         </iterate>
         
         <field-to-result field-name="quoteId" result-name="quoteId"/>
