@@ -188,6 +188,7 @@
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductSeqNum}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductAssociationType}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -203,6 +204,7 @@
                 <td><div class="tabletext" <#if (assocFromProduct.getTimestamp("thruDate"))?exists && nowDate.after(assocFromProduct.getTimestamp("thruDate"))> style="color: red;"</#if>>
                 ${(assocFromProduct.thruDate)?if_exists}&nbsp;</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.sequenceNum)?if_exists}</div></td>
+                <td><div class="tabletext">&nbsp;${(assocFromProduct.quantity)?if_exists}</div></td>
                 <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.description)?if_exists}<#else>${(assocFromProduct.productAssocTypeId)?if_exists}</#if></div></td>
                 <td>
                 <a href="<@ofbizUrl>UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
