@@ -1155,6 +1155,14 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
+    <xs:element name="condition-object">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.condition-object"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.condition-object">
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+    </xs:attributeGroup>
     <xs:element name="field-map">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.field-map"/>
