@@ -106,6 +106,7 @@ public class QuoteServices {
 
         Map bodyParameters = UtilMisc.toMap("quoteId", quoteId, "userLogin", userLogin, "locale", locale);
         bodyParameters.put("note", note);
+        bodyParameters.put("partyId", quote.getString("partyId")); // This is set to trigger the "storeEmailAsCommunication" seca
         sendMap.put("bodyParameters", bodyParameters);
         sendMap.put("userLogin", userLogin);
 
