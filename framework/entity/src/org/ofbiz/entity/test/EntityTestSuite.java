@@ -416,7 +416,8 @@ public class EntityTestSuite extends TestCase {
             assertTrue("GenericEntityException:" + e.toString(), false);
             return;
         } finally {
-            delegator.removeByAnd("Testing", new HashMap());  // empty HashMap for conditions means remove everything
+            List newlyCreatedValues = delegator.findAll("Testing", UtilMisc.toList("testingId"));
+            delegator.removeAll(newlyCreatedValues); 
         }
     }
 
@@ -457,7 +458,8 @@ public class EntityTestSuite extends TestCase {
             assertTrue("GenericEntityException:" + e.toString(), false);
             return;
         } finally {
-            delegator.removeByAnd("Testing", new HashMap());
+            List entitiesToRemove = delegator.findByCondition("Testing", new EntityExpr("testingId", EntityOperator.LIKE, "T2-%"), null, null);
+            delegator.removeAll(entitiesToRemove);
         }
     }
 
@@ -520,6 +522,21 @@ public class EntityTestSuite extends TestCase {
             delegator.removeByAnd("Testing", UtilMisc.toMap("testingId", "timeout-test"));
         }
     }
+
+  /*
+   * This will test setting a blob field to null by creating a TestBlob entity whose blob field is not set
+   */
+  public void testSetNullBlob() throws Exception {
+      try {
+          delegator.create("TestBlob", UtilMisc.toMap("testBlobId", "null-blob"));
+      } catch (GenericEntityException ex) {
+          assertTrue("GenericEntityException:" + ex.toString(), false);
+          return;
+      } finally {
+          List allTestBlobs = delegator.findAll("TestBlob");
+          delegator.removeAll(allTestBlobs);
+      }
+  }
 
   /*
    * This creates an string id from a number 
