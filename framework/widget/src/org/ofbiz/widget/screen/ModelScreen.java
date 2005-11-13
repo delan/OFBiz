@@ -29,7 +29,10 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
@@ -49,6 +52,7 @@ public class ModelScreen implements Serializable {
     public static final String module = ModelScreen.class.getName();
 
     protected String name;
+    protected FlexibleStringExpander transactionTimeoutExdr;
     protected Map modelScreenMap;
     
     protected ModelScreenWidget.Section section;
@@ -60,6 +64,7 @@ public class ModelScreen implements Serializable {
     /** XML Constructor */
     public ModelScreen(Element screenElement, Map modelScreenMap) {
         this.name = screenElement.getAttribute("name");
+        this.transactionTimeoutExdr = new FlexibleStringExpander(screenElement.getAttribute("transaction-timeout"));
         this.modelScreenMap = modelScreenMap;
 
         // read in the section, which will read all sub-widgets too
@@ -96,7 +101,7 @@ public class ModelScreen implements Serializable {
 
         // wrap the whole screen rendering in a transaction, should improve performance in querying and such
         boolean beganTransaction = false;
-        Map parameters = (Map)context.get("parameters");
+        Map parameters = (Map) context.get("parameters");
         int transactionTimeout = -1;
         if (parameters != null) {
             String transactionTimeoutPar = (String) parameters.get("TRANSACTION_TIMEOUT");
@@ -109,6 +114,19 @@ public class ModelScreen implements Serializable {
                 }
             }
         }
+        
+        if (transactionTimeout < 0 && !transactionTimeoutExdr.isEmpty()) {
+            // no TRANSACTION_TIMEOUT parameter, check screen attribute
+            String transactionTimeoutStr = transactionTimeoutExdr.expandString(context);
+            if (UtilValidate.isNotEmpty(transactionTimeoutStr)) {
+                try {
+                    transactionTimeout = Integer.parseInt(transactionTimeoutStr);
+                } catch (NumberFormatException e) {
+                    Debug.logWarning(e, "Could not parse transaction-timeout value, original=[" + transactionTimeoutExdr + "], expanded=[" + transactionTimeoutStr + "]", module);
+                }
+            }
+        }
+        
         try {
             // If transaction timeout is not present (i.e. is equal to -1), the default transaction timeout is used
             // If transaction timeout is present, use it to start the transaction

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+    *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
     *
     *  Permission is hereby granted, free of charge, to any person obtaining a
     *  copy of this software and associated documentation files (the "Software"),
@@ -40,6 +40,7 @@
     </xs:element>
     <xs:attributeGroup name="attlist.screen">
         <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="transaction-timeout" use="optional"/>
     </xs:attributeGroup>
     <xs:element name="section" substitutionGroup="AllWidgets">
         <xs:complexType>
