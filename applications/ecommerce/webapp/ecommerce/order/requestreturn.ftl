@@ -48,7 +48,7 @@
               <td colspan="5"><div class="head3">${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.OrderNbr}<a href="<@ofbizUrl>orderstatus?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
               <td align="right">
                 <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
-                <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);"/>
+                <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');"/>
               </td>
             </tr>
             <tr>
@@ -104,7 +104,7 @@
                     </select>
                   </td>
                   <td align="right">
-                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);"/>
+                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');"/>
                   </td>
                 </tr>
                 <tr><td colspan="6"><hr class="sepbar"/></td></tr>
