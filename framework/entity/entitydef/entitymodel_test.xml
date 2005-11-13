@@ -34,6 +34,7 @@
     <description>None</description>
     <copyright>Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org</copyright>
     <author>Manuel Meyer</author>
+    <author>Si Chen</author>
     <version>1.0</version>
 
   <!-- =========================================================
@@ -78,7 +79,17 @@
         <field name="testingTypeId" type="id-ne"/>
         <field name="description" type="description"/>
         <prim-key field="testingTypeId"/>
-    </entity>        
+    </entity>       
+  <!-- =========================================================
+     An entity for testing the BLOB data type
+   ========================================================== -->
+    <entity entity-name="TestBlob"
+        package-name="org.ofbiz.entity.test"
+        title="Entity for testing the blob type">
+        <field name="testBlobId" type="id-ne"/>
+        <field name="testBlobField" type="blob"/>
+         <prim-key field="testBlobId"/>
+    </entity> 
   <!-- ========================================================= 
     Testing Node entity : hierachy of nodes having 
     'testing node member' as potential members

@@ -29,6 +29,7 @@
     <!-- ========================================================= -->
     <entity-group group="org.ofbiz" entity="Testing"/>
     <entity-group group="org.ofbiz" entity="TestingType"/>
+    <entity-group group="org.ofbiz" entity="TestBlob"/>
     <entity-group group="org.ofbiz" entity="TestingNode"/>
     <entity-group group="org.ofbiz" entity="TestingNodeMember"/>    
     <entity-group group="org.ofbiz" entity="TestingNodeAndMember"/>    
