@@ -68,7 +68,7 @@
     <td><div class="tabletext"><b>${uiLabelMap.ProductIdSeqNum}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductIdCode}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductAbbrev}</b></div></td>
-    <td><div class="tabletext"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);"></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');"></div></td>
   </tr>
 <#if (listSize > 0)>
     <#assign rowCount = 0>
@@ -103,7 +103,7 @@
       <td><input type="text" class='inputBox' size='5' name="defaultSequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum?if_exists}"></td>
       <td><input type="text" class='inputBox' size='5' name="idCode_o_${rowCount}" value="${productFeature.idCode?if_exists}"></td>
       <td><input type="text" class='inputBox' size='5' name="abbrev_o_${rowCount}" value="${productFeature.abbrev?if_exists}"></td>
-      <td align="right"><input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);"></td>
+      <td align="right"><input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');"></td>
   </tr>
 <#assign rowCount = rowCount + 1>
 </#list>

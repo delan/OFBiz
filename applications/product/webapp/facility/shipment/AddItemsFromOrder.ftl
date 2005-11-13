@@ -90,7 +90,7 @@
             <td><div class="tableheadtext">${uiLabelMap.ProductIssue}</div></td>
             <td align="right">
                 <div class="tableheadtext">${uiLabelMap.CommonSubmit} ?</div>
-                <div class="tableheadtext">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);"></div>
+                <div class="tableheadtext">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');"></div>
             </td>
         </tr>
         <#list orderItemDatas?if_exists as orderItemData>
@@ -150,7 +150,7 @@
                             <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${quantityNotIssued}"/>
                         </td>
                         <td align="right">              
-                          <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+                          <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');">
                         </td>
                         <#assign rowCount = rowCount + 1>   
                     <#else>
@@ -194,7 +194,7 @@
                                 <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${(orderItemShipGrpInvResData.shipmentPlanQuantity)?default(availableQuantity)}"/>
                             </td>
                             <td align="right">              
-                              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+                              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');">
                             </td>
                             <#assign rowCount = rowCount + 1>   
                         <#else>
@@ -211,7 +211,7 @@
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
     </form>
-    <script language="JavaScript" type="text/javascript">selectAll();</script>
+    <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
 </#if>
 
 <#else>

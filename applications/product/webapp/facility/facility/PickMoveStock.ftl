@@ -49,7 +49,7 @@
                     <td><div class="tableheadtext">${uiLabelMap.OrderConfirm}</div></td>
                     <td align="right">
                         <span class="tableheadtext">${uiLabelMap.ProductSelectAll}</span>&nbsp;
-                        <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
+                        <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');">
                     </td>
                 </tr>
                 <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
@@ -73,7 +73,7 @@
                                 <input type="text" class="inputBox" name="quantityMoved_o_${rowCount}" size="6" value="${totalQuantity?string.number}">
                             </td>
                             <td align="right">              
-                                <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+                                <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');">
                             </td>
                         </tr>
                         <#assign rowCount = rowCount + 1>   
@@ -98,7 +98,7 @@
                                 <input type="text" class="inputBox" name="quantityMoved_o_${rowCount}" size="6" value="${totalQuantity?string.number}">
                             </td>
                             <td align="right">              
-                                <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+                                <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');">
                             </td>
                         </tr>
                         <#assign rowCount = rowCount + 1>   

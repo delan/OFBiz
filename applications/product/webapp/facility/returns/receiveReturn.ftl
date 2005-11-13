@@ -80,7 +80,7 @@
           </td>
           <td align="right">
             <span class="tableheadtext">${uiLabelMap.ProductSelectAll}</span>&nbsp;
-            <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
+            <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');">
           </td>
         </tr>
                
@@ -197,7 +197,7 @@
               </table>
             </td>
             <td align="right">              
-              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');">
             </td>
           </tr>          
           <#assign rowCount = rowCount + 1>   
@@ -230,7 +230,7 @@
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
   </form>
-  <script language="JavaScript" type="text/javascript">selectAll();</script>
+  <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
   
   <#-- Initial Screen -->
 <#else>

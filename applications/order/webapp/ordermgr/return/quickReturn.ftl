@@ -44,7 +44,7 @@
               <td colspan="7"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
               <td align="right">
                 <span class="tableheadtext">Select All</span>&nbsp;
-                <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);"/>
+                <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');"/>
               </td>
             </tr>
             <tr>
@@ -108,7 +108,7 @@
                     </select>
                   </td>
                   <td align="right">
-                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);"/>
+                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');"/>
                   </td>
                 </tr>
                 <tr><td colspan="8"><hr class="sepbar"></td></tr>
