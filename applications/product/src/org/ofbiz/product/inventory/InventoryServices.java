@@ -589,6 +589,12 @@ public class InventoryServices {
                String productIdTo = productAssoc.getString("productIdTo");
                Double assocQuantity = productAssoc.getDouble("quantity");
                
+               // if there is no quantity for the associated product in ProductAssoc entity, default it to 1.0
+               if (assocQuantity == null) {
+                   Debug.logWarning("ProductAssoc from [" + productAssoc.getString("productId") + "] to [" + productAssoc.getString("productIdTo") + "] has no quantity, assuming 1.0", module);
+                   assocQuantity = new Double(1.0);
+               }
+               
                // figure out the inventory available for this associated product
                Map resultOutput = null;
                try {

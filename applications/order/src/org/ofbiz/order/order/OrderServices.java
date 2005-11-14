@@ -4423,6 +4423,12 @@ public class OrderServices {
                 continue;
             }
 
+            // if an order item does not have a quantity, skip it
+            if (quantity == null) {
+                Debug.logWarning("Order item seq [" + orderItemSeqId + "] has a null quantity, so it cannot be exploded" , module);
+                continue;
+            }
+            
             try {
                 //deal with the order adjustment without orderItemSeqId.  These are adjustments of the order, and we just keep them.
                 if (orderAdjustments != null && orderAdjustments.size() > 0) {
@@ -4455,7 +4461,7 @@ public class OrderServices {
                 if (tmpResult.get("assocProducts") != null) {
                     productAssocList = (List) tmpResult.get("assocProducts");
                 }
-
+                
                 if (productAssocList != null && productAssocList.size() > 0) {
                     Debug.logInfo("The product [" + productId + "] explodes to [" + productAssocList.toString() + "]", module);
                     // now add the associated products to the order
@@ -4467,7 +4473,14 @@ public class OrderServices {
                         GenericValue productTo = productAssoc.getRelatedOne("AssocProduct");
                         String productIdTo = productTo.getString("productId");
                         String itemDescription = "";
+                        
                         Double productToQuantity = productAssoc.getDouble("quantity");
+                        
+                        if (productToQuantity == null) {
+                            productToQuantity = new Double(1.0);
+                            Debug.logWarning("For order item [" + orderItemSeqId + "] Product association [" + productAssoc + "] had a null quantity, assuming 1", module);
+                        }
+                        
                         Double newQuantity = new Double(productToQuantity.doubleValue() * quantity.doubleValue());
 
                         Double listPrice = new Double(0);
@@ -4529,7 +4542,7 @@ public class OrderServices {
                         assocOrderItems.add(newOrderItem);
                         Debug.logInfo("explode OrderItem [" + orderItem.toString() + "] to [" + newOrderItem + "]", module);
                     }// for
-
+                    
                     // If there were a difference between the price of the parent item and the sum of the prices of the marketing package components,
                     // then create an OrderAdjustment for each new order item and pro-rate the difference based on its quantity and the total quantity of all
                     // the component items.
