@@ -253,7 +253,7 @@
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="isPromo"><hidden/></field>
         <field name="productId">
-            <lookup target-form-name="LookupProduct"/>
+            <lookup target-form-name="LookupProductAndPrice"/>
         </field>
         <field name="productFeatureId">
             <lookup target-form-name="LookupProductFeature"/>
