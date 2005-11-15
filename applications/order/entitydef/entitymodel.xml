@@ -1887,9 +1887,10 @@
     <!-- ========================================================= -->
 
     <entity entity-name="ReturnHeader"
-        package-name="org.ofbiz.order.return"
-        title="Return Entity">
+            package-name="org.ofbiz.order.return"
+            title="Return Entity">
         <field name="returnId" type="id-ne"></field>
+        <field name="returnHeaderTypeId" type="id-ne"></field>
         <field name="statusId" type="id"></field>
         <field name="createdBy" type="id-vlong"></field>
         <field name="fromPartyId" type="id"></field>
@@ -1901,6 +1902,9 @@
         <field name="needsInventoryReceive" type="indicator"></field>
         <field name="currencyUomId" type="id-ne"></field>
         <prim-key field="returnId"/>
+        <relation type="one" fk-name="RTN_HEAD_TYPE" rel-entity-name="ReturnHeaderType">
+            <key-map field-name="returnHeaderTypeId"/>
+        </relation>
         <relation type="one" fk-name="RTN_FROM_PARTY" rel-entity-name="Party">
             <key-map field-name="fromPartyId" rel-field-name="partyId"/>
         </relation>
@@ -1930,17 +1934,19 @@
         </relation>
     </entity>
     <entity entity-name="ReturnItem"
-        package-name="org.ofbiz.order.return"
-        title="Return Item Entity">
+            package-name="org.ofbiz.order.return"
+            title="Return Item Entity">
         <field name="returnId" type="id-ne"></field>
         <field name="returnItemSeqId" type="id-ne"></field>
-        <field name="returnReasonId" type="id"></field>
-        <field name="returnTypeId" type="id"></field>
+        <field name="returnReasonId" type="id"></field>    <!-- why item is returned: did not like, wrong item, damaged, etc. etc. -->
+        <field name="returnTypeId" type="id"></field>   <!-- actually used for disbursement type: store credit, cash refund, exchange -->
+        <field name="returnItemTypeId" type="id"></field>  <!-- what is returned: a product, a service, etc. -->
         <field name="description" type="description"></field>
         <field name="orderId" type="id-ne"></field>
         <field name="orderItemSeqId" type="id-ne"></field>
         <field name="statusId" type="id"></field>
-        <field name="returnQuantity" type="floating-point"></field>
+        <field name="returnQuantity" type="floating-point"></field>  <!-- promised by the customer -->
+        <field name="receivedQuantity" type="floating-point"></field> <!-- actually received from the customer -->
         <field name="returnPrice" type="currency-amount"></field>
         <field name="returnItemResponseId" type="id"></field>
         <prim-key field="returnId"/>
@@ -1951,8 +1957,11 @@
         <relation type="one" fk-name="RTN_ITEM_REASON" rel-entity-name="ReturnReason">
             <key-map field-name="returnReasonId"/>
         </relation>
-        <relation type="one" fk-name="RTN_ITEM_TYPE" rel-entity-name="ReturnType">
+        <relation type="one" fk-name="RTN_TYPE" rel-entity-name="ReturnType">
             <key-map field-name="returnTypeId"/>
+        </relation>
+        <relation type="one" fk-name="RTN_ITEM_TYPE" rel-entity-name="ReturnItemType"> <!-- this is new -->
+            <key-map field-name="returnItemTypeId"/>
         </relation>
         <relation type="one" fk-name="RTN_ITEM_RESP" rel-entity-name="ReturnItemResponse">
             <key-map field-name="returnItemResponseId"/>
@@ -1976,10 +1985,62 @@
             <key-map field-name="orderItemSeqId"/>
         </relation>
     </entity>
+    <entity entity-name="ReturnAdjustment"
+            package-name="org.ofbiz.return.return"
+            never-cache="true"
+            title="Return Adjustment Entity">
+      <field name="returnAdjustmentId" type="id-ne"></field>
+      <field name="returnAdjustmentTypeId" type="id"></field>
+      <field name="returnId" type="id"></field>
+      <field name="returnItemSeqId" type="id"></field>
+      <field name="returnItemResponseId" type="id"></field> <!-- a return adjustment can have a response record as well -->
+      <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
+      <field name="amountAuthorized" type="currency-precise"></field>  <!-- up to this amount can be granted on the return -->
+      <field name="amountIssued" type="currency-precise"></field>  <!-- this amount is issued to the customer -->
+      <field name="primaryGeoId" type="id"><!-- for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city) --></field>
+      <field name="secondaryGeoId" type="id"><!-- for tax entries this is the secondary jurisdiction Geo (usually a country, or other Geo that the primary is within) --></field>
+      <field name="taxAuthGeoId" type="id"></field><!-- these taxAuth fields deprecate the primaryGeoId and secondaryGeoId fields and will be used with the newer tax calc stuff -->
+      <field name="taxAuthPartyId" type="id"></field>
+      <field name="overrideGlAccountId" type="id"></field><!-- used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc -->
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <prim-key field="returnAdjustmentId"/>
+      <relation type="one" fk-name="RETURN_ADJ_TYPE" rel-entity-name="ReturnAdjustmentType">
+        <key-map field-name="returnAdjustmentTypeId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_RETHEAD" rel-entity-name="ReturnHeader">
+        <key-map field-name="returnId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_USERL" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ReturnItem">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_ADJ_RESP" rel-entity-name="ReturnItemResponse">
+        <key-map field-name="returnItemResponseId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_PRGEO" title="Primary" rel-entity-name="Geo">
+        <key-map field-name="primaryGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_SCGEO" title="Secondary" rel-entity-name="Geo">
+        <key-map field-name="secondaryGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_TXA" rel-entity-name="TaxAuthority">
+        <key-map field-name="taxAuthGeoId"/>
+        <key-map field-name="taxAuthPartyId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_OGLA" title="Override" rel-entity-name="GlAccount">
+        <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
+    </entity>
     <entity entity-name="ReturnItemResponse"
-        package-name="org.ofbiz.order.return"
-        never-cache="true"
-        title="The Return Item Response Entity">
+            package-name="org.ofbiz.order.return"
+            never-cache="true"
+            title="The Return Item Response Entity">
+        <description>Records what was done with a return: whether a replacement order, a payment, or a billing account credit was issued</description>
         <field name="returnItemResponseId" type="id-ne"></field>
         <field name="orderPaymentPreferenceId" type="id"></field>
         <field name="replacementOrderId" type="id"></field>
@@ -2001,17 +2062,47 @@
             <key-map field-name="billingAccountId"/>
         </relation>
     </entity>
+    <entity entity-name="ReturnInventoryItem"
+            package-name="org.ofbiz.return.return"
+            title="Return Inventory Item Entity">
+        <description>Associates a ReturnItem with multiple destination InventoryItems or multiple ReturnItems to a single InventoryItem</description>
+        <field name="returnInventoryItemId" type="id-ne"></field>
+        <field name="returnId" type="id-ne"></field>
+        <field name="returnItemSeqId" type="id-ne"></field>
+        <field name="inventoryItemId" type="id-ne"></field>
+        <field name="quantity" type="floating-point"></field>
+        <prim-key field="returnInventoryItemId"/>
+        <relation type="one" fk-name="RII_RET_ITEM" rel-entity-name="ReturnItem">
+          <key-map field-name="returnId"/>
+          <key-map field-name="returnItemSeqId"/>
+        </relation>
+        <relation type="one" fk-name="RII_INV_ITEM" rel-entity-name="InventoryItem">
+          <key-map field-name="inventoryItemId"/>
+        </relation>
+    </entity>
+
+    <entity entity-name="ReturnHeaderType"
+            package-name="org.ofbiz.order.return"
+            title="Return Header Type Entity">
+        <field name="returnHeaderTypeId" type="id-ne"></field>
+        <field name="parentTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="returnHeaderTypeId"/>
+        <relation type="one" fk-name="RTHEAD_TYPE_PARENT" title="Parent" rel-entity-name="ReturnHeaderType">
+          <key-map field-name="parentTypeId" rel-field-name="returnHeaderTypeId"/>
+        </relation>
+    </entity>
     <entity entity-name="ReturnReason"
-        package-name="org.ofbiz.order.return"
-        title="Return Reason Entity">
+            package-name="org.ofbiz.order.return"
+            title="Return Reason Entity">
         <field name="returnReasonId" type="id-ne"></field>
         <field name="description" type="description"></field>
         <field name="sequenceId" type="id"></field>
         <prim-key field="returnReasonId"/>
     </entity>
     <entity entity-name="ReturnStatus"
-        package-name="org.ofbiz.order.return"
-        title="Return Status History Entity">
+            package-name="org.ofbiz.order.return"
+            title="Return Status History Entity">
         <field name="returnStatusId" type="id-ne"></field>
         <field name="statusId" type="id"></field>
         <field name="returnId" type="id"></field>
@@ -2030,12 +2121,65 @@
         </relation>
     </entity>
     <entity entity-name="ReturnType"
-        package-name="org.ofbiz.order.return"
-        title="Return Type Entity">
+            package-name="org.ofbiz.order.return"
+            title="Return Type Entity">
         <field name="returnTypeId" type="id-ne"></field>
         <field name="description" type="description"></field>
         <field name="sequenceId" type="id"></field>
         <prim-key field="returnTypeId"/>
+    </entity>
+    <entity entity-name="ReturnItemType"
+            package-name="org.ofbiz.order.return"
+            title="Return Item Type Entity">
+        <description>ReturnItemType records the type of a ReturnItem</description>
+        <field name="returnItemTypeId" type="id-ne"></field>
+        <field name="parentTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="returnItemTypeId"/>
+        <relation type="one" fk-name="RETURN_ITEM_TYPPAR" title="Parent" rel-entity-name="ReturnItemType">
+          <key-map field-name="parentTypeId" rel-field-name="returnItemTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="OrderReturnItemType"
+            package-name="org.ofbiz.order.return"
+            title="Order Return Item Type Entity">
+        <description>Associates a ReturnItemType with an OrderItemType</description>
+        <field name="returnItemTypeId" type="id-ne"></field>
+        <field name="orderItemTypeId" type="id-ne"></field>
+        <prim-key field="returnItemTypeId"/>
+        <prim-key field="orderItemTypeId"/>
+        <relation type="one" fk-name="ORRT_ITEM_TYPE_RT" rel-entity-name="ReturnItemType">
+          <key-map field-name="returnItemTypeId"/>
+        </relation>
+        <relation type="one" fk-name="ORRT_ITEM_TYPE_OR" rel-entity-name="OrderItemType">
+          <key-map field-name="orderItemTypeId" rel-field-name="orderItemTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="ReturnAdjustmentType"
+            package-name="org.ofbiz.return.return"
+            title="Return Adjustment Type Entity">
+      <field name="returnAdjustmentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="returnAdjustmentTypeId"/>
+      <relation type="one" fk-name="RETURN_ADJ_TYPPAR" title="Parent" rel-entity-name="ReturnAdjustmentType">
+        <key-map field-name="parentTypeId" rel-field-name="returnAdjustmentTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="OrderReturnAdjustmentType"
+            package-name="org.ofbiz.order.return"
+            title="Order Return Adjustment Type Entity">
+        <description>Associates a ReturnAdjustmentType with an OrderAdjustmentType</description>
+        <field name="returnAdjustmentTypeId" type="id-ne"></field>
+        <field name="orderAdjustmentTypeId" type="id-ne"></field>
+        <prim-key field="returnAdjustmentTypeId"/>
+        <prim-key field="orderAdjustmentTypeId"/>
+        <relation type="one" fk-name="ORDRET_ADJ_TYPE_RT" rel-entity-name="ReturnAdjustmentType">
+          <key-map field-name="returnAdjustmentTypeId"/>
+        </relation>
+        <relation type="one" fk-name="ORDRET_ADJ_TYPE_OR" rel-entity-name="OrderAdjustmentType">
+          <key-map field-name="orderAdjustmentTypeId" rel-field-name="orderAdjustmentTypeId"/>
+        </relation>
     </entity>
 
   <!-- ========================================================= -->

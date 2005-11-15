@@ -151,10 +151,17 @@
 
     <entity-group group="org.ofbiz" entity="ReturnHeader" />
     <entity-group group="org.ofbiz" entity="ReturnItem" />
+    <entity-group group="org.ofbiz" entity="ReturnAdjustment" />
     <entity-group group="org.ofbiz" entity="ReturnItemResponse" />
+    <entity-group group="org.ofbiz" entity="ReturnInventoryItem" />
+    <entity-group group="org.ofbiz" entity="ReturnHeaderType" />
     <entity-group group="org.ofbiz" entity="ReturnReason" />
     <entity-group group="org.ofbiz" entity="ReturnStatus" />
     <entity-group group="org.ofbiz" entity="ReturnType" />
+    <entity-group group="org.ofbiz" entity="ReturnItemType" />
+    <entity-group group="org.ofbiz" entity="OrderReturnItemType" />
+    <entity-group group="org.ofbiz" entity="ReturnAdjustmentType" />
+    <entity-group group="org.ofbiz" entity="OrderReturnAdjustmentType" />
 
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.shoppingcart -->

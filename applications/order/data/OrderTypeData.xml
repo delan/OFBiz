@@ -167,6 +167,44 @@
     <StatusValidChange condition="" statusId="QUO_APPROVED" statusIdTo="QUO_ORDERED" transitionName="Order Quote"/>
     <StatusValidChange condition="" statusId="QUO_APPROVED" statusIdTo="QUO_REJECTED" transitionName="Reject Quote"/>
 
+    <!-- Return Adjustment Types and mappings to Order Adjustment Types -->
+    <ReturnAdjustmentType description="Promotion" returnAdjustmentTypeId="PROMOTION_ADJUSTMENT"/>
+    <ReturnAdjustmentType description="Replacement" returnAdjustmentTypeId="REPLACE_ADJUSTMENT"/>
+    <ReturnAdjustmentType description="Discount" returnAdjustmentTypeId="DISCOUNT_ADJUSTMENT"/>
+    <ReturnAdjustmentType description="Fee" returnAdjustmentTypeId="FEE"/>
+    <ReturnAdjustmentType description="Miscellaneous Charges" returnAdjustmentTypeId="MISCELLANEOUS_CHARGE"/>
+    <ReturnAdjustmentType description="Sales Tax" returnAdjustmentTypeId="SALES_TAX"/>
+    <ReturnAdjustmentType description="Shipping and Handling" returnAdjustmentTypeId="SHIPPING_CHARGES"/>
+    <ReturnAdjustmentType description="Surcharge" returnAdjustmentTypeId="SURCHARGE_ADJUSTMENT"/>
+    <ReturnAdjustmentType description="Additional Feature" returnAdjustmentTypeId="ADDITIONAL_FEATURE"/>
+    <ReturnAdjustmentType description="Warranty" returnAdjustmentTypeId="WARRANTY_ADJUSTMENT"/>
+    <ReturnAdjustmentType description="Marketing Package Adjustment" returnAdjustmentTypeId="MKTG_PKG_AUTO_ADJUST"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="PROMOTION_ADJUSTMENT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="REPLACE_ADJUSTMENT" orderAdjustmentTypeId="REPLACE_ADJUSTMENT"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="DISCOUNT_ADJUSTMENT" orderAdjustmentTypeId="DISCOUNT_ADJUSTMENT"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="FEE" orderAdjustmentTypeId="FEE"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="MISCELLANEOUS_CHARGE" orderAdjustmentTypeId="MISCELLANEOUS_CHARGE"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="SALES_TAX" orderAdjustmentTypeId="SALES_TAX"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="SHIPPING_CHARGES" orderAdjustmentTypeId="SHIPPING_CHARGES"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="SURCHARGE_ADJUSTMENT" orderAdjustmentTypeId="SURCHARGE_ADJUSTMENT"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="ADDITIONAL_FEATURE" orderAdjustmentTypeId="ADDITIONAL_FEATURE"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="WARRANTY_ADJUSTMENT" orderAdjustmentTypeId="WARRANTY_ADJUSTMENT"/>
+    <OrderReturnAdjustmentType returnAdjustmentTypeId="MKTG_PKG_AUTO_ADJUST" orderAdjustmentTypeId="MKTG_PKG_AUTO_ADJUST"/>
+
+    <!-- Return Item Types and mappings to Order Item Types -->
+    <ReturnItemType description="Bulk Item" returnItemTypeId="BULK_RETURN_ITEM"/>
+    <ReturnItemType description="Product Item" returnItemTypeId="PRODUCT_RETURN_ITEM"/>
+    <ReturnItemType description="Work Item" returnItemTypeId="WORK_RETURN_ITEM"/>
+    <ReturnItemType description="Rental Item" returnItemTypeId="RENTAL_RETURN_ITEM"/>
+    <OrderReturnItemType returnItemTypeId="BULK_RETURN_ITEM" orderItemTypeId="BULK_ORDER_ITEM"/>
+    <OrderReturnItemType returnItemTypeId="PRODUCT_RETURN_ITEM" orderItemTypeId="PRODUCT_ORDER_ITEM"/>
+    <OrderReturnItemType returnItemTypeId="WORK_RETURN_ITEM" orderItemTypeId="WORK_ORDER_ITEM"/>
+    <OrderReturnItemType returnItemTypeId="RENTAL_RETURN_ITEM" orderItemTypeId="RENTAL_ORDER_ITEM"/>
+
+    <!-- Return Header Types -->
+    <ReturnHeaderType  description="Return from Customer" returnHeaderTypeId="CUSTOMER_RETURN"/>
+    <ReturnHeaderType  description="Return to Vendor" returnHeaderTypeId="VENDOR_RETURN"/>  <!-- not supported yet -->
+
     <!-- Return Reasons -->
     <ReturnReason sequenceId="01" returnReasonId="RTN_NOT_WANT" description="Did Not Want Item"/>
     <ReturnReason sequenceId="02" returnReasonId="RTN_DEFECTIVE_ITEM" description="Defective Item"/>
