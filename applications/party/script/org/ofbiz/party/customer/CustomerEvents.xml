@@ -262,9 +262,15 @@
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <check-errors/>
 
-        <call-service service-name="createPerson" in-map-name="personContext">
+        <set-service-fields map-name="personContext" service-name="createPersonAndUserLogin" to-map-name="personUserLoginContext"/>
+        <set-service-fields map-name="newUserLogin" service-name="createPersonAndUserLogin" to-map-name="personUserLoginContext"/>
+        <field-to-field field-name="currentPassword" map-name="newUserLogin" to-field-name="currentPasswordVerify" to-map-name="personUserLoginContext"/>
+        <!-- the above copy is okay since we checked already that they are the same -->
+        <call-service service-name="createPersonAndUserLogin" in-map-name="personUserLoginContext">
             <result-to-field result-name="partyId" map-name="tempMap"/>
+            <result-to-field field-name="createdUserLogin" result-name="newUserLogin"/>
         </call-service>
+        <set-current-user-login value-name="createdUserLogin"/>
 
         <!-- now that we have the partyId, put it where it needs to go... -->
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="partyDataSource"/>
@@ -277,17 +283,6 @@
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="faxPhoneContext"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="mobilePhoneContext"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailContext"/>
-
-        <!-- If password encryption is enabled, encrpyt it now -->
-        <call-bsh><![CDATA[
-            boolean useEncryption = "true".equals(org.ofbiz.base.util.UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
-            if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))); }
-        ]]></call-bsh>
-
-        <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
-        <field-to-field field-name="partyId" map-name="tempMap" to-map-name="newUserLogin"/>
-        <create-value value-name="newUserLogin"/>
-        <set-current-user-login value-name="newUserLogin"/>
 
         <create-value value-name="partyDataSource"/>
         <call-service service-name="createPartyRole" in-map-name="partyRoleContext"/>
