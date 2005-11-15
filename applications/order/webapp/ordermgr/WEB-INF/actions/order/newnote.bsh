@@ -25,11 +25,7 @@
 */
 
 orderId = request.getParameter("order_id");
-if (orderId == null) {
-    orderId = session.getAttribute("orderId");
-} else {
-    session.setAttribute("orderId", orderId);
-}
+if (orderId == null) orderId = request.getParameter("orderId");
 context.put("orderId", orderId);
  
 workEffortId = request.getParameter("workEffortId");
