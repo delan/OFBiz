@@ -1,0 +1,161 @@
+/*
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Rev: 5462 $
+ *@since      3.0
+ */
+
+import java.util.*;
+import java.math.*;
+import java.sql.Timestamp;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.securityext.login.*;
+import org.ofbiz.common.*;
+import org.ofbiz.webapp.control.*;
+import org.ofbiz.accounting.invoice.*;
+
+delegator = parameters.get("delegator");
+organizationPartyId = parameters.get("organizationPartyId");
+partyId = parameters.get("partyId");
+if (partyId == null) return;
+List historyList = new LinkedList();
+
+//get payment totals
+BigDecimal grandTotalPayment = new BigDecimal("0.00");
+List tpayments = delegator.findByOr("Payment",
+	UtilMisc.toMap("partyIdTo",partyId,"partyIdFrom",partyId));
+Iterator pl = tpayments.iterator();
+while (pl.hasNext()) {
+	payment = pl.next();
+	if (payment.getString("statusId").equals("PMNT_CANCELLED")) continue;
+	grandTotalPayment = grandTotalPayment.add(payment.getBigDecimal("amount"));
+}
+
+// get the invoices/payments
+List invoices = delegator.findByOr("Invoice",
+	UtilMisc.toMap("partyId",partyId,"partyIdFrom",partyId),
+	UtilMisc.toList("invoiceDate"));
+List payments = delegator.findByOr("Payment",
+	UtilMisc.toMap("partyIdTo",partyId,"partyIdFrom",partyId),
+	UtilMisc.toList("effectiveDate"));
+	
+BigDecimal totalInvoice = new BigDecimal("0");
+
+// start reeading from the invoices list
+if (invoices != null && invoices.size() > 0) {
+	Iterator inv = invoices.iterator();
+	while (inv.hasNext())	{
+		invoice = inv.next();
+		BigDecimal invoiceAmount = InvoiceWorker.getInvoiceTotalBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP);
+		totalInvoice = totalInvoice.add(invoiceAmount);
+		Map historyItem = UtilMisc.toMap(
+			"invoiceId",invoice.getString("invoiceId"),
+			"invoiceTypeId", invoice.getString("invoiceTypeId").substring(0,1), 
+			"invoiceDate", invoice.getString("invoiceDate").substring(0,10),
+			"invoiceAmount", invoiceAmount.toString(),
+			"totApplied", InvoiceExtWorker.getInvoiceAppliedBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP).toString()
+			);
+			
+		// check for applications
+		List applications = invoice.getRelated("PaymentApplication",null,UtilMisc.toList("paymentId"));
+		if (applications != null && applications.size() > 0) {
+			Iterator appl = applications.iterator();
+			oldPaymentId = new String(" ");
+			BigDecimal applied = new BigDecimal("0");
+			boolean first = true;
+			while (appl.hasNext())	{	// read the applications for this invoice
+				application = appl.next();
+				paymentId = application.getString("paymentId");
+				Debug.log("====processing paymentId: " + paymentId + "  old: " + oldPaymentId, "??");
+
+				//reduce the payment amount in the payment list
+				Iterator pl = payments.iterator();
+				while (pl.hasNext()) {
+					payment = pl.next();
+					if (paymentId.equals(payment.getString("paymentId"))) {
+						plInd = payments.indexOf(payment);
+						payment.put("amount",
+								payment.getBigDecimal("amount").
+								subtract(application.getBigDecimal("amountApplied")).doubleValue());
+						payments.remove(plInd);
+						payments.add(plInd,payment);
+						break;
+					}
+				}
+				
+				// check if the payment number has changed, then we have to output a line....
+				if (!first && !paymentId.equals(oldPaymentId)) { // if the payment number has changed, but not the first
+					historyItem.put("applied", applied.toString());
+					historyItem.put("paymentId", oldPaymentId);
+					payment = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",oldPaymentId));
+					historyItem.put("amount",payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+					historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
+					historyList.add(historyItem);
+					historyItem = new HashMap();
+					applied = new BigDecimal("0");
+				}
+				applied = applied.add(application.getBigDecimal("amountApplied")).setScale(2,BigDecimal.ROUND_HALF_UP);
+				oldPaymentId = paymentId;
+				first = false;
+			}
+			if (!applied.equals("0")) {
+				historyItem.put("applied", applied.toString());
+				historyItem.put("paymentId", oldPaymentId);
+				payment = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",oldPaymentId));
+				historyItem.put("amount",payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+				historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
+				historyList.add(historyItem);
+			}
+		}
+		else {
+			historyList.add(historyItem);
+		}
+	}
+ }
+	
+// check if any payments left not applied
+if (payments != null && payments.size() > 0) {
+	Iterator pm = payments.iterator();
+	while (pm.hasNext())	{
+		payment = pm.next();
+		if (payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).equals(new BigDecimal("0.00"))) continue;
+		historyItem = new HashMap();
+		historyItem.put("invoiceId","Not Appl.Payment:");
+		historyItem.put("paymentId",payment.getString("paymentId"));
+		historyItem.put("applied",payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+		paymentDb = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",payment.getString("paymentId")));
+		historyItem.put("amount",paymentDb.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+		historyItem.put("effectiveDate",paymentDb.getString("effectiveDate").substring(0,10));
+		historyList.add(historyItem);
+	}
+}
+
+// create totals
+
+
+context.put("historyList",historyList);
+BigDecimal totalToBePaid = totalInvoice.subtract(grandTotalPayment);
+context.put("finanSummary",UtilMisc.toMap(
+	"totalInvoice",totalInvoice.toString(),
+	"totalPayment",grandTotalPayment.setScale(2,BigDecimal.ROUND_HALF_UP).toString(),
+	"totalToBePaid",totalToBePaid.setScale(2,BigDecimal.ROUND_HALF_UP).toString()));

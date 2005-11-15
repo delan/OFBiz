@@ -38,28 +38,40 @@
         </field>
         <field name="partyRelationshipTypeId" title="Relation"><display/></field>
         <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
-        <field name="paymentsReceived" title=" " widget-style="buttontext" >
-            <hyperlink description="Paym.Rec" target="listPaymentsReceived?partyId=${partyId}" target-window="new"/>
-        </field>
-        <field name="paymentsSend" title=" " widget-style="buttontext" >
-            <hyperlink description="Paym.Snd" target="listPaymentsSend?partyId=${partyId}" target-window="new"/>
-        </field>
-        <field name="salesInvoices" title=" " widget-style="buttontext" >
-            <hyperlink description="Sls Inv" target="listSalesInvoices?partyId=${partyId}" target-window="new"/>
-        </field>
-        <field name="purchaseInvoices" title=" " widget-style="buttontext" >
-            <hyperlink description="Pur Inv" target="listPurchaseInvoices?partyId=${partyId}" target-window="new"/>
+        <field name="financialHistory" title=" " widget-style="buttontext" >
+            <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
         </field>
     </form>
     
+    <form name="partyFinancialHistory" type="list" list-name="historyList" 
+        default-title-style="tableheadtext" default-widget-style="tabletext" 
+        default-tooltip-style="tabletext" target="updateCategoryProductMember">
+        <field name="invoiceId"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/>></field>
+        <field name="invoiceTypeId" title="T"><display/></field>
+        <field name="invoiceDate"><display/></field>
+        <field name="invoiceAmount"><display/></field>
+        <field name="totApplied"><display/></field>
+        <field name="applied"><display/></field>
+        <field name="paymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
+        <field name="effectiveDate"><display/></field>
+        <field name="amount"><display/></field>
+        <field name="applied"><display/></field>
+    </form>
+
+    <form name="partyFinancialSummary" type="single" title="Financial summary" default-map-name="finanSummary"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="totalInvoice" title=""><display/></field>
+        <field name="totalPayment" title=""><display/></field>
+        <field name="totalToBePaid" title=""><display/></field>
+    </form>
     <form name="ListCustomers" type="list" list-name="customers" 
-         default-title-style="tableheadtext" default-widget-style="inputBox" 
-         default-tooltip-style="tabletext" target="updateCategoryProductMember">
-       
+        default-title-style="tableheadtext" default-widget-style="inputBox" 
+        default-tooltip-style="tabletext" target="updateCategoryProductMember">
+        
         <field name="p" title="Party Id" widget-style="buttontext"><hyperlink target="viewprofile?partyId=${partyId}" description="${partyId}"/></field>        
         <field name="partyId" title="Name"><display-entity entity-name="Person" description="${lastName},${firstName} ${middleName}" key-field-name="partyId"/></field>
         <field name="totalOrders" title="Nbr of orders" widget-style="buttontext"><hyperlink target="findordersCust?lookupFlag=Y&amp;hideFields=Y&amp;partyId=${partyId}" description="${totalOrders}"/></field>
         <field name="totalGrandAmount" title="Amount"><display/></field>
     </form>
-                
+    
 </forms>

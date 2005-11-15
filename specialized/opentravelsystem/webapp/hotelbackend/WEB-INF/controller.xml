@@ -365,22 +365,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findParties"/>
     </request-map>
-    <request-map uri="listPaymentsSend">
+
+    <request-map uri="partyFinancialHistory">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="listPaymentsSend"/>
-    </request-map>
-    <request-map uri="listPaymentsReceived">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="listPaymentsReceived"/>
-    </request-map>
-    <request-map uri="listPurchaseInvoices">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="listPurchaseInvoices"/>
-    </request-map>
-    <request-map uri="listSalesInvoices">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="listSalesInvoices"/>
-    </request-map>
+        <response name="success" type="view" value="partyFinancialHistory"/>
+    </request-map>    
     
     <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
     <request-map uri="viewroles"><security https="true" auth="true"/><response name="success" type="view" value="viewroles"/></request-map>
@@ -2903,13 +2892,13 @@
         <response name="success" type="view" value="InvoicePDF"/>
     </request-map>
     
-    <!-- end of request mappings -->
     <request-map uri="ListInvoices">
         <security https="true" auth="true"/>
         <!--event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="ListInvoices"/-->
         <response name="success" type="view" value="InvoicesList"/>
     </request-map>    
     <view-map name="InvoicesList" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#InvoicesList"/>
+    <!-- end of request mappings -->
     
     <!-- View Mappings -->
     <!-- Main Screens -->
@@ -2962,6 +2951,7 @@
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     <!-- parties -->
     <view-map name="findParties" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findParties"/>
+    <view-map name="partyFinancialHistory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#partyFinancialHistory"/>
     <view-map name="listPaymentsReceived" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsReceived"/>
     <view-map name="listPaymentsSend" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsSend"/>
     <view-map name="listSalesInvoices" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listSalesInvoices"/>
