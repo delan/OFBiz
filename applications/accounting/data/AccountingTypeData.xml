@@ -280,18 +280,15 @@
     <!-- invoice status -->
     <StatusType description="Invoice Status" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
     <StatusItem description="In-Process" sequenceId="01" statusCode="IN_PROCESS" statusId="INVOICE_IN_PROCESS" statusTypeId="INVOICE_STATUS"/>
-    <StatusItem description="Ready to Send" sequenceId="02" statusCode="READY" statusId="INVOICE_READY" statusTypeId="INVOICE_STATUS"/>
+    <StatusItem description="Ready (Approved)" sequenceId="02" statusCode="READY" statusId="INVOICE_READY" statusTypeId="INVOICE_STATUS"/>
     <StatusItem description="Sent" sequenceId="03" statusCode="SENT" statusId="INVOICE_SENT" statusTypeId="INVOICE_STATUS"/>
     <StatusItem description="Received" sequenceId="04" statusCode="RECEIVED" statusId="INVOICE_RECEIVED" statusTypeId="INVOICE_STATUS"/>
     <StatusItem description="Paid" sequenceId="10" statusCode="PAID" statusId="INVOICE_PAID" statusTypeId="INVOICE_STATUS"/>
     <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="INVOICE_CANCELLED" statusTypeId="INVOICE_STATUS"/>
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_READY" transitionName="Mark Ready"/>
-    <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_RECEIVED" transitionName="Receive"/>
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
-    <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_IN_PROCESS" transitionName="Correct"/>
     <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_SENT" transitionName="Send"/>
     <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_PAID" transitionName="Pay"/>
-    <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
     <StatusValidChange condition="" statusId="INVOICE_RECEIVED" statusIdTo="INVOICE_PAID" transitionName="Pay"/>
     <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_PAID" transitionName="Pay"/>
     <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
