@@ -1965,6 +1965,7 @@
       <field name="comments" type="comment"></field>
       <field name="finAccountTransId" type="id"></field>
       <field name="overrideGlAccountId" type="id"></field>
+      <field name="basedOnPaymentId" type="id"><!-- To be used when a payment is based on or comes from another payment, like a payment that is a return of a mistaken or over-payment --></field>
       <field name="actualCurrencyAmount" type="currency-amount"><!-- The ActualCurrency amount and uomId are for the values coming from the bank (if known) and are to be used for reconciliation and such later, and not for PaymentApplication. --></field>
       <field name="actualCurrencyUomId" type="id"></field>
       <prim-key field="paymentId"/>
@@ -2022,6 +2023,9 @@
       </relation>
       <relation type="one" fk-name="PAYMENT_ORGLA" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="PAYMENT_BOPMT" title="BasedOn" rel-entity-name="Payment">
+        <key-map field-name="basedOnPaymentId"/>
       </relation>
     </entity>
     <view-entity entity-name="PaymentAndApplication"
