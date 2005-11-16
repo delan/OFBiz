@@ -80,7 +80,7 @@ public class EntityTestSuite extends TestCase {
     protected void setUp() throws Exception {
         this.delegator = GenericDelegator.getGenericDelegator(DELEGATOR_NAME);
     }
-
+    
     /*
      * Tests storing values with the delegator's .create, .makeValue, and .storeAll methods
      */
@@ -535,6 +535,27 @@ public class EntityTestSuite extends TestCase {
       } finally {
           List allTestBlobs = delegator.findAll("TestBlob");
           delegator.removeAll(allTestBlobs);
+      }
+  }
+
+  /*
+   * Tests setting a byte value into a blob data type using the GenericValue .setBytes method 
+   */
+  public void testBlobCreate() throws Exception {
+      try {
+          byte[] b = new byte[1];
+          b[0] = (byte)0x01;
+          GenericValue testingBlob = delegator.makeValue("TestBlob", UtilMisc.toMap("testBlobId", "byte-blob"));
+          testingBlob.setBytes("testBlobField", b);
+          testingBlob.create();
+          
+          TestCase.assertTrue("Blob with byte value successfully created...", true);
+      } catch(Exception ex) {
+        TestCase.fail(ex.getMessage());
+      } finally {
+          // Remove all our newly inserted values.
+        List values = delegator.findAll("TestBlob");
+        delegator.removeAll(values);
       }
   }
 
