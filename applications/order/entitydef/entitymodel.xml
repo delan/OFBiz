@@ -2051,10 +2051,7 @@
       </relation>
       <relation type="one" fk-name="RETITMMAP_RETTYP" rel-entity-name="ReturnHeaderType">
         <key-map field-name="returnHeaderTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceItem">
-        <key-map field-name="invoiceItemTypeId"/>
-      </relation>
+      </relation>      
     </entity>
     <entity entity-name="ReturnReason"
             package-name="org.ofbiz.order.return"
