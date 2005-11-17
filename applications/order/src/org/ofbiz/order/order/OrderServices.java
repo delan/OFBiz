@@ -23,22 +23,9 @@
  */
 package org.ofbiz.order.order;
 
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.*;
-
 import javolution.util.FastMap;
 import javolution.util.FastSet;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.GeneralRuntimeException;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
@@ -50,11 +37,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.order.shoppingcart.CartItemModifyException;
-import org.ofbiz.order.shoppingcart.CheckOutHelper;
-import org.ofbiz.order.shoppingcart.ItemNotFoundException;
-import org.ofbiz.order.shoppingcart.ShoppingCart;
-import org.ofbiz.order.shoppingcart.ShoppingCartItem;
+import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.party.party.PartyWorker;
@@ -62,12 +45,14 @@ import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.*;
 import org.ofbiz.workflow.WfUtil;
+
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * Order Processing Services
@@ -2744,8 +2729,28 @@ public class OrderServices {
                         return ServiceUtil.returnError((String) serviceResult.get(ModelService.ERROR_MESSAGE));
                     } else {
                         Map returnInfo = new HashMap();
+                        // first the return info (quantity/price)
                         returnInfo.put("returnableQuantity", serviceResult.get("returnableQuantity"));
                         returnInfo.put("returnablePrice", serviceResult.get("returnablePrice"));
+
+                        // now the product type information
+                        String itemTypeKey = "FINISHED_GOOD"; // default item type (same as invoice)
+                        GenericValue product = null;
+                        if (item.get("productId") != null) {
+                            try {
+                                product = item.getRelatedOne("Product");
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, module);
+                                return ServiceUtil.returnError("Unable to obtain order item information!");
+                            }
+                        }
+                        if (product != null) {
+                            itemTypeKey = product.getString("productTypeId");
+                        } else if (item != null) {
+                            itemTypeKey = item.getString("orderItemTypeId");
+                        }
+                        returnInfo.put("itemTypeKey", itemTypeKey);
+
                         returnable.put(item, returnInfo);
                     }
                 }

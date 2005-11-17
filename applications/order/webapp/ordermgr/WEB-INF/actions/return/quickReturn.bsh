@@ -26,6 +26,7 @@
  
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.*;
 
 dispatcher = request.getAttribute("dispatcher");
@@ -45,6 +46,8 @@ if (partyId != null) {
 if (orderId != null) {
     order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
     productStore = order.getRelatedOne("ProductStore");
+    orh = new OrderReadHelper(order);
+    context.put("orh", orh);
     context.put("toPartyId", productStore.getString("payToPartyId"));
 }
 
@@ -53,6 +56,18 @@ context.put("returnTypes", returnTypes);
 
 returnReasons = delegator.findAll("ReturnReason", UtilMisc.toList("sequenceId"));
 context.put("returnReasons", returnReasons);
+
+returnItemTypeMap = delegator.findByAnd("ReturnItemTypeMap", UtilMisc.toMap("returnHeaderTypeId", "CUSTOMER_RETURN"));
+iter = returnItemTypeMap.iterator();
+typeMap = new HashMap();
+while (iter.hasNext()) {
+    value = iter.next();
+    typeMap.put(value.getString("returnItemMapKey"), value.getString("returnItemTypeId"));
+}
+context.put("returnItemTypeMap", typeMap);
+
+orderHeaderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderItemSeqId", "_NA_"));
+context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 
 if (orderId != null) {
     Map returnRes = dispatcher.runSync("getReturnableItems", UtilMisc.toMap("orderId", orderId));   

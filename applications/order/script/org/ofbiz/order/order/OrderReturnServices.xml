@@ -64,6 +64,17 @@
         </if-empty>
         <check-errors/>
 
+        <!-- check and make sure the header type was set -->
+        <if-empty field-name="returnHeaderTypeId" map-name="parameters">
+            <add-error><fail-message message="Return Header Type not defined."/></add-error>
+            <check-errors/>
+        </if-empty>
+
+        <!-- check the needs inventory receive flag -->
+        <if-empty field-name="needsInventoryReceive" map-name="parameters">
+            <set field="parameters.needsInventoryReceive" value="Y"/>     
+        </if-empty>
+
         <make-value value-name="newEntity" entity-name="ReturnHeader"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
@@ -106,7 +117,7 @@
     </simple-method>
 
     <simple-method method-name="createReturnItem" short-description="Create Return Item">
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set field="lookupPKMap.returnId" from-field="parameters.returnId"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
 
         <if>
@@ -122,24 +133,59 @@
         </if>
         <check-errors/>
 
+        <if-empty field-name="returnItemTypeId"  map-name="parameters">
+            <if-not-empty field-name="returnItemMapKey" map-name="parameters">
+                <!-- find the item mapping -->
+            </if-not-empty>
+        </if-empty>
+
+        <if-empty field-name="returnItemTypeId" map-name="parameters">
+            <add-error><fail-message message="Return Item Type is not defined for this item; or no mapping was found."/></add-error>
+            <check-errors/>
+        </if-empty>
+
         <if-compare field-name="returnQuantity" map-name="parameters" operator="equals" value="0" type="Double">
             <add-error><fail-property resource="OrderErrorUiLabels" property="OrderNoReturnQuantityAvailablePreviousReturnsMayExist"/></add-error>
             <check-errors/>
         </if-compare>
 
-        <make-value value-name="itemLookup" entity-name="OrderItem"/>
-        <set-pk-fields map-name="parameters" value-name="itemLookup"/>
-        <if-not-empty field-name="orderItemSeqId" map-name="parameters">
-            <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
+        <!-- setup some default values for protection -->
+        <set field="returnableQuantity" value="0" type="Double"/>
+        <set field="returnablePrice" value="0" type="Double"/>
+
+        <if-not-empty field-name="parameters.orderItemSeqId">
+            <make-value value-name="itemLookup" entity-name="OrderItem"/>
+            <set-pk-fields map-name="parameters" value-name="itemLookup"/>
+            <if-not-empty field-name="parameters.orderItemSeqId">
+                <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
+                <log level="always" message="Return item is an OrderItem - ${orderItem.orderItemSeqId}"/>
+            </if-not-empty>
+        </if-not-empty>
+
+        <if-not-empty field-name="parameters.orderAdjustmentId">
+            <make-value value-name="adjLookup" entity-name="OrderAdjustment"/>
+            <set-pk-fields value-name="adjLookup" map-name="parameters"/>
+            <if-not-empty field-name="parameters.orderAdjustmentId">
+                <find-by-primary-key map-name="adjLookup" value-name="orderAdjustment" entity-name="OrderAdjustment"/>
+                <log level="always" message="Return item is an OrderAdjustment - ${orderAdjustment.orderAdjustmentId}"/>
+            </if-not-empty>
         </if-not-empty>
 
         <if-not-empty field-name="orderItem">
-            <field-to-field field-name="orderItem" to-map-name="serviceContext"/>
+            <set field="serviceContext.orderItem" from-field="orderItem"/>
             <call-service service-name="getReturnableQuantity" in-map-name="serviceContext">
                 <result-to-field result-name="returnableQuantity" field-name="returnableQuantity"/>
                 <result-to-field result-name="returnablePrice" field-name="returnablePrice"/>
             </call-service>
+        </if-not-empty>
 
+        <if-not-empty field-name="orderAdjustment">
+            <set field="returnableQuantity" value="1" type="Double"/>
+            <set field="returnablePrice" from-field="orderAdjustment.amount" type="Double"/>
+            <log level="always" message="set return price to adjustment amount : ${returnablePrice}"/>
+        </if-not-empty>
+
+        <if-compare field-name="returnableQuantity" value="0" operator="greater" type="Double">
             <if>
                 <condition>
                       <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
@@ -153,9 +199,11 @@
                 <add-error><fail-property resource="OrderErrorUiLabels" property="OrderRequestedReturnQuantityNotAvailablePreviousReturnsMayExist"/></add-error>
             </if-compare-field>
 
-            <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
-                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnQuantityCannotExceedTheOrderedQuantity"/></add-error>
-            </if-compare-field>
+            <if-not-empty field-name="orderItem">
+                <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
+                    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnQuantityCannotExceedTheOrderedQuantity"/></add-error>
+                </if-compare-field>
+            </if-not-empty>
 
             <!-- Workaround for bug: returnPrice=16.99, returnablePrice=16.9894 => OrderReturnPriceCannotExceedThePurchasePrice -->
             <set field="epsilon" value="0.01" type="Double"/>
@@ -181,7 +229,7 @@
                     <check-errors/>
                 </if-compare>
             </else>
-        </if-not-empty>
+        </if-compare>
 
         <make-value value-name="newEntity" entity-name="ReturnItem"/>
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="newEntity"/>

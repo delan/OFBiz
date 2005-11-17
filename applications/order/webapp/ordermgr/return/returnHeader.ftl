@@ -47,6 +47,7 @@
 <#if returnHeader?exists>
 <form name="returnhead" method="post" action="<@ofbizUrl>updateReturn</@ofbizUrl>">
 <input type="hidden" name="returnId" value="${returnHeader.returnId}">
+<input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
 <input type="hidden" name="currentStatusId" value="${returnHeader.statusId?if_exists}">
 <#else>
 <form name="returnhead" method="post" action="<@ofbizUrl>createReturn</@ofbizUrl>">
