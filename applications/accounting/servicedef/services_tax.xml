@@ -27,6 +27,44 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
     
+    <!-- Tax Calc Interfaces -->
+    <service name="calcTaxInterface" engine="interface" location="" invoke="">
+        <description>Tax Calc Service Interface</description>
+        <attribute name="productStoreId" type="String" mode="IN"/>
+        <attribute name="billToPartyId" type="String" mode="IN" optional="true"/> <!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is -->
+        <attribute name="itemProductList" type="java.util.List" mode="IN"/>
+        <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
+        <attribute name="itemPriceList" type="java.util.List" mode="IN"/>
+        <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderShippingAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
+        <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
+    </service>
+    <service name="calcTaxTotalForDisplayInterface" engine="interface" location="" invoke="">
+        <description>Tax Calc Total For Display Service Interface</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"><!-- this will be used to get the taxAuthPartyId and taxAuthGeoId to use for the rate lookup --></attribute> 
+        <attribute name="billToPartyId" type="String" mode="IN" optional="true"/> <!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is -->
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="amount" type="Long" mode="IN"/>
+        <attribute name="basePrice" type="Double" mode="IN"/>
+        <attribute name="shippingPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="taxTotal" type="Double" mode="OUT"/>
+        <attribute name="priceWithTax" type="Double" mode="OUT"/>
+    </service>
+    
+    <!-- Tax Authority Calc Services -->
+    <service name="rateProductTaxCalc" engine="java"
+        location="org.ofbiz.accounting.tax.TaxAuthorityServices" invoke="rateProductTaxCalc">
+        <description>Tax Authority Rate Product Calc Service</description>
+        <implements service="calcTaxInterface"/>
+    </service>
+    <service name="rateProductTaxCalcForDisplay" engine="java"
+        location="org.ofbiz.accounting.tax.TaxAuthorityServices" invoke="rateProductTaxCalcForDisplay">
+        <description>Tax Authority Rate Product Calc Service</description>
+        <implements service="calcTaxTotalForDisplayInterface"/>
+    </service>
+    
     <!-- TaxAuthority -->
     <service name="createTaxAuthority" default-entity-name="TaxAuthority" engine="simple" auth="true"
         location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createTaxAuthority">
@@ -141,5 +179,53 @@
         <description>Delete PartyTaxAuthInfo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Simple Tax Rate Services (SimpleSalesTaxLookup) -->
+    <service name="calcTax" engine="java"
+        location="org.ofbiz.accounting.tax.SimpleTaxServices" invoke="simpleTaxCalc">
+        <description>Simple Calc Tax Service</description>
+        <implements service="calcTaxInterface"/>
+    </service>
+    
+    <service name="createTaxRate" engine="simple"
+        location="org/ofbiz/accounting/tax/TaxRateServices.xml" invoke="createTaxRate">
+        <description>Create a Tax Rate entry</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxCategory" type="String" mode="IN" optional="true"/>
+        <attribute name="taxShipping" type="String" mode="IN" optional="false"/>
+        <attribute name="minItemPrice" type="Double" mode="IN" optional="false"/>
+        <attribute name="minPurchase" type="Double" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="salesTaxPercentage" type="Double" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="removeTaxRate" engine="simple"
+        location="org/ofbiz/accounting/tax/TaxRateServices.xml" invoke="removeTaxRate">
+        <description>Remove a Tax Rate entry</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxCategory" type="String" mode="IN" optional="false"/>
+        <attribute name="minItemPrice" type="Double" mode="IN" optional="false"/>
+        <attribute name="minPurchase" type="Double" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- ZipSales Tax Services -->
+    <service name="importZipSalesTaxData" engine="java" transaction-timout="7200"
+        location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="importFlatTable">
+        <description>Import ZipSales Flat File</description>
+        <attribute name="taxFileLocation" type="String" mode="IN" optional="false"/>
+        <attribute name="ruleFileLocation" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="_calcTax" engine="java"
+        location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="flatTaxCalc">
+        <description>Zip Sales Calc Tax Service - change this to calcTax to run</description>
+        <implements service="calcTaxInterface"/>
     </service>
 </services>
