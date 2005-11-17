@@ -338,68 +338,6 @@
        <attribute name="orderItem" type="GenericValue" mode="IN" optional="false"/>
    </service>
 
-    <!-- Tax Services -->
-    <service name="calcTaxInterface" engine="interface" location="" invoke="">
-        <description>Tax Calc Service Interface</description>
-        <attribute name="productStoreId" type="String" mode="IN"/>
-        <attribute name="billToPartyId" type="String" mode="IN" optional="true"/> <!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is -->
-        <attribute name="itemProductList" type="java.util.List" mode="IN"/>
-        <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
-        <attribute name="itemPriceList" type="java.util.List" mode="IN"/>
-        <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="orderShippingAmount" type="Double" mode="IN" optional="true"/>
-        <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
-        <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
-        <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
-    </service>
-
-    <service name="calcTax" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="simpleTaxCalc">
-        <description>Simple Calc Tax Service</description>
-        <implements service="calcTaxInterface"/>
-    </service>
-
-    <service name="createTaxRate" engine="simple"
-            location="org/ofbiz/order/order/TaxRateServices.xml" invoke="createTaxRate">
-        <description>Create a Tax Rate entry</description>
-        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
-        <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
-        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
-        <attribute name="taxCategory" type="String" mode="IN" optional="true"/>
-        <attribute name="taxShipping" type="String" mode="IN" optional="false"/>
-        <attribute name="minItemPrice" type="Double" mode="IN" optional="false"/>
-        <attribute name="minPurchase" type="Double" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="salesTaxPercentage" type="Double" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-    </service>
-
-    <service name="removeTaxRate" engine="simple"
-            location="org/ofbiz/order/order/TaxRateServices.xml" invoke="removeTaxRate">
-        <description>Remove a Tax Rate entry</description>
-        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
-        <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
-        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
-        <attribute name="taxCategory" type="String" mode="IN" optional="false"/>
-        <attribute name="minItemPrice" type="Double" mode="IN" optional="false"/>
-        <attribute name="minPurchase" type="Double" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-    </service>
-
-    <!-- ZipSales Tax Services -->
-    <service name="importZipSalesTaxData" engine="java" transaction-timout="7200"
-            location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="importFlatTable">
-        <description>Import ZipSales Flat File</description>
-        <attribute name="taxFileLocation" type="String" mode="IN" optional="false"/>
-        <attribute name="ruleFileLocation" type="String" mode="IN" optional="false"/>
-    </service>
-
-    <service name="_calcTax" engine="java"
-            location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="flatTaxCalc">
-        <description>Zip Sales Calc Tax Service - change this to calcTax to run</description>
-        <implements service="calcTaxInterface"/>
-    </service>
     <!-- Order View Services -->
     <service name="getOrderedSummaryInformation" engine="simple"
             location="org/ofbiz/order/order/OrderServices.xml" invoke="getOrderedSummaryInformation">
