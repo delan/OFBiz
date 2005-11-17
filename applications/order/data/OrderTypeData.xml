@@ -190,7 +190,7 @@
     <ReturnItemType description="Return Item Fee" returnItemTypeId="RITM_FEE" parentTypeId="RETURN_ITM_ADJ"/>
     <ReturnItemType description="Return Item Miscellaneous Charges" returnItemTypeId="RITM_MISC_CHARGE" parentTypeId="RETURN_ITM_ADJ"/>
     <ReturnItemType description="Return Item Sales Tax" returnItemTypeId="RITM_SALES_TAX" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Shipping and Handling" returnItemTypeId="RITM_SHIPPING_CHARGES" parentTypeId="RETURN_ITM_ADJ"/>
+    <ReturnItemType description="Return Item Shipping and Handling" returnItemTypeId="RITM_SHIPPING_CHRG" parentTypeId="RETURN_ITM_ADJ"/>
     <ReturnItemType description="Return Item Surcharge" returnItemTypeId="RITM_SURCHARGE_ADJ" parentTypeId="RETURN_ITM_ADJ"/>
     <ReturnItemType description="Return Item Additional Feature" returnItemTypeId="RITM_ADD_FEATURE" parentTypeId="RETURN_ITM_ADJ"/>
     <ReturnItemType description="Return Item Warranty" returnItemTypeId="RITM_WARRANTY_ADJ" parentTypeId="RETURN_ITM_ADJ"/>
@@ -215,7 +215,7 @@
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="FEE" returnItemTypeId="RITM_FEE"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="MISCELLANEOUS_CHARGE" returnItemTypeId="RITM_MISC_CHARGE"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SALES_TAX" returnItemTypeId="RITM_SALES_TAX"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SHIPPING_CHARGES" returnItemTypeId="RITM_SHIPPING_CHARGES"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SHIPPING_CHARGES" returnItemTypeId="RITM_SHIPPING_CHRG"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SURCHARGE_ADJUSTMENT" returnItemTypeId="RITM_SURCHARGE_ADJ"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="ADDITIONAL_FEATURE" returnItemTypeId="RITM_ADD_FEATURE"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="WARRANTY_ADJUSTMENT" returnItemTypeId="RITM_WARRANTY_ADJ"/>
