@@ -35,6 +35,9 @@ if (returnId == null) {
 }
 context.put("returnId", returnId);
 
+orderId = request.getParameter("orderId");
+context.put("orderId", orderId);
+
 returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
 context.put("returnHeader", returnHeader);
 
@@ -46,6 +49,18 @@ context.put("returnTypes", returnTypes);
 
 returnReasons = delegator.findAll("ReturnReason", UtilMisc.toList("sequenceId"));
 context.put("returnReasons", returnReasons);
+
+returnItemTypeMap = delegator.findByAnd("ReturnItemTypeMap", UtilMisc.toMap("returnHeaderTypeId", "CUSTOMER_RETURN"));
+iter = returnItemTypeMap.iterator();
+typeMap = new HashMap();
+while (iter.hasNext()) {
+    value = iter.next();
+    typeMap.put(value.getString("returnItemMapKey"), value.getString("returnItemTypeId"));
+}
+context.put("returnItemTypeMap", typeMap);
+
+orderHeaderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderItemSeqId", "_NA_"));
+context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 
 orderId = request.getParameter("orderId");
 if (orderId != null) {    

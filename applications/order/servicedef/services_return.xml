@@ -57,6 +57,9 @@
             <exclude field-name="returnItemSeqId"/>
         </auto-attributes>
         <override name="returnItemResponseId" optional="true"/>
+        <override name="orderAdjustmentId" optional="true"/>
+        <override name="orderItemSeqId" optional="true"/>
+        <override name="receivedQuantity" optional="true"/>
         <override name="statusId" optional="true"/>
         <override name="returnPrice" optional="true"/>
     </service>
@@ -64,9 +67,8 @@
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnItem">
         <description>Create a new ReturnItem</description>
         <implements service="returnItemInterface"/>
-        <attribute name="returnItemType" type="String" mode="IN" optional="false"/>
+        <attribute name="returnItemMapKey" type="String" mode="IN" optional="true"/>
         <attribute name="returnItemSeqId" type="String" mode="OUT" optional="false"/>
-        <override name="orderItemSeqId" optional="true"/>
         <override name="returnReasonId" optional="true"/>
     </service>
     <service name="updateReturnItem" engine="simple"
