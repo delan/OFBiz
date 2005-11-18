@@ -25,9 +25,15 @@
 package org.ofbiz.service;
 
 import java.sql.Timestamp;
-import java.util.*;
-
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -37,10 +43,10 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.config.ServiceConfigUtil;
 
@@ -95,7 +101,7 @@ public class ServiceUtil {
     }
 
     public static Map returnProblem(String returnType, String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
-        Map result = new HashMap();
+        Map result = FastMap.newInstance();
         result.put(ModelService.RESPONSE_MESSAGE, returnType);
         if (errorMessage != null) {
             result.put(ModelService.ERROR_MESSAGE, errorMessage);
@@ -106,7 +112,7 @@ public class ServiceUtil {
             errorList.addAll(errorMessageList);
         }
 
-        Map errorMap = new HashMap();
+        Map errorMap = FastMap.newInstance();
         if (errorMessageMap != null) {
             errorMap.putAll(errorMessageMap);
         }
@@ -147,7 +153,7 @@ public class ServiceUtil {
      *  and what type of message that is should be determined by the RESPONSE_MESSAGE (and there's another annoyance, it should be RESPONSE_CODE)
      */
     public static Map returnMessage(String code, String message) {
-        Map result = new HashMap();
+        Map result = FastMap.newInstance();
         if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
         if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
         return result;
@@ -200,7 +206,7 @@ public class ServiceUtil {
     }
 
     public static void getMessages(HttpServletRequest request, Map result, String defaultMessage,
-            String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
+                                   String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
         String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
         String successMessage = ServiceUtil.makeSuccessMessage(result, msgPrefix, msgSuffix, successPrefix, successSuffix);
         setMessages(request, errorMessage, successMessage, defaultMessage);
