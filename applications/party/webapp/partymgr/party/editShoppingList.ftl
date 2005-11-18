@@ -276,8 +276,12 @@
                               </div>
                          </td>
                          <td nowrap align="center">
-                             <div class='tabletext'>
-                               <input size="6" class='inputBox' type="text" name="quantityPurchased" value="${shoppingListItem.quantityPurchased?if_exists?string.number}">
+                           <div class='tabletext'>
+                             <input size="6" class='inputBox' type="text" name="quantityPurchased" 
+                             <#if shoppingListItem.quantityPurchased?has_content>
+                               value="${shoppingListItem.quantityPurchased?if_exists?string.number}"
+                             </#if>
+                             >
                             </div>
                          </td>
 		                  </form>
