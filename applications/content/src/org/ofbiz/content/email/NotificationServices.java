@@ -34,6 +34,8 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import freemarker.template.TemplateException;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -47,8 +49,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-
-import freemarker.template.TemplateException;
 
 /**
  * Provides generic services related to preparing and
@@ -314,7 +314,7 @@ public class NotificationServices {
                 httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host", localServer);
             }
             if (enableHttps == null) {
-                enableHttps = new Boolean(UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y"));
+                enableHttps = (UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y")) ? Boolean.TRUE : Boolean.FALSE;
             }
                                 
             // prepare the (non-secure) URL
