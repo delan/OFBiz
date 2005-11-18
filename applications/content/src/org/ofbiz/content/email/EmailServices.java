@@ -106,7 +106,7 @@ public class EmailServices {
         String body = (String) context.get("body");
         List bodyParts = (List) context.get("bodyParts");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         results.put("partyId", partyId);
         results.put("subject", subject);
         if (UtilValidate.isNotEmpty(body)) results.put("body", body);
@@ -140,7 +140,7 @@ public class EmailServices {
         String authUser = (String) context.get("authUser");
         String authPass = (String) context.get("authPass");
         String contentType = (String) context.get("contentType");
-        
+
         boolean useSmtpAuth = false;
 
         // define some default
@@ -166,7 +166,7 @@ public class EmailServices {
         if (contentType == null) {
             contentType = "text/html";
         }
-        
+
         if (UtilValidate.isNotEmpty(bodyParts)) {
             contentType = "multipart/mixed";
         }
@@ -192,7 +192,7 @@ public class EmailServices {
             if (UtilValidate.isNotEmpty(sendBcc)) {
                 mail.addRecipients(Message.RecipientType.BCC, sendBcc);
             }
-            
+
             if (UtilValidate.isNotEmpty(bodyParts)) {
                 // check for multipart message (with attachments)
                 // BodyParts contain a list of Maps items containing content(String) and type(String) of the attachement
@@ -202,7 +202,7 @@ public class EmailServices {
                 while (bodyPartIter.hasNext()) {
                     Map bodyPart = (Map) bodyPartIter.next();
                     Object bodyPartContent = bodyPart.get("content");
-                    MimeBodyPart mbp = new MimeBodyPart(); 
+                    MimeBodyPart mbp = new MimeBodyPart();
 
                     if (bodyPartContent instanceof String) {
                         StringDataSource sdr = new StringDataSource((String) bodyPartContent, (String) bodyPart.get("type"));
@@ -298,9 +298,7 @@ public class EmailServices {
         String xslfoAttachScreenLocation = (String) serviceContext.remove("xslfoAttachScreenLocation");
         Map bodyParameters = (Map) serviceContext.remove("bodyParameters");
         String partyId = (String) bodyParameters.get("partyId");
-        if (UtilValidate.isNotEmpty(webSiteId)) {
-            NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
-        }
+        NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);        
 
         StringWriter bodyWriter = new StringWriter();
 
