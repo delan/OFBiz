@@ -398,6 +398,14 @@
         <attribute name="hasSupplierRelatedPermission" type="String" mode="OUT" optional="false"/>
     </service>
 
+    <service name="updateShoppingListQuantitiesFromOrder" engine="java"
+            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="updateShoppingListQuantitiesFromOrder">
+            <description>Given an orderId, this service will look through all its OrderItems and for each shoppingListItemId
+              and shoppingListItemSeqId, update the quantity purchased in the ShoppingListItem entity.  Used for
+              tracking how many of shopping list items are purchased.  This service is mounted as a seca on storeOrder.</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
+
     <!-- serialization test -->
     <service name="shoppingCartRemoteTest" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="shoppingCartRemoteTest">

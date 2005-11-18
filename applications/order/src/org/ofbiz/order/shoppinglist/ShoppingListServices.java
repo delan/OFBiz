@@ -488,4 +488,45 @@ public class ShoppingListServices {
         return makeShoppingListCart(dispatcher, shoppingList, locale);
     }
 
+    /**
+     * 
+     * Given an orderId, this service will look through all its OrderItems and for each shoppingListItemId
+     * and shoppingListItemSeqId, update the quantity purchased in the ShoppingListItem entity.  Used for
+     * tracking how many of shopping list items are purchased.  This service is mounted as a seca on storeOrder.
+     *
+     * @param ctx - The DispatchContext that this service is operating in
+     * @param context - Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
+     */
+    public static Map updateShoppingListQuantitiesFromOrder(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        try {
+            List orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+            Iterator iter = orderItems.iterator();
+            while (iter.hasNext()) {
+                GenericValue orderItem = (GenericValue) iter.next();
+                String shoppingListId = (String) orderItem.getString("shoppingListId");
+                String shoppingListItemSeqId = (String) orderItem.getString("shoppingListItemSeqId");
+                if ((shoppingListId != null) && (shoppingListId.length() > 0)) {
+                    GenericValue shoppingListItem=delegator.findByPrimaryKey("ShoppingListItem", UtilMisc.toMap("shoppingListId",
+                                shoppingListId, "shoppingListItemSeqId", shoppingListItemSeqId));
+                    if (shoppingListItem != null) {
+                        Double quantityPurchased = shoppingListItem.getDouble("quantityPurchased");
+                        Double orderQuantity = orderItem.getDouble("quantity");
+                        if (quantityPurchased != null) {
+                            shoppingListItem.set("quantityPurchased", new Double(orderQuantity.doubleValue() + quantityPurchased.doubleValue()));
+                        }else{
+                            shoppingListItem.set("quantityPurchased", orderQuantity);
+                        }
+                        shoppingListItem.store();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Debug.log("updateShoppingListQuantitiesFromOrder error:"+e.getMessage());
+        }
+        return result;
+    }
 }

@@ -190,6 +190,10 @@
         <action service="createShoppingList" mode="sync" result-to-context="true"/>
     </eca>
 
+    <eca service="storeOrder" event="commit">
+        <action service="updateShoppingListQuantitiesFromOrder" mode="sync"/>
+    </eca>
+
     <!-- CustRequest ECAs -->
     <eca service="createCustRequest" event="commit">
         <condition field-name="communicationEventId" operator="is-not-empty"/>
