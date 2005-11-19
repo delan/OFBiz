@@ -23,22 +23,16 @@
  */
 package org.ofbiz.entity.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.dom.NodeModel;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
 import javolution.lang.Text;
 import javolution.util.FastMap;
 import javolution.xml.sax.Attributes;
 import javolution.xml.sax.RealtimeParser;
-
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
@@ -56,12 +50,11 @@ import org.w3c.dom.Node;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.dom.NodeModel;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModel;
+import java.io.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * SAX XML Parser Content Handler for Entity Engine XML files
@@ -496,7 +489,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                             }
                         }
                     } catch (Exception e) {
-                        Debug.logWarning(e, "Could not set field " + name + " to the value " + value, module);
+                        Debug.logWarning(e, "Could not set field " + entityName + "." + name + " to the value " + value, module);
                     }
                 }
             }
