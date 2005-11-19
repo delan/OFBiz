@@ -23,17 +23,7 @@
  */
 package org.ofbiz.product.store;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import javolution.util.FastMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -50,6 +40,11 @@ import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 /**
  * ProductStoreWorker - Worker class for store related functionality
@@ -96,7 +91,7 @@ public class ProductStoreWorker {
         }
         return null;
     }
-    
+
     public static String makeProductStoreOrderId(GenericDelegator delegator, String productStoreId) {
         return makeProductStoreOrderId(delegator, productStoreId, delegator.getNextSeqId("OrderHeader"));
     }
@@ -116,7 +111,7 @@ public class ProductStoreWorker {
     }
 
     public static boolean autoSaveCart(GenericDelegator delegator, String productStoreId) {
-        return autoSaveCart(getProductStore(productStoreId, delegator));    
+        return autoSaveCart(getProductStore(productStoreId, delegator));
     }
 
     public static boolean autoSaveCart(GenericValue productStore) {
@@ -171,7 +166,7 @@ public class ProductStoreWorker {
     }
 
     public static GenericValue getProductStoreShipmentMethod(GenericDelegator delegator, String productStoreId,
-            String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId) {
+                                                             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId) {
         // check for an external service call
         Map storeFields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId,
                 "partyId", carrierPartyId, "roleTypeId", carrierRoleTypeId);
@@ -420,7 +415,7 @@ public class ProductStoreWorker {
     }
 
     public static ProductStoreSurveyWrapper getRandomSurveyWrapper(GenericDelegator delegator, String productStoreId, String groupName, String partyId, Map passThruFields) {
-        List randomSurveys = getSurveys(delegator, productStoreId, groupName, null, "RANDOM_POLL");        
+        List randomSurveys = getSurveys(delegator, productStoreId, groupName, null, "RANDOM_POLL");
         if (!UtilValidate.isEmpty(randomSurveys)) {
             Random rand = new Random();
             int index = rand.nextInt(randomSurveys.size());
@@ -460,7 +455,7 @@ public class ProductStoreWorker {
                 GenericValue surveyAppl = (GenericValue) ssi.next();
                 GenericValue product = null;
                 String virtualProductId = null;
-                
+
                 // if the item is a variant, get its virtual productId 
                 try {
                     product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
@@ -470,13 +465,13 @@ public class ProductStoreWorker {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problem finding product from productId " + productId, module);
                 }
-                
+
                 // use survey if productId or virtualProductId of the variant product is in the ProductStoreSurveyAppl
                 if (surveyAppl.get("productId") != null) {
                     if (surveyAppl.get("productId").equals(productId)) {
                         surveys.add(surveyAppl);
                     } else if ((virtualProductId != null) && (surveyAppl.getString("productId").equals(virtualProductId))) {
-                        surveys.add(surveyAppl);    
+                        surveys.add(surveyAppl);
                     }
                 } else if (surveyAppl.get("productCategoryId") != null) {
                     List categoryMembers = null;
@@ -548,7 +543,7 @@ public class ProductStoreWorker {
         return isStoreInventoryRequiredAndAvailable(request, product, quantity, null, Boolean.TRUE);
     }
 
-    /** 
+    /**
      * This method is used in the showcart pages to determine whether or not to show the inventory message and 
      * in the productdetail pages to determine whether or not to show the item as out of stock.
      * 
@@ -557,7 +552,6 @@ public class ProductStoreWorker {
      * @param quantity Quantity desired.
      * @param wantRequired If true then inventory required must be true for the result to be true, if false must be false; if null don't care
      * @param wantAvailable If true then inventory avilable must be true for the result to be true, if false must be false; if null don't care
-     * @return
      */
     public static boolean isStoreInventoryRequiredAndAvailable(ServletRequest request, GenericValue product, Double quantity, Boolean wantRequired, Boolean wantAvailable) {
         GenericValue productStore = getProductStore(request);
@@ -569,12 +563,12 @@ public class ProductStoreWorker {
             Debug.logWarning("No Product passed, return false for inventory check", module);
             return false;
         }
-        
+
         if (quantity == null) quantity = new Double(1);
 
         String productStoreId = productStore.getString("productStoreId");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        
+
         try {
             Boolean requiredOkay = null;
             if (wantRequired != null) {
@@ -654,7 +648,7 @@ public class ProductStoreWorker {
                 return false;
             }
             return isInventoryAvailable;
-            
+
         } else {
             GenericValue product = productConfig.getProduct();;
             List productFacilities = null;
@@ -685,5 +679,27 @@ public class ProductStoreWorker {
             }
             return false;
         }
+    }
+
+    protected static Map defaultProductStoreEmailScreenLocation = FastMap.newInstance();
+
+    static {
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://ecommerce/widget/EmailOrderScreens.xml#OrderConfirmNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://ecommerce/widget/EmailOrderScreens.xml#OrderCompleteNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://ecommerce/widget/EmailOrderScreens.xml#BackorderNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://ecommerce/widget/EmailOrderScreens.xml#OrderChangeNotice");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://ecommerce/widget/EmailOrderScreens.xml#PaymentRetryNotice");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnAccept");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnComplete");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnCancel");
+
+        defaultProductStoreEmailScreenLocation.put("PRDS_GC_PURCHASE", "component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
+        defaultProductStoreEmailScreenLocation.put("PRDS_GC_RELOAD", "component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardReload");
+    }
+
+    public static String getDefaultProductStoreEmailScreenLocation(String emailType) {
+        return (String) defaultProductStoreEmailScreenLocation.get(emailType);
     }
 }
