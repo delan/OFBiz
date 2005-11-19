@@ -23,7 +23,7 @@
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
-    <description>Order Services</description>
+    <description>Order Return Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
@@ -84,41 +84,49 @@
         <auto-attributes entity-name="ReturnItem" include="pk" mode="IN" optional="false"/>
     </service>
 
+    <service name="getReturnItemInitialCost" engine="java"
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="getReturnItemInitialCost">
+        <description>Gets the item's initial cost based on the inventory item record associated with the order item or 0.00 if none found.</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+        <attribute name="returnItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="initialItemCost" type="Double" mode="OUT" optional="false"/>
+    </service>
+
     <service name="checkReturnComplete" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="checkReturnComplete">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="checkReturnComplete">
         <description>Checks if all items on a return are complete/cancelled and updates the header status</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="OUT" optional="true"/>
     </service>
 
     <service name="sendReturnAcceptNotification" engine="java" max-retry="3"
-            location="org.ofbiz.order.order.OrderServices" invoke="sendReturnAcceptNotification">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="sendReturnAcceptNotification">
         <description>Send a notification that a return has been accepted</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="sendReturnCompleteNotification" engine="java" max-retry="3"
-            location="org.ofbiz.order.order.OrderServices" invoke="sendReturnCompleteNotification">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="sendReturnCompleteNotification">
         <description>Send a notification that a return has been completed</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
      <service name="sendReturnCancelNotification" engine="java" max-retry="3"
-            location="org.ofbiz.order.order.OrderServices" invoke="sendReturnCancelNotification">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="sendReturnCancelNotification">
         <description>Send a notification that a return has been cancelled</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="processCreditReturn" engine="java" auth="true"
-            location="org.ofbiz.order.order.OrderServices" invoke="processCreditReturn">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="processCreditReturn">
         <description>Process the credits in a return</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="processRefundReturn" engine="java" auth="true"
-            location="org.ofbiz.order.order.OrderServices" invoke="processRefundReturn">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="processRefundReturn">
         <description>Process the refunds in a return</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="processReplacementReturn" engine="java" auth="true"
-            location="org.ofbiz.order.order.OrderServices" invoke="processReplacementReturn">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="processReplacementReturn">
         <description>Process the replacements in a return</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
@@ -129,14 +137,14 @@
         <attribute name="returnHeaderStatus" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="getReturnableQuantity" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="getReturnableQuantity">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="getReturnableQuantity">
         <description>Get the quantity allowed for an item to be returned</description>
         <attribute name="orderItem" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="returnableQuantity" type="Double" mode="OUT" optional="false"/>
         <attribute name="returnablePrice" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="getReturnableItems" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="getReturnableItems">
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="getReturnableItems">
         <description>Get a map of returnable items orderItem => quantity available to return</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="returnableItems" type="Map" mode="OUT" optional="false"/>
