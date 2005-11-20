@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.transaction.xa.XAException;
 
 import org.ofbiz.base.util.Debug;
@@ -46,7 +45,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
-import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -1234,7 +1232,7 @@ public class ValueLinkServices {
                 Map emailCtx = new HashMap();
                 String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                 if (UtilValidate.isEmpty(bodyScreenLocation)) {
-                    bodyScreenLocation = OrderServices.getDefaultProductStoreEmailScreenLocation(emailType);
+                    bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
                 }
                 emailCtx.put("bodyScreenUri", bodyScreenLocation);
                 emailCtx.put("bodyParameters", answerMap);
@@ -1463,7 +1461,7 @@ public class ValueLinkServices {
             
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
             if (UtilValidate.isEmpty(bodyScreenLocation)) {
-                bodyScreenLocation = OrderServices.getDefaultProductStoreEmailScreenLocation(emailType);
+                bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
             }
             emailCtx.put("bodyScreenUri", bodyScreenLocation);
             emailCtx.put("bodyParameters", answerMap);

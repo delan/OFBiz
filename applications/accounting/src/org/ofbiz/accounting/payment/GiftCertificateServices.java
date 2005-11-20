@@ -45,7 +45,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
-import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -633,7 +632,7 @@ public class GiftCertificateServices {
                 Map emailCtx = new HashMap();
                 String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                 if (UtilValidate.isEmpty(bodyScreenLocation)) {
-                    bodyScreenLocation = OrderServices.getDefaultProductStoreEmailScreenLocation(emailType);
+                    bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
                 }
                 emailCtx.put("bodyScreenUri", bodyScreenLocation);
                 emailCtx.put("bodyParameters", answerMap);
@@ -856,7 +855,7 @@ public class GiftCertificateServices {
             Map emailCtx = new HashMap();
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
             if (UtilValidate.isEmpty(bodyScreenLocation)) {
-                bodyScreenLocation = OrderServices.getDefaultProductStoreEmailScreenLocation(emailType);
+                bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
             }
             emailCtx.put("bodyScreenUri", bodyScreenLocation);
             emailCtx.put("bodyParameters", answerMap);
