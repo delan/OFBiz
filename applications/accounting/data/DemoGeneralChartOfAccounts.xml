@@ -333,24 +333,169 @@
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED PAYROLL TAXES - STATE UNEMPLOYMENT TAX" description="" postedBalance="0.0"/>
 
-  <GlAccount parentGlAccountId="220000" glAccountId="224000" accountCode="224000" 
-    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
-    accountName="SALES TAX COLLECTED" description="" postedBalance="0.0"/>
-   <GlAccount parentGlAccountId="224000" glAccountId="224100" accountCode="224100" 
-    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
-    accountName="SALES TAX COLLECTED CA" description="" postedBalance="0.0"/>
-   <GlAccount parentGlAccountId="224000" glAccountId="224200" accountCode="224200" 
-    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
-    accountName="SALES TAX COLLECTED NY" description="" postedBalance="0.0"/>
-   <GlAccount parentGlAccountId="224000" glAccountId="224300" accountCode="224300" 
-    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
-    accountName="SALES TAX COLLECTED UT" description="" postedBalance="0.0"/>
-   <GlAccount parentGlAccountId="224000" glAccountId="224400" accountCode="224400" 
-    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
-    accountName="SALES TAX COLLECTED TX" description="" postedBalance="0.0"/>
-   <GlAccount parentGlAccountId="220000" glAccountId="225000" accountCode="225000" 
+    <GlAccount parentGlAccountId="220000" glAccountId="224000" accountCode="224000" 
+        glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED" description="" postedBalance="0.0"/>
+    
+    <!-- USA Sales Tax Accounts -->    
+    <GlAccount parentGlAccountId="224000" glAccountId="224100" accountCode="224100" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224101" accountCode="224101" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - AK" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224102" accountCode="224102" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - AL" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224103" accountCode="224103" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - AR" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224104" accountCode="224104" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - AS" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224105" accountCode="224105" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - AZ" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224106" accountCode="224106" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - CA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224107" accountCode="224107" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - CO" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224108" accountCode="224108" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - CT" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224109" accountCode="224109" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - DC" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224110" accountCode="224110" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - DE" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224111" accountCode="224111" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - FL" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224112" accountCode="224112" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - FM" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224113" accountCode="224113" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - GA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224114" accountCode="224114" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - GU" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224115" accountCode="224115" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - HI" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224116" accountCode="224116" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - IA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224117" accountCode="224117" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - ID" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224118" accountCode="224118" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - IL" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224119" accountCode="224119" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - IN" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224120" accountCode="224120" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - KS" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224121" accountCode="224121" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - KY" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224122" accountCode="224122" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - LA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224123" accountCode="224123" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224124" accountCode="224124" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MD" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224125" accountCode="224125" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - ME" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224126" accountCode="224126" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MH" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224127" accountCode="224127" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MI" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224128" accountCode="224128" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MN" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224129" accountCode="224129" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MP" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224130" accountCode="224130" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MO" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224131" accountCode="224131" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MS" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224132" accountCode="224132" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - MT" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224133" accountCode="224133" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - NC" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224134" accountCode="224134" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - ND" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224135" accountCode="224135" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - NE" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224136" accountCode="224136" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - NH" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224137" accountCode="224137" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - NJ" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224138" accountCode="224138" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - NM" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224139" accountCode="224139" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - NV" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224140" accountCode="224140" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - NY" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224141" accountCode="224141" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - OH" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224142" accountCode="224142" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - OK" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224143" accountCode="224143" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - OR" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224144" accountCode="224144" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - PA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224145" accountCode="224145" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - PW" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224146" accountCode="224146" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - PR" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224147" accountCode="224147" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - RI" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224148" accountCode="224148" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - SC" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224149" accountCode="224149" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - SD" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224150" accountCode="224150" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - TN" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224151" accountCode="224151" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - TX" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224152" accountCode="224152" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - UM" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224153" accountCode="224153" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - UT" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224154" accountCode="224154" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - VA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224155" accountCode="224155" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - VT" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224156" accountCode="224156" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - WA" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224157" accountCode="224157" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - WI" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224158" accountCode="224158" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - WV" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224159" accountCode="224159" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - WY" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224100" glAccountId="224160" accountCode="224160" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED USA - VI" description="" postedBalance="0.0"/>
+    
+
+    <!-- Canada Sales Tax Accounts -->    
+    <GlAccount parentGlAccountId="224000" glAccountId="224200" accountCode="224200" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224201" accountCode="224201" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - AB" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224202" accountCode="224202" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - BC" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224203" accountCode="224203" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - MB" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224204" accountCode="224204" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - NB" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224205" accountCode="224205" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - NL" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224206" accountCode="224206" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - NS" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224207" accountCode="224207" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - NT" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224208" accountCode="224208" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - NU" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224209" accountCode="224209" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - ON" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224210" accountCode="224210" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - PE" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224211" accountCode="224211" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - QC" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224212" accountCode="224212" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - SK" description="" postedBalance="0.0"/>
+    <GlAccount parentGlAccountId="224200" glAccountId="224213" accountCode="224213" glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        accountName="SALES TAX COLLECTED CAN - YT" description="" postedBalance="0.0"/>
+    
+  <GlAccount parentGlAccountId="220000" glAccountId="225000" accountCode="225000" 
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED USE TAX" description="" postedBalance="0.0"/>
+
   <GlAccount parentGlAccountId="220000" glAccountId="226000" accountCode="226000" 
     glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED RETIREMENT PLAN EXPENSE" description="" postedBalance="0.0"/>
