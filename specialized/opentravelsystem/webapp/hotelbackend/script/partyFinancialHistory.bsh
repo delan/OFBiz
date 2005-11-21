@@ -66,6 +66,7 @@ if (invoices != null && invoices.size() > 0) {
 	Iterator inv = invoices.iterator();
 	while (inv.hasNext())	{
 		invoice = inv.next();
+		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue;
 		BigDecimal invoiceAmount = InvoiceWorker.getInvoiceTotalBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP);
 		totalInvoice = totalInvoice.add(invoiceAmount);
 		Map historyItem = UtilMisc.toMap(

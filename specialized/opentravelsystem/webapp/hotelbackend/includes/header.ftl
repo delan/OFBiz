@@ -57,7 +57,7 @@
           <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
           </#if>  
             <#if userLogin?has_content && productStoreId?exists>
-				<td class="head2"><center><u>Store Name: ${productStoreId}</u></center></td/>
+				<td class="head2"><center><u>Store Name: ${productStoreId}<br/>Org.Party: ${organizationPartyId?if_exists}</u></center></td/>
 			</#if>
           <td align='right' width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='${layoutSettings.headerRightBackgroundUrl}'</#if>>
             <#if person?has_content>

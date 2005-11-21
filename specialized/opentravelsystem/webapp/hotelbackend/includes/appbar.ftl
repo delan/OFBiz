@@ -38,7 +38,7 @@
 <#--		 {"title":"Main", 				"url":"main"} -->
  		{"title":"Product",				"url":"mainCatalog"}
 		,{"title":"Reservations",		"url":"findorders"}
-		,{"title":"Parties",			"url":"findParties"}
+		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
 		,{"title":"Accounting",			"url":"mainAccounting"}
 		,{"title":"Website", 			"url":"/${productStoreId?if_exists}"}
 		,{"title":"Logout", 				"url":"logout"}
@@ -50,8 +50,8 @@
 </#if>
 <#assign unselectedClass = {"col" : "tabdownblock", "left" : "tabdownleft", "center" : "tabdowncenter", "right" : "tabdownright", "link" : "tablink"}>
 <#assign selectedClass = {"col" : "mainblock", "left" : "tabupleft", "center" : "tabupcenter", "right" : "tabupright", "link" : "tablinkselected"}>
+<#if !appTabButtonItem?has_content><#assign appTabButtonItem = page.appTabButtonItem?default("void")></#if>
 <#assign thisAppOpt = page.appTabButtonItem?default("void")>
-
 <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#FFFFFF">    
     <td><div class="appbarleft"></div></td>

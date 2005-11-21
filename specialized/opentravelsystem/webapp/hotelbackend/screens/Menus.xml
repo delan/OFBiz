@@ -20,33 +20,57 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: ProductScreens.xml 4990 2005-05-14 10:00:28Z jacopo $
+ *  $Id: Menus.xml  jacopo $ Hans Bakker (h.bakker@antwebsystems.com)
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">
+    
+    <menu name="PartyAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" selected-menuitem-context-field-name="headerItem"
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
+        default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
+        <menu-item name="Find" title="Find"><link target="findParties"/></menu-item>
+        <menu-item name="New" title="New"><link target="editParty"/></menu-item>
+        <menu-item name="Disabled" title="Disabled Parties"><link target="findParties?statusId=PARTYREL-DELETED"/></menu-item>
+        <!--menu-item name="DataSource" title="${uiLabelMap.DataSource}"><link target="FindDataSource"/></menu-item>
+        <menu-item name="Campaign" title="${uiLabelMap.MarketingCampaign}"><link target="FindMarketingCampaign"/></menu-item>
+        <menu-item name="Tracking" title="${uiLabelMap.Tracking}"><link target="FindTrackingCode"/></menu-item>
+        <menu-item name="Segment" title="${uiLabelMap.Segment}"><link target="FindSegmentGroup"/></menu-item>
+        <menu-item name="ContactList" title="${uiLabelMap.ContactList}"><link target="ListContactLists"/></menu-item>
+        
+        <menu-item name="Logout" title="${uiLabelMap.CommonLogout}" align-style="col-right">
+            <condition><not><if-empty field-name="requestAttributes.userLogin"/></not></condition>
+            <link target="logout"/>
+        </menu-item>
+        <menu-item name="Login" title="${uiLabelMap.CommonLogin}" align-style="col-right">
+            <condition><if-empty field-name="requestAttributes.userLogin"/></condition>
+            <link target="${requestAttributes.checkLoginUrl}"/>
+        </menu-item-->
+        <menu-item name="Help" title="Help" align-style="col-right"><link target="help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}" target-window="new"/></menu-item>
+    </menu>
+    
     <menu name="PartyTabBar" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
         orientation="horizontal" type="simple">
-        <menu-item name="viewprofile" title="${uiLabelMap.PartyProfile}">
+        <!--menu-item name="viewprofile" title="${uiLabelMap.PartyProfile}">
             <link target="viewprofile?partyId=${partyId}"/>
         </menu-item>
         <menu-item name="viewroles" title="${uiLabelMap.PartyRoles}">
             <link target="viewroles?partyId=${partyId}"/>
-        </menu-item>
+        </menu-item-->
         <!--menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
             <link target="EditPartyRelationships?partyId=${partyId}"/>
         </menu-item-->
-        <menu-item name="PartyCommEvents" title="${uiLabelMap.PartyCommunications}" >
+        <!--menu-item name="PartyCommEvents" title="${uiLabelMap.PartyCommunications}" >
             <link target="ListPartyCommEvents?partyId=${partyId}"/>
-        </menu-item>
+        </menu-item-->
         <!--menu-item name="viewvendor" title="${uiLabelMap.PartyVendor}">
             <link target="viewvendor?partyId=${partyId}"/>
         </menu-item-->
-        <menu-item name="EditPartyTaxInfos" title="${uiLabelMap.PartyTaxInfos}">
+        <!--menu-item name="EditPartyTaxInfos" title="${uiLabelMap.PartyTaxInfos}">
             <link target="EditPartyTaxInfos?partyId=${partyId}"/>
         </menu-item>
         <menu-item name="EditPartyRates" title="${uiLabelMap.CommonRates}">
             <link target="EditPartyRates?partyId=${partyId}"/>
-        </menu-item>
+        </menu-item-->
         <!--menu-item name="editShoppingList" title="${uiLabelMap.PartyShoppingLists}">
             <link target="editShoppingList?partyId=${partyId}"/>
         </menu-item-->
@@ -56,8 +80,8 @@
         <!--menu-item name="EditPartyClassifications" title="${uiLabelMap.PartyClassifications}">
             <link target="EditPartyClassifications?partyId=${partyId}"/>
         </menu-item-->
-        <menu-item name="ContactList" title="${uiLabelMap.PartyContactList}">
+        <!--menu-item name="ContactList" title="${uiLabelMap.PartyContactList}">
             <link target="ListPartyContactLists?partyId=${partyId}"/>
-        </menu-item>
+        </menu-item-->
     </menu>
 </menus>

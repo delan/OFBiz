@@ -292,9 +292,43 @@
     </request-map>
 
     <!--============= edit/create parties ================-->    
-    <request-map uri="createnew"><security https="true" auth="true"/><response name="success" type="view" value="CreateNewParty"/></request-map>
+
+    <request-map uri="editParty">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editParty"/>
+    </request-map>
+    <request-map uri="addParty">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="otsAddParty"/>
+        <response name="success" type="view" value="editParty"/>
+        <response name="error" type="view" value="editParty"/>
+    </request-map>
+    <request-map uri="updateParty">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="otsUpdateParty"/>
+        <response name="success" type="view" value="editParty"/>
+        <response name="error" type="view" value="editParty"/>
+    </request-map>
+    <request-map uri="deleteParty">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="otsSetStatusParty"/>
+        <response name="success" type="request" value="findParties"/>
+        <response name="error" type="request" value="findParties"/>
+    </request-map>
+    <request-map uri="unDeleteParty">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="otsSetStatusParty"/>
+        <response name="success" type="request" value="findParties?statusId=PARTYREL-DELETED"/>
+        <response name="error" type="request" value="findParties?statusId=PARTYREL-DELETED"/>
+    </request-map>
     
-    <request-map uri="NewCustomer"><security https="true" auth="true"/><response name="success" type="view" value="NewCustomer"/></request-map>
+    <request-map uri="createnew"><security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewParty"/>
+    </request-map>
+    
+    <request-map uri="NewCustomer"><security https="true" auth="true"/>
+        <response name="success" type="view" value="NewCustomer"/>
+    </request-map>
     <request-map uri="createCustomer">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/party/user/UserEvents.xml" invoke="createCustomer"/>
@@ -475,7 +509,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findordersCust"/>
     </request-map>
-
+    
     <!-- communication event requests -->
     <request-map uri="FindCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="FindCommunicationEvents"/></request-map>
     <request-map uri="PendingCommunications"><security https="true" auth="true"/><response name="success" type="view" value="PendingCommunications"/></request-map>
@@ -2951,12 +2985,13 @@
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     <!-- parties -->
     <view-map name="findParties" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findParties"/>
+    <view-map name="editParty" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#editParty"/>
     <view-map name="partyFinancialHistory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#partyFinancialHistory"/>
     <view-map name="listPaymentsReceived" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsReceived"/>
     <view-map name="listPaymentsSend" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsSend"/>
     <view-map name="listSalesInvoices" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listSalesInvoices"/>
     <view-map name="listPurchaseInvoices" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPurchaseInvoices"/>
-    <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
+    <view-map name="viewprofile" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#viewprofile"/>
     <view-map name="viewroles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewroles"/>
     <view-map name="EditPartyRelationships" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyRelationships"/>
     <view-map name="viewvendor" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewvendor"/>

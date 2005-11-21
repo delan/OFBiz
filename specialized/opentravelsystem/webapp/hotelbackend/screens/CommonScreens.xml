@@ -48,8 +48,8 @@
                 <set field="layoutSettings.headerImageUrl" value="/hotelbackend/images/opentravelsystem_logo.jpg" global="true"/>
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
-                <set field="productStoreId" from-scope="user"  from-field="productStoreId"/>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <set field="productStoreId" from-scope="user"  from-field="productStoreId" global="true"/>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" global="true"/>
                 <set field="requestParameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="parameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="activeApp" value="hotelbackend" global="true"/>
@@ -105,7 +105,7 @@
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
-                <set field="page.appTabButtonItem" value="Parties"/>
+                <set field="appTabButtonItem" value="Parties"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -116,11 +116,12 @@
                                     <if-empty field-name="parameters.popup"/>
                                 </condition>
                                 <widgets>
-                                    <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/party/appheaderCustomer.ftl"/></html></platform-specific>
+                                    <label style="apptitle" text="Customers, Suppliers, Partners, Employees"/>
+                                    <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="PartyAppBar"/>
                                 </widgets>
                                 <fail-widgets>
                                     <container>
-                                        <label style="head1">Party Information for: ${person.firstName} ${person.lastName}${partyGroup.groupName} [${partyId}]</label>
+                                        <label style="head1" text="Party Information for: ${person.firstName} ${person.lastName}${partyGroup.groupName} [${partyId}]"></label>
                                     </container>
                                 </fail-widgets>
                             </section>
