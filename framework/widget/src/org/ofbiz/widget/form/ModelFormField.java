@@ -41,6 +41,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -1587,6 +1588,8 @@ public class ModelFormField {
     public static class DisplayField extends FieldInfo {
         protected boolean alsoHidden = true;
         protected FlexibleStringExpander description;
+        protected String type;  // matches type of field, currently text or currency
+        protected FlexibleStringExpander currency;
 
         protected DisplayField() {
             super();
@@ -1602,6 +1605,8 @@ public class ModelFormField {
 
         public DisplayField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
+            this.type = element.getAttribute("type");
+            this.setCurrency(element.getAttribute("currency"));
             this.setDescription(element.getAttribute("description"));
             this.alsoHidden = !"false".equals(element.getAttribute("also-hidden"));
         }
@@ -1627,8 +1632,18 @@ public class ModelFormField {
             } else {
                 retVal = modelFormField.getEntry(context);
             }
-            if (retVal == null || retVal.length() == 0)
+            if (retVal == null || retVal.length() == 0) {
                 retVal = "&nbsp;";
+            }
+            if ("currency".equals(type)) { 
+                Locale locale = (Locale) context.get("locale");
+                if (locale == null) locale = Locale.getDefault();
+                String isoCode = null;
+                if (this.currency != null && !this.currency.isEmpty()) {
+                    isoCode = this.currency.expandString(context);
+                }   
+                retVal = UtilFormatOut.formatCurrency(UtilMisc.toDouble(retVal), isoCode, locale);
+            } 
             return retVal;
         }
 
@@ -1644,6 +1659,13 @@ public class ModelFormField {
          */
         public void setDescription(String string) {
             description = new FlexibleStringExpander(string);
+        }
+        
+        /**
+         * @param string
+         */
+        public void setCurrency(String string) {
+            currency = new FlexibleStringExpander(string);
         }
     }
 
@@ -2797,5 +2819,4 @@ public class ModelFormField {
         }
 
     }
-
 }
