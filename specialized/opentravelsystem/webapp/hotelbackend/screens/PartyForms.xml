@@ -5,18 +5,32 @@
     <form name="FindParties" type="single" 
         target="findParties" title="Find and list parties"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <set field="deleted" from-field="parameters.deleted"/>
+        </actions>
+        <!--field name="statusId"><hidden value="PARTYREL-ACTIVE"/></field-->
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="partyIdFrom"><hidden value="${organizationPartyId}"/></field>
         <field name="partyId" ><text-find/></field>
         <field name="groupName"><text-find/></field>
         <field name="lastName" ><text-find/></field>
-        <field position="1" name="partyRelationshipTypeId">
+        <field name="partyRelationshipTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${partyRelationshipTypeId}" entity-name="PartyRelationshipType">
-                    <entity-order-by field-name="partyRelationshipTypeId"/>
+                <entity-options description="${partyRelationshipName}" entity-name="PartyRelationshipType">
+                    <entity-order-by field-name="partyRelationshipName"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="statusId" title="Status" >
+            <drop-down allow-empty="true" no-current-selected-key="PARTYREL-ACTIVE">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" value="PARTY-RELATION"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!--field name="statusId" use-when="deleted!=null"><hidden value="PARTYREL-DELETED"/></field>
+        <field name="statusId" use-when="deleted==null"><hidden value="PARTYREL-ACTIVE"/></field-->
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -30,23 +44,64 @@
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="PartyRelationshipAndPartyDetail"/>
-                <field-map field-name="orderBy" value="partyId"/>
+                <field-map field-name="orderBy" value="groupName"/>
             </service>
         </actions>
         <field name="partyId" widget-style="buttontext" >
-            <hyperlink description="${partyId}" target="viewprofile?popup=yes&amp;partyId=${partyId}" target-window="new"/>
+            <hyperlink description="${partyId}" target="editParty?partyId=${partyId}"/>
         </field>
-        <field name="partyRelationshipTypeId" title="Relation"><display/></field>
+        <field name="statusId"><display-entity entity-name="StatusItem"/></field>
+        <field name="partyRelationshipTypeId" title="Relation"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
         <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
         <field name="financialHistory" title=" " widget-style="buttontext" >
             <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
         </field>
+        <field name="delete" title=" " widget-style="buttontext">
+            <hyperlink description="Delete" target-type="plain" target="javascript:if(confirmDelete('You want to delete this party?'))location.replace(&apos;deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-DELETED&apos;)"/>
+        </field>
     </form>
     
+    <form name="editParty" type="single" 
+        target="updateParty" title="Edit Party" default-map-name="info"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <service service-name="otsGetParty" result-map-name="info">
+                <field-map field-name="partyId" value="${parameters.partyId}"/>
+                <field-map field-name="organizationPartyId" value="${organizationPartyId}"/>
+            </service>
+        </actions>
+        <alt-target use-when="party==null||partyId==null" target="addParty"/>
+        <auto-fields-service service-name="otsAddParty"/>
+        <field name="partyId"><hidden value="${parameters.partyId}"/></field>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="partyRelationshipTypeId" title="Party Type">
+            <drop-down allow-empty="false">
+                <entity-options description="${partyRelationshipName}" entity-name="PartyRelationshipType">
+                    <entity-order-by field-name="partyRelationshipName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="countryGeoId" title="Country">
+            <drop-down allow-empty="true">
+                <entity-options description="${geoName}" entity-name="Geo" key-field-name="geoId">
+                    <entity-constraint name="geoTypeId" operator="equals" value="COUNTRY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="accountNumber" title="Bank Account Number"><text/></field>
+        <field position="1" use-when="party==null||partyId==null" name="submitButton" title="Create" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field position="1" use-when="party!=null&amp;&amp;partyId!=null" name="submitButton" title="Update" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
     <form name="partyFinancialHistory" type="list" list-name="historyList" 
         default-title-style="tableheadtext" default-widget-style="tabletext" 
         default-tooltip-style="tabletext" target="updateCategoryProductMember">
-        <field name="invoiceId"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/>></field>
+        <field name="invoiceId"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/></field>
         <field name="invoiceTypeId" title="T"><display/></field>
         <field name="invoiceDate"><display/></field>
         <field name="invoiceAmount"><display/></field>
@@ -63,15 +118,6 @@
         <field name="totalInvoice" title=""><display/></field>
         <field name="totalPayment" title=""><display/></field>
         <field name="totalToBePaid" title=""><display/></field>
-    </form>
-    <form name="ListCustomers" type="list" list-name="customers" 
-        default-title-style="tableheadtext" default-widget-style="inputBox" 
-        default-tooltip-style="tabletext" target="updateCategoryProductMember">
-        
-        <field name="p" title="Party Id" widget-style="buttontext"><hyperlink target="viewprofile?partyId=${partyId}" description="${partyId}"/></field>        
-        <field name="partyId" title="Name"><display-entity entity-name="Person" description="${lastName},${firstName} ${middleName}" key-field-name="partyId"/></field>
-        <field name="totalOrders" title="Nbr of orders" widget-style="buttontext"><hyperlink target="findordersCust?lookupFlag=Y&amp;hideFields=Y&amp;partyId=${partyId}" description="${totalOrders}"/></field>
-        <field name="totalGrandAmount" title="Amount"><display/></field>
     </form>
     
 </forms>
