@@ -88,6 +88,13 @@ text-decoration: underline;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
+.tabletextright {
+font-size: 10px;
+text-decoration: none;
+font-family: Verdana, Arial, Helvettica, sans-serif;
+text-align: right;
+}
+
 .tablebuttontext {
 font-size: 10px;
 color: #1E3C66;

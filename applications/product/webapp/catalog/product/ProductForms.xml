@@ -581,7 +581,7 @@
         <field name="supplierProductId"><display/></field>
         <field name="minimumOrderQuantity"><display/></field>
         <field name="quantityUomId"><display/></field>
-        <field name="lastPrice"><display/></field>
+        <field name="lastPrice"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="currencyUomId"><display/></field>
 
         <field name="updateLink" title=" " widget-style="buttontext">
