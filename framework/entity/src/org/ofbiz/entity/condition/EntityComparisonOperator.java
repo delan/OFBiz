@@ -244,12 +244,20 @@ public class EntityComparisonOperator extends EntityOperator {
         if (lhs == null) {
             if (rhs != null) {
                 return false;
+            } else {
+                return true;
             }
+        } else if (rhs instanceof Collection) {
+            if (((Collection) rhs).contains(lhs)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (lhs.equals(rhs)) {
             return true;
-        } else if (((Collection) rhs).contains(lhs)) {
-            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public static final boolean compareLike(Object lhs, Object rhs) {
