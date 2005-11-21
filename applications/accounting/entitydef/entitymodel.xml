@@ -1965,7 +1965,6 @@
       <field name="comments" type="comment"></field>
       <field name="finAccountTransId" type="id"></field>
       <field name="overrideGlAccountId" type="id"></field>
-      <field name="basedOnPaymentId" type="id"><!-- To be used when a payment is based on or comes from another payment, like a payment that is a return of a mistaken or over-payment --></field>
       <field name="actualCurrencyAmount" type="currency-amount"><!-- The ActualCurrency amount and uomId are for the values coming from the bank (if known) and are to be used for reconciliation and such later, and not for PaymentApplication. --></field>
       <field name="actualCurrencyUomId" type="id"></field>
       <prim-key field="paymentId"/>
@@ -2024,9 +2023,6 @@
       <relation type="one" fk-name="PAYMENT_ORGLA" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
       </relation>
-      <relation type="one" fk-name="PAYMENT_BOPMT" title="BasedOn" rel-entity-name="Payment">
-        <key-map field-name="basedOnPaymentId"/>
-      </relation>
     </entity>
     <view-entity entity-name="PaymentAndApplication"
             package-name="org.ofbiz.accounting.payment"
@@ -2060,6 +2056,7 @@
       <field name="invoiceId" type="id"></field>
       <field name="invoiceItemSeqId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
+      <field name="toPaymentId" type="id"><!-- To be used when a payment is based on or comes from another payment, like a payment that is a return of a mistaken or over-payment --></field>
       <field name="taxAuthGeoId" type="id"/>
       <field name="amountApplied" type="currency-amount"></field>
       <prim-key field="paymentApplicationId"/>
@@ -2075,6 +2072,9 @@
       </relation>
       <relation type="one" fk-name="PAYMENT_APP_BACT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="one" fk-name="PAYMENT_APP_TPMT" title="To" rel-entity-name="Payment">
+        <key-map field-name="toPaymentId" rel-field-name="paymentId"/>
       </relation>
       <relation type="one" fk-name="PAYMENT_APP_GEO" rel-entity-name="Geo">
         <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
