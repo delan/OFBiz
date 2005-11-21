@@ -30,8 +30,8 @@
             <xs:sequence>
                 <xs:element minOccurs="0" ref="title"/>
                 <xs:element minOccurs="0" ref="description"/>
-                <xs:element minOccurs="0" ref="copyright"/>
-                <xs:element minOccurs="0" ref="author"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="copyright"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="author"/>
                 <xs:element minOccurs="0" ref="version"/>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:element ref="entity"/>
