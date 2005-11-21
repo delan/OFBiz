@@ -130,6 +130,11 @@
         </if-empty>
         <check-errors/>
         
+        <if-compare-field field-name="partyGroup.groupName" operator="not-equals" to-field-name="parameters.groupName">
+            <set-service-fields service-name="updatePartyGroup" map-name="parameters" to-map-name="pg"/>
+            <call-service service-name="updatePartyGroup" in-map-name="pg"/>
+        </if-compare-field>
+        
         <if-compare-field field-name="parameters.name" operator="not-equals" to-field-name="partyGroup.groupName">
             <set-service-fields service-name="updatePartyGroup" map-name="parameters" to-map-name="updPartyGroup"/>
             <call-service service-name="updatePartyGroup" in-map-name="updPartyGroup"/>
@@ -305,7 +310,7 @@
         <if-empty field-name="partyGroup">
             <return/>
         </if-empty>
-        <field-to-result field-name="partyGroup.groupName" result-name="name"/>
+        <field-to-result field-name="partyGroup.groupName" result-name="groupName"/>
         
         <!-- get the postal address defined as GENERAL LOCATION -->
         <set field="getKey.partyId" from-field="parameters.partyId"/>

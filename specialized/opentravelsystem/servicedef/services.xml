@@ -37,7 +37,7 @@
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="name" type="String" mode="IN" optional="false"/>
+        <attribute name="groupName" type="String" mode="IN" optional="false"/>
         <attribute name="address1" type="String" mode="IN" optional="true"/>
         <attribute name="address2" type="String" mode="IN" optional="true"/>
         <attribute name="city" type="String" mode="IN" optional="true"/>
@@ -55,7 +55,7 @@
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyRelationshipTypeId" type="String" mode="OUT" optional="true"/>
-        <attribute name="name" type="String" mode="OUT" optional="true"/>
+        <attribute name="groupName" type="String" mode="OUT" optional="true"/>
         <attribute name="address1" type="String" mode="OUT" optional="true"/>
         <attribute name="address2" type="String" mode="OUT" optional="true"/>
         <attribute name="city" type="String" mode="OUT" optional="true"/>
@@ -73,7 +73,7 @@
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="false"/>
         <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="name" type="String" mode="IN" optional="true"/>
+        <attribute name="groupName" type="String" mode="IN" optional="true"/>
         <attribute name="address1" type="String" mode="IN" optional="true"/>
         <attribute name="address2" type="String" mode="IN" optional="true"/>
         <attribute name="city" type="String" mode="IN" optional="true"/>
