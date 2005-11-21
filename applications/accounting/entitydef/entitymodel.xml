@@ -2383,8 +2383,8 @@
         <field name="minPurchase" type="currency-amount"></field>
         <field name="taxShipping" type="indicator"></field>
         <field name="salesTaxPercentage" type="floating-point"></field>
-        <field name="taxAuthPartyId" type="id"></field>"
-        <field name="taxAuthGlAccountId" type="id"></field>"
+        <field name="taxAuthPartyId" type="id"></field>
+        <field name="taxAuthGlAccountId" type="id"></field>
         <prim-key field="productStoreId"/>
         <prim-key field="countryGeoId"/>
         <prim-key field="stateProvinceGeoId"/>
