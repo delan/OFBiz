@@ -199,7 +199,6 @@
                             <label style="head2">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
                         </container>
                         <container>
-                            <link target="EditFacility" text="[${uiLabelMap.ProductNewFacility}]" style="buttontext"/>
                             <link target="EditFacilityInventoryItems?facilityId=${facilityId}" text="[${uiLabelMap.ProductInventoryItems}]" style="buttontext"/>
                         </container>
 
@@ -210,6 +209,39 @@
             </widgets>
         </section>
     </screen>
+    <screen name="SearchInventoryItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleSearchInventoryItems"/>
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="EditFacilityInventoryItems"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="manufacturerPartyId" from-field="parameters.manufacturerPartyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator">
+                    <decorator-section name="body">
+
+                        <container>
+                            <label style="head1">Search for Inventory Items for:</label>
+                            <label style="head2">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
+                            <label style="head2">NOTE: This page is in development right now.</label>
+                        </container>
+                        <container>
+                            <link target="EditFacilityInventoryItems?facilityId=${facilityId}" text="[${uiLabelMap.ProductInventoryItems}]" style="buttontext"/>
+                        </container>
+
+                        <include-form name="SearchInventoryItemsParams" location="component://product/webapp/facility/facility/FacilityForms.xml"/>
+                        <include-form name="SearchInventoryItemsResults" location="component://product/webapp/facility/facility/FacilityForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ 
     <screen name="EditFacilityGroups">
         <section>
             <actions>
