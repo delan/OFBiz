@@ -1966,6 +1966,18 @@
         <key-map field-name="useTimeUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductInventoryItem"
+            package-name="org.ofbiz.product.product"
+            title="View entity joining Product and InventoryItem to allow queries for InventoryItem based on product attributes">
+      <member-entity entity-alias="PR" entity-name="Product"/>
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <alias-all entity-alias="PR"/>
+      <alias-all entity-alias="II"/>
+      <alias entity-alias="II" name="facilityId"/>
+      <view-link entity-alias="PR" rel-entity-alias="II">
+         <key-map field-name="productId"/>
+      </view-link>
+    </view-entity>
     <view-entity entity-name="ProductContentAndInfo"
             package-name="org.ofbiz.product.product"
             title="ProductContent, Content and DataResource View Entity">

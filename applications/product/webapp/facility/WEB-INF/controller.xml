@@ -197,6 +197,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewFacilityInventoryByProduct"/>
     </request-map>
+    <request-map uri="SearchInventoryItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SearchInventoryItems"/>
+    </request-map>
 
     <request-map uri="FindFacilityTransfers">
         <security https="true" auth="true"/>
@@ -924,6 +928,7 @@
     <view-map name="EditFacilityRoles" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityRoles"/>
     <view-map name="ViewContactMechs" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewContactMechs"/>
     <view-map name="EditContactMech" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditContactMech"/>
+    <view-map name="SearchInventoryItems" type="screen" page="component://product/widget/facility/FacilityScreens.xml#SearchInventoryItems"/>
 
     <view-map name="EditInventoryItem" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditInventoryItem"/>
     <view-map name="TransferInventoryItem" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TransferInventoryItem"/>

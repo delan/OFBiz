@@ -72,4 +72,26 @@
         <field name="totalQuantityOnHand"><display/></field>
         <field name="offsetQtyAvailable"><display/></field>
     </form>
+
+    <form name="SearchInventoryItemsParams" type="single" target="SearchInventoryItems"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="facilityId"><text/></field>
+        <field name="manufacturerPartyId"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="SearchInventoryItemsResults" type="list" list-iterator-name="listIt"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+           <service service-name="performFind" result-map-name="results" result-list-iterator-name="listIt">
+               <field-map field-name="inputFields" env-name="requestParameters"/>
+               <field-map field-name="entityName" value="ProductInventoryItem"/>
+           </service>
+        </actions>        
+        <field name="inventoryItemId"><display/></field>
+        <field name="productId"><display/></field>
+        <field name="manufacturerPartyId"><display/></field>
+        <field name="serialNumber"><display/></field> 
+    </form>
 </forms>

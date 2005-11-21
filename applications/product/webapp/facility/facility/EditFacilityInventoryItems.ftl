@@ -31,6 +31,7 @@
     <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewFacility}</a>
     <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewInventoryItemFacility}</a>
     <a href="<@ofbizUrl>ViewFacilityInventoryByProduct?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">View Inventory By Product</a>
+    <a href="<@ofbizUrl>SearchInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">Search Inventory Items</a>
 
     <#if facilityInventoryItems?exists && (facilityInventoryItems.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
