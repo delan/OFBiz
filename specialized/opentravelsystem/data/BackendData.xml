@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <StatusType statusTypeId="PARTY-RELATION" hasTable="N" description="Party relation status"/>
+    <StatusItem statusId="PARTYREL-DELETED" statusTypeId="PARTY-RELATION" description="deleted"/>
+    <StatusItem statusId="PARTYREL-ACTIVE" statusTypeId="PARTY-RELATION" description="active"/>
+</entity-engine-xml>
+    
