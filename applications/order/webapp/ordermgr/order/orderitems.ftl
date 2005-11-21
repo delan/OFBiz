@@ -34,9 +34,9 @@
                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
                     <div class="tabletext">
                       <#--
-                      <a href="<@ofbizUrl>changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a>
+                      <a href="<@ofbizUrl>changeOrderItemStatus?statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a>
                       -->
-                      <a href="<@ofbizUrl>editOrderItems?orderId=${orderId}&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderEditItems}</a>
+                      <a href="<@ofbizUrl>editOrderItems?${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderEditItems}</a>
                     </div>
                 </#if>
             </#if>

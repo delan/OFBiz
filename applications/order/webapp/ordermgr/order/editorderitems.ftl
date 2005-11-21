@@ -32,7 +32,7 @@
         <div style="float: right;">
             <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-                    <div class="tabletext"><a href="<@ofbizUrl>changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a><a href="<@ofbizUrl>orderview?orderId=${orderId}&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderViewOrder}</a></div>
+                    <div class="tabletext"><a href="<@ofbizUrl>changeOrderItemStatus?statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderViewOrder}</a></div>
                 </#if>
             </#if>
         </div>
@@ -134,7 +134,7 @@
                   <td>&nbsp;</td>
                   <td align="right" valign="top" nowrap>
                     <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED") || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && orderHeader.statusId != "ORDER_SENT")>
-                      <div class="tabletext"><a href="<@ofbizUrl>cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCancelAll}</a></div>
+                      <div class="tabletext"><a href="<@ofbizUrl>cancelOrderItem?item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCancelAll}</a></div>
                     <#else>
                       &nbsp;
                     </#if>
@@ -201,7 +201,7 @@
                     <td align="right" valign="top" nowrap>
                       <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)))>
                       <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
-                        <div class="tabletext"><a href="<@ofbizUrl>cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCancel}</a></div>
+                        <div class="tabletext"><a href="<@ofbizUrl>cancelOrderItem?item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCancel}</a></div>
                       <#else>
                         &nbsp;
                       </#if>
