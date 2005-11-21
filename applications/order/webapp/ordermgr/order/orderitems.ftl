@@ -86,10 +86,12 @@
                           <a href="<@ofbizUrl>viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
                         </#if>
                       </div>
-                      <div class="tabletext">
-                          <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" target="_blank">${uiLabelMap.ProductInventory}:</a>
-                          ATP = ${availableToPromiseMap.get(productId)}, QOH = ${quantityOnHandMap.get(productId)}</a>
-                      </div>
+                      <#if (orderHeader.statusId != "ORDER_COMPLETED") && availableToPromiseMap.get(productId)?exists && quantityOnHandMap.get(productId)?exists>
+                        <div class="tabletext">
+                            <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" target="_blank">${uiLabelMap.ProductInventory}:</a>
+                            ATP = ${availableToPromiseMap.get(productId)}, QOH = ${quantityOnHandMap.get(productId)}</a>
+                        </div>
+                      </#if>
                     </#if>
                   </td>
 
