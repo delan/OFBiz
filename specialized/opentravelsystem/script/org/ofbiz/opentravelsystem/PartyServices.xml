@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Copyright (c) 2001-2005 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
+ * @version 1.0
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+
+    <!-- ================================================================ -->
+    <!-- Opentravelsystem Party Services -->
+    <!-- ================================================================ -->
+    
+    <simple-method method-name="addParty" short-description="--Add a Party--">
+        <!--check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/-->
+            
+        <if-empty field-name="parameters.name">
+            <add-error>
+                <fail-message message="Name of the new party is missing"/>
+            </add-error>
+        </if-empty>    
+        <check-errors/>
+
+        <!-- partygroup -->
+        <set field="createPartyGroup.groupName" from-field="parameters.name"/>
+        <call-service service-name="createPartyGroup" in-map-name="createPartyGroup">
+            <result-to-field result-name="partyId" field-name="partyId"/>
+        </call-service>    
+        <check-errors/>
+
+        <!-- postal address -->
+        <if-not-empty field-name="parameters.address1">
+            <set-service-fields service-name="otsUpdatePostalAddress" map-name="parameters" to-map-name="createPostalAddress"/>
+            <set field="createPostalAddress.partyId" from-field="partyId"/>
+            <call-service service-name="otsUpdatePostalAddress" in-map-name="createPostalAddress"/>
+        </if-not-empty>
+        
+        <!-- email address -->
+        <if-not-empty field-name="parameters.emailAddress">
+            <set field="createEmailAddress.infoString" from-field="parameters.emailAddress"/>
+            <set field="createEmailAddress.contactMechTypeId" value="EMAIL_ADDRESS"/>
+            <set field="createEmailAddress.partyId" from-field="partyId"/>
+            <call-service service-name="createPartyContactMech" in-map-name="createEmailAddress"/>    
+        </if-not-empty>
+        
+        <!-- work phone -->
+        <if-not-empty field-name="telephone" map-name="parameters">
+            <set field="workPhoneContext.partyId" from-field="partyId"/>
+            <set field="workPhoneContext.contactNumber" from-field="parameters.telephone"/>
+            <call-service service-name="createPartyTelecomNumber" in-map-name="workPhoneContext">
+                <result-to-field result-name="contactMechId" map-name="workPhonePurposeContext"/>
+            </call-service>
+            <set field="workPhonePurposeContext.partyId" from-field="partyId"/>
+            <set field="workPhonePurposeContext.contactMechPurposeTypeId" value="PHONE_WORK"/>
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="workPhonePurposeContext"/>
+        </if-not-empty>
+        
+        <!-- fax phone -->
+        <if-not-empty field-name="fax" map-name="parameters">
+            <set field="faxPhoneContext.partyId" from-field="partyId"/>
+            <set field="faxPhoneContext.contactNumber" from-field="parameters.fax"/>
+            <call-service service-name="createPartyTelecomNumber" in-map-name="faxPhoneContext">
+                <result-to-field result-name="contactMechId" map-name="faxPhonePurposeContext"/>
+            </call-service>
+            <set field="faxPhonePurposeContext.partyId" from-field="partyId"/>
+            <set field="faxPhonePurposeContext.contactMechPurposeTypeId" value="FAX_NUMBER"/>
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="faxPhonePurposeContext"/>
+        </if-not-empty>
+        
+        <!-- bank account -->        
+        <if-not-empty field-name="parameters.accountNumber">
+            <set field="createEftAccount.partyId" from-field="partyId"/>
+            <set field="createEftAccount.accountNumber" from-field="parameters.accountNumber"/>
+            <set field="createEftAccount.accountType" value=" "/>
+            <set field="createEftAccount.bankName" value=" "/>
+            <set field="createEftAccount.routingNumber" value=" "/>
+            <set field="createEftAccount.nameOnAccount" value=" "/>
+            <call-service service-name="createEftAccount" in-map-name="createEftAccount"/>
+        </if-not-empty>
+        
+        <field-to-result field-name="partyId" result-name="partyId"/>
+        <field-to-request field-name="partyId" request-name="partyId"/>
+
+        <!-- party relationship -->
+        <set field="rel.partyIdFrom" from-field="organizationPartyId"/>
+        <set field="rel.partyIdTo" from-field="partyId"/>
+        <set field="rel.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/>
+        <set field="rel.statusId" value="PARTYREL-ACTIVE"/>
+        <call-service service-name="createPartyRelationship" in-map-name="rel"/>
+
+    </simple-method>
+    
+    <simple-method method-name="updateParty" short-description="--Update an existingParty--">
+        <!--check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/-->
+        
+        <!-- get the partygroup -->
+        <entity-one entity-name="PartyGroup" value-name="partyGroup">
+            <field-map field-name="partyId" value="${parameters.partyId}"/>
+        </entity-one>
+        
+        <if-empty field-name="partyGroup">
+            <add-error><fail-message message="party group ${parameters.partyId} not found"/></add-error>
+        </if-empty>
+        <check-errors/>
+        
+        <if-compare-field field-name="parameters.name" operator="not-equals" to-field-name="partyGroup.groupName">
+            <set-service-fields service-name="updatePartyGroup" map-name="parameters" to-map-name="updPartyGroup"/>
+            <call-service service-name="updatePartyGroup" in-map-name="updPartyGroup"/>
+        </if-compare-field>        
+        
+        <!-- postal address -->
+        <if-not-empty field-name="parameters.address1">
+            <set-service-fields service-name="otsUpdatePostalAddress" map-name="parameters" to-map-name="pa"/>
+            <call-service service-name="otsUpdatePostalAddress" in-map-name="pa"/>
+        </if-not-empty>
+        
+        <!-- telephone  -->
+        <if-not-empty field-name="parameters.telephone">
+            <entity-and entity-name="PartyContactMechPurpose" list-name="partyContactMechPurposesU">
+                <field-map field-name="partyId" value="${parameters.partyId}"/>
+                <field-map field-name="contactMechPurposeTypeId" value="PHONE_WORK"/>
+            </entity-and> 
+            <filter-list-by-date list-name="partyContactMechPurposesU" to-list-name="partyContactMechPurposes"/>
+            <if-not-empty field-name="partyContactMechPurposes">
+                <first-from-list entry-name="partyContactMechPurpose" list-name="partyContactMechPurposes"/>
+                <get-related-one value-name="partyContactMechPurpose" relation-name="TelecomNumber" to-value-name="telecomNumber"/>
+            </if-not-empty>
+            <if-compare-field field-name="parameters.telephone" operator="not-equals" to-field-name="telecomnumber.contactNumber">
+                <if-empty field-name="partyContactMechPurposes"><!-- create new -->
+                    <set field="workPhoneContext.partyId" from-field="parameters.partyId"/>
+                    <set field="workPhoneContext.contactNumber" from-field="parameters.telephone"/>
+                    <call-service service-name="createPartyTelecomNumber" in-map-name="workPhoneContext">
+                        <result-to-field result-name="contactMechId" map-name="workPhonePurposeContext"/>
+                    </call-service>
+                    <set field="workPhonePurposeContext.partyId" from-field="parameters.partyId"/>
+                    <set field="workPhonePurposeContext.contactMechPurposeTypeId" value="PHONE_WORK"/>
+                    <call-service service-name="createPartyContactMechPurpose" in-map-name="workPhonePurposeContext"/>
+                    <else><!-- update existing -->
+                        <set field="telecomNumber.contactNumber" from-field="parameters.telephone"/>
+                        <store-value value-name="telecomNumber"/>
+                    </else>
+                </if-empty>
+            </if-compare-field>            
+        </if-not-empty>
+        
+        <!-- fax  -->
+        <if-not-empty field-name="parameters.fax">
+            <entity-and entity-name="PartyContactMechPurpose" list-name="partyContactMechPurposeU">
+                <field-map field-name="partyId" value="${parameters.partyId}"/>
+                <field-map field-name="contactMechPurposeTypeId" value="FAX_NUMBER"/>
+            </entity-and> 
+            <filter-list-by-date list-name="partyContactMechPurposeU" to-list-name="partyContactMechPurposes"/>
+            <if-not-empty field-name="partyContactMechPurposes">
+                <first-from-list entry-name="partyContactMechPurpose" list-name="partyContactMechPurposes"/>
+                <get-related-one value-name="partyContactMechPurpose" relation-name="TelecomNumber" to-value-name="telecomNumber"/>
+            </if-not-empty>
+            
+            <if-compare-field field-name="parameters.fax" operator="not-equals" to-field-name="telecomNumber.contactNumber">
+                <if-empty field-name="partyContactMechPurposes">
+                    <set field="faxPhoneContext.partyId" from-field="parameters.partyId"/>
+                    <set field="faxPhoneContext.contactNumber" from-field="parameters.fax"/>
+                    <call-service service-name="createPartyTelecomNumber" in-map-name="faxPhoneContext">
+                        <result-to-field result-name="contactMechId" map-name="faxPhonePurposeContext"/>
+                    </call-service>
+                    <set field="faxPhonePurposeContext.partyId" from-field="parameters.partyId"/>
+                    <set field="faxPhonePurposeContext.contactMechPurposeTypeId" value="FAX_NUMBER"/>
+                    <call-service service-name="createPartyContactMechPurpose" in-map-name="faxPhonePurposeContext"/>
+                    <else><!-- update existing -->
+                        <set field="telecomNumber.contactNumber" from-field="parameters.fax"/>
+                        <store-value value-name="telecomNumber"/>
+                    </else>
+                </if-empty>
+            </if-compare-field>
+        </if-not-empty>        
+        
+        <!-- email address  -->
+        <if-not-empty field-name="parameters.emailAddress">
+            <entity-and entity-name="PartyAndContactMech" list-name="emailsU">
+                <field-map field-name="partyId" value="${parameters.partyId}"/>
+                <field-map field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
+            </entity-and> 
+            <filter-list-by-date list-name="emailsU" to-list-name="emails"/>
+            <if-not-empty field-name="emails">
+                <first-from-list entry-name="email" list-name="emails"/>
+            </if-not-empty>
+            <if-compare-field field-name="parameters.emailAddress" operator="not-equals" to-field-name="email.infoString">
+                <set field="updEmailAddress.infoString" from-field="parameters.emailAddress"/>
+                <set field="updEmailAddress.partyId" from-field="parameters.partyId"/>
+                <set field="updEmailAddress.contactMechTypeId" value="EMAIL_ADDRESS"/>
+                <if-empty field-name="emails">
+                    <call-service service-name="createPartyContactMech" in-map-name="updEmailAddress"/>    
+                    <else>
+                        <set field="updEmailAddress.contactMechId" value="${email.contactMechId}"/>
+                        <call-service service-name="updatePartyContactMech" in-map-name="updEmailAddress"/>    
+                    </else>                
+                </if-empty>
+            </if-compare-field>
+        </if-not-empty>
+        
+        <!-- Bank account number -->
+        <if-not-empty field-name="parameters.accountNumber">
+            <entity-and entity-name="PaymentMethod" list-name="paymentMethods">
+                <field-map field-name="partyId" value="${parameters.partyId}"/>
+                <field-map field-name="paymentMethodTypeId" value="EFT_ACCOUNT"/>
+            </entity-and>
+            <if-not-empty field-name="paymentMethods">
+                <first-from-list entry-name="paymentMethod" list-name="paymentMethods"/>
+                <get-related-one value-name="paymentMethod" relation-name="EftAccount" to-value-name="eftAccount"/>
+            </if-not-empty>
+            <if-compare-field field-name="parameters.accountNumber" operator="not-equals" to-field-name="eftAccount.accountNumber">
+                <if-empty field-name="paymentMethods">
+                    <set field="createEftAccount.partyId" from-field="parameters.partyId"/>
+                    <set field="createEftAccount.accountNumber" from-field="parameters.accountNumber"/>
+                    <set field="createEftAccount.accountType" value=" "/>
+                    <set field="createEftAccount.bankName" value=" "/>
+                    <set field="createEftAccount.routingNumber" value=" "/>
+                    <set field="createEftAccount.nameOnAccount" value=" "/>
+                    <call-service service-name="createEftAccount" in-map-name="createEftAccount"/>
+                    <else>
+                        <set field="eftAccount.accountNumber" from-field="parameters.accountNumber"/>
+                        <store-value value-name="eftAccount"/>
+                    </else>
+                </if-empty>
+            </if-compare-field>
+        </if-not-empty>
+        
+        <!-- party relationship -->
+        <entity-and entity-name="PartyRelationship" list-name="partyRelationships">
+            <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
+            <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
+        </entity-and>
+        <first-from-list entry-name="partyRelationship" list-name="partyRelationships"/>
+        <if-compare-field field-name="parameters.partyRelationshipTypeId" operator="not-equals" to-field-name="partyRelationship.partyRelationshipTypeId">
+            <set field="newPartyRelationship.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/>
+            <set field="newPartyRelationship.partyIdFrom" from-field="partyRelationship.partyIdFrom"/>
+            <set field="newPartyRelationship.partyIdTo" from-field="partyRelationship.partyIdTo"/>
+            <set field="newPartyRelationship.roleTypeIdFrom" from-field="partyRelationship.roleTypeIdFrom"/>
+            <set field="newPartyRelationship.roleTypeIdTo" from-field="partyRelationship.roleTypeIdTo"/>
+            <set field="newPartyRelationship.fromDate" from-field="partyRelationship.fromDate"/>
+            <call-service service-name="updatePartyRelationship" in-map-name="newPartyRelationship"/>
+        </if-compare-field>
+        <if-empty field-name="partyRelationship.statusId"><!-- update old rcords -->
+            <set field="partyRelationship.statusId" value="PARTYREL-ACTIVE"/>
+            <store-value value-name="partyRelationship"/>
+        </if-empty>
+
+        <field-to-result field-name="parameters.partyId" result-name="partyId"/>
+        
+    </simple-method>
+
+    <simple-method method-name="getParty" short-description="--retrive Party Information--">
+        <!--check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/-->
+
+        <if-empty field-name="parameters.partyId">
+            <return/>
+        </if-empty>
+
+        <!-- party relationship -->
+        <entity-and entity-name="PartyRelationship" list-name="partyRelationships">
+            <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
+            <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
+        </entity-and>
+        <first-from-list entry-name="partyRelationship" list-name="partyRelationships"/>
+        <if-empty field-name="partyRelationship">
+            <return/>
+        </if-empty>
+        
+        <field-to-result field-name="partyRelationship.partyRelationshipTypeId" result-name="partyRelationshipTypeId"/>
+
+        <!-- get the partygroup -->
+        <entity-one entity-name="PartyGroup" value-name="partyGroup">
+            <field-map field-name="partyId" value="${parameters.partyId}"/>
+        </entity-one>
+        <if-empty field-name="partyGroup">
+            <return/>
+        </if-empty>
+        <field-to-result field-name="partyGroup.groupName" result-name="name"/>
+        
+        <!-- get the postal address defined as GENERAL LOCATION -->
+        <set field="getKey.partyId" from-field="parameters.partyId"/>
+        <set field="getKey.organizationPartyId" from-field="parameters.organizationPartyId"/>
+        <call-service service-name="otsGetPostalAddress" in-map-name="getKey">
+            <result-to-result service-result-name="address1"  result-name="address1"/>
+            <result-to-result service-result-name="address2" result-name="address2"/>
+            <result-to-result service-result-name="city" result-name="city"/>
+            <result-to-result service-result-name="postalCode" result-name="postalCode"/>
+            <result-to-result service-result-name="countryGeoId" result-name="countryGeoId"/>
+        </call-service>
+        
+        <!-- email address  -->
+        <entity-and entity-name="PartyAndContactMech" list-name="emailsU">
+            <field-map field-name="partyId" value="${parameters.partyId}"/>
+            <field-map field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
+        </entity-and> 
+        <filter-list-by-date list-name="emailsU" to-list-name="emails"/>
+        <if-not-empty field-name="emails">
+            <first-from-list entry-name="email" list-name="emails"/>
+            <field-to-result field-name="email.infoString" result-name="emailAddress"/>
+        </if-not-empty>
+        
+        <!-- telephone  -->
+        <entity-and entity-name="PartyContactMechPurpose" list-name="partyContactMechPurposesU">
+            <field-map field-name="partyId" value="${parameters.partyId}"/>
+            <field-map field-name="contactMechPurposeTypeId" value="PHONE_WORK"/>
+        </entity-and> 
+        <filter-list-by-date list-name="partyContactMechPurposesU" to-list-name="partyContactMechPurposes"/>
+        <if-not-empty field-name="partyContactMechPurposes">
+            <first-from-list entry-name="partyContactMechPurpose" list-name="partyContactMechPurposes"/>
+            <get-related-one value-name="partyContactMechPurpose" relation-name="TelecomNumber" to-value-name="telecomNumber"/>
+            <field-to-result field-name="telecomNumber.contactNumber" result-name="telephone"/>
+        </if-not-empty>
+        
+        <!-- fax  -->
+        <entity-and entity-name="PartyContactMechPurpose" list-name="partyContactMechPurposeU">
+            <field-map field-name="partyId" value="${parameters.partyId}"/>
+            <field-map field-name="contactMechPurposeTypeId" value="FAX_NUMBER"/>
+        </entity-and> 
+        <filter-list-by-date list-name="partyContactMechPurposeU" to-list-name="partyContactMechPurposes"/>
+        <if-not-empty field-name="partyContactMechPurposes">
+            <first-from-list entry-name="partyContactMechPurpose" list-name="partyContactMechPurposes"/>
+            <get-related-one value-name="partyContactMechPurpose" relation-name="TelecomNumber" to-value-name="telecomNumber"/>
+            <field-to-result field-name="telecomNumber.contactNumber" result-name="fax"/>
+        </if-not-empty>
+        
+        <!-- Bank account number -->
+        <entity-and entity-name="PaymentMethod" list-name="paymentMethods">
+            <field-map field-name="partyId" value="${parameters.partyId}"/>
+            <field-map field-name="paymentMethodTypeId" value="EFT_ACCOUNT"/>
+        </entity-and>
+        <if-not-empty field-name="paymentMethods">
+            <first-from-list entry-name="paymentMethod" list-name="paymentMethods"/>
+            <get-related-one value-name="paymentMethod" relation-name="EftAccount" to-value-name="eftAccount"/>
+            <field-to-result field-name="eftAccount.accountNumber" result-name="accountNumber"/>
+        </if-not-empty>
+
+    </simple-method>
+    
+    <simple-method method-name="setStatusParty" short-description="--unDelete a Party--">
+        <!--check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/-->
+        
+        <entity-and entity-name="PartyRelationship" list-name="relations">
+            <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
+            <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
+        </entity-and>
+        <filter-list-by-date list-name="relations" to-list-name="selRelations"/>
+        <first-from-list entry-name="relation" list-name="selRelations"/>
+        
+        <set-service-fields service-name="updatePartyRelationship" map-name="relation" to-map-name="sRelation"/>
+        <set field="sRelation.statusId" value="${parameters.statusId}"/>
+        <call-service service-name="updatePartyRelationship" in-map-name="sRelation"/>
+        <!--field-to-result field-name="sRelation.partyIdTo" result-name="partyId"/-->
+    </simple-method>
+
+    <simple-method method-name="updatePostalAddress" short-description="--add/update a postal address for a party--">
+        <!--check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/-->
+
+
+        <!-- check input -->        
+        <if-empty field-name="parameters.countryGeoId"><!-- get countryGeoId from organizationparty if empty -->
+            <entity-and entity-name="PartyAndPostalAddress" list-name="orgAddressesU">
+                <field-map field-name="partyId" value="${parameters.organizationPartyId}"/>
+                <field-map field-name="contactMechTypeId" value="POSTAL_ADDRESS"/>
+            </entity-and>
+            <filter-list-by-date list-name="orgAddressesU" to-list-name="orgAddresses"/>
+            <if-not-empty field-name="orgAddresses">
+                <first-from-list entry-name="orgAddress" list-name="orgAddresses"/>
+                <set field="parameters.countryGeoId" from-field="orgAddress.countryGeoId"/>
+            </if-not-empty>
+        </if-empty>
+        <call-map-processor in-map-name="parameters" out-map-name="createPostalAddress">
+            <simple-map-processor name="dummy">
+                <process field="address1"><copy to-field="address1"/></process>
+                <process field="address2"><copy to-field="address2"/></process>
+                <process field="city"><copy/><not-empty><fail-message message="City is required too..."/></not-empty></process>
+                <process field="postalCode"><copy/><not-empty><fail-message message="Postalcode is required"/></not-empty></process>
+                <process field="countryGeoId"><copy to-field="countryGeoId"/><not-empty><fail-message message="Country is required"/></not-empty></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <check-errors/>
+        
+        <!-- get the postal address defined as GENERAL LOCATION -->
+        <set field="getKey.partyId" from-field="parameters.partyId"/>
+        <set field="getKey.organizationPartyId" from-field="parameters.organizationPartyId"/>
+        <call-service service-name="otsGetPostalAddress" in-map-name="getKey">
+            <result-to-field result-name="contactMechId" field-name="contactMechId"/><!-- required for update -->
+            <result-to-field result-name="address1" field-name="postalAddress.address1"/>
+            <result-to-field result-name="address2" field-name="postalAddress.address2"/>
+            <result-to-field result-name="city" field-name="postalAddress.city"/>
+            <result-to-field result-name="postalCode" field-name="postalAddress.postalCode"/>
+            <result-to-field result-name="countryGeoId" field-name="postalAddress.countryGeoId"/>
+        </call-service>
+        
+        <if><!-- check if we really need an update -->
+            <condition>
+                <or>
+                    <if-empty field-name="contactMechId"/>  <!-- old address not present so add new one -->
+                    <if-compare-field field-name="postalAddress.address1" operator="not-equals" to-field-name="parameters.address1"/>
+                    <if-compare-field field-name="postalAddress.address2" operator="not-equals" to-field-name="parameters.address2"/>
+                    <if-compare-field field-name="postalAddress.city" operator="not-equals" to-field-name="parameters.city"/>
+                    <if-compare-field field-name="postalAddress.postalCode" operator="not-equals" to-field-name="parameters.postalCode"/>
+                    <if-compare-field field-name="postalAddress.countryGeoId" operator="not-equals" to-field-name="parameters.countryGeoId"/>
+                </or>
+            </condition>
+            <then>
+                <if-empty field-name="contactMechId">  <!-- old address not present so add new one -->
+                    <set field="createPartyPostaAddress.partyId" from-field="parameters.partyId"/>
+                    <call-service service-name="createPartyPostalAddress" in-map-name="createPostalAddress">
+                        <result-to-field result-name="contactMechId" field-name="addressPurposeContext.contactMechId"/>
+                    </call-service>
+                    <set field="addressPurposeContext.partyId" from-field="parameters.partyId"/>
+                    <set field="addressPurposeContext.contactMechPurposeTypeId" value="GENERAL_LOCATION"/>
+                    <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                    <else> <!-- update existing one -->
+                        <make-value value-name="newPostalAddress" entity-name="PostalAddress"/>
+                        <set-nonpk-fields value-name="newPostalAddress" map-name="parameters"/>
+                        <set field="newPostalAddress.contactMechId" from-field="contactMechId" />
+                        <log level="always" message="===================${newPostalAddress}"></log>
+                        <store-value value-name="newPostalAddress"/><!-- seems that updatePostalAddress service does not work -->
+                    </else>
+                </if-empty>
+            </then>
+        </if>
+        
+    </simple-method>
+    
+    <simple-method method-name="getPostalAddress" short-description="--get postal address for a party--">
+        <!--check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/-->
+
+        <!-- get the postal address defined as GENERAL LOCATION -->
+        <entity-and entity-name="PartyContactMechPurpose" list-name="addressesU">
+            <field-map field-name="partyId" value="${parameters.partyId}"/>
+            <field-map field-name="contactMechPurposeTypeId" value="GENERAL_LOCATION"/>
+        </entity-and> 
+        <filter-list-by-date list-name="addressesU" to-list-name="addresses"/>
+        <if-not-empty field-name="addresses">
+            <first-from-list entry-name="address" list-name="addresses"/>
+            <get-related-one value-name="address" relation-name="PostalAddress" to-value-name="postalAddress"/>
+            <field-to-result field-name="postalAddress.contactMechId" result-name="contactMechId"/>
+            <field-to-result field-name="postalAddress.address1" result-name="address1"/>
+            <field-to-result field-name="postalAddress.address2" result-name="address2"/>
+            <field-to-result field-name="postalAddress.city" result-name="city"/>
+            <field-to-result field-name="postalAddress.postalCode" result-name="postalCode"/>
+            <field-to-result field-name="postalAddress.countryGeoId" result-name="countryGeoId"/>
+        </if-not-empty>
+    
+    </simple-method>
+    
+</simple-methods>
