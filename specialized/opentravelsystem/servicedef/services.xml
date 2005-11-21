@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ 
+ * OpenTravelSystem additional services on top of the OFBiz services. 
+-->
+
+<!--  =============== Open Travel System additional services ===================== -->
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
+    <description>OpenTravelSystemServices</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+    
+    <!-- party services to add, update and logically delete. -->
+    <service name="otsAddParty" engine="simple" location="org/ofbiz/opentravelsystem/PartyServices.xml"
+        invoke="addParty" auth="true">
+        <description>Add a new party to the system and the relationship to the organizationPartyId</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="name" type="String" mode="IN" optional="false"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
+        <attribute name="telephone" type="String" mode="IN" optional="true"/>
+        <attribute name="fax" type="String" mode="IN" optional="true"/>
+        <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="otsGetParty" engine="simple" location="org/ofbiz/opentravelsystem/PartyServices.xml"
+        invoke="getParty" auth="true">
+        <description>Retrieve the party information</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="name" type="String" mode="OUT" optional="true"/>
+        <attribute name="address1" type="String" mode="OUT" optional="true"/>
+        <attribute name="address2" type="String" mode="OUT" optional="true"/>
+        <attribute name="city" type="String" mode="OUT" optional="true"/>
+        <attribute name="postalCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="OUT" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="OUT" optional="true"/>
+        <attribute name="telephone" type="String" mode="OUT" optional="true"/>
+        <attribute name="fax" type="String" mode="OUT" optional="true"/>
+        <attribute name="accountNumber" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="otsUpdateParty" engine="simple"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="updateParty" auth="true">
+        <description>Modify the party information including the relationship to the organizationPartyId</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="name" type="String" mode="IN" optional="true"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
+        <attribute name="telephone" type="String" mode="IN" optional="true"/>
+        <attribute name="fax" type="String" mode="IN" optional="true"/>
+        <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="otsSetStatusParty" engine="simple"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="setStatusParty" auth="true">
+        <description>set the status of a party in thge relationship table</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="otsUpdatePostalAddress" engine="simple"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="updatePostalAddress" auth="true">
+        <description>Add or Update a GeneralLocation postal address</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="otsGetPostalAddress" engine="simple"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="getPostalAddress" auth="true">
+        <description>Get a GeneralLocation postal address</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
+        <attribute name="address1" type="String" mode="OUT" optional="true"/>
+        <attribute name="address2" type="String" mode="OUT" optional="true"/>
+        <attribute name="city" type="String" mode="OUT" optional="true"/>
+        <attribute name="postalCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="CreateProductCategoryLinkToProdCatalog" engine="simple"
+        location="org/ofbiz/opentravelsystem/CatalogServices.xml"
+        invoke="CreateProductCategoryLinkToProdCatalog" auth="true">
+        <description>Create a new category and make the link to the Catalog</description>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="primaryParentCategoryId" type="String" mode="IN"/>
+        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+</services>
