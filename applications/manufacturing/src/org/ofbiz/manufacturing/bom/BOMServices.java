@@ -428,6 +428,7 @@ public class BOMServices {
             BOMNode node = (BOMNode)componentsIt.next();
             componentMap.put("product", node.getProduct());
             componentMap.put("quantity", new Double(node.getQuantity()));
+            componentsMap.add(componentMap);
         }
         result.put("componentsMap", componentsMap);
         return result;

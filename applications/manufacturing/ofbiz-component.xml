@@ -54,6 +54,7 @@
     <service-resource type="model" loader="main" location="servicedef/services_production_run.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_bom.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_mrp.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_cost.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_formula.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
 
