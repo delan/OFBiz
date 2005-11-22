@@ -40,7 +40,8 @@
       <td><div class="tableheadtext">${uiLabelMap.CommonDate}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.CommonReturn}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.ProductLine}</div></td>
-      <td><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>     
+      <td><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductPerUnitPrice}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.ProductReceived}</div></td>
     </tr>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
@@ -51,6 +52,7 @@
         <td><div class="tabletext">${item.returnId}</div></td>
         <td><div class="tabletext">${item.returnItemSeqId}</div></td>
         <td><div class="tabletext">${item.productId?default("Not Found")}</div></td>
+        <td><div class="tabletext">${item.unitCost?default(0)?string("##0.00")}</div></td>
         <td><div class="tabletext">${item.quantityAccepted?string.number}</div></td>
       </tr>
     </#list>
@@ -86,8 +88,8 @@
                
         <#list returnItems as returnItem>
           <#assign defaultQuantity = returnItem.returnQuantity - receivedQuantities[returnItem.returnItemSeqId]?double>
-          <#if 0 < defaultQuantity>
           <#assign orderItem = returnItem.getRelatedOne("OrderItem")?if_exists>
+          <#if (orderItem?has_content && 0 < defaultQuantity)>
           <#assign orderItemType = (orderItem.getRelatedOne("OrderItemType"))?if_exists>
           <input type="hidden" name="returnId_o_${rowCount}" value="${returnItem.returnId}">
           <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="${returnItem.returnItemSeqId}"> 
@@ -95,6 +97,8 @@
           <input type="hidden" name="datetimeReceived_o_${rowCount}" value="${now}">
           <input type="hidden" name="quantityRejected_o_${rowCount}" value="0">         
           <input type="hidden" name="comments_o_${rowCount}" value="Returned Item RA# ${returnItem.returnId}">
+
+          <#assign unitCost = Static["org.ofbiz.order.order.OrderReturnServices"].getReturnItemInitialCost(delegator, returnItem.returnId, returnItem.returnItemSeqId)/>
           <tr>
             <td colspan="2"><hr class="sepbar"></td>
           </tr>                 
@@ -129,7 +133,8 @@
                       </div>
                     </td>
                   </#if>
-                  
+                  <td>&nbsp;</td>
+
                   <#-- location(s) -->
                   <td align="right">
                     <div class="tableheadtext">${uiLabelMap.ProductLocation}:</div>
@@ -151,7 +156,7 @@
                     </#if>
                   </td>
                   
-                  <td align="right">
+                  <td align="right" nowrap>
                     <div class="tableheadtext">${uiLabelMap.ProductQtyReceived}:</div>
                   </td>
                   <td align="right">                    
@@ -188,11 +193,16 @@
                           <option>${inventoryItem.inventoryItemId}</option>
                         </#list>
                       </select>
-                    </td>                  
-                    <td colspan="2">&nbsp;</td>
+                    </td>
                   <#else>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="2">&nbsp;</td>
                   </#if>
+                  <td align="right" nowrap>
+                    <div class="tableheadtext">${uiLabelMap.ProductPerUnitPrice}:</div>
+                  </td>
+                  <td align="right">
+                    <input type='text' name='unitCost_o_0' size='6' value='${unitCost?default(0)?string("##0.00")}' class="inputBox">
+                  </td>
                 </tr>                                               
               </table>
             </td>

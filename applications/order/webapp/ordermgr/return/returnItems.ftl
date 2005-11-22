@@ -95,8 +95,18 @@
     </tr>
   </#if>
 </table>
-<br/>
 <#if returnHeader.statusId == "RETURN_REQUESTED">
+<br/>
+<form name="acceptReturn" method="post" action="<@ofbizUrl>/updateReturn</@ofbizUrl>">
+  <input type="hidden" name="returnId" value="${returnId}">
+  <input type="hidden" name="statusId" value="RETURN_ACCEPTED">
+  <input type="hidden" name="currentStatusId" value="${returnHeader.statusId?if_exists}">
+  <div class="tabletext" align="right"><input type="submit" value="Accept Return"></div>
+</form>
+</#if>
+
+<#if returnHeader.statusId == "RETURN_REQUESTED">
+<br/>
 <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${returnId}">
   <table border='0' cellpadding='2' cellspacing='0'>

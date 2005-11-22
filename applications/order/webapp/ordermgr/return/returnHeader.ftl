@@ -75,6 +75,10 @@
      <select class="selectBox" name="currencyUomId">
         <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
           <option value="${orderHeader.currencyUom}" selected>${orderHeader.getRelatedOne("Uom").getString("description")}</option>
+          <option value="${orderHeader.currencyUom}">---</option>
+        <#elseif defaultCurrency?has_content>
+          <option value="${defaultCurrency.uomId}" selected>${defaultCurrency.getString("description")}</option>
+          <option value="${defaultCurrency.uomId}">---</option>
         </#if>
         <#if currencies?has_content>
           <#list currencies as currency>
@@ -117,7 +121,7 @@
         </#if>
         <option value="">${uiLabelMap.FacilityNoFacility}</option>
         <#list facilityList as facility>
-          <option value="${facility.facilityId}">${facility.facilityName?default(facility.facilityId)}</option>
+          <option value="${facility.facilityId}" <#if (facilityList?size == 1)>selected</#if>>${facility.facilityName?default(facility.facilityId)}</option>
         </#list>
     </td>                
   </tr>  
@@ -141,6 +145,21 @@
         <input type='text' class='inputBox' size='20' name='billingAccountId'>
       </#if>
     </td>                
+  </tr>
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Needs Auto-Receive (On ACCEPT)</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <select name='needsInventoryReceive' class='selectBox'>
+        <#if needsInventoryReceive?exists>
+          <option>${needsInventoryReceive}</option>
+          <option value="${needsInventoryReceive}">---</option>
+        </#if>
+        <option>N</option>
+        <option>Y</option>
+      </select>
+    </td>
   </tr>
   <#if returnHeader?has_content>
     <tr>

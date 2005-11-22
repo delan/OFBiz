@@ -1957,6 +1957,7 @@
         <field name="orderItemSeqId" type="id"></field>
         <field name="orderAdjustmentId" type="id"></field>
         <field name="statusId" type="id"></field>
+        <field name="expectedItemStatus" type="id"></field>
         <field name="returnQuantity" type="floating-point"></field>  <!-- promised by the customer -->
         <field name="receivedQuantity" type="floating-point"></field> <!-- actually received from the customer -->
         <field name="returnPrice" type="currency-amount"></field>
@@ -1990,6 +1991,9 @@
         </relation>
         <relation type="one" fk-name="RTN_ITEM_STTSIT" rel-entity-name="StatusItem">
             <key-map field-name="statusId"/>
+        </relation>
+        <relation type="one" fk-name="RTN_ITEM_ITSTT" rel-entity-name="StatusItem">
+            <key-map field-name="expectedItemStatus" rel-field-name="statusId"/>
         </relation>
         <relation type="many" rel-entity-name="ShipmentReceipt">
             <key-map field-name="returnId"/>

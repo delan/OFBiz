@@ -23,7 +23,18 @@
  */
 package org.ofbiz.product.store;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -40,11 +51,6 @@ import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.*;
 
 /**
  * ProductStoreWorker - Worker class for store related functionality
@@ -108,6 +114,21 @@ public class ProductStoreWorker {
         } else {
             return orderId.trim();
         }
+    }
+
+    public static String determineSingleFacilityForStore(GenericDelegator delegator, String productStoreId) {
+        GenericValue productStore = null;
+        try {
+            productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        if (productStore != null) {
+            if ("Y".equalsIgnoreCase(productStore.getString("oneInventoryFacility"))) {
+                return productStore.getString("inventoryFacilityId");
+            }
+        }
+        return null;
     }
 
     public static boolean autoSaveCart(GenericDelegator delegator, String productStoreId) {

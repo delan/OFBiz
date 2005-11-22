@@ -49,17 +49,28 @@ if (returnId != null) {
         currentFacility = returnHeader.getRelatedOne("Facility");
         context.put("currentFacility", currentFacility);     
         context.put("entryDate", returnHeader.getTimestamp("entryDate"));
+        context.put("needsInventoryReceive", returnHeader.getString("needsInventoryReceive"));        
     }
 }
 context.put("returnHeader", returnHeader);
 context.put("returnId", returnId);
+currencyUom = null;
 
 if (returnHeader != null) {
     context.put("returnInfo", returnHeader);
+    currencyUom = returnHeader.get("currencyUomId");
 } else {
     context.put("returnInfo", parameters);
+    currencyUom = UtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD");
 }
 
+// default currency
+if (currencyUom != null) {
+    defaultCurrency = delegator.findByPrimaryKey("Uom", UtilMisc.toMap("uomId", currencyUom));
+    context.put("defaultCurrency", defaultCurrency);
+}
+
+// billing account info
 billingAccountList = null;
 if (partyId != null) {
     billingAccountList = delegator.findByAnd("BillingAccountAndRole", UtilMisc.toMap("partyId", partyId));
