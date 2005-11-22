@@ -50,6 +50,7 @@
             <actions>
                 <set field="title" value="add/update a new party"/>
                 <set field="partyId" from-field="parameters.partyId"/>
+                <set field="tabButtonItem" value="EditParty"/>
                 <entity-one entity-name="Party" value-name="party"></entity-one>
             </actions>
             <widgets>
@@ -77,6 +78,7 @@
         <section>
             <actions>
                 <set field="title" value="Party financial history"/>
+                <set field="tabButtonItem" value="FinHistory"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyNameView" value-name="party"></entity-one>
                 <set field="organizationPartyId" from-scope="user" to-scope="screen" from-field="productStoreId"/>
@@ -85,13 +87,42 @@
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1" text="Party: ${party.groupName} ${party.lastName} ${party.firstName} ${party.middleName} [${partyId}] financial history ${organizationPartyId}"/></container>
+                        <container><label style="head1" text="Party: ${party.groupName} ${party.lastName} ${party.firstName} ${party.middleName} [${partyId}] financial history"/></container>
                         <container><label style="head1" text="Applied invoices to payments"/></container>
                         <include-form name="partyFinancialHistoryInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
-                        <container><label style="head1" text="Applied payments to payments"/></container>
-                        <include-form name="partyFinancialHistoryPayments" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
-                        <container><label style="head1" text="Payments not yet applied"/></container>
-                        <include-form name="partyFinancialHistoryPaymentsN" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field-name="historyListPayments"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <container><label style="head1" text="Applied payments to payments"/></container>
+                                <include-form name="partyFinancialHistoryPayments" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field-name="historyListInvoicesN"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <container><label style="head1" text="Invoices not yet (fully) applied"/></container>
+                                <include-form name="partyFinancialHistoryInvoicesN" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field-name="historyListPaymentsN"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <container><label style="head1" text="Payments not yet (fully) applied"/></container>
+                                <include-form name="partyFinancialHistoryPaymentsN" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                            </widgets>
+                        </section>
                         <container><label style="head1" text="Totals for Company: ${organizationPartyId}"/></container>
                         <include-form name="partyFinancialSummary" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
                     </decorator-section>

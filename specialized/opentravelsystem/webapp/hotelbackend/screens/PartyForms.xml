@@ -104,12 +104,12 @@
         <field name="invoiceId"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/></field>
         <field name="invoiceTypeId" title="T"><display/></field>
         <field name="invoiceDate"><display/></field>
-        <field name="invoiceAmount"><display/></field>
-        <field name="totApplied"><display/></field>
-        <field name="applied"><display/></field>
+        <field name="invoiceAmount" widget-area-style="tabletextright"><display/></field>
+        <field name="totInvoiceApplied" widget-area-style="tabletextright"><display/></field>
+        <field name="applied" widget-area-style="tabletextright"><display/></field>
         <field name="paymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
         <field name="effectiveDate"><display/></field>
-        <field name="amount"><display/></field>
+        <field name="amount" widget-area-style="tabletextright"><display/></field>
     </form>
     
     <form name="partyFinancialHistoryPayments" type="list" list-name="historyListPayments" 
@@ -117,13 +117,23 @@
         default-tooltip-style="tabletext" target="updateCategoryProductMember">
         <field name="paymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
         <field name="effectiveDate"><display/></field>
-        <field name="amount"><display/></field>
-        <field name="applied"><display/></field>
+        <field name="amount" widget-area-style="tabletextright"><display/></field>
+        <field name="applied" widget-area-style="tabletextright"><display/></field>
         <field name="toPaymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${toPaymentId}"/></field>
         <field name="toEffectiveDate"><display/></field>
-        <field name="toAmount"><display/></field>
+        <field name="toAmount" widget-area-style="tabletextright"><display/></field>
     </form>
     
+    <form name="partyFinancialHistoryInvoicesN" type="list" list-name="historyListInvoicesN" 
+        default-title-style="tableheadtext" default-widget-style="tabletext" 
+        default-tooltip-style="tabletext" target="updateCategoryProductMember">
+        <field name="invoiceId"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/></field>
+        <field name="invoiceTypeId" title="T"><display/></field>
+        <field name="invoiceDate"><display/></field>
+        <field name="invoiceAmount" widget-area-style="tabletextright"><display/></field>
+        <field name="invoiceNotApplied" widget-area-style="tabletextright"><display/></field>
+    </form>
+
     <form name="partyFinancialHistoryPaymentsN" type="list" list-name="historyListPaymentsN" 
         default-title-style="tableheadtext" default-widget-style="tabletext" 
         default-tooltip-style="tabletext" target="updateCategoryProductMember">
@@ -135,12 +145,14 @@
     
     <form name="partyFinancialSummary" type="single" title="Financial summary" default-map-name="finanSummary"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <field name="totalSalesInvoice"><display/></field>
-        <field name="totalPurchaseInvoice"><display/></field>
-        <field name="totalInvoiceNotApplied"><display/></field>
-        <field name="totalPaymentNotApplied"><display/></field>
-        <field name="totalToBePaid" title="To be paid to: ${parameters.partyId}"><display/></field>
-        <field name="totalToBeReceived" title="To be received from: ${parameters.partyId}"><display/></field>
+        <field position="1" name="totalSalesInvoice"><display/></field>
+        <field position="2" name="totalPurchaseInvoice"><display/></field>
+        <field position="1" name="totalPaymentsIn"><display/></field>
+        <field position="2" name="totalPaymentsOut"><display/></field>
+        <field position="1" name="totalInvoiceNotApplied"><display/></field>
+        <field position="2" name="totalPaymentNotApplied"><display/></field>
+        <field position="1" name="totalToBePaid" title="To be paid to: ${parameters.partyId}"><display/></field>
+        <field position="2" name="totalToBeReceived" title="To be received from: ${parameters.partyId}"><display/></field>
     </form>
     
 </forms>

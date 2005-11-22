@@ -51,6 +51,7 @@
                 <set field="productStoreId" from-scope="user"  from-field="productStoreId" global="true"/>
                 <set field="organizationPartyId" from-scope="user"  to-scope="application" from-field="productStoreId" global="true"/>
                 <set field="organizationPartyId" from-scope="user"  to-scope="screen" from-field="productStoreId" global="true"/>
+                <set field="organizationPartyId" from-scope="user"  to-scope="user" from-field="productStoreId" global="true"/>
                 <set field="requestParameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="parameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="activeApp" value="hotelbackend" global="true"/>

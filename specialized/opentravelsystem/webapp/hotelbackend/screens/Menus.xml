@@ -47,15 +47,15 @@
         <menu-item name="Help" title="Help" align-style="col-right"><link target="help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}" target-window="new"/></menu-item>
     </menu>
     
-    <menu name="PartyTabBar" default-menu-item-name="viewprofile" default-selected-style="tabButtonSelected" 
+    <menu name="PartyTabBar" default-menu-item-name="EditParty" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
-        orientation="horizontal" type="simple">
-        <!--menu-item name="viewprofile" title="${uiLabelMap.PartyProfile}">
-            <link target="viewprofile?partyId=${partyId}"/>
+        orientation="horizontal" title="simple">
+        <menu-item name="EditParty" title="Edit Party">
+            <link target="editParty?partyId=${partyId}"/>
         </menu-item>
-        <menu-item name="viewroles" title="${uiLabelMap.PartyRoles}">
-            <link target="viewroles?partyId=${partyId}"/>
-        </menu-item-->
+        <menu-item name="FinHistory" title="Fin.History">
+            <link target="partyFinancialHistory?partyId=${partyId}"/>
+        </menu-item>
         <!--menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
             <link target="EditPartyRelationships?partyId=${partyId}"/>
         </menu-item-->
