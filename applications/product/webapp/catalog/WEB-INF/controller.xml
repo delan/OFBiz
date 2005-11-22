@@ -766,6 +766,15 @@
         <response name="success" type="view" value="ViewProductManufacturing"/>
     </request-map>
 
+    <!-- ================ Product Costs Requests ================= -->
+    <request-map uri="EditProductCosts"><security https="true" auth="true"/><response name="success" type="view" value="EditProductCosts"/></request-map>
+    <request-map uri="calculateProductCosts">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="calculateProductCosts"/>
+        <response name="success" type="view" value="EditProductCosts"/>
+        <response name="error" type="view" value="EditProductCosts"/>
+    </request-map>
+
     <!-- ================ Product Attributes Requests ================= -->
     <request-map uri="EditProductAttributes">
         <security https="true" auth="true"/>
@@ -2028,6 +2037,7 @@
     <view-map name="EditProductKeyword" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductKeyword"/>
     <view-map name="EditProductAssoc" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductAssoc"/>
     <view-map name="ViewProductManufacturing" type="screen" page="component://product/widget/catalog/ProductScreens.xml#ViewProductManufacturing"/>
+    <view-map name="EditProductCosts" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductCosts"/>
 
     <view-map name="EditProductAttributes" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductAttributes"/>
     <view-map name="EditProductFeatures" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductFeatures"/>

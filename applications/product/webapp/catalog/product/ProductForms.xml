@@ -905,6 +905,31 @@
         </field>
     </form>
 
+    <form name="ListCostComponents" type="list" 
+            title="" list-name="costs" paginate-target="EditProductCosts"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="CostComponent" default-field-type="display"/>
+        <field name="productId"><hidden value="${productId}"/></field>
+        <field name="costComponentTypeId" widget-style="tabletext">
+            <display-entity entity-name="CostComponentType"/>
+        </field>
+    </form>
+    <form name="CalculateProductCosts" type="single"
+            target="calculateProductCosts" title="" 
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="calculateProductCosts" map-name=""/>
+        <field name="productId"><hidden value="${productId}"/></field>
+        <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}" widget-style="selectBox">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultCurrencyUomId}">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]">
+                    <entity-constraint name="uomTypeId" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
     <form name="OutstandingPurchaseOrders" type="list" list-name="purchaseOrders" default-title-style="tableheadtext" default-widget-style="tabletext">
         <field name="orderDate"><display/></field>
         <field name="orderId"><hyperlink also-hidden="false" description="${orderId}" target="/ordermgr/control/orderview?order_id=${orderId}" target-type="inter-app"/></field>
