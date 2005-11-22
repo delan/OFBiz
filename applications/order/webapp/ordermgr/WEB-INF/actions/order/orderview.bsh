@@ -232,6 +232,13 @@ if (orderHeader != null) {
         facilities = delegator.findByAndCache("Facility", UtilMisc.toMap("ownerPartyId", orderReadHelper.getBillToParty().getString("partyId")));
         context.put("facilities", facilities);
     }
+
+    // set the type of return baed on type of order
+    if ("SALES_ORDER".equals(orderType)) {
+        context.put("returnHeaderTypeId", "CUSTOMER_RETURN");
+    } else {
+        context.put("returnHeaderTypeId", "VENDOR_RETURN");
+    }
 }
 
 paramString = "";

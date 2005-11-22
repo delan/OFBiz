@@ -392,6 +392,7 @@
         <set from-field="orderHeader.originFacilityId" field="createHeaderCtx.destinationFacilityId"/>
         <set from-field="orderRole.partyId" field="createHeaderCtx.fromPartyId"/>
         <set value="Y" field="updateHeaderCtx.needsInventoryReceive"/>
+        <set from-field="parameters.returnHeaderTypeId" field="createHeaderCtx.returnHeaderTypeId"/>
 
         <!-- get the return to party from the product store -->
         <get-related-one relation-name="ProductStore" value-name="orderHeader" to-value-name="productStore"/>

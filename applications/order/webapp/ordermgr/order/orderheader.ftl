@@ -823,8 +823,8 @@
                          <div class="tabletext"><a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderViewEditDeliveryScheduleInfo}</a></div>
                        </#if>
                        <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
-                         <div><a href="<@ofbizUrl>quickRefundOrder?order_id=${orderId}&orderId=${orderId}&receiveReturn=true</@ofbizUrl>" class="buttontext">Quick-Refund Entire Order</a></div>
-                         <div><a href="<@ofbizUrl>quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}</@ofbizUrl>" class="buttontext">Create Return</a></div>
+                         <div><a href="<@ofbizUrl>quickRefundOrder?order_id=${orderId}&orderId=${orderId}&receiveReturn=true&returnHeaderTypeId=${returnHeaderTypeId}</@ofbizUrl>" class="buttontext">Quick-Refund Entire Order</a></div>
+                         <div><a href="<@ofbizUrl>quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}&returnHeaderTypeId=${returnHeaderTypeId}</@ofbizUrl>" class="buttontext">Create Return</a></div>
                        </#if>
                      </#if>
                    </td>

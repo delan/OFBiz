@@ -34,6 +34,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="returnReasonId" type="String" mode="IN" optional="true"/>
         <attribute name="returnTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="returnHeaderTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="receiveReturn" type="Boolean" mode="IN" optional="true"/>
         <attribute name="returnId" type="String" mode="OUT" optional="false"/>
     </service>
