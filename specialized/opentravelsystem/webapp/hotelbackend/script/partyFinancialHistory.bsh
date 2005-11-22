@@ -37,7 +37,7 @@ import org.ofbiz.accounting.invoice.*;
 delegator = parameters.get("delegator");
 organizationPartyId = parameters.get("organizationPartyId");
 partyId = parameters.get("partyId");
-if (partyId == null) return;
+if (partyId == null || organizationPartyId == null) return;
 List historyList = new LinkedList();
 
 //get payment totals
@@ -51,7 +51,12 @@ while (pl.hasNext()) {
 	grandTotalPayment = grandTotalPayment.add(payment.getBigDecimal("amount"));
 }
 
-// get the invoices/payments
+// totals
+BigDecimal totalSalesInvoice = new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP);
+BigDecimal totalPurchaseInvoice = new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP);
+BigDecimal totalInvoiceApplied = new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP);
+
+// payment and invoices
 List invoices = delegator.findByOr("Invoice",
 	UtilMisc.toMap("partyId",partyId,"partyIdFrom",partyId),
 	UtilMisc.toList("invoiceDate"));
@@ -59,8 +64,6 @@ List payments = delegator.findByOr("Payment",
 	UtilMisc.toMap("partyIdTo",partyId,"partyIdFrom",partyId),
 	UtilMisc.toList("effectiveDate"));
 	
-BigDecimal totalInvoice = new BigDecimal("0");
-
 // start reeading from the invoices list
 if (invoices != null && invoices.size() > 0) {
 	Iterator inv = invoices.iterator();
@@ -68,13 +71,17 @@ if (invoices != null && invoices.size() > 0) {
 		invoice = inv.next();
 		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue;
 		BigDecimal invoiceAmount = InvoiceWorker.getInvoiceTotalBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP);
-		totalInvoice = totalInvoice.add(invoiceAmount);
+		if (invoice.getString("partyId").equals(organizationPartyId))	invoiceAmount = invoiceAmount.multiply(new BigDecimal("-1"));
+		if (invoice.getString("invoiceTypeId").equals("PURCHASE_INVOICE")) totalPuchaseInvoice = totalPurchaseInvoice.add(invoiceAmount);
+		if (invoice.getString("invoiceTypeId").equals("SALES_INVOICE")) totalSalesInvoice = totalSalesInvoice.add(invoiceAmount);
+		invoiceApplied = InvoiceExtWorker.getInvoiceAppliedBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP);
+		totalInvoiceApplied = totalInvoiceApplied.add(invoiceApplied);
 		Map historyItem = UtilMisc.toMap(
 			"invoiceId",invoice.getString("invoiceId"),
 			"invoiceTypeId", invoice.getString("invoiceTypeId").substring(0,1), 
 			"invoiceDate", invoice.getString("invoiceDate").substring(0,10),
 			"invoiceAmount", invoiceAmount.toString(),
-			"totApplied", InvoiceExtWorker.getInvoiceAppliedBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP).toString()
+			"totInvoiceApplied", invoiceApplied.toString()
 			);
 			
 		// check for applications
@@ -87,7 +94,6 @@ if (invoices != null && invoices.size() > 0) {
 			while (appl.hasNext())	{	// read the applications for this invoice
 				application = appl.next();
 				paymentId = application.getString("paymentId");
-				Debug.log("====processing paymentId: " + paymentId + "  old: " + oldPaymentId, "??");
 
 				//reduce the payment amount in the payment list
 				Iterator pl = payments.iterator();
@@ -109,7 +115,9 @@ if (invoices != null && invoices.size() > 0) {
 					historyItem.put("applied", applied.toString());
 					historyItem.put("paymentId", oldPaymentId);
 					payment = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",oldPaymentId));
-					historyItem.put("amount",payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+					BigDecimal amount = payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
+					if (payment.getString("partyIdTo").equals(organizationPartyId)) amount = amount.multiply(new BigDecimal("-1"));
+					historyItem.put("amount",amount.toString());
 					historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
 					historyList.add(historyItem);
 					historyItem = new HashMap();
@@ -123,7 +131,9 @@ if (invoices != null && invoices.size() > 0) {
 				historyItem.put("applied", applied.toString());
 				historyItem.put("paymentId", oldPaymentId);
 				payment = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",oldPaymentId));
-				historyItem.put("amount",payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+					BigDecimal amount = payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
+					if (payment.getString("partyIdFrom").equals(organizationPartyId))	amount = amount.multiply(new BigDecimal("-1"));
+					historyItem.put("amount",amount.toString());
 				historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
 				historyList.add(historyItem);
 			}
@@ -132,31 +142,108 @@ if (invoices != null && invoices.size() > 0) {
 			historyList.add(historyItem);
 		}
 	}
- }
-	
+	context.put("historyListInvoices",historyList);
+}
+
+// totals
+BigDecimal totalPaymentApplied = new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP);
+// list of payments where payments are applied
+historyList = new LinkedList();
+if (payments != null && payments.size() > 0) {
+	Iterator pay = payments.iterator();
+	while (pay.hasNext())	{
+		payment = pay.next();
+		if (payment.getString("statusId").equals("PMNT_CANCELLED")) continue;
+		List applications = payment.getRelated("ToPaymentApplication",null,UtilMisc.toList("paymentId"));
+		if (applications == null || applications.size() == 0 ) continue; // none found				
+		Map historyItem = UtilMisc.toMap("paymentId",payment.getString("paymentId"),"effectiveDate",payment.getString("effectiveDate").substring(0,10));
+		BigDecimal amount = payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
+		if (payment.getString("partyIdFrom").equals(organizationPartyId)) amount = amount.multiply(new BigDecimal("-1"));
+		historyItem.put("amount",amount.toString());
+		ap = applications.iterator();
+		while (ap.hasNext())	{
+			GenericValue application = ap.next();
+			historyItem.put("toPaymentId",application.getString("paymentId"));
+			historyItem.put("applied",application.getString("amountApplied"));
+			toPayment = application.getRelatedOne("Payment");
+			historyItem.put("toEffectiveDate",toPayment.getString("effectiveDate").substring(0,10));
+			toAmount = toPayment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
+			if (toPayment.getString("partyIdFrom").equals(organizationPartyId)) toAmount = toAmount.multiply(new BigDecimal("-1"));
+			historyItem.put("toAmount",toAmount.toString());
+			historyList.add(historyItem);
+			
+			//reduce the payment amount in the payment list
+			Iterator pl = payments.iterator();
+			while (pl.hasNext()) {
+				payment = pl.next();
+				// reduce paymentId
+				if (application.getString("paymentId").equals(payment.getString("paymentId"))) {
+					plInd = payments.indexOf(payment);
+					payment.put("amount",
+							payment.getBigDecimal("amount").
+							subtract(application.getBigDecimal("amountApplied")).doubleValue());
+					payments.remove(plInd);
+					payments.add(plInd,payment);
+					totalPaymentApplied = totalPaymentApplied.add(application.getBigDecimal("amountApplied"));
+				}
+				// reduce toPaymentId
+				if (application.getString("toPaymentId").equals(payment.getString("paymentId"))) {
+					plInd = payments.indexOf(payment);
+					payment.put("amount",
+							payment.getBigDecimal("amount").
+							subtract(application.getBigDecimal("amountApplied")).doubleValue());
+					payments.remove(plInd);
+					payments.add(plInd,payment);
+					totalPaymentApplied = totalPaymentApplied.add(application.getBigDecimal("amountApplied"));
+				}
+			}
+		}
+	}
+	context.put("historyListPayments",historyList);
+}
+		
+
+BigDecimal totalPaymentNotApplied = new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP);
 // check if any payments left not applied
+historyList = new LinkedList();
 if (payments != null && payments.size() > 0) {
 	Iterator pm = payments.iterator();
 	while (pm.hasNext())	{
 		payment = pm.next();
 		if (payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).equals(new BigDecimal("0.00"))) continue;
 		historyItem = new HashMap();
-		historyItem.put("invoiceId","Not Appl.Payment:");
 		historyItem.put("paymentId",payment.getString("paymentId"));
-		historyItem.put("applied",payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+		notApplied = payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
+		totalPaymentNotApplied = totalPaymentNotApplied.add(notApplied);
 		paymentDb = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",payment.getString("paymentId")));
-		historyItem.put("amount",paymentDb.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+		BigDecimal amount = paymentDb.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
+		if (payment.getString("partyIdFrom").equals(organizationPartyId)) {
+			 amount = amount.multiply(new BigDecimal("-1"));
+			 notApplied = notApplied.multiply(new BigDecimal("-1"));
+		}
+		historyItem.put("amount",amount.toString());
+		historyItem.put("notApplied",notApplied.toString());
 		historyItem.put("effectiveDate",paymentDb.getString("effectiveDate").substring(0,10));
 		historyList.add(historyItem);
 	}
+	context.put("historyListPaymentsN",historyList);
 }
 
 // create totals
 
-
-context.put("historyList",historyList);
-BigDecimal totalToBePaid = totalInvoice.subtract(grandTotalPayment);
-context.put("finanSummary",UtilMisc.toMap(
-	"totalInvoice",totalInvoice.toString(),
-	"totalPayment",grandTotalPayment.setScale(2,BigDecimal.ROUND_HALF_UP).toString(),
-	"totalToBePaid",totalToBePaid.setScale(2,BigDecimal.ROUND_HALF_UP).toString()));
+ finanSummary = UtilMisc.toMap(
+	"totalSalesInvoice",totalSalesInvoice.toString(),	
+	"totalPurchaseInvoice",totalPurchaseInvoice.toString(),	
+	"totalInvoiceApplied",totalInvoiceApplied.toString(),
+	"totalInvoiceNotApplied",totalSalesInvoice.add(totalPurchaseInvoice).subtract(totalInvoiceApplied).toString(),
+	"totalPaymentNotApplied",totalPaymentNotApplied.toString());
+ finanSummary.put("totalPaymentNotApplied",totalPaymentNotApplied.toString());
+ totalToBePaid = totalSalesInvoice.add(totalPurchaseInvoice).subtract(totalInvoiceApplied).add(totalPaymentNotApplied);
+ if (totalToBePaid.compareTo(new BigDecimal("0.00")) < 0 ) finanSummary.put("totalToBePaid",totalToBePaid.toString());
+else if (totalToBePaid.compareTo(new BigDecimal("0.00")) > 0 ) finanSummary.put("totalToBeReceived",totalToBePaid.toString());
+else	{
+	finanSummary.put("totalToBePaid","0.00");
+	finanSummary.put("totalToBeReceived","0.00");
+}
+ context.put("finanSummary",finanSummary);
+	
