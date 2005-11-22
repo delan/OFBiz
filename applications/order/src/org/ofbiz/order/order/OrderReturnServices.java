@@ -60,6 +60,7 @@ public class OrderReturnServices {
         if (delegator == null || returnId == null || returnItemSeqId == null) {
             throw new IllegalArgumentException("Method parameters cannot contain nulls");
         }
+        Debug.log("Finding the initial item cost for return item : " + returnId + " / " + returnItemSeqId, module);
 
         // the cost holder
         Double itemCost = new Double(0.00);
@@ -72,12 +73,14 @@ public class OrderReturnServices {
             Debug.logError(e, module);
             throw new GeneralRuntimeException(e.getMessage());
         }
+        Debug.log("Return item value object - " + returnItem, module);
 
         // check for an orderItem association
         if (returnItem != null) {
             String orderId = returnItem.getString("orderId");
             String orderItemSeqId = returnItem.getString("orderItemSeqId");
             if (orderItemSeqId != null && orderId != null) {
+                Debug.log("Found order item reference", module);
                 // locate the item issuance(s) for this order item
                 List itemIssue = null;
                 try {
@@ -87,6 +90,7 @@ public class OrderReturnServices {
                     throw new GeneralRuntimeException(e.getMessage());
                 }
                 if (itemIssue != null && itemIssue.size() > 0) {
+                    Debug.log("Found item issuance referece", module);
                     // just use the first one for now; maybe later we can find a better way to determine which was the
                     // actual item being returned; maybe by serial number
                     GenericValue issue = EntityUtil.getFirst(itemIssue);
@@ -98,12 +102,18 @@ public class OrderReturnServices {
                         throw new GeneralRuntimeException(e.getMessage());
                     }
                     if (inventoryItem != null) {
-                        itemCost = inventoryItem.getDouble("unitCost");
+                        Debug.log("Located inventory item - " + inventoryItem.getString("inventoryItemId"), module);
+                        if (inventoryItem.get("unitCost") != null) {
+                            itemCost = inventoryItem.getDouble("unitCost");
+                        } else {
+                            Debug.logInfo("Found item cost; but cost was null. Returning default amount (0.00)", module);
+                        }
                     }
                 }
             }
         }
 
+        Debug.log("Initial item cost - " + itemCost, module);
         return itemCost;
     }
 

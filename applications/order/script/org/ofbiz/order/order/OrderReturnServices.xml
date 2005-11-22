@@ -45,9 +45,9 @@
         <if-empty field-name="parameters.toPartyId">
             <!-- no toPartyId was specified.  use destination facility to determine the party of the return -->
             <if-not-empty field-name="parameters.destinationFacilityId">
-                <field-to-field field-name="parameters.destinationFacilityId" to-field-name="facilityId" to-map-name="lookupParams"/>
+                <set from-field="parameters.destinationFacilityId" field="lookupParams.facilityId"/>
                 <find-by-primary-key entity-name="Facility" map-name="lookupParams" value-name="destinationFacility"/>
-                <field-to-field field-name="destinationFacility.ownerPartyId" to-field-name="parameters.toPartyId"/>
+                <set from-field="destinationFacility.ownerPartyId" field="parameters.toPartyId"/>
             </if-not-empty>
         <else>
             <!-- make sure that the party to return to is an INTERNAL_ORGANIZATIO or stop 
@@ -70,9 +70,9 @@
             <check-errors/>
         </if-empty>
 
-        <!-- check the needs inventory receive flag -->
+        <!-- check the needs (auto) inventory receive flag (default to no) -->
         <if-empty field-name="needsInventoryReceive" map-name="parameters">
-            <set field="parameters.needsInventoryReceive" value="Y"/>     
+            <set field="parameters.needsInventoryReceive" value="N"/>
         </if-empty>
 
         <make-value value-name="newEntity" entity-name="ReturnHeader"/>
@@ -86,29 +86,29 @@
                 <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
             </condition>
             <then>
-                <string-to-field field-name="statusId" map-name="newEntity" string="RETURN_REQUESTED"/>
-                <env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+                <set field="newEntity.statusId" value="RETURN_REQUESTED"/>
+                <set from-field="nowTimestamp" field="newEntity.entryDate"/>
             </then>
         </if>
 
         <if-empty field-name="entryDate" map-name="newEntity">
-            <env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+            <set from-field="nowTimestamp" field="newEntity.entryDate"/>
         </if-empty>
 
         <if-empty field-name="statusId" map-name="newEntity">
-            <string-to-field string="RETURN_REQUESTED" field-name="statusId" map-name="newEntity"/>
+            <set value="RETURN_REQUESTED" field="newEntity.statusId"/>
         </if-empty>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdBy" to-map-name="newEntity"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.createdBy"/>
 
         <create-value value-name="newEntity"/>
-        <string-to-field field-name="responseMessage" string="Return Request #${returnId} was created successfully."/>
+        <set field="responseMessage" value="Return Request #${returnId} was created successfully."/>
         <field-to-result field-name="responseMessage" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
 
         <field-to-result field-name="returnHeader.statusId" result-name="currentStatusId"/>
@@ -191,7 +191,7 @@
                       <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
                 </condition>
                 <then>
-                      <field-to-field field-name="returnablePrice" to-field-name="returnPrice" to-map-name="parameters"/>
+                      <set from-field="returnablePrice" field="parameters.returnPrice"/>
                 </then>
             </if>
 
@@ -232,13 +232,12 @@
         </if-compare>
 
         <make-value value-name="newEntity" entity-name="ReturnItem"/>
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="newEntity"/>
-
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupMap"/>
+        <set from-field="parameters.returnId" field="newEntity.returnId"/>
+        <set from-field="parameters.returnId" field="lookupMap.returnId"/>
         <string-to-list string="-returnItemSeqId" list-name="orderBy"/>
         <find-by-and entity-name="ReturnItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
         <if-empty field-name="currentItems">
-            <string-to-field string="1" field-name="returnItemSeqId" map-name="newEntity"/>
+            <set value="1" field="newEntity.returnItemSeqId"/>
         <else>
            <first-from-list entry-name="newestItem" list-name="currentItems"/>
            <calculate field-name="returnItemSeqId" map-name="newEntity" type="Integer">
@@ -259,8 +258,8 @@
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
+        <set from-field="parameters.returnItemSeqId" field="lookupPKMap.returnItemSeqId"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
 
         <field-to-result field-name="returnItem.statusId" result-name="currentStatusId"/>
@@ -271,15 +270,15 @@
         <check-permission permission="ORDERMGR" action="_DELETE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveQuoteItem"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="headerPKMap"/>
+        <set from-field="parameters.returnId" field="headerPKMap.returnId"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="headerPKMap" value-name="returnHeader"/>
         <if-compare field-name="statusId" map-name="returnHeader" operator="not-equals" type="String" value="RETURN_REQUESTED">
             <add-error><fail-property resource="OrderErrorUiLabels" property="OrderCannotRemoveItemsOnceReturnIsApproved"/></add-error>
             <check-errors/>
         </if-compare>
 
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
+        <set from-field="parameters.returnItemSeqId" field="lookupPKMap.returnItemSeqId"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
 
         <remove-value value-name="returnItem"/>
@@ -289,7 +288,7 @@
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
         <find-by-and entity-name="ShipmentReceipt" map-name="lookupPKMap" list-name="shipmentReceipts"/>
         <iterate list-name="shipmentReceipts" entry-name="receipt">
@@ -304,55 +303,55 @@
               <calcop field-name="quantityRejected" map-name="receipt" operator="get"/>
             </calcop>
           </calculate>
-          <field-to-field field-name="returnId" map-name="receipt" to-map-name="newLookupMap"/>
-          <field-to-field field-name="returnItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>
+          <set from-field="receipt.returnId" field="newLookupMap.returnId"/>
+          <set from-field="receipt.returnItemSeqId" field="newLookupMap.returnItemSeqId"/>
           <find-by-primary-key entity-name="ReturnItem" map-name="newLookupMap" value-name="returnItem"/>
           <if-compare-field field-name="returnQuantity" map-name="returnItem" operator="greater-equals" to-field-name="${receipt.returnItemSeqId}" to-map-name="totalsMap" type="Double">
             <!-- update the status for the item -->
-            <string-to-field field-name="statusId" map-name="returnItem" string="RETURN_RECEIVED"/>
+            <set field="returnItem.statusId" value="RETURN_RECEIVED"/>
             <store-value value-name="returnItem"/>
             <!-- create status change history -->
             <make-value entity-name="ReturnStatus" value-name="newValue"/>
             <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
-            <env-to-field env-name="returnStatusId" map-name="newValue"/>
+            <set from-field="returnStatusId" field="newValue.returnStatusId"/>
 
-            <field-to-field field-name="returnItemSeqId" map-name="returnItem" to-map-name="newValue"/>
-            <field-to-field field-name="returnId" map-name="returnItem" to-map-name="newValue"/>
-            <field-to-field field-name="statusId" map-name="returnItem" to-map-name="newValue"/>
+            <set from-field="returnItem.returnItemSeqId" field="newValue.returnId"/>
+            <set from-field="returnItem.returnId" field="newValue.returnId"/>
+            <set from-field="returnItem.statusId" field="newValuereturnId.returnId"/>
 
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+            <set from-field="nowTimestamp" field="newValue.statusDatetime"/>
 
             <create-value value-name="newValue"/>
           </if-compare-field>
         </iterate>
 
         <!-- check to see if all items have been received -->
-        <string-to-field string="true" field-name="allReceived"/>
+        <set value="true" field="allReceived"/>
         <find-by-and entity-name="ReturnItem" map-name="lookupPKMap" list-name="allReturnItems"/>
         <iterate list-name="allReturnItems" entry-name="item">
           <if-compare field-name="statusId" map-name="item" operator="not-equals" value="RETURN_RECEIVED">
             <if-not-empty field-name="orderItemSeqId" map-name="item">
                 <!-- non-order items (i.e. adjustments) are not received -->
-                <string-to-field string="false" field-name="allReceived"/>
+                <set value="false" field="allReceived"/>
             </if-not-empty>
           </if-compare>
         </iterate>
         <if-compare field-name="allReceived" operator="equals" value="true">
           <!-- update the return header -->
-          <string-to-field field-name="statusId" map-name="returnHeaderCtx" string="RETURN_RECEIVED"/>
-          <field-to-field field-name="returnId" map-name="returnHeader" to-map-name="returnHeaderCtx"/>
+          <set field="returnHeaderCtx.statusId" value="RETURN_RECEIVED"/>
+          <set from-field="returnHeader.returnId" field="returnHeaderCtx.returnId"/>
           <call-service service-name="updateReturnHeader" in-map-name="returnHeaderCtx"/>
           <!-- create the status history -->
           <make-value entity-name="ReturnStatus" value-name="newValue"/>
           <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
-          <env-to-field env-name="returnStatusId" map-name="newValue"/>
+          <set from-field="returnStatusId" field="newValue.returnStatusId"/>
 
-          <field-to-field field-name="returnId" map-name="returnHeader" to-map-name="newValue"/>
-          <string-to-field string="RETURN_RECEIVED" field-name="statusId" map-name="newValue"/>
+          <set from-field="returnHeader.returnId" field="newValue.returnId"/>
+          <set value="RETURN_RECEIVED" field="newValue.statusId"/>
 
           <now-timestamp-to-env env-name="nowTimestamp"/>
-          <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+          <set from-field="nowTimestamp" field="newValue.statusDatetime"/>
 
           <create-value value-name="newValue"/>
         </if-compare>
@@ -390,21 +389,21 @@
         <first-from-list entry-name="orderRole" list-name="orderRoles"/>
 
         <!-- create the return header -->
-        <field-to-field field-name="originFacilityId" map-name="orderHeader" to-field-name="destinationFacilityId" to-map-name="createHeaderCtx"/>
-        <field-to-field field-name="partyId" map-name="orderRole" to-field-name="fromPartyId" to-map-name="createHeaderCtx"/>
-        <string-to-field string="Y" field-name="needsInventoryReceive" map-name="updateHeaderCtx"/>
+        <set from-field="orderHeader.originFacilityId" field="createHeaderCtx.destinationFacilityId"/>
+        <set from-field="orderRole.partyId" field="createHeaderCtx.fromPartyId"/>
+        <set value="Y" field="updateHeaderCtx.needsInventoryReceive"/>
 
         <!-- get the return to party from the product store -->
         <get-related-one relation-name="ProductStore" value-name="orderHeader" to-value-name="productStore"/>
-        <field-to-field field-name="productStore.payToPartyId" to-field-name="toPartyId" to-map-name="createHeaderCtx"/>
+        <set from-field="productStore.payToPartyId" field="createHeaderCtx.toPartyId"/>
 
         <if-empty field-name="destinationFacilityId" map-name="createHeaderCtx">
             <get-related-one value-name="orderHeader" relation-name="ProductStore" to-value-name="productStore"/>
-            <field-to-field field-name="inventoryFacilityId" map-name="productStore" to-field-name="destinationFacilityId" to-map-name="createHeaderCtx"/>
+            <set from-field="productStore.inventoryFacilityId" field="createHeaderCtx.destinationFacilityId"/>
         </if-empty>
  
         <!-- copy over the currency of the order to the currency of the return -->
-        <field-to-field field-name="currencyUom" map-name="orderHeader" to-field-name="currencyUomId" to-map-name="createHeaderCtx"/>
+        <set from-field="orderHeader.currencyUom" field="createHeaderCtx.currencyUomId"/>
 
         <call-service service-name="createReturnHeader" in-map-name="createHeaderCtx" include-user-login="true">
             <result-to-field result-name="returnId"/>
@@ -419,16 +418,16 @@
         </entity-condition>
 
         <if-empty field-name="returnReasonId" map-name="parameters">
-            <string-to-field string="RTN_NOT_WANT" field-name="returnReasonId" map-name="parameters"/>
+            <set value="RTN_NOT_WANT" field="parameters.returnReasonId"/>
         </if-empty>
         <if-empty field-name="returnTypeId" map-name="parameters">
-            <string-to-field string="RTN_REFUND" field-name="returnTypeId" map-name="parameters"/>
+            <set value="RTN_REFUND" field="parameters.returnTypeId"/>
         </if-empty>
 
         <!-- create the return items -->
         <calculate field-name="returnTotal" type="Double"><number value="0.0"/></calculate>
         <iterate entry-name="orderItem" list-name="orderItems">
-            <string-to-field string="ITEM" field-name="returnItemType" map-name="newItemCtx"/>
+            <set value="ITEM" field="newItemCtx.returnItemType"/>
             <field-to-field field-name="returnId" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="newItemCtx"/>

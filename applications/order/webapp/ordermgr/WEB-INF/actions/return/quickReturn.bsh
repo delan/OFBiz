@@ -28,6 +28,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.*;
+import org.ofbiz.product.store.*;
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
@@ -46,6 +47,10 @@ if (partyId != null) {
 if (orderId != null) {
     order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
     productStore = order.getRelatedOne("ProductStore");
+    if (productStore != null) {
+        context.put("destinationFacilityId", ProductStoreWorker.determineSingleFacilityForStore(delegator, productStore.getString("productStoreId")));
+    }
+
     orh = new OrderReadHelper(order);
     context.put("orh", orh);
     context.put("toPartyId", productStore.getString("payToPartyId"));
@@ -66,7 +71,7 @@ while (iter.hasNext()) {
 }
 context.put("returnItemTypeMap", typeMap);
 
-orderHeaderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderItemSeqId", "_NA_"));
+orderHeaderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", "_NA_"));
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 
 if (orderId != null) {

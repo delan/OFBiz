@@ -24,13 +24,11 @@
 package org.ofbiz.order.order;
 
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 
 import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -988,6 +986,16 @@ public class OrderServices {
         } else {
             return orderItemName;
         }
+    }
+
+    public static String determineSingleFacilityFromOrder(GenericValue orderHeader) {        
+        if (orderHeader != null) {
+            String productStoreId = orderHeader.getString("productStoreId");
+            if (productStoreId != null) {
+                return ProductStoreWorker.determineSingleFacilityForStore(orderHeader.getDelegator(), productStoreId);
+            }
+        }
+        return null;
     }
 
     /** Service for resetting the OrderHeader grandTotal */

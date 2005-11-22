@@ -59,6 +59,7 @@
         <override name="returnItemResponseId" optional="true"/>
         <override name="orderAdjustmentId" optional="true"/>
         <override name="orderItemSeqId" optional="true"/>
+        <override name="expectedItemStatus" optional="true"/>
         <override name="receivedQuantity" optional="true"/>
         <override name="statusId" optional="true"/>
         <override name="returnPrice" optional="true"/>

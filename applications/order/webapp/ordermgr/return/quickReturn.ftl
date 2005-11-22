@@ -37,6 +37,8 @@
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
           <input type="hidden" name="toPartyId" value="${toPartyId?if_exists}"/>
           <input type="hidden" name="order_id" value="${orderId}"/>
+          <input type="hidden" name="needsInventoryReceive" value="Y"/>
+          <input type="hidden" name="destinationFacilityId" value="${destinationFacilityId}"/>
           <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
           <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
           <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}"/>
@@ -55,7 +57,7 @@
                     <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                     <tr>
                       <td align="right" width="1%" valign="top" nowrap>
-                        <input type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}"/>
+                        <input type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}"  <#if (shippingContactMechList?size == 1)>checked</#if>>
                       </td>
                       <td align="left" width="99%" valign="top" nowrap>
                         <div class="tabletext">

@@ -43,7 +43,10 @@
                     	  <div class="tabletext"><a href="<@ofbizUrl>changeOrderStatus?orderId=${orderId}&statusId=ORDER_COMPLETED</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCompleteOrder}</a></div>
                     </#if>
                 </div>
-                <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${uiLabelMap.CommonInformation} [<a href="<@ofbizUrl>order.pdf?order_id=${orderId}</@ofbizUrl>" class="submenutextright" target="_blank">PDF</a> ]</div>
+                <#if orderHeader.externalId?has_content>
+                  <#assign externalOrder = "(" + orderHeader.externalId + ")"/>
+                </#if>
+                <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${externalOrder?if_exists} ${uiLabelMap.CommonInformation} [<a href="<@ofbizUrl>order.pdf?order_id=${orderId}</@ofbizUrl>" class="submenutextright" target="_blank">PDF</a> ]</div>
             </div>
             <div class="screenlet-body">
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
