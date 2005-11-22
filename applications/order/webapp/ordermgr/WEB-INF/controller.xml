@@ -558,6 +558,11 @@
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
 
+    <request-map uri="createPartyForOrder">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="custsetting"/>
+    </request-map>
+
     <!-- ================================================================= -->
     <!-- ==================  MultiParty Modifs =========================== -->
     <!-- ================================================================= -->
@@ -1259,6 +1264,8 @@
     <view-map name="ordercomplete" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OrderComplete"/>
     <view-map name="orderTerm" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OrderTerms"/>
     <view-map name="setAdditionalParty" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#SetAdditionalParty"/>
+
+    <view-map name="createPartyForOrder" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#CreatePartyForOrder"/>
 
     <view-map name="showAllPromotions" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#showAllPromotions"/>
     <view-map name="showPromotionDetails" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#showPromotionDetails"/>

@@ -72,6 +72,13 @@
                     <a href="/partymgr/control/findparty?${externalKeyParam?if_exists}" class="buttontext">${uiLabelMap.PartyFindParty}</a>
                   </td>
                 </tr>
+                <#if shoppingCart.getOrderType() == "SALES_ORDER">
+                  <tr>
+                    <td>
+                      <a href="<@ofbizUrl>setCustomer</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyCreateNewCustomer}</a>
+                    </td>
+                  </tr>
+                </#if>
                 <tr>
                   <td>
                     <a href="<@ofbizUrl>checkinits</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyChangeParty}</a>
