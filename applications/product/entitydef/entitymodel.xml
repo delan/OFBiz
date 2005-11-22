@@ -658,6 +658,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="cost" type="currency-amount"></field>
+      <field name="costUomId" type="id"></field>
       <prim-key field="costComponentId"/>
       <relation type="one" fk-name="COST_COMP_TYPE" rel-entity-name="CostComponentType">
         <key-map field-name="costComponentTypeId"/>
@@ -676,6 +677,9 @@
       </relation>
       <relation type="one" fk-name="COST_COMP_GEO" rel-entity-name="Geo">
         <key-map field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="COST_COMP_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="costUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="CostComponentAttribute"
