@@ -73,41 +73,26 @@
         </section>
     </screen>
     
-
-    
-    <screen name="viewprofile">
-        <section>
-            <actions>
-                <set field="title" value="Party profile"/>
-                <set field="partyId" from-field="request.partyId"/>
-                <set field="labelTitleProperty" value="PartyTaxInfos"/>
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>
-             </actions>
-                <widgets>
-                    <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
-                        <decorator-section name="body">
-                            <platform-specific>
-                                <html><html-template location="component://party/webapp/partymgr/party/viewprofile.ftl"/></html>
-                            </platform-specific>
-                        </decorator-section>
-                    </decorator-screen>
-                </widgets>
-        </section>
-    </screen>
     <screen name="partyFinancialHistory">
         <section>
             <actions>
                 <set field="title" value="Party financial history"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyNameView" value-name="party"></entity-one>
+                <set field="organizationPartyId" from-scope="user" to-scope="screen" from-field="productStoreId"/>
                 <script location="component://opentravelsystem/webapp/hotelbackend/script/partyFinancialHistory.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1">Party: ${party.groupName} ${party.lastName} ${party.firstName} ${party.middleName} [${partyId}] financial history</label></container>
-                        <include-form name="partyFinancialHistory" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
-                        <container><label style="head1">Totals.</label></container>
+                        <container><label style="head1" text="Party: ${party.groupName} ${party.lastName} ${party.firstName} ${party.middleName} [${partyId}] financial history ${organizationPartyId}"/></container>
+                        <container><label style="head1" text="Applied invoices to payments"/></container>
+                        <include-form name="partyFinancialHistoryInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <container><label style="head1" text="Applied payments to payments"/></container>
+                        <include-form name="partyFinancialHistoryPayments" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <container><label style="head1" text="Payments not yet applied"/></container>
+                        <include-form name="partyFinancialHistoryPaymentsN" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <container><label style="head1" text="Totals for Company: ${organizationPartyId}"/></container>
                         <include-form name="partyFinancialSummary" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
