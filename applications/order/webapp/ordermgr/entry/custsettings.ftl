@@ -97,8 +97,8 @@
                 <td width="5">&nbsp;</td>
                 <td width="74%">
                   <input type="text" class="inputBox" name="homeCountryCode" value="${requestParameters.homeCountryCode?if_exists}" size="4" maxlength="10"/>
-                  -&nbsp;<input type="text" class="inputBox" name="homeAreaCode" value="${requestParameters.homeAreaCode?if_exists}" size="4" maxlength="10"/>
-                  -&nbsp;<input type="text" class="inputBox" name="homeContactNumber" value="${requestParameters.homeContactNumber?if_exists}" size="15" maxlength="15"/>
+                  -&nbsp;<input type="text" class="inputBox" name="homeAreaCode" value="${requestParameters.homeAreaCode?if_exists}" size="4" maxlength="10"/>*
+                  -&nbsp;<input type="text" class="inputBox" name="homeContactNumber" value="${requestParameters.homeContactNumber?if_exists}" size="15" maxlength="15"/>*
                   &nbsp;ext&nbsp;<input type="text" class="inputBox" name="homeExt" value="${requestParameters.homeExt?if_exists}" size="6" maxlength="10"/>
                   <BR>
                   <select name="homeSol" class="selectBox">
