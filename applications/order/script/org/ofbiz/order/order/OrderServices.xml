@@ -119,11 +119,13 @@
 
     <!-- order requirement methods -->
     <simple-method method-name="createOrderRequirementCommitment" short-description="Create OrderRequirementCommitment">
+        <!-- The permission checking is commented out to make this service work also when triggered from ecommerce orders -->
+        <!--
         <check-permission permission="ORDERMGR" action="_CREATE">
             <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCheckCreateOrderRequirementCommitment"/>
         </check-permission>
         <check-errors/>
-
+        -->
         <make-value value-name="newEntity" entity-name="OrderRequirementCommitment"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
