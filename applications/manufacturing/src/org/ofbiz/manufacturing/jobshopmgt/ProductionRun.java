@@ -393,10 +393,20 @@ public class ProductionRun {
         this.productionRunRoutingTasks = null;
     }
     
-    public static long getEstimatedTaskTime(GenericValue task, Double quantity, LocalDispatcher dispatcher) {
-        return getEstimatedTaskTime(task, (quantity != null? quantity.doubleValue(): 1), dispatcher);
-    }
+    /*
+     * FIXME: the three getEstimatedTaskTime(...) methods will be removed and
+     * implemented in the "getEstimatedTaskTime" service.
+     */
     public static long getEstimatedTaskTime(GenericValue task, double quantity, LocalDispatcher dispatcher) {
+        return getEstimatedTaskTime(task, new Double(quantity), dispatcher);
+    }
+    public static long getEstimatedTaskTime(GenericValue task, Double quantity, LocalDispatcher dispatcher) {
+        return getEstimatedTaskTime(task, quantity, null, null, dispatcher);
+    }
+    public static long getEstimatedTaskTime(GenericValue task, Double quantity, String productId, String routingId, LocalDispatcher dispatcher) {
+        if (quantity == null) {
+            quantity = new Double(1);
+        }
         if (task == null) return 0;
         double setupTime = 0;
         double taskTime = 1;
@@ -407,7 +417,7 @@ public class ProductionRun {
         if (task.get("estimatedMilliSeconds") != null) {
             taskTime = task.getDouble("estimatedMilliSeconds").doubleValue();
         }
-        totalTaskTime = (setupTime + taskTime * quantity);
+        totalTaskTime = (setupTime + taskTime * quantity.doubleValue());
         // TODO
         if (task.get("estimateCalcMethod") != null) {
             String serviceName = null;
@@ -417,7 +427,7 @@ public class ProductionRun {
                     serviceName = genericService.getString("customMethodName");
                     // call the service
                     // and put the value in totalTaskTime
-                    Map estimateCalcServiceMap = UtilMisc.toMap("workEffort", task, "quantity", new Double(quantity));
+                    Map estimateCalcServiceMap = UtilMisc.toMap("workEffort", task, "quantity", quantity, "productId", productId, "routingId", routingId);
                     Map serviceContext = UtilMisc.toMap("arguments", estimateCalcServiceMap);
                     // serviceContext.put("userLogin", userLogin);
                     Map resultService = dispatcher.runSync(serviceName, serviceContext);

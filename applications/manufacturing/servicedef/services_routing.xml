@@ -51,4 +51,13 @@
         <attribute mode="OUT" name="routing" type="GenericValue" optional="true"/>
         <attribute mode="OUT" name="tasks" type="java.util.List" optional="true"/>
     </service>
+    <service name="getEstimatedTaskTime" engine="java" auth="true"
+                location="org.ofbiz.manufacturing.routing.RoutingServices" invoke="getEstimatedTaskTime">
+        <description>Computes the estimated time needed to perform the task</description>
+        <attribute mode="IN" name="taskId" optional="false" type="String"/>
+        <attribute mode="IN" name="productId" optional="true" type="String"/>
+        <attribute mode="IN" name="routingId" optional="true" type="String"/>
+        <attribute mode="IN" name="quantity" optional="true" type="Double"/>
+        <attribute mode="OUT" name="estimatedTaskTime" type="Long" optional="false"/>
+    </service>
 </services>
