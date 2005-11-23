@@ -385,11 +385,6 @@
         <check-errors/>
         <entity-one entity-name="CustRequest" value-name="custRequest" auto-field-map="true"/>
         <entity-one entity-name="CustRequestItem" value-name="custRequestItem" auto-field-map="true"/>
-        <make-value value-name="lookupRequestRole" entity-name="CustRequestRole"/>
-        <set from-field="parameters.custRequestId" field="lookupRequestRole.custRequestId"/>
-        <set value="REQ_REQUESTER" field="lookupRequestRole.roleTypeId"/>
-        <find-by-and entity-name="CustRequestRole" map-name="lookupRequestRole" list-name="roles"/>
-        <first-from-list entry-name="requester" list-name="roles"/>
         
         <if-empty field-name="custRequest">
             <add-error>
@@ -409,13 +404,13 @@
 
         <!-- create a non existing ID -->
         <sequenced-id-to-env sequence-name="Quote" env-name="quoteId"/>
-        <make-next-seq-id value-name="newQuoteItem" seq-field-name="quoteItemSeqId"/>
         <set from-field="quoteId" field="newQuote.quoteId"/>
         <set from-field="quoteId" field="newQuoteItem.quoteId"/>
+        <make-next-seq-id value-name="newQuoteItem" seq-field-name="quoteItemSeqId"/>
         <field-to-result field-name="quoteId" result-name="quoteId"/>
         <field-to-result field-name="newQuoteItem.quoteItemSeqId" result-name="quoteItemSeqId"/>
         
-        <set from-field="requester.partyId" field="newQuote.partyId"/>
+        <set from-field="custRequest.fromPartyId" field="newQuote.partyId"/>
         <set from-field="custRequest.custRequestName" field="newQuote.quoteName"/>
         <set from-field="custRequest.description" field="newQuote.description"/>
         <set from-field="custRequest.maximumAmountUomId" field="newQuote.currencyUomId"/>
@@ -424,8 +419,7 @@
         <create-value value-name="newQuote"/>
         <create-value value-name="newQuoteItem"/>
         <!-- copy the roles from the request to the quote-->
-        <clear-field field-name="lookupRequestRole"/>
-        <clear-field field-name="roles"/>
+        <make-value value-name="lookupRequestRole" entity-name="CustRequestRole"/>
         <set from-field="parameters.custRequestId" field="lookupRequestRole.custRequestId"/>
         <find-by-and entity-name="CustRequestRole" map-name="lookupRequestRole" list-name="roles"/>
         <iterate entry-name="role" list-name="roles">
