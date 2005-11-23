@@ -52,7 +52,12 @@
         <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
         <attribute mode="OUT" name="totalCost" type="Double"/>
     </service>
-    <service name="createCostComponent" default-entity-name="CostComponent" engine="simple"
+    <service name="calculateAllProductsCosts" engine="simple" auth="true" transaction-timout="7200"
+                location="org/ofbiz/manufacturing/cost/CostServices.xml" invoke="calculateAllProductsCosts">
+        <description>Calculates estimated costs for all the products</description>
+        <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
+    </service>
+    <service name="createCostComponent" default-entity-name="CostComponent" engine="simple" 
                 location="org/ofbiz/manufacturing/cost/CostServices.xml" invoke="createCostComponent" auth="true">
         <description>Create a CostComponent</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>

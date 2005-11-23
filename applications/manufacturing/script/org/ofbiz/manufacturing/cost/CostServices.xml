@@ -29,7 +29,19 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
 
     <!-- Industrial Costs -->
-    <simple-method method-name="calculateProductCosts" short-description="Calculates the production run's cost">
+    <simple-method method-name="calculateAllProductsCosts" short-description="Calculates estimated costs for all the products">
+        <!--filter-by-date="true"-->
+        <entity-condition entity-name="Product" list-name="products">
+            <select-field field-name="productId"/>
+            <order-by field-name="-billOfMaterialLevel"/>
+        </entity-condition>
+        <set from-field="parameters.currencyUomId" field="inMap.currencyUomId"/>
+        <iterate list-name="products" entry-name="product">
+            <set from-field="product.productId" field="inMap.productId"/>
+            <call-service service-name="calculateProductCosts" in-map-name="inMap"/>
+        </iterate>
+    </simple-method>
+    <simple-method method-name="calculateProductCosts" short-description="Calculates the product's cost">
         <set from-field="parameters.productId" field="callSvcMap.productId"/>
         
         <!-- calculate the total materials' cost -->
@@ -81,21 +93,24 @@
         
         <!-- The CostComponent records are created. -->
         <if-not-empty field-name="totalTaskCost">
-            <clear-field field-name="callSvcMap"/>
-            <set value="ESTIMATED_LABOR_COST" field="callSvcMap.costComponentTypeId"/>
-            <set from-field="parameters.productId" field="callSvcMap.productId"/>
-            <set from-field="parameters.currencyUomId" field="callSvcMap.costUomId"/>
-            <set from-field="totalTaskCost" field="callSvcMap.cost"/>
-            <call-service service-name="createCostComponent" in-map-name="callSvcMap"/>
+            <if-compare field-name="totalTaskCost" operator="greater" value="0" type="Double">
+                <clear-field field-name="callSvcMap"/>
+                <set value="ESTIMATED_LABOR_COST" field="callSvcMap.costComponentTypeId"/>
+                <set from-field="parameters.productId" field="callSvcMap.productId"/>
+                <set from-field="parameters.currencyUomId" field="callSvcMap.costUomId"/>
+                <set from-field="totalTaskCost" field="callSvcMap.cost"/>
+                <call-service service-name="createCostComponent" in-map-name="callSvcMap"/>
+            </if-compare>
         </if-not-empty>
-        <!--<if-compare field-name="totalProductsCost" operator="greater" value="0" type="Double">-->
         <if-not-empty field-name="totalProductsCost">
-            <clear-field field-name="callSvcMap"/>
-            <set value="ESTIMATED_MATERIALS_" field="callSvcMap.costComponentTypeId"/>
-            <set from-field="parameters.productId" field="callSvcMap.productId"/>
-            <set from-field="parameters.currencyUomId" field="callSvcMap.costUomId"/>
-            <set from-field="totalProductsCost" field="callSvcMap.cost"/>
-            <call-service service-name="createCostComponent" in-map-name="callSvcMap"/>
+            <if-compare field-name="totalProductsCost" operator="greater" value="0" type="Double">
+                <clear-field field-name="callSvcMap"/>
+                <set value="ESTIMATED_MATERIALS_" field="callSvcMap.costComponentTypeId"/>
+                <set from-field="parameters.productId" field="callSvcMap.productId"/>
+                <set from-field="parameters.currencyUomId" field="callSvcMap.costUomId"/>
+                <set from-field="totalProductsCost" field="callSvcMap.cost"/>
+                <call-service service-name="createCostComponent" in-map-name="callSvcMap"/>
+            </if-compare>
         </if-not-empty>
         
         <field-to-result field-name="totalCost"/>
