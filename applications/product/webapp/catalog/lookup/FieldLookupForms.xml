@@ -151,9 +151,10 @@
                 <field-map field-name="entityName" value="ProductAndPriceView"/>
             </service>
         </actions>
-        <field name="productId" title=" " widget-style="buttontext">
+        <field name="productId" title=" " widget-style="buttontext" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
+        <field name="productId" title=" " use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
         <field name="currencyUomId"><display/></field>
