@@ -172,6 +172,17 @@
     </simple-method>
     
     <simple-method method-name="createCostComponent" short-description="Create a CostComponent">
+        <!-- The existing costs of the same type are expired -->
+        <set from-field="parameters.productId" field="costsAndMap.productId"/>
+        <set from-field="parameters.costUomId" field="costsAndMap.costUomId"/>
+        <set from-field="parameters.costComponentTypeId" field="costsAndMap.costComponentTypeId"/>
+        <find-by-and entity-name="CostComponent" map-name="costsAndMap" list-name="existingCosts"/>
+        <filter-list-by-date list-name="existingCosts"/>
+        <iterate list-name="existingCosts" entry-name="existingCost">
+            <now-timestamp-to-env env-name="existingCost.thruDate"/>
+            <store-value value-name="existingCost"/>
+        </iterate>
+        <!-- The new cost is created -->
         <make-value value-name="newEntity" entity-name="CostComponent"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <sequenced-id-to-env sequence-name="CostComponent" env-name="newEntity.costComponentId"/>
