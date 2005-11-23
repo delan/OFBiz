@@ -88,4 +88,4 @@ if (partyId != null) {
 // get product inventory summary for each shopping cart item
 inventorySummary = dispatcher.runSync("getProductInventorySummaryForItems", UtilMisc.toMap("orderItems", shoppingCart.makeOrderItems()));
 context.put("availableToPromiseMap", inventorySummary.get("availableToPromiseMap"));
-context.put("quantityOnHandMap", inventorySummary.get("availableToPromiseMap"));
+context.put("quantityOnHandMap", inventorySummary.get("quantityOnHandMap"));
