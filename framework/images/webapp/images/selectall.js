@@ -93,3 +93,32 @@ function changeObjectVisibility(objectId, newVisibility) {
         return false;
     }
 }
+
+// To use this in a link use a URL like this: javascript:confirmActionLink('You want to delete this party?', 'deleteParty?partyId=${partyId}')
+function confirmActionLink(msg, newLocation) {
+    if (msg == null) {
+        msg = "Are you sure you want to do this?";
+    }
+    var agree = confirm(msg);
+    if (agree) {
+        if (newLocation != null) location.replace(newLocation);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// To use this in a link use a URL like this: javascript:confirmActionFormLink('You want to update this party?', 'updateParty')
+function confirmActionFormLink(msg, formName) {
+    if (msg == null) {
+        msg = "Are you sure you want to do this?";
+    }
+    var agree = confirm(msg);
+    if (agree) {
+        if (formName != null) document.forms[formName].submit();
+        return true;
+    } else {
+        return false;
+    }
+}
+
