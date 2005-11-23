@@ -2267,6 +2267,7 @@
       <alias entity-alias="PR" name="internalName"/>
       <alias entity-alias="PR" name="description"/>
       <alias entity-alias="PR" name="primaryProductCategoryId"/>
+      <alias entity-alias="PR" name="isVirtual"/>
       <alias entity-alias="PP" name="productPriceTypeId"/>
       <alias entity-alias="PP" name="productPricePurposeId"/>
       <alias entity-alias="PP" name="currencyUomId"/>
