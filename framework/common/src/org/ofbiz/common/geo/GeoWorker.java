@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Set;
+
+import javolution.util.FastSet;
 
 /**
  * Worker methods for Geos
@@ -91,6 +94,28 @@ public class GeoWorker {
         //Debug.log("Expanded to : " + geoList, module);
 
         return geoList;
+    }
+    
+    public static Set expandGeoRegionDeep(Set geoIdSet, GenericDelegator delegator) throws GenericEntityException {
+        if (geoIdSet == null || geoIdSet.size() == 0) {
+            return geoIdSet;
+        }
+        Set geoIdSetTemp = FastSet.newInstance();
+        Iterator geoIdIter = geoIdSet.iterator();
+        while (geoIdIter.hasNext()) {
+            String curGeoId = (String) geoIdIter.next();
+            List geoAssocList = delegator.findByAndCache("GeoAssoc", UtilMisc.toMap("geoIdTo", curGeoId, "geoAssocTypeId", "REGIONS"));
+            Iterator geoAssocIter = geoAssocList.iterator();
+            while (geoAssocIter.hasNext()) {
+                GenericValue geoAssoc = (GenericValue) geoAssocIter.next();
+                geoIdSetTemp.add(geoAssoc.get("geoId"));
+            }
+        }
+        geoIdSetTemp = expandGeoRegionDeep(geoIdSetTemp, delegator);
+        Set geoIdSetNew = FastSet.newInstance();
+        geoIdSetNew.addAll(geoIdSet);
+        geoIdSetNew.addAll(geoIdSetTemp);
+        return geoIdSetNew;
     }
 
     public static boolean containsGeo(List geoList, String geoId, GenericDelegator delegator) {

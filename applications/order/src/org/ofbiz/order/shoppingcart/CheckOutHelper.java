@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -60,6 +60,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
+import java.math.BigDecimal;
 
 /**
  * A facade over the ShoppingCart to simplify the relatively complex
@@ -554,6 +556,7 @@ public class CheckOutHelper {
                         inputMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                         inputMap.put("quantity", orderItem.getDouble("quantity"));
                         inputMap.put("userLogin", userLogin);
+                        // TODO: check service result for an error return
                         Map prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
                     }
                 } catch (Exception e) {
@@ -579,6 +582,7 @@ public class CheckOutHelper {
                 try {
                     Map inputMap = UtilMisc.toMap("requirementId", requirementId, "statusId", "REQ_ORDERED");
                     inputMap.put("userLogin", userLogin);
+                    // TODO: check service result for an error return
                     Map outMap = dispatcher.runSync("updateRequirement", inputMap);
                 } catch (Exception e) {
                     String service = e.getMessage();
@@ -661,6 +665,7 @@ public class CheckOutHelper {
         int shipGroups = this.cart.getShipGroupSize();
         for (int i = 0; i < shipGroups; i++) {
             Map serviceContext = this.makeTaxContext(i, shipAddress);
+            // TODO: change to pass in BigDecimal values instead of Double
             List taxReturn = this.getTaxAdjustments(dispatcher, "calcTax", serviceContext);
 
             if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn, module);
@@ -703,12 +708,12 @@ public class CheckOutHelper {
             //Debug.logInfo("In makeTaxContext for item [" + i + "] in ship group [" + shipGroup + "] got itemInfo: " + itemInfo, module);
             
             product.add(i, cartItem.getProduct());
-            amount.add(i, new Double(cartItem.getItemSubTotal(itemInfo.quantity)));
-            price.add(i, new Double(cartItem.getBasePrice()));
-            shipAmt.add(i, new Double(0.00)); // no per item shipping yet
+            amount.add(i, new BigDecimal(cartItem.getItemSubTotal(itemInfo.quantity)));
+            price.add(i, new BigDecimal(cartItem.getBasePrice()));
+            shipAmt.add(i, new BigDecimal("0.00")); // no per item shipping yet
         }
 
-        Double shipAmount = new Double(csi.shipEstimate);
+        BigDecimal shipAmount = new BigDecimal(csi.shipEstimate);
         if (shipAddress == null) {
             shipAddress = cart.getShippingAddress(shipGroup);
         }
@@ -940,6 +945,7 @@ public class CheckOutHelper {
             }
         } else if (paymentMethodTypeIds.contains("CASH") || paymentMethodTypeIds.contains("EXT_COD") || paymentMethodTypeIds.contains("EXT_BILLACT")) {
             boolean hasOther = false;
+            // TODO: this is set but not checked anywhere
             boolean validAmount = false;
 
             Iterator pmti = paymentMethodTypeIds.iterator();
@@ -1349,8 +1355,6 @@ public class CheckOutHelper {
      */
     public Map finalizeOrderEntryOfflinePayments(Map params) {
         Map result = ServiceUtil.returnSuccess();
-        List errorMessages = new ArrayList();
-        String errMsg=null;
 
         // get a list of payment types
         List paymentTypes = null;
@@ -1378,7 +1382,7 @@ public class CheckOutHelper {
                         try {
                             paymentAmount = NumberFormat.getNumberInstance().parse(amount).doubleValue();
                         } catch (java.text.ParseException pe) {
-                            errMsg = UtilProperties.getMessage(resource,"checkhelper.problems_parsing_amount", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                            String errMsg = UtilProperties.getMessage(resource,"checkhelper.problems_parsing_amount", (cart != null ? cart.getLocale() : Locale.getDefault()));
                             result = ServiceUtil.returnError(errMsg);
                             return result;
                         }
@@ -1394,7 +1398,7 @@ public class CheckOutHelper {
 
             double cartTotal = cart.getGrandTotal();
             if (cartTotal != paymentTally) {
-                errMsg = UtilProperties.getMessage(resource,"checkhelper.totals_do_not_match_order_total", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                String errMsg = UtilProperties.getMessage(resource,"checkhelper.totals_do_not_match_order_total", (cart != null ? cart.getLocale() : Locale.getDefault()));
                 result = ServiceUtil.returnError(errMsg);
                 return result;
             } else {
@@ -1503,10 +1507,10 @@ public class CheckOutHelper {
      */
     private void addErrors(List targetList, Map targetMap, Map callResult) {
         List newList;
-        Map.Entry entry;
-        Iterator mapIter;
+        //Map.Entry entry;
+        //Iterator mapIter;
         Map errorMsgMap;
-        StringBuffer outMsg;
+        //StringBuffer outMsg;
 
         //See if there is a single message
         if (callResult.containsKey(ModelService.ERROR_MESSAGE)) {
