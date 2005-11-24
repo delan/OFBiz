@@ -30,36 +30,37 @@
     <!-- Tax Calc Interfaces -->
     <service name="calcTaxInterface" engine="interface" location="" invoke="">
         <description>Tax Calc Service Interface</description>
-        <attribute name="productStoreId" type="String" mode="IN"/>
-        <attribute name="billToPartyId" type="String" mode="IN" optional="true"/> <!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is -->
-        <attribute name="itemProductList" type="java.util.List" mode="IN"/>
-        <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
-        <attribute name="itemPriceList" type="java.util.List" mode="IN"/>
-        <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="orderShippingAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"><!-- this will be used to find the payToPartyId, and as one of the columns to constrain by on the lookup --></attribute>
+        <attribute name="billToPartyId" type="String" mode="IN" optional="true"><!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is --></attribute>
+        <attribute name="itemProductList" type="java.util.List" mode="IN" optional="false"><!-- List of GenericValues --></attribute>
+        <attribute name="itemAmountList" type="java.util.List" mode="IN" optional="false"><!-- List of BigDecimals --></attribute>
+        <attribute name="itemPriceList" type="java.util.List" mode="IN" optional="false"><!-- List of BigDecimals --></attribute>
+        <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"><!-- List of BigDecimals --></attribute>
+        <attribute name="orderShippingAmount" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
-        <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
-        <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
+        <attribute name="orderAdjustments" type="java.util.List" mode="OUT" optional="false"><!-- List of GenericValues (OrderAdjustment) --></attribute>
+        <attribute name="itemAdjustments" type="java.util.List" mode="OUT" optional="false"><!-- List of Lists of GenericValues (OrderAdjustment), one List of Adjustments per item --></attribute>
     </service>
     <service name="calcTaxTotalForDisplayInterface" engine="interface" location="" invoke="">
         <description>Tax Calc Total For Display Service Interface</description>
-        <attribute name="productStoreId" type="String" mode="IN" optional="false"><!-- this will be used to get the taxAuthPartyId and taxAuthGeoId to use for the rate lookup --></attribute> 
-        <attribute name="billToPartyId" type="String" mode="IN" optional="true"/> <!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is -->
-        <attribute name="productId" type="String" mode="IN"/>
-        <attribute name="amount" type="Long" mode="IN"/>
-        <attribute name="basePrice" type="Double" mode="IN"/>
-        <attribute name="shippingPrice" type="Double" mode="IN" optional="true"/>
-        <attribute name="taxTotal" type="Double" mode="OUT"/>
-        <attribute name="priceWithTax" type="Double" mode="OUT"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"><!-- this will be used to get the taxAuthPartyId and taxAuthGeoId to use for the rate lookup, and for the payToPartyId, and as one of the columns to constrain by on the lookup --></attribute> 
+        <attribute name="billToPartyId" type="String" mode="IN" optional="true"><!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is --></attribute>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="basePrice" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="shippingPrice" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="taxTotal" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="taxPercentage" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="priceWithTax" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
     
     <!-- Tax Authority Calc Services -->
-    <service name="rateProductTaxCalc" engine="java"
+    <service name="calcTax" engine="java"
         location="org.ofbiz.accounting.tax.TaxAuthorityServices" invoke="rateProductTaxCalc">
         <description>Tax Authority Rate Product Calc Service</description>
         <implements service="calcTaxInterface"/>
     </service>
-    <service name="rateProductTaxCalcForDisplay" engine="java"
+    <service name="calcTaxForDisplay" engine="java"
         location="org.ofbiz.accounting.tax.TaxAuthorityServices" invoke="rateProductTaxCalcForDisplay">
         <description>Tax Authority Rate Product Calc Service</description>
         <implements service="calcTaxTotalForDisplayInterface"/>
@@ -182,7 +183,7 @@
     </service>
 
     <!-- Simple Tax Rate Services (SimpleSalesTaxLookup) -->
-    <service name="calcTax" engine="java"
+    <service name="simpleTaxCalc" engine="java"
         location="org.ofbiz.accounting.tax.SimpleTaxServices" invoke="simpleTaxCalc">
         <description>Simple Calc Tax Service</description>
         <implements service="calcTaxInterface"/>
@@ -223,7 +224,7 @@
         <attribute name="ruleFileLocation" type="String" mode="IN" optional="false"/>
     </service>
     
-    <service name="_calcTax" engine="java"
+    <service name="flatZipSalesTaxCalc" engine="java"
         location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="flatTaxCalc">
         <description>Zip Sales Calc Tax Service - change this to calcTax to run</description>
         <implements service="calcTaxInterface"/>

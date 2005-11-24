@@ -23,6 +23,7 @@
  */
 package org.ofbiz.order.order;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -1165,7 +1166,7 @@ public class OrderServices {
                     double orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(validOrderItems, allAdjustments);
 
                     // shipping amount
-                    Double orderShipping = new Double(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
+                    BigDecimal orderShipping = new BigDecimal(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
 
                     // build up the list of tax calc service parameters
                     for (int i = 0; i < validOrderItems.size(); i++) {
@@ -1173,9 +1174,9 @@ public class OrderServices {
                         String productId = orderItem.getString("productId");
                         try {
                             products.add(i, delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)));  // get the product entity
-                            amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments, true, false))); // get the item amount
-                            shipAmts.add(i, new Double(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, allAdjustments, false, false, true))); // get the shipping amount
-                            itPrices.add(i, orderItem.getDouble("unitPrice"));
+                            amounts.add(i, new BigDecimal(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments, true, false))); // get the item amount
+                            shipAmts.add(i, new BigDecimal(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, allAdjustments, false, false, true))); // get the shipping amount
+                            itPrices.add(i, orderItem.getBigDecimal("unitPrice"));
                         } catch (GenericEntityException e) {
                             Debug.logError(e, "Cannot read order item entity : " + orderItem, module);
                             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderCannotReadTheOrderItemEntity",locale));
@@ -1208,6 +1209,7 @@ public class OrderServices {
                     }
 
                     // prepare the service context
+                    // pass in BigDecimal values instead of Double
                     Map serviceContext = UtilMisc.toMap("productStoreId", orh.getProductStoreId(), "itemProductList", products, "itemAmountList", amounts,
                         "itemShippingList", shipAmts, "itemPriceList", itPrices, "orderShippingAmount", orderShipping);
                     serviceContext.put("shippingAddress", shippingAddress);
@@ -1780,7 +1782,7 @@ public class OrderServices {
         String orderId = (String) context.get("orderId");
         String shipGroupSeqId = (String) context.get("shipGroupSeqId");
         String trackingNumber = (String) context.get("trackingNumber");
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
 
         try {
             GenericValue shipGroup = delegator.findByPrimaryKey("OrderItemShipGroup", UtilMisc.toMap("orderId", orderId, "shipGroupSeqId", shipGroupSeqId));
@@ -1809,7 +1811,7 @@ public class OrderServices {
         String partyId = (String) context.get("partyId");
         String roleTypeId = (String) context.get("roleTypeId");
         Boolean removeOld = (Boolean) context.get("removeOld");
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
 
         if (removeOld != null && removeOld.booleanValue()) {
             try {
@@ -1849,7 +1851,7 @@ public class OrderServices {
         String partyId = (String) context.get("partyId");
         String roleTypeId = (String) context.get("roleTypeId");
         Map fields = UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleTypeId);
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
 
         GenericValue testValue = null;
 
@@ -2428,6 +2430,7 @@ public class OrderServices {
                                 // cancel the order item
                                 Map svcCtx = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
                                 try {
+                                    // TODO: check service result for an error return
                                     Map res = dispatcher.runSync("changeOrderItemStatus", svcCtx);
                                 } catch (GenericServiceException e) {
                                     Debug.logError(e, "Problem calling change item status service : " + svcCtx, module);
