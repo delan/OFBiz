@@ -22,7 +22,7 @@
  *@author     Andy Zeneski
  *@version    $Rev$
  *@since      2.1
-*/
+ */
 
 /*
  * This script is also referenced by the ecommerce's screens and
@@ -91,6 +91,7 @@ if (product != null) {
     priceContext.put("webSiteId", webSiteId);
     priceContext.put("prodCatalogId", catalogId);
     priceContext.put("productStoreId", productStoreId);
+    priceContext.put("checkIncludeVat", "Y");
     priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
             
     context.put("price", priceMap);

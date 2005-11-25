@@ -234,7 +234,7 @@
             </drop-down>
         </field>
         <field name="titleTransferEnumId" title="${uiLabelMap.AccountingTitleTransfer}">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="PTSOFTTFR"/>
                     <entity-order-by field-name="sequenceId"/>

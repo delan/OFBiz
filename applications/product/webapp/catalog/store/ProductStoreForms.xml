@@ -187,6 +187,11 @@
         <field name="selectPaymentTypePerItem" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
         </field>
+        <field name="showPricesWithVatTax" widget-style="selectBox">
+            <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field name="vatTaxAuthGeoId"><lookup target-form-name="LookupGeo"/></field>
+        <field name="vatTaxAuthPartyId"><lookup target-form-name="LookupPartyName"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

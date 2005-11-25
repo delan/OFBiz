@@ -23,6 +23,7 @@
  */
 package org.ofbiz.order.shoppingcart;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1495,10 +1496,39 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the base price. */
     public double getBasePrice() {
+        double curBasePrice;
         if (selectedAmount > 0) {
-            return basePrice * selectedAmount;
+            curBasePrice = basePrice * selectedAmount;
         } else {
-            return basePrice;
+            curBasePrice = basePrice;
+        }
+        
+        return curBasePrice;
+    }
+    
+    public double getDisplayPrice(GenericValue productStore, String billToPartyId, LocalDispatcher dispatcher) {
+        if (productStore != null && "Y".equals(productStore.getString("showPricesWithVatTax"))) {
+            Map calcTaxForDisplayContext = UtilMisc.toMap("productStoreId", productStore.get("productStoreId"), 
+                    "productId", productId, "quantity", new BigDecimal(quantity), 
+                    "basePrice", new BigDecimal(this.getBasePrice()));
+            if (UtilValidate.isNotEmpty(billToPartyId)) {
+                calcTaxForDisplayContext.put("billToPartyId", billToPartyId);
+            }
+            
+            try {
+                Map calcTaxForDisplayResult = dispatcher.runSync("calcTaxForDisplay", calcTaxForDisplayContext);
+                if (ServiceUtil.isError(calcTaxForDisplayResult)) {
+                    throw new IllegalArgumentException("Error calculating VAT tax (with calcTaxForDisplay service)" + ServiceUtil.getErrorMessage(calcTaxForDisplayResult));
+                }
+                // taxTotal, taxPercentage, priceWithTax
+                return ((BigDecimal) calcTaxForDisplayResult.get("priceWithTax")).doubleValue();
+            } catch (GenericServiceException e) {
+                String errMsg = "Error calculating VAT tax (with calcTaxForDisplay service): " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+        } else {
+            return this.getBasePrice();
         }
     }
 
