@@ -86,7 +86,7 @@
     <TaxAuthority taxAuthGeoId="CAN" taxAuthPartyId="CAN_TAXMAN" includeTaxInPrice="N"/>
     <TaxAuthorityGlAccount taxAuthGeoId="CAN" taxAuthPartyId="CAN_TAXMAN" organizationPartyId="Company" glAccountId="224209"/>
     <PartyTaxAuthInfo partyId="Company" taxAuthGeoId="CAN" taxAuthPartyId="CAN_TAXMAN" fromDate="2001-05-13 00:00:00.001" thruDate="" partyTaxId="87654321" isExempt="N" isNexus="Y"/>
-    <TaxAuthority taxAuthGeoId="ON" taxAuthPartyId="ON_TAXMAN" includeTaxInPrice="N"/>
+    <TaxAuthority taxAuthGeoId="ON" taxAuthPartyId="ON_TAXMAN" includeTaxInPrice="Y"/>
     <TaxAuthorityGlAccount taxAuthGeoId="ON" taxAuthPartyId="ON_TAXMAN" organizationPartyId="Company" glAccountId="224209"/>
     <PartyTaxAuthInfo partyId="Company" taxAuthGeoId="ON" taxAuthPartyId="ON_TAXMAN" fromDate="2001-05-13 00:00:00.001" thruDate="" partyTaxId="" isExempt="" isNexus="Y"/>
     

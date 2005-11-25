@@ -665,7 +665,7 @@ public class CheckOutHelper {
         int shipGroups = this.cart.getShipGroupSize();
         for (int i = 0; i < shipGroups; i++) {
             Map serviceContext = this.makeTaxContext(i, shipAddress);
-            // TODO: change to pass in BigDecimal values instead of Double
+            // pass in BigDecimal values instead of Double
             List taxReturn = this.getTaxAdjustments(dispatcher, "calcTax", serviceContext);
 
             if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn, module);

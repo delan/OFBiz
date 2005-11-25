@@ -62,6 +62,7 @@ public class TaxAuthorityServices {
 
     public static final String module = TaxAuthorityServices.class.getName();
     public static final BigDecimal ZERO_BASE = new BigDecimal("0.000"); 
+    public static final BigDecimal ONE_BASE = new BigDecimal("1.000"); 
     public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000"); 
 
     public static Map rateProductTaxCalcForDisplay(DispatchContext dctx, Map context) {
@@ -69,9 +70,12 @@ public class TaxAuthorityServices {
         String productStoreId = (String) context.get("productStoreId");
         String billToPartyId = (String) context.get("billToPartyId");
         String productId = (String) context.get("productId");
-        BigDecimal amount = (BigDecimal) context.get("amount");
+        BigDecimal quantity = (BigDecimal) context.get("quantity");
         BigDecimal basePrice = (BigDecimal) context.get("basePrice");
         BigDecimal shippingPrice = (BigDecimal) context.get("shippingPrice");
+
+        if (quantity == null) quantity = ONE_BASE;
+        BigDecimal amount = basePrice.multiply(quantity);
         
         BigDecimal taxTotal = ZERO_BASE;
         BigDecimal taxPercentage = ZERO_BASE;
@@ -101,16 +105,19 @@ public class TaxAuthorityServices {
                 
                 List taxAdustmentList = getTaxAdjustments(delegator, product, productStore, billToPartyId, taxAuthoritySet, basePrice, amount, shippingPrice);
                 if (taxAdustmentList.size() == 0) {
-                    throw new IllegalArgumentException("Could not find any Tax Authories Rate Rules for store with ID [" + productStoreId + "] for tax calculation; the store settings may need to be corrected.");
+                    // this is something that happens every so often for different products and such, so don't blow up on it...
+                    Debug.logWarning("Could not find any Tax Authories Rate Rules for store with ID [" + productStoreId + "], productId [" + productId + "], basePrice [" + basePrice + "], amount [" + amount + "], for tax calculation; the store settings may need to be corrected.", module);
                 }
 
                 // add up amounts from adjustments (amount OR exemptAmount, sourcePercentage)
                 Iterator taxAdustmentIter = taxAdustmentList.iterator();
                 while (taxAdustmentIter.hasNext()) {
                     GenericValue taxAdjustment = (GenericValue) taxAdustmentIter.next();
-                    taxPercentage.add(taxAdjustment.getBigDecimal("sourcePercentage"));
-                    taxTotal.add(taxAdjustment.getBigDecimal("amount"));
-                    priceWithTax.add(taxAdjustment.getBigDecimal("amount"));
+                    taxPercentage = taxPercentage.add(taxAdjustment.getBigDecimal("sourcePercentage"));
+                    BigDecimal adjAmount = taxAdjustment.getBigDecimal("amount");
+                    taxTotal = taxTotal.add(adjAmount);
+                    priceWithTax = priceWithTax.add(adjAmount);
+                    Debug.logInfo("For productId [" + productId + "] added [" + adjAmount + "] of tax to price for geoId [" + taxAdjustment.getString("taxAuthGeoId") + "], new price is [" + priceWithTax + "]", module);
                 }
             }
         } catch (GenericEntityException e) {
@@ -285,7 +292,7 @@ public class TaxAuthorityServices {
                 }
 
                 // taxRate is in percentage, so needs to be divided by 100
-                BigDecimal taxAmount = taxable.multiply(taxRate).divide(PERCENT_SCALE, 3, BigDecimal.ROUND_CEILING);
+                BigDecimal taxAmount = (taxable.multiply(taxRate)).divide(PERCENT_SCALE, 3, BigDecimal.ROUND_CEILING);
 
                 String taxAuthGeoId = taxAuthorityRateProduct.getString("taxAuthGeoId");
                 String taxAuthPartyId = taxAuthorityRateProduct.getString("taxAuthPartyId");

@@ -23,6 +23,7 @@
  */
 package org.ofbiz.product.price;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,6 +50,8 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -81,6 +84,7 @@ public class PriceServices {
         // utilTimer.setLog(false);
 
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         Map result = new HashMap();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
@@ -91,15 +95,23 @@ public class PriceServices {
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
         String webSiteId = (String) context.get("webSiteId");
+        String checkIncludeVat = (String) context.get("checkIncludeVat");
 
         String productStoreId = (String) context.get("productStoreId");
         String productStoreGroupId = (String) context.get("productStoreGroupId");
+        GenericValue productStore = null;
+        try {
+            // we have a productStoreId, if the corresponding ProductStore.primaryStoreGroupId is not empty, use that
+            productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+        } catch (GenericEntityException e) {
+            String errMsg = "Error getting product store info from the database while calculating price" + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
         if (UtilValidate.isEmpty(productStoreGroupId)) {
-            if (UtilValidate.isNotEmpty(productStoreId)) {
+            if (productStore != null) {
                 try {
-                    // we have a productStoreId, if the corresponding ProductStore.primaryStoreGroupId is not empty, use that
-                    GenericValue productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
-                    if (productStore != null && UtilValidate.isNotEmpty(productStore.getString("primaryStoreGroupId"))) {
+                    if (UtilValidate.isNotEmpty(productStore.getString("primaryStoreGroupId"))) {
                         productStoreGroupId = productStore.getString("primaryStoreGroupId");
                     } else {
                         // no ProductStore.primaryStoreGroupId, try ProductStoreGroupMember
@@ -122,7 +134,7 @@ public class PriceServices {
                 productStoreGroupId = "_NA_";
             }
         }
-
+        
         // if currencyUomId is null get from properties file, if nothing there assume USD (USD: American Dollar) for now
         String currencyUomId = (String) context.get("currencyUomId");
         if (UtilValidate.isEmpty(currencyUomId)) {
@@ -876,6 +888,29 @@ public class PriceServices {
         result.put("isSale", new Boolean(isSale));
         result.put("validPriceFound", new Boolean(validPriceFound));
         result.put("currencyUsed", currencyUomId);
+
+        // okay, now we have the calculated price, see if we should add in tax and if so do it
+        if ("Y".equals(checkIncludeVat) && productStore != null && "Y".equals(productStore.getString("showPricesWithVatTax"))) {
+            Map calcTaxForDisplayContext = UtilMisc.toMap("productStoreId", productStoreId, 
+                    "productId", productId, "quantity", new BigDecimal(quantity), 
+                    "basePrice", new BigDecimal(((Double) result.get("price")).doubleValue()));
+            if (UtilValidate.isNotEmpty(partyId)) {
+                calcTaxForDisplayContext.put("billToPartyId", partyId);
+            }
+            
+            try {
+                Map calcTaxForDisplayResult = dispatcher.runSync("calcTaxForDisplay", calcTaxForDisplayContext);
+                if (ServiceUtil.isError(calcTaxForDisplayResult)) {
+                    return ServiceUtil.returnError("Error calculating VAT tax (with calcTaxForDisplay service)", null, null, calcTaxForDisplayResult);
+                }
+                // taxTotal, taxPercentage, priceWithTax
+                result.put("price", new Double(((BigDecimal) calcTaxForDisplayResult.get("priceWithTax")).doubleValue()));
+            } catch (GenericServiceException e) {
+                String errMsg = "Error calculating VAT tax (with calcTaxForDisplay service): " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+        }
 
         // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
         return result;

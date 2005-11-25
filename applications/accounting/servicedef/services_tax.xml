@@ -46,7 +46,7 @@
         <attribute name="productStoreId" type="String" mode="IN" optional="false"><!-- this will be used to get the taxAuthPartyId and taxAuthGeoId to use for the rate lookup, and for the payToPartyId, and as one of the columns to constrain by on the lookup --></attribute> 
         <attribute name="billToPartyId" type="String" mode="IN" optional="true"><!-- would like to have this not-optional, but in some circumstances may need a tax estimate without knowing who the customer is --></attribute>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="quantity" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="basePrice" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="shippingPrice" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="taxTotal" type="BigDecimal" mode="OUT" optional="false"/>
