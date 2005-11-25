@@ -83,6 +83,7 @@ while (quoteItemsIt.hasNext()) {
             productPrice = EntityUtil.getFirst(productPrices);
             if (productPrice != null && productPrice.get("price") != null) {
                 averageCost = (productPrice.getDouble("price")).doubleValue();
+                averageCost = averageCost * selectedAmount;
             }
         }
         //defaultQuoteUnitPrice = averageCost * costToPriceMult * selectedAmount;
@@ -92,7 +93,7 @@ while (quoteItemsIt.hasNext()) {
         Debug.logError("Problems getting the averageCost for quoteItem: " + quoteItem);
     }
     profit = unitPrice - averageCost;
-    percProfit = averageCost != 0? (profit / averageCost) * 100.00: 0.00;
+    percProfit = averageCost != 0? (unitPrice / averageCost) * 100.00: 0.00;
     quoteItemAndCostInfo = new java.util.HashMap(quoteItem);
     quoteItemAndCostInfo.put("averageCost", averageCost);
     quoteItemAndCostInfo.put("profit", profit);
@@ -108,6 +109,5 @@ context.put("quoteItemAndCostInfos", quoteItemAndCostInfos);
 context.put("totalCost", totalCost);
 context.put("totalPrice", totalPrice);
 context.put("totalProfit", totalProfit);
-context.put("totalPercProfit", totalCost != 0? (totalProfit / totalCost) * 100.00: 0.00);
-//context.put("totalCostMult", (totalCost != 0? totalPrice / totalCost: 0));
+context.put("totalPercProfit", totalCost != 0? (totalPrice / totalCost) * 100.00: 0.00);
 
