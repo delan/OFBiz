@@ -775,7 +775,7 @@
                        <#if orderHeader.orderTypeId == "SALES_ORDER">
                          <a href="<@ofbizUrl>quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Entire Order</a>
                        <#else> <#-- PURCHASE_ORDER -->
-                         <form action="/facility/control/quickShipPurchaseOrder">
+                         <form action="/facility/control/quickShipPurchaseOrder" method="POST">
                            <input type="hidden" name="initialSelected" value="Y"/>
                            <input type="hidden" name="orderId" value="${orderId}"/>
                            <#-- destination form (/facility/control/ReceiveInventory) wants purchaseOrderId instead of orderId, so we set it here as a workaround -->
@@ -800,8 +800,28 @@
                    </td>
                    <td width="5">&nbsp;</td>
                    <td align="left" valign="top" width="80%">
-                     <div class="tabletext"><a href="/facility/control/PackOrder?facilityId=${orderHeader.originFacilityId?if_exists}&orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">Pack Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
-                     <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
+
+                     <#if orderHeader.orderTypeId == "SALES_ORDER">
+                       <div class="tabletext"><a href="/facility/control/PackOrder?facilityId=${storeFacilityId?if_exists}&orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">Pack Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
+                       <div class="tabletext"><a href="/facility/control/createShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&statusId=SHIPMENT_INPUT&originFacilityId=${storeFacilityId}&externalLoginKey=${externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
+                     <#else>
+                       <form action="/facility/control/createShipment" method="GET">
+                         <div class="tabletext">
+                           <input type="hidden" name="primaryOrderId" value="${orderId}"/>
+                           <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
+                           <input type="hidden" name="shipmentTypeId" value="PURCHASE_SHIPMENT"/>
+                           <input type="hidden" name="statusId" value="PURCH_SHIP_CREATED"/>
+                           <input type="hidden" name="externalLoginKey" value="${externalLoginKey}"/>
+                           <select name="destinationFacilityId" class="selectBox">
+                             <#list facilities as facility>
+                               <option value="${facility.facilityId}">${facility.facilityName}</option>
+                             </#list>
+                           </select>
+                           <input type="submit" class="smallSubmit" value="New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]">
+                         </div>
+                       </form>
+                     </#if>
+
                    </td>
                  </tr>
 
