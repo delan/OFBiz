@@ -45,7 +45,7 @@
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductPrimaryOrderId}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
-        <td width="80%" align="left"><span class="tabletext">${shipment.primaryOrderId?if_exists}</span></td>
+        <td width="80%" align="left"><span class="tabletext"><a href="/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}">${shipment.primaryOrderId?if_exists}</a></span></td>
       </tr>
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">Primary Ship Group Seq ID</span></td>
