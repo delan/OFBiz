@@ -33,12 +33,16 @@ import java.util.Set;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.finder.EntityFinderUtil.GetAll;
 import org.ofbiz.entity.finder.EntityFinderUtil.LimitRange;
 import org.ofbiz.entity.finder.EntityFinderUtil.LimitView;
@@ -48,6 +52,7 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
@@ -170,13 +175,19 @@ public class ByAndFinder implements Serializable {
         List orderByFields = EntityFinderUtil.makeOrderByFieldList(this.orderByExpanderList, context);
         
         try {
-            // TODO: if filterByDate, do a date filter on the results based on the now-timestamp
+            // if filterByDate, do a date filter on the results based on the now-timestamp
+            EntityCondition whereEntityCondition = new EntityFieldMap(entityContext, EntityOperator.AND);
             if (filterByDate) {
-                throw new IllegalArgumentException("The filer-by-date feature is not yet implemented");
+                EntityCondition filterByDateCondition = EntityUtil.getFilterByDateExpr();
+                if (whereEntityCondition != null) {
+                    whereEntityCondition = new EntityConditionList(UtilMisc.toList(whereEntityCondition, filterByDateCondition), EntityJoinOperator.AND);
+                } else {
+                    whereEntityCondition = filterByDateCondition;
+                }
             }
             
             if (useCache) {
-                List results = delegator.findByConditionCache(entityName, new EntityFieldMap(entityContext, EntityOperator.AND), fieldsToSelect, orderByFields);
+                List results = delegator.findByConditionCache(entityName, whereEntityCondition, fieldsToSelect, orderByFields);
                 this.outputHandler.handleOutput(results, context, listAcsr);
             } else {
                 boolean useTransaction = true;
@@ -195,7 +206,7 @@ public class ByAndFinder implements Serializable {
                         beganTransaction = TransactionUtil.begin();
                     }
 
-                    EntityListIterator eli = delegator.findListIteratorByCondition(entityName, new EntityFieldMap(entityContext, EntityOperator.AND), null, fieldsToSelect, orderByFields, options);
+                    EntityListIterator eli = delegator.findListIteratorByCondition(entityName, whereEntityCondition, null, fieldsToSelect, orderByFields, options);
                     this.outputHandler.handleOutput(eli, context, listAcsr);
                 } catch (GenericEntityException e) {
                     String errMsg = "Failure in by and find operation, rolling back transaction";

@@ -36,9 +36,12 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.finder.EntityFinderUtil.Condition;
 import org.ofbiz.entity.finder.EntityFinderUtil.ConditionExpr;
 import org.ofbiz.entity.finder.EntityFinderUtil.ConditionList;
@@ -51,6 +54,7 @@ import org.ofbiz.entity.finder.EntityFinderUtil.UseIterator;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -194,9 +198,14 @@ public class ByConditionFinder implements Serializable {
         List orderByFields = EntityFinderUtil.makeOrderByFieldList(this.orderByExpanderList, context);
         
         try {
-            // TODO: if filterByDate, do a date filter on the results based on the now-timestamp
+            // if filterByDate, do a date filter on the results based on the now-timestamp
             if (filterByDate) {
-                throw new IllegalArgumentException("The filer-by-date feature is not yet implemented");
+                EntityCondition filterByDateCondition = EntityUtil.getFilterByDateExpr();
+                if (whereEntityCondition != null) {
+                    whereEntityCondition = new EntityConditionList(UtilMisc.toList(whereEntityCondition, filterByDateCondition), EntityJoinOperator.AND);
+                } else {
+                    whereEntityCondition = filterByDateCondition;
+                }
             }
             
             if (useCache) {
