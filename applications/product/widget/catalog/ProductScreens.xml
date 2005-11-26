@@ -302,7 +302,7 @@
                 <set field="productId" from-field="parameters.productId"/>
                 
                 <entity-one entity-name="Product" value-name="product"/>
-                <entity-and entity-name="CostComponent" list-name="costs">
+                <entity-and entity-name="CostComponent" list-name="costs" filter-by-date="true">
                     <field-map field-name="productId"/>
                     <order-by field-name="-fromDate"/>
                 </entity-and>
