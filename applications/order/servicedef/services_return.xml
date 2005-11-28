@@ -80,6 +80,13 @@
         <attribute entity-name="ReturnItem" name="returnItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="currentStatusId" type="String" mode="OUT" optional="false"/>
     </service>
+    <service name="updateReturnItemsStatus" engine="simple"
+            location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnItemsStatus">
+        <description>Update ReturnItem(s) Status</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="removeReturnItem" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="removeReturnItem">
         <description>Remove a ReturnItem</description>
@@ -150,6 +157,16 @@
         <description>Get a map of returnable items orderItem => quantity available to return</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="returnableItems" type="Map" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="getOrderAvailableReturnedTotal" engine="java"
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="getOrderAvailableReturnedTotal">
+        <description>Get the total amount of all returns for an order</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="adjustment" type="Double" mode="IN" optional="true"/>
+        <attribute name="orderTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="returnTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="availableReturnTotal" type="Double" mode="OUT" optional="false"/>
     </service>
 </services>
 

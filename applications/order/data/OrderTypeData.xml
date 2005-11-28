@@ -173,6 +173,7 @@
     
     <!-- return item types for sales (AR) returns -->
     <ReturnItemType description="Return Adjustment" returnItemTypeId="RETURN_ADJ" parentTypeId=""/>
+    <ReturnItemType description="Return Manual Adjustment" returnItemTypeId="RETURN_MAN_ADJ" parentTypeId="RETURN_ADJ"/>
     <ReturnItemType description="Return Promotion" returnItemTypeId="RET_PROMOTION_ADJ" parentTypeId="RETURN_ADJ"/>
     <ReturnItemType description="Return Discount" returnItemTypeId="RET_DISCOUNT_ADJ" parentTypeId="RETURN_ADJ"/>
     <ReturnItemType description="Return Fee" returnItemTypeId="RET_FEE" parentTypeId="RETURN_ADJ"/>

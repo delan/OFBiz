@@ -166,6 +166,47 @@
                 <tr><td colspan="8"><div class="tableheadtext">No adjustments on this order.</div></td></tr>
               </#if>
 
+              <#assign manualAdjRowNum = rowCount/>
+              <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RETURN_MAN_ADJ"/>
+              <input type="hidden" name="orderId_o_${rowCount}" value="${orderId}"/>
+
+              <tr><td colspan="8"><hr class="sepbar"></td></tr>
+              <tr>
+                <td colspan="8">
+                  <div class="head3">Manual Return Adjustment For Order #<a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td></div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" class="inputBox" size="30" name="description_o_${rowCount}">
+                </td>
+                <td align='center'>
+                  <div class="tabletext">-</div>
+                </td>
+                <td>
+                  <div class="tabletext">-</div>
+                  <input type="hidden" name="returnQuantity_o_${rowCount}" value="1"/>
+                </td>
+                <td align='left'>
+                  <div class="tabletext"><@ofbizCurrency amount=0.00 isoCode=orderHeader.currencyUom/></div>
+                </td>
+                <td>
+                  <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${0.00?string("##0.00")}"/>
+                </td>
+                <td align="center"><div class='tabletext'>-</div></td>
+                <td>
+                  <select name="returnTypeId_o_${rowCount}" class="selectBox">
+                    <#list returnTypes as type>
+                      <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
+                    </#list>
+                  </select>
+                </td>
+                <td align="right">
+                  <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
+                </td>
+              </tr>
+              <#assign rowCount = rowCount + 1>
+
               <!-- final row count -->
               <input type="hidden" name="_rowCount" value="${rowCount}"/>
 
