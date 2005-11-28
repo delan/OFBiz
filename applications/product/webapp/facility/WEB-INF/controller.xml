@@ -597,6 +597,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PackingSlip.pdf"/>
     </request-map>    
+    <request-map uri="ShipmentBarCode.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShipmentBarCode.pdf"/>
+    </request-map>
 
     <!-- ================ Shipment Requests ================= -->
     <request-map uri="FindShipment">
@@ -948,6 +952,7 @@
 
     <view-map name="PackOrder" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#PackOrder"/>
     <view-map name="PackingSlip.pdf" type="screenfop" page="component://product/widget/facility/ShipmentScreens.xml#PackingSlip.fo"/>
+    <view-map name="ShipmentBarCode.pdf" type="screenfop" page="component://product/widget/facility/ShipmentScreens.xml#ShipmentBarCode.fo"/>
 
     <view-map name="FindShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#FindShipment"/>
     <view-map name="ViewShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#ViewShipment"/>

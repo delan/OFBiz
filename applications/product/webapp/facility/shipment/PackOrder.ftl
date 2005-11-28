@@ -29,7 +29,11 @@
     <#assign hideGrid = requestParameters.hideGrid?default("N")>
     <div class="head1">Pack Order<span class='head2'>&nbsp;in&nbsp;${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <#if shipmentId?has_content>
-      <div class="tabletext">View <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">Packing Slip</a> For Shipment #${shipmentId}</div>
+      <div class="tabletext">
+        View <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">Packing Slip</a> For Shipment #${shipmentId}
+        &nbsp;
+        View <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">Barcode</a> For Shipment #${shipmentId}
+      </div>
     </#if>
     <div>&nbsp;</div>
 
