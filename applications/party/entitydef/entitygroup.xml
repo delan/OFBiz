@@ -111,7 +111,7 @@
     <entity-group group="org.ofbiz" entity="PartyRelationshipType" />
     <entity-group group="org.ofbiz" entity="PartyRole" />
     <entity-group group="org.ofbiz" entity="PartyRoleAndPartyDetail" />
-    <entity-group group="org.ofbiz" entity="PartyTaxInfo" />
+    <entity-group group="org.ofbiz" entity="OldPartyTaxInfo" />
     <entity-group group="org.ofbiz" entity="PartyType" />
     <entity-group group="org.ofbiz" entity="PartyTypeAttr" />
     <entity-group group="org.ofbiz" entity="Person" />

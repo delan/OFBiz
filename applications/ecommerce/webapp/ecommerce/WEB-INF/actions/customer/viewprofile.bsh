@@ -33,19 +33,10 @@ import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.accounting.payment.PaymentWorker;
 
-dispatcher = request.getAttribute("dispatcher");
-delegator = request.getAttribute("delegator");
 productStoreId = ProductStoreWorker.getProductStoreId(request);
 context.put("productStoreId", productStoreId);
 
-userLogin = session.getAttribute("userLogin");
 if (userLogin != null) {
-    partyId = userLogin.getString("partyId");
-    partyIdMap = UtilMisc.toMap("partyId", partyId);
-    
-    party = delegator.findByPrimaryKey("Party", partyIdMap);
-    person = delegator.findByPrimaryKey("Person", partyIdMap);
-    partyGroup = delegator.findByPrimaryKey("PartyGroup", partyIdMap);
     profiledefs = delegator.findByPrimaryKey("PartyProfileDefault", UtilMisc.toMap("partyId", partyId, "productStoreId", productStoreId));
     
     showOld = "true".equals(request.getParameter("SHOW_OLD"));
@@ -53,13 +44,8 @@ if (userLogin != null) {
     partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, userLogin.getString("partyId"), showOld);
     paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, userLogin.getString("partyId"), showOld);
     
-    context.put("party", party);
-    context.put("person", person);
-    context.put("partyGroup", partyGroup);
     context.put("profiledefs", profiledefs);
-    
     context.put("showOld", showOld);
-    
     context.put("partyContactMechValueMaps", partyContactMechValueMaps);
     context.put("paymentMethodValueMaps", paymentMethodValueMaps);
 

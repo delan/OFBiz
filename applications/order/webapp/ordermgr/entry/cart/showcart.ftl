@@ -401,14 +401,14 @@ function quicklookup_popup(element) {
             <td nowrap align="right">
               <div class="tabletext">
                 <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
-                  <@ofbizCurrency amount=cartLine.getBasePrice() isoCode=currencyUomId/>
+                  <@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=currencyUomId/>
                 <#else>
-                  <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}"/>
+                  <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="${cartLine.getDisplayPrice()?string("##0.00")}"/>
                 </#if>
               </div>
             </td>
             <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=currencyUomId/></div></td>
-            <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=currencyUomId/></div></td>
+            <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=currencyUomId/></div></td>
           </tr>
         </#list>
 

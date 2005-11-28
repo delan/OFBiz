@@ -41,8 +41,8 @@
         <menu-item name="viewvendor" title="${uiLabelMap.PartyVendor}">
             <link target="viewvendor?partyId=${partyId}"/>
         </menu-item>
-        <menu-item name="EditPartyTaxInfos" title="${uiLabelMap.PartyTaxInfos}">
-            <link target="EditPartyTaxInfos?partyId=${partyId}"/>
+        <menu-item name="EditPartyTaxAuthInfos" title="${uiLabelMap.PartyTaxAuthInfos}">
+            <link target="EditPartyTaxAuthInfos?partyId=${partyId}"/>
         </menu-item>
         <menu-item name="EditPartyRates" title="${uiLabelMap.CommonRates}">
             <link target="EditPartyRates?partyId=${partyId}"/>

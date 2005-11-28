@@ -166,8 +166,10 @@
     <!-- ========================================================= -->
     
     <entity-group group="org.ofbiz" entity="PartyTaxAuthInfo" />
+    <entity-group group="org.ofbiz" entity="PartyTaxAuthInfoAndDetail" />
     <entity-group group="org.ofbiz" entity="SimpleSalesTaxLookup" />
     <entity-group group="org.ofbiz" entity="TaxAuthority" />
+    <entity-group group="org.ofbiz" entity="TaxAuthorityAndDetail" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityAssoc" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityAssocType" />
     <entity-group group="org.ofbiz" entity="TaxAuthorityCategory" />

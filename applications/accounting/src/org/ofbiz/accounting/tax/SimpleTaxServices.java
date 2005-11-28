@@ -233,16 +233,16 @@ public class SimpleTaxServices {
 
                         List ptiConditionList = UtilMisc.toList(
                                 new EntityExpr("partyId", EntityOperator.IN, billToPartyIdSet),
-                                new EntityExpr("geoId", EntityOperator.EQUALS, primaryGeoId));
+                                new EntityExpr("taxAuthGeoId", EntityOperator.EQUALS, primaryGeoId));
                         ptiConditionList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
                         ptiConditionList.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
                         EntityCondition ptiCondition = new EntityConditionList(ptiConditionList, EntityOperator.AND);
                         // sort by -fromDate to get the newest (largest) first, just in case there is more than one, we only want the most recent valid one, should only be one per jurisdiction...
-                        List partyTaxInfos = delegator.findByCondition("PartyTaxInfo", ptiCondition, null, UtilMisc.toList("-fromDate"));
-                        if (partyTaxInfos.size() > 0) {
-                            GenericValue partyTaxInfo = (GenericValue) partyTaxInfos.get(0);
-                            adjMap.put("customerReferenceId", partyTaxInfo.get("partyTaxId"));
-                            if ("Y".equals(partyTaxInfo.getString("isExempt"))) {
+                        List partyTaxAuthInfos = delegator.findByCondition("PartyTaxAuthInfo", ptiCondition, null, UtilMisc.toList("-fromDate"));
+                        if (partyTaxAuthInfos.size() > 0) {
+                            GenericValue partyTaxAuthInfo = (GenericValue) partyTaxAuthInfos.get(0);
+                            adjMap.put("customerReferenceId", partyTaxAuthInfo.get("partyTaxId"));
+                            if ("Y".equals(partyTaxAuthInfo.getString("isExempt"))) {
                                 adjMap.put("amount", new Double(0));
                                 adjMap.put("exemptAmount", taxAmount);
                             }

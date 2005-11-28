@@ -148,13 +148,12 @@
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <!-- PartyTaxInfo -->
-    <form name="AddPartyTaxInfo" type="single"
-        target="createPartyTaxInfo" title=""
+    <!-- PartyTaxAuthInfo -->
+    <form name="AddPartyTaxAuthInfo" type="single" target="createPartyTaxAuthInfo" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <auto-fields-service service-name="createPartyTaxInfo"/>
+        <auto-fields-service service-name="createPartyTaxAuthInfo"/>
         <field name="partyId"><hidden/></field>
-        <field name="geoId" title="Geo (jurisdiction)">
+        <field name="taxAuthGeoId" title="Tax Authority Geo">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonCountry}: [${geoId}] ${geoName}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>
@@ -182,19 +181,24 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="taxAuthPartyId" title="Tax Authority Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="UpdatePartyTaxInfo" type="list"
-            target="updatePartyTaxInfo" title="" list-name="partyTaxInfos"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <auto-fields-service service-name="updatePartyTaxInfo"/>
+    <form name="UpdatePartyTaxAuthInfo" type="list" target="updatePartyTaxAuthInfo" title="" list-name="partyTaxInfos"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updatePartyTaxAuthInfo"/>
         <field name="partyId"><hidden/></field>
-        <field name="geoId" title="Geo (jurisdiction)" widget-style="tabletext"><display-entity entity-name="Geo" description="[${geoId}] ${geoName}" also-hidden="true"/></field>
+        <field name="taxAuthGeoId" title="Tax Authority Geo" widget-style="tabletext"><display-entity entity-name="Geo" key-field-name="geoId" description="[${geoId}] ${geoName}" also-hidden="true"/></field>
+        <field name="taxAuthPartyId" title="Tax Authority Party" widget-style="tabletext">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}" also-hidden="true">
+                <sub-hyperlink target="viewprofile?partyId=${taxAuthPartyId}" description="${taxAuthPartyId}" link-style="buttontext"/>
+            </display-entity>
+        </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deletePartyTaxInfo?partyId=${partyId}&amp;geoId=${geoId}&amp;fromDate=${fromDate}"
+            <hyperlink target="deletePartyTaxAuthInfo?partyId=${partyId}&amp;taxAuthGeoId=${taxAuthGeoId}&amp;fromDate=${fromDate}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>

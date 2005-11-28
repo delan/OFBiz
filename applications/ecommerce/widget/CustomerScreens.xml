@@ -65,7 +65,23 @@
         <section>
             <actions>
                 <set field="title-property" value="PageTitleViewProfile"/>
+                
+                <set field="partyId" from-field="userLogin.partyId"/>
+                <entity-one entity-name="Party" value-name="party"/>
+                <entity-one entity-name="Person" value-name="person"/>
+                <entity-one entity-name="PartyGroup" value-name="partyGroup"/>
+                
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/customer/viewprofile.bsh"/>
+
+                <entity-condition entity-name="PartyTaxAuthInfoAndDetail" list-name="partyTaxAuthInfoAndDetailList">
+                    <condition-expr field-name="partyId" env-name="partyId"/>
+                    <order-by field-name="geoCode"/>
+                    <order-by field-name="groupName"/>
+                </entity-condition>
+                <entity-condition entity-name="TaxAuthorityAndDetail" list-name="taxAuthorityAndDetailList">
+                    <order-by field-name="geoCode"/>
+                    <order-by field-name="groupName"/>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
