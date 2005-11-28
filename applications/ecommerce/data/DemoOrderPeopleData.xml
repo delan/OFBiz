@@ -57,8 +57,8 @@
     <BillingAccount billingAccountId="9010" accountLimit="10000.0" accountCurrencyUomId="USD" contactMechId="9010" fromDate="2001-05-13 00:00:00.000" description="Demo Customer Company Billing Account"/>
     <BillingAccountRole billingAccountId="9010" partyId="DemoCustCompany" roleTypeId="BILL_TO_CUSTOMER" fromDate="2001-05-13 00:00:00.000"/>
     
-    <PartyTaxInfo partyId="DemoCustCompany" geoId="UT" fromDate="2001-05-13 00:00:00.000" partyTaxId="12-3456789" isExempt="Y"/>
-    <PartyTaxInfo partyId="DemoCustCompany" geoId="CA" fromDate="2001-05-13 00:00:00.000" partyTaxId="98-7654321" isExempt="N"/>
+    <PartyTaxAuthInfo partyId="DemoCustCompany" taxAuthGeoId="UT" taxAuthPartyId="UT_TAXMAN" fromDate="2001-05-13 00:00:00.000" partyTaxId="12-3456789" isExempt="Y"/>
+    <PartyTaxAuthInfo partyId="DemoCustCompany" taxAuthGeoId="CA" taxAuthPartyId="CA_BOE" fromDate="2001-05-13 00:00:00.000" partyTaxId="98-7654321" isExempt="N"/>
     
     <!-- DemoCustAgent -->
     <Party partyId="DemoCustAgent" partyTypeId="PERSON"/>

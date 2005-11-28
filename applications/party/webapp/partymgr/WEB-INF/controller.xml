@@ -363,24 +363,24 @@
         <response name="error" type="view" value="viewvendor"/>
     </request-map>
 
-    <request-map uri="EditPartyTaxInfos"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyTaxInfos"/></request-map>
-    <request-map uri="createPartyTaxInfo">
+    <request-map uri="EditPartyTaxAuthInfos"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyTaxAuthInfos"/></request-map>
+    <request-map uri="createPartyTaxAuthInfo">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createPartyTaxInfo"/>
-        <response name="success" type="view" value="EditPartyTaxInfos"/>
-        <response name="error" type="view" value="EditPartyTaxInfos"/>
+        <event type="service" path="" invoke="createPartyTaxAuthInfo"/>
+        <response name="success" type="view" value="EditPartyTaxAuthInfos"/>
+        <response name="error" type="view" value="EditPartyTaxAuthInfos"/>
     </request-map>
-    <request-map uri="updatePartyTaxInfo">
+    <request-map uri="updatePartyTaxAuthInfo">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updatePartyTaxInfo"/>
-        <response name="success" type="view" value="EditPartyTaxInfos"/>
-        <response name="error" type="view" value="EditPartyTaxInfos"/>
+        <event type="service" path="" invoke="updatePartyTaxAuthInfo"/>
+        <response name="success" type="view" value="EditPartyTaxAuthInfos"/>
+        <response name="error" type="view" value="EditPartyTaxAuthInfos"/>
     </request-map>
-    <request-map uri="deletePartyTaxInfo">
+    <request-map uri="deletePartyTaxAuthInfo">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deletePartyTaxInfo"/>
-        <response name="success" type="view" value="EditPartyTaxInfos"/>
-        <response name="error" type="view" value="EditPartyTaxInfos"/>
+        <event type="service" path="" invoke="deletePartyTaxAuthInfo"/>
+        <response name="success" type="view" value="EditPartyTaxAuthInfos"/>
+        <response name="error" type="view" value="EditPartyTaxAuthInfos"/>
     </request-map>
 
     <request-map uri="editlogin"><security https="true" auth="true"/><response name="success" type="view" value="EditUserLogin"/></request-map>
@@ -758,7 +758,7 @@
     <view-map name="viewroles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewroles"/>
     <view-map name="EditPartyRelationships" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyRelationships"/>
     <view-map name="viewvendor" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewvendor"/>
-    <view-map name="EditPartyTaxInfos" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyTaxInfos"/>
+    <view-map name="EditPartyTaxAuthInfos" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyTaxAuthInfos"/>
     <view-map name="editShoppingList" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editShoppingList"/>
 
     <view-map name="EditPerson" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPerson"/>

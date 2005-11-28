@@ -64,5 +64,3 @@ associatedProducts = ProductDisplayWorker.getRandomCartProductAssoc(request, tru
 context.put("associatedProducts", associatedProducts);
 
 context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
-
-

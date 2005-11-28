@@ -509,42 +509,4 @@
             <call-simple-method method-name="getChildRoleTypesInline"/>
         </if-not-empty>
     </simple-method>    
-
-    <!-- ========= PartyTaxInfo methods ========= -->
-    <simple-method method-name="createPartyTaxInfo" short-description="Create PartyTaxInfo">
-        <check-permission permission="PARTYMGR" action="_CREATE"><fail-message message="Security Error: to run createPartyTaxInfo you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/></check-permission>
-        <check-errors/>
-        
-        <make-value entity-name="PartyTaxInfo" value-name="newEntity"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
-        <if-empty field-name="newEntity.fromDate">
-            <now-timestamp-to-env env-name="newEntity.fromDate"/>
-        </if-empty>
-        
-        <create-value value-name="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updatePartyTaxInfo" short-description="Update PartyTaxInfo">
-        <check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="Security Error: to run updatePartyTaxInfo you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/></check-permission>
-        <check-errors/>
-        
-        <make-value entity-name="PartyTaxInfo" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        
-        <store-value value-name="lookedUpValue"/>
-    </simple-method>
-    <simple-method method-name="deletePartyTaxInfo" short-description="Delete PartyTaxInfo">
-        <check-permission permission="PARTYMGR" action="_DELETE"><fail-message message="Security Error: to run deletePartyTaxInfo you must have the PARTYMGR_DELETE or PARTYMGR_ADMIN permission"/></check-permission>
-        <check-errors/>
-        
-        <make-value entity-name="PartyTaxInfo" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <remove-value value-name="lookedUpValue"/>
-    </simple-method>
-    
-    
 </simple-methods>

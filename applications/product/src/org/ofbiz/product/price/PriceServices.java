@@ -63,7 +63,10 @@ import org.ofbiz.service.ServiceUtil;
  * @since      2.0
  */
 public class PriceServices {
+
     public static final String module = PriceServices.class.getName();
+    public static final BigDecimal ONE_BASE = new BigDecimal("1.000"); 
+    public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000"); 
 
     /**
      * <p>Calculates the price of a product from pricing rules given the following input, and of course access to the database:</p>
@@ -461,6 +464,7 @@ public class PriceServices {
                 validPriceFound = true;
             }
 
+            result.put("basePrice", new Double(defaultPrice));
             result.put("price", new Double(defaultPrice));
             result.put("defaultPrice", new Double(defaultPrice));
             result.put("competitivePrice", competitivePriceValue != null ? competitivePriceValue.getDouble("price") : null);
@@ -873,6 +877,7 @@ public class PriceServices {
 
                 if (Debug.verboseOn()) Debug.logVerbose("Final Calculated price: " + price + ", rules: " + totalRules + ", conds: " + totalConds + ", actions: " + totalActions, module);
 
+                result.put("basePrice", new Double(price));
                 result.put("price", new Double(price));
                 result.put("listPrice", new Double(listPrice));
                 result.put("defaultPrice", new Double(defaultPrice));
@@ -905,6 +910,17 @@ public class PriceServices {
                 }
                 // taxTotal, taxPercentage, priceWithTax
                 result.put("price", new Double(((BigDecimal) calcTaxForDisplayResult.get("priceWithTax")).doubleValue()));
+
+                // based on the taxPercentage calculate the other amounts, including: listPrice, defaultPrice, averageCost, promoPrice, competitivePrice
+                BigDecimal taxPercentage = (BigDecimal) calcTaxForDisplayResult.get("taxPercentage");
+                BigDecimal taxMultiplier = ONE_BASE.add(taxPercentage.divide(PERCENT_SCALE, 3));
+                if (result.get("listPrice") != null) result.put("listPrice", new Double((new BigDecimal (((Double) result.get("listPrice")).doubleValue())).multiply(taxMultiplier).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
+                if (result.get("defaultPrice") != null) result.put("defaultPrice", new Double((new BigDecimal (((Double) result.get("defaultPrice")).doubleValue())).multiply(taxMultiplier).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
+                if (result.get("averageCost") != null) result.put("averageCost", new Double((new BigDecimal (((Double) result.get("averageCost")).doubleValue())).multiply(taxMultiplier).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
+                
+                if (result.get("promoPrice") != null) result.put("promoPrice", new Double((new BigDecimal (((Double) result.get("promoPrice")).doubleValue())).multiply(taxMultiplier).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
+                if (result.get("competitivePrice") != null) result.put("competitivePrice", new Double((new BigDecimal (((Double) result.get("competitivePrice")).doubleValue())).multiply(taxMultiplier).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
+                
             } catch (GenericServiceException e) {
                 String errMsg = "Error calculating VAT tax (with calcTaxForDisplay service): " + e.toString();
                 Debug.logError(e, errMsg, module);

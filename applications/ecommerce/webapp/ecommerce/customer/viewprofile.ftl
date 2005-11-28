@@ -338,6 +338,37 @@
     </div>
 </div>
 
+<#-- ============================================================= -->
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;Tax Identification and Exemption</div>
+    </div>
+    <div class="screenlet-body">
+        <#list partyTaxAuthInfoAndDetailList as partyTaxAuthInfoAndDetail>
+            <div>
+                <a href="<@ofbizUrl>deleteCustomerTaxAuthInfo?partyId=${partyId}&amp;taxAuthPartyId=${partyTaxAuthInfoAndDetail.taxAuthPartyId}&amp;taxAuthGeoId=${partyTaxAuthInfoAndDetail.taxAuthGeoId}&amp;fromDate=${partyTaxAuthInfoAndDetail.fromDate}</@ofbizUrl>" class="buttontext">X</a>
+                [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName}): ${partyTaxAuthInfoAndDetail.partyTaxId?if_exists} ${partyTaxAuthInfoAndDetail.isExempt?default("N")}
+            </div>
+        </#list>
+
+        <div>
+          <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
+            <input type="hidden" name="partyId" value="${party.partyId}"/>
+            <span class="tableheadtext">Add Tax Info:</span>
+            <select name="taxAuthPartyGeoIds" class="selectBox">
+              <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>
+                <option value="${taxAuthorityAndDetail.taxAuthPartyId}::${taxAuthorityAndDetail.taxAuthGeoId}">[${taxAuthorityAndDetail.geoCode}] ${taxAuthorityAndDetail.geoName} (${taxAuthorityAndDetail.groupName?if_exists})</option>
+              </#list>
+            </select>
+            <span class="tabletext">ID: </span><input type="text" name="partyTaxId" class="inputBox" size="12" maxlength="40"/>
+            <span class="tabletext">Is Exempt? </span><input type="checkbox" name="isExempt" class="inputBox" value="Y"/>
+            <input type="submit" value="Add" class="smallSubmit"/>
+          </form>
+        </div>
+    </div>
+</div>
+
+<#-- ============================================================= -->
 <div class="screenlet">
     <div class="screenlet-header">
         <div style="float: right;">
@@ -356,9 +387,7 @@
     </div>
 </div>
 
-<#-- only 5 messages will show; edit the viewprofile.bsh to change this number -->
-${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-include")}
-
+<#-- ============================================================= -->
 <form name="setdefaultshipmeth" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>" method="post">
 <input type="hidden" name="productStoreId" value="${productStoreId}">
 <div class="screenlet">
@@ -389,6 +418,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
 </div>
 </form>
 
+<#-- ============================================================= -->
 <div class="screenlet">
     <div class="screenlet-header">
         <div class="boxhead">&nbsp;${uiLabelMap.EcommerceFileManager}</div>
@@ -432,38 +462,7 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
     </div>
 </div>
 
-<#if surveys?has_content>
-<div class="screenlet">
-    <div class="screenlet-header">
-        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSurveys}</div>
-    </div>
-    <div class="screenlet-body">
-        <table width="100%" border="0" cellpadding="1">
-          <#list surveys as surveyAppl>
-            <#assign survey = surveyAppl.getRelatedOne("Survey")>
-            <tr>
-              <td>&nbsp;</td>
-              <td align="left" valign="top" width="10%" nowrap><div class="tabletext"><b>${survey.surveyName?if_exists}</b>&nbsp;-&nbsp;${survey.description?if_exists}</div></td>
-              <td width="5">&nbsp;</td>
-              <td align="left" valign="top" width="70%">
-                <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
-                <div class="tabletext"><#if (responses < 1)><font color="red"><b>${uiLabelMap.EcommerceNotCompleted}</b><#else>${uiLabelMap.EcommerceCompleted}</#if></div>
-              </td>
-              <#if (responses == 0 || survey.allowMultiple?default("N") == "Y")>
-                <#assign surveyLabel = uiLabelMap.EcommerceTakeSurvey>
-                <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
-                  <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey>
-                </#if>
-                <td align="right" width="10%" nowrap><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">${surveyLabel}</a></td>
-              <#else>
-                &nbsp;
-              </#if>
-            </tr>
-          </#list>
-        </table>
-    </div>
-</div>
-</#if>
+<#-- ============================================================= -->
 <div class="screenlet">
     <div class="screenlet-header">
         <div class="boxhead">&nbsp;${uiLabelMap.PartyContactLists}</div>
@@ -537,6 +536,44 @@ ${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-i
         </div>
     </div>
 </div>
+
+<#-- ============================================================= -->
+<#if surveys?has_content>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSurveys}</div>
+    </div>
+    <div class="screenlet-body">
+        <table width="100%" border="0" cellpadding="1">
+          <#list surveys as surveyAppl>
+            <#assign survey = surveyAppl.getRelatedOne("Survey")>
+            <tr>
+              <td>&nbsp;</td>
+              <td align="left" valign="top" width="10%" nowrap><div class="tabletext"><b>${survey.surveyName?if_exists}</b>&nbsp;-&nbsp;${survey.description?if_exists}</div></td>
+              <td width="5">&nbsp;</td>
+              <td align="left" valign="top" width="70%">
+                <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
+                <div class="tabletext"><#if (responses < 1)><font color="red"><b>${uiLabelMap.EcommerceNotCompleted}</b><#else>${uiLabelMap.EcommerceCompleted}</#if></div>
+              </td>
+              <#if (responses == 0 || survey.allowMultiple?default("N") == "Y")>
+                <#assign surveyLabel = uiLabelMap.EcommerceTakeSurvey>
+                <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
+                  <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey>
+                </#if>
+                <td align="right" width="10%" nowrap><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">${surveyLabel}</a></td>
+              <#else>
+                &nbsp;
+              </#if>
+            </tr>
+          </#list>
+        </table>
+    </div>
+</div>
+</#if>
+
+<#-- ============================================================= -->
+<#-- only 5 messages will show; edit the viewprofile.bsh to change this number -->
+${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-include")}
 
 <#else>
     <div class="head3">${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</div>

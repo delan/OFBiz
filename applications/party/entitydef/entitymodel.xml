@@ -1331,7 +1331,7 @@
             title="Party Group Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="groupName" type="name"></field>
-      <!-- DEJ20050628 getting rid of this, deprecated by PartyTaxInfo <field name="federalTaxId" type="long-varchar" encrypt="true"></field> -->
+      <!-- DEJ20050628 getting rid of this, deprecated by PartyTaxAuthInfo <field name="federalTaxId" type="long-varchar" encrypt="true"></field> -->
       <field name="comments" type="comment"></field>
       <field name="logoImageUrl" type="url"></field>
       <prim-key field="partyId"/>
@@ -1538,7 +1538,7 @@
         <key-map field-name="partyId"/>
       </view-link>
     </view-entity>
-    <entity entity-name="PartyTaxInfo"
+    <entity entity-name="OldPartyTaxInfo" table-name="PARTY_TAX_INFO"
             package-name="org.ofbiz.party.party"
             title="Party Tax Information Entity">
       <description>NOTE: this entity is deprecated by PartyTaxAuthInfo</description>

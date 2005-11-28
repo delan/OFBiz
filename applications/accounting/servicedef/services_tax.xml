@@ -182,6 +182,15 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
+    <service name="createCustomerTaxAuthInfo" default-entity-name="PartyTaxAuthInfo" engine="simple" auth="true"
+        location="org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createCustomerTaxAuthInfo">
+        <description>Create Customer PartyTaxAuthInfo</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxAuthPartyGeoIds" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="String" mode="IN" optional="true"/>
+    </service>
+    
     <!-- Simple Tax Rate Services (SimpleSalesTaxLookup) -->
     <service name="simpleTaxCalc" engine="java"
         location="org.ofbiz.accounting.tax.SimpleTaxServices" invoke="simpleTaxCalc">

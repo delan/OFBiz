@@ -67,7 +67,7 @@
                 <set field="titleProperty" value="PageTitleViewPartyProfile"/>
                 <set field="tabButtonItem" value="viewprofile"/>
 
-                <set field="labelTitleProperty" value="PartyTaxInfos"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
 
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>
             </actions>
@@ -189,27 +189,28 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditPartyTaxInfos">
+    <screen name="EditPartyTaxAuthInfos">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditPartyTaxInfos"/>
+                <set field="titleProperty" value="PageTitleEditPartyTaxAuthInfos"/>
                 <set field="headerItem" value="find"/>
-                <set field="tabButtonItem" value="EditPartyTaxInfos"/>
-                <set field="labelTitleProperty" value="PartyTaxInfos"/>
+                <set field="tabButtonItem" value="EditPartyTaxAuthInfos"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-name="party"/>
-                <entity-and entity-name="PartyTaxInfo" list-name="partyTaxInfos">
+                <entity-and entity-name="PartyTaxAuthInfo" list-name="partyTaxInfos">
                     <field-map field-name="partyId"/>
-                    <order-by field-name="geoId"/>
+                    <order-by field-name="taxAuthGeoId"/>
+                    <order-by field-name="taxAuthPartyId"/>
                     <order-by field-name="fromDate"/>
                 </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-form name="UpdatePartyTaxInfo" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
-                        <include-form name="AddPartyTaxInfo" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                        <include-form name="UpdatePartyTaxAuthInfo" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                        <include-form name="AddPartyTaxAuthInfo" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

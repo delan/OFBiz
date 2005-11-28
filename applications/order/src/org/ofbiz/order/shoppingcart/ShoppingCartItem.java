@@ -97,6 +97,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double reservPersons = 0;          // for reservations: number of persons using
     private double quantity = 0.0;
     private double basePrice = 0.0;
+    private Double displayPrice = null;
     private double reserv2ndPPPerc = 0.0;      // for reservations: extra % 2nd person
     private double reservNthPPPerc = 0.0;      // for reservations: extra % Nth person
     private double listPrice = 0.0;
@@ -609,6 +610,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.reservPersons = item.getReservPersons();
         this.selectedAmount = item.getSelectedAmount();
         this.setBasePrice(item.getBasePrice());
+        this.setDisplayPrice(item.getDisplayPrice());
         this.listPrice = item.getListPrice();
         this.reserv2ndPPPerc = item.getReserv2ndPPPerc();
         this.reservNthPPPerc = item.getReservNthPPPerc();
@@ -685,6 +687,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.itemDescription = description;
         this.productCategoryId = categoryId;
         this.setBasePrice(basePrice);
+        this.setDisplayPrice(basePrice);
         this.attributes = attributes;
         this.prodCatalogId = prodCatalogId;
         this.delegatorName = delegator.getDelegatorName();
@@ -708,6 +711,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Sets the base price for the item; use with caution */
     public void setBasePrice(double basePrice) {
         this.basePrice = basePrice;
+    }
+
+    /** Sets the display price for the item; use with caution */
+    public void setDisplayPrice(double displayPrice) {
+        this.displayPrice = new Double(displayPrice);
     }
 
     /** Sets the extra % for second person */
@@ -920,17 +928,20 @@ public class ShoppingCartItem implements java.io.Serializable {
                     }
                     List productSuppliers = (List) priceResult.get("supplierProducts");
                     if ((productSuppliers != null) && (productSuppliers.size() > 0)) {
-                        this.setBasePrice(((Double) ((GenericValue) productSuppliers.get(0)).get("lastPrice")).doubleValue());
-                    } else throw new CartItemModifyException("There was an error when retreive Supplier for product: " + priceResult.get(ModelService.ERROR_MESSAGE));
-
+                        GenericValue productSupplier = (GenericValue) productSuppliers.get(0);
+                        this.setBasePrice(((Double) productSupplier.get("lastPrice")).doubleValue());
+                        this.setDisplayPrice(this.basePrice);
+                    } else {
+                        throw new CartItemModifyException("There was an error when retreive Supplier for product: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                    }
                 } else {
                     priceContext.put("product", this.getProduct());
                     priceContext.put("prodCatalogId", this.getProdCatalogId());
                     priceContext.put("webSiteId", cart.getWebSiteId());
                     priceContext.put("productStoreId", cart.getProductStoreId());
                     Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
-                    if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
-                        throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                    if (ServiceUtil.isError(priceResult)) {
+                        throw new CartItemModifyException("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));
                     }
 
                     Boolean validPriceFound = (Boolean) priceResult.get("validPriceFound");
@@ -938,18 +949,25 @@ public class ShoppingCartItem implements java.io.Serializable {
                         throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "], not adding to cart.");
                     }
 
-                    if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
-
-                    if (priceResult.get("price") != null) {
-                        this.setBasePrice(((Double) priceResult.get("price")).doubleValue());
+                    if (priceResult.get("listPrice") != null) {
+                        this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
                     }
 
+                    if (priceResult.get("basePrice") != null) {
+                        this.setBasePrice(((Double) priceResult.get("basePrice")).doubleValue());
+                    }
+
+                    if (priceResult.get("displayPrice") != null) {
+                        this.setDisplayPrice(((Double) priceResult.get("price")).doubleValue());
+                    }
 
                     this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
 
                     // If product is configurable, the price is taken from the configWrapper.
                     if (configWrapper != null) {
+                        // TODO: for configurable products need to do something to make them VAT aware... for now base and display prices are the same
                         this.setBasePrice(configWrapper.getTotalPrice());
+                        this.setDisplayPrice(configWrapper.getTotalPrice());
                     }
                 }
             } catch (GenericServiceException e) {
@@ -1440,10 +1458,8 @@ public class ShoppingCartItem implements java.io.Serializable {
        List featureAppls = getStandardFeatureList();
        if (featureAppls != null && featureAppls.size() > 0) {
            try {
-              Map result=dispatcher.runSync("convertFeaturesForSupplier",
-                                             UtilMisc.toMap("partyId",partyId,
-                                                            "productFeatures", featureAppls));
-              featuresForSupplier=(List)result.get("convertedProductFeatures");
+              Map result = dispatcher.runSync("convertFeaturesForSupplier", UtilMisc.toMap("partyId", partyId, "productFeatures", featureAppls));
+              featuresForSupplier = (List) result.get("convertedProductFeatures");
            } catch (GenericServiceException e) {
                Debug.logError(e, "Unable to get features for supplier from product : " + this.productId, module);
            }
@@ -1502,34 +1518,21 @@ public class ShoppingCartItem implements java.io.Serializable {
         } else {
             curBasePrice = basePrice;
         }
-        
         return curBasePrice;
     }
     
-    public double getDisplayPrice(GenericValue productStore, String billToPartyId, LocalDispatcher dispatcher) {
-        if (productStore != null && "Y".equals(productStore.getString("showPricesWithVatTax"))) {
-            Map calcTaxForDisplayContext = UtilMisc.toMap("productStoreId", productStore.get("productStoreId"), 
-                    "productId", productId, "quantity", new BigDecimal(quantity), 
-                    "basePrice", new BigDecimal(this.getBasePrice()));
-            if (UtilValidate.isNotEmpty(billToPartyId)) {
-                calcTaxForDisplayContext.put("billToPartyId", billToPartyId);
-            }
-            
-            try {
-                Map calcTaxForDisplayResult = dispatcher.runSync("calcTaxForDisplay", calcTaxForDisplayContext);
-                if (ServiceUtil.isError(calcTaxForDisplayResult)) {
-                    throw new IllegalArgumentException("Error calculating VAT tax (with calcTaxForDisplay service)" + ServiceUtil.getErrorMessage(calcTaxForDisplayResult));
-                }
-                // taxTotal, taxPercentage, priceWithTax
-                return ((BigDecimal) calcTaxForDisplayResult.get("priceWithTax")).doubleValue();
-            } catch (GenericServiceException e) {
-                String errMsg = "Error calculating VAT tax (with calcTaxForDisplay service): " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new IllegalArgumentException(errMsg);
-            }
+    public double getDisplayPrice() {
+        double curDisplayPrice;
+        if (this.displayPrice == null) {
+            curDisplayPrice = this.getBasePrice();
         } else {
-            return this.getBasePrice();
+            if (selectedAmount > 0) {
+                curDisplayPrice = this.displayPrice.doubleValue() * this.selectedAmount;
+            } else {
+                curDisplayPrice = this.displayPrice.doubleValue();
+            }
         }
+        return curDisplayPrice;
     }
 
     /** Returns the list price. */
@@ -1544,7 +1547,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Set isModifiedPrice */
     public void setIsModifiedPrice(boolean isModifiedPrice) {
-        this.isModifiedPrice=isModifiedPrice;
+        this.isModifiedPrice = isModifiedPrice;
     }
 
     /** get the percentage for the second person */
@@ -1566,21 +1569,25 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** calculates for a reservation the percentage/100 extra for more than 1 person. */
     // similar code at editShoppingList.bsh
     public double getRentalAdjustment() {
-        if (!this.itemType.equals("RENTAL_ORDER_ITEM") ) // not a rental item?
+        if (!this.itemType.equals("RENTAL_ORDER_ITEM")) {
+            // not a rental item?
             return 1;
+        }
         double persons = this.getReservPersons();
         double rentalValue = 0;
         if (persons > 1)    {
             if (persons > 2 ) {
                 persons -= 2;
-                if(getReservNthPPPerc() > 0)
+                if(getReservNthPPPerc() > 0) {
                     rentalValue = persons * getReservNthPPPerc();
-                else
+                } else {
                     rentalValue = persons * getReserv2ndPPPerc();
+                }
                 persons = 2;
             }
-            if (persons == 2)
+            if (persons == 2) {
                 rentalValue += getReserv2ndPPPerc();
+            }
         }
         rentalValue += 100;    // add final 100 percent for first person
         //     Debug.log("rental parameters....Nbr of persons:" + getReservPersons() + " extra% 2nd person:" + getReserv2ndPPPerc()+ " extra% Nth person:" + getReservNthPPPerc() + "  total rental adjustment:" + rentalValue/100 * getReservLength() );
@@ -1594,16 +1601,18 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     public double getItemSubTotal() {
-        return this.getItemSubTotal(quantity);
+        return this.getItemSubTotal(this.quantity);
+    }
+
+    public double getDisplayItemSubTotal() {
+        return (getDisplayPrice() * this.quantity * getRentalAdjustment()) + getOtherAdjustments();
     }
 
     public void addAllProductFeatureAndAppls(Map productFeatureAndApplsToAdd) {
         if (productFeatureAndApplsToAdd == null) return;
         Iterator productFeatureAndApplsToAddIter = productFeatureAndApplsToAdd.values().iterator();
-
         while (productFeatureAndApplsToAddIter.hasNext()) {
             GenericValue additionalProductFeatureAndAppl = (GenericValue) productFeatureAndApplsToAddIter.next();
-
             this.putAdditionalProductFeatureAndAppl(additionalProductFeatureAndAppl);
         }
     }
