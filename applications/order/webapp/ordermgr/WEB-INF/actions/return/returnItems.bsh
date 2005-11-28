@@ -59,7 +59,7 @@ while (iter.hasNext()) {
 }
 context.put("returnItemTypeMap", typeMap);
 
-orderHeaderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderItemSeqId", "_NA_"));
+orderHeaderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", "_NA_"));
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 
 orderId = request.getParameter("orderId");

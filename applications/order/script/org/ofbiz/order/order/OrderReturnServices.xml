@@ -181,9 +181,15 @@
 
         <if-not-empty field-name="orderAdjustment">
             <set field="returnableQuantity" value="1" type="Double"/>
+            <set field="returnablePrice" from-field="parameters.returnPrice" type="Double"/>
+            <log level="always" message="set return price to the input amount : ${returnablePrice}"/>
+        </if-not-empty>
+
+        <if-compare field-name="returnItemTypeId" value="RETURN_MAN_ADJ" operator="equals">
+            <set field="returnableQuantity" value="1" type="Double"/>
             <set field="returnablePrice" from-field="orderAdjustment.amount" type="Double"/>
             <log level="always" message="set return price to adjustment amount : ${returnablePrice}"/>
-        </if-not-empty>
+        </if-compare>
 
         <if-compare field-name="returnableQuantity" value="0" operator="greater" type="Double">
             <if>
@@ -224,12 +230,31 @@
             <check-errors/>
 
             <else>
-                <if-compare field-name="returnItemType" map-name="parameters" operator="not-equals" type="String" value="ADJUSTMENT">
+                <if-compare field-name="returnItemTypeId" map-name="parameters" operator="not-equals" type="String" value="RETURN_MAN_ADJ">
                     <add-error><fail-property resource="OrderErrorUiLabels" property="OrderIllegalReturnItemTypePassed"/></add-error>
                     <check-errors/>
                 </if-compare>
             </else>
         </if-compare>
+
+        <!-- test the total return amount vs the total order amount -->
+        <if-not-empty field-name="parameters.orderId">
+            <set field="returnTotalCtx.adjustment" from-field="parameters.returnPrice"/>
+            <set field="returnTotalCtx.orderId" from-field="parameters.orderId"/>
+            <call-service service-name="getOrderAvailableReturnedTotal" in-map-name="returnTotalCtx">
+                <result-to-field result-name="availableReturnTotal" field-name="availableReturnTotal"/>
+                <result-to-field result-name="returnTotal" field-name="returnTotal"/>
+                <result-to-field result-name="orderTotal" field-name="orderTotal"/>
+            </call-service>
+            <log level="always" message="Available amount for return (order #${parameters.orderId}) : ${availableReturnTotal} [${orderTotal} / ${returnTotal} / ${parameters.returnPrice}]"/>
+            <if-compare field-name="availableReturnTotal" value="0" operator="less-equals" type="Double">
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
+            </if-compare>
+        <else>
+            <log level="always" message="Not an order based return; unable to check valid amounts!"/>
+        </else>
+        </if-not-empty>
+        <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ReturnItem"/>
         <set from-field="parameters.returnId" field="newEntity.returnId"/>
@@ -250,6 +275,7 @@
         <to-string field-name="returnItemSeqId" map-name="newEntity" numeric-padding="5"/>
 
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set field="newEntity.statusId" value="RETURN_REQUESTED"/>
         <field-to-result field-name="returnItemSeqId" map-name="newEntity" result-name="returnItemSeqId"/>
         <log level="always" message="Return Item Seq ID: ${newEntity.returnItemSeqId}"/>
         <create-value value-name="newEntity"/>
@@ -265,6 +291,17 @@
         <field-to-result field-name="returnItem.statusId" result-name="currentStatusId"/>
         <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
         <store-value value-name="returnItem"/>
+    </simple-method>
+    <simple-method method-name="updateReturnItemsStatus" short-description="Update Return Items Status">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
+        <check-errors/>
+
+        <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
+        <find-by-and entity-name="ReturnItem" map-name="lookupPKMap" list-name="returnItems"/>
+        <iterate entry-name="item" list-name="returnItems">
+            <set field="item.statusId" from-field="parameters.statusId"/>
+        </iterate>
+        <store-list list-name="returnItems"/>
     </simple-method>
     <simple-method method-name="removeReturnItem" short-description="Remove Return Item">
         <check-permission permission="ORDERMGR" action="_DELETE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveQuoteItem"/></check-permission>

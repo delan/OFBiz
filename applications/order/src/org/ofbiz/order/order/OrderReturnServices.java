@@ -55,6 +55,35 @@ public class OrderReturnServices {
         return result;
     }
 
+    // obtain order/return total information
+    public static Map getOrderAvailableReturnedTotal(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        OrderReadHelper orh = null;
+        try {
+            orh = new OrderReadHelper(delegator, orderId);
+        } catch (IllegalArgumentException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // an adjustment value to test
+        Double adj = (Double) context.get("adjustment");
+        if (adj == null) {
+            adj = new Double(0);
+        }
+
+        double returnTotal = orh.getOrderReturnedTotal(true);
+        double orderTotal = orh.getOrderGrandTotal();
+        double available = orderTotal - returnTotal - adj.doubleValue();
+
+
+        Map result = ServiceUtil.returnSuccess();
+        result.put("availableReturnTotal", new Double(available));
+        result.put("orderTotal", new Double(orderTotal));
+        result.put("returnTotal", new Double(returnTotal));
+        return result;
+    }
+
     // worker method which can be used in screen iterations
     public static Double getReturnItemInitialCost(GenericDelegator delegator, String returnId, String returnItemSeqId) {
         if (delegator == null || returnId == null || returnItemSeqId == null) {

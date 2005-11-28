@@ -25,13 +25,15 @@ package org.ofbiz.order.order;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Arrays;
+
+import org.apache.commons.collections.set.ListOrderedSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -42,14 +44,12 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.security.Security;
-
-import org.apache.commons.collections.set.ListOrderedSet;
 
 /**
  * Utility class for easily extracting important information from orders
@@ -1268,6 +1268,17 @@ public class OrderReadHelper {
         List returnedItemsBase = getOrderReturnItems();
         List returnedItems = new ArrayList(returnedItemsBase.size());
 
+        // filter just order items
+        List orderItemExprs = UtilMisc.toList(new EntityExpr("returnItemTypeId", EntityOperator.EQUALS, "RET_PROD_ITEM"));
+        orderItemExprs.add(new EntityExpr("returnItemTypeId", EntityOperator.EQUALS, "RET_FPROD_ITEM"));
+        orderItemExprs.add(new EntityExpr("returnItemTypeId", EntityOperator.EQUALS, "RET_DPROD_ITEM"));
+        orderItemExprs.add(new EntityExpr("returnItemTypeId", EntityOperator.EQUALS, "RET_FDPROD_ITEM"));
+        orderItemExprs.add(new EntityExpr("returnItemTypeId", EntityOperator.EQUALS, "RET_PROD_FEATR_ITEM"));
+        orderItemExprs.add(new EntityExpr("returnItemTypeId", EntityOperator.EQUALS, "RET_SPROD_ITEM"));
+        orderItemExprs.add(new EntityExpr("returnItemTypeId", EntityOperator.EQUALS, "RET_WE_ITEM"));
+        orderItemExprs.add(new EntityExpr("returnItemTypeId", EntityOperator.EQUALS, "RET_TE_ITEM"));
+        returnedItemsBase = EntityUtil.filterByOr(returnedItemsBase, orderItemExprs);
+
         // get only the RETURN_RECEIVED and RETURN_COMPLETED statusIds
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
@@ -1286,12 +1297,21 @@ public class OrderReadHelper {
     }
 
     public double getOrderReturnedTotal() {
+        return getOrderReturnedTotal(false);
+    }
+
+    public double getOrderReturnedTotal(boolean includeAll) {
         List returnedItemsBase = getOrderReturnItems();
         List returnedItems = new ArrayList(returnedItemsBase.size());
 
         // get only the RETURN_RECEIVED and RETURN_COMPLETED statusIds
-        returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
-        returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
+        if (!includeAll) {
+            returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
+            returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
+        } else {
+            returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase,
+                    UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "RETURN_CANCELLED"))));
+        }
 
         double returnedAmount = 0.00;
         Iterator i = returnedItems.iterator();
