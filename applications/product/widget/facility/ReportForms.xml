@@ -45,11 +45,11 @@
     </form>
 
     <form name="InventorySummaryList" type="list" list-name="inventoryReportList" title="" target=""
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="internalName"><display/></field>
         <field name="productId"><display/></field>
-        <field name="quantityOnHandTotal"><display/></field>
-        <field name="availableToPromiseTotal"><display/></field>
+        <field name="quantityOnHandTotal" widget-area-style="tabletextright"><display/></field>
+        <field name="availableToPromiseTotal" widget-area-style="tabletextright"><display/></field>
         <field name="productId"><display/></field>
         <field name="facilityId"><hidden/></field>
         <field name="ownerPartyId"><hidden/></field>
