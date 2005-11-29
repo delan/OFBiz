@@ -187,6 +187,7 @@
         <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
         <attribute name="orderBy" type="String" mode="IN" optional="true"/>
         <attribute name="noConditionFind" type="String" mode="IN" optional="true"><!-- find with no condition (empty entityConditionList) only done when this is Y --></attribute>
+        <attribute name="filterByDate" type="String" mode="IN" optional="true"/>
         <attribute name="queryString" type="String" mode="OUT" optional="true"/>
         <attribute name="queryStringMap" type="java.util.Map" mode="OUT" optional="true"/>
         <attribute name="orderByList" type="java.util.List" mode="OUT" optional="true"/>
@@ -207,6 +208,7 @@
         <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
         <attribute name="orderBy" type="String" mode="IN" optional="true"/>
         <attribute name="noConditionFind" type="String" mode="IN" optional="true"><!-- find with no condition (empty entityConditionList) only done when this is Y --></attribute>
+        <attribute name="filterByDate" type="String" mode="IN" optional="true"/>
         <attribute name="listIt" type="org.ofbiz.entity.util.EntityListIterator" mode="OUT" optional="true"/>
         <attribute name="queryString" type="String" mode="OUT" optional="true"/>
         <attribute name="queryStringMap" type="java.util.Map" mode="OUT" optional="true"/>
