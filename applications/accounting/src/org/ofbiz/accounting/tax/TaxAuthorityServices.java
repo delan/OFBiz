@@ -298,6 +298,11 @@ public class TaxAuthorityServices {
                 if (taxAuthorityRateProduct != null && (taxAuthorityRateProduct.get("taxShipping") == null || (taxAuthorityRateProduct.get("taxShipping") != null && taxAuthorityRateProduct.getBoolean("taxShipping").booleanValue()))) {
                     taxable = taxable.add(shippingAmount);
                 }
+                
+                if (taxable.doubleValue() == 0) {
+                    // this should make it less confusing if the taxable flag on the product is not Y/true, and there is no shipping and such
+                    continue;
+                }
 
                 // taxRate is in percentage, so needs to be divided by 100
                 BigDecimal taxAmount = (taxable.multiply(taxRate)).divide(PERCENT_SCALE, 3, BigDecimal.ROUND_CEILING);
