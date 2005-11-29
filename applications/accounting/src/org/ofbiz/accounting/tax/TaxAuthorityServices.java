@@ -154,8 +154,16 @@ public class TaxAuthorityServices {
         try {
             Set geoIdSet = FastSet.newInstance();
             if (shippingAddress != null) {
-                geoIdSet.add(shippingAddress.getString("countryGeoId"));
-                geoIdSet.add(shippingAddress.getString("stateProvinceGeoId"));
+                if (shippingAddress.getString("countryGeoId") != null) {
+                    geoIdSet.add(shippingAddress.getString("countryGeoId"));
+                }
+                if (shippingAddress.getString("stateProvinceGeoId") != null) {
+                    geoIdSet.add(shippingAddress.getString("stateProvinceGeoId"));
+                }
+            }
+            
+            if (geoIdSet.size() == 0) {
+                return ServiceUtil.returnError("The address(es) used for tax calculation did not have State/Province or Country values set, so we cannot determine the taxes to charge.");
             }
             
             // get the most granular, or all available, geoIds and then find parents by GeoAssoc with geoAssocTypeId="REGIONS" and geoIdTo=<granular geoId> and find the GeoAssoc.geoId
