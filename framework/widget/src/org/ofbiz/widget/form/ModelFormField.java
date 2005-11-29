@@ -37,6 +37,8 @@ import javolution.util.FastList;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -1641,8 +1643,15 @@ public class ModelFormField {
                 String isoCode = null;
                 if (this.currency != null && !this.currency.isEmpty()) {
                     isoCode = this.currency.expandString(context);
-                }   
-                retVal = UtilFormatOut.formatCurrency(UtilMisc.toDouble(retVal), isoCode, locale);
+                }
+                try {
+                    Double parsedRetVal = (Double) ObjectType.simpleTypeConvert(retVal, "Double", null, locale, false);
+                    retVal = UtilFormatOut.formatCurrency(parsedRetVal, isoCode, locale);
+                } catch (GeneralException e) {
+                    String errMsg = "Error formatting currency value [" + retVal + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new IllegalArgumentException(errMsg);
+                }
             } 
             return retVal;
         }
