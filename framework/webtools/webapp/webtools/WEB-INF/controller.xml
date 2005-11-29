@@ -381,13 +381,19 @@
         <response name="success" type="view" value="EntityExportAll"/>
         <response name="error" type="view" value="EntityExportAll"/>
     </request-map>
-    <request-map uri="EntityImportDir">
+
+    <request-map uri="EntityImportDir"><security https="true" auth="true"/><response name="success" type="view" value="EntityImportDir"/><response name="error" type="view" value="EntityImportDir"/></request-map>
+    <request-map uri="entityImportDir">
         <security https="true" auth="true"/>
+        <event type="service" path="" invoke="entityImportDir"/>
         <response name="success" type="view" value="EntityImportDir"/>
         <response name="error" type="view" value="EntityImportDir"/>
     </request-map>
-    <request-map uri="EntityImport">
+
+    <request-map uri="EntityImport"><security https="true" auth="true"/><response name="success" type="view" value="EntityImport"/><response name="error" type="view" value="EntityImport"/></request-map>
+    <request-map uri="entityImport">
         <security https="true" auth="true"/>
+        <event type="service" path="" invoke="entityImport"/>
         <response name="success" type="view" value="EntityImport"/>
         <response name="error" type="view" value="EntityImport"/>
     </request-map>

@@ -30,7 +30,7 @@
 <hr>
   <div class="head2">Import:</div>
 
-  <form method="post" action="<@ofbizUrl>EntityImportDir</@ofbizUrl>">
+  <form method="post" action="<@ofbizUrl>entityImportDir</@ofbizUrl>">
     <div class="tabletext">Absolute directory path:</div>
     <div><input type="text" class="inputBox" size="60" name="path" value="${path?if_exists}"/></div>
     <div class="tabletext"><input type="checkbox" name="mostlyInserts" <#if mostlyInserts?exists>"checked"</#if>/>Mostly Inserts?</div>
@@ -42,7 +42,9 @@
     <div><input type="submit" value="Import Files"/></div>
   </form>
   <hr>
+  <#if messages?exists>
     <div class="head1">Results:</div>
     <#list messages as message>
         <div class="tabletext">${message}</div>
     </#list>
+  </#if>

@@ -90,7 +90,7 @@
                 <set field="titleProperty" value="PageTitleEntityImportDir"/>
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
                 
-                <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityImportDir.bsh"/>
+                <set field="messages" from-field="parameters.messages"/>
             </actions>
             <widgets>
                 <decorator-screen name="main" location="component://webtools/widget/CommonScreens.xml">
@@ -116,7 +116,7 @@
                 <set field="titleProperty" value="PageTitleEntityImport"/>
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
                 
-                <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityImport.bsh"/>
+                <set field="messages" from-field="parameters.messages"/>
             </actions>
             <widgets>
                 <decorator-screen name="main" location="component://webtools/widget/CommonScreens.xml">
