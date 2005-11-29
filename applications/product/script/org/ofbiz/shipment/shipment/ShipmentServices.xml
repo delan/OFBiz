@@ -950,8 +950,9 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="ensureRouteSegPackage" short-description="Ensure ShipmentPackageRouteSeg exists for all Packages for this RouteSegment">
-        <set from-field="shipmentId" field="lookupPackagesMap.shipmentId"/>
-        <find-by-and entity-name="ShipmentPackage" map-name="lookupPackagesMap" list-name="shipmentPackages"/>
+        <entity-and entity-name="ShipmentPackage" list-name="shipmentPackages">
+            <field-map field-name="shipmentId" env-name="shipmentId"/>
+        </entity-and>
         <iterate entry-name="shipmentPackage" list-name="shipmentPackages">
             <entity-one entity-name="ShipmentPackageRouteSeg" value-name="checkShipmentPackageRouteSeg" auto-field-map="false">
                 <field-map field-name="shipmentId" env-name="shipmentId"/>
@@ -959,8 +960,10 @@
                 <field-map field-name="shipmentPackageSeqId" env-name="shipmentPackage.shipmentPackageSeqId"/>
             </entity-one>
             <if-empty field-name="checkShipmentPackageRouteSeg">
-                <call-service service-name="createShipmentPackageRouteSeg" in-map-name="checkShipmentPackageRouteSegMap">
-                </call-service>
+                <set field="createShipmentPackageRouteSegMap.shipmentId" from-field="shipmentId"/>
+                <set field="createShipmentPackageRouteSegMap.shipmentRouteSegmentId" from-field="shipmentRouteSegmentId"/>
+                <set field="createShipmentPackageRouteSegMap.shipmentPackageSeqId" from-field="shipmentPackage.shipmentPackageSeqId"/>
+                <call-service service-name="createShipmentPackageRouteSeg" in-map-name="createShipmentPackageRouteSegMap"/>
             </if-empty>
         </iterate>
     </simple-method>
