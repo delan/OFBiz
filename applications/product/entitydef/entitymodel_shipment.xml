@@ -1015,6 +1015,7 @@
       <field name="labelImage" type="blob"></field>
       <field name="labelIntlSignImage" type="blob"></field>
       <field name="labelHtml" type="very-long"></field>
+      <field name="labelPrinted" type="indicator"></field> <!-- tracks if a label has been printed -->
       <field name="packageTransportCost" type="currency-amount"></field>
       <field name="packageServiceCost" type="currency-amount"></field>
       <field name="packageOtherCost" type="currency-amount"></field>
@@ -1126,6 +1127,50 @@
         <key-map field-name="billingWeightUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ShipmentPackageRouteDetail"
+            package-name="org.ofbiz.shipment.picklist"
+            title="Shipment Package Route Detail View Entity">
+      <description>View to list information about individual packages with route information, for getting the carrier labels for a package.</description>
+      <member-entity entity-alias="SPRS" entity-name="ShipmentPackageRouteSeg"/>
+      <member-entity entity-alias="SRS" entity-name="ShipmentRouteSegment"/>
+      <member-entity entity-alias="S" entity-name="Shipment"/>
+      <alias entity-alias="SPRS" name="shipmentId"/>
+      <alias entity-alias="SPRS" name="shipmentPackageSeqId"/>
+      <alias entity-alias="SPRS" name="shipmentRouteSegmentId"/>
+      <alias entity-alias="SPRS" name="labelPrinted"/>
+      <alias entity-alias="SRS" name="carrierPartyId"/>
+      <alias entity-alias="SRS" name="carrierServiceStatusId"/>
+      <alias entity-alias="SRS" name="shipmentMethodTypeId"/>
+      <alias entity-alias="S" name="statusId"/>
+      <alias entity-alias="S" name="primaryOrderId"/>
+      <view-link entity-alias="SPRS" rel-entity-alias="SRS">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentRouteSegmentId"/>
+      </view-link>
+      <view-link entity-alias="SPRS" rel-entity-alias="S">
+        <key-map field-name="shipmentId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="ShipmentRouteSegmentDetail"
+            package-name="org.ofbiz.shipment.shipment"
+            title="Shipment Route Segment Detail View Entity">
+      <description>View to list a shipment route segment with extra shipment information, for scheduling shipment route segments</description>
+      <member-entity entity-alias="SRS" entity-name="ShipmentRouteSegment"/>
+      <member-entity entity-alias="S" entity-name="Shipment"/>
+      <alias entity-alias="SRS" name="shipmentId"/>
+      <alias entity-alias="SRS" name="shipmentRouteSegmentId"/>
+      <alias entity-alias="SRS" name="originFacilityId"/>
+      <alias entity-alias="SRS" name="carrierPartyId"/>
+      <alias entity-alias="SRS" name="carrierServiceStatusId"/>
+      <alias entity-alias="SRS" name="shipmentMethodTypeId"/>
+      <alias entity-alias="SRS" name="billingWeight"/>
+      <alias entity-alias="SRS" name="billingWeightUomId"/>
+      <alias entity-alias="S" name="statusId"/>
+      <alias entity-alias="S" name="primaryOrderId"/>
+      <view-link entity-alias="SRS" rel-entity-alias="S">
+        <key-map field-name="shipmentId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ShipmentStatus"
             package-name="org.ofbiz.shipment.shipment"
             title="Shipment Status Entity">

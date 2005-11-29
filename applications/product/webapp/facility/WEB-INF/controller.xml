@@ -602,6 +602,32 @@
         <response name="success" type="view" value="ShipmentBarCode.pdf"/>
     </request-map>
 
+    <!-- ================ Shipment Scheduling Requests ================= -->
+    <request-map uri="Scheduling">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ScheduleShipmentRouteSegment"/>
+    </request-map>
+    <request-map uri="ScheduleShipmentRouteSegment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ScheduleShipmentRouteSegment"/>
+    </request-map>
+    <request-map uri="BatchScheduleShipmentRouteSegments">
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="updateShipmentRouteSegment"/>
+        <response name="error" type="view" value="ScheduleShipmentRouteSegment"/>
+        <response name="success" type="request" value="ScheduleShipmentsWithCarriers"/>
+    </request-map>
+    <request-map uri="ScheduleShipmentsWithCarriers">
+        <security https="true" auth="true" direct-request="false"/>
+        <event type="service-multi" path="" invoke="quickScheduleShipmentRouteSegment"/>
+        <response name="error" type="view" value="ScheduleShipmentRouteSegment"/>
+        <response name="success" type="view" value="Labels"/>
+    </request-map>
+    <request-map uri="Labels">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Labels"/>
+    </request-map>
+
     <!-- ================ Shipment Requests ================= -->
     <request-map uri="FindShipment">
         <security https="true" auth="true"/>
@@ -953,6 +979,9 @@
     <view-map name="PackOrder" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#PackOrder"/>
     <view-map name="PackingSlip.pdf" type="screenfop" page="component://product/widget/facility/ShipmentScreens.xml#PackingSlip.fo"/>
     <view-map name="ShipmentBarCode.pdf" type="screenfop" page="component://product/widget/facility/ShipmentScreens.xml#ShipmentBarCode.fo"/>
+
+    <view-map name="ScheduleShipmentRouteSegment" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ScheduleShipmentRouteSegment"/>
+    <view-map name="Labels" type="screen" page="component://product/widget/facility/FacilityScreens.xml#Labels"/>
 
     <view-map name="FindShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#FindShipment"/>
     <view-map name="ViewShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#ViewShipment"/>

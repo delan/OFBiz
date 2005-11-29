@@ -275,6 +275,14 @@
         <description>Delete ShipmentRouteSegment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="quickScheduleShipmentRouteSegment" default-entity-name="ShipmentRouteSegment" engine="java"
+            location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="quickScheduleShipmentRouteSegment" auth="true">
+        <description>Schedules a shipment route segment with the carrier and service level in the ShipmentRouteSegment entity.
+          Actual scheduling is done by an async service, and this does not return an error, so it can be called in a multi-form,
+          and one failed shipment scheduling does not cause other shipments to be rolled back.
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 
     <!-- ============================================================== -->
     <!-- ItemIssuance Services -->

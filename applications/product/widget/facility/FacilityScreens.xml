@@ -519,4 +519,98 @@
             </widgets>
         </section>
     </screen>    
+
+    <!-- generates the subtab of [Scheduling] using FacilityScheduleTabBar -->
+    <screen name="CommonFacilityScheduleDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container>
+                                    <label style="head1" text="${title}"/>
+                                </container>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/facility/facility/FacilityScheduleTabBar.ftl"/></html>
+                                </platform-specific>
+
+                                <decorator-section-include name="schedule-body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Subscreen of [Scheduling] for weighting and scheduling a route segment -->
+    <screen name="ScheduleShipmentRouteSegment">
+        <section>
+            <actions>
+                <set field="title" value="Shipment Route Scheduling"/>
+                <set field="titleProperty" value="PageTitlePackageShipmentScheduling"/>
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="Scheduling"/>
+                <set field="scheduleTabButtonItem" value="ScheduleTabButton"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+
+                <!-- get ShipmentRouteSegmentDetails that are PACKED and not CONFIRMED with carrier -->
+                <entity-condition entity-name="ShipmentRouteSegmentDetail" list-name="shipmentRouteSegments">
+                    <condition-list combine="and">
+                        <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.facilityId"/>
+                        <condition-expr field-name="statusId" operator="equals" value="SHIPMENT_PACKED"/>
+                        <condition-expr field-name="carrierServiceStatusId" operator="not-equals" value="SHRSCS_CONFIRMED"/>
+                    </condition-list>
+                    <order-by field-name="shipmentId DESC"/>
+                </entity-condition>
+
+                <!-- get the default facility Uom -->
+                <entity-one entity-name="Facility" value-name="facility"/>
+                <entity-one entity-name="Uom" value-name="defaultUom" use-cache="true" auto-field-map="false">
+                    <field-map env-name="facility.defaultUomId" field-name="uomId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityScheduleDecorator">
+                    <decorator-section name="schedule-body">
+                        <container>
+                            <include-form name="SchedulingList" location="component://product/webapp/facility/facility/FacilityForms.xml"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Subscreen of [Scheduling] for listing labels ready to be printed -->
+    <screen name="Labels">
+        <section>
+            <actions>
+                <set field="title" value="Label Printing"/>
+                <set field="titleProperty" value="PageTitleLabelPrinting"/>
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="Scheduling"/>
+                <set field="scheduleTabButtonItem" value="LabelsTabButton"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+
+                <!-- get all carrier CONFIRMED ShipmentPackageRouteDetails -->
+                <entity-condition entity-name="ShipmentPackageRouteDetail" list-name="shipmentPackageRouteSegments">
+                    <condition-list combine="and">
+                        <condition-expr field-name="labelPrinted" operator="not-equals" value="Y"/>
+                        <condition-expr field-name="carrierServiceStatusId" operator="equals" value="SHRSCS_CONFIRMED"/>
+                    </condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityScheduleDecorator">
+                    <decorator-section name="schedule-body">
+                        <container>
+                            <include-form name="Labels" location="component://product/webapp/facility/facility/FacilityForms.xml"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
