@@ -1402,16 +1402,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(opLessThan);
 
         buffer.append(" <input type=\"radio\" name=\"");
-        buffer.append(" Less than equals<input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"lessThanEqualTo\"/>");
         buffer.append(opLessThanEquals);
-
-        buffer.append(" <input type=\"radio\" name=\"");
-        buffer.append(" Is Empty<input type=\"radio\" name=\"");
-        buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_op\" value=\"empty\"/>");
-        buffer.append(opIsEmpty);
 
         buffer.append("</span>");
 
