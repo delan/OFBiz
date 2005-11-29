@@ -42,6 +42,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityComparisonOperator;
 import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -50,6 +51,7 @@ import org.ofbiz.entity.condition.EntityFieldValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.GenericServiceException;
@@ -220,7 +222,7 @@ public class FindServices {
         HashMap subMap2 = null;
         EntityOperator fieldOp = null;
         String fieldValue = null; // If it is a "value" field, it will be the value to be used in the query.
-                                                    // If it is an "op" field, it will be "equals", "greaterThan", etc.
+                                  // If it is an "op" field, it will be "equals", "greaterThan", etc.
         Iterator iter = keys.iterator();
         EntityExpr cond = null;
         ArrayList tmpList = new ArrayList();
@@ -345,7 +347,7 @@ public class FindServices {
             if (origList != null && origList.size() > 0) {
                 Iterator origIter = origList.iterator();
                 while (origIter.hasNext()) {
-                    String [] arr = (String [])origIter.next();
+                    Object [] arr = (Object [])origIter.next();
                     queryStringMap.put(arr[0], arr[1]);
                 }
             }
@@ -368,12 +370,17 @@ public class FindServices {
             // try finding in inputFields Map
             noConditionFind = (String) inputFields.get("noConditionFind");
         }
-
+        String filterByDate = (String) context.get("filterByDate");
+        if (UtilValidate.isEmpty(filterByDate)) {
+            // try finding in inputFields Map
+            filterByDate = (String) inputFields.get("filterByDate");
+        }
+        
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         Map prepareResult = null;
         try {
-            prepareResult = dispatcher.runSync("prepareFind", UtilMisc.toMap("entityName", entityName, "orderBy", orderBy, "inputFields", inputFields));
+            prepareResult = dispatcher.runSync("prepareFind", UtilMisc.toMap("entityName", entityName, "orderBy", orderBy, "inputFields", inputFields, "filterByDate", filterByDate));
         } catch (GenericServiceException gse) {
             return ServiceUtil.returnError("Error preparing conditions: " + gse.getMessage());
         }
@@ -409,7 +416,12 @@ public class FindServices {
             // try finding in inputFields Map
             noConditionFind = (String) inputFields.get("noConditionFind");
         }
-        
+        String filterByDate = (String) context.get("filterByDate");
+        if (UtilValidate.isEmpty(filterByDate)) {
+            // try finding in inputFields Map
+            filterByDate = (String) inputFields.get("filterByDate");
+        }
+
         // parameters run thru UtilHttp.getParameterMap
         Map queryStringMap = new HashMap();
         Map origValueMap = new HashMap();
@@ -425,6 +437,11 @@ public class FindServices {
         List keys = modelEntity.getAllFieldNames();
         ArrayList tmpList = createCondition(keys, normalizedFields, queryStringMap, origValueMap);
 
+        if (!UtilValidate.isEmpty(filterByDate) && "Y".equals(filterByDate)) {
+            EntityCondition filterByDateCondition = EntityUtil.getFilterByDateExpr();
+            tmpList.add(filterByDateCondition);
+        }
+
         EntityConditionList exprList = null;
         if (tmpList.size() > 0) {
             exprList = new EntityConditionList(tmpList, (EntityJoinOperator) EntityOperator.AND);
@@ -438,6 +455,7 @@ public class FindServices {
         Map results = ServiceUtil.returnSuccess();
         Map reducedQueryStringMap = buildReducedQueryString(inputFields, entityName, delegator);
         reducedQueryStringMap.put("noConditionFind", noConditionFind);
+        reducedQueryStringMap.put("filterByDate", filterByDate);
         String queryString = UtilHttp.urlEncodeArgs(reducedQueryStringMap);
         results.put("queryString", queryString);
         results.put("queryStringMap", reducedQueryStringMap);
