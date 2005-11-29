@@ -58,3 +58,7 @@ context.put("ownerParties", ownerParties);
 // all possible inventory item types
 inventoryItemTypes = delegator.findAllCache("InventoryItemType", UtilMisc.toList("description"));
 context.put("inventoryItemTypes", inventoryItemTypes);
+
+// unit of measures
+weightUomList = delegator.findByAndCache("Uom", UtilMisc.toMap("uomTypeId", "WEIGHT_MEASURE"));
+context.put("weightUomList", weightUomList);

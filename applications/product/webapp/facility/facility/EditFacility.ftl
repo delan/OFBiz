@@ -80,6 +80,22 @@
   </tr>
 </#if>
   <tr>
+    <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductFacilityDefaultUnitOfMeasure}</div></td>
+    <td>&nbsp;</td>
+    <td width="74%">
+      <select name="defaultUomId" size="1" class='selectBox'>
+          <option value=''>${uiLabelMap.CommonNone}</option>
+          <#list weightUomList as uom>                      
+            <option value='${uom.uomId}'
+               <#if (facility.defaultUomId?has_content) && (uom.uomId == facility.defaultUomId)>
+               SELECTED
+               </#if>
+             >${uom.description?default(uom.uomId)}</option>
+          </#list>
+      </select>
+    </td>
+  </tr>
+  <tr>
     <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductFacilityDefaultInventoryItemType}</div></td>
     <td>&nbsp;</td>
     <td width="74%">

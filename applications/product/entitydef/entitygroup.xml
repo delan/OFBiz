@@ -294,6 +294,8 @@
     <entity-group group="org.ofbiz" entity="ShipmentPackageContent" />
     <entity-group group="org.ofbiz" entity="ShipmentPackageRouteSeg" />
     <entity-group group="org.ofbiz" entity="ShipmentRouteSegment" />
+    <entity-group group="org.ofbiz" entity="ShipmentPackageRouteDetail" />
+    <entity-group group="org.ofbiz" entity="ShipmentRouteSegmentDetail" />
     <entity-group group="org.ofbiz" entity="ShipmentStatus" />
     <entity-group group="org.ofbiz" entity="ShipmentType" />
     <entity-group group="org.ofbiz" entity="ShipmentTypeAttr" />

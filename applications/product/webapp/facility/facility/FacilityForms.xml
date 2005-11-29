@@ -94,4 +94,63 @@
         <field name="manufacturerPartyId"><display/></field>
         <field name="serialNumber"><display/></field> 
     </form>
+
+    <!-- multi-form for list of packages ready to be weighted and scheduled for shipment -->
+    <form name="SchedulingList" type="multi" use-row-submit="true" list-name="shipmentRouteSegments" title="" target="BatchScheduleShipmentRouteSegments"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext" separate-columns="true">
+        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}">
+            <hyperlink target="ViewShipment?shipmentId=${shipmentId}" description="${shipmentId}"/>
+        </field>
+        <field name="primaryOrderId" title="${uiLabelMap.ProductOrderId}">
+            <hyperlink target="/ordermgr/control/orderview?orderId=${primaryOrderId}" description="${primaryOrderId}" target-type="inter-app"/>
+        </field>
+        <field name="shipmentRouteSegmentId"><display/></field>
+        <field name="carrierPartyId" title="${uiLabelMap.ProductCarrier}">
+            <display-entity description="${groupName}" entity-name="PartyNameView" key-field-name="partyId"/>
+        </field>
+        <field name="shipmentMethodTypeId" title="${uiLabelMap.ProductShipmentMethodType}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ShipmentMethodType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="billingWeight" title="${uiLabelMap.CommonWeight}"><text size="10"/></field>
+        <field name="billingWeightUomId"  title="${uiLabelMap.ProductWeightUomId}">
+            <drop-down allow-empty="false">
+                <option key="${defaultUom.uomId}" description="${defaultUom.description}"/>
+                <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="equals" value="WEIGHT_MEASURE"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductSchedule}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+
+    <!-- multi-form to print confirmed shipping labels -->
+    <form name="Labels" type="multi" list-name="shipmentPackageRouteSegments" title="" target="PrintLabels"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext" separate-columns="true">
+        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}">
+            <hyperlink target="ViewShipment?shipmentId=${shipmentId}" description="${shipmentId}"/>
+        </field>
+        <field name="primaryOrderId" title="${uiLabelMap.ProductOrderId}">
+            <hyperlink target="/ordermgr/control/orderview?orderId=${primaryOrderId}" description="${primaryOrderId}" target-type="inter-app"/>
+        </field>
+        <field name="shipmentRouteSegmentId"><display/></field>
+        <field name="shipmentPackageSeqId"><display/></field>
+        <field name="carrierPartyId" title="${uiLabelMap.ProductCarrier}">
+            <display-entity description="${groupName}" entity-name="PartyNameView" key-field-name="partyId"/>
+        </field>
+        <field name="shipmentMethodTypeId" title="${uiLabelMap.ProductShipmentMethodType}">
+            <display-entity entity-name="ShipmentMethodType"/>
+        </field>
+        <field name="label" title="${uiLabelMap.ProductLabel}">
+          <hyperlink target="viewShipmentPackageRouteSegLabelImage?shipmentId=${shipmentId}&amp;shipmentRouteSegmentId=${shipmentRouteSegmentId}&amp;shipmentPackageSeqId=${shipmentPackageSeqId}" description="${uiLabelMap.ProductLabel}"/>
+        </field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonPrint}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
 </forms>

@@ -849,4 +849,45 @@ public class ShipmentServices {
         }
         return ServiceUtil.returnSuccess("Intentional error at end to keep from committing.");
     }
+
+    /**
+     * Service to call a ShipmentRouteSegment.carrierPartyId's confirm shipment method asynchronously
+     */
+    public static Map quickScheduleShipmentRouteSegment(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String shipmentId = (String) context.get("shipmentId");
+        String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
+        String carrierPartyId = null;
+
+        // get the carrierPartyId
+        try {
+            GenericValue shipmentRouteSegment = shipmentRouteSegment = delegator.findByPrimaryKeyCache("ShipmentRouteSegment", 
+                    UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId));
+            carrierPartyId = shipmentRouteSegment.getString("carrierPartyId");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // get the shipment label.  This is carrier specific.
+        // TODO: This may not need to be done asynchronously.  The reason it's done that way right now is that calling it synchronously means that
+        // if we can't confirm a single shipment, then all shipment route segments in a multi-form are rolled back.
+        try {
+            Map input = UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId, "userLogin", userLogin);
+            // for DHL, we just need to confirm the shipment to get the label.  Other carriers may have more elaborate requirements.
+            if (carrierPartyId.equals("DHL")) {
+                dispatcher.runAsync("dhlShipmentConfirm", input);
+            } else {
+                Debug.logError(carrierPartyId + " is not supported at this time.  Sorry.", module);
+            }
+        } catch (GenericServiceException se) {
+            Debug.logError(se, se.getMessage(), module);
+        }
+
+        // don't return an error
+        return ServiceUtil.returnSuccess();
+    }
 }
