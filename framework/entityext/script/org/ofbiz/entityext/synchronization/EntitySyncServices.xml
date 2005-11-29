@@ -35,7 +35,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <sequenced-id-to-env sequence-name="EntitySync" env-name="entitySyncId"/>
-        <env-to-field env-name="entitySyncId" map-name="newEntity"/>
+        <set field="newEntity.entitySyncId" from-field="entitySyncId"/>
         <field-to-result field-name="entitySyncId" result-name="entitySyncId"/>
 
         <create-value value-name="newEntity"/>
@@ -44,7 +44,7 @@
         <check-permission permission="ENTITY_SYNC" action="_UPDATE"><fail-message message="Security Error: to run updateEntitySync you must have the ENTITY_SYNC_UPDATE or ENTITY_SYNC_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="entitySyncId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set field="lookupPKMap.entitySyncId" from-field="parameters.entitySyncId"/>
         <find-by-primary-key entity-name="EntitySync" map-name="lookupPKMap" value-name="valueToStore"/>
         <set-nonpk-fields map-name="parameters" value-name="valueToStore"/>
         <store-value value-name="valueToStore"/>
@@ -54,10 +54,10 @@
         <check-errors/>
 
         <!-- TODO: add some code to make sure, as much as possible, that this really isn't running -->
-        <field-to-field field-name="entitySyncId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <set field="lookupPKMap.entitySyncId" from-field="parameters.entitySyncId"/>        
         <find-by-primary-key entity-name="EntitySync" map-name="lookupPKMap" value-name="valueToStore"/>
         <if-compare field-name="valueToStore.runStatusId" operator="equals" value="ESR_RUNNING">
-            <string-to-field string="ESR_NOT_STARTED" field-name="valueToStore.runStatusId"></string-to-field>
+            <set field="valueToStore.runStatusId" value="ESR_NOT_STARTED"/>
             <store-value value-name="valueToStore"/>
         </if-compare>
     </simple-method>
