@@ -48,6 +48,7 @@
         <attribute name="estimatedStartDate" type="Timestamp" mode="IN"/>
         <attribute name="workEffortName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="changeProductionRunStatus" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="changeProductionRunStatus" auth="true">

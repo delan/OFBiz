@@ -239,7 +239,6 @@
                     <order-by field-name="sequenceNum"/>
                     <order-by field-name="fromDate"/>
                 </entity-and>
-                <!--<script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditRoutingTaskAssoc.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonRoutingDecorator">
