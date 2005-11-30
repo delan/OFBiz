@@ -79,16 +79,17 @@
         <now-timestamp-to-env env-name="nowTimestamp"/>
         
         <!-- if necessary create new status entry, and set lastStatusUpdate date -->
-        <if-compare-field field-name="currentStatusId" map-name="parameters" operator="not-equals" to-field-name="currentStatusId" to-map-name="lookedUpValue">
-            <set from-field="nowTimestamp" field="lookedUpValue.lastStatusUpdate"/>
-            <make-value value-name="newWorkEffortStatus" entity-name="WorkEffortStatus"/>
-            <set from-field="lookedUpValue.workEffortId" field="newWorkEffortStatus.workEffortId"/>
-            <set from-field="lookedUpValue.currentStatusId" field="newWorkEffortStatus.statusId"/>
-            <set from-field="nowTimestamp" field="newWorkEffortStatus.statusDatetime"/>
-            <set from-field="userLogin.userLoginId" field="newWorkEffortStatus.setByUserLogin"/>
-            <create-value value-name="newWorkEffortStatus"/>
-        </if-compare-field>
-
+        <if-not-empty field-name="parameters.currentStatusId">
+            <if-compare-field field-name="parameters.currentStatusId" operator="not-equals" to-field-name="lookedUpValue.currentStatusId">
+                <set from-field="nowTimestamp" field="lookedUpValue.lastStatusUpdate"/>
+                <make-value value-name="newWorkEffortStatus" entity-name="WorkEffortStatus"/>
+                <set from-field="lookedUpValue.workEffortId" field="newWorkEffortStatus.workEffortId"/>
+                <set from-field="lookedUpValue.currentStatusId" field="newWorkEffortStatus.statusId"/>
+                <set from-field="nowTimestamp" field="newWorkEffortStatus.statusDatetime"/>
+                <set from-field="userLogin.userLoginId" field="newWorkEffortStatus.setByUserLogin"/>
+                <create-value value-name="newWorkEffortStatus"/>
+            </if-compare-field>
+        </if-not-empty>
         <!-- after checking status change, set all parameters -->        
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
 
