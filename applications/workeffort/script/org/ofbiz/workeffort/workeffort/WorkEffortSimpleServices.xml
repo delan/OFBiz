@@ -531,10 +531,6 @@
                 <set field="newEntity.sequenceNum" value="0" type="Long"/>
             </if-empty>        
             <create-value value-name="newEntity"/>
-            <field-to-result field-name="workEffortIdTo" map-name="newEntity"/>
-            <field-to-result field-name="workEffortIdFrom" map-name="newEntity"/>
-            <field-to-result field-name="workEffortAssocTypeId" map-name="newEntity"/>
-            <field-to-result field-name="fromDate" map-name="newEntity"/>
         </else>
         </if-not-empty>
     </simple-method>
