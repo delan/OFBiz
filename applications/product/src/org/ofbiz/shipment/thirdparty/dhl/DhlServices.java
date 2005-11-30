@@ -84,6 +84,7 @@ public class DhlServices {
 
     public final static String module = DhlServices.class.getName();
     public final static String shipmentPropertiesFile = "shipment.properties";
+    public final static String DHL_WEIGHT_UOM_ID = "WT_lb"; // weight Uom used by DHL
 
     /**
      * Opens a URL to DHL and makes a request.
@@ -580,12 +581,33 @@ public class DhlServices {
             if (shipmentPackageRouteSegs.size() != 1) {
                return ServiceUtil.returnError("Cannot confirm shipment: DHL ShipIT does not currently support more than one package per shipment.");
             }
-            
+
+            // get the weight from the ShipmentRouteSegment first, which overrides all later weight computations
+            boolean hasBillingWeight = false;  // for later overrides
+            Double billingWeight = shipmentRouteSegment.getDouble("billingWeight");
+            String billingWeightUomId = shipmentRouteSegment.getString("billingWeightUomId");
+            if ((billingWeight != null) && (billingWeight.doubleValue() > 0)) {
+                hasBillingWeight = true;
+                if (billingWeightUomId == null) {
+                    Debug.logWarning("Shipment Route Segment missing billingWeightUomId in shipmentId " + shipmentId,  module);
+                    billingWeightUomId = "WT_lb"; // TODO: this should be specified in a properties file
+                }
+                // convert
+                Map results = dispatcher.runSync("convertUom", UtilMisc.toMap("uomId", billingWeightUomId, "uomIdTo", DHL_WEIGHT_UOM_ID, "originalValue", billingWeight));
+                if (ServiceUtil.isError(results) || (results.get("convertedValue") == null)) {
+                    Debug.logWarning("Unable to convert billing weights for shipmentId " + shipmentId , module);
+                    // try getting the weight from package instead
+                    hasBillingWeight = false;
+                } else {
+                    billingWeight = (Double) results.get("convertedValue");
+                }
+            }
+
             // loop through Shipment segments (NOTE: only one supported, loop is here for future refactoring reference)
             String length = null;
             String width = null;
             String height = null;
-            Double weight = null;
+            Double packageWeight = null;
             Iterator shipmentPackageRouteSegIter = shipmentPackageRouteSegs.iterator();
             while (shipmentPackageRouteSegIter.hasNext()) {
                 GenericValue shipmentPackageRouteSeg = (GenericValue) shipmentPackageRouteSegIter.next();
@@ -597,7 +619,7 @@ public class DhlServices {
                     carrierShipmentBoxType = (GenericValue) carrierShipmentBoxTypes.get(0); 
                 }
                  
-                // TODO: determine what default UoM is (assuming inches)
+                // TODO: determine what default UoM is (assuming inches) - there should be a defaultDimensionUomId in Facility
                 if (shipmentBoxType != null) {
                     GenericValue dimensionUom = shipmentBoxType.getRelatedOne("DimensionUom");
                     length = shipmentBoxType.get("boxLength").toString();
@@ -605,32 +627,45 @@ public class DhlServices {
                     height = shipmentBoxType.get("boxHeight").toString();
                 }
                 
-                // weights
+                // next step is weight determination, so skip if we have a billing weight
+                if (hasBillingWeight) continue;
+
+                // compute total packageWeight (for now, just one package)
                 if (shipmentPackage.getString("weight") != null) {
-                    weight = Double.valueOf(shipmentPackage.getString("weight"));
+                    packageWeight = Double.valueOf(shipmentPackage.getString("weight"));
                 } else {
                     // use default weight if available
                     try {
-                        weight = Double.valueOf(UtilProperties.getPropertyValue(shipmentPropertiesFile, "shipment.default.weight.value"));
+                        packageWeight = Double.valueOf(UtilProperties.getPropertyValue(shipmentPropertiesFile, "shipment.default.weight.value"));
                     } catch (NumberFormatException ne) {
                         Debug.logWarning("Default shippable weight not configured (shipment.default.weight.value)", module);
-                        weight = new Double(1.0);
+                        packageWeight = new Double(1.0);
                     }
                 }
                 // convert weight
                 String weightUomId = (String) shipmentPackage.get("weightUomId");
                 if (weightUomId == null) {
                     Debug.logWarning("Shipment Route Segment missing weightUomId in shipmentId " + shipmentId,  module);
-                    weightUomId = "WT_lb";
+                    weightUomId = "WT_lb"; // TODO: this should be specified in a properties file
                 }
-                Map results = dispatcher.runSync("convertUom", UtilMisc.toMap("uomId", weightUomId, "uomIdTo", "WT_lb", "originalValue", weight));
+                Map results = dispatcher.runSync("convertUom", UtilMisc.toMap("uomId", weightUomId, "uomIdTo", DHL_WEIGHT_UOM_ID, "originalValue", packageWeight));
                 if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) || (results.get("convertedValue") == null)) {
                     Debug.logWarning("Unable to convert weights for shipmentId " + shipmentId , module);
-                    weight = new Double(1.0);
+                    packageWeight = new Double(1.0);
                 } else {
-                    weight = (Double) results.get("convertedValue");
+                    packageWeight = (Double) results.get("convertedValue");
                 }
             }
+
+            // pick which weight to use and round it
+            Double weight = null;
+            if (hasBillingWeight) { 
+                weight = billingWeight;
+            } else {
+                weight = packageWeight;
+            }
+            // want the rounded weight as a string, so we use the "" + int shortcut
+            String roundedWeight = "" + Math.round(weight.doubleValue());
             
             // translate shipmentMethodTypeId to DHL service code
             String shipmentMethodTypeId = shipmentRouteSegment.getString("shipmentMethodTypeId");
@@ -675,7 +710,7 @@ public class DhlServices {
             inContext.put("shippingKey", shippingKey);
             inContext.put("shipDate", UtilDateTime.nowTimestamp());
             inContext.put("dhlShipmentDetailCode", dhlShipmentDetailCode);
-            inContext.put("weight", "" + Math.round(weight.doubleValue()));
+            inContext.put("weight", roundedWeight);
             inContext.put("senderPhoneNbr", originPhoneNumber);
             inContext.put("companyName", destPostalAddress.getString("toName"));
             inContext.put("attnTo", destPostalAddress.getString("attnName"));
