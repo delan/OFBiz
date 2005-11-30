@@ -40,11 +40,18 @@
     <process field="currentStatusId"><copy/></process>
   </simple-map-processor>
   <simple-map-processor name="routingTaskAssoc">
-    <process field="workEffortIdFrom"><copy/></process>
+    <process field="workEffortId"><copy to-field="workEffortIdFrom"/></process>
     <process field="workEffortIdTo"><copy/><not-empty><fail-property resource="ManufacturingUiLabels" property="ManufacturingRoutingTaskToMissing"/></not-empty></process>
     <process field="workEffortAssocTypeId"><copy/></process>
-    <process field="sequenceNum"><copy/><convert type="Long"><fail-property resource="ManufacturingUiLabels" property="ManufacturingRoutingSeqIdFormatNotCorrect"/></convert>
-    																			<not-empty><fail-property resource="ManufacturingUiLabels" property="ManufacturingRoutingSeqIdMissing"/></not-empty></process>
+    <process field="sequenceNum">
+        <copy/>
+        <convert type="Long">
+            <fail-property resource="ManufacturingUiLabels" property="ManufacturingRoutingSeqIdFormatNotCorrect"/>
+        </convert>
+        <not-empty>
+            <fail-property resource="ManufacturingUiLabels" property="ManufacturingRoutingSeqIdMissing"/>
+        </not-empty>
+    </process>
     <process field="fromDate"><copy/><convert type="Timestamp"><fail-property resource="ManufacturingUiLabels" property="CommonFormatDateFieldNotCorrect"/></convert></process>
     <process field="thruDate"><copy/><convert type="Timestamp"><fail-property resource="ManufacturingUiLabels" property="CommonFormatDateFieldNotCorrect"/></convert></process>
   </simple-map-processor>
