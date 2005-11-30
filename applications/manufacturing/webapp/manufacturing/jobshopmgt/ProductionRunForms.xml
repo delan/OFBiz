@@ -88,6 +88,13 @@
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <display description="[${productionRunData.productId}]/${productionRunData.productName}"/>
         </field>
+        <field name="facilityId" title="${uiLabelMap.ProductFacilityId}">
+            <drop-down>
+                <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
+                    <entity-constraint name="facilityTypeId" value="WAREHOUSE"/>
+                </entity-options>
+             </drop-down>
+        </field>
         <field name="quantity"  title="${uiLabelMap.ManufacturingQuantity}"><text size="10"/></field>
         <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><date-time/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>

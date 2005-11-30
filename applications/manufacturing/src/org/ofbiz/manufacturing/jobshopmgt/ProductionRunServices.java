@@ -424,6 +424,9 @@ public class ProductionRunServices {
                 String  description = (String) context.get("description");
                 if (description != null) productionRun.setDescription(description);
                 
+                String  facilityId = (String) context.get("facilityId");
+                if (facilityId != null) productionRun.getGenericValue().set("facilityId", facilityId);
+
                 if (productionRun.store()) return ServiceUtil.returnSuccess();
                 else {
                     Debug.logError("productionRun.store() fail for productionRunId ="+productionRunId,module);
