@@ -1366,7 +1366,6 @@ public class ProductionRunServices {
                                                  "workEffortId", workEffortId);
             Double totalTime = new Double(addSetupTime.doubleValue() + addTaskTime.doubleValue());
             timeEntryFields.put("partyId", partyId);
-            timeEntryFields.put("roleTypeId", "WORKER"); // FIXME
             timeEntryFields.put("fromDatetime", fromDate);
             timeEntryFields.put("thruDatetime", toDate);
             timeEntryFields.put("hours", totalTime); // FIXME
