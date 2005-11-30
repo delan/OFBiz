@@ -43,7 +43,6 @@ function addRoutingTask() {
     <input type="hidden" name="workEffortIdFrom" value="${workEffortId}">
     <input type="hidden" name="workEffortAssocTypeId" value="ROUTING_COMPONENT">
     <input type="hidden" name="copyTask" value="N">
-    <input type="hidden" name="addTask" value="Y">
     <table cellpadding="2" cellspacing="0" border="0" class="boxoutside">
         <tr>
             <td align="right">
