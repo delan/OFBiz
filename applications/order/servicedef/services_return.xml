@@ -38,17 +38,17 @@
         <attribute name="receiveReturn" type="Boolean" mode="IN" optional="true"/>
         <attribute name="returnId" type="String" mode="OUT" optional="false"/>
     </service>
-    <service name="createReturnHeader" engine="simple"
+    <service name="createReturnHeader" default-entity-name="ReturnHeader" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnHeader">
         <description>Create a new ReturnHeader</description>
-        <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>
-        <auto-attributes entity-name="ReturnHeader" include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
-    <service name="updateReturnHeader" engine="simple"
+    <service name="updateReturnHeader" default-entity-name="ReturnHeader" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnHeader">
         <description>Update a ReturnHeader</description>
-        <auto-attributes entity-name="ReturnHeader" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="currentStatusId" type="String" mode="OUT" optional="false"/>
     </service>
 
@@ -169,4 +169,3 @@
         <attribute name="availableReturnTotal" type="Double" mode="OUT" optional="false"/>
     </service>
 </services>
-

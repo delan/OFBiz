@@ -1460,6 +1460,7 @@
        <field name="invoiceIdPrefix" type="very-short"/>
        <field name="lastInvoiceNumber" type="numeric"/>
        <field name="lastInvoiceRestartDate" type="date-time"/>
+       <field name="useInvoiceIdForReturns" type="indicator"/>
        <prim-key field="partyId"/>
        <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREF_PTY">
            <key-map field-name="partyId"/>

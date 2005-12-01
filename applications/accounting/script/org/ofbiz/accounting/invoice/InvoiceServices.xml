@@ -27,6 +27,107 @@
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+
+    <simple-method method-name="getNextInvoiceId" short-description="Get Next invoiceId">
+        <!-- try to find PartyAcctgPreference for parameters.partyId, see if we need any special invoice number sequencing -->
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false">
+            <field-map field-name="partyId" env-name="parameters.partyId"/>
+        </entity-one>
+        <log level="info" message="In getNextInvoiceId partyId is [${parameters.partyId}], partyAcctgPreference: ${partyAcctgPreference}"/>
+        
+        <if>
+            <condition>
+                <if-compare field-name="partyAcctgPreference.invoiceSequenceEnumId" operator="equals" value="INVSQ_ENF_SEQ"/>
+            </condition>
+            <then>
+                <log level="info" message="In createInvoice sequence enum INVSQ_ENF_SEQ"/>
+                <!-- this is sequential sequencing, we can't skip a number, also it must be a unique sequence per partyIdFrom -->
+                <if-not-empty field-name="partyAcctgPreference.lastInvoiceNumber">
+                    <calculate field-name="partyAcctgPreference.lastInvoiceNumber" type="Long">
+                        <calcop operator="add" field-name="partyAcctgPreference.lastInvoiceNumber"/>
+                        <number value="1"/>
+                    </calculate>
+                    <else>
+                        <calculate field-name="partyAcctgPreference.lastInvoiceNumber" type="Long"><number value="1"/></calculate>
+                    </else>
+                </if-not-empty>
+                <store-value value-name="partyAcctgPreference"/>
+                <set from-field="partyAcctgPreference.lastInvoiceNumber" field="invoiceIdTemp"/>
+            </then>
+            <else-if>
+                <condition>
+                    <if-compare field-name="partyAcctgPreference.invoiceSequenceEnumId" operator="equals" value="INVSQ_RESTARTYR"/>
+                </condition>
+                <then>
+                    <log level="info" message="In createInvoice sequence enum INVSQ_RESTARTYR"/>
+                    <!-- this is sequential sequencing, we can't skip a number; except that it is restarted each fiscal year -->
+                    
+                    <if-empty field-name="partyAcctgPreference.lastInvoiceRestartDate">
+                        <!-- if no lastInvoiceRestartDate then it's easy, just start now with 1 -->
+                        <calculate field-name="partyAcctgPreference.lastInvoiceNumber" type="Long"><number value="1"/></calculate>
+                        <set from-field="nowTimestamp" field="partyAcctgPreference.lastInvoiceRestartDate"/>
+                        <else>
+                            <!-- first figure out if we need to reset the lastInvoiceNumber; is the lastInvoiceRestartDate after the fiscalYearStartMonth/Day for this year? -->
+                            <calculate field-name="zeroLong" type="Long"><number value="0"/></calculate>
+                            <call-class-method class-name="org.ofbiz.base.util.UtilDateTime" method-name="getYearStart" ret-field-name="curYearFiscalStartDate">
+                                <field field-name="nowTimestamp" type="java.sql.Timestamp"/>
+                                <field field-name="partyAcctgPreference.fiscalYearStartDay" type="java.lang.Number"/>
+                                <field field-name="partyAcctgPreference.fiscalYearStartMonth" type="java.lang.Number"/>
+                                <field field-name="zeroLong" type="java.lang.Number"/>
+                            </call-class-method>
+                            <if>
+                                <condition>
+                                    <and>
+                                        <if-compare-field field-name="partyAcctgPreference.lastInvoiceRestartDate" operator="less" to-field-name="curYearFiscalStartDate" type="Timestamp"/>
+                                        <if-compare-field field-name="nowTimestamp" operator="greater-equals" to-field-name="curYearFiscalStartDate" type="Timestamp"/>
+                                    </and>
+                                </condition>
+                                <then>
+                                    <!-- less than fiscal year start, we need to reset it -->
+                                    <calculate field-name="partyAcctgPreference.lastInvoiceNumber" type="Long"><number value="1"/></calculate>
+                                    <set from-field="nowTimestamp" field="partyAcctgPreference.lastInvoiceRestartDate"/>
+                                </then>
+                                <else>
+                                    <!-- greater than or equal to fiscal year start or nowTimestamp hasn't yet hit the current year fiscal start date, we're okay, just increment -->
+                                    <calculate field-name="partyAcctgPreference.lastInvoiceNumber" type="Long">
+                                        <calcop operator="add" field-name="partyAcctgPreference.lastInvoiceNumber"/>
+                                        <number value="1"/>
+                                    </calculate>
+                                </else>
+                            </if>
+                        </else>
+                    </if-empty>
+                    <store-value value-name="partyAcctgPreference"/>
+                    
+                    <!-- get the current year string for prefix, etc; simple 4 digit year date string -->
+                    <call-class-method class-name="org.ofbiz.base.util.UtilDateTime" method-name="toDateString" ret-field-name="curYearString">
+                        <field field-name="partyAcctgPreference.lastInvoiceRestartDate" type="java.util.Date"/>
+                        <string value="yyyy"/>
+                    </call-class-method>
+                    
+                    <set value="${curYearString}-${partyAcctgPreference.lastInvoiceNumber}" field="invoiceIdTemp"/>
+                </then>
+            </else-if>
+            <else>
+                <log level="info" message="In createInvoice sequence enum INVSQ_STANDARD"/>
+                <!-- default to the default sequencing: INVSQ_STANDARD -->
+                <set from-field="parameters.invoiceId" field="invoiceIdTemp"/>
+                <if-empty field-name="invoiceIdTemp">
+                    <sequenced-id-to-env sequence-name="Invoice" env-name="invoiceIdTemp"/>
+                    <else>
+                        <!-- check the provided ID --> 
+                        <check-id field-name="invoiceIdTemp"/>
+                        <check-errors/>
+                    </else>
+                </if-empty>
+            </else>
+        </if>
+        
+        <!-- use invoiceIdTemp along with the invoiceIdPrefix to create the real ID -->
+        <set field="invoiceId" value="${partyAcctgPreference.invoiceIdPrefix}${invoiceIdTemp}"/>
+        <field-to-result field-name="invoiceId" result-name="invoiceId"/>
+    </simple-method>
+    
     <simple-method method-name="createInvoice" short-description="Create a Invoice">
         <make-value value-name="newEntity" entity-name="Invoice"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>

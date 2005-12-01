@@ -45,8 +45,9 @@
         <if-empty field-name="parameters.toPartyId">
             <!-- no toPartyId was specified.  use destination facility to determine the party of the return -->
             <if-not-empty field-name="parameters.destinationFacilityId">
-                <set from-field="parameters.destinationFacilityId" field="lookupParams.facilityId"/>
-                <find-by-primary-key entity-name="Facility" map-name="lookupParams" value-name="destinationFacility"/>
+                <entity-one entity-name="Facility" value-name="destinationFacility" auto-field-map="false">
+                    <field-map field-name="facilityId" env-name="parameters.destinationFacilityId"/>
+                </entity-one>
                 <set from-field="destinationFacility.ownerPartyId" field="parameters.toPartyId"/>
             </if-not-empty>
         <else>
@@ -78,9 +79,22 @@
         <make-value value-name="newEntity" entity-name="ReturnHeader"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <sequenced-id-to-env sequence-name="ReturnHeader" env-name="newEntity.returnId"/>
+        <!-- If PartyAcctgPreference.useInvoiceIdForReturns is Y, get the ID from the getNextInvoiceId service -->
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false">
+            <field-map field-name="partyId" env-name="parameters.toPartyId"/>
+        </entity-one>
+        <if-compare field-name="partyAcctgPreference.useInvoiceIdForReturns" operator="equals" value="Y">
+            <set field="getNextInvoiceIdMap.partyId" from-field="parameters.toPartyId"/>
+            <call-service service-name="getNextInvoiceId" in-map-name="getNextInvoiceIdMap">
+                <result-to-field result-name="invoiceId" field-name="newEntity.returnId"/>
+            </call-service>        
+            
+            <else>
+                <sequenced-id-to-env sequence-name="ReturnHeader" env-name="newEntity.returnId"/>
+            </else>            
+        </if-compare>
         <field-to-result field-name="newEntity.returnId" result-name="returnId"/>
-
+        
         <if>
             <condition>
                 <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
@@ -91,14 +105,14 @@
             </then>
         </if>
 
-        <if-empty field-name="entryDate" map-name="newEntity">
+        <if-empty field-name="newEntity.entryDate">
             <set from-field="nowTimestamp" field="newEntity.entryDate"/>
         </if-empty>
 
-        <if-empty field-name="statusId" map-name="newEntity">
+        <if-empty field-name="newEntity.statusId">
             <set value="RETURN_REQUESTED" field="newEntity.statusId"/>
         </if-empty>
-        <set from-field="userLogin.userLoginId" field="newEntity.createdBy"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
 
         <create-value value-name="newEntity"/>
         <set field="responseMessage" value="Return Request #${returnId} was created successfully."/>
