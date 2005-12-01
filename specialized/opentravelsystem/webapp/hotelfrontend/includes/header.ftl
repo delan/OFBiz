@@ -35,9 +35,9 @@
     <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>" type="text/javascript"></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
-    <link rel="stylesheet" href="/hotelfrontendimages/ecommain.css" type="text/css"/>
-    <!--link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/images/ecommain.css")}</@ofbizContentUrl>" type="text/css"/-->
-    <link rel="stylesheet" href="/hotelfrontendimages/frontend.css" type="text/css"/>
+    <link rel="stylesheet" href="/hotelfrontend/hotelfrontendimages/ecommain.css" type="text/css"/>
+    <!--link rel="stylesheet" href="/hotelfrontend/hotelfrontendimages/ecommain.css" type="text/css"/-->
+    <link rel="stylesheet" href="/hotelfrontend/hotelfrontendimages/frontend.css" type="text/css"/>
 
     <#-- Append CSS for catalog -->
     <#if catalogStyleSheet?exists>

@@ -67,7 +67,7 @@
                         </container>
                         <include-form name="DataExchange" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                         <container>
-                            <label style="head1">Create Invoices from payments with status not paid and not applied.</label>
+                            <label style="head1">Create Invoices from payments and apply but with status not paid.</label>
                         </container>
                         <include-form name="CreateInvoicesFromPayments" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
                         <container>
@@ -135,6 +135,25 @@
                         <container>
                             <label style="head1" text="List of invoices"/>
                             <include-form name="InvoicesList" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="VatReport">
+        <section>
+            <actions>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+                <set field="monthList" from-field="parameters.monthList"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1" text="In and outgoing VAT for: ${organizationPartyId}"/>
+                            <include-form name="VatReport" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
                     </decorator-section>
                 </decorator-screen>

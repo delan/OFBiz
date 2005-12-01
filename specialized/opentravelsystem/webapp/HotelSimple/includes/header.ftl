@@ -54,7 +54,7 @@
     </#if>
     <#if includeHtmlArea>    
         <#assign contextPath=request.getContextPath()/>
-        <link rel="stylesheet" href="<@ofbizContentUrl>${contextPath}/images/css/${(webSitePublishPoint.styleSheetFile)?if_exists}</@ofbizContentUrl>" type="text/css"/>
+        <link rel="stylesheet" href="<@ofbizContentUrl>/HotelSimple/html/haagsestyles.css</@ofbizContentUrl>" type="text/css"/>
         
         <#assign primaryHTMLField=page.primaryHTMLField?if_exists/>
         <#if (dynamicPrimaryHTMLField?exists)>

@@ -48,6 +48,10 @@
          <iterate entry-name="payment" list-name="payments">
              <!-- only select payments which do not have been (partly) applied and optionally generate also sales invoices-->
              <get-related value-name="payment" relation-name="PaymentApplication" list-name="paymentApplications"/>
+             <get-related value-name="payment" relation-name="ToPaymentApplication" list-name="toPaymentApplications"/>
+             <if-not-empty field-name="toPaymentApplications">
+                 <list-to-list list-name="toPaymentApplications" to-list-name="paymentApplications"/>
+             </if-not-empty>
              <if>
                  <condition>
                      <and>
@@ -170,9 +174,9 @@
                      </if-compare>
                      
                      <!-- apply the payment to the invoice -->
-                     <set value="${invoiceId}" field="application.invoiceId"/>
-                     <set from-field="payment.paymentId" field="application.paymentId"/>
-                     <clear-field field-name="application.amountApplied"/>
+                     <set field="application.invoiceId" from-field="invoiceId"/>
+                     <set field="application.paymentId" from-field="payment.paymentId"/> 
+                     <set field="application.amountApplied" from-field="payment.amount" />
                      <call-service service-name="updatePaymentApplication" in-map-name="application"/>
                      
                  </then>

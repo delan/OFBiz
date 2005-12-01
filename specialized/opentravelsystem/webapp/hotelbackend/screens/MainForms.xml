@@ -1,5 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-
+        <form name="ListSecurityGroupUserLogins" type="list" list-name="userLoginSecurityGroups" target="updateUserLoginToSecurityGroup"
+                default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+                <actions>
+                        <entity-condition entity-name="UserLoginAndSecurityGroup">
+                                <condition-expr field-name="groupId" env-name="groupId"/>
+                                <order-by field-name="userLoginId"/>
+                        </entity-condition>
+                </actions>
+                <field name="oragnizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
+                
+                <field name="groupId"><hidden/></field>
+                <field name="userLoginId" title="${uiLabelMap.PartyUserLoginId}" widget-style="tabletext"><display/></field>
+                <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+                <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"><date-time/></field>
+                <field name="partyId" title="${uiLabelMap.PartyParty}" widget-style="tabletext">
+                        <display-entity entity-name="PartyNameView" also-hidden="false" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                                <sub-hyperlink target="viewprofile?partyId=${partyId}" description="[${partyId}]" link-style="buttontext"/>
+                        </display-entity>
+                </field>
+                <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <field name="deleteLink" title=" " widget-style="buttontext">
+                        <hyperlink description="[${uiLabelMap.CommonRemove}]" target="removeUserLoginFromSecurityGroup?userLoginId=${userLoginId}&amp;groupId=${groupId}&amp;fromDate=${fromDate}&amp;organizationPartyId=${parameters.organizationPartyId}" also-hidden="false"/>
+                </field>
+        </form>
+        <form name="ListSecurityGroupUserLogins1" type="list" list-name="userLoginSecurityGroups" target="updateUserLoginToSecurityGroup"
+                default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+                <actions>
+                        <entity-condition entity-name="UserLoginAndSecurityGroup">
+                                <condition-expr field-name="groupId" env-name="groupId"/>
+                                <order-by field-name="userLoginId"/>
+                        </entity-condition>
+                </actions>
+                <field name="oragnizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
+                
+                <field name="groupId"><hidden/></field>
+                <field name="userLoginId" title="${uiLabelMap.PartyUserLoginId}" widget-style="tabletext"><display/></field>
+                <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+                <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"><date-time/></field>
+                <field name="partyId" title="${uiLabelMap.PartyParty}" widget-style="tabletext">
+                        <display-entity entity-name="PartyNameView" also-hidden="false" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                                <sub-hyperlink target="viewprofile?partyId=${partyId}" description="[${partyId}]" link-style="buttontext"/>
+                        </display-entity>
+                </field>
+                <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <field name="deleteLink" title=" " widget-style="buttontext">
+                        <hyperlink description="[${uiLabelMap.CommonRemove}]" target="removeUserLoginFromSecurityGroup?userLoginId=${userLoginId}&amp;groupId=${groupId}&amp;fromDate=${fromDate}&amp;organizationPartyId=${parameters.organizationPartyId}" also-hidden="false"/>
+                </field>
+        </form>
+        
+        <form name="AddSecurityGroupUserLogin" type="single" 
+                target="addUserLoginToSecurityGroup" title=""
+                default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+                <auto-fields-service service-name="addUserLoginToSecurityGroup"/>
+                
+                <field name="groupId"><hidden/></field>
+                <field name="userLoginId" title="${uiLabelMap.PartyUserLoginId}"><lookup target-form-name="LookupPartyAndUserLoginAndPerson" size="30"></lookup></field>
+                
+                <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        </form>
+        <form name="AddSecurityGroupUserLogin1" type="single" 
+                target="addUserLoginToSecurityGroup" title=""
+                default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+                <auto-fields-service service-name="addUserLoginToSecurityGroup"/>
+                
+                <field name="groupId"><hidden/></field>
+                <field name="userLoginId" title="${uiLabelMap.PartyUserLoginId}"><lookup target-form-name="LookupPartyAndUserLoginAndPerson" size="30"></lookup></field>
+                
+                <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        </form>
+        
 </forms>

@@ -75,16 +75,16 @@
             <script location="component://opentravelsystem/webapp/hotelbackend/script/ListInvoices.bsh"/>
         </actions>
         <field name="company" widget-style="buttontext" >
-            <hyperlink description="${company}" target="viewprofile?partyId=${company}" target-window="new"/>
+            <hyperlink description="${company}" target="edutParty?partyId=${company}" target-window="new"/>
         </field>
         <field name="name"><display/></field>
-        <field name="revenue"><display/></field>
-        <field name="salesTaxIn"><display/></field>
-        <field name="expenses"><display/></field>
-        <field name="salesTaxOut"><display/></field>
-        <field name="miscIn"><display/></field>
-        <field name="miscOut"><display/></field>
-        <field name="totalValue"><display/></field>
+        <field name="revenue" widget-area-style="tabletextright"><display/></field>
+            <field name="salesTaxIn" widget-area-style="tabletextright"><display/></field>
+        <field name="expenses" widget-area-style="tabletextright"><display/></field>
+        <field name="salesTaxOut" widget-area-style="tabletextright"><display/></field>
+        <!--field name="miscIn"><display/></field>
+        <field name="miscOut"><display/></field-->
+        <field name="totalValue" widget-area-style="tabletextright"><display currency="ss"/></field>
     </form>
     
 </forms>

@@ -64,12 +64,25 @@
         <field name="submitButton" title="Run Product Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <form name="VatReportOptions" type="single" target="VatReport.pdf" title=""
+    <form name="VatReportOptions" type="single" target="VatReport" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
-        <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <!--field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
+        <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field-->
         <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <form name="VatReport" type="list" list-name="monthList" 
+        default-title-style="tableheadtext" default-widget-style="tabletext" 
+        default-tooltip-style="tabletext" target="updateCategoryProductMember">
+        <field name="monthNr"><display/></field>
+        <field name="revenue" widget-area-style="tabletextright"><display/></field>
+        <field name="salesTaxIn" widget-area-style="tabletextright"><display/></field>
+        <field name="expenses" widget-area-style="tabletextright"><display/></field>
+        <field name="salesTaxOut" widget-area-style="tabletextright"><display/></field>
+        <field name="salesTaxDue" widget-area-style="tabletextright"><display/></field>
+    </form>
+
     <form name="OpenSalesInvoices" type="single" target="OpenSalesInvoices.pdf" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>

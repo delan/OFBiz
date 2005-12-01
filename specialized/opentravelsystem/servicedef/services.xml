@@ -117,7 +117,15 @@
         <attribute name="postalCode" type="String" mode="OUT" optional="true"/>
         <attribute name="countryGeoId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
+    <service name="otsVatReport" engine="simple"
+        location="org/ofbiz/opentravelsystem/ReportServices.xml" invoke="vatReport" auth="true">
+        <description>Report on in/out going VAT for a certain time period</description>
+        <attribute name="organizationPartyId" type="String" mode="IN"/>
+        <attribute name="monthList" type="java.util.List" mode="OUT" optional="true"/>
+    </service>
+
+    <!-- catalog/product services -->
     <service name="CreateProductCategoryLinkToProdCatalog" engine="simple"
         location="org/ofbiz/opentravelsystem/CatalogServices.xml"
         invoke="CreateProductCategoryLinkToProdCatalog" auth="true">
@@ -129,5 +137,52 @@
         <attribute name="fromDate" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <!-- general  services -->
+    <service name="otsHelp" engine="simple" 
+        location="org/ofbiz/opentravelsystem/GeneralServices.xml"
+        invoke="help" auth="false">
+        <description>Provide the user with information about a certain part of the system</description>
+        <attribute name="app" type="String" mode="IN" optional="true"/>/>
+        <attribute name="function" type="String" mode="IN" optional="true"/>/>
+        <attribute name="tab" type="String" mode="IN" optional="true"/>/>
+        <attribute name="contentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="dataResourceId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="otsUpdateHelp" engine="simple"
+        location="org/ofbiz/opentravelsystem/GeneralServices.xml"
+        invoke="updateHelp" auth="true">
+        <description>Update the system help</description>
+        <attribute name="app" type="String" mode="IN"/>
+        <attribute name="function" type="String"/>
+        <attribute name="tab" type="String"/>
+        <attribute name="textData" type="String" mode="IN"/>
+    </service>
+
+    <!-- UserLogin to SecurityGroup services -->
+    <service name="otsAddUserLoginToSecurityGroup" engine="simple" location="org/ofbiz/opentravelsystem/GeneralServices.xml" invoke="addUserLoginToSecurityGroup" auth="true">
+        <description>Add a UserLogin to a SecurityGroup</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
+        <attribute name="groupId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="otsUpdateUserLoginToSecurityGroup" engine="simple" location="org/ofbiz/opentravelsystem/GeneralServices.xml" invoke="updateUserLoginToSecurityGroup" auth="true">
+        <description>Update a UserLogin to SecurityGroup Appl</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
+        <attribute name="groupId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="otsRemoveUserLoginFromSecurityGroup" engine="simple" location="org/ofbiz/opentravelsystem/GeneralServices.xml" invoke="removeUserLoginFromSecurityGroup" auth="true">
+        <description>Remove a UserLogin from a SecurityGroup</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
+        <attribute name="groupId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 </services>

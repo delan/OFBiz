@@ -106,6 +106,12 @@
 
     <screen name="CommonPartyDecorator">
         <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="OPENTRAVELSYSTEM" action="_R"/>
+                    <if-has-permission permission="${parameters.organizationPartyId}" action="_R"/>                    
+                </or>
+            </condition>
             <actions>
                 <set field="appTabButtonItem" value="Parties"/>
             </actions>
@@ -148,10 +154,41 @@
                     </decorator-section>
                 </decorator-screen>
             </widgets>
+            <fail-widgets>
+                <container style="contentarea">
+                    <label text="Security Error: you need at least readaccess to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+                <link text="click here to to to the main screen" target="main"/>
+                </container>
+            </fail-widgets>
         </section>
     </screen>
     
-    <screen name="ReservationsDecorator">
+    <screen name="SecurityGroupDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="security"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="SECURITY" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.PartySecurityViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+       <screen name="ReservationsDecorator">
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Reservations"/>
@@ -399,5 +436,6 @@
             </widgets>
         </section>
     </screen>
+
     
  </screens>

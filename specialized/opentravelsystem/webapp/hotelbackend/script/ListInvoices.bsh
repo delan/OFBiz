@@ -50,7 +50,7 @@ BigDecimal totalValueTot = new BigDecimal("0");
 List invoiceList = new LinkedList();
 
 
-/*
+
 // check companies who have invoices from/to thye organizationParty but no relation
 
 parties = delegator.findAll("Party");
@@ -65,7 +65,7 @@ while (p.hasNext())	{
 		if (invoices != null  && invoices.size() != 0) Debug.logInfo("!!!!!!!!!!(party)" + party.getString("partyId") + " InvoiceId:" + invoices.get(0).getString("invoiceId"),"???????");
 	}
 }
-*/
+
 companies = delegator.findByAnd("PartyRelationshipAndPartyDetail",UtilMisc.toMap("partyIdFrom",organizationPartyId));
 Iterator comp = companies.iterator();
 while (comp.hasNext())	{
@@ -137,17 +137,18 @@ while (comp.hasNext())	{
 				MiscIn = MiscIn.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
 				MiscInTot = MiscInTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
 			}
-			 else	{	Debug.logInfo(" not registered payment: " + invoiceItem.getString("invoiceItemTypeId"),"????????"); }
+			 else	{	Debug.logInfo(" not registered payment: " + 
+			 					invoiceItem.getString("invoiceItemTypeId") + "Id:" + invoiceItem.getString("invoiceId") +"/" + invoiceItem.getString("invoiceItemSeqId"),"??"); }
 		}
 	}
 			
-	Map listItem = UtilMisc.toMap("company",partyId,"name", name, "salesTaxIn",salesTaxIn,"salesTaxOut",salesTaxOut);
-	listItem.put("expenses", expenses);
-	listItem.put("revenue", revenue);
-	listItem.put("miscIn", MiscIn);
-	listItem.put("miscOut", MiscOut);
+	Map listItem = UtilMisc.toMap("company",partyId,"name", name, "salesTaxIn",salesTaxIn.toString(),"salesTaxOut",salesTaxOut.toString());
+	listItem.put("expenses", expenses.toString());
+	listItem.put("revenue", revenue.toString());
+	listItem.put("miscIn", MiscIn.toString());
+	listItem.put("miscOut", MiscOut.toString());
 	BigDecimal totalValue = salesTaxIn.add(salesTaxOut).add(revenue).add(expenses).add(MiscOut).add(MiscIn);
-	listItem.put("totalValue", totalValue);
+	listItem.put("totalValue", totalValue.toString());
 	invoiceList.add(listItem);
 }
 
@@ -171,7 +172,8 @@ ii = delegator.findAll("InvoiceItem");
 		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue; // ignore cancelled items
 		if (!invoice.getString("partyIdFrom").equals(organizationPartyId) &&
 					!invoice.getString("partyId").equals(organizationPartyId)) continue; // only items from organization party id
-		generalTotal = generalTotal.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+		if (invoiceItem.getBigDecimal("amount") != null)
+			generalTotal = generalTotal.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
 	}
 Map listItem = UtilMisc.toMap("company","GeneralTotal","totalValue", generalTotal);
 invoiceList.add(listItem);

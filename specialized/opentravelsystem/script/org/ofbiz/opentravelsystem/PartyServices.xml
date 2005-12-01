@@ -31,13 +31,13 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="addParty" short-description="--Add a Party--">
-        <!--check-permission permission="CATALOG" action="_CREATE">
-            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
-        <check-errors/-->
-            
-        <if-empty field-name="parameters.name">
+        <check-errors/>
+        
+        <if-empty field-name="parameters.groupName">
             <add-error>
                 <fail-message message="Name of the new party is missing"/>
             </add-error>
@@ -45,7 +45,7 @@
         <check-errors/>
 
         <!-- partygroup -->
-        <set field="createPartyGroup.groupName" from-field="parameters.name"/>
+        <set field="createPartyGroup.groupName" from-field="parameters.groupName"/>
         <call-service service-name="createPartyGroup" in-map-name="createPartyGroup">
             <result-to-field result-name="partyId" field-name="partyId"/>
         </call-service>    
@@ -114,11 +114,11 @@
     </simple-method>
     
     <simple-method method-name="updateParty" short-description="--Update an existingParty--">
-        <!--check-permission permission="CATALOG" action="_CREATE">
-            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
-        <check-errors/-->
+        <check-errors/>
         
         <!-- get the partygroup -->
         <entity-one entity-name="PartyGroup" value-name="partyGroup">
@@ -280,13 +280,13 @@
         
     </simple-method>
 
-    <simple-method method-name="getParty" short-description="--retrive Party Information--">
-        <!--check-permission permission="CATALOG" action="_CREATE">
-            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+    <simple-method method-name="getParty" short-description="--retrieve Party Information--">
+        <check-permission permission="OPENTRAVELSYSTEM" action="_R">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_R"/>
+            <fail-message message="Security Error: to update you need R access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
-        <check-errors/-->
-
+        <check-errors/>
+        
         <if-empty field-name="parameters.partyId">
             <return/>
         </if-empty>
@@ -372,11 +372,11 @@
     </simple-method>
     
     <simple-method method-name="setStatusParty" short-description="--unDelete a Party--">
-        <!--check-permission permission="CATALOG" action="_CREATE">
-            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
-        <check-errors/-->
+        <check-errors/>
         
         <entity-and entity-name="PartyRelationship" list-name="relations">
             <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
@@ -392,13 +392,12 @@
     </simple-method>
 
     <simple-method method-name="updatePostalAddress" short-description="--add/update a postal address for a party--">
-        <!--check-permission permission="CATALOG" action="_CREATE">
-            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
-        <check-errors/-->
-
-
+        <check-errors/>
+        
         <!-- check input -->        
         <if-empty field-name="parameters.countryGeoId"><!-- get countryGeoId from organizationparty if empty -->
             <entity-and entity-name="PartyAndPostalAddress" list-name="orgAddressesU">
@@ -468,12 +467,12 @@
     </simple-method>
     
     <simple-method method-name="getPostalAddress" short-description="--get postal address for a party--">
-        <!--check-permission permission="CATALOG" action="_CREATE">
-            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        <check-permission permission="OPENTRAVELSYSTEM" action="_R">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_R"/>
+            <fail-message message="Security Error: to update you need R access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
-        <check-errors/-->
-
+        <check-errors/>
+        
         <!-- get the postal address defined as GENERAL LOCATION -->
         <entity-and entity-name="PartyContactMechPurpose" list-name="addressesU">
             <field-map field-name="partyId" value="${parameters.partyId}"/>

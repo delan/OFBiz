@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+
+    <!-- security -->
+    <SecurityPermissions permissionId="OPENTRAVELSYSTEM_R"/>
+    <SecurityPermissions permissionId="OPENTRAVELSYSTEM_RW"/>
+    <SecurityGroup groupId="OPENTRAVELSYSTEM" description="access to all the opentravelsystem data of shops/hotels"/>
+    <SecurityGroupPermission groupId="OPENTRAVELSYSTEM" permissionId="OPENTRAVELSYSTEM_R"/>
+    <SecurityGroupPermission groupId="OPENTRAVELSYSTEM" permissionId="OPENTRAVELSYSTEM_RW"/>
+    <SecurityGroup groupId="OPENTRAVELSYSTEM_R" description="read accesss to all the opentravelsystem data of shops/hotels"/>
+    <SecurityGroupPermission groupId="OPENTRAVELSYSTEM_R" permissionId="OPENTRAVELSYSTEM_R"/>
+    <UserLoginSecurityGroup userLoginId="admin" groupId="OPENTRAVELSYSTEM" fromDate="2005-11-30 10:57:12.826"/>
+    <UserLoginSecurityGroup userLoginId="demoadmin" groupId="OPENTRAVELSYSTEM_R" fromDate="2005-11-30 10:57:12.826"/>
+    
+    <!-- party manager data -->
     <StatusType statusTypeId="PARTY-RELATION" hasTable="N" description="Party relation status"/>
     <StatusItem statusId="PARTYREL-DELETED" statusTypeId="PARTY-RELATION" description="deleted"/>
     <StatusItem statusId="PARTYREL-ACTIVE" statusTypeId="PARTY-RELATION" description="active"/>
+
+    <!-- first initial screen for the help system -->
+    <DataResource dataResourceId="helpIndex" dataTemplateTypeId="NONE" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html"/>
+    <ElectronicText dataResourceId="helpIndex" textData="&lt;center&gt;&lt;h1&gt; no help text loaded &lt;/h1&gt;&lt;/center&gt;"/>
+    <Content contentId="helpIndex" contentTypeId="DOCUMENT" dataResourceId="helpIndex"/>
+
+    <DataResource dataResourceId="helpIndexFtl" dataTemplateTypeId="FTL" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html"/>
+    <ElectronicText dataResourceId="helpIndexFtl" textData="&lt;center&gt;&lt;h3&gt; ${parameters} &lt;/h3&gt;&lt;/center&gt;"/>
+    <DataResource dataResourceId="helpIndexData" dataTemplateTypeId="NONE" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html"/>
+    <ElectronicText dataResourceId="helpIndexData" textData="&lt;txt&gt;This is the text only&lt;/txt&gt;"/>
+    <Content contentId="helpIndexTemplate" contentTypeId="DOCUMENT" dataResourceId="helpIndexData" templateDataResourceId="helpIndexFtl"/>
+    
 </entity-engine-xml>
     

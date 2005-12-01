@@ -42,34 +42,19 @@
    
     <!-- data resources for initial data -->
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/hotelfrontend/data/HotelDemoStore.xml"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HaagscheSuites/data/HaagscheSuites.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HotelSimple/data/HotelSimple.xml"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="webapp/anet/data/anet.xml"/>
-    <entity-resource type="data" reader-name="seed" loader="main" location="webapp/data/BackendData.xml"/>
+    <!--entity-resource type="data" reader-name="demo" loader="main" location="webapp/anet/data/anet.xml"/-->
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/BackendData.xml"/>
     
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 
-    <!--webapp name="OpenTravelSystemWebsite"
-        title="Open Travel System Website"
-        server="default-server"
-        location="webapp/website"
-        mount-point="/opentravelsystem"
-        app-bar-display="false"/-->
-       
     <webapp name="hotelbackend"
-        title="Hotel demo site Admininstrator backend"
+        title="Hotel demo site Admininstrator backend, the same for all frontends"
         server="default-server"
         location="webapp/hotelbackend"
         mount-point="/hotelbackend"
         app-bar-display="false"/>
-
-    <webapp name="hotelbackendimages"
-        title="Hotel Demo Backend Images directory"
-        server="default-server"
-        location="webapp/hotelbackend/images"
-        mount-point="/hotelbackendimages"
-        app-bar-display="false"/>        
 
     <webapp name="hotelfrontend"
         title="Hotel Demo Basis Website Site"
@@ -78,20 +63,13 @@
         mount-point="/hotelfrontend"
         app-bar-display="false"/>        
     
-    <webapp name="hotelfrontendimages"
-        title="Hotel Demo Backend Images directory"
+    <webapp name="hotelfrontendImages"
+        title="Hotel Demo images directory"
         server="default-server"
-        location="webapp/hotelfrontend/images"
+        location="webapp/hotelfrontend/hotelfrontendimages"
         mount-point="/hotelfrontendimages"
         app-bar-display="false"/>        
-        
-    <!--webapp name="HaagscheSuites"
-        title="Haagsche Suites"
-        server="default-server"
-        location="webapp/HaagscheSuites"
-        mount-point="/HaagscheSuites"
-        app-bar-display="false"/-->        
-        
+    
     <webapp name="HotelSimple"
         title="Hotel simplest, links in the site should open new window"
         server="default-server"
@@ -99,11 +77,11 @@
         mount-point="/HotelSimple"
         app-bar-display="false"/>        
 
-    <webapp name="anet"
+    <!--webapp name="anet"
         title="A-NeT Internet Services"
         server="default-server"
         location="webapp/anet"
         mount-point="/anet"
-        app-bar-display="false"/>        
+        app-bar-display="false"/-->        
 </ofbiz-component>
 
