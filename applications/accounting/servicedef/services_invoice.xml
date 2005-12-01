@@ -12,6 +12,14 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
+    
+    <service name="getNextInvoiceId" engine="simple"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="getNextInvoiceId">
+        <description>Get the Next Invoice ID According to Settings on the PartyAcctgPreference Entity for the given Party</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
     <!-- Invoice services -->
     <service name="createInvoice" engine="simple" default-entity-name="Invoice"
             location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
@@ -78,5 +86,4 @@
         <description>Checks to see if the payments applied to an invoice total up to the invoice total; if so sets to PAID</description>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
     </service>
-
 </services>
