@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Copyright (c) 2001-2005 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
+ * @version 1.0
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+
+    <!-- ================================================================ -->
+    <!-- Opentravelsystem Party Services -->
+    <!-- ================================================================ -->
+    
+    <simple-method method-name="help" short-description="--provide help information to the user--" login-required="false">
+
+        <set field="param.contentId" value="help"/>
+        <string-append field-name="param.contentId" string="${parameters.app}"/>
+        <string-append field-name="param.contentId" string="${parameters.function}"/>
+        <string-append field-name="paramcontentId" string="${parameters.tab}"/>
+        <call-service service-name="getContent" in-map-name="param">
+            <result-to-field result-name="view" field-name="contentView"/>
+        </call-service>
+        
+        <if-empty field-name="contentView">
+            <!-- not found so show help index (should be loaded from data file)-->
+            <set field="param.contentId" value="helpIndex"/>
+            <call-service service-name="getContent" in-map-name="param">
+                <result-to-field result-name="view" field-name="contentView"/>
+            </call-service>
+            <set field="message" value="No information found, displaying the help index..."/>
+        </if-empty>        
+        <field-to-result field-name="contentView.dataResourceId" result-name="dataResourceId"/>        
+        <field-to-result field-name="param.contentId" result-name="contentId"/>
+        
+    </simple-method>
+    <simple-method method-name="editHelp" short-description="--update the help screens--" login-required="true">
+        <set field="param.contentId" value="help"/>
+        <string-append field-name="param.contentId" string="${parameters.app}"/>
+        <string-append field-name="param.contentId" string="${parameters.function}"/>
+        <string-append field-name="paramcontentId" string="${parameters.tab}"/>
+        <call-service service-name="getContent" in-map-name="param">
+            <result-to-field result-name="view" field-name="contentView"/>
+        </call-service>
+        
+        <if-empty field-name="contentView">
+            <!-- content does not exist yet so create -->
+            
+            
+            
+        </if-empty>
+            
+        
+    </simple-method>  
+    
+    <!-- update local security, access to the organization party id -->
+    <simple-method method-name="addUserLoginToSecurityGroup" short-description="--add a user to a security group--" login-required="true">
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+        </check-permission>
+        <check-errors/>
+        <set-service-fields service-name="addUserLoginToSecurityGroup" map-name="parameters" to-map-name="p"/>
+        <call-service service-name="addUserLoginToSecurityGroup" in-map-name="p"/>
+    </simple-method>  
+
+    <simple-method method-name="updateUserLoginToSecurityGroup" short-description="--update a user to a security group--" login-required="true">
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+        </check-permission>        
+        <check-errors/>
+        <set-service-fields service-name="updateUserLoginToSecurityGroup" map-name="parameters" to-map-name="p"/>
+        <call-service service-name="updateUserLoginToSecurityGroup" in-map-name="p">
+        </call-service>        
+    </simple-method>  
+
+    <simple-method method-name="removeUserLoginFromSecurityGroup" short-description="--remove a user to a security group--" login-required="true">
+        <env-to-field env-name="screen" field-name="organizationPartyId"/>
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+        </check-permission>        
+        <check-errors/>
+        <set-service-fields service-name="removeUserLoginFromSecurityGroup" map-name="parameters" to-map-name="p"/>
+        <call-service service-name="removeUserLoginFromSecurityGroup" in-map-name="p">
+        </call-service>        
+    </simple-method>  
+    
+          
+    
+</simple-methods>

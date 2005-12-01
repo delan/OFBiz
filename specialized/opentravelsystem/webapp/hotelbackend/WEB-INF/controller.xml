@@ -60,6 +60,29 @@
         <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
+    <request-map uri="security">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditSecurityGroupUserLogins"/>
+    </request-map>
+    <request-map uri="addUserLoginToSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="otsAddUserLoginToSecurityGroup"/>
+        <response name="success" type="view" value="EditSecurityGroupUserLogins"/>
+        <response name="error" type="view" value="EditSecurityGroupUserLogins"/>
+    </request-map>
+    <request-map uri="updateUserLoginToSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="otsUpdateUserLoginToSecurityGroup"/>
+        <response name="success" type="view" value="EditSecurityGroupUserLogins"/>
+        <response name="error" type="view" value="EditSecurityGroupUserLogins"/>
+    </request-map>
+    <request-map uri="removeUserLoginFromSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="otsRemoveUserLoginFromSecurityGroup"/>
+        <response name="success" type="view" value="EditSecurityGroupUserLogins"/>
+        <response name="error" type="view" value="EditSecurityGroupUserLogins"/>
+    </request-map>
+    
     <request-map uri="checkProductStore" edit="false">
         <description>Check if a valid product store is selected.</description>
         <security https="true" auth="true"/>
@@ -139,12 +162,40 @@
         <response name="success" type="view" value="mainSettings"/>
         <response name="error" type="view" value="mainSettings"/>
     </request-map>
+    
+    <!-- help system -->
+    <request-map uri="help">
+        <security https="false" auth="false"/>
+        <event type="service" invoke="otsHelp"/>
+        <response name="success" type="view" value="help"/>
+        <response name="error" type="view" value="help"/>
+    </request-map>
+    
+    <request-map uri="editHelp">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditElectronicText"/>
+        <response name="error" type="view" value="EditElectronicText"/>
+    </request-map>
 
+    <request-map uri="updateElectronicText">
+        <security auth="true" https="true"/>
+        <event invoke="updateElectronicText" type="service"/>
+        <response name="success" type="view" value="help"/>
+        <response name="error" type="view" value="EditElectronicText"/>
+    </request-map>
+    
+    <!--request-map uri="updateHelp">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateHelp"/>
+        <response name="success" type="view" value="help"/>
+        <response name="error" type="view" value="help"/>
+    </request-map-->
+    
     <!-- Request Mappings -->
     <request-map uri="view">
         <security https="true" auth="false"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="error"/>
+        <response name="success" type="view" value="help"/>
+        <response name="error" type="view" value="editHelp"/>
     </request-map>
 
     <request-map uri="setSessionLocale">
@@ -2756,9 +2807,11 @@
         <response name="success" type="view" value="AccountingReports"/>
     </request-map>  
     
-    <request-map uri="VatReport.pdf">
+    <request-map uri="VatReport">
         <security https="true" auth="true"/>
+        <event type="service" invoke="otsVatReport"/>
         <response name="success" type="view" value="VatReport"/>
+        <response name="error" type="view" value="VatReport"/>
     </request-map>
     <!-- from the accounting component -->    
     <request-map uri="IncomeStatement">
@@ -2941,6 +2994,9 @@
     <view-map name="setStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#setStore"/>
     <view-map name="noAccess" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#noAccess"/>
     <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
+    <view-map name="help" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#help"/>
+    <view-map name="EditElectronicText"  page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditElectronicText" type="screen"/>
+    <view-map name="EditSecurityGroupUserLogins" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#EditSecurityGroupUserLogins"/>
     <!-- Accounting screens-->
     <view-map name="mainAccounting" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#main"/>
     <!-- Catalog screens-->
@@ -3097,7 +3153,7 @@
     <!--view-map name="DataExchange" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#DataExchange"/-->
     <!-- accounting reports -->
     <view-map name="AccountingReports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#reports"/>
-    <view-map name="VatReport" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#VatReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="VatReport" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#VatReport"/>
     <view-map name="IncomeStatement" type="screen" page="component://accountingext/widget/AccountingScreens.xml#IncomeStatement"/>
     <view-map name="BalanceSheet" type="screen" page="component://accountingext/widget/AccountingScreens.xml#BalanceSheet"/>
     <view-map name="TrialBalance" type="screen" page="component://accountingext/widget/AccountingScreens.xml#TrialBalance"/>

@@ -30,6 +30,7 @@
         <menu-item name="Find" title="Find"><link target="findParties"/></menu-item>
         <menu-item name="New" title="New"><link target="editParty"/></menu-item>
         <menu-item name="Disabled" title="Disabled Parties"><link target="findParties?statusId=PARTYREL-DELETED"/></menu-item>
+        <menu-item name="Security" title="Security"><link target="security"/></menu-item>
         <!--menu-item name="DataSource" title="${uiLabelMap.DataSource}"><link target="FindDataSource"/></menu-item>
         <menu-item name="Campaign" title="${uiLabelMap.MarketingCampaign}"><link target="FindMarketingCampaign"/></menu-item>
         <menu-item name="Tracking" title="${uiLabelMap.Tracking}"><link target="FindTrackingCode"/></menu-item>
@@ -44,7 +45,7 @@
             <condition><if-empty field-name="requestAttributes.userLogin"/></condition>
             <link target="${requestAttributes.checkLoginUrl}"/>
         </menu-item-->
-        <menu-item name="Help" title="Help" align-style="col-right"><link target="help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}" target-window="new"/></menu-item>
+        <menu-item name="Help" title="Help" align-style="col-right"><link target="javascript:getHelpWindow('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}')" url-mode="plain"/></menu-item>
     </menu>
     
     <menu name="PartyTabBar" default-menu-item-name="EditParty" default-selected-style="tabButtonSelected" 
@@ -56,6 +57,9 @@
         <menu-item name="FinHistory" title="Fin.History">
             <link target="partyFinancialHistory?partyId=${partyId}"/>
         </menu-item>
+        <!--menu-item name="Visits" title="Visits">
+            <link target="showvisits?partyId=${partyId}"/>
+        </menu-item-->
         <!--menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
             <link target="EditPartyRelationships?partyId=${partyId}"/>
         </menu-item-->

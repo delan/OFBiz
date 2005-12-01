@@ -105,7 +105,7 @@
     <screen name="login">
         <section>
             <actions>
-                <set field="page.appTabButtonItem" value="Login"/>
+                <set field="page.appTabButtonItem" value="login"/>
                 <set field="page.headerItem" value="main"/>
             </actions>
             <widgets>
@@ -121,4 +121,68 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="help">
+        <section>
+            <actions>
+                <set field="parameters.popup" value="Y"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="contentarea">
+                            <container style="${MainColumnStyle}">
+                                <!--platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific-->
+                                <link target="javascript:close()" text="close this screen" url-mode="plain"/>
+                                <content content-id="${parameters.contentId}"/>
+                                <link target="editHelp?dataResourceId=${parameters.dataResourceId}&amp;contentId=${parameters.contentId}" text="update this help screen"/>
+                                <!--content content-id="helpIndexTemplate"/-->
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditSecurityGroupUserLogins">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditSecurityGroupUserLogins"/>
+                <set field="tabButtonItem" value="Security"/>
+                <set field="labelTitleProperty" value="PartyUserLoginsForSecurityGroup"/>
+                
+                <set field="groupId" from-field="parameters.organizationPartyId"/>
+                <entity-one entity-name="SecurityGroup" value-name="securityGroup"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SecurityGroupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <actions>
+                                <set field="groupId" from-field="parameters.organizationPartyId"/>
+                            </actions>
+                            <widgets>
+                                <label style="head1" text="Users with Read/Write access"/>
+                                <include-form name="ListSecurityGroupUserLogins" location="component://opentravelsystem/webapp/hotelbackend/screens/MainForms.xml"/>
+                                <container><label style="head2" text="${uiLabelMap.PartyAddUserLoginToSecurityGroup}"/></container>
+                                <include-form name="AddSecurityGroupUserLogin" location="component://opentravelsystem/webapp/hotelbackend/screens/MainForms.xml"/>
+                            </widgets>
+                        </section>
+                        <section>
+                            <actions>
+                                <set field="groupId" value="${parameters.organizationPartyId}_R"/>
+                            </actions>
+                            <widgets>
+                                <label style="head1" text="Users with Read access"/>
+                                <include-form name="ListSecurityGroupUserLogins1"  location="component://opentravelsystem/webapp/hotelbackend/screens/MainForms.xml"/>
+                                <container><label style="head2" text="${uiLabelMap.PartyAddUserLoginToSecurityGroup}"/></container>
+                                <include-form name="AddSecurityGroupUserLogin1" location="component://opentravelsystem/webapp/hotelbackend/screens/MainForms.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

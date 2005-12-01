@@ -57,8 +57,7 @@
             <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
         </field>
         <field name="Disable" title=" " widget-style="buttontext">
-            <hyperlink description="Delete" target-type="plain" target="javascript:if(confirmDelete('You want to delete this party?'))location.replace(&apos;deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-DELETED&apos;)"/>
-        </field>
+            <hyperlink description="Delete" target-type="plain" target="javascript:confirmActionLink('You want to delete this party?','deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-DELETED')"/>        </field>
     </form>
     
     <form name="editParty" type="single" 
