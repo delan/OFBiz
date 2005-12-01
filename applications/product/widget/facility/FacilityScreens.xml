@@ -567,8 +567,8 @@
 
                 <!-- get the default facility Uom -->
                 <entity-one entity-name="Facility" value-name="facility"/>
-                <entity-one entity-name="Uom" value-name="defaultUom" use-cache="true" auto-field-map="false">
-                    <field-map env-name="facility.defaultUomId" field-name="uomId"/>
+                <entity-one entity-name="Uom" value-name="defaultWeightUom" use-cache="true" auto-field-map="false">
+                    <field-map env-name="facility.defaultWeightUomId" field-name="uomId"/>
                 </entity-one>
             </actions>
             <widgets>
