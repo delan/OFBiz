@@ -116,7 +116,7 @@
         <field name="billingWeight" title="${uiLabelMap.CommonWeight}"><text size="10"/></field>
         <field name="billingWeightUomId"  title="${uiLabelMap.ProductWeightUomId}">
             <drop-down allow-empty="false">
-                <option key="${defaultUom.uomId}" description="${defaultUom.description}"/>
+                <option key="${defaultWeightUom.uomId}" description="${defaultWeightUom.description}"/>
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="WEIGHT_MEASURE"/>
                 </entity-options>
