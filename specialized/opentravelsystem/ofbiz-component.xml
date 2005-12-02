@@ -41,10 +41,11 @@
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
    
     <!-- data resources for initial data -->
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/BackendData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/hotelfrontend/data/HotelDemoStore.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HotelSimple/data/HotelSimple.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="webapp/shop/data/ShopData.xml"/>
     <!--entity-resource type="data" reader-name="demo" loader="main" location="webapp/anet/data/anet.xml"/-->
-    <entity-resource type="data" reader-name="seed" loader="main" location="data/BackendData.xml"/>
     
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
@@ -77,6 +78,13 @@
         mount-point="/HotelSimple"
         app-bar-display="false"/>        
 
+    <webapp name="Shop"
+        title="Small shop"
+        server="default-server"
+        location="webapp/shop"
+        mount-point="/shop"
+        app-bar-display="false"/>        
+    
     <!--webapp name="anet"
         title="A-NeT Internet Services"
         server="default-server"

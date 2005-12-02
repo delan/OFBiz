@@ -2,8 +2,8 @@
 <entity-engine-xml>
 
     <!-- security -->
-    <SecurityPermissions permissionId="OPENTRAVELSYSTEM_R"/>
-    <SecurityPermissions permissionId="OPENTRAVELSYSTEM_RW"/>
+    <SecurityPermission permissionId="OPENTRAVELSYSTEM_R"/>
+    <SecurityPermission permissionId="OPENTRAVELSYSTEM_RW"/>
     <SecurityGroup groupId="OPENTRAVELSYSTEM" description="access to all the opentravelsystem data of shops/hotels"/>
     <SecurityGroupPermission groupId="OPENTRAVELSYSTEM" permissionId="OPENTRAVELSYSTEM_R"/>
     <SecurityGroupPermission groupId="OPENTRAVELSYSTEM" permissionId="OPENTRAVELSYSTEM_RW"/>
