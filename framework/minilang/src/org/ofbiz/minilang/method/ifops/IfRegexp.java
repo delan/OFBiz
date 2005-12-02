@@ -29,6 +29,7 @@ import org.apache.oro.text.regex.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.minilang.*;
 import org.ofbiz.minilang.method.*;
 
@@ -52,20 +53,14 @@ public class IfRegexp extends MethodOperation {
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
 
-    Pattern pattern = null;
-    String expr;
+    FlexibleStringExpander exprExdr;
 
     public IfRegexp(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         this.mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         this.fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
-        this.expr = element.getAttribute("expr");
-        try {
-            pattern = compiler.compile(expr);
-        } catch (MalformedPatternException e) {
-            Debug.logError(e, module);
-        }
+        this.exprExdr = new FlexibleStringExpander(element.getAttribute("expr"));
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
 
@@ -105,6 +100,13 @@ public class IfRegexp extends MethodOperation {
         }
         // always use an empty string by default
         if (fieldString == null) fieldString = "";
+
+        Pattern pattern = null;
+        try {
+            pattern = compiler.compile(methodContext.expandString(this.exprExdr));
+        } catch (MalformedPatternException e) {
+            Debug.logError(e, "Regular Expression [" + this.exprExdr + "] is mal-formed: " + e.toString(), module);
+        }
 
         if (matcher.matches(fieldString, pattern)) {
             return SimpleMethod.runSubOps(subOps, methodContext);
