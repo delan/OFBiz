@@ -10,8 +10,7 @@
         </actions>
         <!--field name="statusId"><hidden value="PARTYREL-ACTIVE"/></field-->
         <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="partyIdFrom"><hidden value="${organizationPartyId}"/></field>
-        <field name="partyId" ><text-find/></field>
+        <field name="partyIdTo" title="Party Id" ><text-find/></field>
         <field name="groupName"><text-find/></field>
         <field name="lastName" ><text-find/></field>
         <field name="partyRelationshipTypeId">
@@ -41,6 +40,7 @@
         default-widget-style="tabletext" default-tooltip-style="tabletext"
         paginate-target="findParties" list-iterator-name="listIt" default-entity-name="PartyRelationshipAndPartyDetail">
         <actions>
+            <set field="parameters.partyIdFrom" from-field="parameters.organizationPartyId"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="PartyRelationshipAndPartyDetail"/>
@@ -57,7 +57,33 @@
             <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
         </field>
         <field name="Disable" title=" " widget-style="buttontext">
-            <hyperlink description="Delete" target-type="plain" target="javascript:confirmActionLink('You want to delete this party?','deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-DELETED')"/>        </field>
+            <hyperlink description="Delete" target-type="plain" target="javascript:confirmActionLink('You want to delete this party?','deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-DELETED')"/>
+        </field>
+    </form>
+    <form name="ListParties1" type="list" separate-columns="true" 
+        title="Party List"  default-title-style="tableheadtext"
+        default-widget-style="tabletext" default-tooltip-style="tabletext"
+        paginate-target="findParties" list-iterator-name="listIt" default-entity-name="PartyRelationshipAndPartyDetail">
+        <actions>
+            <set field="parameters.partyIdFrom" from-field="parameters.organizationPartyId"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="PartyRelationshipAndPartyDetail"/>
+                <field-map field-name="orderBy" value="groupName"/>
+            </service>
+        </actions>
+        <field name="partyId" widget-style="buttontext" >
+            <hyperlink description="${partyId}" target="editParty?partyId=${partyId}"/>
+        </field>
+        <field name="statusId"><display-entity entity-name="StatusItem"/></field>
+        <field name="partyRelationshipTypeId" title="Relation"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
+        <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
+        <field name="financialHistory" title=" " widget-style="buttontext" >
+            <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
+        </field>
+        <field name="Enable" title=" " widget-style="buttontext">
+            <hyperlink description="Enable" target-type="plain" target="javascript:confirmActionLink('You want to Enable this party?','deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-ACTIVE')"/>
+        </field>
     </form>
     
     <form name="editParty" type="single" 

@@ -25,16 +25,16 @@
 
 <web-app>
     <display-name>Open For Business - demostore</display-name>
-    <description>Demo Store for the Open For Business Project</description>
+    <description>Demo Shop for the Open For Business Project</description>
 
     <context-param>
         <param-name>webSiteId</param-name>
-        <param-value>HotelDemoStore</param-value>
-    <description>A unique ID used to look up the WebSite entity to get information about catalogs, etc.</description>
+        <param-value>Shop</param-value>
+        <description>A unique ID used to look up the WebSite entity to get information about catalogs, etc.</description>
     </context-param>
     <context-param>
         <param-name>localDispatcherName</param-name>
-        <param-value>ecommerce</param-value>
+        <param-value>shop</param-value>
         <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
     </context-param>
     <context-param>
@@ -49,7 +49,7 @@
     </context-param>
     <context-param>
         <param-name>mainDecoratorLocation</param-name>
-        <param-value>component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml</param-value>
+        <param-value>component://opentravelsystem/webapp/shop/screens/CommonScreens.xml</param-value>
         <description>The location of the main-decorator screen to use for this webapp; referred to as a context variable in screen def XML files.</description>
     </context-param>
     
@@ -63,7 +63,7 @@
         </init-param>
         <init-param>
             <param-name>allowedPaths</param-name>
-            <param-value>/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/includes/maincss.css:/hotelfrontendimages</param-value>
+            <param-value>/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/html</param-value>
         </init-param>
         <init-param>
             <param-name>errorCode</param-name>

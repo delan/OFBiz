@@ -93,6 +93,14 @@
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
     </service>
     
+    <service name="otsCreatePartyRelationship" engine="simple"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="createPartyRelationship" auth="true">
+        <description>set the relationship between the party and the organizationParty</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
+    </service>
+    
     <service name="otsUpdatePostalAddress" engine="simple"
         location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="updatePostalAddress" auth="true">
         <description>Add or Update a GeneralLocation postal address</description>
@@ -144,9 +152,9 @@
         location="org/ofbiz/opentravelsystem/GeneralServices.xml"
         invoke="help" auth="false">
         <description>Provide the user with information about a certain part of the system</description>
-        <attribute name="app" type="String" mode="IN" optional="true"/>/>
-        <attribute name="function" type="String" mode="IN" optional="true"/>/>
-        <attribute name="tab" type="String" mode="IN" optional="true"/>/>
+        <attribute name="app" type="String" mode="IN" optional="true"/>
+        <attribute name="function" type="String" mode="IN" optional="true"/>
+        <attribute name="tab" type="String" mode="IN" optional="true"/>
         <attribute name="contentId" type="String" mode="OUT" optional="true"/>
         <attribute name="dataResourceId" type="String" mode="OUT" optional="true"/>
     </service>
@@ -156,8 +164,8 @@
         invoke="updateHelp" auth="true">
         <description>Update the system help</description>
         <attribute name="app" type="String" mode="IN"/>
-        <attribute name="function" type="String"/>
-        <attribute name="tab" type="String"/>
+        <attribute name="function" type="String" mode="IN"/>
+        <attribute name="tab" type="String" mode="IN"/>
         <attribute name="textData" type="String" mode="IN"/>
     </service>
 

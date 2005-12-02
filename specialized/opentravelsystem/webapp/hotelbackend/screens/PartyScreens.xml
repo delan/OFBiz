@@ -38,7 +38,17 @@
                     <decorator-section name="body">
                         <container><label style="head1" text="Find Parties"/></container>
                         <include-form name="FindParties" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
-                        <include-form name="ListParties" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <section>
+                            <condition>
+                                <if-compare field-name="parameters.statusId" operator="equals" value="PARTYREL-ACTIVE"/>
+                            </condition>
+                            <widgets>
+                                <include-form name="ListParties" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-form name="ListParties1" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -23,7 +23,7 @@
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
-    <description>OFBiz: eCommerce Controller Configuration File</description>
+    <description>OFBiz: OpenTravelSystem eCommerce Controller Configuration File</description>
     <owner>The Open For Business Project Copyright (c) 2001-2005</owner>
     <errorpage>/error/error.jsp</errorpage>
 
@@ -121,13 +121,9 @@
 
     <request-map uri="main">
         <security https="false" auth="false"/>
-        <response name="success" type="view" value="startup"/>
-    </request-map>
-
-    <request-map uri="book">
         <response name="success" type="view" value="main"/>
     </request-map>
-    
+
     <request-map uri="passwordemail">
         <security https="false" auth="false"/>
         <response name="success" type="view" value="passwordemail"/>
@@ -312,7 +308,7 @@
     </request-map>
     <request-map uri="setBasicInfo">
         <security https="true" auth="false"/>
-        <event type="simple" path="org/ofbiz/order/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <event type="simple" path="org/ofbiz/opentravelsystem/customer/CustomerEvents.xml" invoke="createCustomer"/>
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="custsetting"/>
     </request-map>
@@ -714,7 +710,7 @@
     </request-map>
     <request-map uri="createcustomer">
         <security https="true" auth="false"/>
-        <event type="simple" path="org/ofbiz/ecommerce/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <event type="simple" path="org/ofbiz/opentravelsystem/customer/CustomerEvents.xml" invoke="createCustomer"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
@@ -1196,14 +1192,11 @@
 
     <!-- End of Request Mappings -->
 
-    <!--  hotel frontend specific screens -->
-    <view-map name="startup" type="screen" page="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml#startup"/>
-    
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="screen" page="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml#main"/>
-    <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml#login"/>
-    
+    <view-map name="main" type="screen" page="component://opentravelsystem/webapp/shop/screens/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://ecommerce/widget/CommonScreens.xml#login"/>
+
     <!-- Cart Views -->
     <view-map name="editShoppingList" type="screen" page="component://ecommerce/widget/ShoppingListScreens.xml#editShoppingList"/>
     <view-map name="showcart" type="screen" page="component://ecommerce/widget/CartScreens.xml#showcart"/>
