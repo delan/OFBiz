@@ -123,18 +123,19 @@
         </call-service>
 
         <entity-one entity-name="WorkEffort" value-name="task"/>
-        <get-related-one value-name="task" relation-name="FixedAsset" to-value-name="fixedAsset"/>
-        <set from-field="parameters.currencyUomId" field="costsAndMap.amountUomId"/>
-        <set value="SETUP_COST" field="costsAndMap.fixedAssetStdCostTypeId"/>
-        <get-related value-name="fixedAsset" relation-name="FixedAssetStdCost" map-name="costsAndMap" list-name="setupCosts"/>
-        <filter-list-by-date list-name="setupCosts"/>
-        <!--<filter-list-by-and list-name="costs" map-name="costsAndMap"/>-->
-        <first-from-list list-name="setupCosts" entry-name="setupCost"/>
-        <set value="USAGE_COST" field="costsAndMap.fixedAssetStdCostTypeId"/>
-        <get-related value-name="fixedAsset" relation-name="FixedAssetStdCost" map-name="costsAndMap" list-name="usageCosts"/>
-        <filter-list-by-date list-name="usageCosts"/>
-        <first-from-list list-name="usageCosts" entry-name="usageCost"/>
-        
+        <if-not-empty field-name="task">
+            <get-related-one value-name="task" relation-name="FixedAsset" to-value-name="fixedAsset"/>
+            <set from-field="parameters.currencyUomId" field="costsAndMap.amountUomId"/>
+            <set value="SETUP_COST" field="costsAndMap.fixedAssetStdCostTypeId"/>
+            <get-related value-name="fixedAsset" relation-name="FixedAssetStdCost" map-name="costsAndMap" list-name="setupCosts"/>
+            <filter-list-by-date list-name="setupCosts"/>
+            <!--<filter-list-by-and list-name="costs" map-name="costsAndMap"/>-->
+            <first-from-list list-name="setupCosts" entry-name="setupCost"/>
+            <set value="USAGE_COST" field="costsAndMap.fixedAssetStdCostTypeId"/>
+            <get-related value-name="fixedAsset" relation-name="FixedAssetStdCost" map-name="costsAndMap" list-name="usageCosts"/>
+            <filter-list-by-date list-name="usageCosts"/>
+            <first-from-list list-name="usageCosts" entry-name="usageCost"/>
+        </if-not-empty>
         <calculate field-name="taskCost">
             <calcop field-name="setupCost.amount" operator="add">
                 <calcop field-name="estimatedTaskTime" operator="multiply">
