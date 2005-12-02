@@ -347,7 +347,7 @@
         <#list partyTaxAuthInfoAndDetailList as partyTaxAuthInfoAndDetail>
             <div>
                 <a href="<@ofbizUrl>deleteCustomerTaxAuthInfo?partyId=${partyId}&amp;taxAuthPartyId=${partyTaxAuthInfoAndDetail.taxAuthPartyId}&amp;taxAuthGeoId=${partyTaxAuthInfoAndDetail.taxAuthGeoId}&amp;fromDate=${partyTaxAuthInfoAndDetail.fromDate}</@ofbizUrl>" class="buttontext">X</a>
-                [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName}): ${partyTaxAuthInfoAndDetail.partyTaxId?if_exists} ${partyTaxAuthInfoAndDetail.isExempt?default("N")}
+                [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName}): Tax ID [${partyTaxAuthInfoAndDetail.partyTaxId?default("N/A")}], Is Exempt? [${partyTaxAuthInfoAndDetail.isExempt?default("N")}]
             </div>
         </#list>
 

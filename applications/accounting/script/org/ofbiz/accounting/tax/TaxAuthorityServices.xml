@@ -177,23 +177,49 @@
     <simple-method method-name="createPartyTaxAuthInfo" short-description="create a PartyTaxAuthInfo">
         <set value="_CREATE" field="securityAction"/>
         <check-permission permission="ACCOUNTING" action="${securityAction}"><accept-userlogin-party/><fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/></check-permission>
+        
+        <call-simple-method method-name="validatePartyTaxIdInline"/>
+
+        <!-- done checking preliminary constraints, see if there are any errors -->
         <check-errors/>
         
         <make-value entity-name="PartyTaxAuthInfo" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <if-empty field-name="newEntity.fromDate"><now-timestamp-to-env env-name="newEntity.fromDate"/></if-empty>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
         <create-value value-name="newEntity"/>  
     </simple-method>   
     <simple-method method-name="updatePartyTaxAuthInfo" short-description="update a PartyTaxAuthInfo">
         <set value="_UPDATE" field="securityAction"/>
         <check-permission permission="ACCOUNTING" action="${securityAction}"><accept-userlogin-party/><fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/></check-permission>
+
+        <call-simple-method method-name="validatePartyTaxIdInline"/>
+        
+        <!-- done checking preliminary constraints, see if there are any errors -->
         <check-errors/>
         
         <entity-one entity-name="PartyTaxAuthInfo" value-name="lookedUpValue"/>
         <set-nonpk-fields value-name="lookedUpValue" map-name="parameters"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
+    <simple-method method-name="validatePartyTaxIdInline" short-description="validatePartyTaxIdInline">
+        <!-- validate the partyTaxId based on TaxAuthority.taxIdFormatPattern if not empty -->
+        <entity-one entity-name="TaxAuthority" value-name="taxAuthority"/>
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field-name="taxAuthority.taxIdFormatPattern"/></not>
+                    <not><if-empty field-name="parameters.partyTaxId"/></not>
+                    <not><if-regexp field-name="parameters.partyTaxId" expr="${taxAuthority.taxIdFormatPattern}"/></not>
+                </and>
+            </condition>
+            <then>
+                <add-error><fail-message message="The tax ID [${parameters.partyTaxId}] was not in a valid format for the selected tax authority [${taxAuthority.taxIdFormatPattern}]"/></add-error>
+            </then>
+        </if>
+    </simple-method>
+    
     <simple-method method-name="deletePartyTaxAuthInfo" short-description="delete a PartyTaxAuthInfo">
         <set value="_DELETE" field="securityAction"/>
         <check-permission permission="ACCOUNTING" action="${securityAction}"><accept-userlogin-party/><fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/></check-permission>
