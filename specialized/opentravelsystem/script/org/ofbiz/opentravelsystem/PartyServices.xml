@@ -390,7 +390,31 @@
         <call-service service-name="updatePartyRelationship" in-map-name="sRelation"/>
         <!--field-to-result field-name="sRelation.partyIdTo" result-name="partyId"/-->
     </simple-method>
-
+    
+    <simple-method method-name="createPartyRelationship" short-description="set the relationship between the party and the organizationParty">
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+        </check-permission>        
+        <check-errors/>
+        
+        <entity-and entity-name="PartyRelationship" list-name="relations">
+            <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
+            <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
+        </entity-and>
+        <filter-list-by-date list-name="relations" to-list-name="selRelations"/>
+        <first-from-list entry-name="relation" list-name="selRelations"/>
+        
+        <if-empty field-name="relation">
+            <set field="rel.partyIdFrom" from-field="organizationPartyId"/>
+            <set field="rel.partyIdTo" from-field="partyId"/>
+            <set field="rel.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/>
+            <set field="rel.statusId" value="PARTYREL-ACTIVE"/>
+            <call-service service-name="createPartyRelationship" in-map-name="rel"/>
+        </if-empty>        
+        
+    </simple-method>
+    
     <simple-method method-name="updatePostalAddress" short-description="--add/update a postal address for a party--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
             <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
