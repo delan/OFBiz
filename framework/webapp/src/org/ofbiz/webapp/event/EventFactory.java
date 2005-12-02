@@ -110,16 +110,19 @@ public class EventFactory {
     private EventHandler loadEventHandler(String type) throws EventHandlerException {
         EventHandler handler = null;
         String handlerClass = requestManager.getHandlerClass(type, RequestManager.EVENT_HANDLER_KEY);
-        if (handlerClass == null)
+        if (handlerClass == null) {
             throw new EventHandlerException("Unknown handler type: " + type);
+        }
 
         try {
             handler = (EventHandler) ObjectType.getInstance(handlerClass);
             handler.init(context);
+        } catch (NoClassDefFoundError e) {
+            throw new EventHandlerException("No class def found for handler [" + handlerClass + "]", e);
         } catch (ClassNotFoundException cnf) {
-            throw new EventHandlerException("Cannot load handler class", cnf);
+            throw new EventHandlerException("Cannot load handler class [" + handlerClass + "]", cnf);
         } catch (InstantiationException ie) {
-            throw new EventHandlerException("Cannot get instance of the handler", ie);
+            throw new EventHandlerException("Cannot get instance of the handler [" + handlerClass + "]", ie);
         } catch (IllegalAccessException iae) {
             throw new EventHandlerException(iae.getMessage(), iae);
         }
