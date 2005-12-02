@@ -49,7 +49,7 @@
                     <#if "_NA_" != partyRelationship.roleTypeIdTo>
                         in role <b>${roleTypeTo.description}</b>
                     </#if>
-                    is a <b>${partyRelationshipType.partyRelationshipName}</b>
+                    is a <b>${(partyRelationshipType.partyRelationshipName)?default("NA")}</b>
                     of party <b>${partyRelationship.partyIdFrom}</b>
                     <#if "_NA_" != partyRelationship.roleTypeIdFrom>
                         in role <b>${roleTypeFrom.description}</b>
