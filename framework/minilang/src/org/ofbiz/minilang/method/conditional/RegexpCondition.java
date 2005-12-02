@@ -36,6 +36,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.ContextAccessor;
 import org.ofbiz.minilang.method.MethodContext;
@@ -63,8 +64,7 @@ public class RegexpCondition implements Conditional {
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
 
-    Pattern pattern = null;
-    String expr;
+    FlexibleStringExpander exprExdr;
     
     public RegexpCondition(Element element, SimpleMethod simpleMethod) {
         this.simpleMethod = simpleMethod;
@@ -72,20 +72,24 @@ public class RegexpCondition implements Conditional {
         this.mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         this.fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
-        this.expr = element.getAttribute("expr");
-        try {
-            pattern = compiler.compile(expr);
-        } catch (MalformedPatternException e) {
-            Debug.logError(e, module);
-        }
+        this.exprExdr = new FlexibleStringExpander(element.getAttribute("expr"));
     }
 
     public boolean checkCondition(MethodContext methodContext) {
         String fieldString = getFieldString(methodContext);
 
+        Pattern pattern = null;
+        try {
+            pattern = compiler.compile(methodContext.expandString(this.exprExdr));
+        } catch (MalformedPatternException e) {
+            Debug.logError(e, "Regular Expression [" + this.exprExdr + "] is mal-formed: " + e.toString(), module);
+        }
+
         if (matcher.matches(fieldString, pattern)) {
+            //Debug.logInfo("The string [" + fieldString + "] matched the pattern expr [" + pattern.getPattern() + "]", module);
             return true;
         } else {
+            //Debug.logInfo("The string [" + fieldString + "] did NOT match the pattern expr [" + pattern.getPattern() + "]", module);
             return false;
         }
     }
@@ -130,7 +134,7 @@ public class RegexpCondition implements Conditional {
         messageBuffer.append("=");
         messageBuffer.append(getFieldString(methodContext));
         messageBuffer.append("] matches ");
-        messageBuffer.append(this.expr);
+        messageBuffer.append(methodContext.expandString(this.exprExdr));
         messageBuffer.append("]");
     }
 }
