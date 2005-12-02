@@ -98,7 +98,7 @@
         
         <find-by-and entity-name="EftAccount" map-name="lookupMap" list-name="eftAccounts"/>
         <iterate entry-name="eftAccount" list-name="eftAccounts">
-            <map-to-map map-name="eftAccount" to-map-name="ueaMap"/>
+            <set-service-fields service-name="updateEftAccount" map-name="eftAccount" to-map-name="ueaMap"/>
             <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="ueaMap"/>
             <field-to-field field-name="partyId" map-name="parameters" to-field-name="partyId" to-map-name="ueaMap"/>
             <!-- use the service so it will expire the old account and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
