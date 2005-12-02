@@ -60,7 +60,7 @@
         
         <field name="requireTaxIdForExemption" widget-style="smallSelect"><drop-down no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down></field>
         <field name="includeTaxInPrice" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down></field>
-        <field name="taxIdFormatPattern" tooltip="Use regular expresston validation pattern"></field>
+        <field name="taxIdFormatPattern" tooltip="Use regular expression validation pattern"></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
