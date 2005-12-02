@@ -81,7 +81,7 @@ ERRORS:
   while(ecIter.hasNext()) {
     ModelEntity entity = (ModelEntity) ecIter.next();
 %>
-    <entity entity-name="<%=entity.getEntityName()%>"<%if(!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getPlainTableName()))){
+    <entity entity-name="<%=entity.getEntityName()%>"<%if(!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getPlainTableName())) || !ModelUtil.javaNameToDbName(entity.getEntityName()).equals(entity.getPlainTableName()) ){
           %> table-name="<%=entity.getPlainTableName()%>"<%}%>
             package-name="<%=entity.getPackageName()%>"<%if(entity.getDependentOn().length() > 0){%>
             dependent-on="<%=entity.getDependentOn()%>"<%}%><%if(!title.equals(entity.getTitle())){%>
