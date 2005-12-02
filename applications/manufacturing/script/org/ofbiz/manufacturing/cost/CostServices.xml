@@ -73,7 +73,7 @@
         </call-service>
         <iterate entry-name="task" list-name="tasks">
             <clear-field field-name="callSvcMap"/>
-            <set from-field="task.workEffortIdTo" field="callSvcMap.taskId"/>
+            <set from-field="task.workEffortIdTo" field="callSvcMap.workEffortId"/>
             <set from-field="parameters.currencyUomId" field="callSvcMap.currencyUomId"/>
             <set from-field="parameters.productId" field="callSvcMap.productId"/>
             <set from-field="routing.workEffortId" field="callSvcMap.routingId"/>
@@ -118,6 +118,7 @@
     <simple-method method-name="getTaskCost" short-description="Gets the production run task's costs">
         <!-- First of all, the estimated task time is computed -->
         <set-service-fields service-name="getEstimatedTaskTime" map-name="parameters" to-map-name="inputMap"/>
+        <set from-field="parameters.workEffortId" field="inputMap.taskId"/>
         <call-service service-name="getEstimatedTaskTime" in-map-name="inputMap">
             <result-to-field result-name="estimatedTaskTime"/>
         </call-service>

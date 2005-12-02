@@ -31,7 +31,7 @@
     <service name="getTaskCost" engine="simple" auth="true"
                 location="org/ofbiz/manufacturing/cost/CostServices.xml" invoke="getTaskCost">
         <description>Gets the production run task's costs</description>
-        <attribute mode="IN" name="taskId" optional="false" type="String"/>
+        <attribute mode="IN" name="workEffortId" optional="false" type="String"/>
         <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
         <attribute mode="IN" name="productId" optional="true" type="String"/>
         <attribute mode="IN" name="routingId" optional="true" type="String"/>
