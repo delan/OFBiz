@@ -30,16 +30,21 @@
          <!-- call original event -->
          <call-simple-method method-name="createCustomer" xml-resource="org/ofbiz/ecommerce/customer/CustomerEvents.xml"/>
          <check-errors/>
-         <!-- create relationship to organizationParty -->
-         <set field="parties.partyId" from-field="parameters.partyId"/>        
-         <set field="parties.relationshipTypeId" value="CUSTOMER"/>
-         <if-not-empty field-name="parameters.organizationPartyId">
-             <set field="parties.organizationPartyId" from-field="parameters.organizationPartyId"/>
-             <else>
-                 <set field="parties.organizationPartyId" from-field="parameters.productStoreId"/>
-             </else>             
-         </if-not-empty>
-         <call-service service-name="otsCreatePartyRelationship" in-map-name="parties"/>
+         <!-- create relationship to organizationParty = productStoreId -->
+         <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="getProductStoreId" ret-field-name="productStoreId">
+             <field field-name="request" type="javax.servlet.ServletRequest"/>
+         </call-class-method>
+         <!-- enter relationship directly in table because this customer does not have access to the createpartyRelationship service -->
+         <make-value value-name="parties" entity-name="PartyRelationship"/>
+         <set field="parties.partyIdTo" from-field="tempMap.partyId"/>        
+         <set field="parties.partyRelationshipTypeId" value="CUSTOMER"/>
+         <set field="parties.roleTypeIdFrom" value="_NA_"/>
+         <set field="parties.roleTypeIdTo" value="_NA_"/>
+         <set field="parties.partyIdFrom" from-field="productStoreId"/>
+         <set field="parties.statusId" value="PARTYREL-ACTIVE"/>
+         <now-timestamp-to-env env-name="nowDate"/>
+         <env-to-field env-name="nowDate" field-name="parties.fromDate"/>
+         <create-value value-name="parties"/>         
          
      </simple-method>
      
