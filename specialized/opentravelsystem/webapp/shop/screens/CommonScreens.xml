@@ -39,6 +39,10 @@
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
                 
                 <script location="component://ecommerce/widget/EcommerceSetup.bsh"/>
+                <set field="parameters.productStoreId" from-field="productStore.productStoreId" global="true"/>
+                <set field="productStoreId" from-field="productStore.productStoreId" global="true"/>
+                <set field="parameters.organizationPartyId" from-field="productStore.productStoreId" global="true"/>
+                <set field="organizationPartyId" from-field="productStore.productStoreId" global="true"/>
             </actions>
             <widgets>
                 <!-- render header -->

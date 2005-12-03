@@ -28,5 +28,7 @@
     <ElectronicText dataResourceId="helpIndexData" textData="&lt;txt&gt;This is the text only&lt;/txt&gt;"/>
     <Content contentId="helpIndexTemplate" contentTypeId="DOCUMENT" dataResourceId="helpIndexData" templateDataResourceId="helpIndexFtl"/>
     
+    <!-- that an invoice is create change the productype table -->
+    <ProductType productTypeId="ASSET_USAGE" isPhysical="N" isDigital="Y"/>
 </entity-engine-xml>
     

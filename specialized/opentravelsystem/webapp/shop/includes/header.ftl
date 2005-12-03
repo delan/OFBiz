@@ -53,43 +53,9 @@
         <meta name="keywords" content="${metaKeywords}"/>
     </#if>
 
-    <#if includeHtmlArea>    
-        <#assign contextPath=request.getContextPath()/>
-        <link rel="stylesheet" href="<@ofbizContentUrl>${contextPath}/images/css/${(webSitePublishPoint.styleSheetFile)?if_exists}</@ofbizContentUrl>" type="text/css"/>
-        
-        <#assign primaryHTMLField=page.primaryHTMLField?if_exists/>
-        <#if (dynamicPrimaryHTMLField?exists)>
-          <#assign primaryHTMLField=dynamicPrimaryHTMLField/>
-        </#if>
-        <#assign secondaryHTMLField=page.secondaryHTMLField?if_exists/>
-        <#if (primaryHTMLField?exists && (primaryHTMLField?length > 0))>
-            <script type="text/javascript" language="javascript"> 
-              _editor_url = "/content/images/htmlarea/"; // omit the final slash
-            </script> 
-        
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <style type="text/css">
-                @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
-                textarea { background-color: #fff; border: 1px solid 00f; }
-            </style>
-            <script type="text/javascript">
-                var editor = null;
-                var summary = null;
-                function init_all() {
-                    primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
-                    <#if secondaryHTMLField?exists>
-                        secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
-                    </#if>
-                }
-            </script>
-        </#if>
-    </#if>
 </head>
 
-<body<#if includeHtmlArea> onLoad="init_all()"</#if>>
+<body>
 
 <div id="ecom-header">
     <div id="left">
@@ -117,6 +83,7 @@
             <#else/>
                 ${uiLabelMap.CommonWelcome}!
             </#if>
+            <br/>(${organizationPartyId?if_exists})
         </div>
     </div>
 </div>
