@@ -104,12 +104,11 @@
                     <set from-field="facility.defaultInventoryItemTypeId" field="parameters.inventoryItemTypeId"/>
                 </if-empty>
 
-                <if-empty field-name="statusId" map-name="parameters">                    
-                    <set value="INV_RETURNED" field="parameters.statusId" type="String"/>
-                </if-empty>
-
                 <now-timestamp-to-env env-name="nowTimestamp"/>
                 <iterate entry-name="returnItem" list-name="returnItems">
+                    <if-empty field-name="expectedItemStatus" map-name="returnItem">
+                        <set value="INV_RETURNED" field="returnItem.expectedItemStatus" type="String"/>
+                    </if-empty>
                     <get-related-one value-name="returnItem" relation-name="OrderItem" to-value-name="orderItem"/>
                     <if-not-empty field-name="productId" map-name="orderItem">
                         <set field="costCtx.returnItemSeqId" from-field="returnItem.returnItemSeqId"/>
@@ -119,7 +118,7 @@
                         </call-service>
 
                         <set from-field="parameters.inventoryItemTypeId" field="receiveCtx.inventoryItemTypeId"/>
-                        <set from-field="parameters.statusId" field="receiveCtx.statusId"/>
+                        <set from-field="returnItem.expectedItemStatus" field="receiveCtx.statusId"/>
                         <set from-field="orderItem.productId" field="receiveCtx.productId"/>
                         <set from-field="returnItem.returnItemSeqId" field="receiveCtx.returnItemSeqId"/>
                         <set from-field="returnItem.returnId" field="receiveCtx.returnId"/>
