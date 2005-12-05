@@ -62,6 +62,9 @@ context.put("returnTypes", returnTypes);
 returnReasons = delegator.findAll("ReturnReason", UtilMisc.toList("sequenceId"));
 context.put("returnReasons", returnReasons);
 
+itemStts = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "INV_SERIALIZED_STTS"), UtilMisc.toList("sequenceId"));
+context.put("itemStts", itemStts);
+
 returnItemTypeMap = delegator.findByAnd("ReturnItemTypeMap", UtilMisc.toMap("returnHeaderTypeId", "CUSTOMER_RETURN"));
 iter = returnItemTypeMap.iterator();
 typeMap = new HashMap();

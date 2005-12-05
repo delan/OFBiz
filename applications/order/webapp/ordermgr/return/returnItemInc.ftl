@@ -27,7 +27,7 @@
 
           <table border="0" width="100%" cellpadding="2" cellspacing="0">
             <tr>
-              <td colspan="7"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
+              <td colspan="8"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
               <td align="right">
                 <span class="tableheadtext">Select All</span>&nbsp;
                 <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${selectAllFormName}');"/>
@@ -41,9 +41,10 @@
               <td><div class="tableheadtext">Return Price*</div></td>
               <td><div class="tableheadtext">Return Reason</div></td>
               <td><div class="tableheadtext">Return Type</div></td>
+              <td><div class="tableheadtext">Item Status</div></td>
               <td align="right"><div class="tableheadtext">Include?</div></td>
             </tr>
-            <tr><td colspan="8"><hr class="sepbar"></td></tr>
+            <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <#if returnableItems?has_content>
               <#assign rowCount = 0>
               <#list returnableItems.keySet() as orderItem>
@@ -94,6 +95,15 @@
                       </#list>
                     </select>
                   </td>
+                  <td>
+                    <select name="expectedItemStatus_o_${rowCount}" class="selectBox">
+                      <option value="INV_RETURNED">Returned</option>
+                      <option value="INV_RETURNED">---</option>
+                      <#list itemStts as status>
+                        <option value="${status.statusId}">${status.description}</option>
+                      </#list>
+                    </select>
+                  </td>
                   <td align="right">
                     <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
                   </td>
@@ -101,11 +111,11 @@
                 <#assign rowCount = rowCount + 1>
               </#list>
 
-              <tr><td colspan="8"><hr class="sepbar"></td></tr>
+              <tr><td colspan="9"><hr class="sepbar"></td></tr>
               <tr>
-                <td colspan="8"><div class="head3">Return Order Adjustment(s) From Order #<a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
+                <td colspan="9"><div class="head3">Return Order Adjustment(s) From Order #<a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
               </tr>
-              <tr><td colspan="8"><hr class="sepbar"></td></tr>
+              <tr><td colspan="9"><hr class="sepbar"></td></tr>
               <#if orderHeaderAdjustments?has_content>
                 <tr>
                   <td><div class="tableheadtext">Description</div></td>
@@ -115,9 +125,10 @@
                   <td><div class="tableheadtext">Return Price</div></td>
                   <td><div class="tableheadtext">Return Reason</div></td>
                   <td><div class="tableheadtext">Return Type</div></td>
+                  <td><div class="tableheadtext">Item Status</div></td>
                   <td align="right"><div class="tableheadtext">Include?</div></td>
                 </tr>
-                <tr><td colspan="8"><hr class="sepbar"></td></tr>
+                <tr><td colspan="9"><hr class="sepbar"></td></tr>
                 <#list orderHeaderAdjustments as adj>
                   <#assign returnItemType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
                   <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType")/>
@@ -156,6 +167,9 @@
                         </#list>
                       </select>
                     </td>
+                    <td align='center'>
+                      <div class="tabletext">-</div>
+                    </td>
                     <td align="right">
                       <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
                     </td>
@@ -163,16 +177,16 @@
                   <#assign rowCount = rowCount + 1>
                 </#list>
               <#else>
-                <tr><td colspan="8"><div class="tableheadtext">No adjustments on this order.</div></td></tr>
+                <tr><td colspan="9"><div class="tableheadtext">No adjustments on this order.</div></td></tr>
               </#if>
 
               <#assign manualAdjRowNum = rowCount/>
               <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RETURN_MAN_ADJ"/>
               <input type="hidden" name="orderId_o_${rowCount}" value="${orderId}"/>
 
-              <tr><td colspan="8"><hr class="sepbar"></td></tr>
+              <tr><td colspan="9"><hr class="sepbar"></td></tr>
               <tr>
-                <td colspan="8">
+                <td colspan="9">
                   <div class="head3">Manual Return Adjustment For Order #<a href="<@ofbizUrl>orderview?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td></div>
                 </td>
               </tr>
@@ -201,6 +215,9 @@
                     </#list>
                   </select>
                 </td>
+                <td align='center'>
+                  <div class="tabletext">-</div>
+                </td>
                 <td align="right">
                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
                 </td>
@@ -210,16 +227,16 @@
               <!-- final row count -->
               <input type="hidden" name="_rowCount" value="${rowCount}"/>
 
-              <tr><td colspan="8"><hr class="sepbar"></td></tr>
+              <tr><td colspan="9"><hr class="sepbar"></td></tr>
               <tr>
-                <td colspan="8" align="right">
+                <td colspan="9" align="right">
                   <a href="javascript:document.${selectAllFormName}.submit();" class="buttontext">Return Selected Item(s)</a>
                 </td>
               </tr>
             <#else>
-              <tr><td colspan="8"><div class="tabletext">No returnable items found for order #${orderId}</div></td></tr>
+              <tr><td colspan="9"><div class="tabletext">No returnable items found for order #${orderId}</div></td></tr>
             </#if>
             <tr>
-              <td colspan="7"><div class="tabletext">*Price includes tax & adjustments</div></td>
+              <td colspan="9"><div class="tabletext">*Price includes tax & adjustments</div></td>
             </tr>
           </table>
