@@ -102,10 +102,20 @@ function runAction() {
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='order_id'></td>
               </tr>
+             <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderExternalId}</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td><input type='text' class='inputBox' name='externalId'></td>
+              </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderCustomerPo}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='correspondingPoId' value='${requestParameters.correspondingPoId?if_exists}'></td>
+              </tr>
+              <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderInternalCode}</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td><input type='text' class='inputBox' name='internalCode' value='${requestParameters.internalCode?if_exists}'></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.ProductProductId}</div></td>
@@ -163,6 +173,22 @@ function runAction() {
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonCreatedBy}</div>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='createdBy' value='${requestParameters.createdBy?if_exists}'></td>
+              </tr>
+              <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderSalesChannel}</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td>
+                  <select name='salesChannelEnumId' class='selectBox'>
+                    <#if currentSalesChannel?has_content>
+                    <option value="${currentSalesChannel.enumId}">${currentSalesChannel.description}</option>
+                    <option value="${currentSalesChannel.enumId}">---</option>
+                    </#if>
+                    <option value="ANY">${uiLabelMap.CommonAnySalesChannel}</option>
+                    <#list salesChannels as channel>
+                      <option value="${channel.enumId}">${channel.description}</option>
+                    </#list>
+                  </select>
+                </td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.ProductProductStore}</div></td>
