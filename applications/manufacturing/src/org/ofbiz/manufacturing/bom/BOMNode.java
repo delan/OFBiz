@@ -400,7 +400,7 @@ public class BOMNode {
         }
         if (serviceName != null) {
             Map resultContext = null;
-            Map arguments = UtilMisc.toMap("neededQuantity", new Double(quantity), "amount", new Double((tree!=null? tree.getRootAmount():0)));
+            Map arguments = UtilMisc.toMap("neededQuantity", new Double(quantity * quantityMultiplier), "amount", new Double((tree!=null? tree.getRootAmount():0)));
             Double width = null;
             if (getProduct().get("productWidth") != null) {
                 width = getProduct().getDouble("productWidth");

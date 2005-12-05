@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <entity-engine-xml>
-    <FixedAssetType description="The fixed Asset usable in the operation-routing definition" fixedAssetTypeId="PRODUCTION_EQUIPMENT" hasTable="N" parentTypeId=""/>
-    <FixedAssetType description="Group of machines, used for operation and routing definition" fixedAssetTypeId="GROUP_EQUIPMENT" hasTable="N" parentTypeId=""/>
-
     <RequirementType description="ProductionRun proposed by the MRP process" hasTable="N" parentTypeId="" requirementTypeId="MRP_PRO_PROD_ORDER"/>
     <RequirementType description="Purchase Order proposed by the MRP process" hasTable="N" parentTypeId="" requirementTypeId="MRP_PRO_PURCH_ORDER"/>
 
@@ -25,5 +22,6 @@
     <!-- Task Formulae -->
     <CustomMethod customMethodId="6000" customMethodTypeId="TASK_FORMULA" customMethodName="exampleTaskFormula" description="Example task formula (qty * estimatedMilliSeconds * 10)"/>
     <!-- Bom Formulae -->
-    <CustomMethod customMethodId="6001" customMethodTypeId="BOM_FORMULA" customMethodName="linearComponentFormula" description="Bom formula for linear components"/>
+    <CustomMethod customMethodId="6001" customMethodTypeId="BOM_FORMULA" customMethodName="exampleComponentFormula" description="Example bom formula (qty * k)"/>
+    <CustomMethod customMethodId="6002" customMethodTypeId="BOM_FORMULA" customMethodName="linearComponentFormula" description="Bom formula for linear components"/>
 </entity-engine-xml>
