@@ -275,7 +275,7 @@ function lookupBom() {
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.sequenceNum)?if_exists}</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.quantity)?if_exists}</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.scrapFactor)?if_exists}</div></td>
-                <td><div class="tabletext">&nbsp;${(assocFromProduct.formula)?if_exists}</div></td>
+                <td><div class="tabletext">&nbsp;${(assocFromProduct.estimateCalcMethod)?if_exists}</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.routingWorkEffortId)?if_exists}</div></td>
                 <td>
                 <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&productId=${productId}&productIdTo=${(assocFromProduct.productIdTo)?if_exists}&productAssocTypeId=${(assocFromProduct.productAssocTypeId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
