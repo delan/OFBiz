@@ -57,6 +57,10 @@ context.put("webSites", websites);
 stores = delegator.findAll("ProductStore", UtilMisc.toList("storeName"));
 context.put("productStores", stores);
 
+// get the channels
+channels = delegator.findByAnd("Enumeration", UtilMisc.toMap("enumTypeId", "ORDER_SALES_CHANNEL"), UtilMisc.toList("sequenceId"));
+context.put("salesChannels", channels);
+
 // current role type
 currentRoleTypeId = request.getParameter("roleTypeId");
 if (currentRoleTypeId != null && currentRoleTypeId.length() > 0) {
@@ -89,6 +93,13 @@ currentProductStoreId = request.getParameter("productStoreId");
 if (currentProductStoreId != null && currentProductStoreId.length() > 0) {
     currentProductStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", currentProductStoreId));
     context.put("currentProductStore", currentProductStore);
+}
+
+// current channel
+currentSalesChannelId = request.getParameter("salesChannelEnumId");
+if (currentSalesChannelId != null && currentSalesChannelId.length() > 0) {
+    currentSalesChannel = delegator.findByPrimaryKey("Enumeration", UtilMisc.toMap("enumId", currentSalesChannelId));
+    context.put("currenSalesChannel", currentSalesChannel);
 }
 
 // create the fromDate for calendar
@@ -213,7 +224,11 @@ if (lookupFlag != null) {
         orderStatus = request.getParameter("orderStatusId");
         productStoreId = request.getParameter("productStoreId");
         webSiteId = request.getParameter("webSiteId");
+        salesChannelEnumId = request.getParameter("salesChannelEnumId");
+
         createdBy = request.getParameter("createdBy");
+        externalId = request.getParameter("externalId");
+        internalCode = request.getParameter("internalCode");
         billAcct = request.getParameter("billingAccountId");
         minDate = request.getParameter("minDate");
         maxDate = request.getParameter("maxDate");
@@ -223,6 +238,7 @@ if (lookupFlag != null) {
         if (roleType == null) roleType = "ANY";
         if (orderType == null) orderType = "ANY";
         if (orderStatus == null) orderStatus = "ANY";
+        if (salesChannelEnumId == null) salesChannelEnumId = "ANY";
 
         paramList = paramList + "&productStoreId=" + productStoreId;
         if (!"ANY".equals(productStoreId)) {
@@ -245,6 +261,11 @@ if (lookupFlag != null) {
         if (!"ANY".equals(orderStatus)) {
             andExprs.add(new EntityExpr("statusId", EntityOperator.EQUALS, orderStatus));
         }
+        paramList = paramList + "&salesChannelEnumId=" + salesChannelEnumId;
+        if (!"ANY".equals(salesChannelEnumId)) {
+            andExprs.add(new EntityExpr("salesChannelEnumId", EntityOperator.EQUALS, salesChannelEnumId));
+        }
+
         if (billAcct != null && billAcct.length() > 0) {
             paramList = paramList + "&billingAccountId=" + billAcct;
             andExprs.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billAcct));
@@ -252,6 +273,14 @@ if (lookupFlag != null) {
         if (createdBy != null && createdBy.length() > 0) {
             paramList = paramList + "&createdBy=" + createdBy;
             andExprs.add(new EntityExpr("createdBy", EntityOperator.EQUALS, createdBy));
+        }
+        if (externalId != null && externalId.length() > 0) {
+            paramList = paramList + "&externalId=" + externalId;
+            andExprs.add(new EntityExpr("externalId", EntityOperator.EQUALS, externalId));
+        }
+        if (internalCode != null && internalCode.length() > 0) {
+            paramList = paramList + "&internalCode=" + internalCode;
+            andExprs.add(new EntityExpr("internalCode", EntityOperator.EQUALS, internalCode));
         }
         if (minDate != null && minDate.length() > 8) {
             minDate = minDate.trim();

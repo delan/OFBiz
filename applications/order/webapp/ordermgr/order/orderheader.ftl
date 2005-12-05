@@ -92,6 +92,20 @@
                         </div>
                       </td>
                     </tr>
+                    <#if orderHeader.internalCode?has_content>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderInternalCode}</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <div class="tabletext">
+                          ${orderHeader.internalCode}
+                        </div>
+                      </td>
+                    </tr>
+                    </#if>
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
@@ -501,7 +515,10 @@
                         ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(displayParty)}
                       </#if>
                       <#if partyId?exists>
-                        &nbsp;(<a href="/partymgr/control/viewprofile?partyId=${partyId}" target="partymgr" class="buttontext">${partyId}</a>)
+                        <span>&nbsp;(<a href="/partymgr/control/viewprofile?partyId=${partyId}" target="partymgr" class="buttontext">${partyId}</a>)</span>
+                        <span align="right">
+                            &nbsp;&nbsp;(<a href="<@ofbizUrl>/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderOtherOrders}</a>)
+                        </span>
                       </#if>
                     </div>
                   </td>
