@@ -37,6 +37,7 @@
         <form name="selectAllForm" method="post" action="<@ofbizUrl>requestReturn</@ofbizUrl>">
           <input type="hidden" name="_checkGlobalScope" value="Y"/>
           <input type="hidden" name="_useRowSubmit" value="Y"/>
+          <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
           <input type="hidden" name="toPartyId" value="${toPartyId?if_exists}"/>
           <input type="hidden" name="order_id" value="${orderId}"/>
