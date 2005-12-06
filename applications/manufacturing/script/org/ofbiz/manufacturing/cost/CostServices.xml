@@ -121,8 +121,9 @@
         <set from-field="parameters.workEffortId" field="inputMap.taskId"/>
         <call-service service-name="getEstimatedTaskTime" in-map-name="inputMap">
             <result-to-field result-name="estimatedTaskTime"/>
+            <result-to-field result-name="setupTime"/>
         </call-service>
-
+        
         <entity-one entity-name="WorkEffort" value-name="task"/>
         <if-not-empty field-name="task">
             <get-related-one value-name="task" relation-name="FixedAsset" to-value-name="fixedAsset"/>
@@ -137,11 +138,21 @@
             <filter-list-by-date list-name="usageCosts"/>
             <first-from-list list-name="usageCosts" entry-name="usageCost"/>
         </if-not-empty>
-        <calculate field-name="taskCost">
-            <calcop field-name="setupCost.amount" operator="add">
+        <calculate field-name="taskCost" type="Double">
+            <calcop operator="add">
                 <calcop field-name="estimatedTaskTime" operator="multiply">
                     <calcop field-name="usageCost.amount" operator="get"/>
                 </calcop>
+                <calcop field-name="setupTime" operator="multiply">
+                    <calcop field-name="setupCost.amount" operator="get"/>
+                </calcop>
+            </calcop>
+        </calculate>
+
+        <!-- Time is converted from milliseconds to hours -->
+        <calculate field-name="taskCost" type="Double">
+            <calcop field-name="taskCost" operator="divide">
+                <number value="3600000"/>
             </calcop>
         </calculate>
         

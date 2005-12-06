@@ -401,20 +401,22 @@ public class BOMServices {
         //
         String workEffortId = null;
         try {
-            List workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId, "statusId", "ROU_PROD_TEMPLATE"));
-            workEffortProducts = EntityUtil.filterByDate(workEffortProducts);
-            if (UtilValidate.isEmpty(workEffortProducts)) {
-                workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", tree.getRoot().getProduct().getString("productId"), "statusId", "ROU_PROD_TEMPLATE"));
-                workEffortProducts = EntityUtil.filterByDate(workEffortProducts);
+            Map routingInMap = UtilMisc.toMap("productId", productId, "ignoreDefaultRouting", "Y", "userLogin", userLogin);
+            Map routingOutMap = dispatcher.runSync("getRouting", routingInMap);
+            GenericValue routing = (GenericValue)routingOutMap.get("routing");
+            if (routing == null) {
+                // try to find a routing linked to the virtual product
+                routingInMap = UtilMisc.toMap("productId", tree.getRoot().getProduct().getString("productId"), "userLogin", userLogin);
+                routingOutMap = dispatcher.runSync("getRouting", routingInMap);
+                routing = (GenericValue)routingOutMap.get("routing");
             }
-            GenericValue workEffortProduct = EntityUtil.getFirst(workEffortProducts);
-            if (workEffortProduct != null) {
-                workEffortId = workEffortProduct.getString("workEffortId");
+            if (routing != null) {
+                workEffortId = routing.getString("workEffortId");
             }
-        } catch(GenericEntityException gee) {
-            Debug.logWarning(gee.getMessage(), module);
+        } catch(GenericServiceException gse) {
+            Debug.logWarning(gse.getMessage(), module);
         }
-
+        // ==========================================
         if (workEffortId != null) {
             result.put("workEffortId", workEffortId);
         }

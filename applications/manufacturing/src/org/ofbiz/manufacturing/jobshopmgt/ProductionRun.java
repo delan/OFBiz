@@ -438,7 +438,7 @@ public class ProductionRun {
             }
         }
         
-        return (long)totalTaskTime;
+        return (long) totalTaskTime;
     }
 
 }
