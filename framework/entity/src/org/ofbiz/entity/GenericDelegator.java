@@ -33,19 +33,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.CacheLine;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.cache.Cache;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
@@ -58,31 +61,16 @@ import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.datasource.GenericHelper;
 import org.ofbiz.entity.datasource.GenericHelperFactory;
 import org.ofbiz.entity.eca.EntityEcaHandler;
-import org.ofbiz.entity.model.DynamicViewEntity;
-import org.ofbiz.entity.model.ModelEntity;
-import org.ofbiz.entity.model.ModelEntityChecker;
-import org.ofbiz.entity.model.ModelField;
-import org.ofbiz.entity.model.ModelFieldType;
-import org.ofbiz.entity.model.ModelFieldTypeReader;
-import org.ofbiz.entity.model.ModelGroupReader;
-import org.ofbiz.entity.model.ModelKeyMap;
-import org.ofbiz.entity.model.ModelReader;
-import org.ofbiz.entity.model.ModelRelation;
-import org.ofbiz.entity.model.ModelViewEntity;
+import org.ofbiz.entity.model.*;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.DistributedCacheClear;
+import org.ofbiz.entity.util.EntityCrypto;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.SequenceUtil;
-import org.ofbiz.entity.util.EntityCrypto;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 /**
  * Generic Data Source Delegator Class
@@ -2431,6 +2419,10 @@ public class GenericDelegator implements DelegatorInterface {
 
     public void setEntityEcaHandler(EntityEcaHandler entityEcaHandler) {
         this.entityEcaHandler = entityEcaHandler;
+    }
+
+    public EntityEcaHandler getEntityEcaHandler() {
+        return this.entityEcaHandler;
     }
 
     /** Get the next guaranteed unique seq id from the sequence with the given sequence name;

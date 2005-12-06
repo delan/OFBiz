@@ -23,6 +23,17 @@
  */
 package org.ofbiz.entity.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.dom.NodeModel;
 import freemarker.template.Configuration;
@@ -33,6 +44,12 @@ import javolution.lang.Text;
 import javolution.util.FastMap;
 import javolution.xml.sax.Attributes;
 import javolution.xml.sax.RealtimeParser;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
@@ -40,21 +57,11 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.eca.EntityEcaHandler;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-
-import java.io.*;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * SAX XML Parser Content Handler for Entity Engine XML files
@@ -71,6 +78,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
 
     protected org.xml.sax.Locator locator;
     protected GenericDelegator delegator;
+    protected EntityEcaHandler ecaHandler = null;
     protected GenericValue currentValue = null;
     protected CharSequence currentFieldName = null;
     protected CharSequence currentFieldValue = null;
@@ -83,6 +91,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
     protected boolean maintainTxStamps = false;
     protected boolean createDummyFks = false;
     protected boolean doCacheClear = true;
+    protected boolean disableEeca = false;
 
     protected List valuesToWrite = new ArrayList(valuesPerWrite);
 
@@ -95,7 +104,8 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
     protected EntitySaxReader() {}
 
     public EntitySaxReader(GenericDelegator delegator, int transactionTimeout) {
-        this.delegator = delegator;
+        // clone the delegator right off so there is no chance of making change to the initial object
+        this.delegator = delegator.cloneDelegator();
         this.transactionTimeout = transactionTimeout;
     }
 
@@ -156,6 +166,24 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
 
     public void setDoCacheClear(boolean doCacheClear) {
         this.doCacheClear = doCacheClear;
+    }
+
+    public boolean getDisableEeca() {
+        return this.disableEeca;
+    }
+
+    public void setDisableEeca(boolean disableEeca) {
+        this.disableEeca = disableEeca;
+        if (disableEeca) {
+            if (this.ecaHandler == null) {
+                this.ecaHandler = delegator.getEntityEcaHandler();
+            }
+            this.delegator.setEntityEcaHandler(null);
+        } else {
+            if (ecaHandler != null) {
+                this.delegator.setEntityEcaHandler(ecaHandler);
+            }
+        }
     }
 
     public long parse(String content) throws SAXException, java.io.IOException {
@@ -405,11 +433,30 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         if (Debug.verboseOn()) Debug.logVerbose("startElement: localName=" + localName + ", fullName=" + fullName + ", attributes=" + attributes, module);
         String fullNameString = fullName.toString();
         if ("entity-engine-xml".equals(fullNameString)) {
-            CharSequence ecaDisable = attributes.getValue("disable-eeca");
-            if (ecaDisable != null && "true".equalsIgnoreCase(ecaDisable.toString())) {
-                this.delegator = this.delegator.cloneDelegator();
-                this.delegator.setEntityEcaHandler(null);
+            // check the maintain-timestamp flag
+            CharSequence maintainTx = attributes.getValue("maintain-timestamps");
+            if (maintainTx != null) {
+                this.setMaintainTxStamps("true".equalsIgnoreCase(maintainTx.toString()));
             }
+
+            // check the do-cache-clear flag
+            CharSequence doCacheClear = attributes.getValue("do-cache-clear");
+            if (doCacheClear != null) {
+                this.setDoCacheClear("true".equalsIgnoreCase(doCacheClear.toString()));
+            }
+
+            // check the disable-eeca flag
+            CharSequence ecaDisable = attributes.getValue("disable-eeca");
+            if (ecaDisable != null) {
+                this.setDisableEeca("true".equalsIgnoreCase(ecaDisable.toString()));
+            }
+
+            // check the use-dummy-fk flag
+            CharSequence dummyFk = attributes.getValue("create-dummy-fk");
+            if (dummyFk != null) {
+                this.setCreateDummyFks("true".equalsIgnoreCase(dummyFk.toString()));
+            }
+
             return;
         }
 
