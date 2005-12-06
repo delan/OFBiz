@@ -59,10 +59,13 @@ public class Loop extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        String countStrExp = methodContext.expandString(this.countStr);       
+        String countStrExp = methodContext.expandString(this.countStr);
         int count = 0;
         try {
-            count = Integer.parseInt(countStrExp);
+            Double ctDbl = new Double(countStrExp);
+            if (ctDbl != null) {
+                count = ctDbl.intValue();    
+            }
         } catch (NumberFormatException e) {
             Debug.logError(e, module);
             return false;
