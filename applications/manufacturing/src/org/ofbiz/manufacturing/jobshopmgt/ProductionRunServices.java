@@ -197,6 +197,7 @@ public class ProductionRunServices {
         Map serviceContext = new HashMap();
         serviceContext.put("productId", productId); // the product that we want to manufacture
         serviceContext.put("quantity", pRQuantity); // the quantity that we want to manufacture
+        serviceContext.put("userLogin", userLogin);
         Map resultService = null;
         try {
             resultService = dispatcher.runSync("getManufacturingComponents", serviceContext);
@@ -213,23 +214,9 @@ public class ProductionRunServices {
         // Routing and routing tasks
         // -------------------
         // Select the product's routing
-        /*
-        if (workEffortId == null) {
-            // TODO: we should select the best product routing based on quantity to manufacture
-            workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId, "statusId", "ROU_PROD_TEMPLATE"));
-            workEffortProducts = EntityUtil.filterByDate(workEffortProducts);
-            GenericValue workEffortProduct = EntityUtil.getFirst(workEffortProducts);
-            if (workEffortProduct != null) {
-                workEffortId = workEffortProduct.getString("workEffortId");
-            }
-        }
-        if (workEffortId != null) {
-            routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
-        }
-         */
         try {
             Map routingInMap = UtilMisc.toMap("productId", productId, "userLogin", userLogin);
-            Map routingOutMap = dispatcher.runSync("getRouting", routingInMap);
+            Map routingOutMap = dispatcher.runSync("getProductRouting", routingInMap);
             routing = (GenericValue)routingOutMap.get("routing");
             routingTaskAssocs = (List)routingOutMap.get("tasks");
         } catch(GenericServiceException gse) {
@@ -239,11 +226,6 @@ public class ProductionRunServices {
         if (routing == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductRoutingNotExist", locale));
         }
-        /*
-        // The routing tasks are loaded
-        routingTaskAssocs = routing.getRelated("FromWorkEffortAssoc",UtilMisc.toMap("workEffortAssocTypeId","ROUTING_COMPONENT"), UtilMisc.toList("sequenceNum","fromDate"));
-        routingTaskAssocs = EntityUtil.filterByDate(routingTaskAssocs);
-         */
         if (routingTaskAssocs == null || routingTaskAssocs.size()==0) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRoutingHasNoRoutingTask", locale));
         }

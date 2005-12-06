@@ -112,7 +112,7 @@ public class ProposedOrder {
             if (routing == null) {
                 try {
                     Map routingInMap = UtilMisc.toMap("productId", product.getString("productId"), "ignoreDefaultRouting", "Y", "userLogin", userLogin);
-                    Map routingOutMap = dispatcher.runSync("getRouting", routingInMap);
+                    Map routingOutMap = dispatcher.runSync("getProductRouting", routingInMap);
                     routing = (GenericValue)routingOutMap.get("routing");
                     if (routing == null) {
                         // try to find a routing linked to the virtual product
@@ -129,7 +129,7 @@ public class ProposedOrder {
                         }
                         if (tree != null && tree.getRoot() != null && tree.getRoot().getProduct() != null) {
                             routingInMap = UtilMisc.toMap("productId", tree.getRoot().getProduct().getString("productId"), "userLogin", userLogin);
-                            routingOutMap = dispatcher.runSync("getRouting", routingInMap);
+                            routingOutMap = dispatcher.runSync("getProductRouting", routingInMap);
                             routing = (GenericValue)routingOutMap.get("routing");
                         }
                     }
