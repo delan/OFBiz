@@ -47,6 +47,11 @@
         <action service="balanceInventoryItems" mode="sync"/>    
     </eca>
 
+    <!-- inventory changes -->
+    <eca service="balanceInventoryItems" event="commit">
+        <action service="updateProductIfAvailableFromShipment" mode="sync"/>    
+    </eca>
+
     <!-- Product Price Change ECAs -->
     <eca service="createProductPrice" event="commit">
         <action service="saveProductPriceChange" mode="sync"/>

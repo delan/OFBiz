@@ -892,4 +892,12 @@
          <attribute type="java.util.List" mode="IN" name="productFeatures" optional="false"/>
          <attribute type="java.util.List" mode="OUT" name="products"/>
      </service>
+    <service name="updateProductIfAvailableFromShipment" engine="java"
+		    location="org.ofbiz.product.product.ProductServices"	invoke="updateProductIfAvailableFromShipment">
+		<description>
+			If property is set (catalog.properties) this will re-activate (null discountinue date) on the product
+            if inventory is available. Triggered via ECA by shipment receipt services
+        </description>
+		<attribute type="String" mode="IN" name="inventoryItemId" optional="false"/>		
+	</service>
 </services>

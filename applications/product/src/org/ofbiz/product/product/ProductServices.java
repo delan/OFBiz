@@ -25,6 +25,9 @@ package org.ofbiz.product.product;
 import java.sql.Timestamp;
 import java.util.*;
 
+import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.set.ListOrderedSet;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -41,9 +44,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-
-import org.apache.commons.collections.map.LinkedMap;
-import org.apache.commons.collections.set.ListOrderedSet;
 
 /**
  * Product Services
@@ -889,5 +889,68 @@ public class ProductServices {
         return successResult;
     }
 
+    public static Map updateProductIfAvailableFromShipment(DispatchContext dctx, Map context) {
+        if ("Y".equals(UtilProperties.getPropertyValue("catalog.properties", "reactivate.product.from.receipt", "N"))) {
+            LocalDispatcher dispatcher = dctx.getDispatcher();
+            GenericDelegator delegator = dctx.getDelegator();
+            GenericValue userLogin = (GenericValue) context.get("userLogin");
+            String inventoryItemId = (String) context.get("inventoryItemId");
+
+            GenericValue inventoryItem = null;
+            try {
+                inventoryItem = delegator.findByPrimaryKeyCache("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+
+            if (inventoryItem != null) {
+                String productId = inventoryItem.getString("productId");
+                GenericValue product = null;
+                try {
+                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+
+                if (product != null) {
+                    Timestamp salesDiscontinuationDate = product.getTimestamp("salesDiscontinuationDate");
+                    if (salesDiscontinuationDate != null && salesDiscontinuationDate.before(UtilDateTime.nowTimestamp())) {
+                        Map invRes = null;
+                        try {
+                            invRes = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productId, "userLogin", userLogin));
+                        } catch (GenericServiceException e) {
+                            Debug.logError(e, module);
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+
+                        Double availableToPromiseTotal = (Double) invRes.get("availableToPromiseTotal");
+                        if (availableToPromiseTotal != null && availableToPromiseTotal.doubleValue() > 0) {
+                            // refresh the product so we can update it
+                            GenericValue productToUpdate = null;
+                            try {
+                                productToUpdate = delegator.findByPrimaryKey("Product", product.getPrimaryKey());
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, module);
+                                return ServiceUtil.returnError(e.getMessage());
+                            }
+
+                            // set and save
+                            productToUpdate.set("salesDiscontinuationDate", null);
+                            try {
+                                delegator.store(productToUpdate);
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, module);
+                                return ServiceUtil.returnError(e.getMessage());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
 }
 

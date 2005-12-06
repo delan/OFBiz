@@ -117,22 +117,35 @@
                             <result-to-field result-name="initialItemCost" field-name="receiveCtx.unitCost"/>
                         </call-service>
 
-                        <set from-field="parameters.inventoryItemTypeId" field="receiveCtx.inventoryItemTypeId"/>
-                        <set from-field="returnItem.expectedItemStatus" field="receiveCtx.statusId"/>
-                        <set from-field="orderItem.productId" field="receiveCtx.productId"/>
-                        <set from-field="returnItem.returnItemSeqId" field="receiveCtx.returnItemSeqId"/>
-                        <set from-field="returnItem.returnId" field="receiveCtx.returnId"/>
-                        <set from-field="returnItem.returnQuantity" field="receiveCtx.quantityAccepted"/>
-                        <set from-field="returnHeader.destinationFacilityId" field="receiveCtx.facilityId"/>
+                        <!-- by default we loop just once -->
+                        <set field="loops" value="1"/>
+                        <if-compare field-name="returnItem.expectedItemStatus" value="INV_AVAILABLE" operator="not-equals">
+                            <!-- must be serialized if not going right back into inventory -->
+                            <set field="parameters.inventoryItemTypeId" value="SERIALIZED_INV_ITEM"/>
+                        </if-compare>
+                        <if-compare field-name="parameters.inventoryItemTypeId" value="SERIALIZED_INV_ITEM" operator="equals">
+                            <set field="loops" from-field="returnItem.returnQuantity"/>
+                        </if-compare>
 
-                        <set value="Returned Item RA# ${returnItem.returnId}" field="receiveCtx.comments"/>
-                        <set from-field="nowTimestamp" field="receiveCtx.datetimeReceived"/>
+                        <loop count="${loops}" field="currentLoop">
+                            <log level="always" message="Looping and creating inventory info - ${currentLoop}"/>
+                            <set from-field="parameters.inventoryItemTypeId" field="receiveCtx.inventoryItemTypeId"/>
+                            <set from-field="returnItem.expectedItemStatus" field="receiveCtx.statusId"/>
+                            <set from-field="orderItem.productId" field="receiveCtx.productId"/>
+                            <set from-field="returnItem.returnItemSeqId" field="receiveCtx.returnItemSeqId"/>
+                            <set from-field="returnItem.returnId" field="receiveCtx.returnId"/>
+                            <set from-field="returnItem.returnQuantity" field="receiveCtx.quantityAccepted"/>
+                            <set from-field="returnHeader.destinationFacilityId" field="receiveCtx.facilityId"/>
 
-                        <calculate field-name="quantityRejected" map-name="receiveCtx" type="Double">
-                            <number value="0"/>
-                        </calculate>
+                            <set value="Returned Item RA# ${returnItem.returnId}" field="receiveCtx.comments"/>
+                            <set from-field="nowTimestamp" field="receiveCtx.datetimeReceived"/>
 
-                        <call-service service-name="receiveInventoryProduct" in-map-name="receiveCtx"/>
+                            <calculate field-name="quantityRejected" map-name="receiveCtx" type="Double">
+                                <number value="0"/>
+                            </calculate>
+
+                            <call-service service-name="receiveInventoryProduct" in-map-name="receiveCtx"/>
+                        </loop>
                     </if-not-empty>
                 </iterate>
 
