@@ -29,12 +29,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
@@ -51,8 +52,6 @@ import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * SimpleMethod Mini Language Core Object
@@ -802,6 +801,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.Iterate(curOperElem, simpleMethod));
                 } else if ("iterate-map".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.IterateMap(curOperElem, simpleMethod));
+                } else if ("loop".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.envops.Loop(curOperElem, simpleMethod));
                 } else if ("first-from-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.FirstFromList(curOperElem, simpleMethod));
 
