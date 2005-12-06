@@ -83,10 +83,10 @@ public class RoutingServices {
         long estimatedTaskTime = ProductionRun.getEstimatedTaskTime(task, quantity, productId, routingId, dispatcher);
         result.put("estimatedTaskTime", new Long(estimatedTaskTime));
         if (task != null && task.get("estimatedSetupMillis") != null) {
-            result.put("setupTime", task.getFloat("estimatedSetupMillis"));
+            result.put("setupTime", task.getDouble("estimatedSetupMillis"));
         }
         if (task != null && task.get("estimatedMilliSeconds") != null) {
-            result.put("taskUnitTime", task.getFloat("estimatedMilliSeconds"));
+            result.put("taskUnitTime", task.getDouble("estimatedMilliSeconds"));
         }
         return result;
     }

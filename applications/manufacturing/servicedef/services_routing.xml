@@ -60,7 +60,7 @@
         <attribute mode="IN" name="routingId" optional="true" type="String"/>
         <attribute mode="IN" name="quantity" optional="true" type="Double"/>
         <attribute mode="OUT" name="estimatedTaskTime" type="Long" optional="false"/>
-        <attribute mode="OUT" name="setupTime" type="Float" optional="true"/>
-        <attribute mode="OUT" name="taskUnitTime" type="Float" optional="true"/>
+        <attribute mode="OUT" name="setupTime" type="Double" optional="true"/>
+        <attribute mode="OUT" name="taskUnitTime" type="Double" optional="true"/>
     </service>
 </services>
