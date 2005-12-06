@@ -1992,7 +1992,7 @@
         <relation type="one" fk-name="RTN_ITEM_STTSIT" rel-entity-name="StatusItem">
             <key-map field-name="statusId"/>
         </relation>
-        <relation type="one" fk-name="RTN_ITEM_ITSTT" rel-entity-name="StatusItem">
+        <relation type="one" fk-name="RTN_ITEM_ITSTT" title="Inventory" rel-entity-name="StatusItem">
             <key-map field-name="expectedItemStatus" rel-field-name="statusId"/>
         </relation>
         <relation type="many" rel-entity-name="ShipmentReceipt">

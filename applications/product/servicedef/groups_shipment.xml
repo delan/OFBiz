@@ -28,6 +28,6 @@
         <service name="createInventoryItem" mode="sync" result-to-context="true"/>
         <service name="createInventoryItemDetail" mode="sync" result-to-context="true"/>
         <service name="createShipmentReceipt" mode="sync"/>
-        <service name="balanceInventoryItems" mode="sync"/>
+        <service name="balanceInventoryItems" mode="sync"/>        
     </group>
 </service-group>
