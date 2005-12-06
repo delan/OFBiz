@@ -51,6 +51,7 @@
 <input type="hidden" name="currentStatusId" value="${returnHeader.statusId?if_exists}">
 <#else>
 <form name="returnhead" method="post" action="<@ofbizUrl>createReturn</@ofbizUrl>">
+<input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
 </#if>
 
 <table border='0' cellpadding='2' cellspacing='0'>
