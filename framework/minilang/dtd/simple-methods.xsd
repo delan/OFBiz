@@ -1366,6 +1366,16 @@
         <xs:attribute type="xs:string" name="value-name" use="required"/>
         <xs:attribute type="xs:string" name="map-name" use="required"/>
     </xs:attributeGroup>
+    <xs:element name="loop" substitutionGroup="ControlOperations">
+        <xs:complexType>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="AllOperations"/>
+            <xs:attributeGroup ref="attlist.loop"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.loop">
+        <xs:attribute type="xs:string" name="count" use="required"/>
+        <xs:attribute type="xs:string" name="field" use="optional"/>
+    </xs:attributeGroup>
     <xs:element name="check-errors" substitutionGroup="ControlOperations">
         <xs:complexType>
             <xs:sequence>
