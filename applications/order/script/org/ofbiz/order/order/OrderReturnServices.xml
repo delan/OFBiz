@@ -65,14 +65,8 @@
         </if-empty>
         <check-errors/>
 
-        <!-- check and make sure the header type was set -->
-        <if-empty field-name="returnHeaderTypeId" map-name="parameters">
-            <add-error><fail-message message="Return Header Type not defined."/></add-error>
-            <check-errors/>
-        </if-empty>
-
         <!-- check the needs (auto) inventory receive flag (default to no) -->
-        <if-empty field-name="needsInventoryReceive" map-name="parameters">
+        <if-empty field-name="parameters.needsInventoryReceive">
             <set field="parameters.needsInventoryReceive" value="N"/>
         </if-empty>
 

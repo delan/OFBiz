@@ -41,8 +41,9 @@
     <service name="createReturnHeader" default-entity-name="ReturnHeader" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnHeader">
         <description>Create a new ReturnHeader</description>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="returnHeaderTypeId" optional="false"/>
     </service>
     <service name="updateReturnHeader" default-entity-name="ReturnHeader" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnHeader">
