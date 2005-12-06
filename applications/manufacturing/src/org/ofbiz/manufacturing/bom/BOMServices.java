@@ -354,7 +354,7 @@ public class BOMServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
-        
+
         String productId = (String) context.get("productId");
         Double quantity = (Double) context.get("quantity");
         Double amount = (Double) context.get("amount");
@@ -402,12 +402,12 @@ public class BOMServices {
         String workEffortId = null;
         try {
             Map routingInMap = UtilMisc.toMap("productId", productId, "ignoreDefaultRouting", "Y", "userLogin", userLogin);
-            Map routingOutMap = dispatcher.runSync("getRouting", routingInMap);
+            Map routingOutMap = dispatcher.runSync("getProductRouting", routingInMap);
             GenericValue routing = (GenericValue)routingOutMap.get("routing");
             if (routing == null) {
                 // try to find a routing linked to the virtual product
                 routingInMap = UtilMisc.toMap("productId", tree.getRoot().getProduct().getString("productId"), "userLogin", userLogin);
-                routingOutMap = dispatcher.runSync("getRouting", routingInMap);
+                routingOutMap = dispatcher.runSync("getProductRouting", routingInMap);
                 routing = (GenericValue)routingOutMap.get("routing");
             }
             if (routing != null) {
@@ -416,7 +416,6 @@ public class BOMServices {
         } catch(GenericServiceException gse) {
             Debug.logWarning(gse.getMessage(), module);
         }
-        // ==========================================
         if (workEffortId != null) {
             result.put("workEffortId", workEffortId);
         }
