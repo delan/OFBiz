@@ -212,32 +212,40 @@ public class ProductionRunServices {
         // -------------------
         // Routing and routing tasks
         // -------------------
+        // Select the product's routing
+        /*
+        if (workEffortId == null) {
+            // TODO: we should select the best product routing based on quantity to manufacture
+            workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId, "statusId", "ROU_PROD_TEMPLATE"));
+            workEffortProducts = EntityUtil.filterByDate(workEffortProducts);
+            GenericValue workEffortProduct = EntityUtil.getFirst(workEffortProducts);
+            if (workEffortProduct != null) {
+                workEffortId = workEffortProduct.getString("workEffortId");
+            }
+        }
+        if (workEffortId != null) {
+            routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+        }
+         */
         try {
-            // Select the product's routing
-            if (workEffortId == null) {
-                // TODO: we should select the best product routing based on quantity to manufacture
-                workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId, "statusId", "ROU_PROD_TEMPLATE"));
-                workEffortProducts = EntityUtil.filterByDate(workEffortProducts);
-                GenericValue workEffortProduct = EntityUtil.getFirst(workEffortProducts);
-                if (workEffortProduct != null) {
-                    workEffortId = workEffortProduct.getString("workEffortId");
-                }
-            }
-            if (workEffortId != null) {
-                routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
-            }
-            if (routing == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductRoutingNotExist", locale));
-            }
-            // The routing tasks are loaded
-            routingTaskAssocs = routing.getRelated("FromWorkEffortAssoc",UtilMisc.toMap("workEffortAssocTypeId","ROUTING_COMPONENT"), UtilMisc.toList("sequenceNum","fromDate"));
-            routingTaskAssocs = EntityUtil.filterByDate(routingTaskAssocs);
-            if (routingTaskAssocs == null || routingTaskAssocs.size()==0) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRoutingHasNoRoutingTask", locale));
-            }
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            Map routingInMap = UtilMisc.toMap("productId", productId, "userLogin", userLogin);
+            Map routingOutMap = dispatcher.runSync("getRouting", routingInMap);
+            routing = (GenericValue)routingOutMap.get("routing");
+            routingTaskAssocs = (List)routingOutMap.get("tasks");
+        } catch(GenericServiceException gse) {
+            Debug.logWarning(gse.getMessage(), module);
+        }
+        // =================================
+        if (routing == null) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductRoutingNotExist", locale));
+        }
+        /*
+        // The routing tasks are loaded
+        routingTaskAssocs = routing.getRelated("FromWorkEffortAssoc",UtilMisc.toMap("workEffortAssocTypeId","ROUTING_COMPONENT"), UtilMisc.toList("sequenceNum","fromDate"));
+        routingTaskAssocs = EntityUtil.filterByDate(routingTaskAssocs);
+         */
+        if (routingTaskAssocs == null || routingTaskAssocs.size()==0) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRoutingHasNoRoutingTask", locale));
         }
         
         // ProductionRun header creation,
@@ -665,21 +673,6 @@ public class ProductionRunServices {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
                 }
             }
-            /*
-            if (!productionRun.getGenericValue().getString("currentStatusId").equals("PRUN_RUNNING")) {
-                serviceContext.clear();
-                serviceContext.put("workEffortId", productionRunId);
-                serviceContext.put("currentStatusId", "PRUN_RUNNING");
-                serviceContext.put("userLogin", userLogin);
-                resultService = null;
-                try {
-                    resultService = dispatcher.runSync("updateWorkEffort", serviceContext);
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, "Problem calling the updateWorkEffort service", module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
-                }
-            }
-            */
             result.put("newStatusId", "PRUN_RUNNING");
             result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusChanged",UtilMisc.toMap("newStatusId", "PRUN_DOC_PRINTED"), locale));
             return result;

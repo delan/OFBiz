@@ -699,7 +699,7 @@ public class MrpServices {
                         // #####################################################
                         
                         // calculate the ProposedOrder requirementStartDate and update the requirementStartDate object property.
-                        Map routingTaskStartDate = proposedOrder.calculateStartDate(daysToShip, routing, dispatcher);
+                        Map routingTaskStartDate = proposedOrder.calculateStartDate(daysToShip, routing, delegator, dispatcher, userLogin);
                         if (isbuild) {
                             // process the product components
                             processBomComponent(product, proposedOrder.getQuantity(), proposedOrder.getRequirementStartDate(), routingTaskStartDate, components);
