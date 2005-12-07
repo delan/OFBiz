@@ -44,6 +44,10 @@
         <condition field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
         <action service="checkOrderItemStatus" mode="sync"/>
     </eca>
+    <eca service="changeOrderItemStatus" event="commit">
+        <condition field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
+        <action service="checkDigitalItemFulfillment" mode="sync"/>
+    </eca>
 
     <!-- order status changes -->
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
