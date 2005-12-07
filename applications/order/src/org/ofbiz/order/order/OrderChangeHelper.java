@@ -27,18 +27,14 @@ package org.ofbiz.order.order;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -79,6 +75,7 @@ public class OrderChangeHelper {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS, DIGITAL_ITEM_STATUS);
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
 
+            /*
             // call the service to check/run digial fulfillment
             Map checkDigi = dispatcher.runSync("checkDigitalItemFulfillment", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
             // this service will return a message with success if there were any problems. Get this message and return it to the user
@@ -86,6 +83,7 @@ public class OrderChangeHelper {
             if (UtilValidate.isNotEmpty(message)) {
                 throw new GeneralRuntimeException(message);
             }
+            */
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
