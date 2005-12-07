@@ -35,35 +35,32 @@
         <filter-list-by-date list-name="routings"/>
         <!-- TODO: we should consider the quantity to select the best routing -->
         <first-from-list list-name="routings" entry-name="routing"/>
+        <if-empty field-name="routing">
+            <!-- The default routing is used when no explicit routing is associated to the product 
+                 and the ignoreDefaultRouting is not equals to Y -->
+            <if>
+                <condition>
+                <or>
+                    <if-empty field-name="parameters.ignoreDefaultRouting"/>
+                    <if-compare field-name="parameters.ignoreDefaultRouting" operator="equals" value="N"/>
+                </or>
+                </condition>
+                <then>
+                    <clear-field field-name="lookupRouting"/>
+                    <set value="DEFAULT_ROUTING" field="lookupRouting.workEffortId"/>
+                    <find-by-primary-key entity-name="WorkEffort" value-name="routing" map-name="lookupRouting"/>
+                </then>
+            </if>
+        </if-empty>
+
         <if-not-empty field-name="routing">
             <set from-field="routing.workEffortId" field="lookupTasks.workEffortIdFrom"/>
             <string-to-list string="sequenceNum" list-name="tasksOrder"/>
             <set value="ROUTING_COMPONENT" field="lookupTasks.workEffortAssocTypeId"/>
             <find-by-and entity-name="WorkEffortAssoc" list-name="tasks" map-name="lookupTasks" order-by-list-name="tasksOrder"/>
             <filter-list-by-date list-name="tasks"/>
-            <else>
-                <!-- The default routing is used when no explicit routing is associated to the product 
-                     and the ignoreDefaultRouting is not equals to Y -->
-                <if>
-                    <condition>
-                    <or>
-                        <if-empty field-name="parameters.ignoreDefaultRouting"/>
-                        <if-compare field-name="parameters.ignoreDefaultRouting" operator="equals" value="N"/>
-                    </or>
-                    </condition>
-                    <then>
-                        <clear-field field-name="lookupRouting"/>
-                        <set value="DEFAULT_ROUTING" field="lookupRouting.workEffortId"/>
-                        <find-by-primary-key entity-name="WorkEffort" value-name="routing" map-name="lookupRouting"/>
-                        <set from-field="routing.workEffortId" field="lookupTasks.workEffortIdFrom"/>
-                        <string-to-list string="sequenceNum" list-name="tasksOrder"/>
-                        <set value="ROUTING_COMPONENT" field="lookupTasks.workEffortAssocTypeId"/>
-                        <find-by-and entity-name="WorkEffortAssoc" list-name="tasks" map-name="lookupTasks" order-by-list-name="tasksOrder"/>
-                        <filter-list-by-date list-name="tasks"/>
-                    </then>
-                </if>
-            </else>
         </if-not-empty>
+
         <field-to-result field-name="routing"/>
         <field-to-result field-name="tasks"/>
     </simple-method>
