@@ -57,7 +57,7 @@
         </field>
     </form>
     <form name="ListFacilityInventoryByProduct" type="list" 
-            target="" title="" list-name="inventoryByProduct"
+            target="" title="" list-name="inventoryByProduct" paginate-target="ViewFacilityInventoryByProduct"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="editLink" widget-style="buttontext">
             <hyperlink target="/catalog/control/EditProduct?productId=${productId}" target-type="inter-app" description="${productId}" />
