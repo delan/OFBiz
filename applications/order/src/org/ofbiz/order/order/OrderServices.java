@@ -2541,10 +2541,12 @@ public class OrderServices {
                     GenericValue item = (GenericValue) dii.next();
                     GenericValue product = (GenericValue) digitalProducts.get(item);
 
-                    try {
-                        productType = product.getRelatedOne("ProductType");
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "ERROR: Unable to get ProductType from Product", module);
+                    if (product != null) {
+                        try {
+                            productType = product.getRelatedOne("ProductType");
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "ERROR: Unable to get ProductType from Product", module);
+                        }
                     }
 
                     if (product != null && productType != null) {
