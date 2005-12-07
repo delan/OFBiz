@@ -123,6 +123,12 @@
             <result-to-field result-name="estimatedTaskTime"/>
             <result-to-field result-name="setupTime"/>
         </call-service>
+
+        <calculate field-name="estimatedTaskTime" type="Double">
+            <calcop field-name="estimatedTaskTime" operator="subtract">
+                <calcop field-name="setupTime" operator="get"/>
+            </calcop>
+        </calculate>
         
         <entity-one entity-name="WorkEffort" value-name="task"/>
         <if-not-empty field-name="task">
