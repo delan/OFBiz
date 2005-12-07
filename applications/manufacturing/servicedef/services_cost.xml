@@ -63,4 +63,12 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
+    <service name="cancelCostComponents" engine="simple" 
+                location="org/ofbiz/manufacturing/cost/CostServices.xml" invoke="cancelCostComponents" auth="true">
+        <description>Cancels CostComponent</description>
+        <attribute mode="IN" name="costComponentId" optional="true" type="String"/>
+        <attribute mode="IN" name="productId" optional="true" type="String"/>
+        <attribute mode="IN" name="costUomId" optional="true" type="String"/>
+        <attribute mode="IN" name="costComponentTypeId" optional="true" type="String"/>
+    </service>
 </services>
