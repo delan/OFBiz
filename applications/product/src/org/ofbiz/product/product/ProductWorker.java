@@ -64,7 +64,7 @@ public class ProductWorker {
         String errMsg = null;
         if (product != null) {
             String productTypeId = product.getString("productTypeId");
-            if ("SERVICE".equals(productTypeId) || "DIGITAL_GOOD".equals(productTypeId)) {
+            if ("SERVICE".equals(productTypeId) || ProductWorker.isDigital(product)) {
                 // don't charge shipping on services or digital goods
                 return false;
             }       
@@ -623,5 +623,36 @@ public class ProductWorker {
         }
         return _parentProduct;
     }
+
+    public static boolean isDigital(GenericValue product) {
+        boolean isDigital = false;
+        if (product != null) {
+            GenericValue productType = null;
+            try {
+                productType = product.getRelatedOneCache("ProductType");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+            }
+            String isDigitalValue = (productType != null? productType.getString("isDigital"): null);
+            isDigital = isDigitalValue != null && "Y".equalsIgnoreCase(isDigitalValue);
+        }
+        return isDigital;
+    }
+
+    public static boolean isPhysical(GenericValue product) {
+        boolean isPhysical = false;
+        if (product != null) {
+            GenericValue productType = null;
+            try {
+                productType = product.getRelatedOneCache("ProductType");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+            }
+            String isPhysicalValue = (productType != null? productType.getString("isPhysical"): null);
+            isPhysical = isPhysicalValue != null && "Y".equalsIgnoreCase(isPhysicalValue);
+        }
+        return isPhysical;
+    }
+
 }
 
