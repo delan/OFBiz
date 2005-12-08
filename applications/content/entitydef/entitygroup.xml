@@ -29,6 +29,7 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="Content" />
+    <entity-group group="org.ofbiz" entity="ContentApproval" />
     <entity-group group="org.ofbiz" entity="ContentAssoc" />
     <entity-group group="org.ofbiz" entity="ContentAssocDataResourceViewFrom" />
     <entity-group group="org.ofbiz" entity="ContentAssocDataResourceViewTo" />
@@ -43,6 +44,8 @@
     <entity-group group="org.ofbiz" entity="ContentPurpose" />
     <entity-group group="org.ofbiz" entity="ContentPurposeOperation" />
     <entity-group group="org.ofbiz" entity="ContentPurposeType" />
+    <entity-group group="org.ofbiz" entity="ContentRevision" />
+    <entity-group group="org.ofbiz" entity="ContentRevisionItem" />
     <entity-group group="org.ofbiz" entity="ContentRole" />
     <entity-group group="org.ofbiz" entity="ContentType" />
     <entity-group group="org.ofbiz" entity="ContentTypeAttr" />

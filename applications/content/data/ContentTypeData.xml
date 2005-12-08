@@ -22,6 +22,8 @@
     <ContentAssocType contentAssocTypeId="AUTHOR" description="Author"/>
     <ContentAssocType contentAssocTypeId="SUMMARY" description="Summary"/>
 
+    <ContentAssocType contentAssocTypeId="COMPDOC_PART" description="Composite Document Part"/>
+    
     <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
     <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
     <ContentAssocPredicate contentAssocPredicateId="extends" description="The object extends the subject."/>
@@ -108,6 +110,8 @@
     <ContentType contentTypeId="DEPARTMENT" description="Department" parentTypeId="PLACEHOLDER"/>
     <ContentType contentTypeId="TOPIC" description="Topic" parentTypeId="PLACEHOLDER"/>
 
+    <ContentType contentTypeId="COMPDOC_TEMPLATE" description="Composite Document Template"/>
+    <ContentType contentTypeId="COMPDOC_INSTANCE" description="Composite Document Instance"/>
 
     <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
 
