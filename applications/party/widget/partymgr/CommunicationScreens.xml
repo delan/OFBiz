@@ -293,7 +293,6 @@
                 <entity-one entity-name="RoleType" value-name="toRoleType">
                     <field-map env-name="communicationEvent.roleTypeIdTo" field-name="roleTypeId"/>
                 </entity-one>
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/editCommunication.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCommunicationEventDecorator">
