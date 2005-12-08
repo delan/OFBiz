@@ -29,7 +29,7 @@
         <section>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="headerItem" value="contactlist"/>
+                <set field="tabButtonItem" value="Tracking"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <entity-one entity-name="TrackingCode" value-name="trackingCode"/>
             </actions>
