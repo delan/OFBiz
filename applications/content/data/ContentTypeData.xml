@@ -113,6 +113,14 @@
     <ContentType contentTypeId="COMPDOC_TEMPLATE" description="Composite Document Template"/>
     <ContentType contentTypeId="COMPDOC_INSTANCE" description="Composite Document Instance"/>
 
+    <StatusType description="Content Approval Status" hasTable="N" parentTypeId="" statusTypeId="CNTNTAPPR_STATUS"/>
+    <StatusItem description="Not Ready for Approval" sequenceId="01" statusCode="NOT_READY" statusId="CNTAP_NOT_READY" statusTypeId="CNTNTAPPR_STATUS"/>
+    <StatusItem description="Ready for Approval" sequenceId="02" statusCode="READY" statusId="CNTAP_READY" statusTypeId="CNTNTAPPR_STATUS"/>
+    <StatusItem description="Approval In Process" sequenceId="03" statusCode="IN_PROCESS" statusId="CNTAP_IN_PROCESS" statusTypeId="CNTNTAPPR_STATUS"/>
+    <StatusItem description="Soft Rejected" sequenceId="11" statusCode="SOFT_REJ" statusId="CNTAP_SOFT_REJ" statusTypeId="CNTNTAPPR_STATUS"/>
+    <StatusItem description="Rejected" sequenceId="12" statusCode="REJECTED" statusId="CNTAP_REJECTED" statusTypeId="CNTNTAPPR_STATUS"/>
+    <StatusItem description="Approved" sequenceId="21" statusCode="APPROVED" statusId="CNTAP_APPROVED" statusTypeId="CNTNTAPPR_STATUS"/>
+    
     <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
 
     <EnumerationType enumTypeId="CONTENT_PRIVILEGE" description="Content Privilege"/>
