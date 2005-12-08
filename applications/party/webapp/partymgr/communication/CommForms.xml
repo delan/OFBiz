@@ -181,7 +181,7 @@
         <field name="custReqestId" widget-style="buttontext"><hyperlink target="/ordermgr/control/EditRequest?custRequestId=${custRequestId}" target-type="inter-app"/></field>
         <field map-name="subjectMap" name="subject"><display/></field>
     </form>
-    <form name="ListPartyCommEvents" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" extends="ListCommEvents" type="list">
+    <form name="ListPartyCommEvents" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" extends="ListCommEvents" type="list">
         <actions>
             <entity-condition entity-name="CommunicationEvent">
                 <condition-list combine="or">
