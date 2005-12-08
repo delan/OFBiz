@@ -43,6 +43,9 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
@@ -252,22 +255,45 @@ public class WorkEffortServices {
         return resultMap;
     } 
         
-    private static List getWorkEffortEvents(DispatchContext ctx, Timestamp startStamp, Timestamp endStamp, String partyId, String facilityId) {
+    private static List getWorkEffortEvents(DispatchContext ctx, Timestamp startStamp, Timestamp endStamp, String partyId, String facilityId, String fixedAssetId) {
         GenericDelegator delegator = ctx.getDelegator();
         List validWorkEfforts = new ArrayList();
         try {
             List entityExprList = UtilMisc.toList(
                     new EntityExpr("estimatedCompletionDate", EntityOperator.GREATER_THAN_EQUAL_TO, startStamp),
-                    new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN, endStamp),
-                    new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "EVENT"));
+                    new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN, endStamp));
+            List typesList = UtilMisc.toList(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "EVENT"));
             if (UtilValidate.isNotEmpty(partyId)) {
                 entityExprList.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
             }
             if (UtilValidate.isNotEmpty(facilityId)) {
                 entityExprList.add(new EntityExpr("facilityId", EntityOperator.EQUALS, facilityId));
+                typesList.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_HEADER"));
             }
-            
-            List tempWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign", entityExprList, UtilMisc.toList("estimatedStartDate"));
+            if (UtilValidate.isNotEmpty(fixedAssetId)) {
+                entityExprList.add(new EntityExpr("fixedAssetId", EntityOperator.EQUALS, fixedAssetId));
+                typesList.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"));
+            }
+            EntityCondition typesCondition = null;
+            if (typesList.size() == 1) {
+                typesCondition = (EntityExpr)typesList.get(0);
+            } else {
+                typesCondition = new EntityConditionList(typesList, EntityJoinOperator.OR);
+            }
+            entityExprList.add(typesCondition);
+
+            List tempWorkEfforts = null;
+            if (UtilValidate.isNotEmpty(partyId)) {
+                tempWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign", entityExprList, UtilMisc.toList("estimatedStartDate"));
+            } else {
+                tempWorkEfforts = delegator.findByAnd("WorkEffort", entityExprList, UtilMisc.toList("estimatedStartDate"));
+            }
+
+            // FIXME: I think that now the following code can be removed.
+            //        It was probably here to remove duplicated workeffort ids caused
+            //        by the query on the WorkEffortAndPartyAssign view when no party was
+            //        specified; now it is no more necessary since, when no party is specified,
+            //        the query is done on the WorkEffort entity.
             Set tempWeKeys = new HashSet();
             Iterator tempWorkEffortIter = tempWorkEfforts.iterator();
             while (tempWorkEffortIter.hasNext()) {
@@ -286,7 +312,7 @@ public class WorkEffortServices {
         }
         return validWorkEfforts;        
     }
-    
+
     public static Map getWorkEffortEventsByDays(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");    
@@ -344,7 +370,7 @@ public class WorkEffortServices {
         } else {
             // Use the View Entity
             if (userLogin != null && userLogin.get("partyId") != null) {
-                validWorkEfforts = getWorkEffortEvents(ctx, startStamp, endStamp, userLogin.getString("partyId"), null);                
+                validWorkEfforts = getWorkEffortEvents(ctx, startStamp, endStamp, userLogin.getString("partyId"), null, null);                
             }
         }
         
@@ -401,7 +427,8 @@ public class WorkEffortServices {
 
         String partyId = (String) context.get("partyId");
         String facilityId = (String) context.get("facilityId");
-        
+        String fixedAssetId = (String) context.get("fixedAssetId");
+
         //To be returned, the max concurrent entries for a single period
         int maxConcurrentEntries = 0;
                 
@@ -426,17 +453,16 @@ public class WorkEffortServices {
                 return ServiceUtil.returnError("You do not have permission to view information for party with ID [" + partyId + "], you must be logged in as a user associated with this party, or have the WORKEFFORTMGR_VIEW or WORKEFFORTMGR_ADMIN permissions.");
             }
         } else {
-            // if a facilityId is specified, don't set a default partyId...
-            if (UtilValidate.isEmpty(facilityId)) {
+            // if a facilityId or a fixedAssetId are not specified, don't set a default partyId...
+            if (UtilValidate.isEmpty(facilityId) && UtilValidate.isEmpty(fixedAssetId)) {
                 partyIdToUse = userLogin.getString("partyId");
             }
         }
                 
         // Use the View Entity
-        if (UtilValidate.isNotEmpty(partyIdToUse) || UtilValidate.isNotEmpty(facilityId)) {
-            validWorkEfforts = getWorkEffortEvents(ctx, startStamp, endStamp, partyIdToUse, facilityId);                
+        if (UtilValidate.isNotEmpty(partyIdToUse) || UtilValidate.isNotEmpty(facilityId) || UtilValidate.isNotEmpty(fixedAssetId)) {
+            validWorkEfforts = getWorkEffortEvents(ctx, startStamp, endStamp, partyIdToUse, facilityId, fixedAssetId);
         }
-        
         // Split the WorkEffort list into a map with entries for each period, period start is the key
         List periods = new ArrayList();
         if (validWorkEfforts != null) {

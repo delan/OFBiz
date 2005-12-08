@@ -40,8 +40,15 @@ dispatcher = request.getAttribute("dispatcher");
 allFacilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
 context.put("allFacilities", allFacilities);
 
+allFixedAssets = delegator.findAll("FixedAsset", UtilMisc.toList("fixedAssetId"));
+context.put("allFixedAssets", allFixedAssets);
+
 //currentDay = request.getAttribute("currentDay");
 startParam = request.getParameter("start");
+
+facilityId = request.getParameter("facilityId");
+fixedAssetId = request.getParameter("fixedAssetId");
+partyId = request.getParameter("partyId");
 
 now = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp());
 start = null;
@@ -70,7 +77,9 @@ tempCal.add(Calendar.DATE,-(prevMonthDays));
 numDays += prevMonthDays;
 getFrom = new Timestamp(tempCal.getTime().getTime());
 
-serviceCtx = UtilMisc.toMap("userLogin", userLogin, "start", getFrom,"numPeriods", new Integer(numDays), "periodSeconds", new Integer(3600*24), "partyId", request.getParameter("partyId"), "facilityId", request.getParameter("facilityId"));
+serviceCtx = UtilMisc.toMap("userLogin", userLogin, "start", getFrom,"numPeriods", new Integer(numDays), "periodSeconds", new Integer(3600*24), "partyId", partyId, "facilityId", facilityId);
+serviceCtx.put("fixedAssetId", fixedAssetId);
+
 result = dispatcher.runSync("getWorkEffortEventsByPeriod", serviceCtx);
 
 context.put("periods",result.get("periods"));
