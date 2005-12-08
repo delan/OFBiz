@@ -34,13 +34,13 @@
         <menu-item name="ContactList" title="${uiLabelMap.ContactList}"><link target="ListContactLists"/></menu-item>
         <menu-item name="Reports" title="${uiLabelMap.Reports}"><link target="MarketingReport"/></menu-item>
 
-        <menu-item name="Logout" title="${uiLabelMap.CommonLogout}" align-style="col-right">
-            <condition><if-empty field-name="requestAttributes.userLogin"/></condition>
+        <menu-item name="Logout" title="Logout" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
+            <condition><not><if-empty field-name="userLogin"/></not></condition>
             <link target="logout"/>
         </menu-item>
-        <menu-item name="Login" title="${uiLabelMap.CommonLogin}" align-style="col-right">
-            <condition><not> <if-empty field-name="requestAttributes.userLogin"/></not></condition>
-            <link target="${requestAttributes.checkLoginUrl}"/>
+        <menu-item name="Login" title="Login" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
+            <condition><if-empty field-name="userLogin"/></condition>
+            <link target="${checkLoginUrl}"/>
         </menu-item>
     </menu>
 </menus>
