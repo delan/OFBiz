@@ -96,7 +96,7 @@
 <div class="tabletext">&nbsp;</div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
-		<td width="50%" align="center">
+		<td width="34%" align="center">
 			<div class="tabletext">
 				<form action="<@ofbizUrl>month</@ofbizUrl>" name="partyform" method="post">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
@@ -106,14 +106,30 @@
 				</form>
 			</div>
 		</td>
-		<td width="50%" align="center">
+		<td width="32%" align="center">
 			<div class="tabletext">
 				<form action="<@ofbizUrl>month</@ofbizUrl>" method="post">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
 					${uiLabelMap.WorkEffortByFacility}: 
 						<select name="facilityId" class="selectBox">
+                                                        <option value=""></option>
 							<#list allFacilities as facility>
 								<option value="${facility.facilityId}"<#if requestParameters.facilityId?has_content && requestParameters.facilityId == facility.facilityId>${uiLabelMap.WorkEffortSelected}</#if>>${facility.facilityName}</option>
+							</#list>
+						</select>
+					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
+				</form>
+			</div>
+		</td>
+		<td width="32%" align="center">
+			<div class="tabletext">
+				<form action="<@ofbizUrl>month</@ofbizUrl>" method="post">
+					<input type="hidden" name="start" value="${start.time?string("#")}"/>
+					${uiLabelMap.WorkEffortByFixedAsset}: 
+						<select name="fixedAssetId" class="selectBox">
+                                                        <option value=""></option>
+							<#list allFixedAssets as fixedAsset>
+                                                            <option value="${fixedAsset.fixedAssetId}"<#if requestParameters.fixedAssetId?has_content && requestParameters.fixedAssetId == fixedAsset.fixedAssetId>${uiLabelMap.WorkEffortSelected}</#if>>${fixedAsset.fixedAssetId}</option>
 							</#list>
 						</select>
 					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>

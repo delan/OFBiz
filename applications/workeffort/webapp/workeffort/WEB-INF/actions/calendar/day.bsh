@@ -34,6 +34,8 @@ import java.sql.Timestamp;
 
 String currentDay = request.getAttribute("currentDay");
 String startParam = request.getParameter("start");
+String facilityId = parameters.get("facilityId");
+String fixedAssetId = parameters.get("fixedAssetId");
 
 Timestamp now = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 Timestamp start = null;
@@ -50,7 +52,7 @@ Timestamp prev = UtilDateTime.getDayStart(start,-1);
 Timestamp next = UtilDateTime.getDayStart(start,1);
 
 dispatcher = request.getAttribute("dispatcher");
-Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"start",start,"numPeriods",new Integer(24),"periodSeconds",new Integer(3600));
+Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"start",start,"numPeriods",new Integer(24),"periodSeconds",new Integer(3600), "facilityId", facilityId, "fixedAssetId", fixedAssetId);
 Map result = dispatcher.runSync("getWorkEffortEventsByPeriod",serviceCtx);
 context.put("periods",result.get("periods"));
 context.put("maxConcurrentEntries",result.get("maxConcurrentEntries"));
