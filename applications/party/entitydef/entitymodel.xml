@@ -416,6 +416,8 @@
       <field name="parentCommEventId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="contactMechTypeId" type="id"></field>
+      <field name="contactMechIdFrom" type="id"/>
+      <field name="contactMechIdTo" type="id"/>
       <field name="roleTypeIdFrom" type="id"></field>
       <field name="roleTypeIdTo" type="id"></field>
       <field name="partyIdFrom" type="id"></field>
@@ -456,6 +458,12 @@
       </relation>
       <relation type="one" fk-name="COM_EVNT_CMTP" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_FCM" title="From" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechIdFrom" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_TCM" title="To" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechIdTo" rel-field-name="contactMechId"/>
       </relation>
       <relation type="one" fk-name="COM_EVNT_CLST" rel-entity-name="ContactList">
         <key-map field-name="contactListId"/>
