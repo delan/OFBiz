@@ -488,6 +488,13 @@
         <description>Marks a communication event as read if in the entered/pending status</description>
         <attribute name="messageId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="sendCommEventAsEmail" engine="java"
+            location="org.ofbiz.party.communication.CommunicationEventServices" invoke="sendCommEventAsEmail" auth="true"
+            transaction-timout="7200">  <!-- set transaction time out for 2 hours, since this sometimes may run as an async service to send emails to lots of people -->
+        <description>Sends a communication event as an email.  All parameters come from the CommunicationEvent, which must
+            be of type EMAIL_COMMUNICATION</description>
+        <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <service name="createPartyContent" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyContent" auth="false">
