@@ -31,6 +31,7 @@
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="headerItem" value="contactlist"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
+                <set field="tabButtonItem" value="Campaign"/>
                 <entity-one entity-name="MarketingCampaign" value-name="marketingCampaign"/>
             </actions>
             <widgets>
