@@ -72,6 +72,7 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
@@ -450,12 +451,30 @@ public class EmailServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map storeEmailAsCommunication(DispatchContext dctx, Map serviceContext) {
-          LocalDispatcher dispatcher = dctx.getDispatcher();
-          String subject = (String) serviceContext.get("subject");
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) serviceContext.get("userLogin");
+        
+        String subject = (String) serviceContext.get("subject");
         String body = (String) serviceContext.get("body");
         String partyId = (String) serviceContext.get("partyId");
-      
-        GenericValue userLogin = (GenericValue) serviceContext.get("userLogin");
+        String communicationEventId = (String) serviceContext.get("communicationEventId");
+        
+        // if this email is already associated with a communication event, then update its status
+        if (communicationEventId != null) {
+            try {
+                Map result = dispatcher.runSync("updateCommunicationEvent", UtilMisc.toMap("communicationEventId", communicationEventId,
+                        "statusId", "COM_COMPLETE", "userLogin", userLogin));
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                } else {
+                    return ServiceUtil.returnSuccess();
+                }
+            } catch (GenericServiceException esx) {
+                return ServiceUtil.returnError(esx.getMessage());
+            }
+        }
+        
+        // otherwise, create a new communication event
         String partyIdFrom = (String) userLogin.get("partyId");
         Map commEventMap = FastMap.newInstance();
         commEventMap.put("communicationEventTypeId", "EMAIL_COMMUNICATION");
