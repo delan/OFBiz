@@ -95,48 +95,49 @@
 </table>
 <div class="tabletext">&nbsp;</div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width="34%" align="center">
-			<div class="tabletext">
-				<form action="<@ofbizUrl>month</@ofbizUrl>" name="partyform" method="post">
-					<input type="hidden" name="start" value="${start.time?string("#")}"/>
-					 ${uiLabelMap.WorkEffortByPartyId}: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputBox"/>
-                                         <a href="javascript:call_fieldlookup2(document.partyform.partyId,'<@ofbizUrl>LookupPartyName</@ofbizUrl>');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
-					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
-				</form>
-			</div>
-		</td>
-		<td width="32%" align="center">
-			<div class="tabletext">
-				<form action="<@ofbizUrl>month</@ofbizUrl>" method="post">
-					<input type="hidden" name="start" value="${start.time?string("#")}"/>
-					${uiLabelMap.WorkEffortByFacility}: 
-						<select name="facilityId" class="selectBox">
-                                                        <option value=""></option>
-							<#list allFacilities as facility>
-								<option value="${facility.facilityId}"<#if requestParameters.facilityId?has_content && requestParameters.facilityId == facility.facilityId>${uiLabelMap.WorkEffortSelected}</#if>>${facility.facilityName}</option>
-							</#list>
-						</select>
-					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
-				</form>
-			</div>
-		</td>
-		<td width="32%" align="center">
-			<div class="tabletext">
-				<form action="<@ofbizUrl>month</@ofbizUrl>" method="post">
-					<input type="hidden" name="start" value="${start.time?string("#")}"/>
-					${uiLabelMap.WorkEffortByFixedAsset}: 
-						<select name="fixedAssetId" class="selectBox">
-                                                        <option value=""></option>
-							<#list allFixedAssets as fixedAsset>
-                                                            <option value="${fixedAsset.fixedAssetId}"<#if requestParameters.fixedAssetId?has_content && requestParameters.fixedAssetId == fixedAsset.fixedAssetId>${uiLabelMap.WorkEffortSelected}</#if>>${fixedAsset.fixedAssetId}</option>
-							</#list>
-						</select>
-					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
-				</form>
-			</div>
-		</td>
-	</tr>
+    <tr>
+        <td width="34%" align="center">
+            <div class="tabletext">
+                <form action="<@ofbizUrl>month</@ofbizUrl>" name="partyform" method="post">
+                    <input type="hidden" name="start" value="${start.time?string("#")}"/>
+                    ${uiLabelMap.WorkEffortByPartyId}: 
+                    <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputBox"/>
+                    <a href="javascript:call_fieldlookup2(document.partyform.partyId,'<@ofbizUrl>LookupPartyName</@ofbizUrl>');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+                    <input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
+                </form>
+            </div>
+        </td>
+        <td width="32%" align="center">
+            <div class="tabletext">
+                <form action="<@ofbizUrl>month</@ofbizUrl>" method="post">
+                    <input type="hidden" name="start" value="${start.time?string("#")}"/>
+                    ${uiLabelMap.WorkEffortByFacility}: 
+                    <select name="facilityId" class="selectBox">
+                        <option value=""></option>
+                        <#list allFacilities as facility>
+                            <option value="${facility.facilityId}"<#if requestParameters.facilityId?has_content && requestParameters.facilityId == facility.facilityId>${uiLabelMap.WorkEffortSelected}</#if>>${facility.facilityName}</option>
+                        </#list>
+                    </select>
+                    <input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
+                </form>
+            </div>
+        </td>
+        <td width="32%" align="center">
+            <div class="tabletext">
+                <form action="<@ofbizUrl>month</@ofbizUrl>" method="post">
+                    <input type="hidden" name="start" value="${start.time?string("#")}"/>
+                    ${uiLabelMap.WorkEffortByFixedAsset}: 
+                    <select name="fixedAssetId" class="selectBox">
+                        <option value=""></option>
+                        <#list allFixedAssets as fixedAsset>
+                            <option value="${fixedAsset.fixedAssetId}"<#if requestParameters.fixedAssetId?has_content && requestParameters.fixedAssetId == fixedAsset.fixedAssetId>${uiLabelMap.WorkEffortSelected}</#if>>${fixedAsset.fixedAssetId}</option>
+                        </#list>
+                    </select>
+                    <input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
+                </form>
+            </div>
+        </td>
+    </tr>
 </table>
 
 <#else> 
