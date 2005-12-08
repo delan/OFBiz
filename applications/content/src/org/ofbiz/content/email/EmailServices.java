@@ -459,7 +459,7 @@ public class EmailServices {
         String partyIdFrom = (String) userLogin.get("partyId");
         Map commEventMap = FastMap.newInstance();
         commEventMap.put("communicationEventTypeId", "EMAIL_COMMUNICATION");
-        commEventMap.put("statusId", "COM_ENTERED");
+        commEventMap.put("statusId", "COM_COMPLETE");
         commEventMap.put("contactMechTypeId", "EMAIL_ADDRESS");
         commEventMap.put("partyIdFrom", partyIdFrom);
         commEventMap.put("partyIdTo", partyId);

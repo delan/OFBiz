@@ -103,8 +103,10 @@
         <implements service="sendNotificationInterface"/>
     </service>
     <service name="storeEmailAsCommunication" engine="java"
-            location="org.ofbiz.content.email.EmailServices" invoke="storeEmailAsCommunication">
-        <description>Store email as communication </description>
+            location="org.ofbiz.content.email.EmailServices" invoke="storeEmailAsCommunication" auth="true">
+        <description>Store email as a communication event with the status COM_COMPLETE.  The communication event will be
+                     from the party of the userLogin to the party of the partyId parameter.  It is meant to run a SECA after
+                     a sendMail to record outgoing emails.</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="subject" type="String" mode="IN" optional="false"/>
         <attribute name="body" type="String" mode="IN" optional="false"/>
