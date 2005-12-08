@@ -37,12 +37,6 @@ import java.util.Calendar;
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
 
-allFacilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
-context.put("allFacilities", allFacilities);
-
-allFixedAssets = delegator.findAll("FixedAsset", UtilMisc.toList("fixedAssetId"));
-context.put("allFixedAssets", allFixedAssets);
-
 //currentDay = request.getAttribute("currentDay");
 startParam = request.getParameter("start");
 
