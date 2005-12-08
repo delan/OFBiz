@@ -64,4 +64,11 @@
         <condition field-name="workEffortId" operator="is-empty"/>
         <action service="createWorkEffort" mode="sync" />
     </eca>
+    
+    <!-- when an email communictaion event is marked "IN PROGRESS", launch a background process to send them out -->
+    <eca service="updateCommunicationEvent" event="commit">
+        <condition field-name="statusId" operator="equals" value="COM_IN_PROGRESS"/>
+        <condition field-name="communicationEventTypeId" operator="equals" value="EMAIL_COMMUNICATION"/>
+        <action service="sendCommEventAsEmail" mode="async"/>
+    </eca>
 </service-eca>
