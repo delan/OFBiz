@@ -62,6 +62,7 @@
       <field name="contentId" type="id-ne"></field>
       <field name="contentTypeId" type="id"></field>
       <field name="ownerContentId" type="id"></field>
+      <field name="instanceOfContentId" type="id"></field>
       <field name="dataResourceId" type="id"></field>
       <field name="templateDataResourceId" type="id"></field>
       <field name="dataSourceId" type="id"></field>
@@ -119,12 +120,45 @@
       <relation type="one" fk-name="CONTENT_PCNTNT" title="Owner" rel-entity-name="Content">
         <key-map field-name="ownerContentId" rel-field-name="contentId"/>
       </relation>
+      <relation type="one" fk-name="CONTENT_IOFCNT" title="InstanceOf" rel-entity-name="Content">
+          <key-map field-name="instanceOfContentId" rel-field-name="contentId"/>
+      </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
+    </entity>
+    <entity entity-name="ContentApproval"
+        package-name="org.ofbiz.content.content"
+        title="Content Association Entity">
+        <field name="contentApprovalId" type="id-ne"></field>
+        <field name="contentId" type="id-ne"></field>
+        <field name="contentRevisionSeqId" type="id-ne"></field>
+        <field name="partyId" type="id-ne"></field>
+        <field name="roleTypeId" type="id-ne"></field>
+        <field name="approvalStatusId" type="id-ne"></field>
+        <field name="approvalDate" type="date-time"></field>
+        <field name="sequenceNum" type="numeric"></field>
+        <field name="comments" type="comment"></field>
+        <prim-key field="contentApprovalId"/>
+        <relation type="one" fk-name="CNTNTAPPR_CNT" rel-entity-name="Content">
+            <key-map field-name="contentId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="ContentRevision">
+            <key-map field-name="contentId"/>
+            <key-map field-name="contentRevisionSeqId"/>
+        </relation>
+        <relation type="one" fk-name="CNTNTAPPR_PTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="CNTNTAPPR_RLTP" rel-entity-name="RoleType">
+            <key-map field-name="roleTypeId"/>
+        </relation>
+        <relation type="one" fk-name="CNTNTAPPR_APSI" title="Approval" rel-entity-name="StatusItem">
+            <key-map field-name="approvalStatusId" rel-field-name="statusId"/>
+        </relation>
     </entity>
     <entity entity-name="ContentAssoc"
             package-name="org.ofbiz.content.content"
@@ -424,6 +458,44 @@
       <field name="contentPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="contentPurposeTypeId"/>
+    </entity>
+    <entity entity-name="ContentRevision"
+        package-name="org.ofbiz.content.content"
+        title="Content Revision Entity">
+        <field name="contentId" type="id-ne"></field>
+        <field name="contentRevisionSeqId" type="id-ne"></field>
+        <field name="committedByPartyId" type="id-ne"></field>
+        <field name="comments" type="comment"></field>
+        <prim-key field="contentId"/>
+        <prim-key field="contentRevisionSeqId"/>
+        <relation type="one" fk-name="CNTNTREV_CNT" rel-entity-name="Content">
+            <key-map field-name="contentId"/>
+        </relation>
+        <relation type="one" fk-name="CNTNTREV_CBPTY" title="CommittedBy" rel-entity-name="Party">
+            <key-map field-name="committedByPartyId" rel-field-name="partyId"/>
+        </relation>
+    </entity>
+    <entity entity-name="ContentRevisionItem"
+        package-name="org.ofbiz.content.content"
+        title="Content Revision Entity">
+        <field name="contentId" type="id-ne"></field>
+        <field name="contentRevisionSeqId" type="id-ne"></field>
+        <field name="itemContentId" type="id-ne"></field>
+        <field name="oldDataResourceId" type="id-ne"></field>
+        <field name="newDataResourceId" type="id-ne"></field>
+        <prim-key field="contentId"/>
+        <prim-key field="contentRevisionSeqId"/>
+        <prim-key field="itemContentId"/>
+        <relation type="one" fk-name="CNTNTREVIT_CNTREV" rel-entity-name="ContentRevision">
+            <key-map field-name="contentId"/>
+            <key-map field-name="contentRevisionSeqId"/>
+        </relation>
+        <relation type="one" fk-name="CNTNTREVIT_OLDDR" title="Old" rel-entity-name="DataResource">
+            <key-map field-name="oldDataResourceId" rel-field-name="dataResourceId"/>
+        </relation>
+        <relation type="one" fk-name="CNTNTREVIT_NEWDR" title="New" rel-entity-name="DataResource">
+            <key-map field-name="newDataResourceId" rel-field-name="dataResourceId"/>
+        </relation>
     </entity>
     <entity entity-name="ContentRole"
             package-name="org.ofbiz.content.content"
