@@ -209,7 +209,7 @@
               <#elseif "EMAIL_ADDRESS" = contactMech.contactMechTypeId>
                   <div class="tabletext">
                     ${contactMech.infoString?if_exists}
-                    <a href="mailto:${contactMech.infoString?if_exists}" class="linktext">(${uiLabelMap.CommonSendEmail})</a>
+                    <a href="<@ofbizUrl>EditCommunicationEvent?partyIdFrom=${userLogin.partyId}&partyId=${party.partyId}&communicationEventTypeId=EMAIL_COMMUNICATION&contactMechIdTo=${contactMech.contactMechId}&contactMechTypeId=EMAIL_ADDRESS<#if thisUserPrimaryEmail?has_content>&contactMechIdFrom=${thisUserPrimaryEmail.contactMechId}</#if></@ofbizUrl>" class="linktext">(${uiLabelMap.CommonSendEmail})</a>
                   </div>
               <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
                   <div class="tabletext">

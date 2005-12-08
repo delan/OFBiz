@@ -81,27 +81,16 @@
             </drop-down>
         </field>
         
-        <field name="contactMechTypeId" use-when="commEventContactMechType!=null&amp;&amp;parentCommEventContactMechType==null">
+        <field name="contactMechTypeId">  <!-- does not have use-when restrictions so we can enter what the contactMechTypeId is -->
             <drop-down>
                 <entity-options description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="contactMechTypeId" use-when="commEventContactMechType==null&amp;&amp;parentCommEventContactMechType!=null">
-            <drop-down>
-                <entity-options description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="contactMechTypeId" use-when="commEventContactMechType==null&amp;&amp;parentCommEventContactMechType==null">
-            <drop-down>
-                <entity-options description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
+        <!-- TODO: somehow show the address or email here, rather than just a contactMechId -->
+        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}"><text/></field>
+        <field name="contactMechIdTo" title="${uiLabelMap.PartyToContactMech}"><text/></field>
         
         <field name="roleTypeIdFrom" use-when="commEventRoleTypeIdFrom!=null">
             <drop-down no-current-selected-key="_NA_">
