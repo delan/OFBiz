@@ -125,6 +125,8 @@
         <field name="partyIdTo" title="Party To"><display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/></field>
         <field name="statusId"><display-entity description="${description}" entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="contactMechTypeId"><display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/></field>
+        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}"><display/></field>
+        <field name="contactMechIdTo" title="${uiLabelMap.PartyToContactMech}"><display/></field>
         <field name="roleTypeIdFrom"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="roleTypeIdTo"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><display/></field>
