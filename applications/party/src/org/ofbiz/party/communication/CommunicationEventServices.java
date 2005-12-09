@@ -26,6 +26,7 @@ package org.ofbiz.party.communication;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
@@ -50,9 +51,12 @@ public class CommunicationEventServices {
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-        Map result = ServiceUtil.returnSuccess();
                 
         String communicationEventId = (String) context.get("communicationEventId");
+        
+        Map result = ServiceUtil.returnSuccess();
+        List errorMessages = new LinkedList();                   // used to keep a list of all error messages returned from sending emails to contact list
+        
         try {
             // find the communication event and make sure that it is actually an email
             GenericValue communicationEvent = delegator.findByPrimaryKey("CommunicationEvent", UtilMisc.toMap("communicationEventId", communicationEventId));
@@ -99,10 +103,8 @@ public class CommunicationEventServices {
                 // send it
                 Map tmpResult = dispatcher.runSync("sendMail", sendMailParams);
                 if (ServiceUtil.isError(tmpResult)) {
-                    result = ServiceUtil.returnError(ServiceUtil.getErrorMessage(tmpResult));
-                } else {
-                    result = ServiceUtil.returnSuccess();
-                }    
+                    errorMessages.add(ServiceUtil.getErrorMessage(tmpResult));
+                } 
             } else {
                 // there's actually a contact list here, so we want to be sending to the entire contact list
                 GenericValue ContactList = communicationEvent.getRelatedOne("ContactList");
@@ -116,16 +118,42 @@ public class CommunicationEventServices {
                     // no communicationEventId here - we want to create a communication event for each member of the contact list
             
                     // could be run async as well, but that may spawn a lot of processes if there's a large list and cause problems
-                    Map tmpResult = dispatcher.runSync("sendMail", sendMailParams);                        
+                    Map tmpResult = dispatcher.runSync("sendMail", sendMailParams);
+                    if (ServiceUtil.isError(tmpResult)) {
+                        errorMessages.add(ServiceUtil.getErrorMessage(tmpResult));
+                    }
                 }
             }
-            
         } catch (GenericEntityException eex) {
             ServiceUtil.returnError(eex.getMessage());
         } catch (GenericServiceException esx) {
             ServiceUtil.returnError(esx.getMessage());
         }
         
+        // if there were errors, then the result of this service should be error with the full list of messages
+        if (errorMessages.size() > 0) {
+            result = ServiceUtil.returnError(errorMessages);
+        }
+        return result;
+    }
+    
+    public static Map setCommEventComplete(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String communicationEventId = (String) context.get("communicationEventId");
+        
+        // assume it's a success unless updateCommunicationEvent gives us an error
+        Map result = ServiceUtil.returnSuccess();
+        try {
+            Map tmpResult = dispatcher.runSync("updateCommunicationEvent", UtilMisc.toMap("communicationEventId", communicationEventId,
+                    "statusId", "COM_COMPLETE", "userLogin", userLogin));
+            if (ServiceUtil.isError(result)) {
+                result = ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
+        } catch (GenericServiceException esx) {
+            return ServiceUtil.returnError(esx.getMessage());
+        }
+
         return result;
     }
 }

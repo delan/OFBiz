@@ -459,38 +459,26 @@ public class EmailServices {
         String partyId = (String) serviceContext.get("partyId");
         String communicationEventId = (String) serviceContext.get("communicationEventId");
         
-        // if this email is already associated with a communication event, then update its status
-        if (communicationEventId != null) {
+        // only create a new communication event if the email is not already associated with one
+        if (communicationEventId == null) {
+            String partyIdFrom = (String) userLogin.get("partyId");
+            Map commEventMap = FastMap.newInstance();
+            commEventMap.put("communicationEventTypeId", "EMAIL_COMMUNICATION");
+            commEventMap.put("statusId", "COM_COMPLETE");
+            commEventMap.put("contactMechTypeId", "EMAIL_ADDRESS");
+            commEventMap.put("partyIdFrom", partyIdFrom);
+            commEventMap.put("partyIdTo", partyId);
+            commEventMap.put("subject", subject);
+            commEventMap.put("content", body);
+            commEventMap.put("userLogin", userLogin);
             try {
-                Map result = dispatcher.runSync("updateCommunicationEvent", UtilMisc.toMap("communicationEventId", communicationEventId,
-                        "statusId", "COM_COMPLETE", "userLogin", userLogin));
-                if (ServiceUtil.isError(result)) {
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                } else {
-                    return ServiceUtil.returnSuccess();
-                }
-            } catch (GenericServiceException esx) {
-                return ServiceUtil.returnError(esx.getMessage());
+                dispatcher.runSync("createCommunicationEvent", commEventMap);
+            } catch (Exception e) {
+                Debug.logError(e, "Cannot store email as communication event", module);
+                return ServiceUtil.returnError("Cannot store email as communication event; see logs");
             }
         }
         
-        // otherwise, create a new communication event
-        String partyIdFrom = (String) userLogin.get("partyId");
-        Map commEventMap = FastMap.newInstance();
-        commEventMap.put("communicationEventTypeId", "EMAIL_COMMUNICATION");
-        commEventMap.put("statusId", "COM_COMPLETE");
-        commEventMap.put("contactMechTypeId", "EMAIL_ADDRESS");
-        commEventMap.put("partyIdFrom", partyIdFrom);
-        commEventMap.put("partyIdTo", partyId);
-        commEventMap.put("subject", subject);
-        commEventMap.put("content", body);
-        commEventMap.put("userLogin", userLogin);
-        try {
-            dispatcher.runSync("createCommunicationEvent", commEventMap);
-        } catch (Exception e) {
-            Debug.logError(e, "Cannot store email as communication event", module);
-            return ServiceUtil.returnError("Cannot store email as communication event; see logs");
-        }
         return ServiceUtil.returnSuccess();
     }
 
