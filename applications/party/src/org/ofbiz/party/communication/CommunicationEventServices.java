@@ -24,28 +24,20 @@
 */
 package org.ofbiz.party.communication;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 public class CommunicationEventServices {
@@ -58,7 +50,7 @@ public class CommunicationEventServices {
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-        Map result = null;
+        Map result = ServiceUtil.returnSuccess();
                 
         String communicationEventId = (String) context.get("communicationEventId");
         try {
@@ -73,25 +65,61 @@ public class CommunicationEventServices {
                 String errMsg = UtilProperties.getMessage(resource,"commeventservices.communication_event_must_be_email_for_email", locale);
                 return ServiceUtil.returnError(errMsg + " " + communicationEventId);
             }
-            
+            // make sure the from contact mech is an email if it is specified
+            if ((communicationEvent.getRelatedOne("FromContactMech") == null) ||
+                 (!(communicationEvent.getRelatedOne("FromContactMech").getString("contactMechTypeId").equals("EMAIL_ADDRESS")) ||
+                 (communicationEvent.getRelatedOne("FromContactMech").getString("infoString") == null))) {
+                String errMsg = UtilProperties.getMessage(resource,"commeventservices.communication_event_from_contact_mech_must_be_email", locale);
+                return ServiceUtil.returnError(errMsg + " " + communicationEventId);
+            }
+                        
             // prepare the email
             Map sendMailParams = new HashMap();
-            sendMailParams.put("sendFrom", communicationEvent.getString("contactMechIdFrom"));
+            sendMailParams.put("sendFrom", communicationEvent.getRelatedOne("FromContactMech").getString("infoString"));
             sendMailParams.put("subject", communicationEvent.getString("subject"));
             sendMailParams.put("body", communicationEvent.getString("content"));
-            sendMailParams.put("communicationEventId", communicationEventId);
-            
-            sendMailParams.put("sendTo", communicationEvent.getString("contactMechIdTo"));
-            sendMailParams.put("partyId", communicationEvent.getString("partyIdTo"));  // who it's going to
             sendMailParams.put("userLogin", userLogin);
             
-            // send it
-            Map tmpResult = dispatcher.runSync("sendMail", sendMailParams);
-            if (ServiceUtil.isError(tmpResult)) {
-                result = ServiceUtil.returnError(ServiceUtil.getErrorMessage(tmpResult));
+            // if there is no contact list, then send look for a contactMechIdTo and partyId
+            if ((communicationEvent.getString("contactListId") == null) ||
+                (communicationEvent.getString("contactListId").equals(""))) {
+                
+                // in this case, first make sure that the to contact mech actually is an email
+                if ((communicationEvent.getRelatedOne("ToContactMech") == null) || 
+                        (!(communicationEvent.getRelatedOne("ToContactMech").getString("contactMechTypeId").equals("EMAIL_ADDRESS")) ||
+                        (communicationEvent.getRelatedOne("ToContactMech").getString("infoString") == null))) {
+                       String errMsg = UtilProperties.getMessage(resource,"commeventservices.communication_event_to_contact_mech_must_be_email", locale);
+                       return ServiceUtil.returnError(errMsg + " " + communicationEventId);
+                   }
+                
+                sendMailParams.put("communicationEventId", communicationEventId);
+                sendMailParams.put("sendTo", communicationEvent.getRelatedOne("ToContactMech").getString("infoString"));
+                sendMailParams.put("partyId", communicationEvent.getString("partyIdTo"));  // who it's going to
+                
+                // send it
+                Map tmpResult = dispatcher.runSync("sendMail", sendMailParams);
+                if (ServiceUtil.isError(tmpResult)) {
+                    result = ServiceUtil.returnError(ServiceUtil.getErrorMessage(tmpResult));
+                } else {
+                    result = ServiceUtil.returnSuccess();
+                }    
             } else {
-                result = ServiceUtil.returnSuccess();
+                // there's actually a contact list here, so we want to be sending to the entire contact list
+                GenericValue ContactList = communicationEvent.getRelatedOne("ContactList");
+                List sendToParties = ContactList.getRelated("ContactListParty");
+                
+                for (Iterator it = sendToParties.iterator(); it.hasNext(); ) {
+                    GenericValue nextSendToParty = (GenericValue) it.next();
+                    sendMailParams.put("sendTo", nextSendToParty.getRelatedOne("PreferredContactMech").getString("infoString"));
+                    sendMailParams.put("partyId", nextSendToParty.getString("partyId"));
+                    
+                    // no communicationEventId here - we want to create a communication event for each member of the contact list
+            
+                    // could be run async as well, but that may spawn a lot of processes if there's a large list and cause problems
+                    Map tmpResult = dispatcher.runSync("sendMail", sendMailParams);                        
+                }
             }
+            
         } catch (GenericEntityException eex) {
             ServiceUtil.returnError(eex.getMessage());
         } catch (GenericServiceException esx) {

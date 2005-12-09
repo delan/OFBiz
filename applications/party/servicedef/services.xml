@@ -491,8 +491,9 @@
     <service name="sendCommEventAsEmail" engine="java"
             location="org.ofbiz.party.communication.CommunicationEventServices" invoke="sendCommEventAsEmail" auth="true"
             transaction-timout="7200">  <!-- set transaction time out for 2 hours, since this sometimes may run as an async service to send emails to lots of people -->
-        <description>Sends a communication event as an email.  All parameters come from the CommunicationEvent, which must
-            be of type EMAIL_COMMUNICATION</description>
+        <description>Sends a communication event as a single-part email using sendMail.  All parameters come from CommunicationEvent, which must
+            be of type EMAIL_COMMUNICATION.  If there a contactListId, then will send it to every party on that contact list at their
+            preferredContactMechId.  Otherwise, will look for a contactMechIdTo to send the emails</description>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
     </service>
 
