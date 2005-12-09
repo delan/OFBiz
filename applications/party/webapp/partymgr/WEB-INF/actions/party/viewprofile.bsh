@@ -112,13 +112,3 @@ context.put("monthsToInclude", monthsToInclude);
 context.put("totalSubRemainingAmount", result.get("totalSubRemainingAmount"));
 context.put("totalOrders", result.get("totalOrders"));
 
-// figure out the PRIMARY_EMAIL of the logged in user, for setting in the send email link
-// maybe nice to put in some secondary emails later
-userLogin = request.getAttribute("userLogin");
-if (userLogin != null) {
-    userLoginParty = userLogin.getRelatedOneCache("Party");
-    userLoginPartyPrimaryEmails = userLoginParty.getRelatedByAnd("PartyContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", "PRIMARY_EMAIL"));
-    if ((userLoginPartyPrimaryEmails != null) && (userLoginPartyPrimaryEmails.size() > 0)) {
-        context.put("thisUserPrimaryEmail", userLoginPartyPrimaryEmails.get(0));
-    }
-}
