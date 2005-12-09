@@ -36,6 +36,10 @@ import java.sql.Timestamp;
 String currentDay = request.getAttribute("currentDay");
 String startParam = request.getParameter("start");
 
+facilityId = request.getParameter("facilityId");
+fixedAssetId = request.getParameter("fixedAssetId");
+partyId = request.getParameter("partyId");
+
 Timestamp now = UtilDateTime.getWeekStart(UtilDateTime.nowTimestamp());
 Timestamp start = null;
 if(startParam != null) 
@@ -52,6 +56,10 @@ Timestamp next = UtilDateTime.getDayStart(start,7);
 Timestamp end = UtilDateTime.getDayStart(start,6);
 dispatcher = request.getAttribute("dispatcher");
 Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"start",start,"numPeriods",new Integer(7),"periodSeconds",new Integer(3600*24));
+serviceCtx.put("partyId", partyId);
+serviceCtx.put("facilityId", facilityId);
+serviceCtx.put("fixedAssetId", fixedAssetId);
+
 Map result = dispatcher.runSync("getWorkEffortEventsByPeriod",serviceCtx);
 context.put("periods",result.get("periods"));
 context.put("maxConcurrentEntries",result.get("maxConcurrentEntries"));
