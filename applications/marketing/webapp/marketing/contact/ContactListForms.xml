@@ -223,14 +223,14 @@
         </field>
         
         <field name="roleTypeIdFrom" title="${uiLabelMap.PartyRoleTypeIdFrom}" use-when="commEventRoleTypeIdFrom!=null">
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
         <field name="roleTypeIdTo" title="${uiLabelMap.PartyRoleTypeIdTo}" use-when="commEventRoleTypeIdTo!=null">
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
@@ -245,17 +245,21 @@
             </lookup>
         </field>
         -->
+
+        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}">
+        	<text default-value="${thisUserPrimaryEmail.contactMechId}"/>          <!-- this default value is the logged in user's primary email and is useful for comm events which are emails -->
+        </field>
         <field name="contactListId" title="${uiLabelMap.ContactListId}"><lookup size="20" target-form-name="LookupContactList"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><date-time/></field>
-        <field name="subject" title="${uiLabelMap.PartyCommEventSubject}"><text size="30"/></field>
+        <field name="subject" title="${uiLabelMap.PartySubject}"><text size="30"/></field>
         <field name="note" title="${uiLabelMap.CommonNote}"><textarea cols="60" rows="3"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="60" rows="10"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/>        </field>
         <field name="cancelLink" title="${uiLabelMap.CommonCancel}" widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="FindContactListCommEvents" target="ListContactListCommEvents" title="" type="single"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <field name="contactListId" title="${uiLabelMap.ContactListContactListId}"><text/></field>
         <field name="commEventId" title="${uiLabelMap.ContactListCommEventId}"><lookup target-form-name="LookupCommEvent"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
@@ -263,7 +267,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="ListContactListCommEvents" list-iterator-name="listIt" title="" type="list"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
             <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map field-name="inputFields" env-name="parameters"/>
