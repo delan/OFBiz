@@ -47,16 +47,19 @@
                   <td><div class="tabletext"><b>${uiLabelMap.CommonEndDateTime}</b></div></td>
                   <td><div class="tabletext"><b>${uiLabelMap.WorkEffortEventName}</b></div></td>
                 </tr>                
-                <#list days as workEfforts>
-                  <tr><td colspan="3"><hr class="sepbar"/></td></tr>
-                  <#list workEfforts as workEffort>
-                    <tr>
-                      <td><div class="tabletext">${workEffort.estimatedStartDate}</div></td>
-                      <td><div class="tabletext">${workEffort.estimatedCompletionDate}</div></td>
-                      <td><a class="buttontext" href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
-                    </tr>
+                <#list days as day>
+                  <#assign workEfforts = day.calendarEntries>
+                  <#if workEfforts?has_content>
+                    <tr><td colspan="3"><hr class="sepbar"/></td></tr>
+                    <#list workEfforts as calendarEntry>
+                      <#assign workEffort = calendarEntry.workEffort>
+                      <tr>
+                        <td><div class="tabletext">${workEffort.estimatedStartDate}</div></td>
+                        <td><div class="tabletext">${workEffort.estimatedCompletionDate}</div></td>
+                        <td><a class="buttontext" href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
+                      </tr>
                     </#list>
-                  <#if workEfforts_has_next><tr><td colspan="3"><hr></td></tr></#if>
+                  </#if>
                 </#list>
               </table>
             <#else>

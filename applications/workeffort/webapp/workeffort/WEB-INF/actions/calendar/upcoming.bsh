@@ -33,6 +33,16 @@ import org.ofbiz.webapp.pseudotag.*;
 import org.ofbiz.workeffort.workeffort.*;
 
 dispatcher = request.getAttribute("dispatcher");
-Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"startDay",UtilDateTime.nowTimestamp(),"numDays",new Integer(7));
-Map result = dispatcher.runSync("getWorkEffortEventsByDays",serviceCtx);
-context.put("days",result.get("days"));
+facilityId = request.getParameter("facilityId");
+fixedAssetId = request.getParameter("fixedAssetId");
+partyId = request.getParameter("partyId");
+start = UtilDateTime.nowTimestamp();
+
+Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"start", start,"numPeriods",new Integer(7),"periodSeconds",new Integer(3600*24));
+serviceCtx.put("partyId", partyId);
+serviceCtx.put("facilityId", facilityId);
+serviceCtx.put("fixedAssetId", fixedAssetId);
+
+Map result = dispatcher.runSync("getWorkEffortEventsByPeriod",serviceCtx);
+context.put("days", result.get("periods"));
+context.put("start", start);
