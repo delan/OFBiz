@@ -32,11 +32,20 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.webapp.pseudotag.*;
 import org.ofbiz.workeffort.workeffort.*;
 
-dispatcher = request.getAttribute("dispatcher");
-facilityId = request.getParameter("facilityId");
-fixedAssetId = request.getParameter("fixedAssetId");
-partyId = request.getParameter("partyId");
+facilityId = parameters.get("facilityId");
+fixedAssetId = parameters.get("fixedAssetId");
+partyId = parameters.get("partyId");
 start = UtilDateTime.nowTimestamp();
+eventsParam = "";
+if (facilityId != null) {
+    eventsParam = "&" + eventsParam + "facilityId=" + facilityId;
+}
+if (fixedAssetId != null) {
+    eventsParam = "&" + eventsParam + "fixedAssetId=" + fixedAssetId;
+}
+if (partyId != null) {
+    eventsParam = "&" + eventsParam + "partyId=" + partyId;
+}
 
 Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"start", start,"numPeriods",new Integer(7),"periodSeconds",new Integer(3600*24));
 serviceCtx.put("partyId", partyId);
@@ -46,3 +55,4 @@ serviceCtx.put("fixedAssetId", fixedAssetId);
 Map result = dispatcher.runSync("getWorkEffortEventsByPeriod",serviceCtx);
 context.put("days", result.get("periods"));
 context.put("start", start);
+context.put("eventsParam", eventsParam);
