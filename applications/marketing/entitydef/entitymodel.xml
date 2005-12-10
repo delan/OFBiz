@@ -25,7 +25,7 @@
  * @version    $Rev$
 -->
 
-<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
@@ -361,11 +361,11 @@
             <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
         </view-link>
     </view-entity>
-    
+
     <!-- ========================================================= -->
     <!-- org.ofbiz.marketing.tracking -->
     <!-- ========================================================= -->
-    
+
     <entity entity-name="TrackingCode"
             package-name="org.ofbiz.marketing.tracking"
             title="Tracking Code Entity">
@@ -442,4 +442,31 @@
         <key-map field-name="sourceEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
+
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.marketing.reports -->
+    <!-- ========================================================= -->
+
+     <view-entity entity-name="TrackingCodeAndVisit" package-name="org.ofbiz.marketing.reports"
+         title="View entity for reporting number of visits for a tracking code">
+        <member-entity entity-alias="TC" entity-name="TrackingCode"/>
+        <member-entity entity-alias="TCV" entity-name="TrackingCodeVisit"/>
+        <alias entity-alias="TC" name="trackingCodeId" group-by="true"/>
+        <alias entity-alias="TCV" name="visitId" function="count"/>
+        <alias entity-alias="TCV" name="fromDate" group-by="false"/>  <!-- this means we want to use TrackingCodeVisit.fromDate but not group-by it -->
+        <view-link entity-alias="TCV" rel-entity-alias="TC" rel-optional="true">
+            <key-map field-name="trackingCodeId"/>
+        </view-link>
+      </view-entity>
+      <view-entity entity-name="TrackingCodeAndOrderHeader" package-name="org.ofibz.marketing.reports"
+          title="View entity for reporting number of orders and total order amounts">
+        <member-entity entity-alias="TCO" entity-name="TrackingCodeOrder"/>
+        <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+        <alias entity-alias="OH" name="grandTotal" function="sum"/>
+        <alias entity-alias="TCO" name="orderId" function="count"/>
+        <alias entity-alias="TCO" name="trackingCodeId" group-by="true"/>
+        <view-link entity-alias="OH" rel-entity-alias="TCO">
+            <key-map field-name="orderId"/>
+        </view-link>
+    </view-entity>
 </entitymodel>

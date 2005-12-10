@@ -64,4 +64,11 @@
     <entity-group group="org.ofbiz" entity="TrackingCodeType" />
     <entity-group group="org.ofbiz" entity="TrackingCodeVisit" />
 
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.marketing.tracking -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="TrackingCodeAndVisit"/>
+    <entity-group group="org.ofbiz" entity="TrackingCodeAndOrderHeader"/>
+
 </entitygroup>
