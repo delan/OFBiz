@@ -42,6 +42,13 @@ productionRunId = request.getParameter("productionRunId");
 if (!UtilValidate.isEmpty(productionRunId)) {
     
     GenericValue productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
+    if (productionRun != null) {
+        // If this is a task, get the parent production run
+        if (productionRun.getString("workEffortTypeId") != null && "PROD_ORDER_TASK".equals(productionRun.getString("workEffortTypeId"))) {
+            productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRun.getString("workEffortParentId")));
+        }
+    }
+
     if (productionRun == null) {
         return "error";
     }
