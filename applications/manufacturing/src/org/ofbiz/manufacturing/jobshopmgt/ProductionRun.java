@@ -86,7 +86,14 @@ public class ProductionRun {
         try {
             if (! UtilValidate.isEmpty(productionRunId)) {
                 this.dispatcher = dispatcher;
-                this.productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
+                GenericValue workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
+                if (workEffort != null) {
+                    // If this is a task, get the parent production run
+                    if (workEffort.getString("workEffortTypeId") != null && "PROD_ORDER_TASK".equals(workEffort.getString("workEffortTypeId"))) {
+                        workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffort.getString("workEffortParentId")));
+                    }
+                }
+                this.productionRun = workEffort;
                 if (exist()) {
                     this.estimatedStartDate = productionRun.getTimestamp("estimatedStartDate");
                     this.estimatedCompletionDate = productionRun.getTimestamp("estimatedCompletionDate");

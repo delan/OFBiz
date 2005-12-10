@@ -44,6 +44,7 @@ productionRunId = request.getParameter("productionRunId");
 if (!UtilValidate.isEmpty(productionRunId)) {
     ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
     if (productionRun.exist()){
+        productionRunId = productionRun.getGenericValue().getString("workEffortId");
         context.put("productionRunId", productionRunId);
         context.put("productionRun", productionRun.getGenericValue());
         // Find all the order items to which this production run is linked.
