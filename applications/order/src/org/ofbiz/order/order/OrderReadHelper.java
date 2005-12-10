@@ -1238,6 +1238,10 @@ public class OrderReadHelper {
     }
 
     public List getOrderItemIssuances(GenericValue orderItem) {
+        return this.getOrderItemIssuances(orderItem, null);
+    }
+
+    public List getOrderItemIssuances(GenericValue orderItem, String shipmentId) {
         if (orderItem == null) return null;
         if (this.orderItemIssuances == null) {
             GenericDelegator delegator = orderItem.getDelegator();
@@ -1248,7 +1252,13 @@ public class OrderReadHelper {
                 Debug.logWarning(e, "Trouble getting ItemIssuance(s)", module);
             }
         }
-        return EntityUtil.filterByAnd(orderItemIssuances, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
+
+        // filter the issuances
+        Map filter = UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId"));
+        if (shipmentId != null) {
+            filter.put("shipmentId", shipmentId);
+        }        
+        return EntityUtil.filterByAnd(orderItemIssuances, filter);
     }
 
     public List getOrderReturnItems() {
