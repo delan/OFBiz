@@ -32,11 +32,22 @@ import org.ofbiz.webapp.pseudotag.*;
 import org.ofbiz.workeffort.workeffort.*;
 import java.sql.Timestamp;
 
-String currentDay = request.getAttribute("currentDay");
-String startParam = request.getParameter("start");
-facilityId = request.getParameter("facilityId");
-fixedAssetId = request.getParameter("fixedAssetId");
-partyId = request.getParameter("partyId");
+String currentDay = parameters.get("currentDay");
+String startParam = parameters.get("start");
+facilityId = parameters.get("facilityId");
+fixedAssetId = parameters.get("fixedAssetId");
+partyId = parameters.get("partyId");
+
+eventsParam = "";
+if (facilityId != null) {
+    eventsParam = "&" + eventsParam + "facilityId=" + facilityId;
+}
+if (fixedAssetId != null) {
+    eventsParam = "&" + eventsParam + "fixedAssetId=" + fixedAssetId;
+}
+if (partyId != null) {
+    eventsParam = "&" + eventsParam + "partyId=" + partyId;
+}
 
 Timestamp now = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 Timestamp start = null;
@@ -52,7 +63,6 @@ if(start == null) {
 Timestamp prev = UtilDateTime.getDayStart(start,-1);
 Timestamp next = UtilDateTime.getDayStart(start,1);
 
-dispatcher = request.getAttribute("dispatcher");
 Map serviceCtx = UtilMisc.toMap("userLogin", userLogin,"start",start,"numPeriods",new Integer(24),"periodSeconds",new Integer(3600));
 serviceCtx.put("partyId", partyId);
 serviceCtx.put("facilityId", facilityId);
@@ -65,4 +75,4 @@ context.put("start",start);
 context.put("prev",prev);
 context.put("next",next);
 context.put("now",now);
-request.setAttribute("isCalendarSelected", new Boolean(true));
+context.put("eventsParam", eventsParam);

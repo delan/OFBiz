@@ -38,7 +38,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
 	<td width="100%" class="monthheadertext">${start?date?string("MMMM yyyy")?cap_first}</td>
-    <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>month?start=${prev.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortPreviousMonth}</a> | <a href='<@ofbizUrl>month?start=${next.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortNextMonth}</a> | <a href='<@ofbizUrl>month?start=${now.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortThisMonth}</a></td>
+    <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>month?start=${prev.time?string("#")}${eventsParam}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortPreviousMonth}</a> | <a href='<@ofbizUrl>month?start=${next.time?string("#")}${eventsParam}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortNextMonth}</a> | <a href='<@ofbizUrl>month?start=${now.time?string("#")}${eventsParam}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortThisMonth}</a></td>
   </tr>
 </table>
 <#if periods?has_content> 
@@ -56,12 +56,12 @@
   <#assign indexMod7 = period_index % 7>
   <#if indexMod7 = 0>
   <tr class="bg">
-    <td valign="top" height="60" nowrap class="monthweekheader"><a href='<@ofbizUrl>week?start=${period.start.time?string("#")}</@ofbizUrl>' class="monthweeknumber">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a></td>
+    <td valign="top" height="60" nowrap class="monthweekheader"><a href='<@ofbizUrl>week?start=${period.start.time?string("#")}${eventsParam}</@ofbizUrl>' class="monthweeknumber">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a></td>
   </#if>			  
     <td valign="top">
       <table width="100%" cellspacing="0" cellpadding="0" border="0">			
         <tr>
-          <td nowrap class="monthdaynumber"><a href='<@ofbizUrl>day?start=${period.start.time?string("#")}</@ofbizUrl>' class="monthdaynumber">${period.start?date?string("d")?cap_first}</a></td>
+          <td nowrap class="monthdaynumber"><a href='<@ofbizUrl>day?start=${period.start.time?string("#")}${eventsParam}</@ofbizUrl>' class="monthdaynumber">${period.start?date?string("d")?cap_first}</a></td>
           <td align="right"><a href='<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&currentStatusId=CAL_TENTATIVE&estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>' class="add">${uiLabelMap.CommonAddNew}</a>&nbsp;&nbsp;</td>
         </tr>			
       </table>

@@ -36,11 +36,21 @@
                             <condition>
                                 <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
                             </condition>
+                            <actions>
+                                <entity-condition entity-name="Facility" list-name="allFacilities">
+                                    <order-by field-name="facilityName"/>
+                                </entity-condition>
+                                <entity-condition entity-name="FixedAsset" list-name="allFixedAssets">
+                                    <order-by field-name="fixedAssetId"/>
+                                </entity-condition>
+                            </actions>
                             <widgets>
                                 <platform-specific>
                                     <html><html-template location="component://workeffort/webapp/workeffort/calendar/CalendarTabBar.ftl"/></html>
                                 </platform-specific>
-            
+                                <platform-specific>
+                                    <html><html-template location="component://workeffort/webapp/workeffort/calendar/eventsByForms.ftl"/></html>
+                                </platform-specific>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -59,12 +69,6 @@
                 <set field="headerItem" value="calendar"/>
                 <set field="tabButtonItem" value="day"/>
 
-                <entity-condition entity-name="Facility" list-name="allFacilities">
-                    <order-by field-name="facilityName"/>
-                </entity-condition>
-                <entity-condition entity-name="FixedAsset" list-name="allFixedAssets">
-                    <order-by field-name="fixedAssetId"/>
-                </entity-condition>
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/day.bsh"/>
             </actions>
             <widgets>
@@ -72,9 +76,6 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/calendar/day.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://workeffort/webapp/workeffort/calendar/eventsByForms.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -88,12 +89,6 @@
                 <set field="headerItem" value="calendar"/>
                 <set field="tabButtonItem" value="week"/>
 
-                <entity-condition entity-name="Facility" list-name="allFacilities">
-                    <order-by field-name="facilityName"/>
-                </entity-condition>
-                <entity-condition entity-name="FixedAsset" list-name="allFixedAssets">
-                    <order-by field-name="fixedAssetId"/>
-                </entity-condition>
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/week.bsh"/>
             </actions>
             <widgets>
@@ -101,9 +96,6 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/calendar/week.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://workeffort/webapp/workeffort/calendar/eventsByForms.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -117,12 +109,6 @@
                 <set field="headerItem" value="calendar"/>
                 <set field="tabButtonItem" value="month"/>
 
-                <entity-condition entity-name="Facility" list-name="allFacilities">
-                    <order-by field-name="facilityName"/>
-                </entity-condition>
-                <entity-condition entity-name="FixedAsset" list-name="allFixedAssets">
-                    <order-by field-name="fixedAssetId"/>
-                </entity-condition>
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/month.bsh"/>
             </actions>
             <widgets>
@@ -130,9 +116,6 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/calendar/month.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://workeffort/webapp/workeffort/calendar/eventsByForms.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -146,12 +129,6 @@
                 <set field="headerItem" value="calendar"/>
                 <set field="tabButtonItem" value="upcoming"/>
 
-                <entity-condition entity-name="Facility" list-name="allFacilities">
-                    <order-by field-name="facilityName"/>
-                </entity-condition>
-                <entity-condition entity-name="FixedAsset" list-name="allFixedAssets">
-                    <order-by field-name="fixedAssetId"/>
-                </entity-condition>
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/upcoming.bsh"/>
             </actions>
             <widgets>
@@ -159,9 +136,6 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/calendar/upcoming.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://workeffort/webapp/workeffort/calendar/eventsByForms.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

@@ -24,7 +24,6 @@
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@version    1.0
 -->
-<div class="tabletext">&nbsp;</div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td width="34%" align="center">
@@ -70,3 +69,4 @@
         </td>
     </tr>
 </table>
+<div class="tabletext">&nbsp;</div>
