@@ -39,7 +39,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
 	<td width="100%" class="monthheadertext">${start?date?string("EEEE")?cap_first} ${start?date?string.long}</td>
-    <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>day?start=${prev.time?string("#")}${eventsParam}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousDay}</a> | <a href="<@ofbizUrl>day?start=${next.time?string("#")}${eventsParam}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextDay}</a> | <a href="<@ofbizUrl>day?start=${now.time?string("#")}${eventsParam}</@ofbizUrl>" class="previousnext">${uiLabelMap.CommonToday}</a></td>
+    <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>day?start=${prev.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousDay}</a> | <a href="<@ofbizUrl>day?start=${next.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextDay}</a> | <a href="<@ofbizUrl>day?start=${now.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.CommonToday}</a></td>
   </tr>
 </table>
 <#if periods?has_content>
