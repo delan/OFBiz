@@ -299,4 +299,12 @@
         <field name="storeName" title="${uiLabelMap.StoreName}"><display/></field>
         <field name="submitButton" title="Select" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    <form name="ImportProduct" target="importProductFile" title="Import product data" type="upload"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="localFile" title="Local file name"><file />
+        </field>
+        <field name="submitButton" title="Upload" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>

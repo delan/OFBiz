@@ -50,7 +50,7 @@
                 
                 <container id="ecom-mainarea">
                     <!-- by default will render left-bar only if left/rightbarScreenName value not empty -->
-                    <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
+                    <!--include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/-->
                     <include-screen name="${rightbarScreenName}" location="${rightbarScreenLocation}"/>
                 
                     <container style="${MainColumnStyle}">
@@ -115,7 +115,7 @@
     <screen name="main">
         <section>
             <actions>
-                <!--set field="leftbarScreenName" value="leftbar"/-->
+                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 

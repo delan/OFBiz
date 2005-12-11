@@ -42,6 +42,7 @@
   <div class="col"><a href="<@ofbizUrl>EditFixedAssets</@ofbizUrl>" class="${selectedLeftClassMap.fixedassets?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemFixedAssets}</a></div>
   <div class="col"><a href="<@ofbizUrl>EditProductStore</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemStore}</a></div>  
   <div class="col"><a href="<@ofbizUrl>selectStore</@ofbizUrl>" class="${selectedLeftClassMap.selectStore?default(unselectedLeftClassName)}">${uiLabelMap.selectStore}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>importProduct</@ofbizUrl>" class="${selectedLeftClassMap.importProduct?default(unselectedLeftClassName)}">importProduct</a></div>  
 
   <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>

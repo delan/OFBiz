@@ -22,30 +22,67 @@
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  -->
- 
- <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="file:/home/hans/ofbizSvn/framework/minilang/dtd/simple-methods.xsd">
-     
-     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
-         <!-- call original event -->
-         <call-simple-method method-name="createCustomer" xml-resource="org/ofbiz/ecommerce/customer/CustomerEvents.xml"/>
-         <check-errors/>
-         <!-- create relationship to organizationParty = productStoreId -->
-         <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="getProductStoreId" ret-field-name="productStoreId">
-             <field field-name="request" type="javax.servlet.ServletRequest"/>
-         </call-class-method>
-         <!-- enter relationship directly in table because this customer does not have access to the createpartyRelationship service -->
-         <make-value value-name="parties" entity-name="PartyRelationship"/>
-         <set field="parties.partyIdTo" from-field="tempMap.partyId"/>        
-         <set field="parties.partyRelationshipTypeId" value="CUSTOMER"/>
-         <set field="parties.roleTypeIdFrom" value="_NA_"/>
-         <set field="parties.roleTypeIdTo" value="_NA_"/>
-         <set field="parties.partyIdFrom" from-field="productStoreId"/>
-         <set field="parties.statusId" value="PARTYREL-ACTIVE"/>
-         <now-timestamp-to-env env-name="nowDate"/>
-         <env-to-field env-name="nowDate" field-name="parties.fromDate"/>
-         <create-value value-name="parties"/>         
-         
-     </simple-method>
-     
-</simple-methods>             
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="file:/home/hans/ofbizSvn/framework/minilang/dtd/simple-methods.xsd">
+         <simple-method method-name="createCustomer" short-description="Create Customer"
+                  login-required="false">
+                  <!-- call original event -->
+                  <call-simple-method method-name="createCustomer"
+                           xml-resource="org/ofbiz/ecommerce/customer/CustomerEvents.xml"/>
+                  <check-errors error-code="error"/>
+                  <!-- create relationship to organizationParty = productStoreId -->
+                  <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker"
+                           method-name="getProductStoreId" ret-field-name="productStoreId">
+                           <field field-name="request" type="javax.servlet.ServletRequest"/>
+                  </call-class-method>
+                  <!-- enter relationship directly in table because this customer does not have access to the createpartyRelationship service -->
+                  <make-value value-name="parties" entity-name="PartyRelationship"/>
+                  <set field="parties.partyIdTo" from-field="tempMap.partyId"/>
+                  <set field="parties.partyRelationshipTypeId" value="CUSTOMER"/>
+                  <set field="parties.roleTypeIdFrom" value="_NA_"/>
+                  <set field="parties.roleTypeIdTo" value="_NA_"/>
+                  <set field="parties.partyIdFrom" from-field="productStoreId"/>
+                  <set field="parties.statusId" value="PARTYREL-ACTIVE"/>
+                  <now-timestamp-to-env env-name="nowDate"/>
+                  <env-to-field env-name="nowDate" field-name="parties.fromDate"/>
+                  <create-value value-name="parties"/>
+                  <!-- do not display the option screen set everything from here -->
+                  <!--         String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+         String correspondingPoId = request.getParameter("corresponding_po_id");
+         String shippingInstructions = request.getParameter("shipping_instructions");
+         String orderAdditionalEmails = request.getParameter("order_additional_emails");
+         String maySplit = request.getParameter("may_split");
+         String giftMessage = request.getParameter("gift_message");
+         String isGift = request.getParameter("is_gift");
+         String shipBeforeDate = request.getParameter("shipBeforeDate");
+         String shipAfterDate = request.getParameter("shipAfterDate");
+         Please Select a Shipping Method.Please Select a Splitting Preference.Please Specify Whether or Not This Order is a Gift.
+         Please Select a Shipping Destination.Please select a method of payment.
+         org.ofbiz.party.contact.ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)
+-->
+                  <!-- get shipping address -->
+                  <set field="partyLookup.partyId" from-field="tempMap.partyId"/>
+                  <find-by-primary-key map-name="partyLookup" value-name="party" entity-name="Party"/>
+                  <call-class-method class-name="org.ofbiz.opentravelsystem.otsUtils"
+                           method-name="getContactMech" ret-field-name="contactList">
+                           <field field-name="party" type="org.ofbiz.entity.GenericValue"/>
+                           <string value="SHIPPING_LOCATION"/>
+                           <string value="POSTAL_ADDRESS"/>
+                  </call-class-method>
+                  <first-from-list entry-name="contactMechId" list-name="contactList"/>
+                  <set field="shipM" value="NO_SHIPPING@_NA_"/>
+                  <field-to-request field-name="shipM" request-name="shipping_method"/>
+                  <field-to-request field-name="contactMechId" request-name="shipping_contact_mech_id"/>
+                  <set field="no" value="N"/>
+                  <field-to-request field-name="no" request-name="may_split"/>
+                  <set field="request.may_split" value="N"/>
+                  <set field="request.shipping_contact_mech_id" from-field="contactMechId"/>
+                    
+                  <call-class-method class-name="org.ofbiz.order.shoppingcart.CheckOutEvents"
+                           method-name="setCheckOutOptions" ret-field-name="returnString">
+                           <field field-name="request" type="javax.servlet.http.HttpServletRequest"/>
+                           <field field-name="response" type="javax.servlet.http.HttpServletResponse"/>
+                  </call-class-method>
+                  <check-errors error-code="errorOptions"/>
+         </simple-method>
+</simple-methods>
