@@ -391,7 +391,7 @@
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="ProductPrice" list-name="productPrices">
-                    <field-map env-name="productId"/>
+                    <field-map field-name="productId"/>
                     <order-by field-name="productStoreGroupId"/>
                     <order-by field-name="productPriceTypeId"/>
                     <order-by field-name="currencyUomId"/>
@@ -744,6 +744,27 @@
                                 <include-form name="selectStoreAdmin" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ImportProduct">
+        <section>            
+            <actions>
+                <set field="title" value="Import product data"/>
+                <set field="headerItem" value="importProduct"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">Import comma delimited product/catalog file</label>
+                        </container>
+                        <container>
+                            <label style="head3">Format: &quot;ProductNr&quot;,descr,largeImage,smallImage,price,category,promo-y/n</label>
+                        </container>
+                        <include-form name="ImportProduct" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

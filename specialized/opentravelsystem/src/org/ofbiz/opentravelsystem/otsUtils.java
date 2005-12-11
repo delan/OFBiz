@@ -530,4 +530,12 @@ public class otsUtils {
         return "success";
     }
 
+    // boolean can not be defined in a minilanguage file
+    public static Collection getContactMech(GenericValue party, String contactMechPurposeTypeId, String contactMechTypeId) {
+    	return org.ofbiz.party.contact.ContactHelper.getContactMech(party, contactMechPurposeTypeId, contactMechTypeId, false); 
+    }
+
+
+    
+    
 }

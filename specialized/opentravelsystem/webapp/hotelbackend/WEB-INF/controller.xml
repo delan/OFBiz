@@ -293,7 +293,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListFixedAssetCalendar"/>
     </request-map>
-
+    <!-- ================ import product data ================= -->
+    <request-map uri="importProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ImportProduct"/>
+    </request-map>    
+    <request-map uri="importProductFile">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.opentravelsystem.importData" invoke="importProduct"/>
+        <response name="success" type="view" value="ImportProduct"/>
+        <response name="error" type="view" value="ImportProduct"/>
+    </request-map>    
+    
    <!-- ================ ProductStore ================= -->
     <request-map uri="EditProductStore"><!-- show a tabular list of products connected -->
         <security https="true" auth="true"/>
@@ -3017,6 +3028,7 @@
     <view-map name="EditProductStoreTaxSetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreTaxSetup"/>
     <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
     <view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#selectStore"/>
+    <view-map name="ImportProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ImportProduct"/>
     <!--view-map name="EditProductCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/-->
     <view-map name="EditProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProducts"/>
     <view-map name="EditCategoryProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryProducts"/>

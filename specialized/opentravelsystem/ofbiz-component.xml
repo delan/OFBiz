@@ -45,6 +45,7 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/hotelfrontend/data/HotelDemoStore.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HotelSimple/data/HotelSimple.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/shop/data/ShopData.xml"/>
+    <!--entity-resource type="data" reader-name="demo" loader="main" location="webapp/vuurwerk/data/VuurwerkData.xml"/-->
     <!--entity-resource type="data" reader-name="demo" loader="main" location="webapp/anet/data/anet.xml"/-->
     
     <!-- service resources: model(s), eca(s) and group definitions -->
@@ -56,7 +57,14 @@
         location="webapp/hotelbackend"
         mount-point="/hotelbackend"
         app-bar-display="false"/>
-
+    
+    <webapp name="backend"
+        title="Admininstrator backend, the same for all frontends"
+        server="default-server"
+        location="webapp/hotelbackend"
+        mount-point="/backend"
+        app-bar-display="false"/>
+    
     <webapp name="hotelfrontend"
         title="Hotel Demo Basis Website Site"
         server="default-server"
@@ -84,6 +92,13 @@
         location="webapp/shop"
         mount-point="/shop"
         app-bar-display="false"/>        
+    
+    <!--webapp name="Vuurwerk"
+        title="Vuurwerk shop"
+        server="default-server"
+        location="webapp/vuurwerk"
+        mount-point="/vuurwerk"
+        app-bar-display="false"/-->        
     
     <!--webapp name="anet"
         title="A-NeT Internet Services"
