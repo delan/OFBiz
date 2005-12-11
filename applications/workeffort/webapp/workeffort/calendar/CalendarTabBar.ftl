@@ -25,9 +25,9 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class="tabContainer">
-    <a href="<@ofbizUrl>day<#if start?exists>?start=${start.time?string("#")}${eventsParam?if_exists}</#if></@ofbizUrl>" class="${selectedClassMap.day?default(unselectedClassName)}">${uiLabelMap.WorkEffortDayView}</a>
-    <a href="<@ofbizUrl>week<#if start?exists>?start=${start.time?string("#")}${eventsParam?if_exists}</#if></@ofbizUrl>" class="${selectedClassMap.week?default(unselectedClassName)}">${uiLabelMap.WorkEffortWeekView}</a>
-    <a href="<@ofbizUrl>month<#if start?exists>?start=${start.time?string("#")}${eventsParam?if_exists}</#if></@ofbizUrl>" class="${selectedClassMap.month?default(unselectedClassName)}">${uiLabelMap.WorkEffortMonthView}</a>
+    <a href="<@ofbizUrl>day<#if eventsParam?has_content>?${eventsParam}</#if></@ofbizUrl>" class="${selectedClassMap.day?default(unselectedClassName)}">${uiLabelMap.WorkEffortDayView}</a>
+    <a href="<@ofbizUrl>week<#if eventsParam?has_content>?${eventsParam}</#if></@ofbizUrl>" class="${selectedClassMap.week?default(unselectedClassName)}">${uiLabelMap.WorkEffortWeekView}</a>
+    <a href="<@ofbizUrl>month<#if eventsParam?has_content>?${eventsParam}</#if></@ofbizUrl>" class="${selectedClassMap.month?default(unselectedClassName)}">${uiLabelMap.WorkEffortMonthView}</a>
     <a href="<@ofbizUrl>upcoming<#if eventsParam?has_content>?${eventsParam}</#if></@ofbizUrl>" class="${selectedClassMap.upcoming?default(unselectedClassName)}">${uiLabelMap.WorkEffortUpcomingEvents}</a>
 </div>
 

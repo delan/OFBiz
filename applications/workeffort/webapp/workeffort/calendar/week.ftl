@@ -39,7 +39,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
 	<td width="100%" class="monthheadertext">${uiLabelMap.CommonWeek} ${start?date?string("w")}</td>
-    <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>week?start=${prev.time?string("#")}${eventsParam}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousWeek}</a> | <a href="<@ofbizUrl>week?start=${next.time?string("#")}${eventsParam}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextWeek}</a> | <a href="<@ofbizUrl>week?start=${now.time?string("#")}${eventsParam}</@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortThisWeek}</a></td>
+    <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>week?start=${prev.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousWeek}</a> | <a href="<@ofbizUrl>week?start=${next.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextWeek}</a> | <a href="<@ofbizUrl>week?start=${now.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortThisWeek}</a></td>
   </tr>
 </table>
 <#if periods?has_content> 
@@ -59,7 +59,7 @@
   </tr>
   <#list periods as period>
   <tr>
-    <td valign="top" nowrap width="1%" class="monthweekheader" height="36"><a href="<@ofbizUrl>day?start=${period.start.time?string("#")}${eventsParam}</@ofbizUrl>" class="monthweeknumber">${period.start?date?string("EEEE")?cap_first} ${period.start?date?string("d/M")?cap_first}</a><br/>
+    <td valign="top" nowrap width="1%" class="monthweekheader" height="36"><a href="<@ofbizUrl>day?start=${period.start.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="monthweeknumber">${period.start?date?string("EEEE")?cap_first} ${period.start?date?string("d/M")?cap_first}</a><br/>
 	  <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&currentStatusId=CAL_TENTATIVE&estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>">${uiLabelMap.CommonAddNew}</a>
 	  </td>
     <#list period.calendarEntries as calEntry>

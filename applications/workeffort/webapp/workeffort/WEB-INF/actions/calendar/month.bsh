@@ -42,13 +42,13 @@ partyId = parameters.get("partyId");
 
 eventsParam = "";
 if (facilityId != null) {
-    eventsParam = "&" + eventsParam + "facilityId=" + facilityId;
+    eventsParam = "facilityId=" + facilityId;
 }
 if (fixedAssetId != null) {
-    eventsParam = "&" + eventsParam + "fixedAssetId=" + fixedAssetId;
+    eventsParam = "fixedAssetId=" + fixedAssetId;
 }
 if (partyId != null) {
-    eventsParam = "&" + eventsParam + "partyId=" + partyId;
+    eventsParam = "partyId=" + partyId;
 }
 
 now = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp());
