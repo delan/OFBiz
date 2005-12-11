@@ -125,10 +125,12 @@
         <if-compare field-name="parameters.copyQuoteRoles" value="Y" operator="equals">
             <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
             <iterate list-name="quoteRoles" entry-name="quoteRole">
-                <clear-field field-name="createQuoteRoleInMap"/>
-                <set-service-fields service-name="createQuoteRole" to-map-name="createQuoteRoleInMap" map-name="quoteRole"/>
-                <set from-field="quoteIdTo" field="createQuoteRoleInMap.quoteId"/>
-                <call-service service-name="createQuoteRole" in-map-name="createQuoteRoleInMap"/>
+                <if-compare field-name="quoteRole.roleTypeId" value="REQ_TAKER" operator="not-equals">
+                    <clear-field field-name="createQuoteRoleInMap"/>
+                    <set-service-fields service-name="createQuoteRole" to-map-name="createQuoteRoleInMap" map-name="quoteRole"/>
+                    <set from-field="quoteIdTo" field="createQuoteRoleInMap.quoteId"/>
+                    <call-service service-name="createQuoteRole" in-map-name="createQuoteRoleInMap"/>
+                </if-compare>
             </iterate>
         </if-compare>
 
