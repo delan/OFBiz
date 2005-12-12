@@ -344,27 +344,11 @@
         <div class="boxhead">&nbsp;Tax Identification and Exemption</div>
     </div>
     <div class="screenlet-body">
-        <#list partyTaxAuthInfoAndDetailList as partyTaxAuthInfoAndDetail>
-            <div>
-                <a href="<@ofbizUrl>deleteCustomerTaxAuthInfo?partyId=${partyId}&amp;taxAuthPartyId=${partyTaxAuthInfoAndDetail.taxAuthPartyId}&amp;taxAuthGeoId=${partyTaxAuthInfoAndDetail.taxAuthGeoId}&amp;fromDate=${partyTaxAuthInfoAndDetail.fromDate}</@ofbizUrl>" class="buttontext">X</a>
-                [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName}): Tax ID [${partyTaxAuthInfoAndDetail.partyTaxId?default("N/A")}], Is Exempt? [${partyTaxAuthInfoAndDetail.isExempt?default("N")}]
-            </div>
-        </#list>
-
-        <div>
-          <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
+        <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
             <input type="hidden" name="partyId" value="${party.partyId}"/>
-            <span class="tableheadtext">Add Tax Info:</span>
-            <select name="taxAuthPartyGeoIds" class="selectBox">
-              <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>
-                <option value="${taxAuthorityAndDetail.taxAuthPartyId}::${taxAuthorityAndDetail.taxAuthGeoId}">[${taxAuthorityAndDetail.geoCode}] ${taxAuthorityAndDetail.geoName} (${taxAuthorityAndDetail.groupName?if_exists})</option>
-              </#list>
-            </select>
-            <span class="tabletext">ID: </span><input type="text" name="partyTaxId" class="inputBox" size="12" maxlength="40"/>
-            <span class="tabletext">Is Exempt? </span><input type="checkbox" name="isExempt" class="inputBox" value="Y"/>
+            ${screens.render("component://ecommerce/widget/CustomerScreens.xml#customertaxinfo")}
             <input type="submit" value="Add" class="smallSubmit"/>
-          </form>
-        </div>
+        </form>
     </div>
 </div>
 

@@ -158,6 +158,7 @@
         <section>
             <actions>
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
+
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutpayment.bsh"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutoptions.bsh"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>

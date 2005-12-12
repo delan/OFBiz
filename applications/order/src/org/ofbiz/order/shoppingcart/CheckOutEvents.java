@@ -72,7 +72,7 @@ public class CheckOutEvents {
 
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
-        Locale locale = UtilHttp.getLocale(request);
+        //Locale locale = UtilHttp.getLocale(request);
         String errMsg = null;
 
         if (cart != null && cart.size() > 0) {
@@ -118,12 +118,9 @@ public class CheckOutEvents {
             return "error";
         }
 
-        Locale locale = UtilHttp.getLocale(request);
+        //Locale locale = UtilHttp.getLocale(request);
         String curPage = request.getParameter("checkoutpage");
         Debug.logInfo("CheckoutPage: " + curPage, module);
-
-        Map callResult = null;
-        String errMsg = null;
 
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -133,11 +130,31 @@ public class CheckOutEvents {
         if ("shippingaddress".equals(curPage) == true) {
             // Set the shipping address options
             String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-            callResult = checkOutHelper.setCheckOutShippingAddress(shippingContactMechId);
 
+            String taxAuthPartyGeoIds = request.getParameter("taxAuthPartyGeoIds");
+            String partyTaxId = request.getParameter("partyTaxId");
+            String isExempt = request.getParameter("isExempt");
+            
+            // if taxAuthPartyGeoIds is not empty drop that into the database
+            if (UtilValidate.isNotEmpty(taxAuthPartyGeoIds)) {
+                try {
+                    Map createCustomerTaxAuthInfoResult = dispatcher.runSync("createCustomerTaxAuthInfo", 
+                            UtilMisc.toMap("partyId", cart.getPartyId(), "taxAuthPartyGeoIds", taxAuthPartyGeoIds, "partyTaxId", partyTaxId, "isExempt", isExempt));
+                    ServiceUtil.getMessages(request, createCustomerTaxAuthInfoResult, null);
+                    if (ServiceUtil.isError(createCustomerTaxAuthInfoResult)) {
+                        return "error";
+                    }
+                } catch (GenericServiceException e) {
+                    String errMsg = "Error setting customer tax info: " + e.toString();
+                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                    return "error";
+                }
+            }
+            
+            Map callResult = checkOutHelper.setCheckOutShippingAddress(shippingContactMechId);
             ServiceUtil.getMessages(request, callResult, null);
 
-            if (!(callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
+            if (!(ServiceUtil.isError(callResult))) {
                 // No errors so push the user onto the next page
                 curPage = "shippingoptions";
             }
@@ -152,7 +169,7 @@ public class CheckOutEvents {
             String isGift = request.getParameter("is_gift");
             String shipBeforeDate = request.getParameter("shipBeforeDate");
             String shipAfterDate = request.getParameter("shipAfterDate");
-            callResult = checkOutHelper.setCheckOutShippingOptions(shippingMethod, correspondingPoId,
+            Map callResult = checkOutHelper.setCheckOutShippingOptions(shippingMethod, correspondingPoId,
                     shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate);
 
             ServiceUtil.getMessages(request, callResult, null);
@@ -182,7 +199,7 @@ public class CheckOutEvents {
                 } catch (ParseException e) {
                     Debug.logError(e, module);
                     Map messageMap = UtilMisc.toMap("billingAccountId", billingAccountId);
-                    errMsg = UtilProperties.getMessage(resource, "checkevents.invalid_amount_set_for_billing_account", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    String errMsg = UtilProperties.getMessage(resource, "checkevents.invalid_amount_set_for_billing_account", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     return "error";
                 }
@@ -207,7 +224,7 @@ public class CheckOutEvents {
                 }
             }
 
-            callResult = checkOutHelper.setCheckOutPayment(selectedPaymentMethods, singleUsePayments, billingAccountId, billingAccountAmt);
+            Map callResult = checkOutHelper.setCheckOutPayment(selectedPaymentMethods, singleUsePayments, billingAccountId, billingAccountAmt);
             ServiceUtil.getMessages(request, callResult, null);
 
             if (!(callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
@@ -251,7 +268,7 @@ public class CheckOutEvents {
 
     public static Map getSelectedPaymentMethods(HttpServletRequest request) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
-        Locale locale = UtilHttp.getLocale(request);
+        //Locale locale = UtilHttp.getLocale(request);
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
         Map selectedPaymentMethods = new HashMap();
@@ -284,8 +301,6 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
-        String errMsg = null;
-
         // get the currency format
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
@@ -298,6 +313,11 @@ public class CheckOutEvents {
 
         String shippingMethod = request.getParameter("shipping_method");
         String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+        
+        String taxAuthPartyGeoIds = request.getParameter("taxAuthPartyGeoIds");
+        String partyTaxId = request.getParameter("partyTaxId");
+        String isExempt = request.getParameter("isExempt");
+        
         String correspondingPoId = request.getParameter("corresponding_po_id");
         String shippingInstructions = request.getParameter("shipping_instructions");
         String orderAdditionalEmails = request.getParameter("order_additional_emails");
@@ -308,6 +328,22 @@ public class CheckOutEvents {
         String shipAfterDate = request.getParameter("shipAfterDate");
         List singleUsePayments = new ArrayList();
 
+        // if taxAuthPartyGeoIds is not empty drop that into the database
+        if (UtilValidate.isNotEmpty(taxAuthPartyGeoIds)) {
+            try {
+                Map createCustomerTaxAuthInfoResult = dispatcher.runSync("createCustomerTaxAuthInfo", 
+                        UtilMisc.toMap("partyId", cart.getPartyId(), "taxAuthPartyGeoIds", taxAuthPartyGeoIds, "partyTaxId", partyTaxId, "isExempt", isExempt));
+                ServiceUtil.getMessages(request, createCustomerTaxAuthInfoResult, null);
+                if (ServiceUtil.isError(createCustomerTaxAuthInfoResult)) {
+                    return "error";
+                }
+            } catch (GenericServiceException e) {
+                String errMsg = "Error setting customer tax info: " + e.toString();
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                return "error";
+            }
+        }
+        
         // get the billing account and amount
         String billingAccountId = request.getParameter("billingAccountId");
         String billingAcctAmtStr = request.getParameter("amount_" + billingAccountId);
@@ -319,7 +355,7 @@ public class CheckOutEvents {
             } catch (ParseException e) {
                 Debug.logError(e, module);
                 Map messageMap = UtilMisc.toMap("billingAccountId", billingAccountId);
-                errMsg = UtilProperties.getMessage(resource, "checkevents.invalid_amount_set_for_billing_account", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+                String errMsg = UtilProperties.getMessage(resource, "checkevents.invalid_amount_set_for_billing_account", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
@@ -332,16 +368,16 @@ public class CheckOutEvents {
         // check for gift card not on file
         Map gcResult = checkOutHelper.checkGiftCard(params, selectedPaymentMethods);
         ServiceUtil.getMessages(request, gcResult, null);
-        if (gcResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+        if (ServiceUtil.isError(gcResult)) {
             return "error";
-        } else {
-            String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
-            Double gcAmount = (Double) gcResult.get("amount");
-            if (gcPaymentMethodId != null) {
-                selectedPaymentMethods.put(gcPaymentMethodId, gcAmount);
-                if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
-                    singleUsePayments.add(gcPaymentMethodId);
-                }
+        }
+
+        String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
+        Double gcAmount = (Double) gcResult.get("amount");
+        if (gcPaymentMethodId != null) {
+            selectedPaymentMethods.put(gcPaymentMethodId, gcAmount);
+            if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
+                singleUsePayments.add(gcPaymentMethodId);
             }
         }
 
@@ -350,11 +386,11 @@ public class CheckOutEvents {
                 orderAdditionalEmails, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate);
 
         ServiceUtil.getMessages(request, optResult, null);
-        if (optResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+        if (ServiceUtil.isError(optResult)) {
             return "error";
-        } else {
-            return "success";
         }
+
+        return "success";
     }
 
     // Create order event - uses createOrder service for processing
