@@ -1063,4 +1063,57 @@ public class PriceServices {
         }
         return false;
     }
+
+    /**
+     * Calculates the purchase price of a product
+     */
+    public static Map calculatePurchasePrice(DispatchContext dctx, Map context) {
+
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Map result = new HashMap();
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+
+        List orderItemPriceInfos = new LinkedList();
+        boolean validPriceFound = false;
+        double price = 0.0;
+
+        GenericValue product = (GenericValue)context.get("product");
+        String productId = product.getString("productId");
+        String currencyUomId = (String)context.get("currencyUomId");
+        String partyId = (String)context.get("partyId");
+        Double quantity = (Double)context.get("quantity");
+        
+        if (quantity == null) {
+            quantity = new Double(1);
+        }
+        
+        // TODO: a) Get the Price from the Agreement* data model
+        // b) If no price can be found, get the lastPrice from the SupplierProduct entity
+        Map priceContext = UtilMisc.toMap("currencyUomId", currencyUomId, "partyId", partyId, "productId", productId, "quantity", quantity);
+        List productSuppliers = null;
+        try {
+            Map priceResult = dispatcher.runSync("getSuppliersForProduct", priceContext);
+            if (ServiceUtil.isError(priceResult)) {
+                String errMsg = ServiceUtil.getErrorMessage(priceResult);
+                Debug.logError(errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+            productSuppliers = (List) priceResult.get("supplierProducts");
+        } catch(GenericServiceException gse) {
+            Debug.logError(gse, module);
+            return ServiceUtil.returnError(gse.getMessage());
+        }
+        if ((productSuppliers != null) && (productSuppliers.size() > 0)) {
+            GenericValue productSupplier = (GenericValue) productSuppliers.get(0);
+            price = ((Double)productSupplier.get("lastPrice")).doubleValue();
+            validPriceFound = true;
+        }
+        // TODO: c) If no price can be found, get the averageCost from the ProductPrice entity
+        
+        result.put("price", new Double(price));
+        result.put("validPriceFound", new Boolean(validPriceFound));
+        result.put("orderItemPriceInfos", orderItemPriceInfos);
+        return result;
+    }
 }
