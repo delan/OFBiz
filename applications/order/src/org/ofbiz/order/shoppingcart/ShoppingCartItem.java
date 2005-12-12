@@ -919,23 +919,20 @@ public class ShoppingCartItem implements java.io.Serializable {
                     priceContext.put("partyId", partyId);
                 }
                 priceContext.put("quantity", new Double(this.getQuantity()));
+                priceContext.put("product", this.getProduct());
                 if (cart.getOrderType().equals("PURCHASE_ORDER")) {
-                    // TODO: If there's ever a calculatePurchasePrice service, this should be re-factored to use it
-                    priceContext.put("productId", this.getProduct().get("productId"));
-                    Map priceResult = dispatcher.runSync("getSuppliersForProduct", priceContext);
-                    if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
-                        throw new CartItemModifyException("There was an error when retreive Supplier for product: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                    Map priceResult = dispatcher.runSync("calculatePurchasePrice", priceContext);
+                    if (ServiceUtil.isError(priceResult)) {
+                        throw new CartItemModifyException("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));
                     }
-                    List productSuppliers = (List) priceResult.get("supplierProducts");
-                    if ((productSuppliers != null) && (productSuppliers.size() > 0)) {
-                        GenericValue productSupplier = (GenericValue) productSuppliers.get(0);
-                        this.setBasePrice(((Double) productSupplier.get("lastPrice")).doubleValue());
-                        this.setDisplayPrice(this.basePrice);
-                    } else {
-                        throw new CartItemModifyException("There was an error when retreive Supplier for product: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                    Boolean validPriceFound = (Boolean) priceResult.get("validPriceFound");
+                    if (!validPriceFound.booleanValue()) {
+                        throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "] and supplier with ID [" + partyId + "], not adding to cart.");
                     }
+
+                    this.setBasePrice(((Double) priceResult.get("price")).doubleValue());
+                    this.setDisplayPrice(this.basePrice);
                 } else {
-                    priceContext.put("product", this.getProduct());
                     priceContext.put("prodCatalogId", this.getProdCatalogId());
                     priceContext.put("webSiteId", cart.getWebSiteId());
                     priceContext.put("productStoreId", cart.getProductStoreId());
