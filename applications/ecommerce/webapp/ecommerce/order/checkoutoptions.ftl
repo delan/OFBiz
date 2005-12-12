@@ -150,6 +150,13 @@ function toggleBillingAccount(box) {
                      </#list>
                    </#if>
                  </table>
+                 
+                <#-- Party Tax Info -->
+                <#-- commented out by default because the TaxAuthority drop-down is just too wide...
+                <hr class="sepbar"/>
+                <div class="tableheadtext">&nbsp;Tax IDs &amp; Exemptions</div>
+                ${screens.render("component://ecommerce/widget/CustomerScreens.xml#customertaxinfo")}
+                -->
             </div>
         </div>
       </td>
