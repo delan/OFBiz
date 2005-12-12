@@ -128,16 +128,20 @@
                     <order-by field-name="ruleName"/>
                 </entity-condition>
                 <entity-condition entity-name="ProductPromoCategory" list-name="promoProductPromoCategories">
-                    <condition-expr field-name="productPromoId" env-name="productPromoId"/>
-                    <condition-expr field-name="productPromoRuleId" value="_NA_"/>
-                    <condition-expr field-name="productPromoActionSeqId" value="_NA_"/>
-                    <condition-expr field-name="productPromoCondSeqId" value="_NA_"/>
+                    <condition-list>
+                        <condition-expr field-name="productPromoId" env-name="productPromoId"/>
+                        <condition-expr field-name="productPromoRuleId" value="_NA_"/>
+                        <condition-expr field-name="productPromoActionSeqId" value="_NA_"/>
+                        <condition-expr field-name="productPromoCondSeqId" value="_NA_"/>
+                    </condition-list>
                 </entity-condition>
                 <entity-condition entity-name="ProductPromoProduct" list-name="promoProductPromoProducts">
-                    <condition-expr field-name="productPromoId" env-name="productPromoId"/>
-                    <condition-expr field-name="productPromoRuleId" value="_NA_"/>
-                    <condition-expr field-name="productPromoActionSeqId" value="_NA_"/>
-                    <condition-expr field-name="productPromoCondSeqId" value="_NA_"/>
+                    <condition-list>
+                        <condition-expr field-name="productPromoId" env-name="productPromoId"/>
+                        <condition-expr field-name="productPromoRuleId" value="_NA_"/>
+                        <condition-expr field-name="productPromoActionSeqId" value="_NA_"/>
+                        <condition-expr field-name="productPromoCondSeqId" value="_NA_"/>
+                    </condition-list>
                 </entity-condition>
                 
                 <!-- General Data for Drop-downs, etc -->
