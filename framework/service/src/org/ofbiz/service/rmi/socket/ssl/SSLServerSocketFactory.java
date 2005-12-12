@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -58,11 +58,11 @@ public class SSLServerSocketFactory implements RMIServerSocketFactory, Serializa
     }
 
     public ServerSocket createServerSocket(int port) throws IOException {
-		String storeType = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore.type", "jks");
+        String storeType = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore.type", "jks");
         String storeFile = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore", null);
         String storeAlias = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore.alias", null);
         String storePass = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore.password", null);
-		char[] passphrase = null;
+        char[] passphrase = null;
         if (storePass != null) {
             passphrase = storePass.toCharArray();
         }
@@ -83,7 +83,7 @@ public class SSLServerSocketFactory implements RMIServerSocketFactory, Serializa
         }
 
         if (ks == null) {
-            throw new IOException("Unable to load KeyStore containing RMI SSL certificate");
+            throw new IOException("Unable to load KeyStore containing Service Engine RMI SSL certificate");
         }
 
 
@@ -91,8 +91,8 @@ public class SSLServerSocketFactory implements RMIServerSocketFactory, Serializa
         try {
             factory = SSLUtil.getSSLServerSocketFactory(ks, storePass, storeAlias);
         } catch (GeneralSecurityException e) {
-            Debug.logError(e, module);
-            throw new IOException(e.getMessage());
+            Debug.logError(e, "Error getting javax.net.ssl.SSLServerSocketFactory instance for Service Engine RMI calls: " + e.toString(), module);
+            throw new IOException(e.toString());
         }
 
         if (factory == null) {
@@ -102,5 +102,5 @@ public class SSLServerSocketFactory implements RMIServerSocketFactory, Serializa
         SSLServerSocket socket = (SSLServerSocket) factory.createServerSocket(port);
         socket.setNeedClientAuth(clientAuth);
         return socket;
-	}
+    }
 }
