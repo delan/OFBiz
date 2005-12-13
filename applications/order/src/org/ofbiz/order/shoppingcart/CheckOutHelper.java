@@ -1292,130 +1292,25 @@ public class CheckOutHelper {
     }
 
     /**
-     * Indicates whether the payment should be made offline or
-     * whether further settings will be given for the electronic
-     * payment method.
-     *
-     * @param paymentMthodType "offline" to indicate that is to be paid
-     * offline, <code>null</code> or anything else for online.
-     * @return A Map conforming to the OFBiz Service conventions containing
-     * any error messages
-     */
-    public Map finalizeOrderEntryMethodType(String paymentMthodType) {
-        Map result = null;
-        cart.clearPayments();
-
-        if (paymentMthodType != null && paymentMthodType.equals("offline")) {
-            cart.addPayment("EXT_OFFLINE");
-        }
-
-        result = ServiceUtil.returnSuccess();
-        return result;
-    }
-
-    /**
      * Sets the payment ID to use during the checkout process
      *
-     * @param checkOutPaymentId The type of payment to use, should
-     * be "OFFLINE_PAYMENT" to indicate offlinem otherwise the payment ID
-     * will be associated with the cart
+     * @param checkOutPaymentId The payment ID to be associated with the cart
      * @return A Map conforming to the OFBiz Service conventions containing
-     * any error messages. Includes the field "OFFLINE_PAYMENT"
-     * containing a <code>Boolean</code> indicating whether it's an offline
-     * payment or not.
+     * any error messages. 
      */
     public Map finalizeOrderEntryPayment(String checkOutPaymentId, Double amount, boolean singleUse, boolean append) {
         Map result = ServiceUtil.returnSuccess();
 
         if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
-            if (!checkOutPaymentId.equals("OFFLINE_PAYMENT")) {
-                // clear out the old payments
-                if (!append) {
-                    cart.clearPayments();
-                }
-                cart.addPaymentAmount(checkOutPaymentId, amount, singleUse);
-            } else {
+            if (!append) {
                 cart.clearPayments();
-                result.put("OFFLINE_PAYMENT", new Boolean(true));
             }
+            cart.addPaymentAmount(checkOutPaymentId, amount, singleUse);
         }
 
         return result;
     }
-
-    /**
-     * Defines the payment options for an order.
-     *
-     * @param params Contains the amount associated with
-     * each <code>paymentMethodTypeId</code>.
-     * @return A Map conforming to the OFBiz Service conventions containing
-     * any error messages. Includes the field "OFFLINE_PAYMENTS"
-     * containing a <code>Boolean</code> indicating whether it's an offline
-     * payment or not.
-     */
-    public Map finalizeOrderEntryOfflinePayments(Map params) {
-        Map result = ServiceUtil.returnSuccess();
-
-        // get a list of payment types
-        List paymentTypes = null;
-        try {
-            paymentTypes = delegator.findAll("PaymentMethodType");
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot get payment method types from datasource", module);
-        }
-        if (paymentTypes != null) {
-            Map paymentPrefs = new HashMap();
-            double paymentTally = 0.00;
-            Iterator pi = paymentTypes.iterator();
-            while (pi.hasNext()) {
-                GenericValue paymentMethodType = (GenericValue) pi.next();
-                String paymentType = null;
-                if (paymentMethodType != null && paymentMethodType.get("paymentMethodTypeId") != null) {
-                    paymentType = paymentMethodType.getString("paymentMethodTypeId");
-                }
-
-                // get the amount by type
-                double paymentAmount = 0.00;
-                if (paymentType != null && !paymentType.equals("OFFLINE")) {
-                    String amount = (String) params.get(paymentMethodType.getString("paymentMethodTypeId"));
-                    if (amount != null && amount.length() > 0) {
-                        try {
-                            paymentAmount = NumberFormat.getNumberInstance().parse(amount).doubleValue();
-                        } catch (java.text.ParseException pe) {
-                            String errMsg = UtilProperties.getMessage(resource,"checkhelper.problems_parsing_amount", (cart != null ? cart.getLocale() : Locale.getDefault()));
-                            result = ServiceUtil.returnError(errMsg);
-                            return result;
-                        }
-                    }
-                }
-
-                // only worry about types w/ an amount
-                if (paymentAmount > 0.00) {
-                    paymentPrefs.put(paymentType, new Double(paymentAmount));
-                    paymentTally += paymentAmount;
-                }
-            }
-
-            double cartTotal = cart.getGrandTotal();
-            if (cartTotal != paymentTally) {
-                String errMsg = UtilProperties.getMessage(resource,"checkhelper.totals_do_not_match_order_total", (cart != null ? cart.getLocale() : Locale.getDefault()));
-                result = ServiceUtil.returnError(errMsg);
-                return result;
-            } else {
-                Set keySet = paymentPrefs.keySet();
-                Iterator i = keySet.iterator();
-                while (i.hasNext()) {
-                    String type = (String) i.next();
-                    Double amt = (Double) paymentPrefs.get(type);
-                    cart.addPaymentAmount(type, amt);
-                }
-                result.put("OFFLINE_PAYMENTS", new Boolean(true));
-            }
-        }
-
-        return result;
-    }
-
+    
     /**
      * Performs all the finalization settings and combines all the results.
      * This is a convenience method, primarily to match the original
@@ -1426,7 +1321,6 @@ public class CheckOutHelper {
      * class {@link ServiceUtil ServiceUtil}
      *
      * @see CheckOutHelper#finalizeOrderEntryMethodType(String)
-     * @see CheckOutHelper#finalizeOrderEntryOfflinePayments(Map)
      * @see CheckOutHelper#finalizeOrderEntryOptions(String, String, String, String, String, String, String)
      * @see CheckOutHelper#finalizeOrderEntryPayment(String, Double, boolean, boolean)
      * @see CheckOutHelper#finalizeOrderEntryShip(String)
@@ -1453,12 +1347,6 @@ public class CheckOutHelper {
             this.addErrors(errorMessages, errorMaps, callResult);
         }
 
-        // payment option; if offline we skip the payment screen
-        if (finalizeMode != null && finalizeMode.equals("payoption")) {
-            callResult = this.finalizeOrderEntryMethodType(methodType);
-            this.addErrors(errorMessages, errorMaps, callResult);
-        }
-
         // set the payment
         if (finalizeMode != null && finalizeMode.equals("payment")) {
             Map selectedPaymentMethods = null;
@@ -1475,12 +1363,6 @@ public class CheckOutHelper {
                 Map gcCallRes = this.finalizeOrderEntryPayment(gcPaymentMethodId, giftCardAmount, true, true);
                 this.addErrors(errorMessages, errorMaps, gcCallRes);
             }
-        }
-
-        // create offline payments
-        if (finalizeMode != null && finalizeMode.equals("offline_payments")) {
-            callResult = this.finalizeOrderEntryOfflinePayments(params);
-            this.addErrors(errorMessages, errorMaps, callResult);
         }
 
         //See whether we need to return an error or not

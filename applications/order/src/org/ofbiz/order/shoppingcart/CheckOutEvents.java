@@ -739,14 +739,8 @@ public class CheckOutEvents {
         // determine whether it was a success or not
         if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
             return "error";
-        } else {
-            // seems a bit suspicious that these properties have slightly different names
-            offlinePayments = (Boolean) callResult.get("OFFLINE_PAYMENT");
-            request.setAttribute("OFFLINE_PAYMENT", offlinePayments);
-            offlinePayments = (Boolean) callResult.get("OFFLINE_PAYMENTS");
-            request.getSession().setAttribute("OFFLINE_PAYMENTS", offlinePayments);
         }
-
+        
         // determine where to direct the browser
         // these are the default values
         boolean requireCustomer = true;
