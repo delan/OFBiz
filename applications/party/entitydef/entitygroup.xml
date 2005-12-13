@@ -38,6 +38,7 @@
     <entity-group group="org.ofbiz" entity="AgreementItemTypeAttr" />
     <entity-group group="org.ofbiz" entity="AgreementPartyApplic" />
     <entity-group group="org.ofbiz" entity="AgreementProductAppl" />
+    <entity-group group="org.ofbiz" entity="AgreementPromoAppl" />
     <entity-group group="org.ofbiz" entity="AgreementRole" />
     <entity-group group="org.ofbiz" entity="AgreementTerm" />
     <entity-group group="org.ofbiz" entity="AgreementTermAttribute" />

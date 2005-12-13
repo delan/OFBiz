@@ -268,6 +268,30 @@
         <key-map field-name="productId"/>
       </relation>
     </entity>
+    <entity entity-name="AgreementPromoAppl"
+            package-name="org.ofbiz.party.agreement"
+            title="Agreement Promo Applicability Entity">
+      <field name="agreementId" type="id-ne"></field>
+      <field name="agreementItemSeqId" type="id-ne"></field>
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="agreementId"/>
+      <prim-key field="agreementItemSeqId"/>
+      <prim-key field="productPromoId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="AGRMNT_PROM_PRO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_PROM_AGR" rel-entity-name="Agreement">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_PROM_AITM" rel-entity-name="AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
+    </entity>
     <entity entity-name="AgreementRole"
             package-name="org.ofbiz.party.agreement"
             title="Agreement Role Entity">
