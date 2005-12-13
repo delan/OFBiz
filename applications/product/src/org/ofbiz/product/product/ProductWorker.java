@@ -23,10 +23,18 @@
  */
 package org.ofbiz.product.product;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
+
+import org.apache.commons.collections.map.LinkedMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -41,9 +49,6 @@ import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceUtil;
-
-import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * Product Worker class to reduce code in JSPs.
@@ -352,7 +357,7 @@ public class ProductWorker {
      * @param delegator
      * @param productId
      * @param productFeatureApplTypeId - if null, returns ALL productFeatures, regardless of applType
-     * @return
+     * @return List
      */
     public static List getProductFeaturesByApplTypeId(GenericDelegator delegator, String productId, String productFeatureApplTypeId) {
         if (productId == null) {
@@ -656,6 +661,39 @@ public class ProductWorker {
         return isPhysical;
     }
 
+    public static String findProductId(GenericDelegator delegator, String idToFind, String goodIdentificationTypeId) throws GenericEntityException {
+        // first lookup and see if this is the Product PK
+        GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", idToFind));
+        String productId = null;
+
+        if (product == null) {
+            // no product record found; no check good identification
+            Map goodIdLookup = UtilMisc.toMap("idValue", idToFind);
+            if (UtilValidate.isNotEmpty(goodIdentificationTypeId)) {
+                goodIdLookup.put("goodIdentificationTypeId", goodIdentificationTypeId);
+            }
+            List goodIds = delegator.findByAndCache("GoodIdentification", goodIdLookup, UtilMisc.toList("-createdStamp"));
+
+            // sorted by createdStamp; so pull out the most current entry
+            GenericValue lastGoodId = EntityUtil.getFirst(goodIds);
+            if (lastGoodId != null) {
+                productId = lastGoodId.getString("productId");
+            }
+        } else {
+            productId = product.getString("productId");
+        }
+
+        if (productId != null) {
+            return productId;
+        } else {
+            return null;
+        }
+    }
+
+    public static String findProductId(GenericDelegator delegator, String idToFind) throws GenericEntityException {
+        return findProductId(delegator, idToFind, null);
+    }
+
     public static GenericValue findProduct(GenericDelegator delegator, String idToFind, String goodIdentificationTypeId) throws GenericEntityException {
         // first lookup and see if this is the Product PK
         GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", idToFind));
@@ -684,7 +722,7 @@ public class ProductWorker {
     }
 
     public static GenericValue findProduct(GenericDelegator delegator, String idToFind) throws GenericEntityException {
-        return findProduct(delegator, idToFind);
+        return findProduct(delegator, idToFind, null);
     }
 }
 
