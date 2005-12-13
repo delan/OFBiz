@@ -886,8 +886,8 @@ public class ShoppingCartItem implements java.io.Serializable {
             this.updatePrice(dispatcher, cart);
         }
 
-        // apply/unapply promotions - only for sales orders
-        if (triggerExternalOps && cart.getOrderType().equals("SALES_ORDER")) {
+        // apply/unapply promotions
+        if (triggerExternalOps) {
             ProductPromoWorker.doPromotions(cart, dispatcher);
         }
 
@@ -932,6 +932,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
                     this.setBasePrice(((Double) priceResult.get("price")).doubleValue());
                     this.setDisplayPrice(this.basePrice);
+                    this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
                 } else {
                     priceContext.put("prodCatalogId", this.getProdCatalogId());
                     priceContext.put("webSiteId", cart.getWebSiteId());
