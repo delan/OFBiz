@@ -90,7 +90,11 @@
             <hyperlink target="deleteTrackingCode?trackingCodeId=${trackingCodeId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
-    
+    <form name="FindTrackingCode" type="single"
+        target="ListTrackingCode" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+           <auto-fields-entity entity-name="TrackingCode"/>
+    </form>
     <form name="EditTrackingCodeOrder" type="single" 
             target="updateTrackingCodeOrder" title="" default-map-name="trackingCodeOrder"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -157,7 +161,7 @@
         <field name="sourceEnumId" title="${uiLabelMap.TrackingCodeVisitSourceEnumId}" widget-style="selectBox">
             <drop-down>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
-                    <entity-constraint name="enumerationTypeId" operator="equals" value=" TRACKINGCODE_SRC"/>
+                    <entity-constraint name="enumTypeId" operator="equals" value=" TRACKINGCODE_SRC"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -171,7 +175,7 @@
         <field name="sourceEnumId" title="${uiLabelMap.TrackingCodeVisitSourceEnumId}" widget-style="selectBox">
             <drop-down>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
-                    <entity-constraint name="enumerationTypeId" operator="equals" value=" TRACKINGCODE_SRC"/>
+                    <entity-constraint name="enumTypeId" operator="equals" value=" TRACKINGCODE_SRC"/>
                 </entity-options>
             </drop-down>
         </field>

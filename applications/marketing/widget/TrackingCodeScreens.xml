@@ -93,7 +93,6 @@
             </widgets>
         </section>
     </screen>
-    
    <screen name="ListTrackingCode">
         <section>
             <actions>
@@ -116,6 +115,22 @@
             </widgets>
         </section>
     </screen>
+    <screen name="FindTrackingCode">
+        <section>
+            <actions>
+                <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTrackingCodeDecorator">
+                    <decorator-section name="body">
+                        <container><label style="head1"> ${uiLabelMap.PageTitleFindTrackingCode}</label></container>
+                        <include-form name="FindTrackingCode" location="component://marketing/webapp/marketing/trackingcode/TrackingCodeForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="EditTrackingCodeOrder">
         <section>
             <actions>
@@ -140,7 +155,6 @@
             </widgets>
         </section>
     </screen>
-    
     <screen name="ListTrackingCodeOrders">
         <section>
             <actions>
