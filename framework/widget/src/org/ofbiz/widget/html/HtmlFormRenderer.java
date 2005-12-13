@@ -1194,6 +1194,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
         String opIsEmpty = UtilProperties.getMessage("conditional", "is_empty", locale);
         String ignoreCase = UtilProperties.getMessage("conditional", "ignore_case", locale);
 
+        String defaultOption = textFindField.getDefaultOption();
+        boolean ignCase = textFindField.getIgnoreCase();
+
         buffer.append("<input type=\"text\"");
 
         String className = modelFormField.getWidgetStyle();
@@ -1242,27 +1245,27 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_op\" value=\"equals\" checked=\"checked\"/>");
+        buffer.append("_op\" value=\"equals\"" + ("equals".equals(defaultOption) ? " checked=\"checked\"" : "") + "/>");
         buffer.append(opEquals);
 
         buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_op\" value=\"like\"/>");
+        buffer.append("_op\" value=\"like\"" + ("like".equals(defaultOption) ? " checked=\"checked\"" : "") + "/>");
         buffer.append(opBeginsWith);
 
         buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_op\" value=\"contains\"/>");
+        buffer.append("_op\" value=\"contains\"" + ("contains".equals(defaultOption) ? " checked=\"checked\"" : "") + "/>");
         buffer.append(opContains);
 
         buffer.append(" <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_op\" value=\"empty\"/>");
+        buffer.append("_op\" value=\"empty\"" + ("empty".equals(defaultOption) ? " checked=\"checked\"" : "") + "/>");
         buffer.append(opIsEmpty);
         
         buffer.append(" <input type=\"checkbox\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_ic\" value=\"Y\"/>");
+        buffer.append("_ic\" value=\"Y\"" + (ignCase ? " checked=\"checked\"" : "") + "/>");
         buffer.append(ignoreCase);
         
         buffer.append("</span>");

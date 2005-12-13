@@ -705,6 +705,24 @@
         <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
         <xs:attribute type="xs:positiveInteger" name="maxlength"/>
         <xs:attribute type="xs:string" name="default-value"/>
+        <xs:attribute name="ignore-case" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="default-option" default="equals">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="equals"/>
+                    <xs:enumeration value="like"/>
+                    <xs:enumeration value="contains"/>
+                    <xs:enumeration value="empty"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
 
   <!-- ================== FIELD SUB-ELEMENTS ==================== -->

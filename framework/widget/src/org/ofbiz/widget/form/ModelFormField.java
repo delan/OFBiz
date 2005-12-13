@@ -2584,12 +2584,25 @@ public class ModelFormField {
     }
 
     public static class TextFindField extends TextField {
+        protected boolean ignoreCase = false;
+        protected String defaultOption = "equals";
+
         public TextFindField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
+            this.ignoreCase = "true".equals(element.getAttribute("ignore-case"));
+            this.defaultOption = element.getAttribute("default-option");
         }
 
         public TextFindField(int fieldSource, ModelFormField modelFormField) {
             super(fieldSource, modelFormField);
+        }
+
+        public boolean getIgnoreCase() {
+            return this.ignoreCase;
+        }
+
+        public String getDefaultOption() {
+            return this.defaultOption;
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
