@@ -35,7 +35,7 @@
     <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>    
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
-
+    <handler name="screenfop" type="view" class="org.ofbiz.widget.screen.ScreenFopPdfViewHandler"/>
     <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>    
     <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
     
@@ -61,6 +61,11 @@
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
         <response name="success" type="view" value="main" />
         <response name="error" type="view" value="login" />
+    </request-map>
+
+    <request-map uri="MarketingReport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MarketingReport"/>        
     </request-map>
 
     <request-map uri="login">
@@ -380,6 +385,18 @@
     <request-map uri="LookupCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
     <request-map uri="LookupPreferredContactMech"><security https="true" auth="true"/><response name="success" type="view" value="LookupPreferredContactMech"/></request-map>
     <request-map uri="LookupCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
+
+    <request-map uri="TrackingCodeReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TrackingCodeReport"/>
+        <response name="error"   type="view" value="MarketingReport"/>
+    </request-map>
+    <request-map uri="MarketingCampaignReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MarketingCampaignReport"/>
+        <response name="error"   type="view" value="MarketingReport"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -440,6 +457,9 @@
     <view-map name="LookupPartyClassificationGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyClassificationGroup"/>
     <view-map name="LookupCommEvent" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCommEvent"/>
     <view-map name="LookupGeo" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeo"/>
+
+    <view-map name="TrackingCodeReport" type="screenfop" page="component://marketing/widget/MarketingReportScreens.xml#TrackingCodeReport"  content-type="application/pdf" encoding="none"  />
+    <view-map name="MarketingCampaignReport" type="screenfop" page="component://marketing/widget/MarketingReportScreens.xml#MarketingCampaignReport"  content-type="application/pdf" encoding="none"  />
 
     <!-- end of view mappings -->
 </site-conf>

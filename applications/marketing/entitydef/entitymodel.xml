@@ -464,6 +464,7 @@
         <member-entity entity-alias="OH" entity-name="OrderHeader"/>
         <alias entity-alias="OH" name="grandTotal" function="sum"/>
         <alias entity-alias="TCO" name="orderId" function="count"/>
+        <alias entity-alias="OH" name="orderDate" group-by="false"/>
         <alias entity-alias="TCO" name="trackingCodeId" group-by="true"/>
         <view-link entity-alias="OH" rel-entity-alias="TCO">
             <key-map field-name="orderId"/>
