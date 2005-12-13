@@ -250,12 +250,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="receivepayment"/>
     </request-map>
-    <request-map uri="receiveOfflinePayments">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.order.OrderManagerEvents" invoke="receiveOfflinePayment"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="receivepayment"/>
-    </request-map>
     <request-map uri="allowordersplit">
         <security https="true" auth="true"/>
         <event type="service" invoke="setAllowOrderSplit"/>
@@ -696,13 +690,6 @@
     <request-map uri="processpayment">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
-        <response name="success" type="request" value="processOfflinePayment"/>
-        <response name="fail" type="view" value="confirm"/>
-        <response name="error" type="view" value="confirm"/>
-    </request-map>
-    <request-map uri="processOfflinePayment">
-        <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.order.OrderManagerEvents" invoke="processOfflinePayments"/>
         <response name="success" type="request" value="clearcart"/>
         <response name="fail" type="view" value="confirm"/>
         <response name="error" type="view" value="confirm"/>
