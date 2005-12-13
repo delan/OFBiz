@@ -2303,6 +2303,7 @@
       <field name="paymentMethodId" type="id"></field>
       <field name="transCodeEnumId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="referenceNum" type="short-varchar"></field>
       <field name="altReference" type="short-varchar"></field>
       <field name="subReference" type="short-varchar"></field>
@@ -2318,6 +2319,9 @@
       </relation>
       <relation type="one" fk-name="PAYGATR_TXCODE" title="TranCode" rel-entity-name="Enumeration">
         <key-map field-name="transCodeEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PAYGATR_CUOM" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="PAYGATR_ORDPMPRF" rel-entity-name="OrderPaymentPreference">
         <key-map field-name="orderPaymentPreferenceId"/>
