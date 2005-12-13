@@ -51,6 +51,7 @@ import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -148,6 +149,15 @@ public class ShoppingCartEvents {
             } else {
                 request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource, "cart.addToCart.noProductInfoPassed", locale));
                 return "success"; // not critical return to same page
+            }
+        } else {
+            try {
+                String pId = ProductWorker.findProductId(delegator, productId);
+                if (pId != null) {
+                    productId = pId;
+                }
+            } catch (Throwable e) {
+                Debug.logWarning(e, module);
             }
         }
 
