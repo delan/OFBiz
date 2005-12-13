@@ -6,7 +6,7 @@ var target2 = null;
 
 function call_fieldlookup(target, viewName, formName,viewWidth,viewheight) {   
     var fieldLookup = new fieldLookup1(target);  
-    if (! viewWidth) viewWidth = 250;
+    if (! viewWidth) viewWidth = 350;
     if (! viewheight) viewheight = 200;
     fieldLookup.popup(viewName, formName, viewWidth, viewheight);
 }
@@ -73,7 +73,7 @@ function lookup_popup2 (view_name) {
             argString += "&parm" + (i-2) + "=" + this.args[i];
         }
     }
-	var obj_lookupwindow = window.open(view_name + '?id=' + this.id + argString,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,resizable=yes,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+	var obj_lookupwindow = window.open(view_name + '?id=' + this.id + argString,'FieldLookup', 'width=750,height=550,scrollbars=yes,status=no,resizable=yes,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }
