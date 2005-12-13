@@ -84,4 +84,23 @@
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <!-- AgreementPromoAppl  -->
+    <service name="createAgreementPromoAppl" default-entity-name="AgreementPromoAppl" engine="simple"
+                location="org/ofbiz/accounting/agreement/AgreementServices.xml" invoke="createAgreementPromoAppl" auth="true">
+        <description>Create an PromoAppl</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateAgreementPromoAppl" default-entity-name="AgreementPromoAppl" engine="simple"
+                location="org/ofbiz/accounting/agreement/AgreementServices.xml" invoke="updateAgreementPromoAppl" auth="true">
+        <description>Update an AgreementPromoAppl</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeAgreementPromoAppl" default-entity-name="AgreementPromoAppl" engine="simple"
+                location="org/ofbiz/accounting/agreement/AgreementServices.xml" invoke="removeAgreementPromoAppl" auth="true">
+        <description>Remove an AgreementPromoAppl</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
 </services>

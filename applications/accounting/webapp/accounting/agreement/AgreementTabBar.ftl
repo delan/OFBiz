@@ -28,9 +28,16 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <#if agreement?has_content>
-    <div class='tabContainer'>
+    <div class="tabContainer">
         <a href="<@ofbizUrl>EditAgreement?agreementId=${agreement.agreementId}</@ofbizUrl>" class="${selectedClassMap.EditAgreement?default(unselectedClassName)}">${uiLabelMap.AccountingAgreement}</a>
-        <a href="<@ofbizUrl>ListAgreementItems?agreementId=${agreement.agreementId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementItems?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementItems}</a>
         <a href="<@ofbizUrl>ListAgreementTerms?agreementId=${agreement.agreementId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementTerms?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementTerms}</a>
+        <a href="<@ofbizUrl>ListAgreementItems?agreementId=${agreement.agreementId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementItems?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementItems}</a>
     </div>
 </#if>
+<#if agreementItem?has_content>
+    <div class="tabContainer">
+        <a href="<@ofbizUrl>EditAgreementItem?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.EditAgreementItem?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementItem}</a>
+        <a href="<@ofbizUrl>ListAgreementPromoAppls?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementPromoAppls?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementPromoAppls}</a>
+    </div>
+</#if>
+
