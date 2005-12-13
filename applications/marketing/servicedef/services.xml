@@ -175,6 +175,14 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+
+    <service name="updateTrackingCodeType" default-entity-name="TrackingCodeType" engine="simple"
+            location="org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="updateTrackingCodeType" auth="true">
+        <description>Update a TrackingCode Type</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
     <service name="deleteTrackingCode" default-entity-name="TrackingCode" engine="simple"
             location="org/ofbiz/marketing/tracking/TrackingCodeServices.xml" invoke="deleteTrackingCode" auth="true">
         <description>Update a TrackingCode record</description>

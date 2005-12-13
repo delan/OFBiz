@@ -31,7 +31,7 @@
     <handler name="soap" type="request" class="org.ofbiz.webapp.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.webapp.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
-
+    
     <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>    
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
@@ -139,7 +139,7 @@
     <request-map uri="EditTrackingCode"><security https="true" auth="true"/><response name="success" type="view" value="EditTrackingCode"/></request-map>
     <request-map uri="createTrackingCode"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createTrackingCode"/>
-        <response name="success" type="view" value="EditTrackingCode"/>
+        <response name="success" type="view" value="FindTrackingCode"/>
         <response name="error" type="view" value="EditTrackingCode"/>
     </request-map>
     <request-map uri="updateTrackingCode"><security https="true" auth="true"/>
@@ -147,10 +147,28 @@
         <response name="success" type="view" value="EditTrackingCode"/>
         <response name="error" type="view" value="EditTrackingCode"/>
     </request-map>
+     <request-map uri="deleteTrackingCode"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteTrackingCode"/>
+        <response name="success" type="view" value="FindTrackingCode"/>
+        <response name="error" type="view" value="FindTrackingCode"/>
+    </request-map>
     
     <request-map uri="FindTrackingCodeOrders"><security https="true" auth="true"/><response name="success" type="view" value="FindTrackingCodeOrders"/></request-map>
     <request-map uri="FindTrackingCodeVisits"><security https="true" auth="true"/><response name="success" type="view" value="FindTrackingCodeVisits"/></request-map>
-    
+    <request-map uri="FindTrackingCodeType"><security https="true" auth="true"/><response name="success" type="view" value="FindTrackingCodeType"/></request-map>
+    <request-map uri="EditTrackingCodeType"><security https="true" auth="true"/><response name="success" type="view" value="EditTrackingCodeType"/></request-map>
+    <request-map uri="updateTrackingCodeType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateTrackingCodeType"/>
+        <response name="success" type="view" value="EditTrackingCodeType"/>
+        <response name="error" type="view" value="EditTrackingCodeType"/>
+    </request-map>
+    <request-map uri="deleteTrackingCodeType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteTrackingCodeType"/>
+        <response name="success" type="view" value="FindTrackingCodeType"/>
+        <response name="error" type="view" value="FindTrackingCodeType"/>
+    </request-map>
     <!-- =========== MarketingCampaign =========== -->
     <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>
     <request-map uri="EditMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="EditMarketingCampaign"/></request-map>
@@ -368,16 +386,20 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="screen" page="component://marketing/widget/CommonScreens.xml#main"/>
     <view-map name="login" type="screen" page="component://marketing/widget/CommonScreens.xml#login"/>
+    <view-map name="MarketingReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#MarketingReportList"/>
     
     <view-map name="FindDataSource"  type="screen" page="component://marketing/widget/DataSourceScreens.xml#ListDataSource"/>
     <view-map name="EditDataSource" type="screen" page="component://marketing/widget/DataSourceScreens.xml#EditDataSource"/>
     <view-map name="FindDataSourceType"  type="screen" page="component://marketing/widget/DataSourceScreens.xml#ListDataSourceType"/>
     <view-map name="EditDataSourceType" type="screen" page="component://marketing/widget/DataSourceScreens.xml#EditDataSourceType"/>
     
-    <view-map name="FindTrackingCode" type="region"/>
-    <view-map name="EditTrackingCode" type="region"/>
-    <view-map name="FindTrackingCodeOrders" type="region"/>
-    <view-map name="FindTrackingCodeVisits" type="region"/>
+    <view-map name="FindTrackingCode" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#ListTrackingCode"/>
+    <view-map name="EditTrackingCode" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#EditTrackingCode"/>
+    <view-map name="FindTrackingCodeOrders" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#ListTrackingCodeOrders"/>
+    <view-map name="FindTrackingCodeVisits" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#ListTrackingCodeVisits"/>
+
+    <view-map name="EditTrackingCodeType" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#EditTrackingCodeType"/>
+    <view-map name="FindTrackingCodeType" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#ListTrackingCodeType"/>
 
     <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#ListMarketingCampaign"/>
     <view-map name="EditMarketingCampaign" type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#EditMarketingCampaign"/>
@@ -418,5 +440,6 @@
     <view-map name="LookupPartyClassificationGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyClassificationGroup"/>
     <view-map name="LookupCommEvent" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCommEvent"/>
     <view-map name="LookupGeo" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeo"/>
+
     <!-- end of view mappings -->
 </site-conf>
