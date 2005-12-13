@@ -148,6 +148,93 @@ public class ProductPromoWorker {
         return productPromos;
     }
 
+    public static List getProductStorePromotions(ShoppingCart cart, Timestamp nowTimestamp, LocalDispatcher dispatcher) {
+        List productPromoList = new LinkedList();
+        
+        GenericDelegator delegator = cart.getDelegator();
+
+        String productStoreId = cart.getProductStoreId();
+        GenericValue productStore = null;
+        try {
+            productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up store with id " + productStoreId, module);
+        }
+        if (productStore == null) {
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
+            return productPromoList;
+        }
+
+        try {
+            // loop through promotions and get a list of all of the rules...
+            List productStorePromoApplsList = productStore.getRelatedCache("ProductStorePromoAppl", null, UtilMisc.toList("sequenceNum"));
+            productStorePromoApplsList = EntityUtil.filterByDate(productStorePromoApplsList, nowTimestamp);
+
+            if (productStorePromoApplsList == null || productStorePromoApplsList.size() == 0) {
+                if (Debug.verboseOn()) Debug.logVerbose("Not doing promotions, none applied to store with ID " + productStoreId, module);
+            }
+
+            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(productStorePromoApplsList);
+            while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
+                GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
+                GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
+                productPromoList.add(productPromo);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up promotion data while doing promotions", module);
+        }
+        return productPromoList;
+    }
+
+    public static List getAgreementPromotions(ShoppingCart cart, Timestamp nowTimestamp, LocalDispatcher dispatcher) {
+        List productPromoList = new LinkedList();
+        
+        GenericDelegator delegator = cart.getDelegator();
+
+        String agreementId = cart.getAgreementId();
+        GenericValue agreement = null;
+        try {
+            agreement = delegator.findByPrimaryKeyCache("Agreement", UtilMisc.toMap("agreementId", agreementId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up agreement with id " + agreementId, module);
+        }
+        if (agreement == null) {
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoAgreementFoundWithIdNotDoingPromotions", UtilMisc.toMap("agreementId", agreementId), cart.getLocale()), module);
+            return productPromoList;
+        }
+        GenericValue agreementItem = null;
+        try {
+            List agreementItems = delegator.findByAndCache("AgreementItem", UtilMisc.toMap("agreementId", agreementId, "agreementItemTypeId", "AGREEMENT_PRICING_PR", "currencyUomId", cart.getCurrency()));
+            agreementItem = EntityUtil.getFirst(agreementItems);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up agreement items for agreement with id " + agreementId, module);
+        }
+        if (agreementItem == null) {
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoAgreementItemFoundForAgreementWithIdNotDoingPromotions", UtilMisc.toMap("agreementId", agreementId), cart.getLocale()), module);
+            return productPromoList;
+        }
+
+        try {
+            // loop through promotions and get a list of all of the rules...
+            List agreementPromoApplsList = agreementItem.getRelatedCache("AgreementPromoAppl", null, UtilMisc.toList("sequenceNum"));
+            agreementPromoApplsList = EntityUtil.filterByDate(agreementPromoApplsList, nowTimestamp);
+
+            if (agreementPromoApplsList == null || agreementPromoApplsList.size() == 0) {
+                if (Debug.verboseOn()) Debug.logVerbose("Not doing promotions, none applied to agreement with ID " + agreementId, module);
+            }
+
+            Iterator agreementPromoAppls = UtilMisc.toIterator(agreementPromoApplsList);
+            while (agreementPromoAppls != null && agreementPromoAppls.hasNext()) {
+                GenericValue agreementPromoAppl = (GenericValue) agreementPromoAppls.next();
+                GenericValue productPromo = agreementPromoAppl.getRelatedOneCache("ProductPromo");
+                productPromoList.add(productPromo);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up promotion data while doing promotions", module);
+        }
+        return productPromoList;
+    }
+
     public static void doPromotions(ShoppingCart cart, LocalDispatcher dispatcher) {
         // this is called when a user logs in so that per customer limits are honored, called by cart when new userlogin is set
         // there is code to store ProductPromoUse information when an order is placed
@@ -161,36 +248,14 @@ public class ProductPromoWorker {
         // start out by clearing all existing promotions, then we can just add all that apply
         cart.clearAllPromotionInformation();
         
-        String productStoreId = cart.getProductStoreId();
-        GenericValue productStore = null;
-        try {
-            productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up store with id " + productStoreId, module);
-        }
-        if (productStore == null) {
-        	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
-            return;
-        }
-
         // there will be a ton of db access, so just do a big catch entity exception block
         try {
-            // loop through promotions and get a list of all of the rules...
-            List productStorePromoApplsList = productStore.getRelatedCache("ProductStorePromoAppl", null, UtilMisc.toList("sequenceNum"));
-            productStorePromoApplsList = EntityUtil.filterByDate(productStorePromoApplsList, nowTimestamp);
-
-            if (productStorePromoApplsList == null || productStorePromoApplsList.size() == 0) {
-                if (Debug.verboseOn()) Debug.logVerbose("Not doing promotions, none applied to store with ID " + productStoreId, module);
+            List productPromoList = null;
+            if (cart.getOrderType().equals("SALES_ORDER")) {
+                productPromoList = ProductPromoWorker.getProductStorePromotions(cart, nowTimestamp, dispatcher);
+            } else {
+                productPromoList = ProductPromoWorker.getAgreementPromotions(cart, nowTimestamp, dispatcher);
             }
-
-            List productPromoList = new LinkedList();
-            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(productStorePromoApplsList);
-            while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
-                GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
-                GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
-                productPromoList.add(productPromo);
-            }
-
             // do a calculate only run through the promotions, then order by descending totalDiscountAmount for each promotion
             // NOTE: on this run, with isolatedTestRun passed as false it should not apply any adjustments 
             //  or track which cart items are used for which promotions, but it will track ProductPromoUseInfo and 
@@ -240,7 +305,7 @@ public class ProductPromoWorker {
             Debug.logError(e, "Error looking up promotion data while doing promotions", module);
         }
     }
-    
+
     protected static boolean hasOrderTotalCondition(GenericValue productPromo, GenericDelegator delegator) throws GenericEntityException {
         boolean hasOtCond = false;
         List productPromoConds = delegator.findByAndCache("ProductPromoCond", UtilMisc.toMap("productPromoId", productPromo.get("productPromoId")), UtilMisc.toList("productPromoCondSeqId"));

@@ -267,7 +267,7 @@
                 <#list orderItemPriceInfos as orderItemPriceInfo>
                   <tr>
                     <td align="right" colspan="2">
-                      <div class="tabletext" style="font-size: xx-small;"><b><i>Price Rule</i>:</b> [${orderItemPriceInfo.productPriceRuleId}:${orderItemPriceInfo.productPriceActionSeqId}] ${orderItemPriceInfo.description?if_exists}</div>
+                      <div class="tabletext" style="font-size: xx-small;"><b><i>Price Rule</i>:</b> [${orderItemPriceInfo.productPriceRuleId?if_exists}:${orderItemPriceInfo.productPriceActionSeqId?if_exists}] ${orderItemPriceInfo.description?if_exists}</div>
                     </td>
                     <td>&nbsp;</td>
                     <td align="right">
