@@ -399,7 +399,9 @@
                 org.ofbiz.securityext.login.LoginEvents.autoLoginSet(request, response);
                 session = request.getSession();
                 cart = session.getAttribute("shoppingCart");
-                cart.setOrderPartyId(tempMap.get("partyId"));
+                if (cart != null) {
+                    cart.setOrderPartyId(tempMap.get("partyId"));
+                }
             ]]></call-bsh>
         </if-compare>
 
