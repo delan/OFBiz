@@ -532,6 +532,28 @@
         <response name="error" type="view" value="EditAgreementTerm"/>
     </request-map>
 
+    <request-map uri="ListAgreementPromoAppls"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementPromoAppls"/></request-map>
+    <request-map uri="removeAgreementPromoAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeAgreementPromoAppl"/>
+        <response name="success" type="view" value="ListAgreementPromoAppls"/>
+        <response name="error" type="view" value="ListAgreementPromoAppls"/>
+    </request-map>
+
+    <request-map uri="EditAgreementPromoAppl"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementPromoAppl"/></request-map>
+    <request-map uri="createAgreementPromoAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createAgreementPromoAppl"/>
+        <response name="success" type="view" value="EditAgreementPromoAppl"/>
+        <response name="error" type="view" value="EditAgreementPromoAppl"/>
+    </request-map>
+    <request-map uri="updateAgreementPromoAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateAgreementPromoAppl"/>
+        <response name="success" type="view" value="EditAgreementPromoAppl"/>
+        <response name="error" type="view" value="EditAgreementPromoAppl"/>
+    </request-map>
+
     <!-- TaxAuthority Requests -->
     <request-map uri="FindTaxAuthority"><security https="true" auth="true"/><response name="success" type="view" value="FindTaxAuthority"/></request-map>
     <request-map uri="EditTaxAuthority"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthority"/></request-map>
@@ -715,6 +737,8 @@
     <view-map name="EditAgreementItem" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementItem"/>
     <view-map name="ListAgreementTerms" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementTerms"/>
     <view-map name="EditAgreementTerm" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementTerm"/>
+    <view-map name="ListAgreementPromoAppls" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementPromoAppls"/>
+    <view-map name="EditAgreementPromoAppl" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementPromoAppl"/>
 
     <view-map name="FindTaxAuthority" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#FindTaxAuthority"/>
     <view-map name="EditTaxAuthority" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthority"/>

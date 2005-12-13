@@ -188,4 +188,45 @@
         <check-errors/>
     </simple-method>
     
+    <!-- create a new AgreementPromoAppl -->
+    <simple-method method-name="createAgreementPromoAppl" short-description="Create an AgreementPromoAppl">
+        <check-permission permission="ACCOUNTING" action="_CREATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createAgreementPromoAppl you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_CREATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="AgreementPromoAppl"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- update an existing AgreementPromoAppl -->
+    <simple-method method-name="updateAgreementPromoAppl" short-description="Update an existing AgreementPromoAppl">
+        <check-permission permission="ACCOUNTING" action="_UPDATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run updateAgreementPromoAppl you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="AgreementPromoAppl" value-name="agreementPromoAppl" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="agreementPromoAppl"/>
+        <store-value value-name="agreementPromoAppl"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- remove an existing AgreementPromoAppl -->
+    <simple-method method-name="removeAgreementPromoAppl" short-description="Remove an existing AgreementPromoAppl">
+        <check-permission permission="ACCOUNTING" action="_UPDATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run removeAgreementPromoAppl you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="AgreementPromoAppl" value-name="agreementPromoAppl" auto-field-map="true"/>
+        <check-errors/>
+        <remove-value value-name="agreementPromoAppl"/>
+        <check-errors/>
+    </simple-method>
+    
 </simple-methods>
