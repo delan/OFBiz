@@ -392,11 +392,14 @@
             <store-value value-name="personVo"/>
         </if-not-empty>
 
-        <!-- now finished, log in the user... -->
+        <!-- now finished, log in the user and set the cart's partyId to that of the newly created customer ... -->
         <if-compare field-name="allowPassword" operator="equals" value="Y">
             <call-bsh><![CDATA[
                 org.ofbiz.securityext.login.LoginEvents.doBasicLogin(createdUserLogin, request);
                 org.ofbiz.securityext.login.LoginEvents.autoLoginSet(request, response);
+                session = request.getSession();
+                cart = session.getAttribute("shoppingCart");
+                cart.setOrderPartyId(tempMap.get("partyId"));
             ]]></call-bsh>
         </if-compare>
 
