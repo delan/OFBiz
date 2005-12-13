@@ -31,6 +31,7 @@ import javax.servlet.jsp.PageContext;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -40,6 +41,7 @@ import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 import org.apache.commons.collections.map.LinkedMap;
 
@@ -654,5 +656,35 @@ public class ProductWorker {
         return isPhysical;
     }
 
+    public static GenericValue findProduct(GenericDelegator delegator, String idToFind, String goodIdentificationTypeId) throws GenericEntityException {
+        // first lookup and see if this is the Product PK
+        GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", idToFind));
+        String productId = null;
+
+        if (product == null) {
+            // no product record found; no check good identification
+            Map goodIdLookup = UtilMisc.toMap("idValue", idToFind);
+            if (UtilValidate.isNotEmpty(goodIdentificationTypeId)) {
+                goodIdLookup.put("goodIdentificationTypeId", goodIdentificationTypeId);
+            }
+            List goodIds = delegator.findByAndCache("GoodIdentification", goodIdLookup, UtilMisc.toList("-createdStamp"));
+
+            // sorted by createdStamp; so pull out the most current entry
+            GenericValue lastGoodId = EntityUtil.getFirst(goodIds);
+            if (lastGoodId != null) {
+                product = lastGoodId.getRelatedOneCache("Product");
+            }
+        }
+
+        if (product != null) {
+            return product;
+        } else {
+            return null;
+        }
+    }
+
+    public static GenericValue findProduct(GenericDelegator delegator, String idToFind) throws GenericEntityException {
+        return findProduct(delegator, idToFind);
+    }
 }
 
