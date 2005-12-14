@@ -500,6 +500,7 @@ public class ShoppingCartEvents {
     public static String modifyCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         ShoppingCart cart = getCartObject(request);
+        Locale locale = UtilHttp.getLocale(request);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Security security = (Security) request.getAttribute("security");
@@ -513,7 +514,7 @@ public class ShoppingCartEvents {
         String removeSelectedFlag = request.getParameter("removeSelected");
         String selectedItems[] = request.getParameterValues("selectedItem");
         boolean removeSelected = ("true".equals(removeSelectedFlag) && selectedItems != null && selectedItems.length > 0);
-        result = cartHelper.modifyCart(security, userLogin, paramMap, removeSelected, selectedItems);
+        result = cartHelper.modifyCart(security, userLogin, paramMap, removeSelected, selectedItems, locale);
         controlDirective = processResult(result, request);
 
         //Determine where to send the browser
