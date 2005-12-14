@@ -42,6 +42,7 @@ import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.product.product.ProductWorker;
 
 /**
  *
@@ -98,6 +99,9 @@ public class PackingSession implements java.io.Serializable {
         if (status == 0) {
             throw new GeneralException("Packing sessio has been completed; be sure to CLEAR before packing a new order!");
         }
+
+        // find the actual product ID
+        productId = ProductWorker.findProductId(this.getDelegator(), productId);
 
         // set the default null values - primary is the assumed first item
         if (orderId == null) {
