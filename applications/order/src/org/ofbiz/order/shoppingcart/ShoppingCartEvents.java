@@ -119,6 +119,7 @@ public class ShoppingCartEvents {
         // not used right now: Map attributes = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         Locale locale = UtilHttp.getLocale(request);
+        NumberFormat nf = NumberFormat.getNumberInstance(locale);
 
         // Get the parameters as a MAP, remove the productId and quantity params.
         Map paramMap = UtilHttp.getParameterMap(request);
@@ -241,8 +242,7 @@ public class ShoppingCartEvents {
                 reservLengthStr = (String) paramMap.remove("reservLength");
                 // parse the reservation Length
                 try {
-                    reservLength = NumberFormat.getNumberInstance().parse(
-                            reservLengthStr).doubleValue();
+                    reservLength = nf.parse(reservLengthStr).doubleValue();
                 } catch (Exception e) {
                     Debug.logWarning(e,"Problems parsing reservation length string: "
                                     + reservLengthStr, module);
@@ -256,8 +256,7 @@ public class ShoppingCartEvents {
                 reservPersonsStr = (String) paramMap.remove("reservPersons");
                 // parse the number of persons
                 try {
-                    reservPersons = NumberFormat.getNumberInstance().parse(
-                            reservPersonsStr).doubleValue();
+                    reservPersons = nf.parse(reservPersonsStr).doubleValue();
                 } catch (Exception e) {
                     Debug.logWarning(e,"Problems parsing reservation number of persons string: " + reservPersonsStr, module);
                     reservPersons = 1;
@@ -279,7 +278,7 @@ public class ShoppingCartEvents {
 
         // parse the price
         try {
-            price = NumberFormat.getNumberInstance().parse(priceStr).doubleValue();
+            price = nf.parse(priceStr).doubleValue();
         } catch (Exception e) {
             Debug.logWarning(e, "Problems parsing price string: " + priceStr, module);
             price = 0.00;
@@ -287,7 +286,7 @@ public class ShoppingCartEvents {
 
         // parse the quantity
         try {
-            quantity = NumberFormat.getNumberInstance().parse(quantityStr).doubleValue();
+            quantity = nf.parse(quantityStr).doubleValue();
         } catch (Exception e) {
             Debug.logWarning(e, "Problems parsing quantity string: " + quantityStr, module);
             quantity = 1;
@@ -305,7 +304,7 @@ public class ShoppingCartEvents {
         double amount = 0.00;
         if (selectedAmountStr != null && selectedAmountStr.length() > 0) {
             try {
-                amount = NumberFormat.getNumberInstance().parse(selectedAmountStr).doubleValue();
+                amount = nf.parse(selectedAmountStr).doubleValue();
             } catch (Exception e) {
                 Debug.logWarning(e, "Problem parsing amount string: " + selectedAmountStr, module);
                 amount = 0.00;
