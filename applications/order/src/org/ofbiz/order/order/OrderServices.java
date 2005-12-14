@@ -3113,11 +3113,14 @@ public class OrderServices {
 
         // remove the adjustments
         try {
+            List adjExprs = new LinkedList();
+            adjExprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, orderId));
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("orderAdjustmentTypeId", EntityOperator.EQUALS, "PROMOTION_ADJUSTMENT"));
             exprs.add(new EntityExpr("orderAdjustmentTypeId", EntityOperator.EQUALS, "SHIPPING_CHARGES"));
             exprs.add(new EntityExpr("orderAdjustmentTypeId", EntityOperator.EQUALS, "SALES_TAX"));
-            EntityCondition cond = new EntityConditionList(exprs, EntityOperator.OR);
+            adjExprs.add(new EntityConditionList(exprs, EntityOperator.OR));
+            EntityCondition cond = new EntityConditionList(adjExprs, EntityOperator.AND);
             delegator.removeByCondition("OrderAdjustment", cond);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
