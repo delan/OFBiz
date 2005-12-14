@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -43,6 +44,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
@@ -549,6 +551,8 @@ public class ShoppingCartHelper {
     /** Update the items in the shopping cart. */
     public Map modifyCart(Security security, GenericValue userLogin, Map context, boolean removeSelected, String[] selectedItems) {
         Map result = null;
+        Locale locale = this.cart.getLocale();
+        NumberFormat nf = NumberFormat.getNumberInstance(locale);
 
         ArrayList deleteList = new ArrayList();
         ArrayList errorMsgs = new ArrayList();
@@ -606,16 +610,16 @@ public class ShoppingCartHelper {
                         }
                     } else if (o.startsWith("reservLength")) {
                         if (item != null) {
-                                double reservLength = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                                double reservLength = nf.parse(quantString).doubleValue();
                                 item.setReservLength(reservLength);
                         }
                     } else if (o.startsWith("reservPersons")) {
                         if (item != null) {
-                                double reservPersons = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                                double reservPersons = nf.parse(quantString).doubleValue();
                                 item.setReservPersons(reservPersons);
                         }
                     } else {
-                        quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                        quantity = nf.parse(quantString).doubleValue();
                         if (quantity < 0) {
                             throw new CartItemModifyException("Quantity must be a positive number.");
                         }
@@ -668,9 +672,9 @@ public class ShoppingCartHelper {
                     }
 
                     if (o.toUpperCase().startsWith("PRICE")) {
-                      NumberFormat nf = NumberFormat.getCurrencyInstance();
-                      String tmpQuantity = nf.format(quantity);
-                      String tmpOldPrice = nf.format(oldPrice);
+                      NumberFormat pf = NumberFormat.getCurrencyInstance(locale);
+                      String tmpQuantity = pf.format(quantity);
+                      String tmpOldPrice = pf.format(oldPrice);
                       if (!tmpOldPrice.equals(tmpQuantity)) {
                         if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
                             if (item != null) {
@@ -731,6 +735,9 @@ public class ShoppingCartHelper {
         } else {
             this.cart.setViewCartOnAdd(false);
         }
+
+        // Promotions are run again.
+        ProductPromoWorker.doPromotions(this.cart, dispatcher);
 
         if (errorMsgs.size() > 0) {
             result = ServiceUtil.returnError(errorMsgs);
