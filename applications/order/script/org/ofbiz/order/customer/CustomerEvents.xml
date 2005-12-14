@@ -235,16 +235,22 @@
         
         <!-- the rest of the methods require a userLogin object; so if we are anonymous lets fake it -->
         <if-empty field-name="userLogin">
-            <string-to-field field-name="userLoginId" map-name="ulLookup" string="anonymous"/>
+            <set field="ulLookup.userLoginId" value="anonymous"/>
             <find-by-primary-key entity-name="UserLogin" map-name="ulLookup" value-name="userLogin"/>
-            <field-to-field field-name="partyId" map-name="tempMap" to-map-name="userLogin"/>
+            <set field="userLogin.partyId" from-field="tempMap.partyId"/>
             <set-current-user-login value-name="userLogin"/>
+            <else><!-- of an anonymous vistor is coming back, update the party id in the userLogin object -->
+                <if-compare field-name="userLogin.userLoginId" value="anonymous" operator="equals">
+                    <set field="userLogin.partyId" from-field="tempMap.partyId"/>
+                </if-compare>
+            </else>
         </if-empty>
+
         <log level="info" message="UserLogin : ${userLogin}"/>
         
         <!-- add the party to the customer role -->
-        <string-to-field field-name="roleTypeId" map-name="roleMap" string="CUSTOMER"/>
-        <field-to-field field-name="partyId" map-name="tempMap" to-map-name="roleMap"/>
+        <set field="roleMap.roleTypeId" value="CUSTOMER"/>
+        <set field="roleMap.partyId" from-field="tempMap.partyId"/>
         <call-service service-name="createPartyRole" in-map-name="roleMap"/>
         
         <env-to-env env-name="tempMap.partyId" to-env-name="partyId"/>
@@ -252,7 +258,7 @@
         
         <!-- create userLogin -->
         <if-not-empty field-name="userLoginId" map-name="parameters">
-            <field-to-field field-name="userLoginId" map-name="parameters" to-map-name="loginMap"/>
+            <set field="loginMap.userLoginId" from-field="parameters.userLoginId"/>
             <!-- call create userLogin -->
             <!-- call reset password (to email a password) -->
         </if-not-empty>
