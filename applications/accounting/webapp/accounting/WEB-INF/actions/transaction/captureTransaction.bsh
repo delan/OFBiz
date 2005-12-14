@@ -18,6 +18,10 @@ context.put("orderPaymentPreference", orderPaymentPreference);
 paymentMethodType = orderPaymentPreference.getRelatedOneCache("PaymentMethodType");
 context.put("paymentMethodType", paymentMethodType);
 
+if (orderPaymentPrefrence != null) {
+    context.put("paymentTypeId", "CUSTOMER_PAYMENT");
+}
+
 // we retrieve the captureAmount by looking at the latest authorized gateway response for this orderPaymentPreference
 gatewayResponses = orderPaymentPreference.getRelated("PaymentGatewayResponse", UtilMisc.toList("transactionDate DESC"));
 EntityUtil.filterByCondition(gatewayResponses, new EntityExpr("transCodeEnumId", EntityOperator.EQUALS, "PGT_AUTHORIZE"));
