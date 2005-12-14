@@ -124,4 +124,22 @@ public class ModelIndex extends ModelChild {
     public String removeIndexField(int index) {
         return (String) this.fieldNames.remove(index);
     }
+
+    public Element toXmlElement(Document document) {
+        Element root = document.createElement("index");
+        root.setAttribute("name", this.getName());
+        if (this.getUnique()) {
+            root.setAttribute("unique", "true");
+        }
+
+        Iterator fnIter = this.fieldNames.iterator();
+        while (fnIter != null && fnIter.hasNext()) {
+            String fieldName = (String) fnIter.next();
+            Element fn = document.createElement("index-field");
+            fn.setAttribute("name", fieldName);
+            root.appendChild(fn);
+        }
+
+        return root;
+    }
 }

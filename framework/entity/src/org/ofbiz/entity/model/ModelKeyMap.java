@@ -24,9 +24,12 @@
 package org.ofbiz.entity.model;
 
 import java.util.List;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilXml;
-import org.w3c.dom.Element;
 
 
 /**
@@ -103,5 +106,15 @@ public class ModelKeyMap implements java.io.Serializable {
         if (!otherKeyMap.relFieldName.equals(this.relFieldName)) return false;
 
         return true;
+    }
+
+    public Element toXmlElement(Document document) {
+        Element root = document.createElement("key-map");
+        root.setAttribute("field-name", this.getFieldName());
+        if (!this.getFieldName().equals(this.getRelFieldName())) {
+            root.setAttribute("rel-field-name", this.getRelFieldName());
+        }
+
+        return root;
     }
 }
