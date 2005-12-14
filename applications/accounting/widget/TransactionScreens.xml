@@ -120,6 +120,11 @@
                 <set field="orderId" from-field="parameters.orderId"/>
                 <set field="orderPaymentPreferenceId" from-field="parameters.orderPaymentPreferenceId"/>
 
+                <entity-one entity-name="OrderPaymentPreference" value-name="opp">
+                    <field-map field-name="orderPaymentPreferenceId" env-name="orderPaymentPreferenceId"/>
+                </entity-one>
+                <set field="paymentMethodTypeId" from-field="opp.paymentMethodTypeId"/>
+
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/transaction/authorizeTransaction.bsh"/>
             </actions>
             <widgets>
@@ -143,6 +148,11 @@
                 <set field="orderId" from-field="parameters.orderId"/>
                 <set field="orderPaymentPreferenceId" from-field="parameters.orderPaymentPreferenceId"/>
 
+                <entity-one entity-name="OrderPaymentPreference" value-name="opp">
+                    <field-map field-name="orderPaymentPreferenceId" env-name="orderPaymentPreferenceId"/>
+                </entity-one>
+                <set field="paymentMethodTypeId" from-field="opp.paymentMethodTypeId"/>
+                
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/transaction/captureTransaction.bsh"/>
             </actions>
             <widgets>
