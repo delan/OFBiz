@@ -31,7 +31,7 @@
     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
         <string-to-field field-name="require_email" string="false"/>
         <string-to-field field-name="require_phone" string="false"/>
-        <string-to-field field-name="create_allow_password" string="false"/>
+        <string-to-field field-name="create_allow_password" string="true"/>
 
         <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="parameters"/>
         <call-simple-method method-name="createUser"/>
