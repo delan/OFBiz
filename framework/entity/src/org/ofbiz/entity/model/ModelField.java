@@ -184,4 +184,28 @@ public class ModelField extends ModelChild {
     public String toString() {
         return getModelEntity() + "@" + getName();
     }
+
+    public Element toXmlElement(Document document) {
+        Element root = document.createElement("field");
+        root.setAttribute("name", this.getName());
+        if (!this.getColName().equals(ModelUtil.javaNameToDbName(this.getName()))) {
+            root.setAttribute("col-name", this.getColName());
+        }
+        root.setAttribute("type", this.getType());
+        if (this.getEncrypt()) {
+            root.setAttribute("encrypt", "true");
+        }
+
+        Iterator valIter = this.validators.iterator();
+        if (valIter != null) {
+            while (valIter.hasNext()) {
+                String validator = (String) valIter.next();
+                Element val = document.createElement("validate");
+                val.setAttribute("name", validator);
+                root.appendChild(val);
+            }
+        }
+
+        return root;
+    }
 }

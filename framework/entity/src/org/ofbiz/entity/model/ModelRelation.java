@@ -279,4 +279,25 @@ public class ModelRelation extends ModelChild {
         
         return true;
     }
+
+    public Element toXmlElement(Document document) {
+        Element root = document.createElement("relation");
+        root.setAttribute("type", this.getType());
+        if (UtilValidate.isNotEmpty(this.getTitle())) {
+            root.setAttribute("title", this.getTitle());
+        }
+        root.setAttribute("rel-entity-name", this.getRelEntityName());
+
+        if (UtilValidate.isNotEmpty(this.getFkName())) {
+            root.setAttribute("fk-name", this.getFkName());
+        }
+
+        Iterator kmIter = this.getKeyMapsIterator();
+        while (kmIter != null && kmIter.hasNext()) {
+            ModelKeyMap km = (ModelKeyMap) kmIter.next();
+            root.appendChild(km.toXmlElement(document));
+        }
+
+        return root;
+    }
 }

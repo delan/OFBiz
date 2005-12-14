@@ -32,6 +32,9 @@ import java.util.Set;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -39,6 +42,7 @@ import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,8 +50,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * Generic Entity - Entity model class
@@ -58,7 +60,7 @@ import org.w3c.dom.NodeList;
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable, Serializable {
-    
+
     public static final String module = ModelEntity.class.getName();
 
     /** The name of the time stamp field for locking/syncronization */
@@ -66,7 +68,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
     public static final String STAMP_TX_FIELD = "lastUpdatedTxStamp";
     public static final String CREATE_STAMP_FIELD = "createdStamp";
     public static final String CREATE_STAMP_TX_FIELD = "createdTxStamp";
-    
+
     /** The ModelReader that created this Entity */
     protected ModelReader modelReader = null;
 
@@ -109,7 +111,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
 
     /** Can be used to disable automatically creating update stamp fields and populating them on inserts and updates */
     protected boolean noAutoStamp = false;
-    
+
     /** An indicator to specify if this entity is never cached. 
      * If true causes the delegator to not clear caches on write and to not get 
      * from cache on read showing a warning messages to that effect 
@@ -145,7 +147,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
                 this.fields.add(field);
             }
         }
-        
+
         // if applicable automatically add the STAMP_FIELD and STAMP_TX_FIELD fields
         if ((this.doLock || !this.noAutoStamp) && !this.isField(STAMP_FIELD)) {
             ModelField newField = reader.createModelField(STAMP_FIELD, "date-time", null, false);
@@ -158,7 +160,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
             newField.setIsAutoCreatedInternal(true);
             newField.setModelEntity(this);
             this.fields.add(newField);
-            
+
             // also add an index for this field
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXSTMP", 18);
             ModelIndex txIndex = new ModelIndex(this, indexName, false);
@@ -179,7 +181,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
             newField.setIsAutoCreatedInternal(true);
             newField.setModelEntity(this);
             this.fields.add(newField);
-            
+
             // also add an index for this field
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXCRTS", 18);
             ModelIndex txIndex = new ModelIndex(this, indexName, false);
@@ -269,7 +271,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
             }
         }
     }
-    
+
     public boolean containsAllPkFieldNames(Set fieldNames) {
         Iterator pksIter = this.getPksIterator();
         while (pksIter.hasNext()) {
@@ -437,7 +439,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
             throw new IllegalArgumentException("Error in getOnlyPk, the [" + this.getEntityName() + "] entity has more than one pk!");
         }
     }
-    
+
     public Iterator getPksIterator() {
         return this.pks.iterator();
     }
@@ -456,7 +458,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
         }
         return idFieldName;
     }
-    
+
     public int getNopksSize() {
         return this.nopks.size();
     }
@@ -520,7 +522,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
         }
         return modelField;
     }
-    
+
     protected synchronized void createFieldsMap() {
         Map tempMap = FastMap.newInstance();
         for (int i = 0; i < fields.size(); i++) {
@@ -602,7 +604,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
     public int getRelationsSize() {
         return this.relations.size();
     }
-    
+
     public int getRelationsOneSize() {
         int numRels = 0;
         Iterator relationsIter = this.getRelationsIterator();
@@ -814,7 +816,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
         Iterator fldsIt = flds.iterator();
         while(fldsIt.hasNext()) {
             ModelField field = (ModelField) fldsIt.next();
-            returnString.append(field.colName);            
+            returnString.append(field.colName);
             if (fldsIt.hasNext()) {
                 returnString.append(separator);
             }
@@ -1109,7 +1111,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
 
         return this.getEntityName().compareTo(otherModelEntity.getEntityName());
     }
-    
+
     public void convertFieldMapInPlace(Map inContext, GenericDelegator delegator) {
         Iterator modelFields = this.getFieldsIterator();
         while (modelFields.hasNext()) {
@@ -1121,7 +1123,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
             }
         }
     }
-    
+
     public Object convertFieldValue(String fieldName, Object value, GenericDelegator delegator) {
         ModelField modelField = this.getField(fieldName);
         if (modelField == null) {
@@ -1130,7 +1132,7 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
         }
         return convertFieldValue(modelField, value, delegator);
     }
-    
+
     public Object convertFieldValue(ModelField modelField, Object value, GenericDelegator delegator) {
         if (value == null || value == GenericEntity.NULL_FIELD) {
             return null;
@@ -1168,6 +1170,105 @@ public class ModelEntity extends ModelInfo implements Comparable, Serializable {
 
     public String toString() {
         return "ModelEntity[" + getEntityName() + "]";
+    }
+
+    public Element toXmlElement(Document document, String packageName) {
+        if (UtilValidate.isNotEmpty(this.getPackageName()) && !packageName.equals(this.getPackageName())) {
+            Debug.logWarning("Export EntityModel XML Element [" + this.getEntityName() + "] with a NEW package - " + packageName, module);
+        }
+
+        Element root = document.createElement("entity");
+        root.setAttribute("entity-name", this.getEntityName());
+        if (!this.getEntityName().equals(ModelUtil.dbNameToClassName(this.getPlainTableName())) ||
+                !ModelUtil.javaNameToDbName(this.getEntityName()).equals(this.getPlainTableName())) {
+                root.setAttribute("table-name", this.getPlainTableName());
+        }
+        root.setAttribute("package-name", packageName);
+
+        // additional elements
+        if (UtilValidate.isNotEmpty(this.getDefaultResourceName())) {
+            root.setAttribute("default-resource-name", this.getDefaultResourceName());
+        }
+
+        if (UtilValidate.isNotEmpty(this.getDependentOn())) {
+            root.setAttribute("dependent-on", this.getDependentOn());
+        }
+
+        if (this.getDoLock()) {
+            root.setAttribute("enable-lock", "true");
+        }
+
+        if (this.getNoAutoStamp()) {
+            root.setAttribute("no-auto-stamp", "true");
+        }
+
+        if (this.getNeverCache()) {
+            root.setAttribute("never-cache", "true");
+        }
+
+        if (!this.getAutoClearCache()) {
+            root.setAttribute("auto-clear-cache", "false");
+        }
+
+        if (UtilValidate.isNotEmpty(this.getTitle())) {
+            root.setAttribute("title", this.getTitle());
+        }
+
+        if (UtilValidate.isNotEmpty(this.getCopyright())) {
+            root.setAttribute("copyright", this.getCopyright());
+        }
+
+        if (UtilValidate.isNotEmpty(this.getAuthor())) {
+            root.setAttribute("author", this.getAuthor());
+        }
+
+        if (UtilValidate.isNotEmpty(this.getVersion())) {
+            root.setAttribute("version", this.getVersion());
+        }
+
+        // description element
+        if (UtilValidate.isNotEmpty(this.getDescription())) {
+            UtilXml.addChildElementValue(root, "description", this.getDescription(), document);
+        }
+
+        // append field elements
+        Iterator fieldIter = this.getFieldsIterator();
+        while (fieldIter != null && fieldIter.hasNext()) {
+            ModelField field = (ModelField) fieldIter.next();
+            if (!field.getIsAutoCreatedInternal()) {
+                root.appendChild(field.toXmlElement(document));
+            }
+        }
+
+        // append PK elements
+        Iterator pkIter = this.getPksIterator();
+        while (pkIter != null && pkIter.hasNext()) {
+            ModelField pk = (ModelField) pkIter.next();
+            Element pkey = document.createElement("prim-key");
+            pkey.setAttribute("field", pk.getName());
+            root.appendChild(pkey);
+        }
+
+        // append relation elements
+        Iterator relIter = this.getRelationsIterator();
+        while (relIter != null && relIter.hasNext()) {
+            ModelRelation rel = (ModelRelation) relIter.next();
+
+        }
+
+        // append index elements
+        Iterator idxIter = this.getIndexesIterator();
+        while (idxIter != null && idxIter.hasNext()) {
+            ModelIndex idx = (ModelIndex) idxIter.next();
+            root.appendChild(idx.toXmlElement(document));
+
+        }
+
+        return root;
+    }
+
+    public Element toXmlElement(Document document) {
+        return this.toXmlElement(document, this.getPackageName());
     }
 }
 
