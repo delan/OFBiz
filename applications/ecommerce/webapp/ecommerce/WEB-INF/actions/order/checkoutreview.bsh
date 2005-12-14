@@ -39,9 +39,6 @@ context.put("cart", cart);
 orderAdjustments = cart.makeAllAdjustments();
 context.put("orderAdjustments", orderAdjustments);
 
-// set the sales channel in the cart
-cart.setChannelType("WEB_SALES_CHANNEL");
-
 orderItems = cart.makeOrderItems();
 context.put("orderItems", orderItems);
 

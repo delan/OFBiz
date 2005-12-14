@@ -2913,6 +2913,7 @@
       <field name="orderNumberPrefix" type="id-long"></field>
       <field name="defaultLocaleString" type="very-short"></field>
       <field name="defaultCurrencyUomId" type="id"></field>
+      <field name="defaultSalesChannelEnumId" type="id"></field>
       <field name="allowPassword" type="indicator"></field>
       <field name="defaultPassword" type="long-varchar"></field>
       <field name="explodeOrderItems" type="indicator"></field>
@@ -2958,6 +2959,9 @@
       </relation>
       <relation type="one" fk-name="PROD_STR_CURUOM" rel-entity-name="Uom">
         <key-map field-name="defaultCurrencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_SALECHN" title="DefaultSalesChannel" rel-entity-name="Enumeration">
+        <key-map field-name="defaultSalesChanEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PROD_STR_HAPSTS" title="HeaderApproved" rel-entity-name="StatusItem">
         <key-map field-name="headerApprovedStatus" rel-field-name="statusId"/>

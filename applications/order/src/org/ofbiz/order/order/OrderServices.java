@@ -383,11 +383,19 @@ public class OrderServices {
         }
         GenericValue orderHeader = delegator.makeValue("OrderHeader", orderHeaderMap);
 
-        if (context.get("salesChannelEnumId") == null) {
-            orderHeader.set("salesChannelEnumId", "UNKNWN_SALES_CHANNEL");
-        } else {
-            orderHeader.set("salesChannelEnumId", context.get("salesChannelEnumId"));
+        // determine the sales channel
+        String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+        if ((salesChannelEnumId == null) || salesChannelEnumId.equals("UNKNWN_SALES_CHANNEL")) {
+            // try the default store sales channel
+            if (orderTypeId.equals("SALES_ORDER") && (productStore != null)) {
+                salesChannelEnumId = productStore.getString("defaultSalesChannelEnumId");
+            }
+            // if there's still no channel, set to unknown channel
+            if (salesChannelEnumId == null) {
+                salesChannelEnumId = "UNKNWN_SALES_CHANNEL";
+            }
         }
+        orderHeader.set("salesChannelEnumId", salesChannelEnumId);
 
         if (context.get("currencyUom") != null) {
             orderHeader.set("currencyUom", context.get("currencyUom"));
