@@ -2961,7 +2961,7 @@
         <key-map field-name="defaultCurrencyUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="PROD_STR_SALECHN" title="DefaultSalesChannel" rel-entity-name="Enumeration">
-        <key-map field-name="defaultSalesChanEnumId" rel-field-name="enumId"/>
+        <key-map field-name="defaultSalesChannelEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PROD_STR_HAPSTS" title="HeaderApproved" rel-entity-name="StatusItem">
         <key-map field-name="headerApprovedStatus" rel-field-name="statusId"/>
