@@ -167,10 +167,11 @@ public class CheckOutEvents {
             String maySplit = request.getParameter("may_split");
             String giftMessage = request.getParameter("gift_message");
             String isGift = request.getParameter("is_gift");
+            String internalCode = request.getParameter("internalCode");
             String shipBeforeDate = request.getParameter("shipBeforeDate");
             String shipAfterDate = request.getParameter("shipAfterDate");
             Map callResult = checkOutHelper.setCheckOutShippingOptions(shippingMethod, correspondingPoId,
-                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate);
+                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift, internalCode, shipBeforeDate, shipAfterDate);
 
             ServiceUtil.getMessages(request, callResult, null);
 
@@ -324,6 +325,7 @@ public class CheckOutEvents {
         String maySplit = request.getParameter("may_split");
         String giftMessage = request.getParameter("gift_message");
         String isGift = request.getParameter("is_gift");
+        String internalCode = request.getParameter("internalCode");
         String shipBeforeDate = request.getParameter("shipBeforeDate");
         String shipAfterDate = request.getParameter("shipAfterDate");
         List singleUsePayments = new ArrayList();
@@ -383,7 +385,7 @@ public class CheckOutEvents {
 
         Map optResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
                 singleUsePayments, billingAccountId, billingAccountAmt, correspondingPoId, shippingInstructions,
-                orderAdditionalEmails, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate);
+                orderAdditionalEmails, maySplit, giftMessage, isGift, internalCode, shipBeforeDate, shipAfterDate);
 
         ServiceUtil.getMessages(request, optResult, null);
         if (ServiceUtil.isError(optResult)) {
@@ -599,6 +601,7 @@ public class CheckOutEvents {
         String maySplit = null;
         String giftMessage = null;
         String isGift = null;
+        String internalCode = null;
         String methodType = null;
         String checkOutPaymentId = null;
         String singleUsePayment = null;
@@ -681,6 +684,7 @@ public class CheckOutEvents {
         maySplit = request.getParameter("may_split");
         giftMessage = request.getParameter("gift_message");
         isGift = request.getParameter("is_gift");
+        internalCode = request.getParameter("internalCode");
         shipBeforeDate = request.getParameter("shipBeforeDate");
         shipAfterDate = request.getParameter("shipAfterDate");
         Locale locale = UtilHttp.getLocale(request);
@@ -731,7 +735,8 @@ public class CheckOutEvents {
         }
 
         Map callResult = checkOutHelper.finalizeOrderEntry(mode, shippingContactMechId, shippingMethod, shippingInstructions,
-                maySplit, giftMessage, isGift, methodType, checkOutPaymentId, isSingleUsePayment, doAppendPayment, paramMap, shipBeforeDate, shipAfterDate);
+                maySplit, giftMessage, isGift, methodType, checkOutPaymentId, isSingleUsePayment, doAppendPayment, paramMap,
+                internalCode, shipBeforeDate, shipAfterDate);
 
         // generate any messages required
         ServiceUtil.getMessages(request, callResult, null);
