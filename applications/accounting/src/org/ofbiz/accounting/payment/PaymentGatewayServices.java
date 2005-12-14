@@ -378,6 +378,9 @@ public class PaymentGatewayServices {
 
             // add paymentSettings to result; for use by later processors
             processorResult.put("paymentSettings", paymentSettings);
+
+            // and pass on the currencyUomId
+            processorResult.put("currencyUomId", orh.getCurrency());
         }
 
         return processorResult;
@@ -1117,6 +1120,9 @@ public class PaymentGatewayServices {
         // add paymentSettings to result; for use by later processors
         captureResult.put("paymentSettings", paymentSettings);
 
+        // pass the currencyUomId as well
+        captureResult.put("currencyUomId", orh.getCurrency());
+
         // log the error message as a gateway response when it fails
         if (ServiceUtil.isError(captureResult)) {
             saveError(dispatcher, userLogin, paymentPref, captureResult, "PRDS_PAY_CAPTURE", "PGT_CAPTURE");
@@ -1214,6 +1220,7 @@ public class PaymentGatewayServices {
         GenericValue paymentPreference = (GenericValue) context.get("orderPaymentPreference");
         Boolean authResult = (Boolean) context.get("authResult");
         String authType = (String) context.get("serviceTypeEnum");
+        String currencyUomId = (String) context.get("currencyUomId");
 
         // type of auth this was can be determined by the previous status
         if (UtilValidate.isEmpty(authType)) {
@@ -1230,6 +1237,7 @@ public class PaymentGatewayServices {
         response.set("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
         response.set("paymentMethodId", paymentPreference.get("paymentMethodId"));
         response.set("transCodeEnumId", "PGT_AUTHORIZE");
+        response.set("currencyUomId", currencyUomId);
 
         // set the avs/fraud result
         response.set("gatewayAvsResult", context.get("avsCode"));
@@ -1407,6 +1415,7 @@ public class PaymentGatewayServices {
         String payTo = (String) context.get("payToPartyId");
         Double amount = (Double) context.get("captureAmount");
         String serviceType = (String) context.get("serviceTypeEnum");
+        String currencyUomId = (String) context.get("currencyUomId");
         Debug.logInfo("Invoice ID: " + invoiceId, module);
 
         if (UtilValidate.isEmpty(payTo)) {
@@ -1426,6 +1435,7 @@ public class PaymentGatewayServices {
         response.set("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
         response.set("paymentMethodId", paymentPreference.get("paymentMethodId"));
         response.set("transCodeEnumId", "PGT_CAPTURE");
+        response.set("currencyUomId", currencyUomId);
         if (context.get("authRefNum") != null) {
             response.set("subReference", context.get("authRefNum"));
             response.set("altReference", context.get("authAltRefNum"));
@@ -1486,6 +1496,7 @@ public class PaymentGatewayServices {
         paymentCtx.put("statusId", "PMNT_RECEIVED");
         paymentCtx.put("paymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
         paymentCtx.put("amount", amount);
+        paymentCtx.put("currencyUomId", currencyUomId);
         paymentCtx.put("userLogin", userLogin);
         paymentCtx.put("paymentRefNum", context.get("captureRefNum"));
 
