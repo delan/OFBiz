@@ -549,9 +549,11 @@ public class ShoppingCartHelper {
     }
 
     /** Update the items in the shopping cart. */
-    public Map modifyCart(Security security, GenericValue userLogin, Map context, boolean removeSelected, String[] selectedItems) {
+    public Map modifyCart(Security security, GenericValue userLogin, Map context, boolean removeSelected, String[] selectedItems, Locale locale) {
         Map result = null;
-        Locale locale = this.cart.getLocale();
+        if (locale == null) {
+            locale = this.cart.getLocale();
+        }
         NumberFormat nf = NumberFormat.getNumberInstance(locale);
 
         ArrayList deleteList = new ArrayList();
