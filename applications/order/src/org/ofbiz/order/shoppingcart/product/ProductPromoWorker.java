@@ -236,6 +236,10 @@ public class ProductPromoWorker {
     }
 
     public static void doPromotions(ShoppingCart cart, LocalDispatcher dispatcher) {
+        ProductPromoWorker.doPromotions(cart, null, dispatcher);
+    }
+
+    public static void doPromotions(ShoppingCart cart, List productPromoList, LocalDispatcher dispatcher) {
         // this is called when a user logs in so that per customer limits are honored, called by cart when new userlogin is set
         // there is code to store ProductPromoUse information when an order is placed
         // ProductPromoUses are ignored if the corresponding order is cancelled
@@ -250,11 +254,12 @@ public class ProductPromoWorker {
         
         // there will be a ton of db access, so just do a big catch entity exception block
         try {
-            List productPromoList = null;
-            if (cart.getOrderType().equals("SALES_ORDER")) {
-                productPromoList = ProductPromoWorker.getProductStorePromotions(cart, nowTimestamp, dispatcher);
-            } else {
-                productPromoList = ProductPromoWorker.getAgreementPromotions(cart, nowTimestamp, dispatcher);
+            if (productPromoList == null) {
+                if (cart.getOrderType().equals("SALES_ORDER")) {
+                    productPromoList = ProductPromoWorker.getProductStorePromotions(cart, nowTimestamp, dispatcher);
+                } else {
+                    productPromoList = ProductPromoWorker.getAgreementPromotions(cart, nowTimestamp, dispatcher);
+                }
             }
             // do a calculate only run through the promotions, then order by descending totalDiscountAmount for each promotion
             // NOTE: on this run, with isolatedTestRun passed as false it should not apply any adjustments 

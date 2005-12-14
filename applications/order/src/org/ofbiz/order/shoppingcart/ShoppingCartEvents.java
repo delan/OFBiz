@@ -52,6 +52,7 @@ import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -1141,4 +1142,34 @@ public class ShoppingCartEvents {
       }
       return "cart";
   }
+
+    public static String doManualPromotions(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        ShoppingCart cart = getCartObject(request);
+        List manualPromotions = new LinkedList();
+
+        // iterate through the context and find all keys that start with "productPromoId_"
+        Map context = UtilHttp.getParameterMap(request);
+        String keyPrefix = "productPromoId_";
+        for (int i = 1; i <= 50; i++) {
+            String productPromoId = (String)context.get(keyPrefix + i);
+            if (UtilValidate.isNotEmpty(productPromoId)) {
+                try {
+                    GenericValue promo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
+                    if (promo != null) {
+                        manualPromotions.add(promo);
+                    }
+                } catch(GenericEntityException gee) {
+                    request.setAttribute("_ERROR_MESSAGE_", gee.getMessage());
+                    return "error";
+                }
+            } else {
+                break;
+            }
+        }
+        ProductPromoWorker.doPromotions(cart, manualPromotions, dispatcher);
+        return "success";
+    }
+
 }
