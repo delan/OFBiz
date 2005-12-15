@@ -1176,6 +1176,46 @@
         <attribute name="surveyResponseId" type="String" mode="IN" optional="false"/>
     </service>
 
+    <service name="buildSurveyFromPdf" engine="java" 
+            location="org.ofbiz.content.survey.PdfSurveyServices" invoke="buildSurveyFromPdf" auth="false">
+        <description>Create a Survey and related entities from AcroForm</description>
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="surveyName" type="String" mode="IN" optional="true" />
+        <attribute name="surveyId" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="buildSurveyResponseFromPdf" engine="java"  transaction-timout="72000"
+            location="org.ofbiz.content.survey.PdfSurveyServices" invoke="buildSurveyResponseFromPdf" auth="false">
+        <description>Create a Survey and related entities from AcroForm</description>
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="surveyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="surveyResponseId" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="getAcroFieldsFromPdf" engine="java" 
+            location="org.ofbiz.content.survey.PdfSurveyServices" invoke="getAcroFieldsFromPdf" auth="false">
+        <description>Get fields from AcroForm</description>
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="acroFieldMap" type="Map" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="setAcroFieldsFromSurveyResponse" engine="java" 
+            location="org.ofbiz.content.survey.PdfSurveyServices" invoke="setAcroFieldsFromSurveyResponse" auth="false">
+        <description>Get fields from AcroForm</description>
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="false" />
+        <attribute name="pdfFileNameOut" type="String" mode="IN" optional="false" />
+    </service>
+
+    <service name="setAcroFields" engine="java" 
+            location="org.ofbiz.content.survey.PdfSurveyServices" invoke="setAcroFields" auth="false">
+        <description>Get fields from AcroForm</description>
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="acroFieldMap" type="Map" mode="In" optional="false"/>
+        <attribute name="pdfFileNameOut" type="String" mode="IN" optional="false" />
+    </service>
+
     <!-- Util -->
     <service name="findAssocContent" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml" invoke="findAssocContent" auth="true">
@@ -1659,5 +1699,18 @@
         <attribute name="fmContext" type="java.util.Map" mode="IN" optional="true"/>
         <attribute name="fmPrefixMap" type="java.util.Map" mode="IN" optional="true" string-map-prefix="CTX_"/>
         <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="true"/>
+    </service>
+    <service name="surveyFromPdf" auth="false" engine="java" transaction-timout="72000" 
+        location="org.ofbiz.content.survey.SurveyServices" invoke="surveyFromPdf">
+        <description>Derive Survey from PDF</description>
+        <attribute name="pdfFileName" type="String" mode="IN" optional="false"/>
+        <attribute mode="OUT" name="surveyId" optional="true" type="String"/>
+    </service>
+    <service name="convertOpenOfficeDocument" auth="false" engine="java" transaction-timout="72000" 
+        location="org.ofbiz.content.OpenOfficeServices" invoke="convertDocument">
+        <description>Convert document</description>
+        <attribute name="fileNameFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="fileNameTo" type="String" mode="IN" optional="false"/>
+        <attribute name="filterName" type="String" mode="IN" optional="true"/>
     </service>
 </services>
