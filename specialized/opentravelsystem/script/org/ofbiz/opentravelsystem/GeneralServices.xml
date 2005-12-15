@@ -31,7 +31,6 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="help" short-description="--provide help information to the user--" login-required="false">
-
         <set field="param.contentId" value="help"/>
         <string-append field-name="param.contentId" string="${parameters.app}"/>
         <string-append field-name="param.contentId" string="${parameters.function}"/>
@@ -41,16 +40,36 @@
         </call-service>
         
         <if-empty field-name="contentView">
-            <!-- not found so show help index (should be loaded from data file)-->
+            <!-- retrieve the general index-->
             <set field="param.contentId" value="helpIndex"/>
             <call-service service-name="getContent" in-map-name="param">
                 <result-to-field result-name="view" field-name="contentView"/>
             </call-service>
-            <set field="message" value="No information found, displaying the help index..."/>
+            <if-empty field-name="contentView">
+                <!-- not found so create with default text-->
+                <set field="dr.dataResourceId" value="helpIndex"/>
+                <set field="dr.dataTemplateTypeId" value="NONE"/>
+                <set field="mimeTypeId" value="text/html"/>
+                <call-service service-name="createDataResource" in-map-name="dr">
+                    <result-to-field result-name="dataResourceId" field-name="dataResourceId"/>
+                </call-service>
+                <set field="et.dataResourceId" value="helpIndex"/>
+                <set field="testData" value="&lt;center&gt;&lt;h1&gt; no help text loaded &lt;/h1&gt;&lt;/center&gt;"/>
+                <call-service service-name="createElectronicText"/>
+                <set field="c.contentId" value="helpIndex"/>
+                <set field="c.contentTypeId" value="DOCUMENT"/>
+                <set field="c.dataresourceId" value="helpIndex"/>
+                <call-service service-name="createContent" in-map-name="c"/>
+                <!-- retrieve the same thing to see if it went ok..-->
+                <set field="param.contentId" value="helpIndex"/>
+                <call-service service-name="getContent" in-map-name="param">
+                    <result-to-field result-name="view" field-name="contentView"/>
+                </call-service>
+                <set field="message" value="No information found, creating/displaying the help index..."/>
+            </if-empty>
         </if-empty>        
         <field-to-result field-name="contentView.dataResourceId" result-name="dataResourceId"/>        
         <field-to-result field-name="param.contentId" result-name="contentId"/>
-        
     </simple-method>
     <simple-method method-name="editHelp" short-description="--update the help screens--" login-required="true">
         <set field="param.contentId" value="help"/>
