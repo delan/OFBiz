@@ -2524,6 +2524,12 @@
         <response name="success" type="view" value="listInvoiceItems"/>
         <response name="error" type="view" value="editInvoice"/>
     </request-map>
+    <request-map uri="copyInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="copyInvoice"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
     <request-map uri="updateInvoice">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateInvoice"/>

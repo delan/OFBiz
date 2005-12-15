@@ -142,7 +142,8 @@ public class importData {
 			
 			// prepare structures for updating
 			GenericValue product =delegator.makeValue("Product",UtilMisc.toMap(
-					"productTypeId","FINISHED_GOOD",
+					"productTypeId","FINISHED_GOOD",		
+					"includeInPromotions","Y",						// allow promotions
 					"primaryProductCategoryId", organizationPartyId));
 			GenericValue productPrice =delegator.makeValue("ProductPrice",UtilMisc.toMap(
 					"productPricePurposeId","PURCHASE",

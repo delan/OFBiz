@@ -45,7 +45,7 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/hotelfrontend/data/HotelDemoStore.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HotelSimple/data/HotelSimple.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/shop/data/ShopData.xml"/>
-    <!--entity-resource type="data" reader-name="demo" loader="main" location="webapp/vuurwerk/data/VuurwerkData.xml"/-->
+    <entity-resource type="data" reader-name="demo" loader="main" location="webapp/vuurwerk/data/VuurwerkData.xml"/>
     <!--entity-resource type="data" reader-name="demo" loader="main" location="webapp/anet/data/anet.xml"/-->
     
     <!-- service resources: model(s), eca(s) and group definitions -->
@@ -93,18 +93,5 @@
         mount-point="/shop"
         app-bar-display="false"/>        
     
-    <!--webapp name="Vuurwerk"
-        title="Vuurwerk shop"
-        server="default-server"
-        location="webapp/vuurwerk"
-        mount-point="/vuurwerk"
-        app-bar-display="false"/-->        
-    
-    <!--webapp name="anet"
-        title="A-NeT Internet Services"
-        server="default-server"
-        location="webapp/anet"
-        mount-point="/anet"
-        app-bar-display="false"/-->        
 </ofbiz-component>
 
