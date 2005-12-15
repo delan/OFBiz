@@ -24,7 +24,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
 
-    <form name="TrackingCodeReportOptions" type="single" target="TrackingCodeReport.pdf" 
+    <form name="TrackingCodeReportOptions" type="single" target="TrackingCodeReport"
         title="Tracking Code Report" default-title-style="tableheadtext">
         <field name="fromDate" title="From Date (Date&gt;=)">
             <date-time type="timestamp"/>
@@ -32,7 +32,6 @@
         <field name="thruDate" title="Thru Date (Date&lt;)">
             <date-time type="timestamp"/>
         </field>
-
 
         <field name="trackingCodeId" title="Tracking Code">
             <drop-down allow-empty="true">
@@ -42,13 +41,12 @@
             </drop-down>
         </field>
 
-
         <field name="submitButton" title="Run TrackingCode Report" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
 
-    <form name="MarketingCampaignOptions" type="single" target="MarketingCampaignReport.pdf" 
+    <form name="MarketingCampaignOptions" type="single" target="MarketingCampaignReport"
         title="Marketing Campaign Report" default-title-style="tableheadtext">
         <field name="fromDate" title="From Date (Date&gt;=)">
             <date-time type="timestamp"/>
@@ -70,7 +68,30 @@
         </field>
     </form>
 
+      <form name="TrackingCodeReport" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-area-style="tabletextright"
+        list-iterator-name="trackingCodeIterator" target="" paginate-target="TrackingCodeReport"
+        title="${uiLabelMap.TrackingCodeReportTitle}" type="list">
+        <field name="trackingCodeId"  widget-area-style="tabletext" title="${uiLabelMap.TrackingCode}">
+            <display/>
+        </field>
+        <field name="visits" title="${uiLabelMap.MarketingVisits}"><display/></field>
+        <field name="orders" title="${uiLabelMap.MarketingOrders}"><display/></field>
+        <field name="orderAmount" title="${uiLabelMap.MarketingOrderAmount}"><display/></field>
+        <field name="conversionRate" title="${uiLabelMap.MarketingConversionRate}"><display/></field>
+    </form>
 
+   <form name="MarketCampaignReport" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-area-style="tabletextright"
+        list-iterator-name="marketingCampaignIterator" target="" paginate-target="MarketCampaignReport"
+        title="${uiLabelMap.MarketingCampaignReportTitle}" type="list">
+        <field name="campaignName" title="${uiLabelMap.MarketingCampaignName}"><display/></field>
+        <field name="trackingCodeId" title="${uiLabelMap.TrackingCode}"><display/></field>
+        <field name="visits" title="${uiLabelMap.MarketingVisits}"><display/></field>
+        <field name="orders" title="${uiLabelMap.MarketingOrders}"><display/></field>
+        <field name="orderAmount" title="${uiLabelMap.MarketingOrderAmount}"><display/></field>
+        <field name="conversionRate" title="${uiLabelMap.MarketingConversionRate}"><display/></field>
+    </form>
 
 </forms>
 

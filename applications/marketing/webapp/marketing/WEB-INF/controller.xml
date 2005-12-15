@@ -384,12 +384,12 @@
     <request-map uri="LookupPreferredContactMech"><security https="true" auth="true"/><response name="success" type="view" value="LookupPreferredContactMech"/></request-map>
     <request-map uri="LookupCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
 
-    <request-map uri="TrackingCodeReport.pdf">
+    <request-map uri="TrackingCodeReport">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TrackingCodeReport"/>
         <response name="error"   type="view" value="MarketingReport"/>
     </request-map>
-    <request-map uri="MarketingCampaignReport.pdf">
+    <request-map uri="MarketingCampaignReport">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="MarketingCampaignReport"/>
         <response name="error"   type="view" value="MarketingReport"/>
@@ -456,8 +456,8 @@
     <view-map name="LookupCommEvent" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCommEvent"/>
     <view-map name="LookupGeo" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeo"/>
 
-    <view-map name="TrackingCodeReport" type="screenfop" page="component://marketing/widget/MarketingReportScreens.xml#TrackingCodeReport"  content-type="application/pdf" encoding="none"  />
-    <view-map name="MarketingCampaignReport" type="screenfop" page="component://marketing/widget/MarketingReportScreens.xml#MarketingCampaignReport"  content-type="application/pdf" encoding="none"  />
+    <view-map name="TrackingCodeReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#TrackingCodeReport"/>
+    <view-map name="MarketingCampaignReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#MarketingCampaignReport"/>
 
     <!-- end of view mappings -->
 </site-conf>
