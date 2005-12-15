@@ -84,13 +84,13 @@
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/reports/TrackingCodeReport.bsh"/>
             </actions>
             <widgets>
-                <platform-specific>
-                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
-                    <html>
-                        <html-template
-                                location="component://marketing/webapp/marketing/reports/TrackingCodeReport.fo.ftl"/>
-                    </html>
-                </platform-specific>
+                <decorator-screen name="CommonMarketReportDecorator">
+                    <decorator-section name="body">
+                        <label style="head1" text="${uiLabelMap.MarketingTrackingCodeReportTitle}"></label>
+                        <label style="head1" text="${uiLabelMap.CommonFrom} ${parameters.fromDate} ${uiLabelMap.CommonThru} ${parameters.thruDate}"/>
+                        <include-form name="TrackingCodeReport" location="component://marketing/widget/ReportForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -104,13 +104,13 @@
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/reports/MarketingCampaignReport.bsh"/>
             </actions>
             <widgets>
-                <platform-specific>
-                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
-                    <html>
-                        <html-template
-                                location="component://marketing/webapp/marketing/reports/MarketingCampaignReport.fo.ftl"/>
-                    </html>
-                </platform-specific>
+                <decorator-screen name="CommonMarketReportDecorator">
+                    <decorator-section name="body">
+                        <label style="head1" text="${uiLabelMap.MarketingCampaignReportTitle}"></label>
+                        <label style="head1" text="${uiLabelMap.CommonFrom} ${parameters.fromDate} ${uiLabelMap.CommonThru} ${parameters.thruDate}"/>
+                        <include-form name="MarketCampaignReport" location="component://marketing/widget/ReportForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
