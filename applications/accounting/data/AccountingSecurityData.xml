@@ -45,6 +45,13 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUAL_PAYMENT"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUAL_PAYMENT"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="MANUAL_PAYMENT"/>
+
+    <!-- Ability to print checks -->
+    <SecurityPermission description="Print checks." permissionId="ACCOUNTING_PRINT_CHECKS"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_PRINT_CHECKS"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_PRINT_CHECKS"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCOUNTING_PRINT_CHECKS"/>
+
     
     <!-- Set up accounting organization preferences security -->
     <SecurityPermission description="Set organization accounting preferences" permissionId="ACCTG_PREF_CREATE"/>
