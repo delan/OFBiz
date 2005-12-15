@@ -189,7 +189,7 @@
             </service>
         </actions>
         <field name="visitId" title="${uiLabelMap.TrackingCodeVisitVisitId}">
-            <hyperlink description="${visitId}" target="EditVisit?visitId=${visitId}&amp;DONE_PAGE=${donePage}" target-type="inter-app"/>
+            <hyperlink description="${visitId}" target="/partymgr/control/visitdetail?visitId=${visitId}&amp;DONE_PAGE=${donePage}" target-type="inter-app"/>
         </field>
         <field name="sourceEnumId" title="${uiLabelMap.TrackingCodeVisitSourceEnumId}">
             <display-entity description="${description} [${enumCode}]" entity-name="Enumeration" key-field-name="enumId"/>
