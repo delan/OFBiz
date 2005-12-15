@@ -33,15 +33,15 @@
         <menu-item name="Segment" title="${uiLabelMap.Segment}"><link target="FindSegmentGroup"/></menu-item>
         <menu-item name="ContactList" title="${uiLabelMap.ContactList}"><link target="ListContactLists"/></menu-item>
 
-        <menu-item name="Logout" title="Logout" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected" position="2">
+        <menu-item name="Logout" title="Logout" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
             <condition><not><if-empty field-name="userLogin"/></not></condition>
             <link target="logout"/>
         </menu-item>
-        <menu-item name="Login" title="Login" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected" position="2">
+        <menu-item name="Login" title="Login" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
             <condition><if-empty field-name="userLogin"/></condition>
             <link target="${checkLoginUrl}"/>
         </menu-item>
-        <menu-item name="Reports" title="${uiLabelMap.Reports}" align-style="col-right" widget-style="headerButtonRight" position="1"><link target="MarketingReport"/></menu-item>
+        <menu-item name="Reports" title="${uiLabelMap.Reports}" align-style="col-right" widget-style="headerButtonRight"><link target="MarketingReport"/></menu-item>
 
     </menu>
 </menus>
