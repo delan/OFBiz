@@ -231,8 +231,9 @@
                     <td align="right" colspan="2">
                       <div class="tabletext" style="font-size: xx-small;">
                         <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${adjustmentType.description}</b>:
-                        ${orderItemAdjustment.description?if_exists} (${orderItemAdjustment.comments?default("")})
-
+                        ${orderItemAdjustment.description?if_exists} 
+                        <#if orderItemAdjustment.comments?has_content>(${orderItemAdjustment.comments?default("")})</#if>
+                        <#if orderItemAdjustment.productPromoId?has_content><a href="/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}&externalLoginKey=${externalLoginKey}">${orderItemAdjustment.getRelatedOne("ProductPromo").getString("promoName")}</a></#if>
                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                           <#if orderItemAdjustment.primaryGeoId?has_content>
                             <#assign primaryGeo = orderItemAdjustment.getRelatedOneCache("PrimaryGeo")/>
