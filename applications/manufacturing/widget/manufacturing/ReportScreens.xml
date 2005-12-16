@@ -25,6 +25,33 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="ManufacturingReports">
+        <section>
+            <actions>
+                <set field="title" value="Manufacturing Reports"/>
+                <set field="titleProperty" value="ManufacturingReports"/>
+                <set field="headerItem" value="ManufacturingReports"/>
+                
+                <set field="mrpName" from-field="parameters.mrpName"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1" text="${uiLabelMap.ManufacturingReports}"/>
+                        </container>
+                        <container>
+                            <include-form name="SelectMrpName" location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunForms.xml"/>
+                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/MrpReports.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="CuttingListReport">
         <section>
             <actions>
