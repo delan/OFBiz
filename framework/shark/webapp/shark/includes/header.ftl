@@ -30,7 +30,7 @@
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 
-<div class="apptitle">&nbsp;Shark Wokflow Manager&nbsp;</div>
+<div class="apptitle">&nbsp;Shark Workflow Manager&nbsp;</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
   <#if requestAttributes.userLogin?has_content>
