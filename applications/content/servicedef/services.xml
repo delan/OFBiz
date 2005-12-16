@@ -1706,11 +1706,22 @@
         <attribute name="pdfFileName" type="String" mode="IN" optional="false"/>
         <attribute mode="OUT" name="surveyId" optional="true" type="String"/>
     </service>
-    <service name="convertOpenOfficeDocument" auth="false" engine="java" transaction-timout="72000" 
+    <service name="convertDocument" auth="false" engine="java" transaction-timout="72000" 
         location="org.ofbiz.content.OpenOfficeServices" invoke="convertDocument">
-        <description>Convert document</description>
-        <attribute name="fileNameFrom" type="String" mode="IN" optional="false"/>
-        <attribute name="fileNameTo" type="String" mode="IN" optional="false"/>
-        <attribute name="filterName" type="String" mode="IN" optional="true"/>
-    </service>
+         <description>Use OpenOffice to convert between document types</description>
+        <attribute name="oooHost" type="String" mode="IN" optional="true"/>
+        <attribute name="oooPort" type="String" mode="IN" optional="true"/>
+        <attribute name="filenameFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="filenameTo" type="String" mode="IN" optional="false"/>
+        <attribute name="convertFilterName" type="String" mode="IN" optional="true"/>
+   </service>
+    <service name="compareDocuments" auth="false" engine="java" transaction-timout="72000" 
+        location="org.ofbiz.content.OpenOfficeServices" invoke="compareDocuments">
+         <description>Use OpenOffice to compare two documents</description>
+        <attribute name="oooHost" type="String" mode="IN" optional="true"/>
+        <attribute name="oooPort" type="String" mode="IN" optional="true"/>
+        <attribute name="filenameFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="filenameOriginal" type="String" mode="IN" optional="false"/>
+        <attribute name="filenameOut" type="String" mode="IN" optional="false"/>
+   </service>
 </services>
