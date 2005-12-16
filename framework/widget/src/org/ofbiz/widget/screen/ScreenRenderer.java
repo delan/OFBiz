@@ -153,7 +153,7 @@ public class ScreenRenderer {
     public void populateContextForRequest(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         HttpSession session = request.getSession();
 
-        // attribute names to skip for session and application attributes; these are all handles as special cases, duplicating results in undesired messages
+        // attribute names to skip for session and application attributes; these are all handled as special cases, duplicating results and causing undesired messages
         Set attrNamesToSkip = FastSet.newInstance();
         attrNamesToSkip.add("delegator");
         attrNamesToSkip.add("dispatcher");
@@ -165,25 +165,7 @@ public class ScreenRenderer {
         Enumeration requestAttrNames = request.getAttributeNames();
         while (requestAttrNames.hasMoreElements()) {
             String attrName = (String) requestAttrNames.nextElement();
-            Object param = parameterMap.get(attrName);
             Object attrValue = request.getAttribute(attrName);
-            if (param == null) {
-                parameterMap.put(attrName, attrValue);
-            } else if (param instanceof String && ((String) param).length() == 0) {
-                // also put the attribute value in if the parameter is empty
-                parameterMap.put(attrName, attrValue);
-            } else {
-                // do nothing, just log something
-                Debug.logInfo("Found request attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
-            }
-        }
-
-        // do the same for session attributes, for convenience
-        Enumeration sessionAttrNames = session.getAttributeNames();
-        while (sessionAttrNames.hasMoreElements()) {
-            String attrName = (String) sessionAttrNames.nextElement();
-            if (attrNamesToSkip.contains(attrName)) continue;
-            Object attrValue = session.getAttribute(attrName);
 
             // NOTE: this is being set to false by default now 
             //this change came after the realization that it is common to want a request attribute to override a request parameter, but I can't think of even ONE reason why a request parameter should override a request attribute...
@@ -197,10 +179,28 @@ public class ScreenRenderer {
                     parameterMap.put(attrName, attrValue);
                 } else {
                     // do nothing, just log something
-                    Debug.logInfo("Found session attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
+                    Debug.logInfo("Found request attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
                 }
             } else {
                 parameterMap.put(attrName, attrValue);
+            }
+        }
+
+        // do the same for session attributes, for convenience
+        Enumeration sessionAttrNames = session.getAttributeNames();
+        while (sessionAttrNames.hasMoreElements()) {
+            String attrName = (String) sessionAttrNames.nextElement();
+            if (attrNamesToSkip.contains(attrName)) continue;
+            Object attrValue = session.getAttribute(attrName);
+            Object param = parameterMap.get(attrName);
+            if (param == null) {
+                parameterMap.put(attrName, attrValue);
+            } else if (param instanceof String && ((String) param).length() == 0) {
+                // also put the attribute value in if the parameter is empty
+                parameterMap.put(attrName, attrValue);
+            } else {
+                // do nothing, just log something
+                Debug.logInfo("Found session attribute that conflicts with parameter name, leaving request parameter in place for name: " + attrName, module);
             }
         }
 
