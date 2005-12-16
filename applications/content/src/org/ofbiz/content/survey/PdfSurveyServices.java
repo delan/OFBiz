@@ -280,16 +280,17 @@ public class PdfSurveyServices {
     	Map results = ServiceUtil.returnSuccess();
 		try {
 	    	String pdfFileNameIn = (String)context.get("pdfFileNameIn");
-			Map acroFieldMap = (HashMap)context.get("acroFieldMap");
+			Map acroFieldMap = (Map)context.get("acroFieldMap");
 	    	String pdfFileNameOut = (String)context.get("pdfFileNameOut");
 	    	if (pdfFileNameOut == null) {
 	    		pdfFileNameOut = pdfFileNameIn;
 	    	}
-	    	FileOutputStream os = new FileOutputStream(pdfFileNameOut);
+	    	File fileOut = new File(pdfFileNameOut);
+	    	FileOutputStream os = new FileOutputStream(fileOut);
 			PdfReader r = new PdfReader(pdfFileNameIn);
 			PdfStamper s = new PdfStamper(r,os);
 			AcroFields fs = s.getAcroFields();
-			HashMap map = fs.getFields();
+			Map map = fs.getFields();
 			
 			s.setFormFlattening(true);
 			
@@ -315,9 +316,10 @@ public class PdfSurveyServices {
 					fieldValue=(String)obj;
 				}
 			
-				if (fieldValue != null)
+				if (UtilValidate.isNotEmpty(fieldValue))
 					fs.setField(fieldName, fieldValue);
 			}			
+            s.close();
             os.close();
         } catch(DocumentException e) {
             System.err.println(e.getMessage());
@@ -335,7 +337,7 @@ public class PdfSurveyServices {
     
     /**
      */
-    public static Map setAcroFieldsFromSurvey(DispatchContext dctx, Map context) {
+    public static Map setAcroFieldsFromSurveyResponse(DispatchContext dctx, Map context) {
         
     	GenericDelegator delegator = dctx.getDelegator();
     	LocalDispatcher dispatcher = dctx.getDispatcher();
