@@ -43,6 +43,12 @@
                                 <platform-specific>
                                     <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunTabBar.ftl"/></html>
                                 </platform-specific>
+                                <container>
+                                    <label style="head1">[${uiLabelMap.CommonId}:${productionRunId}]</label>
+                                </container>
+                                <container>
+                                    <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="buttontext"/>
+                                </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -59,14 +65,12 @@
             <actions>
                 <set field="title" value="Create a Production Run"/>
                 <set field="titleProperty" value="ManufacturingCreateProductionRun"/>
-                <set field="tabButtonItem" value="create"/>
-                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="jobshop"/>
 
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/CreateProductionRun.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJobshopDecorator">
+                <decorator-screen name="main-decorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/CreateProductionRun.ftl"/></html>
@@ -82,9 +86,7 @@
                 <set field="title" value="Edit a Production Run"/>
                 <set field="titleProperty" value="ManufacturingEditProductionRun"/>
                 <set field="tabButtonItem" value="edit"/>
-                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="jobshop"/>
-
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/EditProductionRun.bsh"/>
             </actions>
             <widgets>
@@ -120,44 +122,25 @@
             </widgets>
         </section>
     </screen>
-    <screen name="WorkWithShipmentPlans">
-        <section>
-            <actions>
-                <set field="title" value="Work With Shipment Plans"/>
-                <set field="titleProperty" value="ManufacturingWorkWithShipmentPlans"/>
-                <set field="tabButtonItem" value="WorkWithShipmentPlans"/>
-                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
-                <set field="headerItem" value="jobshop"/>
-
-                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/WorkWithShipmentPlans.bsh"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonJobshopDecorator">
-                    <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/WorkWithShipmentPlans.ftl"/></html>
-                        </platform-specific>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="FindProductionRun">
         <section>
             <actions>
                 <set field="title" value="Find Production Runs"/>
                 <set field="titleProperty" value="ManufacturingFindProductionRun"/>
-                <set field="tabButtonItem" value="find"/>
-                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="jobshop"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
 
-                <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="PROD_ORDER_HEADER"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJobshopDecorator">
+                <decorator-screen name="main-decorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
                     <decorator-section name="body">
+                        <container>
+                            <label style="head1">${uiLabelMap.ManufacturingFindProductionRun}</label>
+                        </container>
+                        <container>
+                            <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="buttontext"/>
+                        </container>
                         <include-form name="findProductionRun" location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunForms.xml"/>
                         <include-form name="listFindProductionRun" location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunForms.xml"/>
                     </decorator-section>
@@ -165,27 +148,20 @@
             </widgets>
         </section>
     </screen>
-    <screen name="ManufacturingReports">
+    <screen name="WorkWithShipmentPlans">
         <section>
             <actions>
-                <set field="title" value="Manufacturing Reports"/>
-                <set field="titleProperty" value="ManufacturingReports"/>
-                <set field="tabButtonItem" value="ManufacturingReports"/>
-                <set field="headerItem" value="jobshop"/>
-                
-                <set field="mrpName" from-field="parameters.mrpName"/>
+                <set field="title" value="Work With Shipment Plans"/>
+                <set field="titleProperty" value="ManufacturingWorkWithShipmentPlans"/>
+                <set field="headerItem" value="ShipmentPlans"/>
+
+                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/WorkWithShipmentPlans.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJobshopDecorator">
+                <decorator-screen name="main-decorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
                     <decorator-section name="body">
-                        <container>
-                            <label style="head1" text="${uiLabelMap.ManufacturingReports}"/>
-                        </container>
-                        <container>
-                            <include-form name="SelectMrpName" location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunForms.xml"/>
-                        </container>
                         <platform-specific>
-                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/MrpReports.ftl"/></html>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/WorkWithShipmentPlans.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

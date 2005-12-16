@@ -40,7 +40,7 @@ delegator = request.getAttribute("delegator");
 
 HashMap productionRunData= new HashMap();
 
-productionRunId = request.getParameter("productionRunId");
+productionRunId = parameters.get("productionRunId");
 if (!UtilValidate.isEmpty(productionRunId)) {
     ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
     if (productionRun.exist()){
