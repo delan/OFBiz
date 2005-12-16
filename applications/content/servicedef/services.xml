@@ -1212,7 +1212,7 @@
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="setAcroFields" auth="false">
         <description>Get fields from AcroForm</description>
         <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
-        <attribute name="acroFieldMap" type="Map" mode="In" optional="false"/>
+        <attribute name="acroFieldMap" type="Map" mode="IN" optional="false"/>
         <attribute name="pdfFileNameOut" type="String" mode="IN" optional="false" />
     </service>
 
@@ -1699,12 +1699,6 @@
         <attribute name="fmContext" type="java.util.Map" mode="IN" optional="true"/>
         <attribute name="fmPrefixMap" type="java.util.Map" mode="IN" optional="true" string-map-prefix="CTX_"/>
         <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="true"/>
-    </service>
-    <service name="surveyFromPdf" auth="false" engine="java" transaction-timout="72000" 
-        location="org.ofbiz.content.survey.SurveyServices" invoke="surveyFromPdf">
-        <description>Derive Survey from PDF</description>
-        <attribute name="pdfFileName" type="String" mode="IN" optional="false"/>
-        <attribute mode="OUT" name="surveyId" optional="true" type="String"/>
     </service>
     <service name="convertDocument" auth="false" engine="java" transaction-timout="72000" 
         location="org.ofbiz.content.OpenOfficeServices" invoke="convertDocument">
