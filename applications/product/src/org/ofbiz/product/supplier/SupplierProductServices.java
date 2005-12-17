@@ -31,69 +31,70 @@ public class SupplierProductServices {
     public static final String module = SupplierProductServices.class.getName();
     public static final String resource = "ProductUiLabels";
     
-/*
- * Parameters: productId, partyId, currencyUomId, quantity
- * Result: a List of SupplierProduct entities for productId, filtered by date and optionally by partyId, ordered with lowest price first
- */
+    /*
+     * Parameters: productId, partyId, currencyUomId, quantity
+     * Result: a List of SupplierProduct entities for productId,
+     *         filtered by date and optionally by partyId, ordered with lowest price first
+     */
     public static Map getSuppliersForProduct(DispatchContext dctx, Map context) {
-		Map results = new HashMap();
-		GenericDelegator delegator = dctx.getDelegator();
+        Map results = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
         
-		GenericValue product = null;
-		String productId = (String) context.get("productId");
-		String partyId = (String) context.get("partyId");
-                String currencyUomId = (String) context.get("currencyUomId");
-                Double quantity =(Double) context.get("quantity");
-		try {
-			product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-                        if (product==null) {
-                                results = ServiceUtil.returnSuccess();
-                                results.put("supplierProducts",null);
-                                return results;
-                        }
-			List supplierProducts = product.getRelatedCache("SupplierProduct");
-
-			// if there were no related SupplierProduct entities and the item is a variant, then get the SupplierProducts of the virtual parent product
-			if (supplierProducts.size() == 0 && product.getString("isVariant") != null && product.getString("isVariant").equals("Y")) {
-				String virtualProductId = ProductWorker.getVariantVirtualId(product);
-				GenericValue virtualProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", virtualProductId));
-				if (virtualProduct != null) {
-				supplierProducts = virtualProduct.getRelatedCache("SupplierProduct");
-			}
-			}
-			
-			// filter the list down by the partyId if one is provided
-			if (partyId != null) {
-				supplierProducts = EntityUtil.filterByAnd(supplierProducts, UtilMisc.toMap("partyId", partyId));
-			}
-			
-                        // filter the list down by the currencyUomId if one is provided
-                        if (currencyUomId != null) {
-                           supplierProducts = EntityUtil.filterByAnd(supplierProducts, UtilMisc.toMap("currencyUomId", currencyUomId));
-                        }
-
-                        // filter the list down by the minimumOrderQuantity if one is provided
-                        if (quantity != null) {
-                                //minimumOrderQuantity
-                            supplierProducts = EntityUtil.filterByCondition(supplierProducts, new EntityExpr("minimumOrderQuantity", EntityOperator.LESS_THAN_EQUAL_TO, quantity));
-                        }
-
-			// filter the list down again by date before returning it
-                        supplierProducts = EntityUtil.filterByDate(supplierProducts, UtilDateTime.nowTimestamp(), "availableFromDate", "availableThruDate", true);
-
-                        //sort resulting list of SupplierProduct entities by price in ASCENDING order
-                        supplierProducts = EntityUtil.orderBy(supplierProducts, UtilMisc.toList("lastPrice ASC"));
-
-                        results = ServiceUtil.returnSuccess();
-                        results.put("supplierProducts", supplierProducts);
-                } catch (GenericEntityException ex) {
-                      Debug.logError(ex, ex.getMessage(), module);
-                      return ServiceUtil.returnError(ex.getMessage());
-                }catch(Exception ex){
-                      Debug.logError(ex, ex.getMessage(), module);
-                      return ServiceUtil.returnError(ex.getMessage());
+        GenericValue product = null;
+        String productId = (String) context.get("productId");
+        String partyId = (String) context.get("partyId");
+        String currencyUomId = (String) context.get("currencyUomId");
+        Double quantity =(Double) context.get("quantity");
+        try {
+            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+            if (product == null) {
+                results = ServiceUtil.returnSuccess();
+                results.put("supplierProducts",null);
+                return results;
+            }
+            List supplierProducts = product.getRelatedCache("SupplierProduct");
+            
+            // if there were no related SupplierProduct entities and the item is a variant, then get the SupplierProducts of the virtual parent product
+            if (supplierProducts.size() == 0 && product.getString("isVariant") != null && product.getString("isVariant").equals("Y")) {
+                String virtualProductId = ProductWorker.getVariantVirtualId(product);
+                GenericValue virtualProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", virtualProductId));
+                if (virtualProduct != null) {
+                    supplierProducts = virtualProduct.getRelatedCache("SupplierProduct");
                 }
-         return results;
+            }
+            
+            // filter the list down by the partyId if one is provided
+            if (partyId != null) {
+                supplierProducts = EntityUtil.filterByAnd(supplierProducts, UtilMisc.toMap("partyId", partyId));
+            }
+            
+            // filter the list down by the currencyUomId if one is provided
+            if (currencyUomId != null) {
+                supplierProducts = EntityUtil.filterByAnd(supplierProducts, UtilMisc.toMap("currencyUomId", currencyUomId));
+            }
+            
+            // filter the list down by the minimumOrderQuantity if one is provided
+            if (quantity != null) {
+                //minimumOrderQuantity
+                supplierProducts = EntityUtil.filterByCondition(supplierProducts, new EntityExpr("minimumOrderQuantity", EntityOperator.LESS_THAN_EQUAL_TO, quantity));
+            }
+            
+            // filter the list down again by date before returning it
+            supplierProducts = EntityUtil.filterByDate(supplierProducts, UtilDateTime.nowTimestamp(), "availableFromDate", "availableThruDate", true);
+            
+            //sort resulting list of SupplierProduct entities by price in ASCENDING order
+            supplierProducts = EntityUtil.orderBy(supplierProducts, UtilMisc.toList("lastPrice ASC"));
+            
+            results = ServiceUtil.returnSuccess();
+            results.put("supplierProducts", supplierProducts);
+        } catch (GenericEntityException ex) {
+            Debug.logError(ex, ex.getMessage(), module);
+            return ServiceUtil.returnError(ex.getMessage());
+        }catch(Exception ex){
+            Debug.logError(ex, ex.getMessage(), module);
+            return ServiceUtil.returnError(ex.getMessage());
+        }
+        return results;
     }
 
     /*
@@ -113,7 +114,7 @@ public class SupplierProductServices {
                 for (Iterator fI = features.iterator(); fI.hasNext(); ) {
                     GenericValue nextFeature = (GenericValue) fI.next();
                     List supplierFeatures = EntityUtil.filterByAnd(nextFeature.getRelated("SupplierProductFeature"),
-                            UtilMisc.toMap("partyId", partyId));
+                                                                   UtilMisc.toMap("partyId", partyId));
                     GenericValue supplierFeature = null;
 
                     if ((supplierFeatures != null) && (supplierFeatures.size() > 0)) {
@@ -134,6 +135,6 @@ public class SupplierProductServices {
             Debug.logError(ex, ex.getMessage(), module);
             return ServiceUtil.returnError(ex.getMessage());
         }
-    	return results;
+        return results;
     }
 }
