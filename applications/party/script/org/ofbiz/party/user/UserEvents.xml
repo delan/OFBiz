@@ -31,6 +31,7 @@
     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
         <string-to-field field-name="require_email" string="false"/>
         <string-to-field field-name="require_phone" string="false"/>
+        <!-- this parameter must be set to true or the createUser method below will use a default password instead of the one entered by user -->
         <string-to-field field-name="create_allow_password" string="true"/>
 
         <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="parameters"/>
