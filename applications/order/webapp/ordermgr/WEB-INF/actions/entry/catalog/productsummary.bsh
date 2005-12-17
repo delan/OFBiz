@@ -86,15 +86,25 @@ if (product != null) {
     }
 
     // get the product price
-    priceContext = UtilMisc.toMap("product", product, "currencyUomId", cart.getCurrency(), 
-            "autoUserLogin", autoUserLogin, "userLogin", userLogin);
-    priceContext.put("webSiteId", webSiteId);
-    priceContext.put("prodCatalogId", catalogId);
-    priceContext.put("productStoreId", productStoreId);
-    priceContext.put("checkIncludeVat", "Y");
-    priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
-            
-    context.put("price", priceMap);
+    if (cart.isSalesOrder()) {
+        // sales order: run the "calculateProductPrice" service
+        priceContext = UtilMisc.toMap("product", product, "currencyUomId", cart.getCurrency(), 
+                "autoUserLogin", autoUserLogin, "userLogin", userLogin);
+        priceContext.put("webSiteId", webSiteId);
+        priceContext.put("prodCatalogId", catalogId);
+        priceContext.put("productStoreId", productStoreId);
+        priceContext.put("checkIncludeVat", "Y");
+        priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
+
+        context.put("price", priceMap);
+    } else {
+        // purchase order: run the "calculatePurchasePrice" service
+        priceContext = UtilMisc.toMap("product", product, "currencyUomId", cart.getCurrency(), 
+                "partyId", cart.getPartyId(), "userLogin", userLogin);
+        priceMap = dispatcher.runSync("calculatePurchasePrice", priceContext);
+
+        context.put("price", priceMap);
+    }
 }
 
 // get the product review(s)

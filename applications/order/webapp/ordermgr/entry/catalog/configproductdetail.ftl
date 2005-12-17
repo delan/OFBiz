@@ -215,7 +215,7 @@ ${virtualJavaScript?if_exists}
       </#if>
       <div class="tabletext">
         <b>
-          <#if price.isSale>
+          <#if price.isSale?exists && price.isSale>
             <span class='salePrice'>${uiLabelMap.EcommerceOnSale}!</span>
             <#assign priceStyle = "salePrice">
           <#else>

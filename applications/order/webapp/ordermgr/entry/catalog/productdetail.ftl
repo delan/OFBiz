@@ -266,7 +266,7 @@ ${virtualJavaScript?if_exists}
       </#if>
       <div class="tabletext">
         <b>
-          <#if price.isSale>
+          <#if price.isSale?exists && price.isSale>
             <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
             <#assign priceStyle = "salePrice">
           <#else>
@@ -284,6 +284,14 @@ ${virtualJavaScript?if_exists}
         <#assign priceSaved = price.listPrice?double - price.price?double>
         <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
         <div class="tabletext">${uiLabelMap.EcommerceSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span></div>
+      </#if>
+      <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
+      <#if (showPriceDetails?exists && showPriceDetails?default("N") == "Y")>
+          <#if price.orderItemPriceInfos?exists>
+              <#list price.orderItemPriceInfos as orderItemPriceInfo>
+                  <div class="tabletext">${orderItemPriceInfo.description?if_exists}</div>
+              </#list>
+          </#if>
       </#if>
 
       <#-- Included quantities/pieces -->

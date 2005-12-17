@@ -173,12 +173,21 @@ if (product != null) {
     currentCatalogId = catalogId;
     webSiteId = CatalogWorker.getWebSiteId(request);
     autoUserLogin = request.getSession().getAttribute("autoUserLogin");
-    priceContext = UtilMisc.toMap("product", product, "prodCatalogId", catalogId,
-        "currencyUomId", cart.getCurrency(), "autoUserLogin", autoUserLogin);
-    priceContext.put("webSiteId", webSiteId);
-    priceContext.put("productStoreId", productStoreId);
-    priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
-    context.put("priceMap", priceMap);
+    if (cart.isSalesOrder()) {
+        // sales order: run the "calculateProductPrice" service
+        priceContext = UtilMisc.toMap("product", product, "prodCatalogId", catalogId,
+            "currencyUomId", cart.getCurrency(), "autoUserLogin", autoUserLogin);
+        priceContext.put("webSiteId", webSiteId);
+        priceContext.put("productStoreId", productStoreId);
+        priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
+        context.put("priceMap", priceMap);
+    } else {
+        // purchase order: run the "calculatePurchasePrice" service
+        priceContext = UtilMisc.toMap("product", product, "currencyUomId", cart.getCurrency(), 
+                "partyId", cart.getPartyId(), "userLogin", userLogin);
+        priceMap = dispatcher.runSync("calculatePurchasePrice", priceContext);
+        context.put("priceMap", priceMap);
+    }
 
     // get the product review(s)
     reviewByAnd = UtilMisc.toMap("statusId", "PRR_APPROVED", "productStoreId", productStoreId);

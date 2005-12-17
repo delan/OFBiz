@@ -117,17 +117,29 @@
                   ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
                 </#if>
                 <b>
-                  <#if price.isSale>
+                  <#if price.isSale?exists && price.isSale>
                     <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
+                    <#assign priceStyle = "salePrice">
+                  <#else>
+                    <#assign priceStyle = "regularPrice">
                   </#if>
+
                   <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
-                    ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+                    ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
                 </b>
                 <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
                   <#assign priceSaved = price.listPrice?double - price.price?double>
                   <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
                     ${uiLabelMap.EcommerceSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span>
+                </#if>
+                <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
+                <#if (showPriceDetails?exists && showPriceDetails?default("N") == "Y")>
+                    <#if price.orderItemPriceInfos?exists>
+                        <#list price.orderItemPriceInfos as orderItemPriceInfo>
+                            <div class="tabletext">${orderItemPriceInfo.description?if_exists}</div>
+                        </#list>
+                    </#if>
                 </#if>
           </div>
           <#if averageRating?exists && (averageRating?double > 0) && numRatings?exists && (numRatings?long > 2)>
