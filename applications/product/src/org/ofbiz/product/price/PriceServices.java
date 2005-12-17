@@ -1084,10 +1084,6 @@ public class PriceServices {
         String partyId = (String)context.get("partyId");
         Double quantity = (Double)context.get("quantity");
         
-        if (quantity == null) {
-            quantity = new Double(1);
-        }
-        
         // TODO: a) Get the Price from the Agreement* data model
         //
         // b) If no price can be found, get the lastPrice from the SupplierProduct entity
@@ -1106,27 +1102,32 @@ public class PriceServices {
             Debug.logError(gse, module);
             return ServiceUtil.returnError(gse.getMessage());
         }
-        if ((productSuppliers != null) && (productSuppliers.size() > 0)) {
-            GenericValue productSupplier = (GenericValue) productSuppliers.get(0);
-            price = ((Double)productSupplier.get("lastPrice")).doubleValue();
-            validPriceFound = true;
-            // add a orderItemPriceInfo element too, without orderId or orderItemId
-            StringBuffer priceInfoDescription = new StringBuffer();
-            priceInfoDescription.append("SupplierProduct ");
-            priceInfoDescription.append("[minimumOrderQuantity:");
-            priceInfoDescription.append("" + productSupplier.getDouble("minimumOrderQuantity").doubleValue());
-            priceInfoDescription.append("]");
-            GenericValue orderItemPriceInfo = delegator.makeValue("OrderItemPriceInfo", null);
-            //orderItemPriceInfo.set("productPriceRuleId", productPriceAction.get("productPriceRuleId"));
-            //orderItemPriceInfo.set("productPriceActionSeqId", productPriceAction.get("productPriceActionSeqId"));
-            //orderItemPriceInfo.set("modifyAmount", new Double(modifyAmount));
-            // make sure description is <= than 250 chars
-            String priceInfoDescriptionString = priceInfoDescription.toString();
-            if (priceInfoDescriptionString.length() > 250) {
-                priceInfoDescriptionString = priceInfoDescriptionString.substring(0, 250);
+        if (productSuppliers != null) {
+            for (int i = 0; i < productSuppliers.size(); i++) {
+                GenericValue productSupplier = (GenericValue) productSuppliers.get(i);
+                if (!validPriceFound) {
+                    price = ((Double)productSupplier.get("lastPrice")).doubleValue();
+                    validPriceFound = true;
+                }
+                // add a orderItemPriceInfo element too, without orderId or orderItemId
+                StringBuffer priceInfoDescription = new StringBuffer();
+                priceInfoDescription.append("SupplierProduct ");
+                priceInfoDescription.append("[minimumOrderQuantity:");
+                priceInfoDescription.append("" + productSupplier.getDouble("minimumOrderQuantity").doubleValue());
+                priceInfoDescription.append(", lastPrice: " + productSupplier.getDouble("lastPrice").doubleValue());
+                priceInfoDescription.append("]");
+                GenericValue orderItemPriceInfo = delegator.makeValue("OrderItemPriceInfo", null);
+                //orderItemPriceInfo.set("productPriceRuleId", productPriceAction.get("productPriceRuleId"));
+                //orderItemPriceInfo.set("productPriceActionSeqId", productPriceAction.get("productPriceActionSeqId"));
+                //orderItemPriceInfo.set("modifyAmount", new Double(modifyAmount));
+                // make sure description is <= than 250 chars
+                String priceInfoDescriptionString = priceInfoDescription.toString();
+                if (priceInfoDescriptionString.length() > 250) {
+                    priceInfoDescriptionString = priceInfoDescriptionString.substring(0, 250);
+                }
+                orderItemPriceInfo.set("description", priceInfoDescriptionString);
+                orderItemPriceInfos.add(orderItemPriceInfo);
             }
-            orderItemPriceInfo.set("description", priceInfoDescriptionString);
-            orderItemPriceInfos.add(orderItemPriceInfo);
         }
         // TODO: c) If no price can be found, get the averageCost from the ProductPrice entity
 
