@@ -464,7 +464,7 @@
             </tr>
           <#list contactListPartyList as contactListParty>
             <#assign contactList = contactListParty.getRelatedOne("ContactList")/>
-            <#assign statusItem = contactListParty.getRelatedOneCache("StatusItem")/>
+            <#assign statusItem = contactListParty.getRelatedOneCache("StatusItem")?if_exists/>
             <#-- <#assign contactListType = contactList.getRelatedOneCache("ContactListType")/> -->
             <tr><td colspan="6"><hr class="sepbar"/></td></tr>
             <tr>

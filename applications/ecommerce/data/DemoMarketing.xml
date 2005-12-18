@@ -11,9 +11,9 @@
         verifyEmailFrom="ofbiztest@yahoo.com" verifyEmailScreen="component://ecommerce/widget/EmailContactListScreens.xml#ContactListVerifyEmail" 
         verifyEmailSubject="Subscription Verify Email" verifyEmailWebSiteId="WebStore"/>
     
-    <ContactListParty contactListId="9000" partyId="DemoCustCompany" preferredContactMechId="9021" fromDate="2005-01-01 00:00:00"/>
-    <ContactListParty contactListId="9000" partyId="DemoCustAgent" preferredContactMechId="9023" fromDate="2005-01-01 00:00:00"/>
-    <ContactListParty contactListId="9000" partyId="DemoCustomer" preferredContactMechId="9026" fromDate="2005-01-01 00:00:00"/>
+    <ContactListParty contactListId="9000" partyId="DemoCustCompany" preferredContactMechId="9021" statusId="CLPT_ACCEPTED" fromDate="2001-05-13 00:00:00"/>
+    <ContactListParty contactListId="9000" partyId="DemoCustAgent" preferredContactMechId="9023" statusId="CLPT_ACCEPTED" fromDate="2001-05-13 00:00:00"/>
+    <ContactListParty contactListId="9000" partyId="DemoCustomer" preferredContactMechId="9026" statusId="CLPT_ACCEPTED" fromDate="2001-05-13 00:00:00"/>
         
     <!-- some sample affiliate and tracking codes for marketing campaigns -->
     <MarketingCampaign marketingCampaignId="9001" campaignName="Pay Per Click Advertising"/>
