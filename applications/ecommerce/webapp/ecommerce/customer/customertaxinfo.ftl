@@ -37,6 +37,11 @@
           </#list>
         </select>
         <span class="tabletext">ID: </span><input type="text" name="partyTaxId" class="inputBox" size="12" maxlength="40"/>
+
+        <#if productStore.showTaxIsExempt?default("Y") == "Y">
         <span class="tabletext">Is Exempt? </span><input type="checkbox" name="isExempt" class="inputBox" value="Y"/>
+        <#else/>
+        <input type="hidden" name="isExempt" value="N"/>
+        </#if>
     </div>
 </#if>

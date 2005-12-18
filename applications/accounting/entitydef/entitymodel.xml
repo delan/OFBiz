@@ -2363,7 +2363,7 @@
         <field name="thruDate" type="date-time"></field>
         <field name="partyTaxId" type="id-long-ne"></field>
         <field name="isExempt" type="indicator"></field>
-        <field name="isNexus" type="indicator"><!-- if true it means that this Party has a sufficient presence in the area to warrant having to charge tax --></field>
+        <field name="isNexus" type="indicator"><!-- default N; if Y it means that this Party has a sufficient presence in the area to warrant having to charge tax --></field>
         <prim-key field="partyId"/>
         <prim-key field="taxAuthGeoId"/>
         <prim-key field="taxAuthPartyId"/>
