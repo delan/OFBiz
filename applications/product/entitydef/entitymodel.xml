@@ -2939,6 +2939,7 @@
       <field name="showCheckoutGiftOptions" type="indicator"></field>
       <field name="selectPaymentTypePerItem" type="indicator"></field>
       <field name="showPricesWithVatTax" type="indicator"></field>
+      <field name="showTaxIsExempt" type="indicator"><!-- default Y; if set to N do not show isExempt checkbox for PartyTaxAuthInfo, always force to N --></field>
       <field name="vatTaxAuthGeoId" type="id"></field>
       <field name="vatTaxAuthPartyId" type="id"></field>
       <prim-key field="productStoreId"/>
