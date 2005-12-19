@@ -97,7 +97,7 @@ public class PackingSession implements java.io.Serializable {
     public void addOrIncreaseLine(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, double quantity, int packageSeqId) throws GeneralException {
         // reset the session if we just completed
         if (status == 0) {
-            throw new GeneralException("Packing sessio has been completed; be sure to CLEAR before packing a new order!");
+            throw new GeneralException("Packing session has been completed; be sure to CLEAR before packing a new order!");
         }
 
         // find the actual product ID
