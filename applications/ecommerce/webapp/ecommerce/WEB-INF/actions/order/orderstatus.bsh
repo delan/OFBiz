@@ -76,7 +76,8 @@ if (orderHeader != null) {
 
     billingAccount = orderHeader.getRelatedOne("BillingAccount");
   
-    orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
+    orderPaymentPreferences = UtilMisc.toIterator(EntityUtil.filterByAnd(orderHeader.getRelated("OrderPaymentPreference"),
+            UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED"))));
     paymentMethods = new ArrayList();
     if (orderPaymentPreferences != null) {
         while (orderPaymentPreferences.hasNext()) {
