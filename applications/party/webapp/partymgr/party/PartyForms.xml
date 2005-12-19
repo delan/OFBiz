@@ -371,4 +371,13 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
         <!-- <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field> -->
     </form>
+    <form name="EditPartyAttribute" type="single"
+            target="updatePartyAttribute" title="" default-map-name="attribute"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <alt-target use-when="attribute==null" target="createPartyAttribute"/>
+        <auto-fields-service service-name="updatePartyAttribute" map-name="attribute"/>
+        <field name="partyId"><hidden value="${partyId}"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>

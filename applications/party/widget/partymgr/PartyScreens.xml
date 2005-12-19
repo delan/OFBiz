@@ -190,6 +190,38 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="EditPartyAttribute">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPartyAttribute"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="viewvendor"/>
+
+                <set field="labelTitleProperty" value="PartyAttribute"/>
+
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="attrName" from-field="parameters.attrName"/>
+                <entity-one entity-name="Party" value-name="party"/>
+                <entity-one entity-name="PartyAttribute" value-name="attribute"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="screenlet">
+                            <container style="screenlet-header">
+                                <label style="boxhead" text="${uiLabelMap.PartyAttribute}"/>
+                            </container>
+                            <container style="screenlet-body">
+                                <include-form name="EditPartyAttribute" location="component://party/webapp/partymgr/party/PartyForms.xml"/>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="EditPartyTaxAuthInfos">
         <section>
             <actions>
