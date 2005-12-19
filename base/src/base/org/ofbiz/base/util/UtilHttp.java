@@ -66,6 +66,12 @@ public class UtilHttp {
 
     public static final String module = UtilHttp.class.getName();
 
+    public static final String MULTI_ROW_DELIMITER = "_o_";
+    public static final String ROW_SUBMIT_PREFIX = "_rowSubmit_o_";
+    public static final int MULTI_ROW_DELIMITER_LENGTH = MULTI_ROW_DELIMITER.length();
+    public static final int ROW_SUBMIT_PREFIX_LENGTH = ROW_SUBMIT_PREFIX.length();
+    
+
     /**
      * Create a map from an HttpServletRequest object
      * @return The resulting Map
@@ -678,5 +684,57 @@ public class UtilHttp {
             retStr = cleanQuery.toString();
         }
         return retStr;
+    }
+
+    /**
+     * Given multi form data with the ${param}_o_N notation, creates a Collection 
+     * of Maps for the submitted rows. Each Map contains the key/value pairs 
+     * of a particular row. The keys will be stripped of the _o_N suffix. 
+     * There is an additionaly key "row" for each Map that holds the 
+     * index of the row.
+     */
+    public static Collection parseMultiFormData(Map parameters) {
+        FastMap rows = new FastMap(); // stores the rows keyed by row number
+
+        // first loop through all the keys and create a hashmap for each ${ROW_SUBMIT_PREFIX}${N} = Y
+        Iterator keys = parameters.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+
+            // skip everything that is not ${ROW_SUBMIT_PREFIX}N
+            if (key == null || key.length() <= ROW_SUBMIT_PREFIX_LENGTH) continue;
+            if (key.indexOf(MULTI_ROW_DELIMITER) <= 0) continue;
+            if (!key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) continue;
+            if (!parameters.get(key).equals("Y")) continue;
+
+            // decode the value of N and create a new map for it
+            Integer n = Integer.decode(key.substring(ROW_SUBMIT_PREFIX_LENGTH, key.length()));
+            Map m = new FastMap();
+            m.put("row", n); // special "row" = N tuple
+            rows.put(n, m); // key it to N
+        }
+
+        // next put all parameters with matching N in the right map
+        keys = parameters.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+
+            // skip keys without DELIMITER and skip ROW_SUBMIT_PREFIX
+            if (key == null) continue;
+            int index = key.indexOf(MULTI_ROW_DELIMITER);
+            if (index <= 0) continue;
+            if (key.length() > ROW_SUBMIT_PREFIX_LENGTH && key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) continue;
+
+            // get the map with index N
+            Integer n = Integer.decode(key.substring(index + MULTI_ROW_DELIMITER_LENGTH, key.length())); // N from ${param}${DELIMITER}${N}
+            Map map = (Map) rows.get(n);
+            if (map == null) continue;
+
+            // get the key without the <DELIMITER>N suffix and store it and its value
+            String newKey = key.substring(0, index);
+            map.put(newKey, parameters.get(key));
+        }
+        // return only the values, which is the list of maps
+        return rows.values();
     }
 }

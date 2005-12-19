@@ -63,7 +63,6 @@ public class ServiceMultiEventHandler implements EventHandler {
 
     public static final String module = ServiceMultiEventHandler.class.getName();
 
-    public static final String DELIMITER = "_o_";
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
 
@@ -77,6 +76,8 @@ public class ServiceMultiEventHandler implements EventHandler {
      * @see org.ofbiz.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+        // TODO: consider changing this to use the new UtilHttp.parseMultiFormData method
+        
         // make sure we have a valid reference to the Service Engine
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         if (dispatcher == null) {
@@ -173,9 +174,9 @@ public class ServiceMultiEventHandler implements EventHandler {
 
         // now loop throw the rows and prepare/invoke the service for each
         for (int i = 0; i < rowCount; i++) {
-            String thisSuffix = DELIMITER + i;
-            boolean rowSelected = request.getParameter("_rowSubmit" + thisSuffix) == null ? false :
-                    "Y".equalsIgnoreCase(request.getParameter("_rowSubmit" + thisSuffix));
+            String curSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+            boolean rowSelected = request.getParameter(UtilHttp.ROW_SUBMIT_PREFIX + i) == null ? false :
+                    "Y".equalsIgnoreCase(request.getParameter(UtilHttp.ROW_SUBMIT_PREFIX + i));
 
             // make sure we are to process this row
             if (useRowSubmit && !rowSelected) {
@@ -196,14 +197,14 @@ public class ServiceMultiEventHandler implements EventHandler {
 
                 Object value = null;
                 if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
-                    Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, thisSuffix);
+                    Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, curSuffix);
                     value = paramMap;
                 } else if (modelParam.stringListSuffix != null && modelParam.stringListSuffix.length() > 0) {
                     List paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
                     value = paramList;
                 } else {
                     // first check for request parameters
-                    String[] paramArr = request.getParameterValues(name + thisSuffix);
+                    String[] paramArr = request.getParameterValues(name + curSuffix);
                     if (paramArr != null) {
                         if (paramArr.length > 1) {
                             value = Arrays.asList(paramArr);
@@ -214,10 +215,10 @@ public class ServiceMultiEventHandler implements EventHandler {
 
                     // if the parameter wasn't passed and no other value found, don't pass on the null
                     if (value == null) {
-                        value = request.getAttribute(name + thisSuffix);
+                        value = request.getAttribute(name + curSuffix);
                     }
                     if (value == null) {
-                        value = request.getSession().getAttribute(name + thisSuffix);
+                        value = request.getSession().getAttribute(name + curSuffix);
                     }
 
                     // now check global scope

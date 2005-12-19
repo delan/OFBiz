@@ -129,7 +129,7 @@
     </form>
 
     <!-- multi-form to print confirmed shipping labels -->
-    <form name="Labels" type="multi" list-name="shipmentPackageRouteSegments" title="" target="PrintLabels"
+    <form name="Labels" type="multi" list-name="shipmentPackageRouteSegments" title="" target="BatchPrintShippingLabels"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext" separate-columns="true">
         <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}">
             <hyperlink target="ViewShipment?shipmentId=${shipmentId}" description="${shipmentId}"/>
