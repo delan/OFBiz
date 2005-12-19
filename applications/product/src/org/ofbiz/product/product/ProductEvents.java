@@ -109,12 +109,14 @@ public class ProductEvents {
         String keyword = request.getParameter("KEYWORD");
         String relevancyWeightString = request.getParameter("relevancyWeight");
         Long relevancyWeight = null;
-        try {
-            relevancyWeight = Long.valueOf(relevancyWeightString);
-        } catch (NumberFormatException e) {
-            String errMsg = "Bad format for relevancyWeight [" + relevancyWeightString + "]: " + e.toString();
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
+        if (UtilValidate.isNotEmpty(relevancyWeightString)) {
+            try {
+                relevancyWeight = Long.valueOf(relevancyWeightString);
+            } catch (NumberFormatException e) {
+                String errMsg = "Bad format for relevancyWeight [" + relevancyWeightString + "]: " + e.toString();
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                return "error";
+            }
         }
 
         String errMsgTemp = "";
