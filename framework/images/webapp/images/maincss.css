@@ -95,6 +95,13 @@ font-family: Verdana, Arial, Helvettica, sans-serif;
 text-align: right;
 }
 
+.tabletextcenter {
+font-size: 10px;
+text-decoration: none;
+font-family: Verdana, Arial, Helvettica, sans-serif;
+text-align: center;
+}
+
 .tablebuttontext {
 font-size: 10px;
 color: #1E3C66;
