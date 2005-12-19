@@ -613,4 +613,16 @@
             </widgets>
         </section>
     </screen>
+
+    <!-- Generates a PDF of selected Labels for batch printing -->
+    <screen name="BatchPrintShippingLabels">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/facility/facility/batchPrintShippingLabels.fo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>    
+
 </screens>

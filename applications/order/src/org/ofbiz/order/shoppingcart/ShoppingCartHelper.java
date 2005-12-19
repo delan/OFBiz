@@ -37,6 +37,7 @@ import java.util.Vector;
 import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -394,7 +395,7 @@ public class ShoppingCartHelper {
             String productId = null;
             String quantStr = null;
             String requirementId = null;
-            String thisSuffix = org.ofbiz.webapp.event.ServiceMultiEventHandler.DELIMITER + i;
+            String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
             boolean rowSelected = (!context.containsKey("_rowSubmit" + thisSuffix))? false :
                     "Y".equalsIgnoreCase((String)context.get("_rowSubmit" + thisSuffix));
             
