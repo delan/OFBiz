@@ -456,6 +456,39 @@
     </div>
 </div>
 
+<#-- Party Attributes -->
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div style="float: right;">
+          <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
+            <a href="<@ofbizUrl>editPartyAttribute?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+          </#if>
+        </div>
+        <div class="boxhead">&nbsp;${uiLabelMap.PartyAttributes}</div>
+    </div>
+    <div class="screenlet-body">
+        <#if attributes?has_content>
+            <table width="100%" border="0" cellpadding="1">
+              <#list attributes as attr>
+                <tr>
+                  <td nowrap align="left" valign="top" width="1%">
+                    <div class="tabletext">&nbsp;<b>Name: </b>${attr.attrName}</div>
+                  </td>
+                  <td align="left" valign="top" width="98%">
+                    <div class="tabletext">&nbsp;<b>Value: </b>${attr.attrValue}</div>
+                  </td>
+                  <td align="right" valign="top" width="1%">
+                    <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId}&attrName=${attr.attrName}</@ofbizUrl>" class="buttontext">Edit</a>
+                  </td>
+                </tr>
+              </#list>
+            </table>
+        <#else>
+            <div class="tabletext">No party attributes found.</div>
+        </#if>
+    </div>
+</div>
+
 <#-- Visits -->
 <div class="screenlet">
     <div class="screenlet-header">

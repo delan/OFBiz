@@ -363,6 +363,29 @@
         <response name="error" type="view" value="viewvendor"/>
     </request-map>
 
+     <request-map uri="editPartyAttribute">
+         <security https="true" auth="true"/>
+         <response name="success" type="view" value="EditPartyAttribute"/>
+     </request-map>
+    <request-map uri="createPartyAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyAttribute"/>
+        <response name="success" type="view" value="EditPartyAttribute"/>
+        <response name="error" type="view" value="EditPartyAttribute"/>
+    </request-map>
+    <request-map uri="updatePartyAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyAttribute"/>
+        <response name="success" type="view" value="EditPartyAttribute"/>
+        <response name="error" type="view" value="EditPartyAttribute"/>
+    </request-map>
+    <request-map uri="removePartyAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removePartyAttribute"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+
     <request-map uri="EditPartyTaxAuthInfos"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyTaxAuthInfos"/></request-map>
     <request-map uri="createPartyTaxAuthInfo">
         <security https="true" auth="true"/>
@@ -765,6 +788,7 @@
     <view-map name="EditPartyGroup" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup"/>
     <view-map name="EditUserLogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLogin"/>
     <view-map name="createnewlogin" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateUserLogin"/>
+    <view-map name="EditPartyAttribute" type="screen" page="component://jsn/widget/partymgr/PartyScreens.xml#EditPartyAttribute"/>
     <view-map name="EditUserLoginSecurityGroups" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditUserLoginSecurityGroups"/>
     <view-map name="AddPartyNote" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#AddPartyNote"/>
     <view-map name="ViewSegmentRoles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#ViewSegmentRoles"/>

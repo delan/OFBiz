@@ -52,6 +52,9 @@ if (partyId == null) partyId = request.getParameter("partyId");
 if (partyId == null) partyId = (String) request.getAttribute("partyId");
 context.put("partyId", partyId);
 
+attributes = delegator.findByAnd("PartyAttribute", UtilMisc.toMap("partyId", partyId));
+context.put("attributes", attributes);
+
 userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId));
 context.put("userLogins", userLogins);
 
