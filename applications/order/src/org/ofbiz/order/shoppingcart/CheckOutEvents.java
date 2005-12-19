@@ -698,6 +698,12 @@ public class CheckOutEvents {
             checkOutPaymentId = (String) request.getAttribute("paymentMethodId");
         }
 
+        // check for offline payment type
+        if ("offline".equals(methodType)) {
+            Debug.log("Changing mode from->to: " + mode + "->payment", module);
+            checkOutPaymentId = "EXT_OFFLINE";            
+            mode = "payment";
+        }
         singleUsePayment = request.getParameter("singleUsePayment");
         appendPayment = request.getParameter("appendPayment");
         boolean isSingleUsePayment = singleUsePayment != null && "Y".equalsIgnoreCase(singleUsePayment) ? true : false;
