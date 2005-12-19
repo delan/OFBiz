@@ -643,7 +643,7 @@
     </request-map>
     <request-map uri="createCreditCardOrderEntry">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createCreditCardOrderEntry"/>
+        <event type="service" path="" invoke="createCreditCard"/>
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="billsetting"/>
     </request-map>
