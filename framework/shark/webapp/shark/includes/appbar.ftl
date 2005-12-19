@@ -30,6 +30,8 @@
 <#assign contextPath = request.getContextPath()>
 <#assign displayApps = Static["org.ofbiz.base.component.ComponentConfig"].getAppBarWebInfos(ofbizServerName)>
 
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+
 <#if requestAttributes.userLogin?has_content>
 
 <#assign unselectedClass = {"col" : "tabdownblock", "left" : "tabdownleft", "center" : "tabdowncenter", "right" : "tabdownright", "link" : "tablink"}>
@@ -60,7 +62,7 @@
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td class="${class.left}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
-                    <td nowrap="nowrap" class="${class.center}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}">${display.title}</a></td>
+                    <td nowrap="nowrap" class="${class.center}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><#if uiLabelMap?exists>${uiLabelMap[display.title]}<#else>${display.title}</#if></a></td>
                     <td class="${class.right}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                   </tr>
                   <#if thisApp != contextPath>
