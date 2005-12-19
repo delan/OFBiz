@@ -110,6 +110,24 @@
         <attribute name="defaultShipMeth" type="String" mode="IN" optional="true"/>
     </service>
 
+    <service name="createPartyAttribute" engine="simple" default-entity-name="PartyAttribute"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyAttribute" auth="true">
+        <description>create a party attribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePartyAttribute" engine="simple" default-entity-name="PartyAttribute"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="updatePartyAttribute" auth="true">
+        <description>updates a party attribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removePartyAttribute" engine="simple" default-entity-name="PartyAttribute"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="removePartyAttribute" auth="true">
+        <description>removes a party attribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
     <!-- Party Role services -->
     <service name="createPartyRole" engine="java"
             location="org.ofbiz.party.party.PartyRoleServices" invoke="createPartyRole" auth="true">
