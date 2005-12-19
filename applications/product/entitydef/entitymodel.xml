@@ -564,7 +564,7 @@
         <field name="configItemIdTo" type="id-ne"></field>
         <field name="configOptionIdTo" type="id-ne"></field>
         <field name="sequenceNum" type="numeric"></field>
-        <field name="configIactnTypeId" type="id"></field> <!-- INCOMPATIBLE, etc... -->
+        <field name="configIactnTypeId" type="id"><description>INCOMPATIBLE, etc...</description></field>
         <field name="description" type="description"></field>
         <prim-key field="configItemId"/>
         <prim-key field="configOptionId"/>
@@ -634,7 +634,7 @@
         <field name="configId" type="id-ne"></field>
         <field name="productId" type="id-ne"></field>
         <field name="numOfConfs" type="numeric"></field>
-        <field name="configTypeId" type="id"></field> <!-- HIDDEN, TEMPLATE, etc... -->
+        <field name="configTypeId" type="id"><description>HIDDEN, TEMPLATE, etc...</description></field>
         <prim-key field="configId"/>
         <prim-key field="productId"/>
         <relation type="one" fk-name="PROD_CONFS_PROD" title="Product" rel-entity-name="Product">
@@ -1330,7 +1330,6 @@
       <member-entity entity-alias="PR" entity-name="Product"/>
       <member-entity entity-alias="II" entity-name="InventoryItem"/>
       <member-entity entity-alias="FC" entity-name="Facility"/>
-      <!-- group by -->
       <alias entity-alias="II" name="productId" group-by="true"/>
       <alias entity-alias="PR" name="internalName" group-by="true"/>
       <!-- condition and display fields -->
@@ -1338,7 +1337,6 @@
       <alias entity-alias="FC" name="ownerPartyId" group-by="false"/>
       <alias entity-alias="II" name="quantityOnHandTotal" function="sum"/>
       <alias entity-alias="II" name="availableToPromiseTotal" function="sum"/>
-      <!-- links -->
       <view-link entity-alias="II" rel-entity-alias="PR">
         <key-map field-name="productId"/>
       </view-link>
@@ -1491,7 +1489,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-precise"></field>
-      <field name="termUomId" type="id"><!-- mainly used for recurring and usage prices to specify a time/freq measure, or a usage unit measure (bits, minutes, etc) --></field>
+      <field name="termUomId" type="id"><description>mainly used for recurring and usage prices to specify a time/freq measure, or a usage unit measure (bits, minutes, etc)</description></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -1798,12 +1796,9 @@
       <field name="isVariant" type="indicator"></field>
       <field name="requirementMethodEnumId" type="id"></field>
       <field name="billOfMaterialLevel" type="numeric"></field>
-      <!-- maximum number of persons who can rent this asset at the same time -->
-      <field name="reservMaxPersons" type="floating-point"/>
-      <!-- reservationSecondPersonPricePercentage:        percentage of the end price for the 2nd person renting this asset connected to this product-->
-      <field name="reserv2ndPPPerc" type="floating-point"/>
-      <!-- reservationNthPersonPricePercentage:        percentage of the end price for the Nth person renting this asset connected to this product-->
-      <field name="reservNthPPPerc" type="floating-point"/>
+      <field name="reservMaxPersons" type="floating-point"><description>maximum number of persons who can rent this asset at the same time</description></field>
+      <field name="reserv2ndPPPerc" type="floating-point"><description>percentage of the end price for the 2nd person renting this asset connected to this product</description></field>
+      <field name="reservNthPPPerc" type="floating-point"><description>percentage of the end price for the Nth person renting this asset connected to this product</description></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -1977,7 +1972,7 @@
       <member-entity entity-alias="II" entity-name="InventoryItem"/>
       <alias-all entity-alias="PR"/>
       <alias-all entity-alias="II"/>
-      <alias entity-alias="II" name="facilityId"/> <!-- this overrides the facilityId also found in Product -->
+      <alias entity-alias="II" name="facilityId"><description>this overrides the facilityId also found in Product</description></alias>
       <view-link entity-alias="PR" rel-entity-alias="II">
          <key-map field-name="productId"/>
       </view-link>
@@ -2617,7 +2612,7 @@
         <key-map field-name="defaultWeightUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="ProductStore">
-        <!-- this was changed from the FK to better handle syncronization; this may be re-enabled in the future -->
+        <description>this was changed from the FK to better handle syncronization; this may be set back to be a FK in the future</description>
         <key-map field-name="productStoreId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
@@ -2891,7 +2886,7 @@
       <field name="title" type="name"></field>
       <field name="subtitle" type="description"></field>
       <field name="payToPartyId" type="id">
-          <!-- Note that this corresponds with the organizationPartyId that GL transactions will be posted to. -->
+          <description>Note that this corresponds with the organizationPartyId that GL transactions will be posted to.</description>
       </field>
       <field name="daysToCancelNonPay" type="numeric"></field>
       <field name="manualAuthIsCapture" type="indicator"></field>
@@ -2901,7 +2896,7 @@
       <field name="autoApproveReviews" type="indicator"></field>
       <field name="isDemoStore" type="indicator"></field>
       <field name="isImmediatelyFulfilled" type="indicator">
-          <!-- If immediately fulfilled (for physical stores, etc): don't send email notices, don't reserve inventory, and IFF inventory info isn't found on the server then don't issue inventory right away -->
+          <description>If immediately fulfilled (for physical stores, etc): don't send email notices, don't reserve inventory, and IFF inventory info isn't found on the server then don't issue inventory right away</description>
       </field>
       <field name="inventoryFacilityId" type="id"></field>
       <field name="oneInventoryFacility" type="indicator"></field>
@@ -2939,7 +2934,7 @@
       <field name="showCheckoutGiftOptions" type="indicator"></field>
       <field name="selectPaymentTypePerItem" type="indicator"></field>
       <field name="showPricesWithVatTax" type="indicator"></field>
-      <field name="showTaxIsExempt" type="indicator"><!-- default Y; if set to N do not show isExempt checkbox for PartyTaxAuthInfo, always force to N --></field>
+      <field name="showTaxIsExempt" type="indicator"><description>default Y; if set to N do not show isExempt checkbox for PartyTaxAuthInfo, always force to N</description></field>
       <field name="vatTaxAuthGeoId" type="id"></field>
       <field name="vatTaxAuthPartyId" type="id"></field>
       <prim-key field="productStoreId"/>
@@ -3013,8 +3008,8 @@
             title="Product Store Email Settings Entity">
       <field name="productStoreId" type="id-ne"></field>
       <field name="emailType" type="id-ne"></field>
-      <field name="bodyScreenLocation" type="long-varchar"><!-- if empty defaults to a screen based on the emailType --></field>
-      <field name="xslfoAttachScreenLocation" type="long-varchar"><!-- if specified is used to generate XSL:FO that is transformed to a PDF via Apache FOP and attached to the email --></field>
+      <field name="bodyScreenLocation" type="long-varchar"><description>if empty defaults to a screen based on the emailType</description></field>
+      <field name="xslfoAttachScreenLocation" type="long-varchar"><description>if specified is used to generate XSL:FO that is transformed to a PDF via Apache FOP and attached to the email</description></field>
       <field name="fromAddress" type="email"></field>
       <field name="ccAddress" type="email"></field>
       <field name="bccAddress" type="email"></field>
