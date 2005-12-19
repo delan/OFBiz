@@ -115,6 +115,7 @@
     <xs:element name="field">
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="validate"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.field"/>
@@ -146,6 +147,7 @@
     <xs:element name="relation">
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
                 <xs:element maxOccurs="unbounded" ref="key-map"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.relation"/>
@@ -178,6 +180,7 @@
     <xs:element name="index">
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
                 <xs:element maxOccurs="unbounded" ref="index-field"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.index"/>
@@ -245,6 +248,9 @@
     </xs:attributeGroup>
     <xs:element name="member-entity">
         <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
+            </xs:sequence>
             <xs:attributeGroup ref="attlist.member-entity"/>
         </xs:complexType>
     </xs:element>
@@ -255,6 +261,7 @@
     <xs:element name="alias-all">
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="exclude"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.alias-all"/>
@@ -275,6 +282,7 @@
     <xs:element name="alias">
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
                 <xs:element minOccurs="0" ref="complex-alias"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.alias"/>
@@ -347,6 +355,7 @@
     <xs:element name="view-link">
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
                 <xs:element maxOccurs="unbounded" ref="key-map"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.view-link"/>
