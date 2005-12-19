@@ -352,6 +352,25 @@
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
     </service>
 
+    <!-- contact mech attribute services -->
+    <service name="createContactMechAttribute" engine="simple" default-entity-name="ContactMechAttribute"
+            location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="createContactMechAttribute" auth="true">
+        <description>create a contact mech attribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateContactMechAttribute" engine="simple" default-entity-name="ContactMechAttribute"
+            location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="updateContactMechAttribute" auth="true">
+        <description>updates a contact mech attribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeContactMechAttribute" engine="simple" default-entity-name="ContactMechAttribute"
+            location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="removeContactMechAttribute" auth="true">
+        <description>removes a contact mech attribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
     <!-- PartyContactMechPurpose services -->
     <service name="createPartyContactMechPurpose" engine="java"
             location="org.ofbiz.party.contact.ContactMechServices" invoke="createPartyContactMechPurpose" auth="true">

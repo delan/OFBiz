@@ -1053,4 +1053,18 @@ public class ContactMechWorker {
 
         return false;
     }
+
+    public static String getContactMechAttribute(GenericDelegator delegator, String contactMechId, String attrName) {
+        GenericValue attr = null;
+        try {
+            attr = delegator.findByPrimaryKey("ContactMechAttribute", UtilMisc.toMap("contactMechId", contactMechId, "attrName", attrName));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        if (attr == null) {
+            return null;
+        } else {
+            return attr.getString("attrValue");
+        }
+    }
 }
