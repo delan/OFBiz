@@ -45,6 +45,18 @@
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
 	${layoutSettings.extraHead?if_exists}
+    <#if htmlEdit?exists>
+		<script language="javascript" type="text/javascript" src="/hotelbackend/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>		<script language="javascript" type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+		<script language="javascript" type="text/javascript">
+			tinyMCE.init({
+	        mode : "textareas",
+	        theme : "advanced",
+	        theme_advanced_toolbar_location : "top",
+  	        theme_advanced_disable : "strikethrough,styleselect,formatselect,anchor,removeformat,sub,sup,visualaid,separator,hr,charmap,cleanup",
+        	theme_advanced_buttons1_add : "charmap"
+       		});		
+		</script>
+	</#if>
 	<script language="JavaScript">
 		function getHelpWindow(url) {
 	    win=window.open(url,"helpwin","height=400,width=600,toolbar=no,location=no,scrollbars=yes,directories=no,status=no,menubar=no,resizable=yes");
@@ -60,8 +72,10 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
-          <#if layoutSettings.headerImageUrl?exists>
-          <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
+         <#if userLogin?has_content && productStoreId?exists>
+          <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"/></td>
+          <#else>
+          <td align="left" width='1%'><img alt="Backend system" src="/${activeApp}/html/images/system.jpg"/></td>
           </#if>  
             <#if userLogin?has_content && productStoreId?exists>
 				<td class="head2"><center><u>Store Name: ${productStoreId}<br/>Org.Party: ${organizationPartyId?if_exists}</u></center></td/>

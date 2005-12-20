@@ -32,14 +32,14 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="updateElectronicText" title="" type="single">
         <actions>
-            <set field="dataResourceId" from-field="parameters.dataResourceId"/>
-            <set field="contentId" from-field="parameters.contentId"/>
-            <entity-one entity-name="ElectronicText"/>
+            <service service-name="getElectronicText">
+                <field-map field-name="contentId" value="${parameters.contentId}"/>
+            </service>
         </actions>
         <auto-fields-service service-name="updateElectronicText"/>
-        <field name="textData" title=" "><textarea cols="60" rows="20"/></field>
-        <field name="contentId"><hidden/></field>
+        <field name="textData" title=" "><textarea cols="90" rows="38"/></field>
         <field name="dataResourceId"><hidden/></field>
+        <field name="contentId"><hidden/></field>
         <field name="skipPermissionCheck"><hidden/></field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

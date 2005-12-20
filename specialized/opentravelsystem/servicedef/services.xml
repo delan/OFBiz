@@ -54,17 +54,37 @@
         <description>Retrieve the party information</description>
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="partyRelationshipTypeId" type="String" mode="OUT" optional="true"/>
-        <attribute name="groupName" type="String" mode="OUT" optional="true"/>
-        <attribute name="address1" type="String" mode="OUT" optional="true"/>
-        <attribute name="address2" type="String" mode="OUT" optional="true"/>
-        <attribute name="city" type="String" mode="OUT" optional="true"/>
-        <attribute name="postalCode" type="String" mode="OUT" optional="true"/>
-        <attribute name="countryGeoId" type="String" mode="OUT" optional="true"/>
-        <attribute name="emailAddress" type="String" mode="OUT" optional="true"/>
-        <attribute name="telephone" type="String" mode="OUT" optional="true"/>
-        <attribute name="fax" type="String" mode="OUT" optional="true"/>
-        <attribute name="accountNumber" type="String" mode="OUT" optional="true"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="groupName" type="String" mode="IN" optional="true"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
+        <attribute name="telephone" type="String" mode="IN" optional="true"/>
+        <attribute name="fax" type="String" mode="IN" optional="true"/>
+        <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="otsGetOrganizationParty" engine="simple" location="org/ofbiz/opentravelsystem/PartyServices.xml"
+        invoke="getOrganizationParty" auth="true">
+        <description>Retrieve the organization party information</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="groupName" type="String" mode="IN" optional="true"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
+        <attribute name="webSite" type="String" mode="IN" optional="true"/>
+        <attribute name="telephone" type="String" mode="IN" optional="true"/>
+        <attribute name="fax" type="String" mode="IN" optional="true"/>
+        <attribute name="bankName" type="String" mode="IN" optional="true"/>
+        <attribute name="routingCode" type="String" mode="IN" optional="true"/>
+        <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="productStoreActive" type="String" mode="IN" optional="true"/><!-- set productStore active.. -->
     </service>
     
     <service name="otsUpdateParty" engine="simple"
@@ -82,6 +102,25 @@
         <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
         <attribute name="telephone" type="String" mode="IN" optional="true"/>
         <attribute name="fax" type="String" mode="IN" optional="true"/>
+        <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="otsUpdateOrganizationParty" engine="simple"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="updateOrganizationParty" auth="true">
+        <description>Modify the party organization information</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="groupName" type="String" mode="IN" optional="true"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
+        <attribute name="webSite" type="String" mode="IN" optional="true"/>
+        <attribute name="telephone" type="String" mode="IN" optional="true"/>
+        <attribute name="fax" type="String" mode="IN" optional="true"/>
+        <attribute name="bankName" type="String" mode="IN" optional="true"/>
+        <attribute name="routingCode" type="String" mode="IN" optional="true"/>
         <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
     </service>
     
@@ -168,7 +207,22 @@
         <attribute name="tab" type="String" mode="IN"/>
         <attribute name="textData" type="String" mode="IN"/>
     </service>
-
+    
+    <service name="otsEditCmsPage" engine="simple" 
+        location="org/ofbiz/opentravelsystem/GeneralServices.xml"
+        invoke="editCmsPage" auth="false">
+        <description>Edit a html page from the content management system and if not exist create with default info</description>
+        <attribute name="contentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="dataResourceId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="otsShowCmsPage" engine="simple" 
+        location="org/ofbiz/opentravelsystem/GeneralServices.xml" invoke="showCmsPage" auth="false">
+        <description>Show a html page from the content management system and if not exist create with default info</description>
+        <attribute name="contentId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="dataResourceId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
     <!-- UserLogin to SecurityGroup services -->
     <service name="otsAddUserLoginToSecurityGroup" engine="simple" location="org/ofbiz/opentravelsystem/GeneralServices.xml" invoke="addUserLoginToSecurityGroup" auth="true">
         <description>Add a UserLogin to a SecurityGroup</description>

@@ -26,9 +26,54 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
 
-    <!-- ================================================================ -->
-    <!-- Opentravelsystem Party Services -->
-    <!-- ================================================================ -->
+    <simple-method method-name="showCmsPage" short-description="--show a page to the user--" login-required="false">
+        <set-service-fields service-name="getContent" map-name="parameters" to-map-name="param"/>
+        <call-service service-name="getContent" in-map-name="param">
+            <result-to-field result-name="view" field-name="content"/>
+        </call-service>
+        
+        <if-empty field-name="content">
+            <!-- not found so create with default text-->
+            <log level="always" message="----creating contentId: ${parameters.contentId}"></log>
+            <entity-one entity-name="DataResource" value-name="dataResource">
+                <field-map field-name="dataResourceId" value="${parameters.contentId}"/>
+            </entity-one>
+            <if-empty field-name="dataResource">
+                <make-value value-name="dr" entity-name="DataResource"/>
+                <set field="dr.dataResourceId" from-field="parameters.contentId"/>
+                <set field="dr.dataResourceTypeId" value="ELECTRONIC_TEXT"/>
+                <set field="dr.dataTemplateTypeId" value="NONE"/>
+                <set field="dr.mimeTypeId" value="text/html"/>
+                <create-value value-name="dr"/>
+            </if-empty>
+            <entity-one entity-name="ElectronicText" value-name="electronicText">
+                <field-map field-name="dataResourceId" value="${parameters.contentId}"/>
+            </entity-one>
+            <if-empty field-name="electronicText">
+                <make-value value-name="et" entity-name="ElectronicText"/>
+                <set field="et.dataResourceId" from-field="parameters.contentId"/>
+                <set field="statusId" value="BLOG_PUBLISHED"/>
+                <set field="et.textData" value="&lt;center&gt;&lt;h1&gt; enter your text here....&lt;/h1&gt;&lt;/center&gt;"/>
+                <create-value value-name="et"/>
+            </if-empty>
+            <make-value value-name="c" entity-name="Content"/>
+            <set field="c.contentId" from-field="parameters.contentId"/>
+            <set field="c.contentTypeId" value="DOCUMENT"/>
+            <set field="c.dataResourceId" from-field="parameters.contentId"/>
+            <set field="c.description" value="Description of ${parameters.contentId}"/>
+            <set field="c.contentName" value="Name of ${parameters.contentId}"/>
+            <create-value value-name="c"/>
+            <!-- retrieve the same thing to see if it went ok..-->
+            <set-service-fields service-name="getContent" map-name="parameters" to-map-name="param"/>
+            <call-service service-name="getContent" in-map-name="param">
+                <result-to-field result-name="view" field-name="content"/>
+            </call-service>
+            <set field="message" value="No information found, creating/displaying contentId:${content.contentId}"/>
+        </if-empty>        
+        <field-to-result field-name="content.dataResourceId" result-name="dataResourceId"/>        
+        <field-to-result field-name="content.contentId" result-name="contentId"/>
+    </simple-method>
+    
     
     <simple-method method-name="help" short-description="--provide help information to the user--" login-required="false">
         <set field="param.contentId" value="help"/>
@@ -71,24 +116,6 @@
         <field-to-result field-name="contentView.dataResourceId" result-name="dataResourceId"/>        
         <field-to-result field-name="param.contentId" result-name="contentId"/>
     </simple-method>
-    <simple-method method-name="editHelp" short-description="--update the help screens--" login-required="true">
-        <set field="param.contentId" value="help"/>
-        <string-append field-name="param.contentId" string="${parameters.app}"/>
-        <string-append field-name="param.contentId" string="${parameters.function}"/>
-        <string-append field-name="paramcontentId" string="${parameters.tab}"/>
-        <call-service service-name="getContent" in-map-name="param">
-            <result-to-field result-name="view" field-name="contentView"/>
-        </call-service>
-        
-        <if-empty field-name="contentView">
-            <!-- content does not exist yet so create -->
-            
-            
-            
-        </if-empty>
-            
-        
-    </simple-method>  
     
     <!-- update local security, access to the organization party id -->
     <simple-method method-name="addUserLoginToSecurityGroup" short-description="--add a user to a security group--" login-required="true">
