@@ -122,6 +122,50 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ProductionRunAssocs">
+        <section>
+            <actions>
+                <set field="title" value="Production Run Assocs"/>
+                <set field="titleProperty" value="ManufacturingProductionRunAssocs"/>
+                <set field="tabButtonItem" value="assocs"/>
+                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+                <set field="headerItem" value="jobshop"/>
+
+                <set field="productionRunId" from-field="parameters.productionRunId"/>
+                <entity-one entity-name="WorkEffort" value-name="productionRun">
+                    <field-map field-name="workEffortId" env-name="productionRunId"/>
+                </entity-one>
+                <!-- Find all the work efforts that must be completed before this one. -->
+                <entity-condition entity-name="WorkEffortAssoc" list-name="mandatoryWorkEfforts" filter-by-date="true">
+                    <condition-list>
+                        <condition-expr field-name="workEffortIdTo" env-name="productionRunId"/>
+                        <condition-expr field-name="workEffortAssocTypeId" value="WORK_EFF_PRECEDENCY"/>
+                    </condition-list>
+                </entity-condition>
+                <!-- Find all the work efforts that are dependent from this one. -->
+                <entity-condition entity-name="WorkEffortAssoc" list-name="dependentWorkEfforts" filter-by-date="true">
+                    <condition-list>
+                        <condition-expr field-name="workEffortIdFrom" env-name="productionRunId"/>
+                        <condition-expr field-name="workEffortAssocTypeId" value="WORK_EFF_PRECEDENCY"/>
+                    </condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonJobshopDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">${uiLabelMap.ManufacturingMandatoryWorkEfforts}</label>
+                        </container>
+                        <include-form name="mandatoryWorkEfforts" location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunForms.xml"/>
+                        <container>
+                            <label style="head2">${uiLabelMap.ManufacturingDependentWorkEfforts}</label>
+                        </container>
+                        <include-form name="dependentWorkEfforts" location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="FindProductionRun">
         <section>
             <actions>
