@@ -997,7 +997,7 @@ public class OrderServices {
         }
     }
 
-    public static String determineSingleFacilityFromOrder(GenericValue orderHeader) {        
+    public static String determineSingleFacilityFromOrder(GenericValue orderHeader) {
         if (orderHeader != null) {
             String productStoreId = orderHeader.getString("productStoreId");
             if (productStoreId != null) {
@@ -1923,6 +1923,8 @@ public class OrderServices {
         String sendTo = (String) context.get("sendTo");
         String sendCc = (String) context.get("sendCc");
         String note = (String) context.get("note");
+        String screenUri = (String) context.get("screenUri");
+
         // prepare the order information
         Map sendMap = FastMap.newInstance();
 
@@ -1947,13 +1949,21 @@ public class OrderServices {
         if (productStoreEmail == null) {
             return ServiceUtil.returnFailure("No valid email setting for store with productStoreId=" + orderHeader.get("productStoreId") + " and emailType=" + emailType);
         }
-        String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
-        if (UtilValidate.isEmpty(bodyScreenLocation)) {
-            bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
+
+        // the override screenUri
+        if (UtilValidate.isEmpty(screenUri)) {
+            String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+            if (UtilValidate.isEmpty(bodyScreenLocation)) {
+                bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
+            }
+            sendMap.put("bodyScreenUri", bodyScreenLocation);
+            String xslfoAttachScreenLocation = productStoreEmail.getString("xslfoAttachScreenLocation");
+            sendMap.put("xslfoAttachScreenLocation", xslfoAttachScreenLocation);
+        } else {
+            sendMap.put("bodyScreenUri", screenUri);
         }
-        sendMap.put("bodyScreenUri", bodyScreenLocation);
-        String xslfoAttachScreenLocation = productStoreEmail.getString("xslfoAttachScreenLocation");
-        sendMap.put("xslfoAttachScreenLocation", xslfoAttachScreenLocation);
+
+        // website
         sendMap.put("webSiteId", orderHeader.get("webSiteId"));
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
@@ -2216,7 +2226,7 @@ public class OrderServices {
     public static Map getOrderAddress(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-        
+
         String orderId = (String) context.get("orderId");
         //appears to not be used: GenericValue v = null;
         String purpose[] = { "BILLING_LOCATION", "SHIPPING_LOCATION" };
