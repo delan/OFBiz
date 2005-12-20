@@ -31,20 +31,7 @@
         <menu-item name="New" title="New"><link target="editParty"/></menu-item>
         <menu-item name="Disabled" title="Disabled Parties"><link target="findParties?statusId=PARTYREL-DELETED"/></menu-item>
         <menu-item name="Security" title="Security"><link target="security"/></menu-item>
-        <!--menu-item name="DataSource" title="${uiLabelMap.DataSource}"><link target="FindDataSource"/></menu-item>
-        <menu-item name="Campaign" title="${uiLabelMap.MarketingCampaign}"><link target="FindMarketingCampaign"/></menu-item>
-        <menu-item name="Tracking" title="${uiLabelMap.Tracking}"><link target="FindTrackingCode"/></menu-item>
-        <menu-item name="Segment" title="${uiLabelMap.Segment}"><link target="FindSegmentGroup"/></menu-item>
-        <menu-item name="ContactList" title="${uiLabelMap.ContactList}"><link target="ListContactLists"/></menu-item>
-        
-        <menu-item name="Logout" title="${uiLabelMap.CommonLogout}" align-style="col-right">
-            <condition><not><if-empty field-name="requestAttributes.userLogin"/></not></condition>
-            <link target="logout"/>
-        </menu-item>
-        <menu-item name="Login" title="${uiLabelMap.CommonLogin}" align-style="col-right">
-            <condition><if-empty field-name="requestAttributes.userLogin"/></condition>
-            <link target="${requestAttributes.checkLoginUrl}"/>
-        </menu-item-->
+        <menu-item name="CompanyInfo" title="CompanyInfo"><link target="editCompany?organizationPartyId=${organizationPartyId}"/></menu-item>
         <menu-item name="Help" title="Help" align-style="col-right"><link target="javascript:getHelpWindow('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}')" url-mode="plain"/></menu-item>
     </menu>
     

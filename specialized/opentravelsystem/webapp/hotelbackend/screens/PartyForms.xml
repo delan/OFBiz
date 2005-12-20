@@ -10,9 +10,9 @@
         </actions>
         <!--field name="statusId"><hidden value="PARTYREL-ACTIVE"/></field-->
         <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="partyIdTo" title="Party Id" ><text-find/></field>
-        <field name="groupName"><text-find/></field>
-        <field name="lastName" ><text-find/></field>
+        <field name="partyIdTo" title="Party Id" ><text-find default-option="contains" ignore-case="true"/></field>
+        <field name="groupName"><text-find default-option="contains" ignore-case="true"/></field>
+        <field name="lastName" ><text-find default-option="contains" ignore-case="true"/></field>
         <field name="partyRelationshipTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${partyRelationshipName}" entity-name="PartyRelationshipType">
@@ -123,6 +123,33 @@
         </field>
     </form>
 
+    <form name="editCompany" type="single" 
+        target="updateCompany" title="Edit Organization Party" default-map-name="info"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <service service-name="otsGetOrganizationParty" result-map-name="info">
+                <field-map field-name="organizationPartyId" value="${organizationPartyId}"/>
+            </service>
+        </actions>
+        <auto-fields-service service-name="otsUpdateOrganizationParty"/>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="countryGeoId" title="Country">
+            <drop-down allow-empty="true">
+                <entity-options description="${geoName}" entity-name="Geo" key-field-name="geoId">
+                    <entity-constraint name="geoTypeId" operator="equals" value="COUNTRY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="accountNumber" title="Bank Account Number"><text/></field>
+        <field position="1" use-when="party==null||partyId==null" name="submitButton" title="Create" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field position="1" use-when="party!=null&amp;&amp;partyId!=null" name="submitButton" title="Update" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
     <form name="partyFinancialHistoryInvoices" type="list" list-name="historyListInvoices" 
         default-title-style="tableheadtext" default-widget-style="tabletext" 
         default-tooltip-style="tabletext" target="updateCategoryProductMember">

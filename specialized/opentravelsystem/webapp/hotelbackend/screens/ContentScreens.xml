@@ -27,8 +27,8 @@
     <screen name="EditElectronicText">
         <section>
             <actions>
+                <set field="htmlEdit" value="Y"/>
                 <set field="parameters.popup" value="Y"/>
-                <set field="layoutSettings.extraHead" value="&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot; src=&quot;/hotelbackend/tinymce/jscripts/tiny_mce/tiny_mce.js&quot;&gt;tinyMCE.init({mode:&quot;textareas&quot;,theme:&quot;advanced&quot;,width:&quot;500&quot;});&lt;/script&gt;"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

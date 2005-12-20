@@ -171,7 +171,7 @@
         <response name="error" type="view" value="help"/>
     </request-map>
     
-    <request-map uri="editHelp">
+    <request-map uri="editPage">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditElectronicText"/>
         <response name="error" type="view" value="EditElectronicText"/>
@@ -355,6 +355,15 @@
 
     <!--============= edit/create parties ================-->    
 
+    <request-map uri="editCompany">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editCompany"/>
+    </request-map>
+    <request-map uri="updateCompany">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="otsUpdateOrganizationParty"/>
+        <response name="success" type="view" value="editCompany"/>
+    </request-map>
     <request-map uri="editParty">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editParty"/>
@@ -3060,6 +3069,7 @@
     <!-- parties -->
     <view-map name="findParties" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findParties"/>
     <view-map name="editParty" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#editParty"/>
+    <view-map name="editCompany" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#editCompany"/>
     <view-map name="partyFinancialHistory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#partyFinancialHistory"/>
     <view-map name="listPaymentsReceived" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsReceived"/>
     <view-map name="listPaymentsSend" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsSend"/>

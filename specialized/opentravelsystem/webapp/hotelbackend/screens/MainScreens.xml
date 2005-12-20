@@ -135,7 +135,7 @@
                                 <!--platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific-->
                                 <link target="javascript:close()" text="close this screen" url-mode="plain"/>
                                 <content content-id="${parameters.contentId}"/>
-                                <link target="editHelp?dataResourceId=${parameters.dataResourceId}&amp;contentId=${parameters.contentId}" text="update this help screen"/>
+                                <link target="editPage?dataResourceId=${parameters.dataResourceId}&amp;contentId=${parameters.contentId}" text="update this help screen"/>
                                 <!--content content-id="helpIndexTemplate"/-->
                             </container>
                         </container>

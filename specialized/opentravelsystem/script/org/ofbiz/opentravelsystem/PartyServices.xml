@@ -280,7 +280,21 @@
         
     </simple-method>
 
-    <simple-method method-name="getParty" short-description="--retrieve Party Information--">
+    <simple-method method-name="getOrganizationParty" short-description="--retrieve Organization Party Information--">
+        <check-permission permission="OPENTRAVELSYSTEM" action="_R">
+            <alt-permission permission="${parameters.organizationPartyId}" action="_R"/>
+            <fail-message message="Security Error: to update you need R access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+        </check-permission>        
+        <check-errors/>
+        <set field="org.organizationPartyId" value="parameters.organizationPartyId"/>        
+        <set field="org.partyId" value="parameters.organizationPartyId"/>        
+        <call-service service-name="otsGetParty" in-map-name="org">
+            <result-to-result/>
+        </call-service>
+        <field-to-result field-name="parameters.organizationPartyId" result-name="organizationPartyId"/>
+    </simple-method>
+    
+        <simple-method method-name="getParty" short-description="--retrieve Party Information--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_R">
             <alt-permission permission="${parameters.organizationPartyId}" action="_R"/>
             <fail-message message="Security Error: to update you need R access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>

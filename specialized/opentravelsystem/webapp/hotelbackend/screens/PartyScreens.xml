@@ -84,6 +84,28 @@
         </section>
     </screen>
     
+    <screen name="editCompany">
+        <section>
+            <actions>
+                <set field="title" value="add/update a new party"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="tabButtonItem" value="CompanyInfo"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container><label style="head1" text="Update the Organization Party Information"/></container>
+                            </widgets>
+                        </section>
+                        <include-form name="editCompany" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="partyFinancialHistory">
         <section>
             <actions>
