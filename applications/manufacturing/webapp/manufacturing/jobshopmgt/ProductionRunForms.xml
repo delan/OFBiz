@@ -422,4 +422,60 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="mandatoryWorkEfforts" type="list" 
+            target="" title="" list-name="mandatoryWorkEfforts"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="workEffortIdFrom" title=" " widget-style="buttontext">
+            <hyperlink target="ShowProductionRun?productionRunId=${workEffortIdFrom}" description="${workEffortIdFrom}" also-hidden="false"/>
+        </field>
+        <field name="workEffortName" entry-name="workEffortIdFrom">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName} " cache="true"/>
+        </field>
+        <field name="quantityToProduce" entry-name="workEffortIdFrom">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${quantityToProduce} " cache="true"/>
+        </field>
+        <field name="quantityProduced" entry-name="workEffortIdFrom">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${quantityProduced} " cache="true"/>
+        </field>
+        <field name="estimatedStartDate" entry-name="workEffortIdFrom">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${estimatedStartDate} " cache="true"/>
+        </field>
+        <field name="estimatedCompletionDate" entry-name="workEffortIdFrom">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${estimatedCompletionDate} " cache="true"/>
+        </field>
+        <field name="actualStartDate" entry-name="workEffortIdFrom">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${actualStartDate} " cache="true"/>
+        </field>
+        <field name="actualCompletionDate" entry-name="workEffortIdFrom">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${actualCompletionDate} " cache="true"/>
+        </field>
+    </form>
+    <form name="dependentWorkEfforts" type="list" 
+            target="" title="" list-name="dependentWorkEfforts"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="workEffortIdTo" title=" " widget-style="buttontext">
+            <hyperlink target="ShowProductionRun?productionRunId=${workEffortIdTo}" description="${workEffortIdTo}" also-hidden="false"/>
+        </field>
+        <field name="workEffortName" entry-name="workEffortIdTo">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName} " cache="true"/>
+        </field>
+        <field name="quantityToProduce" entry-name="workEffortIdTo">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${quantityToProduce} " cache="true"/>
+        </field>
+        <field name="quantityProduced" entry-name="workEffortIdTo">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${quantityProduced} " cache="true"/>
+        </field>
+        <field name="estimatedStartDate" entry-name="workEffortIdTo">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${estimatedStartDate} " cache="true"/>
+        </field>
+        <field name="estimatedCompletionDate" entry-name="workEffortIdTo">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${estimatedCompletionDate} " cache="true"/>
+        </field>
+        <field name="actualStartDate" entry-name="workEffortIdTo">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${actualStartDate} " cache="true"/>
+        </field>
+        <field name="actualCompletionDate" entry-name="workEffortIdTo">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${actualCompletionDate} " cache="true"/>
+        </field>
+    </form>
 </forms>

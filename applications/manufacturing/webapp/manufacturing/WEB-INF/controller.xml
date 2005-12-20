@@ -440,6 +440,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProductionRunDeclaration"/>
     </request-map>
+    <request-map uri="ProductionRunAssocs">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProductionRunAssocs"/>
+    </request-map>
     <request-map uri="RemoveWorkEffortGoodStandard">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeWorkEffortGoodStandard"/>
@@ -633,6 +637,7 @@
     <view-map name="FindProductionRun" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#FindProductionRun" type="screen"/>
     <view-map name="EditProductionRun" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#EditProductionRun" type="screen"/>
     <view-map name="ProductionRunDeclaration" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#ProductionRunDeclaration" type="screen"/>
+    <view-map name="ProductionRunAssocs" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#ProductionRunAssocs" type="screen"/>
     <view-map name="WorkWithShipmentPlans" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#WorkWithShipmentPlans" type="screen"/>
     
     <!-- Report view mappings -->

@@ -34,5 +34,6 @@
         <#else>
         <a href="<@ofbizUrl>ProductionRunDeclaration?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.declaration?default(unselectedClassName)}">${uiLabelMap.ManufacturingProductionRunDeclaration}</a>
         </#if>
+        <a href="<@ofbizUrl>ProductionRunAssocs?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.assocs?default(unselectedClassName)}">${uiLabelMap.ManufacturingProductionRunAssocs}</a>
     </#if>
 </div>
