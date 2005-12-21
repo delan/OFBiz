@@ -33,6 +33,13 @@
         <action service="ensureNaPartyRole" mode="sync"/>
     </eca>
 
+    <eca service="updatePerson" event="invoke">
+        <action service="savePartyNameChange" mode="sync"/>
+    </eca>
+    <eca service="updatePartyGroup" event="invoke">
+        <action service="savePartyNameChange" mode="sync"/>
+    </eca>
+    
     <!-- before running the createPartyRelationship service, make sure the party is in the _NA_ role if that is the desired roleTypeId for From or To -->
     <eca service="createPartyRelationship" event="invoke">
         <condition field-name="roleTypeIdFrom" operator="equals" value="_NA_"/>
