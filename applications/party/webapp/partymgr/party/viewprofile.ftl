@@ -117,6 +117,17 @@
 <#else>
     <div class="tabletext">${uiLabelMap.PartyInformationNotFound}</div>
 </#if>
+    <#if partyNameHistoryList?has_content>
+        <div><hr class="sepbar"/></div>
+        <div class="tableheadtext">Name History</div>
+        <#list partyNameHistoryList as partyNameHistory>
+            <#if lookupPerson?has_content>
+                <div class="tabletext">Was: ${partyNameHistory.personalTitle?if_exists} ${partyNameHistory.firstName?if_exists} ${partyNameHistory.middleName?if_exists} ${partyNameHistory.lastName?if_exists} ${partyNameHistory.suffix?if_exists} (Changed: ${partyNameHistory.changeDate})</div>
+            <#elseif lookupGroup?has_content>
+                <div class="tabletext">Was: ${partyNameHistory.groupName?if_exists} (Changed: ${partyNameHistory.changeDate})</div>
+            </#if>
+        </#list>
+    </#if>
     </div>
 </div>
 
