@@ -486,9 +486,21 @@ public class BOMNode {
         }
     }
 
-    public void createManufacturingOrder(String workEffortId, String orderId, String orderItemSeqId, String shipmentId, String facilityId, Date date, boolean useSubstitute) throws GenericEntityException {
+    public String createManufacturingOrder(String orderId, String orderItemSeqId, String shipmentId, String facilityId, Date date, boolean useSubstitute) throws GenericEntityException {
+        String productionRunId = null;
         if (isManufactured()) {
-            String productionRunId = null;
+            BOMNode oneChildNode = null;
+            ArrayList childProductionRuns = new ArrayList();
+            for (int i = 0; i < childrenNodes.size(); i++) {
+                oneChildNode = (BOMNode)childrenNodes.get(i);
+                if (oneChildNode != null) {
+                    String childProductionRunId = oneChildNode.createManufacturingOrder(null, null, shipmentId, facilityId, date, false);
+                    if (childProductionRunId != null) {
+                        childProductionRuns.add(childProductionRunId);
+                    }
+                }
+            }
+
             Timestamp startDate = UtilDateTime.toTimestamp(UtilDateTime.toDateTimeString(date));
             Map serviceContext = new HashMap();
             if (!useSubstitute) {
@@ -502,7 +514,7 @@ public class BOMNode {
                 serviceContext.put("facilityId", facilityId);
             }
             if (shipmentId != null) {
-                serviceContext.put("workEffortName", "SP_" + shipmentId);
+                serviceContext.put("workEffortName", "SP_" + shipmentId + "_" + serviceContext.get("productId"));
             }
             serviceContext.put("pRQuantity", new Double(getQuantity()));
             serviceContext.put("startDate", startDate);
@@ -515,23 +527,19 @@ public class BOMNode {
                 Debug.logError("Problem calling the createProductionRun service", module);
             }
             try {
-                if (productionRunId != null && orderId != null && orderItemSeqId != null) {
-                    delegator.create("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId, "orderId", orderId, "orderItemSeqId", orderItemSeqId));
-                }
-                if (productionRunId != null && workEffortId != null) {
-                    delegator.create("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", productionRunId, "workEffortIdTo", workEffortId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY", "fromDate", startDate));
+                if (productionRunId != null) {
+                    if (orderId != null && orderItemSeqId != null) {
+                        delegator.create("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId, "orderId", orderId, "orderItemSeqId", orderItemSeqId));
+                    }
+                    for (int i = 0; i < childProductionRuns.size(); i++) {
+                        delegator.create("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", (String)childProductionRuns.get(i), "workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY", "fromDate", startDate));
+                    }
                 }
             } catch (GenericEntityException e) {
                 //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
             }
-            BOMNode oneChildNode = null;
-            for (int i = 0; i < childrenNodes.size(); i++) {
-                oneChildNode = (BOMNode)childrenNodes.get(i);
-                if (oneChildNode != null) {
-                    oneChildNode.createManufacturingOrder(productionRunId, null, null, shipmentId, facilityId, date, false);
-                }
-            }
         }
+        return productionRunId;
     }
 
     public boolean isWarehouseManaged() {

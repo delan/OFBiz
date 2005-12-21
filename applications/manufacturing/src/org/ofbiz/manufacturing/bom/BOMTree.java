@@ -322,7 +322,7 @@ public class BOMTree {
                 GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
                 facilityId = shipment.getString("originFacilityId");
             }
-            root.createManufacturingOrder(null, orderId, orderItemSeqId, shipmentId, facilityId, date, true);
+            root.createManufacturingOrder(orderId, orderItemSeqId, shipmentId, facilityId, date, true);
         }
     }
 
