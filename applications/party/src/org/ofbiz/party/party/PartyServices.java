@@ -299,6 +299,7 @@ public class PartyServices {
                     newPartyMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
                 }
                 party = delegator.makeValue("Party", newPartyMap);
+                party.setNonPKFields(context);
                 party.create();
             }
 
