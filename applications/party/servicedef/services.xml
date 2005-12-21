@@ -73,6 +73,18 @@
         <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
+    <service name="savePartyNameChange" engine="simple"
+        location="org/ofbiz/party/party/PartyServices.xml" invoke="savePartyNameChange" auth="true">
+        <description>Save Party Name Change</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="groupName" type="String" mode="IN" optional="true"/>
+        <attribute name="firstName" type="String" mode="IN" optional="true"/>
+        <attribute name="middleName" type="String" mode="IN" optional="true"/>
+        <attribute name="lastName" type="String" mode="IN" optional="true"/>
+        <attribute name="personalTitle" type="String" mode="IN" optional="true"/>
+        <attribute name="suffix" type="String" mode="IN" optional="true"/>
+    </service>
+    
     <service name="createAffiliate" engine="java"
             location="org.ofbiz.party.party.PartyServices" invoke="createAffiliate" auth="false">
         <description>Create an Affiliate</description>

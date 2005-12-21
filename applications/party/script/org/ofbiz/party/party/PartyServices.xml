@@ -28,6 +28,56 @@
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    
+    <simple-method method-name="savePartyNameChange" short-description="Save Party Name Change">
+        <make-value value-name="partyNameHistory" entity-name="PartyNameHistory"/>
+        <set-pk-fields value-name="partyNameHistory" map-name="parameters"/>
+        <now-timestamp-to-env env-name="partyNameHistory.changeDate"/>
+        
+        <if>
+            <condition><not><if-empty field-name="parameters.groupName"/></not></condition>
+            <then>
+                <entity-one entity-name="PartyGroup" value-name="partyGroup"/>
+                <if>
+                    <condition><if-compare-field field-name="partyGroup.groupName" operator="not-equals" to-field-name="parameters.groupName"/></condition>
+                    <then>
+                        <set-nonpk-fields value-name="partyNameHistory" map-name="partyGroup"/>
+                        <create-value value-name="partyNameHistory"/>
+                    </then>
+                </if>
+            </then>
+            <else-if>
+                <condition>
+                    <or>
+                        <not><if-empty field-name="parameters.firstName"></if-empty></not>
+                        <not><if-empty field-name="parameters.middleName"></if-empty></not>
+                        <not><if-empty field-name="parameters.lastName"></if-empty></not>
+                        <not><if-empty field-name="parameters.personalTitle"></if-empty></not>
+                        <not><if-empty field-name="parameters.suffix"></if-empty></not>
+                    </or>
+                </condition>
+                <then>
+                    <entity-one entity-name="Person" value-name="person"/>
+                    <if>
+                        <condition>
+                            <or>
+                                <if-compare-field field-name="person.firstName" operator="not-equals" to-field-name="parameters.firstName"/>
+                                <if-compare-field field-name="person.middleName" operator="not-equals" to-field-name="parameters.middleName"/>
+                                <if-compare-field field-name="person.lastName" operator="not-equals" to-field-name="parameters.lastName"/>
+                                <if-compare-field field-name="person.personalTitle" operator="not-equals" to-field-name="parameters.personalTitle"/>
+                                <if-compare-field field-name="person.suffix" operator="not-equals" to-field-name="parameters.suffix"/>
+                            </or>
+                        </condition>
+                        <then>
+                            <set-nonpk-fields value-name="partyNameHistory" map-name="person"/>
+                            <create-value value-name="partyNameHistory"/>
+                        </then>
+                    </if>
+                </then>
+            </else-if>
+        </if>        
+    </simple-method>
+    
     <!-- PostalAddressBoundary methods -->
     <simple-method method-name="createPostalAddressBoundary" short-description="Create Postal Address Boundary">
         <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePostalAddressBoundaryPermissionError"/></check-permission>
