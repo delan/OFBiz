@@ -866,6 +866,7 @@
       <field name="countryCode" type="very-short"></field>
       <field name="areaCode" type="very-short"></field>
       <field name="contactNumber" type="short-varchar"></field>
+      <field name="askForName" type="name"></field>  <!-- person or department to ask for at this number -->
       <prim-key field="contactMechId"/>
       <relation type="one" fk-name="TEL_NUM_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
@@ -1139,6 +1140,9 @@
       <field name="partyId" type="id-ne"></field>
       <field name="partyTypeId" type="id-ne"></field>
       <field name="externalId" type="id"></field>
+      <field name="preferredCurrencyUomId" type="id-ne"></field>
+      <field name="description" type="very-long"></field>
+      <field name="statusId" type="id-ne"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -1152,6 +1156,12 @@
       </relation>
       <relation type="one" fk-name="PARTY_LMCUL" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_PREF_CRNCY" rel-entity-name="Uom">
+        <key-map field-name="preferredCurrencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_STATUSITM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
         <key-map field-name="partyTypeId"/>
@@ -1363,12 +1373,26 @@
             title="Party Group Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="groupName" type="name"></field>
+      <field name="groupNameLocal" type="name"></field>  
+      <field name="officeSiteName" type="name"></field>
+      <field name="annualRevenue" type="currency-amount"></field>
+      <field name="numberEmployees" type="numeric"></field>
+      <field name="industryEnumId" type="id-ne"></field>
+      <field name="ownershipEnumId" type="id-ne"></field>
+      <field name="sicCode" type="id"></field>   <!-- sicCode and ticker symbol could be shorter -->
+      <field name="tickerSymbol" type="id"></field>
       <!-- DEJ20050628 getting rid of this, deprecated by PartyTaxAuthInfo <field name="federalTaxId" type="long-varchar" encrypt="true"></field> -->
       <field name="comments" type="comment"></field>
       <field name="logoImageUrl" type="url"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PARTY_GRP_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation title="Industry" fk-name="PARTY_GRP_IND_ENUM" rel-entity-name="Enumeration" type="one">
+      	<key-map field-name="industryEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation title="Ownership" fk-name="PTY_GRP_OWNR_ENUM" rel-entity-name="Enumeration" type="one">
+      	<key-map field-name="ownershipEnumId" rel-field-name="enumId"/>
       </relation>
       <index name="GROUP_NAME_IDX">
         <index-field name="groupName"/>
@@ -1392,12 +1416,17 @@
       <member-entity entity-alias="PTYGRP" entity-name="PartyGroup"/>
       <alias entity-alias="PTY" name="partyId"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
+      <alias entity-alias="PTY" name="description"/>
+      <alias entity-alias="PER" name="salutation"/>
       <alias entity-alias="PER" name="firstName"/>
       <alias entity-alias="PER" name="middleName"/>
       <alias entity-alias="PER" name="lastName"/>
+      <alias entity-alias="PER" name="firstNameLocal"/>
+      <alias entity-alias="PER" name="lastNameLocal"/>
       <alias entity-alias="PER" name="personalTitle"/>
       <alias entity-alias="PER" name="suffix"/>
       <alias entity-alias="PTYGRP" name="groupName"/>
+      <alias entity-alias="PTYGRP" name="groupNameLocal"/>
       <view-link entity-alias="PTY" rel-entity-alias="PER" rel-optional="true">
         <key-map field-name="partyId"/>
       </view-link>
@@ -1550,8 +1579,10 @@
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
       <member-entity entity-alias="PERSON" entity-name="Person"/>
       <member-entity entity-alias="PTYGRP" entity-name="PartyGroup"/>
+      <member-entity entity-alias="PS" entity-name="PartyStatus"/>
       <alias-all entity-alias="PTY"/>
       <alias-all entity-alias="PR"/>
+      <alias-all entity-alias="PS"/>
       <alias-all entity-alias="PERSON">
         <exclude field="comments"/>
       </alias-all>
@@ -1569,7 +1600,26 @@
       <view-link entity-alias="PTY" rel-entity-alias="PTYGRP" rel-optional="true">
         <key-map field-name="partyId"/>
       </view-link>
+      <view-link entity-alias="PTY" rel-entity-alias="PS" rel-optional="true">
+        <key-map field-name="partyId"/>
+      </view-link>
     </view-entity>
+    <entity entity-name="PartyStatus"
+            package-name="org.ofbiz.party.party"
+            title="Tracks a history of the status of a Party">
+      <field name="statusId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="statusDate" type="date-time"></field>
+      <prim-key field="statusId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="statusDate"/>
+      <relation type="one" fk-name="PARTY_STS_STSITM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_STS_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+    </entity>    
     <entity entity-name="OldPartyTaxInfo" table-name="PARTY_TAX_INFO"
             package-name="org.ofbiz.party.party"
             title="Party Tax Information Entity">
@@ -1626,12 +1676,16 @@
             package-name="org.ofbiz.party.party"
             title="Person Entity">
       <field name="partyId" type="id-ne"></field>
+      <field name="salutation" type="name"></field>  
       <field name="firstName" type="name"></field>
       <field name="middleName" type="name"></field>
       <field name="lastName" type="name"></field>
       <field name="personalTitle" type="name"></field>
       <field name="suffix" type="name"></field>
       <field name="nickname" type="name"></field>
+      <field name="firstNameLocal" type="name"></field>
+      <field name="lastNameLocal" type="name"></field>
+      <field name="department" type="name"></field>
       <field name="memberId" type="id"></field>
       <field name="gender" type="indicator"></field>
       <field name="birthDate" type="date"></field>
