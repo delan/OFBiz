@@ -1701,7 +1701,7 @@
         <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="true"/>
     </service>
     <service name="convertDocument" auth="false" engine="java" transaction-timout="72000" 
-        location="org.ofbiz.content.OpenOfficeServices" invoke="convertDocument">
+        location="org.ofbiz.content.openoffice.OpenOfficeServices" invoke="convertDocument">
          <description>Use OpenOffice to convert between document types</description>
         <attribute name="oooHost" type="String" mode="IN" optional="true"/>
         <attribute name="oooPort" type="String" mode="IN" optional="true"/>
@@ -1709,8 +1709,18 @@
         <attribute name="filenameTo" type="String" mode="IN" optional="false"/>
         <attribute name="convertFilterName" type="String" mode="IN" optional="true"/>
    </service>
+    <service name="convertDocumentFileToFile" auth="false" engine="java" transaction-timout="72000" 
+        location="org.ofbiz.content.openoffice.OpenOfficeServices" invoke="convertDocumentFileToFile">
+         <description>Use OpenOffice to convert between document types</description>
+        <attribute name="oooHost" type="String" mode="IN" optional="true"/>
+        <attribute name="oooPort" type="String" mode="IN" optional="true"/>
+        <attribute name="filenameFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="filenameTo" type="String" mode="IN" optional="false"/>
+        <attribute name="inputMimeType" type="String" mode="IN" optional="true"/>
+        <attribute name="outputMimeType" type="String" mode="IN" optional="true"/>
+   </service>
     <service name="compareDocuments" auth="false" engine="java" transaction-timout="72000" 
-        location="org.ofbiz.content.OpenOfficeServices" invoke="compareDocuments">
+        location="org.ofbiz.content.openoffice.OpenOfficeServices" invoke="compareDocuments">
          <description>Use OpenOffice to compare two documents</description>
         <attribute name="oooHost" type="String" mode="IN" optional="true"/>
         <attribute name="oooPort" type="String" mode="IN" optional="true"/>
