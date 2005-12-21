@@ -80,9 +80,9 @@
     <PartyContactMech partyId="DemoCustAgent" contactMechId="9023" fromDate="2001-05-13 00:00:00.000" allowSolicitation="Y"/>
     <PartyContactMechPurpose partyId="DemoCustAgent" contactMechId="9023" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2001-05-13 00:00:00.000"/>
     
-    <PartyRelationship partyIdFrom="DemoCustAgent" partyIdTo="DemoCustCompany" roleTypeIdFrom="AGENT" roleTypeIdTo="CUSTOMER" 
+    <PartyRelationship partyIdFrom="DemoCustCompany" partyIdTo="DemoCustAgent" roleTypeIdFrom="CUSTOMER" roleTypeIdTo="AGENT" 
         fromDate="2001-05-13 00:00:00.000" partyRelationshipTypeId="AGENT" comments="Allows the DemoCustAgent to purchase on behalf of DemoCustCompany, ie purchase against BillingAccount"/>
-    <PartyRelationship partyIdFrom="DemoCustAgent" partyIdTo="DemoCustCompany" roleTypeIdFrom="_NA_" roleTypeIdTo="_NA_" 
+    <PartyRelationship partyIdFrom="DemoCustCompany" partyIdTo="DemoCustAgent" roleTypeIdFrom="_NA_" roleTypeIdTo="_NA_" 
         fromDate="2001-05-13 00:00:00.000" partyRelationshipTypeId="GROUP_ROLLUP" comments="Specifies the DemoCustAgent is a member of the DemoCustCompany, for Price Rules, Promos, etc"/>
     
     <!-- DemoCustomer -->
