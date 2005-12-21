@@ -580,6 +580,10 @@ public class ShoppingCart implements Serializable {
 
         // set the default view cart on add for this store
         GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+        if (productStore == null) {
+            throw new IllegalArgumentException("Unable to locate ProductStore by ID [" + productStoreId + "]");
+        }
+        
         String storeViewCartOnAdd = productStore.getString("viewCartOnAdd");
         if (storeViewCartOnAdd != null && "Y".equalsIgnoreCase(storeViewCartOnAdd)) {
             this.viewCartOnAdd = true;
