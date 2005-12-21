@@ -1375,24 +1375,12 @@
       <field name="groupName" type="name"></field>
       <field name="groupNameLocal" type="name"></field>  
       <field name="officeSiteName" type="name"></field>
-      <field name="annualRevenue" type="currency-amount"></field>
-      <field name="numberEmployees" type="numeric"></field>
-      <field name="industryEnumId" type="id-ne"></field>
-      <field name="ownershipEnumId" type="id-ne"></field>
-      <field name="sicCode" type="id"></field>   <!-- sicCode and ticker symbol could be shorter -->
-      <field name="tickerSymbol" type="id"></field>
       <!-- DEJ20050628 getting rid of this, deprecated by PartyTaxAuthInfo <field name="federalTaxId" type="long-varchar" encrypt="true"></field> -->
       <field name="comments" type="comment"></field>
       <field name="logoImageUrl" type="url"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PARTY_GRP_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
-      </relation>
-      <relation title="Industry" fk-name="PARTY_GRP_IND_ENUM" rel-entity-name="Enumeration" type="one">
-      	<key-map field-name="industryEnumId" rel-field-name="enumId"/>
-      </relation>
-      <relation title="Ownership" fk-name="PTY_GRP_OWNR_ENUM" rel-entity-name="Enumeration" type="one">
-      	<key-map field-name="ownershipEnumId" rel-field-name="enumId"/>
       </relation>
       <index name="GROUP_NAME_IDX">
         <index-field name="groupName"/>
@@ -1434,7 +1422,6 @@
       <alias entity-alias="PTY" name="partyId"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
       <alias entity-alias="PTY" name="description"/>
-      <alias entity-alias="PER" name="salutation"/>
       <alias entity-alias="PER" name="firstName"/>
       <alias entity-alias="PER" name="middleName"/>
       <alias entity-alias="PER" name="lastName"/>
@@ -1510,6 +1497,9 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="statusId" type="id"></field>
+      <field name="relationshipName" type="name">
+          <description>Official name of relationship, such as title in a company</description>
+      </field>
       <field name="priorityTypeId" type="id"></field>
       <field name="partyRelationshipTypeId" type="id"></field>
       <field name="comments" type="comment"></field>
@@ -1702,7 +1692,6 @@
       <field name="nickname" type="name"></field>
       <field name="firstNameLocal" type="name"></field>
       <field name="lastNameLocal" type="name"></field>
-      <field name="department" type="name"></field>
       <field name="memberId" type="id"></field>
       <field name="gender" type="indicator"></field>
       <field name="birthDate" type="date"></field>
