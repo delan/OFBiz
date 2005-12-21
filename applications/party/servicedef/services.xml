@@ -84,6 +84,18 @@
         <attribute name="personalTitle" type="String" mode="IN" optional="true"/>
         <attribute name="suffix" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="getPartyNameForDate" engine="simple"
+        location="org/ofbiz/party/party/PartyServices.xml" invoke="getPartyNameForDate" auth="true">
+        <description>Get Party Name For Date</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="compareDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="groupName" type="String" mode="OUT" optional="true"/>
+        <attribute name="firstName" type="String" mode="OUT" optional="true"/>
+        <attribute name="middleName" type="String" mode="OUT" optional="true"/>
+        <attribute name="lastName" type="String" mode="OUT" optional="true"/>
+        <attribute name="personalTitle" type="String" mode="OUT" optional="true"/>
+        <attribute name="suffix" type="String" mode="OUT" optional="true"/>
+    </service>
     
     <service name="createAffiliate" engine="java"
             location="org.ofbiz.party.party.PartyServices" invoke="createAffiliate" auth="false">

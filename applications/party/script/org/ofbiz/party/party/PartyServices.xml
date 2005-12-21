@@ -77,6 +77,51 @@
             </else-if>
         </if>        
     </simple-method>
+    <simple-method method-name="getPartyNameForDate" short-description="Get Party Name For Date">
+        <entity-and entity-name="PartyNameHistory" list-name="partyNameHistoryList">
+            <field-map field-name="partyId" env-name="parameters.partyId"/>
+            <order-by field-name="-changeDate"/>
+        </entity-and>
+        <entity-one entity-name="Person" value-name="person"/>
+        <entity-one entity-name="PartyGroup" value-name="partyGroup"/>
+
+        <!-- go through the list which is sorted by most recent first and find the oldest (last) one with the changeDate greater than the compareDate -->        
+        <iterate entry-name="partyNameHistory" list-name="partyNameHistoryList">
+            <if-compare-field field-name="partyNameHistory.changeDate" operator="greater" to-field-name="parameters.compareDate">
+                <set field="partyNameHistoryCurrent" from-field="partyNameHistory"/>
+            </if-compare-field>
+        </iterate>
+        
+        <if-empty field-name="partyNameHistoryCurrent">
+            <if-not-empty field-name="person">
+                <field-to-result field-name="person.firstName" result-name="firstName"/>
+                <field-to-result field-name="person.middleName" result-name="middleName"/>
+                <field-to-result field-name="person.lastName" result-name="lastName"/>
+                <field-to-result field-name="person.personalTitle" result-name="personalTitle"/>
+                <field-to-result field-name="person.suffix" result-name="suffix"/>
+                <else>
+                    <if-not-empty field-name="partyGroup">
+                        <field-to-result field-name="partyGroup.groupName" result-name="groupName"/>
+                    </if-not-empty>
+                </else>
+            </if-not-empty>
+            <else>
+                <!-- partyNameHistoryCurrent has a value -->
+                <if-not-empty field-name="person">
+                    <field-to-result field-name="partyNameHistoryCurrent.firstName" result-name="firstName"/>
+                    <field-to-result field-name="partyNameHistoryCurrent.middleName" result-name="middleName"/>
+                    <field-to-result field-name="partyNameHistoryCurrent.lastName" result-name="lastName"/>
+                    <field-to-result field-name="partyNameHistoryCurrent.personalTitle" result-name="personalTitle"/>
+                    <field-to-result field-name="partyNameHistoryCurrent.suffix" result-name="suffix"/>
+                    <else>
+                        <if-not-empty field-name="partyGroup">
+                            <field-to-result field-name="partyNameHistoryCurrent.groupName" result-name="groupName"/>
+                        </if-not-empty>
+                    </else>
+                </if-not-empty>
+            </else>
+        </if-empty>
+    </simple-method>
     
     <!-- PostalAddressBoundary methods -->
     <simple-method method-name="createPostalAddressBoundary" short-description="Create Postal Address Boundary">

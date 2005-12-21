@@ -38,19 +38,17 @@ import org.ofbiz.party.party.*;
 import org.ofbiz.accounting.payment.*;
 import org.ofbiz.securityext.login.*;
 
-partyId = request.getParameter("party_id");
-if (partyId == null) partyId = request.getParameter("partyId");
-userLoginId = request.getParameter("userlogin_id");
+partyId = parameters.get("party_id");
+if (partyId == null) partyId = parameters.get("partyId");
+context.put("partyId", partyId);
+
+userLoginId = parameters.get("userlogin_id");
 if (partyId == null && userLoginId != null) {
     thisUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
     if (thisUserLogin != null) {
         partyId = thisUserLogin.getString("partyId");
     }
 }
-
-if (partyId == null) partyId = request.getParameter("partyId");
-if (partyId == null) partyId = (String) request.getAttribute("partyId");
-context.put("partyId", partyId);
 
 attributes = delegator.findByAnd("PartyAttribute", UtilMisc.toMap("partyId", partyId));
 context.put("attributes", attributes);
@@ -60,6 +58,9 @@ context.put("userLogins", userLogins);
 
 partyRoles = delegator.findByAnd("RoleTypeAndParty", UtilMisc.toMap("partyId", partyId));
 context.put("partyRoles", partyRoles);
+
+partyNameHistoryList = delegator.findByAnd("PartyNameHistory", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("-changeDate"));
+context.put("partyNameHistoryList", partyNameHistoryList);
 
 custRole = delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "CUSTOMER"));
 if (custRole != null) {
@@ -95,7 +96,7 @@ context.put("party", otherValues.get("party"));
 context.put("lookupPerson", otherValues.get("lookupPerson"));
 context.put("lookupGroup", otherValues.get("lookupGroup"));
 
-boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
+boolean showOld = "true".equals(parameters.get("SHOW_OLD"));
 context.put("showOld", new Boolean(showOld));
 
 List partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, showOld);
@@ -114,4 +115,3 @@ Map result = dispatcher.runSync("getOrderedSummaryInformation", serviceIn);
 context.put("monthsToInclude", monthsToInclude);
 context.put("totalSubRemainingAmount", result.get("totalSubRemainingAmount"));
 context.put("totalOrders", result.get("totalOrders"));
-
