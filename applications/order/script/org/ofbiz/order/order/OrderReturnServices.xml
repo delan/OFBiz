@@ -255,7 +255,7 @@
                 <result-to-field result-name="orderTotal" field-name="orderTotal"/>
             </call-service>
             <log level="always" message="Available amount for return (order #${parameters.orderId}) : ${availableReturnTotal} [${orderTotal} / ${returnTotal} / ${parameters.returnPrice}]"/>
-            <if-compare field-name="availableReturnTotal" value="0" operator="less-equals" type="Double">
+            <if-compare field-name="availableReturnTotal" operator="less" value="0" type="Double">
                 <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
             </if-compare>
         <else>
