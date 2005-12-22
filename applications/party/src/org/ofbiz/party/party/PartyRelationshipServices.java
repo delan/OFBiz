@@ -64,7 +64,11 @@ public class PartyRelationshipServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        // check permission PARTYMGR_REL_CREATE or use ServiceUtil.getPartyIdCheckSecurity to check permission
+        if (!security.hasEntityPermission("PARTYMGR", "_REL_CREATE", userLogin)) {
+            // note: partyId isn't used after this, but it might in the future. for now, it is used only to check the security
+            String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        }
         Locale locale = (Locale) context.get("locale");
         String errMsg = null;
 
@@ -154,7 +158,11 @@ public class PartyRelationshipServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        // check permission PARTYMGR_REL_UPDATE or use ServiceUtil.getPartyIdCheckSecurity to check permission
+        if (!security.hasEntityPermission("PARTYMGR", "_REL_UPDATE", userLogin)) {
+            // note: partyId isn't used after this, but it might in the future. for now, it is used only to check the security
+            String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        }
         Locale locale = (Locale) context.get("locale");
         String errMsg = null;
 

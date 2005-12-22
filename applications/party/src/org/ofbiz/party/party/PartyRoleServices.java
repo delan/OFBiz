@@ -62,7 +62,13 @@ public class PartyRoleServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        // check permission PARTYMGR_ROLE_CREATE or use ServiceUtil.getPartyIdCheckSecurity to check permission
+        String partyId = null;
+        if (security.hasEntityPermission("PARTYMGR", "_ROLE_CREATE", userLogin)) {
+            partyId = (String) context.get("partyId");
+        } else {
+            partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        }
         Locale locale = (Locale) context.get("locale");
         String errMsg = null;
 
@@ -109,7 +115,13 @@ public class PartyRoleServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        // check permission PARTYMGR_ROLE_DELETE or use ServiceUtil.getPartyIdCheckSecurity to check permission
+        String partyId = null;
+        if (security.hasEntityPermission("PARTYMGR", "_ROLE_DELETE", userLogin)) {
+            partyId = (String) context.get("partyId");
+        } else {
+            partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        }
         Locale locale = (Locale) context.get("locale");
         String errMsg = null;
 
