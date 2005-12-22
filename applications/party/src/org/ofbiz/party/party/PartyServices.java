@@ -996,14 +996,14 @@ public class PartyServices {
                     String address1 = (String) context.get("address1");
                     if (address1 != null && address1.length() > 0) {
                         paramList = paramList + "&address1=" + address1;
-                        andExprs.add(new EntityExpr("address1", true, EntityOperator.LIKE, "%"+address1+"%", true));
+                        andExprs.add(new EntityExpr("address1", true, EntityOperator.LIKE, "%" + address1 + "%", true));
                     }
 
                     // filter on address2
                     String address2 = (String) context.get("address2");
                     if (address2 != null && address2.length() > 0) {
                         paramList = paramList + "&address2=" + address2;
-                        andExprs.add(new EntityExpr("address2", true, EntityOperator.LIKE, "%"+address2+"%", true));
+                        andExprs.add(new EntityExpr("address2", true, EntityOperator.LIKE, "%" + address2 + "%", true));
                     }
 
                     // filter on city
@@ -1023,7 +1023,7 @@ public class PartyServices {
                     String postalCode = (String) context.get("postalCode");
                     if (postalCode != null && postalCode.length() > 0) {
                         paramList = paramList + "&postalCode=" + postalCode;
-                        andExprs.add(new EntityExpr("postalCode", true, EntityOperator.EQUALS, postalCode, true));
+                        andExprs.add(new EntityExpr("postalCode", true, EntityOperator.LIKE, "%" + postalCode + "%", true));
                     }
 
                     fieldsToSelect.add("postalCode");
@@ -1086,6 +1086,7 @@ public class PartyServices {
                         andExprs.add(new EntityExpr("contactNumber", true, EntityOperator.EQUALS, contactNumber, true));
                     }
 
+                    fieldsToSelect.add("contactNumber");
                     fieldsToSelect.add("areaCode");
                 }
 
