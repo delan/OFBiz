@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
 public class QuoteServices {
 
     public static final String module = QuoteServices.class.getName();
-    public static final String resource = "org.ofbiz.order.order.PackageMessages";
+    public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
 
     public static Map sendQuoteReportMail(DispatchContext dctx, Map context) {

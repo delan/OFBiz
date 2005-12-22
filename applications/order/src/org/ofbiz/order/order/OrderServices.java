@@ -82,7 +82,7 @@ import org.ofbiz.workflow.WfUtil;
 public class OrderServices {
 
     public static final String module = OrderServices.class.getName();
-    public static final String resource = "org.ofbiz.order.order.PackageMessages";
+    public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
 
     public static Map salesAttributeRoleMap = FastMap.newInstance();

@@ -41,7 +41,7 @@ import org.ofbiz.service.ServiceUtil;
 public class OrderReturnServices {
 
     public static final String module = OrderReturnServices.class.getName();
-    public static final String resource = "org.ofbiz.order.order.PackageMessages";
+    public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
 
     // locate the return item's initial inventory item cost
