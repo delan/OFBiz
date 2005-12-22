@@ -509,10 +509,11 @@
                     <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonName}</b></div>
                   </td>
                   <td width="5">&nbsp;</td>
-                  <td NOWRAP align="left" valign="top" width="80%">
+                  <td align="left" valign="top" width="80%">
                     <div class="tabletext">
                       <#if displayParty?has_content>
-                        ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(displayParty)}
+                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+                        ${displayPartyNameResult.fullName?default("[Name Not Found]")}
                       </#if>
                       <#if partyId?exists>
                         <span>&nbsp;(<a href="/partymgr/control/viewprofile?partyId=${partyId}" target="partymgr" class="buttontext">${partyId}</a>)</span>

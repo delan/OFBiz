@@ -107,12 +107,14 @@
               <#list orderHeaderList as orderHeader>
                 <#assign status = orderHeader.getRelatedOneCache("StatusItem")>                               
                 <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
-                <#assign billToParty = orh.getBillToParty()?default("")>
-                <#assign billFromParty = orh.getBillFromParty()?default("")>
-                <#if billToParty != "">
-                  <#assign billTo = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billToParty, true)?if_exists>
+                <#assign billToParty = orh.getBillToParty()?if_exists>
+                <#assign billFromParty = orh.getBillFromParty()?if_exists>
+                <#if billToParty?has_content>
+                    <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", billToParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+                    <#assign billTo = billToPartyNameResult.fullName?default("[Name Not Found]")/>
+                    <#-- <#assign billTo = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billToParty, true)?if_exists> -->
                 </#if>
-                <#if billFromParty != "">
+                <#if billFromParty?has_content>
                   <#assign billFrom = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billFromParty, true)?if_exists>
                 </#if>
                 <tr><td colspan="8"><hr class="sepbar"></td></tr>

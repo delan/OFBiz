@@ -30,6 +30,11 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     
     <simple-method method-name="savePartyNameChange" short-description="Save Party Name Change">
+        <!-- for special case in ecommerce, if no partyId is passed in use userLogin.partyId -->
+        <if-empty field-name="parameters.partyId">
+            <set field="parameters.partyId" from-field="userLogin.partyId"/>
+        </if-empty>
+        
         <make-value value-name="partyNameHistory" entity-name="PartyNameHistory"/>
         <set-pk-fields value-name="partyNameHistory" map-name="parameters"/>
         <now-timestamp-to-env env-name="partyNameHistory.changeDate"/>
@@ -99,9 +104,19 @@
                 <field-to-result field-name="person.lastName" result-name="lastName"/>
                 <field-to-result field-name="person.personalTitle" result-name="personalTitle"/>
                 <field-to-result field-name="person.suffix" result-name="suffix"/>
+
+                <if-compare field-name="parameters.lastNameFirst" operator="equals" value="Y">
+                    <set field="fullName" value="${person.personalTitle} ${person.lastName}, ${person.firstName} ${person.middleName} ${person.suffix}"/>
+                <else>
+                    <set field="fullName" value="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix}"/>
+                </else>
+                </if-compare>
+                <field-to-result field-name="fullName"/>
+                
                 <else>
                     <if-not-empty field-name="partyGroup">
                         <field-to-result field-name="partyGroup.groupName" result-name="groupName"/>
+                        <field-to-result field-name="partyGroup.groupName" result-name="fullName"/>
                     </if-not-empty>
                 </else>
             </if-not-empty>
@@ -113,9 +128,19 @@
                     <field-to-result field-name="partyNameHistoryCurrent.lastName" result-name="lastName"/>
                     <field-to-result field-name="partyNameHistoryCurrent.personalTitle" result-name="personalTitle"/>
                     <field-to-result field-name="partyNameHistoryCurrent.suffix" result-name="suffix"/>
+                    
+                    <if-compare field-name="parameters.lastNameFirst" operator="equals" value="Y">
+                        <set field="fullName" value="${partyNameHistoryCurrent.personalTitle} ${partyNameHistoryCurrent.lastName}, ${partyNameHistoryCurrent.firstName} ${partyNameHistoryCurrent.middleName} ${partyNameHistoryCurrent.suffix}"/>
+                    <else>
+                        <set field="fullName" value="${partyNameHistoryCurrent.personalTitle} ${partyNameHistoryCurrent.firstName} ${partyNameHistoryCurrent.middleName} ${partyNameHistoryCurrent.lastName} ${partyNameHistoryCurrent.suffix}"/>
+                    </else>
+                    </if-compare>
+                    <field-to-result field-name="fullName"/>
+                    
                     <else>
                         <if-not-empty field-name="partyGroup">
                             <field-to-result field-name="partyNameHistoryCurrent.groupName" result-name="groupName"/>
+                            <field-to-result field-name="partyNameHistoryCurrent.groupName" result-name="fullName"/>
                         </if-not-empty>
                     </else>
                 </if-not-empty>

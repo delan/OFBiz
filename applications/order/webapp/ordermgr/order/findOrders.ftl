@@ -391,7 +391,8 @@ document.lookuporder.order_id.focus();
               <td>
                 <div class="tabletext">
                   <#if displayParty?has_content>
-                    ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(displayParty, true)}
+                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+                      ${displayPartyNameResult.fullName?default("[Name Not Found]")}
                   <#else>
                     N/A
                   </#if>
