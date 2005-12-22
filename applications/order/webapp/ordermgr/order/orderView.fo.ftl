@@ -281,13 +281,14 @@ Here is a good place to put boilerplate terms and conditions for a purchase orde
                         </fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
-                      <fo:table-cell number-columns-spanned="1">
+                        <fo:table-cell number-columns-spanned="1">
                         <fo:block>${note.noteInfo?if_exists}</fo:block>    
                     </fo:table-cell>
-                       <fo:table-cell number-columns-spanned="2">
-                        <fo:block>${uiLabelMap.CommonBy}: ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</fo:block>    
+                        <fo:table-cell number-columns-spanned="2">
+                        <#assign notePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", note.noteParty, "compareDate", note.noteDateTime, "lastNameFirst", "Y", "userLogin", userLogin))/>
+                        <fo:block>${uiLabelMap.CommonBy}: ${notePartyNameResult.fullName?default("Name Not Found")}</fo:block>
                     </fo:table-cell>
-                       <fo:table-cell number-columns-spanned="1">
+                        <fo:table-cell number-columns-spanned="1">
                         <fo:block>${uiLabelMap.CommonAt}: ${note.noteDateTime?string?if_exists}</fo:block>    
                     </fo:table-cell>
                   </fo:table-row>

@@ -24,7 +24,6 @@
 -->
 <?xml version="1.0" encoding="UTF-8" ?>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
-<#--${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, quote.partyId, false)}-->
 
 <fo:layout-master-set>
     <fo:simple-page-master master-name="main" 
@@ -66,7 +65,8 @@
                 <fo:table-row>
                     <fo:table-cell>
                         <fo:block>
-                            <fo:block font-weight="bold">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, quote.partyId, false)}</fo:block>
+                            <#assign quotePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", quote.partyId, "compareDate", quote.issueDate, "userLogin", userLogin))/>
+                            <fo:block font-weight="bold">${quotePartyNameResult.fullName?default("[Name Not Found]")}</fo:block>
                         </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
