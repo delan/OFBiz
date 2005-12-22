@@ -29,7 +29,7 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
-        <string-to-field field-name="require_email" string="false"/>
+        <string-to-field field-name="require_email" string="true"/>
         <string-to-field field-name="require_phone" string="false"/>
         <string-to-field field-name="require_login" string="true"/>
 
@@ -43,7 +43,7 @@
     <simple-method method-name="createProspect" short-description="Create Prospect" login-required="false">
         <string-to-field field-name="require_email" string="true"/>
         <string-to-field field-name="require_phone" string="false"/>
-        <string-to-field field-name="require_login" string="true"/>
+        <string-to-field field-name="require_login" string="false"/>
         <string-to-field field-name="create_allow_password" string="true"/>
 
         <property-to-field resource="security" property="username.lowercase" default="false" field-name="username_lowercase"/>
@@ -320,16 +320,18 @@
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="mobilePhoneContext"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailContext"/>
 
-        <!-- If password encryption is enabled, encrpyt it now -->
-        <call-bsh><![CDATA[
-            boolean useEncryption = "true".equals(org.ofbiz.base.util.UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
-            if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))); }
-        ]]></call-bsh>
+        <if-not-empty field-name="newUserLogin">
+            <!-- If password encryption is enabled, encrpyt it now -->
+            <call-bsh><![CDATA[
+                boolean useEncryption = "true".equals(org.ofbiz.base.util.UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
+                if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))); }
+            ]]></call-bsh>
 
-        <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
-        <field-to-field field-name="partyId" map-name="tempMap" to-map-name="newUserLogin"/>
-        <create-value value-name="newUserLogin"/>
-        <set-current-user-login value-name="newUserLogin"/>
+            <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
+            <field-to-field field-name="partyId" map-name="tempMap" to-map-name="newUserLogin"/>
+            <create-value value-name="newUserLogin"/>
+            <set-current-user-login value-name="newUserLogin"/>
+        </if-not-empty>
 
         <create-value value-name="partyDataSource"/>
         <call-service service-name="createPartyRole" in-map-name="partyRoleContext"/>
@@ -392,12 +394,14 @@
         </if-not-empty>
 
         <!-- email address -->
-        <call-service service-name="createPartyEmailAddress" in-map-name="emailContext">
-            <result-to-field result-name="contactMechId" map-name="emailPurposeContext"/>
-        </call-service>
-        <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailPurposeContext"/>
-        <string-to-field string="PRIMARY_EMAIL" field-name="contactMechPurposeTypeId" map-name="emailPurposeContext"/>
-        <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
+        <if-not-empty field-name="USER_EMAIL" map-name="parameters">
+            <call-service service-name="createPartyEmailAddress" in-map-name="emailContext">
+                <result-to-field result-name="contactMechId" map-name="emailPurposeContext"/>
+            </call-service>
+            <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailPurposeContext"/>
+            <string-to-field string="PRIMARY_EMAIL" field-name="contactMechPurposeTypeId" map-name="emailPurposeContext"/>
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
+        </if-not-empty>
 
         <!-- set the partyId in the request -->
         <field-to-request field-name="partyId" map-name="tempMap" request-name="partyId"/>
