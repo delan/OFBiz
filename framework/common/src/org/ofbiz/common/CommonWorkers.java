@@ -97,7 +97,7 @@ public class CommonWorkers {
         country = UtilProperties.getPropertyValue("general.properties", "country.geo.id.default");
       }
       List geoList = new ArrayList();
-      Map geoAssocFindMap = UtilMisc.toMap("geoId", country, "geoAssocTypeId","REGIONS");
+      Map geoAssocFindMap = UtilMisc.toMap("geoId", country, "geoAssocTypeId", "REGIONS");
       List sortList = UtilMisc.toList("geoIdTo");
       try {
           geoList = delegator.findByAndCache("GeoAssoc", geoAssocFindMap, sortList);
