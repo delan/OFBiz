@@ -46,17 +46,19 @@
         <div class="screenlet-body">
             <table width="100%" border="0" cellpadding="1">
                 <#-- placing customer information -->
-                <#if placingCustomerPerson?has_content>
+                <#if localOrderReadHelper?exists>
+                  <#assign displayParty = localOrderReadHelper.getPlacingParty()?if_exists/>
+                  <#if displayParty?has_content>
+                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+                  </#if>
                   <tr>
                     <td align="right" valign="top" width="15%">
                       <div class="tabletext">&nbsp;<b>${uiLabelMap.PartyName}</b></div>
                     </td>
                     <td width="5">&nbsp;</td>
                     <td align="left" valign="top" width="80%">
-                      <div class="tabletext">                           
-                        ${placingCustomerPerson.firstName}&nbsp;
-                        <#if placingCustomerPerson.middleName?exists>${placingCustomerPerson.middleName}&nbsp;</#if>
-                        ${placingCustomerPerson.lastName}
+                      <div class="tabletext">
+                        ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
                       </div>
                     </td>
                   </tr>
@@ -77,7 +79,7 @@
                   </td>
                 </tr>
                 <#-- ordered date -->
-                <#if orderHeader?has_content>   
+                <#if orderHeader?has_content>
                   <tr><td colspan="7"><hr class="sepbar"/></td></tr>
                   <tr>
                     <td align="right" valign="top" width="15%">

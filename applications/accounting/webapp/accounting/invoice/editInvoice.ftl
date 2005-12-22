@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,36 +26,21 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<#macro displayPersonOrGroup label party>
+<#macro displayPersonOrGroup label party showDate>
+    <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", party.partyId, "compareDate", showDate, "userLogin", userLogin))/>
     <tr>
       <td align="right" valign="top" width="15%">
          <div class="tabletext">&nbsp;<b>${label}</b></div>
       </td>   
       <td width="5">&nbsp;</td>
-  <#if party.getRelatedOne("Person")?has_content>
-     <#assign person = party.getRelatedOne("Person")>
+
       <td align="left" valign="top" width="80%">
-         <div class="tabletext">
-            <#if person.partyId != "_NA_">
-               ${person.firstName?if_exists}&nbsp;
-            <#if person.middleName?exists>${person.middleName}&nbsp;</#if>
-               ${person.lastName?if_exists}
-            <#else>
-               [Anonymous]
-            </#if>
-         </div>
+          <div class="tabletext">
+              ${displayPartyNameResult.fullName?default("[Name Not Found]")}
+          </div>
       </td>
-   </#if>
-   <#if party.getRelatedOne("PartyGroup")?has_content>
-      <#assign group = party.getRelatedOne("PartyGroup")>
-      <td align="left" valign="top" width="80%">
-         <div class="tabletext">
-            ${group.groupName?if_exists}
-         </div>
-      </td>
-   </#if>
-   </tr>
-   <tr><td colspan="7"><hr class='sepbar'></td></tr>
+    </tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
 </#macro>                        
                         
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -83,11 +68,11 @@
                   <table width="100%" border="0" cellpadding="1">
                     <#-- sending party information -->
                     <#if sendingParty?has_content>
-                        <@displayPersonOrGroup label=uiLabelMap.CommonFrom party=sendingParty/>
+                        <@displayPersonOrGroup label=uiLabelMap.CommonFrom party=sendingParty showDate=invoice.invoiceDate/>
                     </#if>
                     <#-- billing party information -->
                     <#if billingParty?has_content>
-                        <@displayPersonOrGroup label=uiLabelMap.CommonTo party=billingParty/>
+                        <@displayPersonOrGroup label=uiLabelMap.CommonTo party=billingParty showDate=invoice.invoiceDate/>
                     </#if>
                     <#-- invoice status information -->
                     <tr>
