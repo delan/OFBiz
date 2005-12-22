@@ -149,6 +149,7 @@ public class ModelForm {
     protected int actualPageSize = 0;
     
     protected List actions;
+    protected List rowActions;
     protected FlexibleStringExpander rowCountExdr;
     protected ModelFormField multiSubmitField;
     protected int rowCount = 0;
@@ -417,6 +418,12 @@ public class ModelForm {
         Element actionsElement = UtilXml.firstChildElement(formElement, "actions");
         if (actionsElement != null) {
             this.actions = ModelFormAction.readSubActions(this, actionsElement);
+        }
+
+        // read all actions under the "row-actions" element
+        Element rowActionsElement = UtilXml.firstChildElement(formElement, "row-actions");
+        if (rowActionsElement != null) {
+            this.rowActions = ModelFormAction.readSubActions(this, rowActionsElement);
         }
     }
 
@@ -1063,10 +1070,11 @@ public class ModelForm {
                     Map itemMap = (Map) item;
                     localContext.putAll(itemMap);
                 }
-                this.resetBshInterpreter(localContext);
                 
+                ModelFormAction.runSubActions(this.rowActions, localContext);
+
                 localContext.put("itemIndex", new Integer(itemIndex - lowIndex));
-                
+                this.resetBshInterpreter(localContext);
                 this.rowCount++;
 
                 if (Debug.verboseOn()) Debug.logVerbose("In form got another row, context is: " + localContext, module);

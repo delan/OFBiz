@@ -36,6 +36,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="actions"/>
+                <xs:element minOccurs="0" ref="row-actions"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="alt-target"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-fields-service"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-fields-entity"/>
@@ -887,6 +888,13 @@
   <!-- ================== ACTIONS ==================== -->
     <xs:element name="AllActions" abstract="true"/>
     <xs:element name="actions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="row-actions">
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
