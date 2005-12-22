@@ -31,6 +31,8 @@
     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
         <string-to-field field-name="require_email" string="false"/>
         <string-to-field field-name="require_phone" string="false"/>
+        <string-to-field field-name="require_login" string="true"/>
+
         <!-- this parameter must be set to true or the createUser method below will use a default password instead of the one entered by user -->
         <string-to-field field-name="create_allow_password" string="true"/>
 
@@ -41,6 +43,7 @@
     <simple-method method-name="createProspect" short-description="Create Prospect" login-required="false">
         <string-to-field field-name="require_email" string="true"/>
         <string-to-field field-name="require_phone" string="false"/>
+        <string-to-field field-name="require_login" string="true"/>
         <string-to-field field-name="create_allow_password" string="true"/>
 
         <property-to-field resource="security" property="username.lowercase" default="false" field-name="username_lowercase"/>
@@ -54,6 +57,7 @@
     <simple-method method-name="createEmployee" short-description="Create Employee" login-required="false">
         <string-to-field field-name="require_email" string="false"/>
         <string-to-field field-name="require_phone" string="true"/>
+        <string-to-field field-name="require_login" string="true"/>
         <string-to-field field-name="create_allow_password" string="true"/>
 
         <property-to-field resource="security" property="username.lowercase" default="false" field-name="username_lowercase"/>
@@ -86,39 +90,47 @@
         </if-compare>
 
         <!-- Create the UserLogin Record -->
-        <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
-            <simple-map-processor name="newUserLogin">
-                <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></not-empty></process>
-                <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
-                <process field="CONFIRM_PASSWORD">
-                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
-                    <!-- This is checked below in the checkNewPassword method in the bsh block: <not-empty><fail-property resource="PartyUiLabels" property="PartyEnterPasswordTwice"/></not-empty> -->
-                    <copy to-field="currentPasswordVerify"/>
-                </process>
-                <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
-            </simple-map-processor>
-        </call-map-processor>
-        <if-not-empty field-name="userLoginId" map-name="userLoginContext">
-            <field-to-field field-name="userLoginId" map-name="userLoginContext" to-map-name="userLoginExistsMap"/>
-            <find-by-primary-key entity-name="UserLogin" map-name="userLoginExistsMap" value-name="existingUserLogin"/>
-            <if-not-empty field-name="existingUserLogin">
-                <string-to-field string="Username in use, please choose another." field-name="tempErrorMessage"/>
-                <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
+        <if-not-empty field-name="USERNAME" map-name="parameters">
+            <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
+                <simple-map-processor name="newUserLogin">
+                    <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></not-empty></process>
+                    <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
+                    <process field="CONFIRM_PASSWORD">
+                        <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
+                        <!-- This is checked below in the checkNewPassword method in the bsh block: <not-empty><fail-property resource="PartyUiLabels" property="PartyEnterPasswordTwice"/></not-empty> -->
+                        <copy to-field="currentPasswordVerify"/>
+                    </process>
+                    <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
+                </simple-map-processor>
+            </call-map-processor>
+            <if-not-empty field-name="userLoginId" map-name="userLoginContext">
+                <field-to-field field-name="userLoginId" map-name="userLoginContext" to-map-name="userLoginExistsMap"/>
+                <find-by-primary-key entity-name="UserLogin" map-name="userLoginExistsMap" value-name="existingUserLogin"/>
+                <if-not-empty field-name="existingUserLogin">
+                    <string-to-field string="Username in use, please choose another." field-name="tempErrorMessage"/>
+                    <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
+                </if-not-empty>
             </if-not-empty>
+
+            <make-value entity-name="UserLogin" value-name="newUserLogin"/>
+            <field-to-field field-name="userLoginId" map-name="userLoginContext" to-map-name="newUserLogin"/>
+            <field-to-field field-name="currentPassword" map-name="userLoginContext" to-map-name="newUserLogin"/>
+            <field-to-field field-name="passwordHint" map-name="userLoginContext" to-map-name="newUserLogin"/>
+
+            <!-- Check the password, etc for validity -->
+            <call-bsh><![CDATA[
+                String password = (String) userLoginContext.get("currentPassword");
+                String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
+                String passwordHint = (String) userLoginContext.get("passwordHint");
+                org.ofbiz.securityext.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
+            ]]></call-bsh>
+        <else>
+            <if-compare field-name="require_login" operator="equals" value="true">
+                <add-error><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></add-error>
+                <check-errors/>
+            </if-compare>
+        </else>
         </if-not-empty>
-
-        <make-value entity-name="UserLogin" value-name="newUserLogin"/>
-        <field-to-field field-name="userLoginId" map-name="userLoginContext" to-map-name="newUserLogin"/>
-        <field-to-field field-name="currentPassword" map-name="userLoginContext" to-map-name="newUserLogin"/>
-        <field-to-field field-name="passwordHint" map-name="userLoginContext" to-map-name="newUserLogin"/>
-
-        <!-- Check the password, etc for validity -->
-        <call-bsh><![CDATA[
-            String password = (String) userLoginContext.get("currentPassword");
-            String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
-            String passwordHint = (String) userLoginContext.get("passwordHint");
-            org.ofbiz.securityext.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
-        ]]></call-bsh>
 
         <!-- Create the Person -->
         <call-map-processor in-map-name="parameters" out-map-name="personContext">
