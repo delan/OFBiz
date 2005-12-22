@@ -181,7 +181,8 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, distributorId, false)}
+                          <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", distributorId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+                          ${distPartyNameResult.fullName?default("[Name Not Found]")}
                         </div>
                       </td>
                     </tr>
@@ -195,7 +196,8 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, affiliateId, false)}
+                          <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", affiliateId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+                          ${affPartyNameResult.fullName?default("[Name Not Found]")}
                         </div>
                       </td>
                     </tr>

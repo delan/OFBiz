@@ -169,13 +169,14 @@
                         <#list quoteRoles as quoteRole>
                             <#assign roleType = quoteRole.getRelatedOne("RoleType")>
                             <#assign party = quoteRole.getRelatedOne("Party")>
+                            <#assign rolePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", quoteRole.partyId, "compareDate", quote.issueDate, "userLogin", userLogin))/>
                             <tr>
                                 <td align="right" valign="top" width="15%">
                                     <div class="tabletext">&nbsp;<b>${roleType.description?if_exists}</b></div>
                                 </td>
                                 <td width="5">&nbsp;</td>
                                 <td align="left" valign="top" width="80%">
-                                    <div class="tabletext">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(party)}</div>
+                                    <div class="tabletext">${rolePartyNameResult.fullName?default("Name Not Found")}</div>
                                 </td>
                             </tr>
                             <tr><td colspan="7"><hr class="sepbar"/></td></tr>
