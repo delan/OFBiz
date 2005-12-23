@@ -225,8 +225,8 @@
 
     <request-map uri="ForceGarbageCollection">
         <security https="true" auth="true"/>
-        <event type="service" invoke="clearEvent"/>
-        <response name="success" type="view" value="forceGarbageCollection"/>
+        <event type="service" invoke="forceGarbageCollection"/>
+        <response name="success" type="view" value="FindUtilCache"/>
         <response name="error" type="view" value="FindUtilCache"/>
     </request-map>
     
