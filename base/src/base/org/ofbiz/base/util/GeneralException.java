@@ -25,6 +25,7 @@ package org.ofbiz.base.util;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Base OFBiz Exception, provides nested exceptions, etc
@@ -36,6 +37,7 @@ import java.io.PrintWriter;
 public class GeneralException extends Exception {
 
     Throwable nested = null;
+    List messages = null;
 
     /**
      * Creates new <code>GeneralException</code> without detail message.
@@ -55,6 +57,7 @@ public class GeneralException extends Exception {
     /**
      * Constructs an <code>GeneralException</code> with the specified detail message and nested Exception.
      * @param msg the detail message.
+     * @param nested the nested exception.
      */
     public GeneralException(String msg, Throwable nested) {
         super(msg);
@@ -63,11 +66,49 @@ public class GeneralException extends Exception {
 
     /**
      * Constructs an <code>GeneralException</code> with the specified detail message and nested Exception.
-     * @param nested the detail message.
+     * @param nested the nested exception.
      */
     public GeneralException(Throwable nested) {
         super();
         this.nested = nested;
+    }
+
+    /**
+     * Constructs an <code>GeneralException</code> with the specified detail message, list and nested Exception.
+     * @param msg the detail message.
+     * @param messages error message list.
+     */
+    public GeneralException(String msg, List messages) {
+        super(msg);        
+        this.messages = messages;
+    }
+
+    /**
+     * Constructs an <code>GeneralException</code> with the specified detail message, list and nested Exception.
+     * @param msg the detail message.
+     * @param messages error message list.
+     * @param nested the nexted exception
+     */
+    public GeneralException(String msg, List messages, Throwable nested) {
+        super(msg);
+        this.nested = nested;
+        this.messages = messages;
+    }
+
+    /**
+     * Constructs an <code>GeneralException</code> with the specified detail message list and nested Exception.
+     * @param messages error message list.
+     * @param nested the nested exception.
+     */
+    public GeneralException(List messages, Throwable nested) {
+        super();
+        this.nested = nested;
+        this.messages = messages;
+    }
+
+    public GeneralException(List messages) {
+        super();
+        this.messages = messages;
     }
 
     /** Returns the detail message, including the message from the nested exception if there is one. */
@@ -81,6 +122,10 @@ public class GeneralException extends Exception {
         } else {
             return super.getMessage();
         }
+    }
+
+    public List getMessageList() {
+        return this.messages;
     }
 
     /** Returns the detail message, NOT including the message from the nested exception. */
