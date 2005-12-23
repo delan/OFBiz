@@ -1409,7 +1409,7 @@
         <field name="suffix" type="name"></field>
         <prim-key field="partyId"/>
         <prim-key field="changeDate"/>
-        <relation type="one" fk-name="PARTY_NOTE_PARTY" rel-entity-name="Party">
+        <relation type="one" fk-name="PTY_NMHIS_PARTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
     </entity>
