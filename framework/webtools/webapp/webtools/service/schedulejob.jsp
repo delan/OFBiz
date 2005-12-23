@@ -40,7 +40,7 @@
 
 <%
 	String serviceName = request.getParameter("SERVICE_NAME");
-	String poolName = ServiceConfigUtil.getSendPool();
+    String poolName = ServiceConfigUtil.getSendPool();
 %>
 
 <% if (serviceName == null) { %>
@@ -52,7 +52,7 @@
     <table border='0'>
       <tr>
         <td align="right"><div class="tabletext">Service:</div></td>
-        <td><input type="text" class="inputBox" size="20" name="SERVICE_NAME"></td>
+        <td><input type="text" class="inputBox" size="20" name="SERVICE_NAME" value="<%=(serviceName != null ? serviceName : "")%>"></td>
       </tr>      
       <tr>
         <td align="right"><div class="tabletext">Pool Name:</div></td>
