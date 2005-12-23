@@ -83,6 +83,11 @@ public class ServiceUtil {
     }
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
+    public static Map returnError(String errorMessage, List errorMessageList) {
+        return returnProblem(ModelService.RESPOND_ERROR, errorMessage, errorMessageList, null, null);
+    }
+
+    /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(List errorMessageList) {
         return returnProblem(ModelService.RESPOND_ERROR, null, errorMessageList, null, null);
     }

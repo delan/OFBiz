@@ -28,58 +28,47 @@
 <#if requestAttributes.serviceValidationException?exists><#assign serviceValidationException = requestAttributes.serviceValidationException></#if>
 <#if requestAttributes.uiLabelMap?has_content><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<#-- special error message override -->
-<#if serviceValidationException?exists>
-  <#assign serviceName = serviceValidationException.getServiceName()?if_exists>
-  <#assign missingList = serviceValidationException.getMissingFields()?if_exists>
-  <#assign extraList = serviceValidationException.getExtraFields()?if_exists>
-
-  <#--  need if statement for EACH service (see the controller.xml file for service names) -->
-  <#if serviceName?has_content && serviceName == "createPartyContactMechPurpose">
-    <#-- create the inital message prefix -->
-    <#assign message = "${uiLabelMap.CommonRequiredFieldsFoundEmpty}:">
-
-    <#-- loop through all the missing fields -->
-    <#list missingList as missing>
-      <#--
-           check for EACH required field (see the service definition)
-           then append a message for the missing field; some fields may be
-           and not needed; this example show ALL fields for the service.
-           ** The value inside quotes must match 100% case included.
-       -->
-
-      <#if missing == "partyId">
-        <#assign message = message + "<li>${uiLabelMap.PartyPartyID}</li>">
-      </#if>
-      <#if missing == "contactMechId">
-        <#assign message = message + "<li>${uiLabelMap.PartyContactMechID}</li>">
-      </#if>
-      <#if missing == "contactMechPurposeTypeId">
-        <#assign message = message + "<li>${uiLabelMap.PartyContactPurpose}</li>">
-      </#if>
-    </#list>
-
-    <#-- this will replace the current error message with the new one -->
-    <#assign errorMsgReq = message>
-  </#if>
+<#if !errorMessage?has_content>
+  <#assign errorMessage = requestAttributes._ERROR_MESSAGE_?if_exists>
+</#if>
+<#if !errorMessageList?has_content>
+  <#assign errorMessageList = requestAttributes._ERROR_MESSAGE_LIST_?if_exists>
+</#if>
+<#if !eventMessage?has_content>
+  <#assign eventMessage = requestAttributes._EVENT_MESSAGE_?if_exists>
+</#if>
+<#if !eventMessageList?has_content>
+  <#assign eventMessageList = requestAttributes._EVENT_MESSAGE_LIST_?if_exists>
 </#if>
 
 <#-- display the error messages -->
-<#if errorMessageList?has_content>
-<div class="errorMessage">${uiLabelMap.CommonFollowingErrorsOccurred}:</div><br/>
-<ul>
-  <#list errorMessageList as errorMsg>
-    <li class="errorMessage">${errorMsg}</li>
-  </#list>
-</ul>
-<br/>
+<#if (errorMessage?has_content || errorMessageList?has_content)>
+  <div class="errorMessage">${uiLabelMap.CommonFollowingErrorsOccurred}:</div><br/>
+  <ul>
+    <#if errorMessage?has_content>
+      <li class="errorMessage">${errorMessage}</li>
+    </#if>
+    <#if errorMessageList?has_content>
+      <#list errorMessageList as errorMsg>
+        <li class="errorMessage">${errorMsg}</li>
+      </#list>
+    </#if>
+  </ul>
+  <br/>
 </#if>
-<#if eventMessageList?has_content>
-<div class="eventMessage">${uiLabelMap.CommonFollowingOccurred}:</div><br/>
-<ul>
-  <#list eventMessageList as eventMsg>
-    <li class="eventMessage">${eventMsg}</li>
-  </#list>
-</ul>
-<br/>
+
+<#-- display the event messages -->
+<#if (eventMessage?has_content || eventMessageList?has_content)>
+  <div class="eventMessage">${uiLabelMap.CommonFollowingOccurred}:</div><br/>
+  <ul>
+    <#if eventMessage?has_content>
+      <li class="eventMessage">${eventMessage}</li>
+    </#if>
+    <#if eventMessageList?has_content>
+      <#list eventMessageList as eventMsg>
+        <li class="eventMessage">${eventMsg}</li>
+      </#list>
+    </#if>
+  </ul>
+  <br/>
 </#if>

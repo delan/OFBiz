@@ -24,6 +24,7 @@
  */
 package org.ofbiz.webapp.event;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +41,7 @@ import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
@@ -53,7 +54,6 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceAuthException;
-import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
 
 /**
@@ -325,30 +325,13 @@ public class ServiceEventHandler implements EventHandler {
                 responseString = (String) result.get(ModelService.RESPONSE_MESSAGE);
             }
 
-            // Get the messages:
-            String errorPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.error.prefix", locale);
-            String errorSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.error.suffix", locale);
-            String successPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.success.prefix", locale);
-            String successSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.success.suffix", locale);
-            String messagePrefixStr = UtilProperties.getMessage("DefaultMessages", "service.message.prefix", locale);
-            String messageSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.message.suffix", locale);
-            String defaultMessageStr = UtilProperties.getMessage("DefaultMessages", "service.default.message", locale);
+            // set the messages in the request; this will be picked up by messages.ftl and displayed
+            request.setAttribute("_ERROR_MESSAGE_LIST_", result.get(ModelService.ERROR_MESSAGE_LIST));
+            request.setAttribute("_ERROR_MESSAGE_MAP_", result.get(ModelService.ERROR_MESSAGE_MAP));
+            request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
 
-            String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
-
-            if (UtilValidate.isNotEmpty(errorMessage)) {
-                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-            }
-
-            String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
-
-            if (UtilValidate.isNotEmpty(successMessage)) {
-                request.setAttribute("_EVENT_MESSAGE_", successMessage);
-            }
-
-            if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr)) {
-                request.setAttribute("_EVENT_MESSAGE_", defaultMessageStr);
-            }
+            request.setAttribute("_EVENT_MESSAGE_LIST_", result.get(ModelService.SUCCESS_MESSAGE_LIST));
+            request.setAttribute("_EVENT_MESSAGE_", result.get(ModelService.SUCCESS_MESSAGE));
 
             // set the results in the request
             Iterator ri = result.keySet().iterator();
