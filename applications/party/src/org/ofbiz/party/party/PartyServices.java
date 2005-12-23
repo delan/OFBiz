@@ -58,6 +58,8 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 
 /**
  * Services for Party/Person/Group maintenance
@@ -516,6 +518,7 @@ public class PartyServices {
     public static Map createPartyNote(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String noteString = (String) context.get("note");
         String partyId = (String) context.get("partyId");
@@ -523,8 +526,14 @@ public class PartyServices {
         Locale locale = (Locale) context.get("locale");
         //Map noteCtx = UtilMisc.toMap("note", noteString, "userLogin", userLogin);
 
-        // Store the note.
-        Map noteRes = org.ofbiz.common.CommonServices.createNote(dctx, context);
+        // create and associate the note with the userLogin
+        Map noteRes = null;
+        try {
+            noteRes = dispatcher.runSync("createNote", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "note", noteString, "userLogin", userLogin, "locale", locale));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, e.getMessage(), module);
+            return ServiceUtil.returnError("Unable to create Note: " + e.getMessage());
+        }
 
         if (noteRes.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
             return noteRes;
