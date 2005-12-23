@@ -172,4 +172,10 @@
         <description>ECA Condition Service - Return FALSE</description>
         <implements service="serviceEcaConditionInterface"/>
     </service>
+
+    <service name="ping" engine="java" export="true" require-new-transaction="true"
+            location="org.ofbiz.common.CommonServices" invoke="ping">
+        <description>Test Ping Service</description>
+        <attribute name="message" type="String" mode="INOUT" optional="true"/>
+    </service>
 </services>

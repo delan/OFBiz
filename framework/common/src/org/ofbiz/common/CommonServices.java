@@ -448,5 +448,29 @@ public class CommonServices {
         }
         return ServiceUtil.returnSuccess();
     }
+
+    public static Map ping(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String message = (String) context.get("message");
+        if (message == null) {
+            message = "PONG";
+        }
+
+        long count = -1;
+        try {
+            count = delegator.findCountByAnd("SequenceValueItem", null);
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+            return ServiceUtil.returnError("Unable to connect to datasource!");
+        }
+
+        if (count > 0) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("message", message);
+            return result;
+        } else {
+            return ServiceUtil.returnError("Invalid count returned from database");
+        }
+    }
 }
 
