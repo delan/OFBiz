@@ -159,13 +159,18 @@ public class PackingServices {
         // set the instructions -- will clear out previous if now null
         String instructions = (String) context.get("handlingInstructions");
         session.setHandlingInstructions(instructions);
-        
+
+        Boolean force = (Boolean) context.get("forceComplete");
+        if (force == null) {
+            force = Boolean.FALSE;
+        }
+
         String shipmentId = null;
         try {
-            shipmentId = session.complete();
+            shipmentId = session.complete(force.booleanValue());
         } catch (GeneralException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            return ServiceUtil.returnError(e.getMessage(), e.getMessageList());
         }
 
         Map resp = ServiceUtil.returnSuccess("Shipment #" + shipmentId + " created and marked as PACKED.");

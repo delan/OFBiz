@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 import javolution.util.FastMap;
+import javolution.util.FastList;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -351,7 +353,9 @@ public class PackingSession implements java.io.Serializable {
         this.runEvents(PackingEvent.EVENT_CODE_CLEAR);
     }
 
-    public String complete() throws GeneralException {
+    public String complete(boolean force) throws GeneralException {
+        // check for errors
+        this.checkReservations(force);
         // set the status to 0
         this.status = 0;
         // create the shipment
@@ -368,6 +372,37 @@ public class PackingSession implements java.io.Serializable {
         this.runEvents(PackingEvent.EVENT_CODE_COMPLETE);
 
         return this.shipmentId;
+    }
+
+    protected void checkReservations(boolean ignore) throws GeneralException {
+        List errors = FastList.newInstance();
+        Iterator i = this.getLines().iterator();
+        while (i.hasNext()) {
+            PackingSessionLine line = (PackingSessionLine) i.next();
+            Map invLookup = FastMap.newInstance();
+            invLookup.put("orderId", line.getOrderId());
+            invLookup.put("orderItemSeqId", line.getOrderItemSeqId());
+            invLookup.put("shipGroupSeqId", line.getShipGroupSeqId());
+            invLookup.put("inventoryItemId", line.getInventoryItemId());
+            GenericValue res = this.getDelegator().findByPrimaryKey("OrderItemShipGrpInvRes", invLookup);
+            Double qty = res.getDouble("quantity");
+            if (qty == null) qty = new Double(0);
+
+            double resQty = qty.doubleValue();
+            double lineQty = line.getQuantity();
+
+            if (lineQty != resQty) {
+                errors.add("Packed amount does not match reserved amount for item (" + line.getProductId() + ") [" + lineQty + " / " + resQty + "]");
+            }
+        }
+
+        if (errors.size() > 0) {
+            if (!ignore) {
+                throw new GeneralException("Attempt to pack order failed. Click COMPLETE again to force.", errors);
+            } else {
+                Debug.logWarning("Packing warnings: " + errors, module);
+            }
+        }
     }
 
     protected void runEvents(int eventCode) {
