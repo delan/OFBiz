@@ -36,7 +36,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_CREATE">
+            <check-permission permission="PARTYMGR" action="_PCM_CREATE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
@@ -71,7 +71,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_UPDATE">
+            <check-permission permission="PARTYMGR" action="_PCM_UPDATE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
@@ -143,7 +143,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_DELETE">
+            <check-permission permission="PARTYMGR" action="_PCM_DELETE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
@@ -170,7 +170,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>        
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_CREATE">
+            <check-permission permission="PARTYMGR" action="_PCM_CREATE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
@@ -203,7 +203,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_UPDATE">
+            <check-permission permission="PARTYMGR" action="_PCM_UPDATE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
@@ -235,7 +235,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_CREATE">
+            <check-permission permission="PARTYMGR" action="_PCM_CREATE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
@@ -266,7 +266,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_UPDATE">
+            <check-permission permission="PARTYMGR" action="_PCM_UPDATE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
@@ -297,7 +297,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_CREATE">
+            <check-permission permission="PARTYMGR" action="_PCM_CREATE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
@@ -319,7 +319,7 @@
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
-            <check-permission permission="PARTYMGR" action="_UPDATE">
+            <check-permission permission="PARTYMGR" action="_PCM_UPDATE">
                 <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>

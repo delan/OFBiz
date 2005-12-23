@@ -11,6 +11,9 @@
     <SecurityPermission description="Update party relationships in the Party Manager." permissionId="PARTYMGR_REL_UPDATE"/>
     <SecurityPermission description="Create party roles in the Party Manager." permissionId="PARTYMGR_ROLE_CREATE"/>
     <SecurityPermission description="Delete party roles in the Party Manager." permissionId="PARTYMGR_ROLE_DELETE"/>
+    <SecurityPermission description="Create party contact mechs in the Party Manager." permissionId="PARTYMGR_PCM_CREATE"/>
+    <SecurityPermission description="Update party contact mechs in the Party Manager." permissionId="PARTYMGR_PCM_UPDATE"/>
+    <SecurityPermission description="Delete party contact mechs in the Party Manager." permissionId="PARTYMGR_PCM_DELETE"/>
 
     <SecurityGroup description="Party Admin group, has all party permissions." groupId="PARTYADMIN"/>
     <SecurityGroupPermission groupId="PARTYADMIN" permissionId="PARTYMGR_ADMIN"/>
@@ -22,6 +25,13 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_UPDATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_NOTE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_REL_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_REL_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_ROLE_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_PCM_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_PCM_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_PCM_DELETE"/>
 
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_NOTE"/>
