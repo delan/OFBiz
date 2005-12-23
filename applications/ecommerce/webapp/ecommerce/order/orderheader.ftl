@@ -46,7 +46,7 @@
         <div class="screenlet-body">
             <table width="100%" border="0" cellpadding="1">
                 <#-- placing customer information -->
-                <#if localOrderReadHelper?exists>
+                <#if localOrderReadHelper?exists && orderHeader?has_content>
                   <#assign displayParty = localOrderReadHelper.getPlacingParty()?if_exists/>
                   <#if displayParty?has_content>
                       <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
