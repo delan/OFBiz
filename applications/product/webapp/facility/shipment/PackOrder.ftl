@@ -26,7 +26,14 @@
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
     <#assign showInput = requestParameters.showInput?default("Y")>
-    <#assign hideGrid = requestParameters.hideGrid?default("N")>
+    <#assign hideGrid = requestParameters.hideGrid?default("N")>    
+
+    <#if (requestParameters.forceComplete?has_content && !shipmentId?has_content)>
+        <#assign forceComplete = "true">
+        <#assign showInput = "Y">
+    </#if>
+
+
     <div class="head1">Pack Order<span class='head2'>&nbsp;in&nbsp;${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <#if shipmentId?has_content>
       <div class="tabletext">
@@ -239,6 +246,7 @@
           <input type="hidden" name="orderId" value="${orderId?if_exists}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
           <input type="hidden" name="facilityId" value="${facilityId?if_exists}"/>
+          <input type="hidden" name="forceComplete" value="${forceComplete?default('false')}"/>
           <input type="hidden" name="showInput" value="N"/>
           <hr class="sepbar">
           <div>&nbsp;</div>
@@ -252,7 +260,11 @@
               </td>
               <td align="right">
                 <div>
-                  <input type="button" value="Complete" onclick="javascript:document.completePackForm.submit();"/>
+                  <#assign buttonName = "Complete">
+                  <#if forceComplete?default("false") == "true">
+                    <#assign buttonName = "Force Complete">
+                  </#if>
+                  <input type="button" value="${buttonName}" onclick="javascript:document.completePackForm.submit();"/>
                 </div>
               </td>
             </tr>
