@@ -307,6 +307,7 @@ public class ShoppingCart implements Serializable {
     public static class CartPaymentInfo implements Serializable, Comparable {
         public String paymentMethodTypeId = null;
         public String paymentMethodId = null;
+        public String securityCode = null;
         public String postalCode = null;
         public String[] refNum = new String[2];
         public Double amount = null;
@@ -405,6 +406,9 @@ public class ShoppingCart implements Serializable {
                 if (refNum != null) {
                     opp.set("manualRefNum", refNum[0]);
                     opp.set("manualAuthCode", refNum[1]);
+                }
+                if (securityCode != null) {
+                    opp.set("securityCode", securityCode);
                 }
                 if (paymentMethodId != null) {
                     opp.set("statusId", "PAYMENT_NOT_AUTH");
@@ -1537,7 +1541,7 @@ public class ShoppingCart implements Serializable {
     public String getPaymentRef(String id) {
         return this.getPaymentInfo(id).refNum[0];
     }
-
+    
     /** returns the total payment amounts */
     public double getPaymentTotal() {
         double total = 0.00;
