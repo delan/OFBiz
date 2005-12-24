@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <!-- Content Lookup forms -->
+    <form name="findCompDocTemplate" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="ListCompDocTemplate" title="" type="single">
+        <auto-fields-entity entity-name="Content" default-field-type="find" />
+        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listCompDocTemplate" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
+    </form>
+    
+    <!-- ContentRevision forms -->
+    <form name="EditContentRevision" default-map-name="contentRevision" target="updateContentRevision" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="ContentRevision" />
+        <alt-target target="createContentRevision" use-when="contentRevision==null"/>
+        
+        <field name="contentId" title="" widget-style="buttontext" ><lookup target-form-name="LookupContent"/><text/></field>
+        <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
+<!--         <field name="contentRevisionSeqId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="" key-field-name="contentRevisionSeqId"/>
+            </drop-down>
+        </field>
+-->
+        <field name="committedByPartyId" title="" widget-style="inputBox"></field>
+        <field name="comments" title="" widget-style="inputBox"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
+    </form>
+
+    <form name="ListContentRevision" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
+        <actions>
+            <entity-and entity-name="ContentRevision" use-cache="true">
+                <field-map env-name="contentId" field-name="contentId" />
+            </entity-and>
+        </actions>
+        <field name="contentId"><display/></field>
+        <field name="contentRevisionSeqId"><display/></field>
+        <field name="committedByPartyId"><display/></field>
+        <field name="comments"><display/></field>
+        <field name="editLink" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+        </field>
+        <field name="itemLink" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Item]" target="ListContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+        </field>
+        <field name="create" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision"/>
+        </field>
+    </form>
+    
+    <!-- ContentRevisionItem forms -->
+    <form name="EditContentRevisionItem" default-map-name="contentRevisionItem" target="updateContentRevisionItem" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="ContentRevisionItem" />
+        <alt-target target="createContentRevisionItem" use-when="contentRevisionItem==null"/>
+        
+        <field name="contentId" title="" widget-style="buttontext" ><lookup target-form-name="LookupContent"/><text/></field>
+        <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
+<!--         <field name="contentRevisionSeqId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="" key-field-name="contentRevisionSeqId"/>
+            </drop-down>
+        </field>
+-->
+        <field name="itemContentId" title="" widget-style="inputBox"></field>
+        <field name="oldDataResourceId" title="" widget-style="inputBox"></field>
+        <field name="newDataResourceId" title="" widget-style="inputBox"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
+    </form>
+
+    <form name="ListContentRevisionItem" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
+        <actions>
+            <entity-and entity-name="ContentRevisionItem" use-cache="true">
+                <field-map env-name="contentId" field-name="contentId" />
+                <field-map env-name="contentRevisionSeqId" field-name="contentRevisionSeqId" />
+            </entity-and>
+        </actions>
+        <field name="contentId"><display/></field>
+        <field name="contentRevisionSeqId"><display/></field>
+        <field name="itemContentId"><display/></field>
+        <field name="oldDataResourceId"><display/></field>
+        <field name="newDataResourceId"><display/></field>
+        <field name="editLink" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}"/>
+        </field>
+        <field name="create" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevisionItem"/>
+        </field>
+    </form>
+
+    <!-- ContentApproval forms -->
+    <form name="EditContentApproval" default-map-name="contentApproval" target="updateContentApproval" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+            <alt-target target="createContentApproval" use-when="contentApproval==null"/>
+        <auto-fields-entity entity-name="ContentApproval"/>
+        <field name="contentApprovalId" title="" widget-style="buttontext" ><text/></field>
+        <field name="contentId" title="" widget-style="inputBox"><lookup target-form-name="LookupContent"/><text/></field>
+        <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
+        <field name="partyId" title="" widget-style="inputBox">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                    <entity-constraint name="parentTypeId" value="CALENDAR_ROLE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="approvalStatusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" value="CALENDAR_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="approvalDate" title="" widget-style="inputBox"></field>
+        <field name="sequenceNum" title="" widget-style="inputBox"></field>
+        <field name="comments" title="" widget-style="inputBox"></field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
+    </form>
+
+    <form name="ListContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
+        <actions>
+            <entity-condition entity-name="ContentApproval">
+                <condition-list>
+                    <condition-expr field-name="contentId" operator="equals" env-name="contentId"/>
+                </condition-list>
+            </entity-condition>
+        </actions>
+        <field name="contentApprovalId"><display/></field>
+        <field name="contentId"><display/></field>
+        <field name="contentRevisionSeqId"><display/></field>
+        <field name="partyId"><display/></field>
+        <field name="roleTypeId"><display/></field>
+        <field name="approvalStatusId"><display/></field>
+        <field name="approvalDate"><display/></field>
+        <field name="sequenceNum"><display/></field>
+        <field name="comments"><display/></field>
+        <field name="Edit" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}"/>
+        </field>
+    </form>
+
+    <form name="EditCompDocTemplate" title="" type="single" target="persistCompDocTemplate"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="Content"/>
+        <auto-fields-entity entity-name="ContentAssoc"/>
+        <field name="contentName"><text/></field>
+
+        <field name="contentId"><hidden value="ECMC180004"/></field>
+        <field name="contentTypeId"><hidden value="COMPDOC_TEMPLATE"/></field>
+        <field name="ownerContentId"><hidden/></field>
+        <field name="instanceOfContentId"><hidden/></field>
+        <field name="dataResourceId"><hidden/></field>
+        <field name="templateDataResourceId"><hidden/></field>
+        <field name="dataSourceId"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+        <field name="privilegeEnumId"><hidden/></field>
+        <field name="serviceName"><hidden/></field>
+        <field name="description"><hidden/></field>
+        <field name="localeString"><hidden/></field>
+        <field name="mimeTypeId"><hidden/></field>
+        <field name="characterSetId"><hidden/></field>
+        <field name="childLeafCount"><hidden/></field>
+        <field name="childBranchCount"><hidden/></field>
+        <field name="createdDate"><hidden/></field>
+        <field name="createdByUserLogin"><hidden/></field>
+        <field name="lastModifiedDate"><hidden/></field>
+        <field name="lastModifiedByUserLogin"><hidden/></field>
+
+        <field name="contentIdTo"><hidden value="ECMC180003"/></field>
+        <field name="contentAssocTypeId"><hidden value="COMPDOC_PART"/></field>
+        <field name="fromDate"><hidden value="${nowTimestamp}"/></field>
+        <field name="thruDate"><hidden/></field>
+        <field name="contentAssocPredicateId"><hidden/></field>
+        <field name="sequenceNum"><hidden/></field>
+        <field name="mapKey"><hidden/></field>
+        <field name="upperCoordinate"><hidden/></field>
+        <field name="leftCoordinate"><hidden/></field>
+
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+</forms>
