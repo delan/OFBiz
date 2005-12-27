@@ -23,17 +23,48 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <!-- Content Lookup forms -->
+    
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <!-- CompDoc forms -->
     <form name="findCompDocTemplate" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="ListCompDocTemplate" title="" type="single">
-        <auto-fields-entity entity-name="Content" default-field-type="find" />
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        default-entity-name="ContentAssocViewFrom"
+        target="FindCompDocTemplate" title=" " type="single">
+        <field name="contentName" title="Name" ><text-find/></field>
+        <field name="contentId" title="Content Id" ><text-find/></field>
+        <field name="caFromDate" title="From Date" ><date-find/></field>
+        <field name="caThruDate" title="Thru Date" ><date-find/></field>
+        <field name="caContentIdTo" title="Publish-to content" ><text-find/></field>
+        <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addCompDocTemplate" title="">
+            <hyperlink also-hidden="false" description="Create" target="addCompDocTemplate"/> 
+        </field>
     </form>
     
-    <form name="listCompDocTemplate" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
+    <form name="listCompDocTemplate" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+        default-widget-style="tabletext" title="" type="list"
+        target=""  paginate-target="ContentAssocViewFrom" list-iterator-name="listIt">
+        <actions>
+            <entity-condition entity-name="ContentAssocViewFrom">
+                <condition-list>
+                    <condition-expr field-name="contentName" operator="equals" env-name="contentName"/>
+                    <condition-expr field-name="contentId" operator="equals" env-name="contentId"/>
+                    <condition-expr field-name="caFromDate" operator="equals" env-name="caFromDate"/>
+                    <condition-expr field-name="caThruDate" operator="equals" env-name="caThruDate"/>
+                    <condition-expr field-name="caContentIdTo" operator="equals" env-name="caContentIdTo"/>
+                </condition-list>
+            </entity-condition>
+        </actions>
+        <field name="contentId" title="Content Id" ><display/></field>
+        <field name="contentName" title="Name" ><display/></field>
+        <field name="editTemplate" title="">
+            <hyperlink also-hidden="false" description="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/> 
+        </field>
+        <field name="templateTree" title="">
+            <hyperlink also-hidden="false" description="Tree" target="CompDocTemplateTree?contentId=${contentId}&amp;contentName=${contentName}"/> 
+        </field>
     </form>
-    
     <!-- ContentRevision forms -->
     <form name="EditContentRevision" default-map-name="contentRevision" target="updateContentRevision" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
@@ -208,5 +239,51 @@
         <field name="leftCoordinate"><hidden/></field>
 
         <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="EditCompDocInstance" title="" type="single" target="persistCompDocTemplate"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="Content"/>
+        <auto-fields-entity entity-name="ContentAssoc"/>
+        <field name="contentName"><text/></field>
+
+        <field name="contentId"><hidden/></field>
+        <field name="contentTypeId"><hidden value="COMPDOC_INSTANCE"/></field>
+        <field name="ownerContentId"><hidden/></field>
+        <field name="instanceOfContentId"><hidden/></field>
+        <field name="dataResourceId"><hidden/></field>
+        <field name="templateDataResourceId"><hidden/></field>
+        <field name="dataSourceId"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+        <field name="privilegeEnumId"><hidden/></field>
+        <field name="serviceName"><hidden/></field>
+        <field name="description"><hidden/></field>
+        <field name="localeString"><hidden/></field>
+        <field name="mimeTypeId"><hidden/></field>
+        <field name="characterSetId"><hidden/></field>
+        <field name="childLeafCount"><hidden/></field>
+        <field name="childBranchCount"><hidden/></field>
+        <field name="createdDate"><hidden/></field>
+        <field name="createdByUserLogin"><hidden/></field>
+        <field name="lastModifiedDate"><hidden/></field>
+        <field name="lastModifiedByUserLogin"><hidden/></field>
+
+        <field name="contentIdTo"><hidden/></field>
+        <field name="contentAssocTypeId"><hidden value="TREE_CHILD"/></field>
+        <field name="fromDate"><hidden value="${nowTimestamp}"/></field>
+        <field name="thruDate"><hidden/></field>
+        <field name="contentAssocPredicateId"><hidden/></field>
+        <field name="sequenceNum"><hidden/></field>
+        <field name="mapKey"><hidden/></field>
+        <field name="upperCoordinate"><hidden/></field>
+        <field name="leftCoordinate"><hidden/></field>
+
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="Approval" title="">
+            <hyperlink also-hidden="false" description="Approval" target="ListContentApproval?contentId=${contentId}"/> 
+        </field>
+        <field name="Revision" title="">
+            <hyperlink also-hidden="false" description="Revision" target="ListContentRevision?contentId=${contentId}"/> 
+        </field>
     </form>
 </forms>
