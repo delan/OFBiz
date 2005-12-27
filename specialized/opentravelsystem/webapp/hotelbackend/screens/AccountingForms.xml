@@ -75,7 +75,7 @@
             <script location="component://opentravelsystem/webapp/hotelbackend/script/ListInvoices.bsh"/>
         </actions>
         <field name="company" widget-style="buttontext" >
-            <hyperlink description="${company}" target="edutParty?partyId=${company}" target-window="new"/>
+            <hyperlink description="${company}" target="editParty?partyId=${company}" target-window="new"/>
         </field>
         <field name="name"><display/></field>
         <field name="revenue" widget-area-style="tabletextright"><display/></field>

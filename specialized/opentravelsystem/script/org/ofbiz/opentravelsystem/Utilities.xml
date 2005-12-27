@@ -93,15 +93,15 @@
                      </calculate>
                      
                      <!-- check if party does not need a sales tax -->
-                     <make-value value-name="partyTaxInfo" entity-name="PartyTaxInfo"/>
+                     <make-value value-name="partyTaxInfo" entity-name="PartyTaxAuthInfo"/>
                      <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
                          <set field="partyTaxInfo.partyId" from-field="payment.partyIdTo"/>
                          <else>
                              <set field="partyTaxInfo.partyId" from-field="payment.partyIdFrom"/>
                          </else>
                      </if-compare>
-                     <set field="partyTaxInfo.geoId" value="NLD"/>
-                     <find-by-and entity-name="PartyTaxInfo" map-name="partyTaxInfo" list-name="partyTaxInfos"/>
+                     <set field="partyTaxInfo.taxAuthGeoId" value="NLD"/>
+                     <find-by-and entity-name="PartyTaxAuthInfo" map-name="partyTaxInfo" list-name="partyTaxInfos"/>
                      <filter-list-by-date list-name="partyTaxInfos"/>
                      <first-from-list entry-name="partyTaxInfo" list-name="partyTaxInfos"/>
                      

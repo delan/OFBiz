@@ -54,17 +54,17 @@
         <description>Retrieve the party information</description>
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="groupName" type="String" mode="IN" optional="true"/>
-        <attribute name="address1" type="String" mode="IN" optional="true"/>
-        <attribute name="address2" type="String" mode="IN" optional="true"/>
-        <attribute name="city" type="String" mode="IN" optional="true"/>
-        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
-        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
-        <attribute name="telephone" type="String" mode="IN" optional="true"/>
-        <attribute name="fax" type="String" mode="IN" optional="true"/>
-        <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="groupName" type="String" mode="OUT" optional="true"/>
+        <attribute name="address1" type="String" mode="OUT" optional="true"/>
+        <attribute name="address2" type="String" mode="OUT" optional="true"/>
+        <attribute name="city" type="String" mode="OUT" optional="true"/>
+        <attribute name="postalCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="OUT" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="OUT" optional="true"/>
+        <attribute name="telephone" type="String" mode="OUT" optional="true"/>
+        <attribute name="fax" type="String" mode="OUT" optional="true"/>
+        <attribute name="accountNumber" type="String" mode="OUT" optional="true"/>
     </service>
     
     <service name="otsGetOrganizationParty" engine="simple" location="org/ofbiz/opentravelsystem/PartyServices.xml"
