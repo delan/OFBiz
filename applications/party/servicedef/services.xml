@@ -71,6 +71,7 @@
         <description>Update a PartyGroup</description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
     </service>
 

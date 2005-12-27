@@ -7,6 +7,7 @@
     <SecurityPermission description="Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
     <SecurityPermission description="ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
     <SecurityPermission description="Create notes in the Party Manager." permissionId="PARTYMGR_NOTE"/>
+    <SecurityPermission description="Update party groups in the Party Manager." permissionId="PARTYMGR_GRP_UPDATE"/>
     <SecurityPermission description="Create party relationships in the Party Manager." permissionId="PARTYMGR_REL_CREATE"/>
     <SecurityPermission description="Update party relationships in the Party Manager." permissionId="PARTYMGR_REL_UPDATE"/>
     <SecurityPermission description="Create party roles in the Party Manager." permissionId="PARTYMGR_ROLE_CREATE"/>
@@ -25,6 +26,7 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_UPDATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_NOTE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_GRP_UPDATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_REL_CREATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_REL_UPDATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_ROLE_CREATE"/>

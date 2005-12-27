@@ -338,7 +338,13 @@ public class PartyServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        // get the party Id from context if party has permission to update groups, otherwise use getPartyIdCheckSecurity
+        String partyId = null;
+        if (security.hasEntityPermission("PARTYMGR", "_GRP_UPDATE", userLogin)) {
+            partyId = (String) context.get("partyId");
+        } else {
+            partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        }
         Locale locale = (Locale) context.get("locale");
         String errMsg = null;
 
