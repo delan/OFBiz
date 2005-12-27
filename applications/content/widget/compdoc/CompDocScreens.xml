@@ -187,10 +187,9 @@
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="findCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                        <include-form name="listCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml" />
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -213,7 +212,22 @@
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="listCompDocTemplate" location="component://content/webapp/content/content/CompDocForms.xml"/>
+                        <section>   
+                            <actions>
+                                <entity-condition entity-name="ContentAssocViewFrom"  list-name="compDocFindList">
+                                    <condition-list combine="and" >
+                                        <condition-expr field-name="contentName" operator="equals" env-name="contentName" ignore-if-empty="true"/>
+                                        <condition-expr field-name="contentId" operator="equals" env-name="contentId" ignore-if-empty="true"/>
+                                        <condition-expr field-name="caFromDate" operator="equals" env-name="caFromDate" ignore-if-empty="true"/>
+                                        <condition-expr field-name="caThruDate" operator="equals" env-name="caThruDate" ignore-if-empty="true"/>
+                                        <condition-expr field-name="caContentIdTo" operator="equals" env-name="caContentIdTo" ignore-if-empty="true"/>
+                                    </condition-list>
+                                </entity-condition>
+                            </actions>                      
+                            <widgets>
+                                <include-form name="listCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                            </widgets>
+                        </section>   
                     </decorator-section>
                 </decorator-screen>
             </widgets>

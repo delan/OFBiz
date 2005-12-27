@@ -23,14 +23,11 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <!-- CompDoc forms -->
     <form name="findCompDocTemplate" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         default-entity-name="ContentAssocViewFrom"
-        target="FindCompDocTemplate" title=" " type="single">
+        target="ListCompDocTemplate" title=" " type="single" > 
         <field name="contentName" title="Name" ><text-find/></field>
         <field name="contentId" title="Content Id" ><text-find/></field>
         <field name="caFromDate" title="From Date" ><date-find/></field>
@@ -43,18 +40,9 @@
     </form>
     
     <form name="listCompDocTemplate" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-        default-widget-style="tabletext" title="" type="list"
-        target=""  paginate-target="ContentAssocViewFrom" list-iterator-name="listIt">
+        default-widget-style="tabletext" title="" type="list" list-name="compDocFindList"
+        target=""  paginate-target="ContentAssocViewFrom">
         <actions>
-            <entity-condition entity-name="ContentAssocViewFrom">
-                <condition-list>
-                    <condition-expr field-name="contentName" operator="equals" env-name="contentName"/>
-                    <condition-expr field-name="contentId" operator="equals" env-name="contentId"/>
-                    <condition-expr field-name="caFromDate" operator="equals" env-name="caFromDate"/>
-                    <condition-expr field-name="caThruDate" operator="equals" env-name="caThruDate"/>
-                    <condition-expr field-name="caContentIdTo" operator="equals" env-name="caContentIdTo"/>
-                </condition-list>
-            </entity-condition>
         </actions>
         <field name="contentId" title="Content Id" ><display/></field>
         <field name="contentName" title="Name" ><display/></field>
@@ -65,6 +53,7 @@
             <hyperlink also-hidden="false" description="Tree" target="CompDocTemplateTree?contentId=${contentId}&amp;contentName=${contentName}"/> 
         </field>
     </form>
+    
     <!-- ContentRevision forms -->
     <form name="EditContentRevision" default-map-name="contentRevision" target="updateContentRevision" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
