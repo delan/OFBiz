@@ -23,7 +23,9 @@
  */
 package org.ofbiz.content.data;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -59,8 +61,10 @@ import org.ofbiz.content.email.NotificationServices;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 import org.ofbiz.widget.screen.ModelScreen;
 import org.ofbiz.widget.screen.ScreenFactory;
@@ -1054,4 +1058,83 @@ public class DataResourceWorker {
         }
         return latestDir;
     }
+    
+    public static ByteWrapper getContentAsByteWrapper(GenericDelegator delegator, String dataResourceId, String https, String webSiteId, Locale locale, String rootDir) throws IOException, GeneralException {
+
+    	ByteWrapper byteWrapper = new ByteWrapper(new byte[0]);
+    	GenericValue dataResource = null;
+    	String text = null;
+    	try {
+    		dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+    		if (dataResource == null) {
+    			Debug.logInfo("DataResource for " + dataResourceId + " is null.", module);
+        		return byteWrapper;
+    		}
+	        String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
+	        if (UtilValidate.isEmpty(dataResourceTypeId)) {
+	            dataResourceTypeId = "SHORT_TEXT";
+	        }
+	        String mimeTypeId = dataResource.getString("mimeTypeId");
+	        if (UtilValidate.isEmpty(mimeTypeId)) {
+	        	mimeTypeId = "text/html";
+	        }
+	
+	        if (dataResourceTypeId.equals("SHORT_TEXT")) {
+	            text = dataResource.getString("objectInfo");
+	            byteWrapper = new ByteWrapper(text.getBytes());
+	        } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
+	            GenericValue electronicText = delegator.findByPrimaryKeyCache("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
+	            if (electronicText != null) {
+	                text = electronicText.getString("textData");
+	                byteWrapper = new ByteWrapper(text.getBytes());
+	            }
+	        } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+	        	byte [] imageBytes = acquireImage(delegator, dataResource);
+                byteWrapper = new ByteWrapper(imageBytes);
+	        } else if (dataResourceTypeId.equals("LINK")) {
+	            text = dataResource.getString("objectInfo");
+	            byteWrapper = new ByteWrapper(text.getBytes());
+	        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
+	            URL url = new URL(dataResource.getString("objectInfo"));
+	            if (url.getHost() != null) { // is absolute
+	                InputStream in = url.openStream();
+	                int c;
+	                StringWriter sw = new StringWriter();
+	                while ((c = in.read()) != -1) {
+	                    sw.write(c);
+	                }
+	                sw.close();
+	                text = sw.toString();
+	            } else {
+	                String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
+	                String sep = "";
+	                //String s = "";
+	                if (url.toString().indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
+	                    sep = "/";
+	                }
+	                String s2 = prefix + sep + url.toString();
+	                URL url2 = new URL(s2);
+	                text = (String) url2.getContent();
+	            }
+	            byteWrapper = new ByteWrapper(text.getBytes());
+	        } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
+	            String objectInfo = dataResource.getString("objectInfo");
+	            File inputFile = getContentFile(dataResourceId, objectInfo, rootDir);
+		    	long fileSize = inputFile.length();
+		    	FileInputStream fis = new FileInputStream(inputFile);
+		    	ByteArrayOutputStream baos = new ByteArrayOutputStream((int)fileSize);
+		    	int c;
+		    	while ((c = fis.read()) != -1) {
+		    		baos.write(c);
+		    	}
+	            byteWrapper = new ByteWrapper(baos.toByteArray());
+	        } else {
+	            throw new GeneralException("The dataResourceTypeId [" + dataResourceTypeId + "] is not supported in getContentAsByteWrapper");
+	        }
+    	} catch(GenericEntityException e) {
+            throw new GeneralException(e.getMessage());
+    	}
+        return byteWrapper;
+    }
+
 }
