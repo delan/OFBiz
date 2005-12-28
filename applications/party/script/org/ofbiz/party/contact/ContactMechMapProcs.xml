@@ -63,6 +63,7 @@
   	<process field="contactMechId"><copy set-if-null="false"/></process>	  	
     <process field="countryCode"><copy/></process>
     <process field="areaCode"><copy/></process>
+    <process field="askForName"><copy/></process>
     <process field="contactNumber"><copy/><not-empty><fail-property resource="PartyUiLabels" property="PartyContactNumberMissing"/>
     	</not-empty></process>
   </simple-map-processor>
