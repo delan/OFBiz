@@ -93,7 +93,6 @@
                      </calculate>
                      
                      <!-- check if party does not need a sales tax -->
-                     <make-value value-name="partyTaxInfo" entity-name="PartyTaxAuthInfo"/>
                      <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
                          <set field="partyTaxInfo.partyId" from-field="payment.partyIdTo"/>
                          <else>
@@ -106,7 +105,7 @@
                      <first-from-list entry-name="partyTaxInfo" list-name="partyTaxInfos"/>
                      
                      <set value="${invoiceId}" field="invoiceItem.invoiceId"/>
-                     
+                     <if-not-empty field-name="partyTaxInfo"><log level="always" message="${partyTaxInfo}"/></if-not-empty>
                      <if-compare field-name="partyTaxInfo.isExempt" value="Y" operator="equals">
                          <!--  create one item record only  -->
                          <set value="N" field="invoiceItem.taxableFlag"/>
