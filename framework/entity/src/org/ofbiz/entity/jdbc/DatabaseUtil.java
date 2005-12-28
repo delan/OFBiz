@@ -272,7 +272,7 @@ public class DatabaseUtil {
                                         Debug.logError(message, module);
                                         if (messages != null) messages.add(message);
                                     }
-                                    if (columnSize != -1 && ccInfo.columnSize != -1 && columnSize != ccInfo.columnSize) {
+                                    if (columnSize != -1 && ccInfo.columnSize != -1 && columnSize != ccInfo.columnSize && (columnSize * 3) != ccInfo.columnSize) {
                                         String message = "WARNING: Column [" + ccInfo.columnName + "] of table [" + entity.getTableName(datasourceInfo) + "] of entity [" +
                                             entity.getEntityName() + "] has a column size of [" + ccInfo.columnSize +
                                             "] in the database, but is defined to have a column size of [" + columnSize + "] in the entity definition.";
