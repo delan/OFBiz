@@ -22,10 +22,13 @@
  *@author     Leon Torres (leon@opensourcestrategies.com)
  *@author     Si Chen (sichen@opensourcestrategies.com)
 -->
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <#-- Generates PDF of return invoice -->
 <#-- A great XSL:FO tutorial is at http://www.xml.com/pub/a/2001/01/17/xsl-fo/ -->
+
+<#assign fromPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", returnHeader.fromPartyId, "compareDate", returnHeader.entryDate, "userLogin", userLogin))/>
+<#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", returnHeader.toPartyId, "compareDate", returnHeader.entryDate, "userLogin", userLogin))/>
 
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
@@ -127,11 +130,12 @@
               <fo:table-body>
                 <fo:table-row><fo:table-cell border-style="solid" border-width="0.2pt" padding="1mm"><fo:block font-weight="bold">Return From</fo:block></fo:table-cell></fo:table-row>
                 <fo:table-row><fo:table-cell padding="1mm">
-                 <fo:block white-space-collapse="false"><#if postalAddressFrom?exists><#if postalAddressFrom.toName?has_content>${postalAddressFrom.toName}</#if><#if postalAddressFrom.attnName?has_content>
-${postalAddressFrom.attnName}</#if>
-${postalAddressFrom.address1}<#if postalAddressFrom.address2?has_content>
-${postalAddressFrom.address2}<br/></#if>
-${postalAddressFrom.city}<#if postalAddressFrom.stateProvinceGeoId?has_content>, ${postalAddressFrom.stateProvinceGeoId} </#if></#if></fo:block>
+                  <fo:block white-space-collapse="false"><#if fromPartyNameResult.fullName?has_content>${fromPartyNameResult.fullName}<#else/><#if (postalAddressFrom.toName)?has_content>${postalAddressFrom.toName}</#if><#if (postalAddressFrom.attnName)?has_content>
+${postalAddressFrom.attnName}</#if></#if>
+${postalAddressFrom.address1}<#if (postalAddressFrom.address2)?has_content>
+${postalAddressFrom.address2}</#if>
+${postalAddressFrom.city}<#if (postalAddressFrom.stateProvinceGeoId)?has_content>, ${postalAddressFrom.stateProvinceGeoId}</#if><#if (postalAddressFrom.postalCode)?has_content>, ${postalAddressFrom.postalCode}</#if>
+                  </fo:block>
 
                 </fo:table-cell></fo:table-row>
               </fo:table-body>
@@ -141,21 +145,19 @@ ${postalAddressFrom.city}<#if postalAddressFrom.stateProvinceGeoId?has_content>,
             <fo:table-cell/>
 
             <fo:table-cell>
-            <#if postalAddressTo?exists>
             <fo:table border-style="solid" border-width="0.2pt" height="1in">
               <fo:table-column column-width="2.75in"/>
               <fo:table-body>
                 <fo:table-row><fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt"><fo:block font-weight="bold">Return To</fo:block></fo:table-cell></fo:table-row>
                 <fo:table-row><fo:table-cell padding="1mm">
-                 <fo:block white-space-collapse="false"><#if postalAddressTo?exists><#if postalAddressTo.toName?has_content>${postalAddressTo.toName}</#if><#if postalAddressTo.attnName?has_content>
-${postalAddressTo.attnName}</#if>
-${postalAddressTo.address1}<#if postalAddressTo.address2?has_content>
-${postalAddressTo.address2}<br/></#if>
-${postalAddressTo.city}<#if postalAddressTo.stateProvinceGeoId?has_content>, ${postalAddressTo.stateProvinceGeoId} </#if></#if></fo:block>
+                  <fo:block white-space-collapse="false"><#if toPartyNameResult.fullName?has_content>${toPartyNameResult.fullName}<#else/><#if (postalAddressTo.toName)?has_content>${postalAddressTo.toName}</#if><#if (postalAddressTo.attnName)?has_content>
+${postalAddressTo.attnName}</#if></#if>
+${postalAddressTo.address1}<#if (postalAddressTo.address2)?has_content>
+${postalAddressTo.address2}</#if>
+${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, ${postalAddressTo.stateProvinceGeoId}</#if><#if (postalAddressTo.postalCode)?has_content>, ${postalAddressTo.postalCode}</#if></fo:block>
                 </fo:table-cell></fo:table-row>
               </fo:table-body>
             </fo:table>
-            </#if>
             </fo:table-cell>
               
           </fo:table-row>
@@ -225,8 +227,8 @@ ${postalAddressTo.city}<#if postalAddressTo.stateProvinceGeoId?has_content>, ${p
                 </fo:table-cell>
                 <fo:table-cell padding="1mm"><fo:block wrap-option="wrap">${returnItem.description}</fo:block></fo:table-cell>
                 <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnItem.returnQuantity}</fo:block></fo:table-cell>
-                <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnItem.returnPrice?string.currency}</fo:block></fo:table-cell>
-                <fo:table-cell padding="1mm" text-align="right"><fo:block>${(returnItem.returnPrice * returnItem.returnQuantity)?string.currency}</fo:block></fo:table-cell>
+                <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnItem.returnPrice}</fo:block></fo:table-cell>
+                <fo:table-cell padding="1mm" text-align="right"><fo:block>${(returnItem.returnPrice * returnItem.returnQuantity)}</fo:block></fo:table-cell>
               </fo:table-row>
               <#assign total = total + returnItem.returnQuantity.doubleValue() * returnItem.returnPrice.doubleValue()/>
             </#list>
@@ -236,7 +238,6 @@ ${postalAddressTo.city}<#if postalAddressTo.stateProvinceGeoId?has_content>, ${p
       </fo:block>
 
       <#-- total -->
-
         <fo:table space-before="5mm" font-size="10pt">
           <fo:table-column column-width="0.85in"/>
           <fo:table-column column-width="0.85in"/>
@@ -254,15 +255,12 @@ ${postalAddressTo.city}<#if postalAddressTo.stateProvinceGeoId?has_content>, ${p
                 <fo:block font-weight="bold" text-align="center">Total</fo:block>
               </fo:table-cell>
               <fo:table-cell text-align="right" padding="1mm" border-style="solid" border-width="0.2pt">
-                <fo:block>${total?string.currency}</fo:block>
+                <fo:block>${total}</fo:block>
               </fo:table-cell>
             </fo:table-row>
           </fo:table-body>
         </fo:table>
-      
       <fo:block id="theEnd"/>  <#-- marks the end of the pages and used to identify page-number at the end -->
     </fo:flow>
-
   </fo:page-sequence>
-      
 </fo:root>
