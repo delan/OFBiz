@@ -33,8 +33,6 @@ import org.ofbiz.party.contact.*;
 orderId = parameters.get("orderId");
 partyId = parameters.get("fromPartyId");
 returnId = parameters.get("returnId");
-if (returnId == null)
-    returnId = (String) request.getAttribute("returnId");
     
 returnHeader = null;
 if (returnId != null) {
