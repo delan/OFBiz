@@ -24,7 +24,7 @@
  -->
  
  <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="file:/home/hans/ofbiz/framework/minilang/dtd/simple-methods.xsd">
+     xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
      
      <!-- create an invoice from a payment and apply the payment -->
      <simple-method method-name="CreateInvoicesFromPayments" short-description="--Create an Invoice header and detail records from a payment">
@@ -93,44 +93,50 @@
                      </calculate>
                      
                      <!-- check if party does not need a sales tax -->
-                     <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
-                         <set field="partyTaxInfo.partyId" from-field="payment.partyIdTo"/>
+                     <if-compare-field field-name="payment.partyIdFrom" operator="equals" to-field-name="parameters.organizationPartyId">
+                         <set field="partyTaxInfoSearch.partyId" from-field="payment.partyIdTo"/>
                          <else>
-                             <set field="partyTaxInfo.partyId" from-field="payment.partyIdFrom"/>
+                             <set field="partyTaxInfoSearch.partyId" from-field="payment.partyIdFrom"/>
                          </else>
-                     </if-compare>
-                     <set field="partyTaxInfo.taxAuthGeoId" value="NLD"/>
-                     <find-by-and entity-name="PartyTaxAuthInfo" map-name="partyTaxInfo" list-name="partyTaxInfos"/>
-                     <filter-list-by-date list-name="partyTaxInfos"/>
-                     <first-from-list entry-name="partyTaxInfo" list-name="partyTaxInfos"/>
-                     
+                     </if-compare-field>
+                     <set field="partyTaxInfoSearch.taxAuthGeoId" value="NLD"/>
+                     <find-by-and entity-name="PartyTaxAuthInfo" map-name="partyTaxInfoSearch" list-name="partyTaxInfos"/>
+                     <filter-list-by-date list-name="partyTaxInfos" to-list-name="fPartyTaxInfos"/>
+                     <first-from-list entry-name="partyTaxInfo" list-name="fPartyTaxInfos"/>
                      <set value="${invoiceId}" field="invoiceItem.invoiceId"/>
-                     <if-not-empty field-name="partyTaxInfo"><log level="always" message="${partyTaxInfo}"/></if-not-empty>
-                     <if-compare field-name="partyTaxInfo.isExempt" value="Y" operator="equals">
-                         <!--  create one item record only  -->
-                         <set value="N" field="invoiceItem.taxableFlag"/>
-                         <set field="invoiceItem.amount" from-field="payment.amount"/>
-                         <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
-                             <if-compare field-name="payment.paymentTypeId" value="SALES_TAX_PAYMENT" operator="equals">
-                                 <set value="PINV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
-                                 <else>
-                                     <set value="PINV_SPROD_ITEM" field="invoiceItem.invoiceItemTypeId"/>
-                                 </else>
-                             </if-compare>
-                             <else>
+                     <if>
+                         <condition>
+                             <and>
+                                 <if-compare-field field-name="partyTaxInfo.partyId" operator="equals" to-field-name="partyTaxInfoSearch.partyId"/>
+                                 <if-compare field-name="partyTaxInfo.isExempt" value="Y" operator="equals"/>
+                             </and>
+                         </condition>
+                         <then>
+                             <log level="always" message="+++Party: ${partyTaxInfoSearch.partyId}/${partyTaxInfo.partyId}, no VAT..."></log>
+                             <!--  create one item record only, no tax required -->
+                             <set value="N" field="invoiceItem.taxableFlag"/>
+                             <set field="invoiceItem.amount" from-field="payment.amount"/>
+                             <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
                                  <if-compare field-name="payment.paymentTypeId" value="SALES_TAX_PAYMENT" operator="equals">
-                                     <set value="INV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
+                                     <set value="PINV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
                                      <else>
-                                         <set value="INV_MISC_CHARGE" field="invoiceItem.invoiceItemTypeId"/>
+                                         <set value="PINV_SPROD_ITEM" field="invoiceItem.invoiceItemTypeId"/>
                                      </else>
                                  </if-compare>
-                             </else>
-                         </if-compare>
-                         <set value="Amount no VAT required" field="invoiceItem.description"/>
-                         <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
-                         
-                         <else> <!-- apply the sales tax -->
-                             
+                                 <else>
+                                     <if-compare field-name="payment.paymentTypeId" value="SALES_TAX_PAYMENT" operator="equals">
+                                         <set value="INV_SALES_TAX" field="invoiceItem.invoiceItemTypeId"/>
+                                         <else>
+                                             <set value="INV_MISC_CHARGE" field="invoiceItem.invoiceItemTypeId"/>
+                                         </else>
+                                     </if-compare>
+                                 </else>
+                             </if-compare>
+                             <set value="Amount no VAT required" field="invoiceItem.description"/>
+                             <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
+                         </then>
+                         <else> <!-- create two records one for the sales tax 19% -->
+                             <log level="always" message="+++Party: ${partyTaxInfoSearch.partyId}, should pay VAT..."></log>
                              <!-- first invoiceItem -->
                              <set value="Y" field="invoiceItem.taxableFlag"/>
                              <calculate field-name="invoiceItem.amount" rounding-mode="HalfUp" >
@@ -170,7 +176,7 @@
                              <set value="VAT 19%" field="invoiceItem.description"/>
                              <call-service service-name="createInvoiceItem" in-map-name="invoiceItem"/>
                          </else>                     
-                     </if-compare>
+                     </if>
                      
                      <!-- apply the payment to the invoice -->
                      <set field="application.invoiceId" from-field="invoiceId"/>
