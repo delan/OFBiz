@@ -19,6 +19,8 @@
     <MimeType mimeTypeId="application/postscript" description="Postsctipt Application/Script"/>
     <MimeType mimeTypeId="application/zip" description="ZIP Data"/>
     <MimeType mimeTypeId="application/pdf" description="Adobe Portable Document Format (PDF)"/>
+    <MimeType mimeTypeId="application/msword" description="Microsoft Word"/>
+    <MimeType mimeTypeId="application/vnd.oasis.opendocument.text" description="OpenOffice OpenDocument Text"/>
 
     <!-- audio mime types -->
     <MimeType mimeTypeId="audio/basic" description="Basic Audio"/>
@@ -77,6 +79,8 @@
     <FileExtension fileExtensionId="html" mimeTypeId="text/html"/>
     <FileExtension fileExtensionId="xml" mimeTypeId="text/xml"/>
     <FileExtension fileExtensionId="vrml" mimeTypeId="model/vrml"/>
+    <FileExtension fileExtensionId="doc" mimeTypeId="application/msword"/>
+    <FileExtension fileExtensionId="odt" mimeTypeId="application/vnd.oasis.opendocument.text"/>
 
     <!-- Registered MIME Types:
     MEDIA TYPES
