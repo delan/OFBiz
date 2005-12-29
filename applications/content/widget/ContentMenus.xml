@@ -36,7 +36,8 @@
         <menu-item name="ContentSetupMenu" title="${uiLabelMap.ContentContentSetup}"><link target="ContentSetupMenu"/></menu-item>
         <menu-item name="DataResourceSetupMenu" title="${uiLabelMap.ContentDataSetup}"><link target="DataResourceSetupMenu"/></menu-item>
         <menu-item name="Layout" title="${uiLabelMap.ContentTemplate}"><link target="LayoutMenu"/></menu-item>
-        <menu-item name="CompDoc" title="${uiLabelMap.ContentCompDoc}"><link target="FindCompDoc"/></menu-item>
+        <menu-item name="CMS" title="${uiLabelMap.ContentCMS}"><link target="CMSContentFind"/></menu-item>
+        <menu-item name="CompDoc" title="${uiLabelMap.ContentCompDoc}"><link target="FindCompDocTemplate"/></menu-item>
         
         <menu-item name="Logout" title="Logout" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
             <condition><not><if-empty field-name="userLogin"/></not></condition>

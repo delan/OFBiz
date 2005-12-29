@@ -23,6 +23,7 @@
     <ContentAssocType contentAssocTypeId="SUMMARY" description="Summary"/>
 
     <ContentAssocType contentAssocTypeId="COMPDOC_PART" description="Composite Document Part"/>
+    <ContentAssocType contentAssocTypeId="INSTANCE" description="Instance Of"/>
     
     <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
     <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
@@ -98,7 +99,6 @@
     <ContentType contentTypeId="STRUCTURE_LEAF" description="Structure Leaf" hasTable="N" parentTypeId=""/>
     <ContentType contentTypeId="STRUCTURE_DEF" description="Structure Definition (like DTD)" hasTable="N" parentTypeId=""/>
     <ContentType contentTypeId="TXFORM_DEF" description="Transformation Definition (like XSLT)" hasTable="N" parentTypeId=""/>
-    <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
     <ContentType contentTypeId="OUTLINE_NODE" description="Outline Node" hasTable="N" parentTypeId="DOCUMENT"/>
     <ContentType contentTypeId="PAGE_NODE" description="Page Node" hasTable="N" parentTypeId="DOCUMENT"/>
     <ContentType contentTypeId="SUBPAGE_NODE" description="Sub Page Node" hasTable="N" parentTypeId="DOCUMENT"/>
@@ -146,6 +146,8 @@
     <DataResourceType dataResourceTypeId="LOCAL_FILE_BIN" description="Local Binary File" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="OFBIZ_FILE_BIN" description="Binary File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="CONTEXT_FILE_BIN" description="Binary File (rel to webapp root)" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="SURVEY" description="Survey" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="SURVEY_RESPONSE" description="Survey Response" hasTable="N" parentTypeId=""/>
 
     <DataTemplateType dataTemplateTypeId="NONE" description="No Template" extension=""/>
     <DataTemplateType dataTemplateTypeId="FTL" description="FreeMarker" extension="ftl"/>
