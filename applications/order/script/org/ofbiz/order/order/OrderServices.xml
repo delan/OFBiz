@@ -311,6 +311,55 @@
             </if-compare-field>
         </if-compare>
     </simple-method>
+
+    <simple-method method-name="getNextOrderId" short-description="Get Next orderId">
+        <!-- try to find PartyAcctgPreference for parameters.partyId, see if we need any special order number sequencing -->
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference"/>
+        <log level="info" message="In getNextOrderId partyId is [${parameters.partyId}], partyAcctgPreference: ${partyAcctgPreference}"/>
+        
+        <if>
+            <condition>
+                <if-compare field-name="partyAcctgPreference.orderSequenceEnumId" operator="equals" value="ODRSQ_ENF_SEQ"/>
+            </condition>
+            <then>
+                <!-- <log level="info" message="In getNextOrderId sequence enum ODRSQ_ENF_SEQ"/> -->
+                <!-- this is sequential sequencing, we can't skip a number, also it must be a unique sequence per partyIdFrom -->
+                <if-not-empty field-name="partyAcctgPreference.lastOrderNumber">
+                    <calculate field-name="partyAcctgPreference.lastOrderNumber" type="Long">
+                        <calcop operator="add" field-name="partyAcctgPreference.lastOrderNumber"/>
+                        <number value="1"/>
+                    </calculate>
+                    <else>
+                        <calculate field-name="partyAcctgPreference.lastOrderNumber" type="Long"><number value="1"/></calculate>
+                    </else>
+                </if-not-empty>
+                <store-value value-name="partyAcctgPreference"/>
+                <set from-field="partyAcctgPreference.lastOrderNumber" field="orderIdTemp"/>
+            </then>
+            <else>
+                <!-- <log level="info" message="In getNextOrderId sequence enum ODRSQ_STANDARD"/> -->
+                <!-- default to the default sequencing: ODRSQ_STANDARD -->
+                <set from-field="parameters.orderId" field="orderIdTemp"/>
+                <if-empty field-name="orderIdTemp">
+                    <sequenced-id-to-env sequence-name="OrderHeader" env-name="orderIdTemp"/>
+                    <else>
+                        <!-- check the provided ID --> 
+                        <check-id field-name="orderIdTemp"/>
+                        <check-errors/>
+                    </else>
+                </if-empty>
+            </else>
+        </if>
+
+        <if-not-empty field-name="parameters.productStoreId">
+            <entity-one entity-name="ProductStore" value-name="productStore"/>
+        </if-not-empty>
+        
+        <!-- use orderIdTemp along with the orderIdPrefix to create the real ID -->
+        <set field="orderId" value="${productStore.orderNumberPrefix}${partyAcctgPreference.orderIdPrefix}${orderIdTemp}"/>
+        <field-to-result field-name="orderId" result-name="orderId"/>
+    </simple-method>
+    
     <simple-method method-name="createOrderHeader" short-description="Create OrderHeader">
         <set value="Create OrderHeader" field="operationName"/>
         <check-permission permission="ORDERMGR" action="_CREATE">

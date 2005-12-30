@@ -1449,35 +1449,47 @@
       <prim-key field="glXbrlClassId"/>
     </entity>
     <entity entity-name="PartyAcctgPreference"
-            package-name="org.ofbiz.accounting.ledger"
-            title="Party (organization) accounting preferences">
-       <field name="partyId" type="id-ne"/>
-       <field name="fiscalYearStartMonth" type="numeric"/>
-       <field name="fiscalYearStartDay" type="numeric"/>
-       <field name="taxFormId" type="id-ne"/>
-       <field name="cogsMethodId" type="id-ne"/>
-       <field name="baseCurrencyUomId" type="id-ne"/>
-       <field name="invoiceSequenceEnumId" type="id-ne"/>
-       <field name="invoiceIdPrefix" type="very-short"/>
-       <field name="lastInvoiceNumber" type="numeric"/>
-       <field name="lastInvoiceRestartDate" type="date-time"/>
-       <field name="useInvoiceIdForReturns" type="indicator"/>
-       <prim-key field="partyId"/>
-       <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREF_PTY">
-           <key-map field-name="partyId"/>
-       </relation>
-       <relation type="one" fk-name="ACTGPREF_TAXFORM" title="TaxForm" rel-entity-name="Enumeration">
-           <key-map field-name="taxFormId" rel-field-name="enumId"/>
-       </relation>
-       <relation type="one" fk-name="ACTGPREF_COGS" title="Cogs" rel-entity-name="Enumeration">
-           <key-map field-name="cogsMethodId" rel-field-name="enumId"/>
-       </relation>
-       <relation type="one" fk-name="ACCTGPREF_CURNCY" rel-entity-name="Uom">
-           <key-map field-name="baseCurrencyUomId" rel-field-name="uomId"/>
-       </relation>
-       <relation type="one" fk-name="ACTGPREF_INVSQ" title="InvoiceSequence" rel-entity-name="Enumeration">
-           <key-map field-name="invoiceSequenceEnumId" rel-field-name="enumId"/>
-       </relation>
+        package-name="org.ofbiz.accounting.ledger"
+        title="Party (organization) accounting preferences">
+        <field name="partyId" type="id-ne"/>
+        <field name="fiscalYearStartMonth" type="numeric"/>
+        <field name="fiscalYearStartDay" type="numeric"/>
+        <field name="taxFormId" type="id-ne"/>
+        <field name="cogsMethodId" type="id-ne"/>
+        <field name="baseCurrencyUomId" type="id-ne"/>
+        <field name="invoiceSequenceEnumId" type="id-ne"/>
+        <field name="invoiceIdPrefix" type="very-short"/>
+        <field name="lastInvoiceNumber" type="numeric"/>
+        <field name="lastInvoiceRestartDate" type="date-time"/>
+        <field name="useInvoiceIdForReturns" type="indicator"/>
+        <field name="quoteSequenceEnumId" type="id-ne"/>
+        <field name="quoteIdPrefix" type="very-short"/>
+        <field name="lastQuoteNumber" type="numeric"/>
+        <field name="orderSequenceEnumId" type="id-ne"/>
+        <field name="orderIdPrefix" type="very-short"/>
+        <field name="lastOrderNumber" type="numeric"/>
+        <prim-key field="partyId"/>
+        <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREF_PTY">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="ACTGPREF_TAXFORM" title="TaxForm" rel-entity-name="Enumeration">
+            <key-map field-name="taxFormId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="ACTGPREF_COGS" title="Cogs" rel-entity-name="Enumeration">
+            <key-map field-name="cogsMethodId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="ACCTGPREF_CURNCY" rel-entity-name="Uom">
+            <key-map field-name="baseCurrencyUomId" rel-field-name="uomId"/>
+        </relation>
+        <relation type="one" fk-name="ACTGPREF_INVSQ" title="InvoiceSequence" rel-entity-name="Enumeration">
+            <key-map field-name="invoiceSequenceEnumId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="ACTGPREF_QTESQ" title="QuoteSequence" rel-entity-name="Enumeration">
+            <key-map field-name="quoteSequenceEnumId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="ACTGPREF_ODRSQ" title="OrderSequence" rel-entity-name="Enumeration">
+            <key-map field-name="orderSequenceEnumId" rel-field-name="enumId"/>
+        </relation>
     </entity>
     <entity entity-name="ProductAverageCost"
             package-name="org.ofbiz.accounting.ledger"

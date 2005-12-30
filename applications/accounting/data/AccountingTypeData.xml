@@ -330,9 +330,17 @@
 
     <!-- inventory sequencing mode for accounting preferences -->
     <EnumerationType description="Invoice Sequence Mode" enumTypeId="INVOICE_SEQMD" hasTable="N" parentTypeId=""/>
-    <Enumeration description="Standard (faster, may have gaps)" enumCode="STANDARD" enumId="INVSQ_STANDARD" sequenceId="01" enumTypeId="INVOICE_SEQMD"/>
-    <Enumeration description="Enforced Sequence (no gaps)" enumCode="ENF_SEQ" enumId="INVSQ_ENF_SEQ" sequenceId="02" enumTypeId="INVOICE_SEQMD"/>
-    <Enumeration description="Restart on Fiscal Year (no gaps, reset to 1 each year)" enumCode="RESTARTYR" enumId="INVSQ_RESTARTYR" sequenceId="03" enumTypeId="INVOICE_SEQMD"/>
+    <Enumeration description="Standard (faster, may have gaps, per system)" enumCode="STANDARD" enumId="INVSQ_STANDARD" sequenceId="01" enumTypeId="INVOICE_SEQMD"/>
+    <Enumeration description="Enforced Sequence (no gaps, per organization)" enumCode="ENF_SEQ" enumId="INVSQ_ENF_SEQ" sequenceId="02" enumTypeId="INVOICE_SEQMD"/>
+    <Enumeration description="Restart on Fiscal Year (no gaps, per org, reset to 1 each year)" enumCode="RESTARTYR" enumId="INVSQ_RESTARTYR" sequenceId="03" enumTypeId="INVOICE_SEQMD"/>
+    <!-- quote sequencing mode for accounting preferences -->
+    <EnumerationType description="Quote Sequence Mode" enumTypeId="QUOTE_SEQMD" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Standard (faster, may have gaps, per system)" enumCode="STANDARD" enumId="QTESQ_STANDARD" sequenceId="01" enumTypeId="QUOTE_SEQMD"/>
+    <Enumeration description="Enforced Sequence (no gaps, per organization)" enumCode="ENF_SEQ" enumId="QTESQ_ENF_SEQ" sequenceId="02" enumTypeId="QUOTE_SEQMD"/>
+    <!-- order sequencing mode for accounting preferences -->
+    <EnumerationType description="Order Sequence Mode" enumTypeId="ORDER_SEQMD" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Standard (faster, may have gaps, per system)" enumCode="STANDARD" enumId="ODRSQ_STANDARD" sequenceId="01" enumTypeId="ORDER_SEQMD"/>
+    <Enumeration description="Enforced Sequence (no gaps, per organization)" enumCode="ENF_SEQ" enumId="ODRSQ_ENF_SEQ" sequenceId="02" enumTypeId="ORDER_SEQMD"/>
     
     <!-- Standard Industrial Cost Types -->
     <FixedAssetStdCostType description="Standard Setup Cost" hasTable="N" parentTypeId="" fixedAssetStdCostTypeId="SETUP_COST"/>

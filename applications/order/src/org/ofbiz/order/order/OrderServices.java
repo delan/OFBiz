@@ -113,6 +113,7 @@ public class OrderServices {
         // get the order type
         String orderTypeId = (String) context.get("orderTypeId");
         String partyId = (String) context.get("partyId");
+        String billFromVendorPartyId = (String) context.get("billFromVendorPartyId");
 
         // check security permissions for order:
         //  SALES ORDERS - if userLogin has ORDERMGR_SALES_CREATE or ORDERMGR_CREATE permission, or if it is same party as the partyId, or
@@ -365,13 +366,39 @@ public class OrderServices {
 
         // create the order object
         String orderId = null;
-        if ((orderTypeId.equals("SALES_ORDER")) || (productStoreId != null)) {
-            orderId = ProductStoreWorker.makeProductStoreOrderId(delegator, productStoreId);
-        } else {
-            // for purchase orders, a product store id should not be required to make an order
-            orderId = delegator.getNextSeqId("OrderHeader");
+        String orgPartyId = null;
+        if (productStore != null) {
+            orgPartyId = productStore.getString("payToPartyId");
+        } else if (billFromVendorPartyId != null) {
+            orgPartyId = billFromVendorPartyId;
+        }
+        
+        if (UtilValidate.isNotEmpty(orgPartyId)) {
+            Map getNextOrderIdContext = UtilMisc.toMap("partyId", orgPartyId, "userLogin", userLogin);
+
+            if ((orderTypeId.equals("SALES_ORDER")) || (productStoreId != null)) {
+                getNextOrderIdContext.put("productStoreId", productStoreId);
+            }
+            
+            try {
+                Map getNextOrderIdResult = dispatcher.runSync("getNextOrderId", getNextOrderIdContext);
+                if (ServiceUtil.isError(getNextOrderIdResult)) {
+                    return ServiceUtil.returnError("Error getting next orderId while creating order", null, null, getNextOrderIdResult);
+                }
+                
+                orderId = (String) getNextOrderIdResult.get("orderId");
+            } catch (GenericServiceException e) {
+                String errMsg = "Error creating order while getting orderId: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
         }
 
+        if (UtilValidate.isEmpty(orderId)) {
+            // for purchase orders or when other orderId generation fails, a product store id should not be required to make an order
+            orderId = delegator.getNextSeqId("OrderHeader");
+        }
+        
         String billingAccountId = (String) context.get("billingAccountId");
 
         Map orderHeaderMap = UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
