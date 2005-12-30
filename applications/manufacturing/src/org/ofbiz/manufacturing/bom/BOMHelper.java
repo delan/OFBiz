@@ -123,7 +123,7 @@ public class BOMHelper {
         return duplicatedNode;
     }
 
-    public static String createProductionRunsForOrders(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) {
+    public static String createProductionRunsForShipment(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) {
         String errMsg = "";
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -131,8 +131,6 @@ public class BOMHelper {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute("userLogin");
 
         String shipmentId = request.getParameter("shipmentId");
-        //String orderId = request.getParameter("orderId");
-        //String orderItemSeqId = request.getParameter("orderItemSeqId");
 
         try {
         List shipmentPlans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("shipmentId", shipmentId));
