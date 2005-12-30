@@ -187,6 +187,57 @@ public class PartyServices {
     }
 
     /**
+     * Sets a party status.
+     * <b>security check</b>: userLogin must have permission PARTYMGR_STS_UPDATE and the status change must be defined in StatusValidChange.
+     */
+    public static Map setPartyStatus(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+
+        String partyId = (String) context.get("partyId");
+        String statusId = (String) context.get("statusId");
+        Timestamp statusDate = (Timestamp) context.get("statusDate");
+        if (statusDate == null) statusDate = UtilDateTime.nowTimestamp();
+
+        // userLogin must have PARTYMGR_STS_UPDATE. Also, we aren't letting userLogin with same partyId change his own status.
+        if (!security.hasEntityPermission("PARTYMGR", "_STS_UPDATE", userLogin)) {
+            String errorMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.no_permission_to_operation", locale) + ".";
+            Debug.logWarning(errorMsg, module);
+            return ServiceUtil.returnError(errorMsg);
+        }
+        try {
+            GenericValue party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+
+            // check that status is defined as a valid change
+            GenericValue statusValidChange = delegator.findByPrimaryKey("StatusValidChange", UtilMisc.toMap("statusId", party.getString("statusId"), "statusIdTo", statusId));
+            if (statusValidChange == null) {
+                String errorMsg = "Cannot change party status from " + party.getString("statusId") + " to " + statusId;
+                Debug.logWarning(errorMsg, module);
+                return ServiceUtil.returnError(errorMsg);
+            }
+            
+            // record the oldStatusId and change the party status
+            String oldStatusId = party.getString("statusId");
+            party.set("statusId", statusId);
+            party.store();
+
+            // record this status change in PartyStatus table
+            GenericValue partyStatus = delegator.makeValue("PartyStatus", UtilMisc.toMap("partyId", partyId, "statusId", statusId, "statusDate", statusDate));
+            partyStatus.create();
+
+            Map results = ServiceUtil.returnSuccess();
+            results.put("oldStatusId", oldStatusId);
+            return results;
+        } catch (GenericEntityException e) {
+            Debug.logError(e, e.getMessage(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.write_failure", new Object[] { e.getMessage() }, locale));
+        }
+    }
+
+    /**
      * Updates a Person.
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission.
      * @param ctx The DispatchContext that this service is operating in.
