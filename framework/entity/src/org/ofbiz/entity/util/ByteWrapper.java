@@ -49,4 +49,8 @@ public class ByteWrapper implements Serializable {
     public byte getByte(int pos) {
         return bytes[pos];
     }
+
+    public int getLength() {
+        return bytes.length;
+    }
 }
