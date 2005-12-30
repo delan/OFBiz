@@ -27,7 +27,14 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
     
-    <!-- Quote  -->
+    <!-- Quote -->
+    <service name="getNextQuoteId" engine="simple"
+        location="org/ofbiz/order/quote/QuoteServices.xml" invoke="getNextQuoteId">
+        <description>Get the Next Quote ID According to Settings on the PartyAcctgPreference Entity for the given Party</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="quoteId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
     <service name="createQuote" default-entity-name="Quote" engine="simple"
                 location="org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuote" auth="true">
         <description>Create an Quote</description>

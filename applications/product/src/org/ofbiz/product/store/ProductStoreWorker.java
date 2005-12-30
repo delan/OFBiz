@@ -98,24 +98,6 @@ public class ProductStoreWorker {
         return null;
     }
 
-    public static String makeProductStoreOrderId(GenericDelegator delegator, String productStoreId) {
-        return makeProductStoreOrderId(delegator, productStoreId, delegator.getNextSeqId("OrderHeader"));
-    }
-
-    public static String makeProductStoreOrderId(GenericDelegator delegator, String productStoreId, String orderId) {
-        if (UtilValidate.isEmpty(orderId) || UtilValidate.isEmpty(productStoreId) || delegator == null) {
-            throw new IllegalArgumentException();
-        }
-
-        GenericValue store = getProductStore(productStoreId, delegator);
-        String prefix = store.getString("orderNumberPrefix");
-        if (!UtilValidate.isEmpty(prefix)) {
-            return prefix.trim() + orderId.trim();
-        } else {
-            return orderId.trim();
-        }
-    }
-
     public static String determineSingleFacilityForStore(GenericDelegator delegator, String productStoreId) {
         GenericValue productStore = null;
         try {
