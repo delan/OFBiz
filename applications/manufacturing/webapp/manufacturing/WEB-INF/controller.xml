@@ -523,9 +523,9 @@
         <response name="success" type="view" value="ProductionRunDeclaration"/>
         <response name="error" type="view" value="ProductionRunDeclaration"/>
     </request-map>
-    <request-map uri="createProductionRunsForOrder">
+    <request-map uri="createProductionRunsForShipment">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.bom.BOMHelper" invoke="createProductionRunsForOrders"/>
+        <event type="java" path="org.ofbiz.manufacturing.bom.BOMHelper" invoke="createProductionRunsForShipment"/>
         <response name="success" type="view" value="WorkWithShipmentPlans"/>
     </request-map>
     <request-map uri="WorkWithShipmentPlans">

@@ -143,7 +143,7 @@ public class ProposedOrder {
                 //Looks for all the routingTask (ordered by inversed (begin from the end) sequence number)
                 for (int i = 1; i <= listRoutingTaskAssoc.size(); i++) {
                     GenericValue routingTaskAssoc = (GenericValue) listRoutingTaskAssoc.get(listRoutingTaskAssoc.size() - i);
-                    if (EntityUtil.isValueActive(routingTaskAssoc,endDate)) {
+                    if (EntityUtil.isValueActive(routingTaskAssoc, endDate)) {
                         GenericValue routingTask = null;
                         try {
                             routingTask = routingTaskAssoc.getRelatedOneCache("ToWorkEffort");
@@ -156,6 +156,17 @@ public class ProposedOrder {
                         // record the routingTask with the startDate associated
                         result.put(routingTask.getString("workEffortId"),startDate);
                         endDate = startDate;
+                        /*
+                         * This is a work in progress
+                        GenericValue routingTask = null;
+                        try {
+                            Map timeInMap = UtilMisc.toMap("taskId", routingTaskAssoc.getString("workEffortIdTo"), "quantity", new Double(quantity), "userLogin", userLogin);
+                            Map timeOutMap = dispatcher.runSync("getEstimatedTaskTime", timeInMap);
+                            routingTask = (GenericValue)timeOutMap.get("routing");
+                        } catch (GenericServiceException gse) {
+                            Debug.logError(gse.getMessage(),  module);
+                        }
+                        */
                     }
                 }
 
