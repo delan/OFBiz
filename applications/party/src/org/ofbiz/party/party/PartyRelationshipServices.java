@@ -235,7 +235,10 @@ public class PartyRelationshipServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        if (!security.hasEntityPermission("PARTYMGR", "_REL_DELETE", userLogin)) {
+            // note: partyId isn't used after this, but it might in the future. for now, it is used only to check the security
+            String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_DELETE");
+        }
 
         if (result.size() > 0)
             return result;
