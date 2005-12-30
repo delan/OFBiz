@@ -33,6 +33,15 @@
         <description>Delete a Party</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="setPartyStatus" engine="java"
+            location="org.ofbiz.party.party.PartyServices" invoke="setPartyStatus" auth="true">
+        <description>Set the party status. Requires PARTYMGR_STS_UPDATE permission. The change to statusId must be defined in StatusValidChange, otherwise
+            this service will fail. The result is the original statusId, so that ECA conditions can check if a status has actually changed.</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
+    </service>
 
     <service name="createPerson" engine="java" default-entity-name="Person"
             location="org.ofbiz.party.party.PartyServices" invoke="createPerson" auth="false">
@@ -41,6 +50,7 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="firstName" optional="false"/>
         <override name="lastName" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createPersonAndUserLogin" engine="simple" require-new-transaction="true"
             location="org/ofbiz/party/party/PartySimpleMethods.xml" invoke="createPersonAndUserLogin" auth="false">
