@@ -510,6 +510,15 @@
         <auto-attributes entity-name="Vendor" include="pk" mode="IN" optional="false"/>
     </service>
 
+    <!-- PartyDataSource services -->
+    <service name="createPartyDataSource" engine="java"
+            location="org.ofbiz.party.party.PartyServices" invoke="createPartyDataSource" auth="true">
+        <description>Creates a relation between a Party and a DataSource using PartyDataSource. The userLogin must have PARTYMGR_SRC_CREATE permission.</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+
     <!-- Communication Event Services -->
     <service name="createCommunicationEvent" engine="simple"
             location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEvent" auth="true">

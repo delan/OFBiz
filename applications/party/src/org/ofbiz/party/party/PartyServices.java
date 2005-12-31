@@ -847,6 +847,45 @@ public class PartyServices {
         return result;
     }
 
+    public static Map createPartyDataSource(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale"); 
+
+        // input data
+        String partyId = (String) context.get("partyId");
+        String dataSourceId = (String) context.get("dataSourceId");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        if (fromDate == null) fromDate = UtilDateTime.nowTimestamp();
+
+        // userLogin must have PARTYMGR_SRC_CREATE permission
+        if (!security.hasEntityPermission("PARTYMGR", "_SRC_CREATE", userLogin)) {
+            String errorMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.no_permission_to_operation", locale) + ".";
+            return ServiceUtil.returnError(errorMsg);
+        }
+        try {
+            // validate the existance of party and dataSource
+            GenericValue party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+            GenericValue dataSource = delegator.findByPrimaryKey("DataSource", UtilMisc.toMap("dataSourceId", dataSourceId));
+            if (party == null || dataSource == null) {
+                List errorList = UtilMisc.toList("Cannot create PartyDataSource");
+                if (party == null) errorList.add("party with ID [" + partyId + "] was not found ");
+                if (dataSource == null) errorList.add("data source with ID [" + dataSourceId + "] was not found ");
+                return ServiceUtil.returnError(errorList);
+            }
+
+            // create the PartyDataSource
+            GenericValue partyDataSource = delegator.makeValue("PartyDataSource", UtilMisc.toMap("partyId", partyId, "dataSourceId", dataSourceId, "fromDate", fromDate));
+            partyDataSource.create();
+
+        } catch (GenericEntityException e) {
+            Debug.logError(e, e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
     public static Map findParty(DispatchContext dctx, Map context) {
         Map result = ServiceUtil.returnSuccess();
         GenericDelegator delegator = dctx.getDelegator();
