@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <trees xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-tree.xsd">
-    <tree name="ResponseTree" root-node-name="node-root" 
+    <tree name="CompDocTemplateTree" root-node-name="node-root" 
         default-render-style="simple" default-wrap-style="responseTreeWrapper">
-        <node name="node-root" entry-name="rsp">
-            <entity-one entity-name="Content"  use-cache="false" value-name="rsp">
+        <node name="node-root">
+            <entity-one entity-name="Content"  use-cache="false">
                 <field-map field-name="contentId" env-name="rootEntityId"/>
             </entity-one>
             <include-screen name="cDTreeLine"
                 location="component://content/widget/compdoc/CompDocScreens.xml" />
             <sub-node node-name="node-body">
-                <entity-condition entity-name="ContentAssocViewFrom" use-cache="false" >
-                    <order-by field-name="caFromDate DESC"/>
+                <entity-condition entity-name="ContentAssocViewFrom" use-cache="true" >
                    <condition-list combine="and">
-                        <condition-expr field-name="caContentIdTo" operator="equals" env-name="rsp.contentId" />
+                        <condition-expr field-name="caContentIdTo" operator="equals" env-name="contentId" />
                         <condition-expr field-name="caContentAssocTypeId" operator="equals" value="COMPDOC_PART" />
                         <condition-expr field-name="caThruDate" operator="equals" value=""/>
                    </condition-list> 
+                   <order-by field-name="caSequenceNum"/>
                 </entity-condition>
             </sub-node>
         </node>
-        <node name="node-body" entry-name="rsp">
+        <node name="node-body">
             <include-screen name="responseTreeLine" 
                 location="component://content/widget/compdoc/CompDocScreens.xml" />
             <sub-node node-name="node-body">
                 <entity-condition entity-name="ContentAssocViewFrom" use-cache="true" >
-                    <order-by field-name="caFromDate DESC"/>
                    <condition-list combine="and">
-                        <condition-expr field-name="caContentIdTo" operator="equals" env-name="rsp.contentId" />
+                        <condition-expr field-name="caContentIdTo" operator="equals" env-name="contentId" />
                         <condition-expr field-name="caContentAssocTypeId" operator="equals" value="COMPDOC_PART" />
                         <condition-expr field-name="caThruDate" operator="equals" value=""/>
                    </condition-list> 
+                   <order-by field-name="caSequenceNum"/>
                 </entity-condition>
             </sub-node>
+        </node>
+        <node name="node-test">
+            <label text="i am here"/>
         </node>
     </tree>
 </trees>
