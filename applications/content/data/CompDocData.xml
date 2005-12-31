@@ -1,0 +1,10 @@
+<entity-engine-xml>
+    <Content contentId="CD1000" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" contentName="CompDoc Root" description="CompDoc Root Description"
+createdDate="2005-12-30 11:40:15.818" createdByUserLogin="admin" lastModifiedDate="2005-12-30 11:40:15.818" lastModifiedByUserLogin="admin" />
+    <Content contentId="CD1001" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" contentName="CompDoc Child 1" description="CompDoc Child 1 Description"
+createdDate="2005-12-30 11:40:15.818" createdByUserLogin="admin" lastModifiedDate="2005-12-30 11:40:15.818" lastModifiedByUserLogin="admin" />
+    <Content contentId="CD1002" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" contentName="CompDoc Child 2" description="CompDoc Child 2 Description"
+createdDate="2005-12-30 11:40:15.818" createdByUserLogin="admin" lastModifiedDate="2005-12-30 11:40:15.818" lastModifiedByUserLogin="admin" />
+    <ContentAssoc contentIdTo="CD1000" contentId="CD1001" contentAssocTypeId="COMPDOC_PART" fromDate="2005-12-30 11:40:15.818" />
+    <ContentAssoc contentIdTo="CD1000" contentId="CD1002" contentAssocTypeId="COMPDOC_PART" fromDate="2005-12-30 11:40:15.818" />
+</entity-engine-xml>

@@ -189,7 +189,7 @@
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="findCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                        <include-form name="FindCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -221,11 +221,11 @@
                                         <condition-expr field-name="caFromDate" operator="equals" env-name="caFromDate" ignore-if-empty="true"/>
                                         <condition-expr field-name="caThruDate" operator="equals" env-name="caThruDate" ignore-if-empty="true"/>
                                         <condition-expr field-name="caContentIdTo" operator="equals" env-name="caContentIdTo" ignore-if-empty="true"/>
-                                    </condition-list>
+                                        <condition-expr field-name="contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>                  </condition-list>
                                 </entity-condition>
                             </actions>                      
                             <widgets>
-                                <include-form name="listCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                                <include-form name="ListCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
                             </widgets>
                         </section>   
                     </decorator-section>
@@ -243,9 +243,16 @@
             <actions>
                 <set field="headerItem" value="Content"/>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="ESP Content Edit Page"/>
+                <set field="title" value="Composite Document Template Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="contentId" from-field="parameters.contentId"/>
+                <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
+                <set field="contentAssocTypeId" from-field="parameters.caContentAssocTypeId"/>
+                <set field="fromDate" from-field="parameters.caFromDate"/>
+
+                <entity-one entity-name="Content" value-name="content"/>
+                <entity-one entity-name="ContentAssoc" value-name="contentAssoc"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
@@ -264,7 +271,7 @@
             <actions>
                 <set field="headerItem" value="Content"/>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="ESP Content Edit Page"/>
+                <set field="title" value="Composite Document Instance Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
             </actions>
@@ -288,15 +295,15 @@
                     <field-map field-name="contentId" env-name="contentId"/>
                 </entity-one>
                 <set field="enableEdit" value="false"/>
-                <set field="rsp.contentId" value="${content.contentId}" />
+                <set field="contentId" value="${content.contentId}" />
             </actions>
             <widgets>
                 <label text="&lt;p/&gt;" />
                 <container style="cdhr">
                     <label text="Response tree: " style="cdtitle"/>
                 </container>
-                <include-tree  name="ResponseTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
-                <label text="Content Id: ${rsp.contentId}"/>
+                <include-tree  name="CompDocTemplateTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
+                <label text="Content Id: ${contentId}"/>
             </widgets>
         </section>
     </screen>
@@ -305,32 +312,32 @@
             <widgets>
                 <section>
                     <condition>
-                        <if-compare-field field-name="responseContentId" operator="not-equals" to-field-name="rsp.contentId" />
+                        <if-compare-field field-name="responseContentId" operator="not-equals" to-field-name="contentId" />
                     </condition>
                     <widgets>
                         <container>
-                            <label text="${rsp.contentName}[${rsp.contentId}]" style="responseheader" />
-                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${rsp.contentId}" style="tabButton"/>
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${rsp.contentId}" style="tabButton"/>
-                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${rsp.contentId}" style="tabButton"/>
+                            <label text="${contentName}[${contentId}]" style="responseheader" />
+                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${contentId}" style="tabButton"/>
+                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton"/>
+                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${contentId}" style="tabButton"/>
                             <container style="responsetext">
-                                <label text="${rsp.description}" style="responsetext" />
+                                <label text="${description}" style="responsetext" />
                             </container>
                         </container>    
                     </widgets>
         </section>
         <section>
             <condition>
-                <if-compare-field field-name="responseContentId" operator="equals" to-field-name="rsp.contentId" />
+                <if-compare-field field-name="responseContentId" operator="equals" to-field-name="contentId" />
             </condition>
             <widgets>
               <container style="responseSelected">
-                      <label text="${rsp.contentName}[${rsp.contentId}]" style="responseheader" />
-                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${rsp.contentId}" style="tabButton"/>
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${rsp.contentId}" style="tabButton"/>
-                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${rsp.contentId}" style="tabButton"/>
+                      <label text="${contentName}[${contentId}]" style="responseheader" />
+                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${contentId}" style="tabButton"/>
+                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton"/>
+                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${contentId}" style="tabButton"/>
                       <container style="responsetext">
-                        <label text="${rsp.description}" style="responsetext" />
+                        <label text="${description}" style="responsetext" />
                       </container>
               </container>    
             </widgets>
@@ -342,12 +349,12 @@
         <section>
             <widgets>
                 <container>
-                    <label text="${rsp.contentName}[${rsp.contentId}]" style="responseheader" />
-                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${rsp.contentId}" style="tabButton"/>
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${rsp.contentId}" style="tabButton"/>
-                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${rsp.contentId}" style="tabButton"/>
+                    <label text="${contentName}[${contentId}]" style="responseheader" />
+                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${contentId}" style="tabButton"/>
+                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton"/>
+                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${contentId}" style="tabButton"/>
                     <container style="responsetext">
-                        <label text="${rsp.description}" style="responsetext" />
+                        <label text="${description}" style="responsetext" />
                     </container>
                 </container>    
             </widgets>
