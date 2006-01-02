@@ -240,11 +240,37 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
-    <service name="otsRemoveUserLoginFromSecurityGroup" engine="simple" location="org/ofbiz/opentravelsystem/GeneralServices.xml" invoke="removeUserLoginFromSecurityGroup" auth="true">
+    <service name="otsRemoveUserLoginFromSecurityGroup" engine="simple" 
+        location="org/ofbiz/opentravelsystem/GeneralServices.xml" invoke="removeUserLoginFromSecurityGroup" auth="true">
         <description>Remove a UserLogin from a SecurityGroup</description>
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
         <attribute name="groupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+    <service name="createPayment" engine="simple" default-entity-name="Payment"
+        location="org/ofbiz/opentravelsystem/PaymentServices.xml" invoke="createPayment" auth="true">
+        <description>Create a Payment</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="paymentTypeId" optional="false"/>
+        <override name="paymentMethodTypeId" optional="false"/>
+        <override name="partyIdFrom" optional="false"/>
+        <override name="partyIdTo" optional="false"/>
+        <override name="statusId" optional="false"/>
+        <override name="amount" optional="false"/>
+    </service>
+    <service name="createPaymentOfbiz" engine="simple" default-entity-name="Payment"
+        location="org/ofbiz/accounting/payment/PaymentServicesExt.xml" invoke="createPayment" auth="true">
+        <description>Create a Payment</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <override name="paymentTypeId" optional="false"/>
+        <override name="paymentMethodTypeId" optional="false"/>
+        <override name="partyIdFrom" optional="false"/>
+        <override name="partyIdTo" optional="false"/>
+        <override name="statusId" optional="false"/>
+        <override name="amount" optional="false"/>
+    </service>
+    
 </services>

@@ -45,7 +45,13 @@
         <check-errors/>
 
         <!-- partygroup -->
+        <!-- create id using the invoice prefix -->
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false">
+            <field-map field-name="partyId" env-name="parameters.organizationPartyId"/>
+        </entity-one>
         <set field="createPartyGroup.groupName" from-field="parameters.groupName"/>
+        <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Party" env-name="nextPartyId"/>
+        <set field="createPartyGroup.partyId" value="${partyAcctgPreference.invoiceIdPrefix}${nextPartyId}"/>        
         <call-service service-name="createPartyGroup" in-map-name="createPartyGroup">
             <result-to-field result-name="partyId" field-name="partyId"/>
         </call-service>    
