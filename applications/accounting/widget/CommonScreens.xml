@@ -72,7 +72,7 @@
     <screen name="CommonFixedAssetDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="FixedAssets"/>
+                <set field="headerItem" value="ListFixedAssets"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
