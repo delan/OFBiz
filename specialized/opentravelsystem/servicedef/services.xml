@@ -248,6 +248,9 @@
         <attribute name="groupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+
+    <!-- add functions to existing services -->
+    <!-- add a prefix to the paymentId -->
     <service name="createPayment" engine="simple" default-entity-name="Payment"
         location="org/ofbiz/opentravelsystem/PaymentServices.xml" invoke="createPayment" auth="true">
         <description>Create a Payment</description>
@@ -271,6 +274,24 @@
         <override name="partyIdTo" optional="false"/>
         <override name="statusId" optional="false"/>
         <override name="amount" optional="false"/>
+    </service>
+
+    <!-- add a prefix to the purchase invoice -->
+    <service name="createInvoice" engine="simple" default-entity-name="Invoice"
+        location="org/ofbiz/opentravelsystem/InvoiceServices.xml" invoke="createInvoice">
+        <description>Create Invoice Record with company prefix</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="invoiceTypeId" mode="IN" optional="false"/>
+        <override name="statusId" mode = "IN" optional="false"/>
+    </service>
+    <service name="createInvoiceOfbiz" engine="simple" default-entity-name="Invoice"
+        location="org/ofbiz/accounting/invoice/InvoiceServicesExt.xml" invoke="createInvoice">
+        <description>Create Invoice Record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="invoiceTypeId" mode="IN" optional="false"/>
+        <override name="statusId" mode = "IN" optional="false"/>
     </service>
     
 </services>

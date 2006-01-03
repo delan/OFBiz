@@ -149,14 +149,9 @@ public class mt940 {
 		// find the taxGeoId of the company
 		String taxAuthPartyId = null; // the taxauthority
 		try	{
-			List partyTaxInfos = EntityUtil.filterByDate(delegator.findByAnd("PartyTaxInfo",UtilMisc.toMap("partyId",accountPartyId)));
+			List partyTaxInfos = EntityUtil.filterByDate(delegator.findByAnd("PartyTaxAuthInfo",UtilMisc.toMap("partyId",accountPartyId)));
 			if (partyTaxInfos != null && partyTaxInfos.size() > 0)	{
-				GenericValue partyTaxInfo = (GenericValue) partyTaxInfos.get(0);
-					List taxAuthorities = delegator.findByAnd("TaxAuthority",UtilMisc.toMap("taxAuthGeoId",partyTaxInfo.getString("geoId")));
-					if (taxAuthorities != null && taxAuthorities.size() > 0)	{
-						taxAuthPartyId = ((GenericValue) taxAuthorities.get(0)).getString("taxAuthPartyId");
-						if (debug)Debug.logInfo("taxAuthPartyId found:" + taxAuthPartyId.toString(),module);
-					}
+				taxAuthPartyId = ((GenericValue) partyTaxInfos.get(0)).getString("taxAuthPartyId");
 			}
 		} catch (GenericEntityException e) {	
 			request.setAttribute("_ERROR_MESSAGE_", "The company " + accountPartyId + " has no related taxauthority");

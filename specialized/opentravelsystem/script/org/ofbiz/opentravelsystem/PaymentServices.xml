@@ -44,6 +44,7 @@
         <set-service-fields service-name="createPaymentOfbiz" map-name="parameters" to-map-name="createPayment"/>
         <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Payment" env-name="nextPaymentId"/>
         <set field="createPayment.paymentId" value="${partyAcctgPreference.invoiceIdPrefix}${nextPaymentId}"/>
+        <!-- call original ofbiz service with preset paymentId -->
         <call-service service-name="createPaymentOfbiz" in-map-name="createPayment">
             <result-to-result result-name="paymentId" service-result-name="paymentId"/>
         </call-service>
