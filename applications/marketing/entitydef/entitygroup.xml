@@ -70,5 +70,7 @@
 
     <entity-group group="org.ofbiz" entity="TrackingCodeAndVisit"/>
     <entity-group group="org.ofbiz" entity="TrackingCodeAndOrderHeader"/>
+    <entity-group group="org.ofbiz" entity="MarketingCampaignAndVisit"/>
+    <entity-group group="org.ofbiz" entity="MarketingCampaignAndOrderHeader"/>
 
 </entitygroup>
