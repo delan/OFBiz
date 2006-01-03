@@ -55,7 +55,7 @@
             <date-time type="timestamp"/>
         </field>
 
-         <field name="campaignName" title="Marketing Campaign">
+         <field name="marketingCampaignId" title="Marketing Campaign">
             <drop-down allow-empty="true">
                 <option key="" description="- Any -"/>
                 <entity-options entity-name="MarketingCampaign" description="${campaignName}">
@@ -68,12 +68,12 @@
         </field>
     </form>
 
-      <form name="TrackingCodeReport" default-title-style="tableheadtext"
+    <form name="TrackingCodeReport" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-area-style="tabletextright"
-        list-iterator-name="trackingCodeIterator" target="" paginate-target="TrackingCodeReport"
+        list-name="trackingCodeVisitAndOrders" target="" paginate-target="TrackingCodeReport"
         title="${uiLabelMap.TrackingCodeReportTitle}" type="list">
         <field name="trackingCodeId"  widget-area-style="tabletext" title="${uiLabelMap.TrackingCode}">
-            <display/>
+            <display-entity entity-name="TrackingCode" key-field-name="trackingCodeId" description="${description} [${trackingCodeId}]"/>
         </field>
         <field name="visits" title="${uiLabelMap.MarketingVisits}"><display/></field>
         <field name="orders" title="${uiLabelMap.MarketingOrders}"><display/></field>
@@ -83,10 +83,11 @@
 
    <form name="MarketCampaignReport" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-area-style="tabletextright"
-        list-iterator-name="marketingCampaignIterator" target="" paginate-target="MarketCampaignReport"
+        list-name="marketingCampaignVisitAndOrders" target="" paginate-target="MarketCampaignReport"
         title="${uiLabelMap.MarketingCampaignReportTitle}" type="list">
-        <field name="campaignName" title="${uiLabelMap.MarketingCampaignName}"><display/></field>
-        <field name="trackingCodeId" title="${uiLabelMap.TrackingCode}"><display/></field>
+        <field name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignName}" widget-area-style="tabletext">
+            <display-entity entity-name="MarketingCampaign" key-field-name="marketingCampaignId" description="${campaignName} [${marketingCampaignId}]"/>
+        </field>
         <field name="visits" title="${uiLabelMap.MarketingVisits}"><display/></field>
         <field name="orders" title="${uiLabelMap.MarketingOrders}"><display/></field>
         <field name="orderAmount" title="${uiLabelMap.MarketingOrderAmount}"><display/></field>
