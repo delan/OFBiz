@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Copyright (c) 2001-2005 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
+ * @version 1.0
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+
+    <simple-method method-name="createInvoice" short-description="--Add a Invoice with the invoice prefix--">
+        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+        </check-permission>        
+        <check-errors/>
+        
+        <!-- create id using the invoice prefix -->
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false">
+            <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
+        </entity-one>
+        <set-service-fields service-name="createInvoiceOfbiz" map-name="parameters" to-map-name="createInvoice"/>
+        <if-compare field-name="parameters.invoiceTypeId" value="PURCHASE_INVOICE" operator="equals">
+            <!-- switch/fill values if not set right -->
+            <if-compare-field field-name="parameters.partyIdTo" operator="not-equals" to-field-name="parameters.userLogin.partyId">
+                <if-empty field-name="parameters.partyIdTo"> <!-- if not supplied fill -->
+                    <set field="parameters.partIdTo" from-field="parameters.userLogin.partyId"/>
+                    <else><!-- assume they are the wrong way around so switch them -->
+                        <set field="partyIdTo" from-field="parameters.partyIdTo"/>
+                        <set field="parameters.partIdTo" from-field="parameters.userLogin.partyId"/>
+                        <set field="parameters.partyId" from-field="partyIdTo"/>
+                    </else>                
+                </if-empty>
+            </if-compare-field>
+            <!-- create purchase invoiceId -->
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}PInvoice" env-name="nextInvoiceId"/>
+            <set field="createInvoice.invoiceId" value="${partyAcctgPreference.invoiceIdPrefix}P${nextInvoiceId}"/>
+            <else>
+                <!-- switch/fill values if not set right -->
+                <if-compare-field field-name="parameters.partyId" operator="not-equals" to-field-name="parameters.userLogin.partyId">
+                    <if-empty field-name="parameters.partyId"> <!-- if not supplied fill -->
+                        <set field="parameters.partyId" from-field="parameters.userLogin.partyId"/>
+                        <else><!-- assume they are the wrong way around so switch them -->
+                            <set field="partyId" from-field="parameters.partyId"/>
+                            <set field="parameters.partyId" from-field="parameters.userLogin.partyId"/>
+                            <set field="parameters.partyIdTo" from-field="partyId"/>                
+                        </else>                
+                    </if-empty>
+                </if-compare-field>
+                <!-- create sales invoiceId -->
+                <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}SInvoice" env-name="nextInvoiceId"/>
+                <set field="createInvoice.invoiceId" value="${partyAcctgPreference.invoiceIdPrefix}S${nextInvoiceId}"/>
+            </else>            
+        </if-compare>
+        <call-service service-name="createInvoiceOfbiz" in-map-name="createInvoice">
+            <result-to-result result-name="invoiceId" service-result-name="invoiceId"/>
+        </call-service>
+        
+    </simple-method>
+    
+</simple-methods>
