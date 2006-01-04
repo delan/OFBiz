@@ -45,7 +45,7 @@ import javax.swing.JRootPane;
 import net.xoetrope.swing.XButton;
 import net.xoetrope.swing.XTextArea;
 import net.xoetrope.xui.XPage;
-import net.xoetrope.xui.XResourceManager;
+import net.xoetrope.xui.XProjectManager;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -61,8 +61,8 @@ public class PosDialog {
     public static final String module = PosDialog.class.getName();
     protected static UtilCache instances = new UtilCache("pos.Dialogs", 0, 0);
 
-    protected final Frame clientFrame = XResourceManager.getAppFrame();
-    protected final Window appWindow = XResourceManager.getAppWindow();
+    protected final Frame clientFrame = XProjectManager.getCurrentProject().getAppFrame();
+    protected final Window appWindow = XProjectManager.getCurrentProject().getAppWindow();
 
     protected DialogCallback cb = null;
     protected Component parent = null;

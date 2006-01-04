@@ -25,6 +25,7 @@
 package org.ofbiz.pos.screen;
 
 
+import java.awt.AWTEvent;
 import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.FocusEvent;
@@ -35,7 +36,6 @@ import java.util.*;
 import net.xoetrope.builder.NavigationHelper;
 import net.xoetrope.xui.XPage;
 import net.xoetrope.xui.XProjectManager;
-import net.xoetrope.xui.XResourceManager;
 
 import org.ofbiz.base.splash.SplashLoader;
 import org.ofbiz.base.util.Debug;
@@ -61,8 +61,8 @@ import org.ofbiz.pos.device.DeviceLoader;
 public class PosScreen extends NavigationHelper implements Runnable, DialogCallback, FocusListener {
 
     public static final String module = PosScreen.class.getName();
-    public static final Frame appFrame = XResourceManager.getAppFrame();
-    public static final Window appWin = XResourceManager.getAppWindow();
+    public static final Frame appFrame = XProjectManager.getCurrentProject().getAppFrame();
+    public static final Window appWin = XProjectManager.getCurrentProject().getAppWindow();
     public static final String BUTTON_ACTION_METHOD = "buttonPressed";
     public static final long MAX_INACTIVITY = 1800000;
     public static PosScreen currentScreen;
@@ -293,7 +293,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     // generic button XUI event calls into PosButton to lookup the external reference
     public synchronized void buttonPressed() {
         this.setLastActivity(System.currentTimeMillis());
-        buttons.buttonPressed(this, this.getCurrentEvent());
+        buttons.buttonPressed(this, (AWTEvent)this.getCurrentEvent());
         journal.focus();
     }
 
@@ -306,7 +306,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         if (pageName.startsWith("/")) {
             pageName = pageName.substring(1);
         }
-        XPage newPage = XProjectManager.getPageManager().showPage(this.getScreenLocation() + "/" + pageName);         
+        XPage newPage = (XPage)XProjectManager.getPageManager().showPage(this.getScreenLocation() + "/" + pageName);         
         if (newPage instanceof PosScreen) {
             if (refresh) ((PosScreen) newPage).refresh();
             return (PosScreen) newPage;
@@ -342,7 +342,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         if (pageName.startsWith("/")) {
             pageName = pageName.substring(1);
         }
-        XPage dialogPage = XProjectManager.getPageManager().loadPage(this.getScreenLocation() + "/" + pageName);        
+        XPage dialogPage = (XPage)XProjectManager.getPageManager().loadPage(this.getScreenLocation() + "/" + pageName);        
         PosDialog dialog = PosDialog.getInstance(dialogPage, true, 0);
         dialog.showDialog(this, cb, text);
         return dialog;

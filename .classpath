@@ -126,7 +126,7 @@
 	<classpathentry kind="lib" path="framework/jetty/lib/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="framework/jetty/lib/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="framework/jetty/lib/ant.jar"/>
-	<classpathentry kind="lib" path="framework/guiapp/lib/XuiCoreSwing.jar"/>
+	<classpathentry kind="lib" path="framework/guiapp/lib/XuiCoreSwing_v2_0_5_jdk1_4.jar"/>
 	<classpathentry kind="lib" path="applications/pos/lib/starjavapos.jar"/>
 	<classpathentry kind="lib" path="applications/pos/lib/looks-1.2.2.jar"/>
 	<classpathentry kind="lib" path="applications/pos/lib/jpos18-controls.jar"/>
