@@ -175,16 +175,24 @@ public class ContentManagementServices {
      * the ElectronicText that may be associated with the Content.
      * The keys for determining if each entity is created is the presence
      * of the contentTypeId, contentAssocTypeId and dataResourceTypeId.
+     * This service tries to handle DataResource and ContentAssoc fields with and
+     * without "dr" and "ca" prefixes.
+     * Assumes binary data is always in field, "imageData".
      */
     public static Map persistContentAndAssoc(DispatchContext dctx, Map context) throws GenericServiceException {
 
         HashMap result = new HashMap();
-        Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        
+        // Knowing why a request fails permission check is one of the more difficult
+        // aspects of content management. Setting "displayFailCond" to true will
+        // put an html table in result.errorMessage that will show what tests were performed
         Boolean bDisplayFailCond = (Boolean)context.get("displayFailCond");
-        Map permContext = new HashMap();
         String mapKey = (String) context.get("mapKey"); 
+        
+        // If "deactivateExisting" is set, other Contents that are tied to the same
+        // contentIdTo will be deactivated (thruDate set to now)
         String deactivateExisting = (String) context.get("deactivateExisting"); 
         if (UtilValidate.isEmpty(deactivateExisting)) {
             if (UtilValidate.isEmpty(mapKey)) 
@@ -194,21 +202,20 @@ public class ContentManagementServices {
         }
         if (Debug.infoOn()) Debug.logInfo("in persist... mapKey(0):" + mapKey, null);
 
+        // ContentPurposes can get passed in as a delimited string or a list. Combine.
         List contentPurposeList = (List)context.get("contentPurposeList");
         if (contentPurposeList == null)
             contentPurposeList = new ArrayList();
-        
         String contentPurposeString = (String)context.get("contentPurposeString");
         if (UtilValidate.isNotEmpty(contentPurposeString)) {
             List tmpPurposes = StringUtil.split(contentPurposeString, "|");
             contentPurposeList.addAll(tmpPurposes);
         }
-        
         if (contentPurposeList != null ) {
             context.put("contentPurposeList", contentPurposeList);   
             context.put("contentPurposeString", null);   
         }
-        //if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
+        if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
         if (Debug.infoOn()) Debug.logInfo("in persist... textData(0):" + context.get("textData"), null);
         
         
@@ -245,7 +252,6 @@ public class ContentManagementServices {
         String contentTypeId = (String)content.get("contentTypeId");
         String origContentId = (String)content.get("contentId");
         String origDataResourceId = (String)content.get("dataResourceId");
-        String origContentTypeId = (String)content.get("contentTypeId");
         if (Debug.infoOn()) Debug.logInfo("in persist... contentId(0):" + contentId, null);
 
 
@@ -280,151 +286,152 @@ public class ContentManagementServices {
         boolean dataResourceExists = true;
         if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceTypeId(0):" + dataResourceTypeId, null);
         if (UtilValidate.isNotEmpty(dataResourceTypeId) ) {
-                context.put("skipPermissionCheck", "granted"); // TODO: a temp hack because I don't want to bother with DataResource permissions at this time.
-                if (UtilValidate.isEmpty(dataResourceId)) {
-                    dataResourceExists = false;
-                } else {
-                    try {
-                        GenericValue val = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-                        if (val == null)
-                            dataResourceExists = false;
-                    } catch(GenericEntityException e) {
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
+            context.put("skipPermissionCheck", "granted"); // TODO: a temp hack because I don't want to bother with DataResource permissions at this time.
+            if (UtilValidate.isEmpty(dataResourceId)) {
+                dataResourceExists = false;
+            } else {
+                try {
+                    GenericValue val = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+                    if (val == null)
+                        dataResourceExists = false;
+                } catch(GenericEntityException e) {
+                    return ServiceUtil.returnError(e.getMessage());
                 }
-                    Map newDrContext = new HashMap();
-                    ModelService dataResourceModel = dispatcher.getDispatchContext().getModelService("updateDataResource");
-                    Map ctx = dataResourceModel.makeValid(dataResource, "IN");
-                    newDrContext.putAll(ctx);
-                    newDrContext.put("userLogin", userLogin);
-                    newDrContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
-                    ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
-                    String mimeTypeId = (String) newDrContext.get("mimeTypeId");
-                    if (byteWrapper != null && (mimeTypeId == null || (mimeTypeId.indexOf("image") >= 0))) {
-                        mimeTypeId = (String) context.get("_imageData_contentType");
-                        String fileName = (String) context.get("_imageData_fileName");
-                        newDrContext.put("objectInfo", fileName);
-                        newDrContext.put("mimeTypeId", mimeTypeId);
-                    }
-                if (!dataResourceExists) {
-                    Map thisResult = dispatcher.runSync("createDataResource", newDrContext);
-                    String errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                    if (UtilValidate.isNotEmpty(errorMsg)) {
-                            return ServiceUtil.returnError(errorMsg);
-                    }
-                    dataResourceId = (String)thisResult.get("dataResourceId");
-                    if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceId(0):" + dataResourceId, null);
-                    dataResource = (GenericValue)thisResult.get("dataResource");
-                    Map fileContext = new HashMap();
-                    fileContext.put("userLogin", userLogin);
-                    if ( dataResourceTypeId.indexOf("_FILE") >=0) {
-                        boolean hasData = false;
-                        if (textData != null) {
-                            fileContext.put("textData", textData);
-                            hasData = true;
-                        }
-                        if (byteWrapper != null) {
-                            fileContext.put("binData", byteWrapper);
-                            hasData = true;
-                        }
-                        if (hasData) {
-                            fileContext.put("rootDir", context.get("rootDir"));
-                            fileContext.put("dataResourceTypeId", dataResourceTypeId);
-                            fileContext.put("objectInfo", dataResource.get("objectInfo"));
-                            thisResult = dispatcher.runSync("createFile", fileContext);
-                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                            if (UtilValidate.isNotEmpty(errorMsg)) {
-                                return ServiceUtil.returnError(errorMsg);
-                            }
-                        }
-                    } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-                        if (byteWrapper != null) {
-                            fileContext.put("dataResourceId", dataResourceId);
-                            fileContext.put("imageData", byteWrapper);
-                            thisResult = dispatcher.runSync("createImage", fileContext);
-                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                            if (UtilValidate.isNotEmpty(errorMsg)) {
-                                return ServiceUtil.returnError(errorMsg);
-                            }
-                        } else {
-                            return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
-                        }
-                    } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
-                    } else {
-                        // assume ELECTRONIC_TEXT
-                        if (UtilValidate.isNotEmpty(textData)) {
-                            fileContext.put("dataResourceId", dataResourceId);
-                            fileContext.put("textData", textData);
-                            thisResult = dispatcher.runSync("createElectronicText", fileContext);
-                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                            if (UtilValidate.isNotEmpty(errorMsg)) {
-                                return ServiceUtil.returnError(errorMsg);
-                            }
-                        }
-                    }
-                } else {
-                    Map thisResult = dispatcher.runSync("updateDataResource", newDrContext);
-                    String errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                    if (UtilValidate.isNotEmpty(errorMsg)) {
+            }
+            Map newDrContext = new HashMap();
+            ModelService dataResourceModel = dispatcher.getDispatchContext().getModelService("updateDataResource");
+            Map ctx = dataResourceModel.makeValid(dataResource, "IN");
+            newDrContext.putAll(ctx);
+            newDrContext.put("userLogin", userLogin);
+            newDrContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
+            // Assumes binary data is always in field, "imageData"
+            ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+            String mimeTypeId = (String) newDrContext.get("mimeTypeId");
+            if (byteWrapper != null && (mimeTypeId == null || (mimeTypeId.indexOf("image") >= 0))) {
+                mimeTypeId = (String) context.get("_imageData_contentType");
+                String fileName = (String) context.get("_imageData_fileName");
+                newDrContext.put("objectInfo", fileName);
+                newDrContext.put("mimeTypeId", mimeTypeId);
+            }
+            if (!dataResourceExists) {
+                Map thisResult = dispatcher.runSync("createDataResource", newDrContext);
+                String errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                if (UtilValidate.isNotEmpty(errorMsg)) {
                         return ServiceUtil.returnError(errorMsg);
+                }
+                dataResourceId = (String)thisResult.get("dataResourceId");
+                if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceId(0):" + dataResourceId, null);
+                dataResource = (GenericValue)thisResult.get("dataResource");
+                Map fileContext = new HashMap();
+                fileContext.put("userLogin", userLogin);
+                if ( dataResourceTypeId.indexOf("_FILE") >=0) {
+                    boolean hasData = false;
+                    if (textData != null) {
+                        fileContext.put("textData", textData);
+                        hasData = true;
                     }
-                    //Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
-                    if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
-                        //thisResult = DataServices.updateElectronicTextMethod(dctx, context);
-                    Map fileContext = new HashMap();
-                    fileContext.put("userLogin", userLogin);
-                    String forceElectronicText = (String)context.get("forceElectronicText");
-                    if (dataResourceTypeId.indexOf("_FILE") >=0) {
-                        boolean hasData = false;
-                        if (textData != null) {
-                            fileContext.put("textData", textData);
-                            hasData = true;
+                    if (byteWrapper != null) {
+                        fileContext.put("binData", byteWrapper);
+                        hasData = true;
+                    }
+                    if (hasData) {
+                        fileContext.put("rootDir", context.get("rootDir"));
+                        fileContext.put("dataResourceTypeId", dataResourceTypeId);
+                        fileContext.put("objectInfo", dataResource.get("objectInfo"));
+                        thisResult = dispatcher.runSync("createFile", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
                         }
-                        if (byteWrapper != null) {
-                            fileContext.put("binData", byteWrapper);
-                            hasData = true;
+                    }
+                } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+                    if (byteWrapper != null) {
+                        fileContext.put("dataResourceId", dataResourceId);
+                        fileContext.put("imageData", byteWrapper);
+                        thisResult = dispatcher.runSync("createImage", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
                         }
-                        if (hasData || "true".equalsIgnoreCase(forceElectronicText)) {
-                            fileContext.put("rootDir", context.get("rootDir"));
-                            fileContext.put("dataResourcetype", dataResourceTypeId);
-                            fileContext.put("objectInfo", dataResource.get("objectInfo"));
-                            thisResult = dispatcher.runSync("updateFile", fileContext);
-                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                            if (UtilValidate.isNotEmpty(errorMsg)) {
-                                return ServiceUtil.returnError(errorMsg);
-                            }
-                        }
-                    } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-                        if (byteWrapper != null || "true".equalsIgnoreCase(forceElectronicText)) {
-                            fileContext.put("dataResourceId", dataResourceId);
-                            fileContext.put("imageData", byteWrapper);
-                            thisResult = dispatcher.runSync("updateImage", fileContext);
-                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                            if (UtilValidate.isNotEmpty(errorMsg)) {
-                                return ServiceUtil.returnError(errorMsg);
-                            }
-                        } else {
-                            //return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
-                        }
-                    } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
-                        if (UtilValidate.isNotEmpty(textData) || "true".equalsIgnoreCase(forceElectronicText)) {
-                            fileContext.put("dataResourceId", dataResourceId);
-                            fileContext.put("textData", textData);
-                            thisResult = dispatcher.runSync("updateElectronicText", fileContext);
-                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                            if (UtilValidate.isNotEmpty(errorMsg)) {
-                                return ServiceUtil.returnError(errorMsg);
-                            }
+                        return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
+                    }
+                } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
+                } else {
+                    // assume ELECTRONIC_TEXT
+                    if (UtilValidate.isNotEmpty(textData)) {
+                        fileContext.put("dataResourceId", dataResourceId);
+                        fileContext.put("textData", textData);
+                        thisResult = dispatcher.runSync("createElectronicText", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
                         }
                     }
                 }
+            } else {
+                Map thisResult = dispatcher.runSync("updateDataResource", newDrContext);
+                String errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                if (UtilValidate.isNotEmpty(errorMsg)) {
+                    return ServiceUtil.returnError(errorMsg);
+                }
+                //Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
+                if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
+                    //thisResult = DataServices.updateElectronicTextMethod(dctx, context);
+                Map fileContext = new HashMap();
+                fileContext.put("userLogin", userLogin);
+                String forceElectronicText = (String)context.get("forceElectronicText");
+                if (dataResourceTypeId.indexOf("_FILE") >=0) {
+                    boolean hasData = false;
+                    if (textData != null) {
+                        fileContext.put("textData", textData);
+                        hasData = true;
+                    }
+                    if (byteWrapper != null) {
+                        fileContext.put("binData", byteWrapper);
+                        hasData = true;
+                    }
+                    if (hasData || "true".equalsIgnoreCase(forceElectronicText)) {
+                        fileContext.put("rootDir", context.get("rootDir"));
+                        fileContext.put("dataResourcetype", dataResourceTypeId);
+                        fileContext.put("objectInfo", dataResource.get("objectInfo"));
+                        thisResult = dispatcher.runSync("updateFile", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
+                        }
+                    }
+                } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+                    if (byteWrapper != null || "true".equalsIgnoreCase(forceElectronicText)) {
+                        fileContext.put("dataResourceId", dataResourceId);
+                        fileContext.put("imageData", byteWrapper);
+                        thisResult = dispatcher.runSync("updateImage", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
+                        }
+                    } else {
+                        //return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
+                    }
+                } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
+                } else {
+                    if (UtilValidate.isNotEmpty(textData) || "true".equalsIgnoreCase(forceElectronicText)) {
+                        fileContext.put("dataResourceId", dataResourceId);
+                        fileContext.put("textData", textData);
+                        thisResult = dispatcher.runSync("updateElectronicText", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
+                        }
+                    }
+                }
+            }
 
-                result.put("dataResourceId", dataResourceId);
-                result.put("drDataResourceId", dataResourceId);
-                context.put("dataResourceId", dataResourceId);
-                content.put("dataResourceId", dataResourceId);
-                context.put("drDataResourceId", dataResourceId);
+            result.put("dataResourceId", dataResourceId);
+            result.put("drDataResourceId", dataResourceId);
+            context.put("dataResourceId", dataResourceId);
+            content.put("dataResourceId", dataResourceId);
+            context.put("drDataResourceId", dataResourceId);
         }
         // Do update and create permission checks on Content if warranted.
 
@@ -1614,5 +1621,74 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         return result;
     }
 
+    /**
+   */
+  public static Map persistContentWithRevision(DispatchContext dctx, Map context) {
+      Map result = null;
+      boolean dataResourceExists = false;
+      GenericDelegator delegator = dctx.getDelegator();
+      LocalDispatcher dispatcher = dctx.getDispatcher();
+      GenericValue dataResource = null;
+      String masterRevisionContentId = (String)context.get("masterRevisionContentId");
+      String oldDataResourceId = (String)context.get("drDataResourceId");
+      if (UtilValidate.isEmpty(oldDataResourceId)) {
+          oldDataResourceId = (String)context.get("dataResourceId");
+      }
+      if (UtilValidate.isNotEmpty(oldDataResourceId)) {
+          try {
+        	  dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", oldDataResourceId));
+          } catch(GenericEntityException e) {
+              Debug.logError(e.getMessage(), module);
+              return ServiceUtil.returnError(e.getMessage());
+          }
+      }
+      
+      try {
+    	  ModelService persistContentAndAssocModel = dispatcher.getDispatchContext().getModelService("persistContentAndAssoc");
+    	  Map ctx = persistContentAndAssocModel.makeValid(context, "IN");
+    	  if (dataResource != null) {
+    		  ctx.remove("dataResourceId");
+    		  ctx.remove("drDataResourceId");
+    	  }
+          result = dispatcher.runSync("persistContentAndAssoc", ctx);
+          String errorMsg = ServiceUtil.getErrorMessage(result);
+          if (UtilValidate.isNotEmpty(errorMsg)) {
+        	  return ServiceUtil.returnError(errorMsg);
+          }
+          String contentId = (String)result.get("contentId");
+          List parentList = new ArrayList();
+          if (UtilValidate.isEmpty(masterRevisionContentId)) {
+        	  Map traversMap = new HashMap();
+        	  traversMap.put("contentId", contentId);
+        	  traversMap.put("direction", "To");
+        	  traversMap.put("contentAssocTypeId", "COMPDOC_PART");
+        	  Map traversResult = dispatcher.runSync("traverseContent", traversMap);
+        	  parentList = (List)traversResult.get("parentList");
+          } else {
+              parentList.add(masterRevisionContentId);
+          }
+          
+          // Update ContentRevision and ContentRevisonItem
+          Map contentRevisionMap = new HashMap();
+          contentRevisionMap.put("itemContentId", contentId);
+          contentRevisionMap.put("newDataResourceId", result.get("dataResourceId"));
+          contentRevisionMap.put("oldDataResourceId", result.get("oldDataResourceId"));
+          // need committedByPartyId
+          for (int i=0; i < parentList.size(); i++) {
+              String thisContentId = (String)parentList.get(i);
+              contentRevisionMap.put("contentId", thisContentId);
+              result = dispatcher.runSync("updateContentRevisionAndItem", contentRevisionMap);
+              errorMsg = ServiceUtil.getErrorMessage(result);
+              if (UtilValidate.isNotEmpty(errorMsg)) {
+            	  return ServiceUtil.returnError(errorMsg);
+              }
+          }
+          
+      } catch (GenericServiceException e) {
+          Debug.logError(e.getMessage(), module);
+          return ServiceUtil.returnError(e.getMessage());
+      }
+      return result;
+  }
 
 }

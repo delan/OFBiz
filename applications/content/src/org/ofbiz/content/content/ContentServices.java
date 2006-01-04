@@ -146,7 +146,49 @@ public class ContentServices {
         results.put("contentList", permittedList);
         return results;
     }
-
+    /**
+     * This is a generic service for traversing a Content tree, typical of a blog response tree. It calls the ContentWorker.traverse method.
+     */
+    public static Map findContentParents(DispatchContext dctx, Map context) {
+        HashMap results = new HashMap();
+        List parentList = new ArrayList();
+        results.put("parentList", parentList);
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String contentId = (String)context.get("contentId");
+        String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        String direction = (String)context.get("direction");
+        if (UtilValidate.isEmpty(direction)) direction="To";
+        Map traversMap = new HashMap();
+  	  	traversMap.put("contentId", contentId);
+  	  	traversMap.put("direction", direction);
+  	  	traversMap.put("contentAssocTypeId", contentAssocTypeId);
+  	  	try {
+  	  		Map thisResults = dispatcher.runSync("traverseContent", traversMap);
+            String errorMsg = ServiceUtil.getErrorMessage(thisResults);
+            if (UtilValidate.isNotEmpty(errorMsg) ) {
+                Debug.logError( "Problem in traverseContent. " + errorMsg, module);
+                return ServiceUtil.returnError(errorMsg);
+            }
+            Map nodeMap = (Map)thisResults.get("nodeMap");
+            walkParentTree(nodeMap, parentList);
+  	  	} catch (GenericServiceException e) {
+            return ServiceUtil.returnFailure(e.getMessage());
+  	  	}
+        return results;
+    }
+    
+    private static void walkParentTree(Map nodeMap, List parentList) {
+        List kids = (List)nodeMap.get("kids");
+        if (kids == null || kids.size() == 0) {
+            parentList.add(nodeMap.get("contentId"));
+        } else {
+            Iterator iter = kids.iterator();
+            while (iter.hasNext()) {
+                Map node = (Map) iter.next();
+                walkParentTree(node, parentList);
+            }
+        }
+    }
     /**
      * This is a generic service for traversing a Content tree, typical of a blog response tree. It calls the ContentWorker.traverse method.
      */

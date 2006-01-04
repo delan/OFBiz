@@ -1401,6 +1401,39 @@
         <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
+    
+    <service name="persistContentWithRevision" engine="java"
+        transaction-timout="72000" 
+            location="org.ofbiz.content.ContentManagementServices" invoke="persistContentWithRevision" auth="true">
+        <implements service="persistContentAndAssoc"/>
+        <attribute mode="IN" name="masterRevisionContentId" optional="false" type="String"/>
+    </service>
+    
+    <!-- 
+    <service name="persistSurveyContent" engine="java"
+        transaction-timout="72000" 
+            location="org.ofbiz.content.ContentManagementServices" invoke="persistSurveyContent" auth="true">
+        <implements service="createSurveyResponse"/>
+        
+    </service>
+    
+    <service name="persistSurveyContentWithRevision" engine="java"
+        transaction-timout="72000" 
+            location="org.ofbiz.content.ContentManagementServices" invoke="persistSurveyContentWithRevision" auth="true">
+        <implements service="persistSurveyContent"/>
+        <attribute mode="IN" name="masterRevisionContentId" optional="false" type="String"/>
+    </service>
+    -->
+    
+    <service name="findContentParents" engine="java"
+        transaction-timout="72000" 
+            location="org.ofbiz.content.ContentManagementServices" invoke="findContentParents" auth="true">
+        <attribute mode="IN" name="contentId" optional="false" type="String"/>
+        <attribute mode="IN" name="contentAssocTypeId" optional="false" type="String"/>
+        <attribute mode="IN" name="direction" optional="true" type="String"/>
+        <attribute mode="OUT" name="parentList" optional="true" type="List"/>
+    </service>
+    
     <service name="deactivateAssocs" engine="java"
             location="org.ofbiz.content.content.ContentServices" invoke="deactivateAssocs" auth="true">
         <description>Supply thruDate to all ContentAssoc that come "before" current one</description>
@@ -1700,6 +1733,93 @@
         <attribute name="fmPrefixMap" type="java.util.Map" mode="IN" optional="true" string-map-prefix="CTX_"/>
         <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="true"/>
     </service>
+
+    <!-- Content Revision services -->
+    <service name="createContentRevision" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="createContentRevision"
+        default-entity-name="ContentRevision" auth="true">
+        <description>Create a ContentRevision</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateContentRevision" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="updateContentRevision"
+        default-entity-name="ContentRevision" auth="true">
+        <description>Update a ContentRevision</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeContentRevision" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="removeContentRevision"
+        default-entity-name="ContentRevision" auth="true">
+        <description>Remove ContentRevision</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Content Revision Item services -->
+    <service name="createContentRevisionItem" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="createContentRevisionItem"
+        default-entity-name="ContentRevisionItem" auth="true">
+        <description>Create a ContentRevisionItem</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateContentRevisionItem" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="updateContentRevisionItem"
+        default-entity-name="ContentRevisionItem" auth="true">
+        <description>Update a ContentRevisionItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeContentRevisionItem" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="removeContentRevisionItem"
+        default-entity-name="ContentRevisionItem" auth="true">
+        <description>Remove ContentRevisionItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Content Approval services -->
+    <service name="createContentApproval" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="createContentApproval"
+        default-entity-name="ContentApproval" auth="true">
+        <description>Create a ContentApproval</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateContentApproval" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="updateContentApproval"
+        default-entity-name="ContentApproval" auth="true">
+        <description>Update a ContentApproval</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeContentApproval" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="removeContentApproval"
+        default-entity-name="ContentApproval" auth="true">
+        <description>Remove ContentApproval</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ================ CompDoc Requests ================= -->
+    <service name="updateContentRevisionAndItem" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="updateContentRevisionAndItem" auth="false">
+        <description>Update a ContentRevision and ContentRevisionItem</description>
+        <auto-attributes entity-name="ContentRevision" include="all" mode="IN" optional="true">
+        </auto-attributes>
+        <auto-attributes entity-name="ContentRevisionItem" include="all" mode="IN" optional="true">
+        </auto-attributes>
+    </service>
+
     <service name="convertDocument" auth="false" engine="java" transaction-timout="72000" 
         location="org.ofbiz.content.openoffice.OpenOfficeServices" invoke="convertDocument">
          <description>Use OpenOffice to convert between document types</description>
@@ -1708,7 +1828,7 @@
         <attribute name="filenameFrom" type="String" mode="IN" optional="false"/>
         <attribute name="filenameTo" type="String" mode="IN" optional="false"/>
         <attribute name="convertFilterName" type="String" mode="IN" optional="true"/>
-   </service>
+    </service>
     <service name="convertDocumentFileToFile" auth="false" engine="java" transaction-timout="72000" 
         location="org.ofbiz.content.openoffice.OpenOfficeServices" invoke="convertDocumentFileToFile">
          <description>Use OpenOffice to convert between document types</description>
@@ -1718,7 +1838,7 @@
         <attribute name="filenameTo" type="String" mode="IN" optional="false"/>
         <attribute name="inputMimeType" type="String" mode="IN" optional="true"/>
         <attribute name="outputMimeType" type="String" mode="IN" optional="true"/>
-   </service>
+    </service>
     <service name="compareDocuments" auth="false" engine="java" transaction-timout="72000" 
         location="org.ofbiz.content.openoffice.OpenOfficeServices" invoke="compareDocuments">
          <description>Use OpenOffice to compare two documents</description>
@@ -1727,5 +1847,5 @@
         <attribute name="filenameFrom" type="String" mode="IN" optional="false"/>
         <attribute name="filenameOriginal" type="String" mode="IN" optional="false"/>
         <attribute name="filenameOut" type="String" mode="IN" optional="false"/>
-   </service>
+    </service>
 </services>
