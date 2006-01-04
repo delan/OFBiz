@@ -81,6 +81,7 @@
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_BILLING" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_PAYMENT" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_PHONE" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_WEB_URL" contactMechTypeId="WEB_ADDRESS"/>
     
     <EnumerationType description="Party Content Purpose" enumTypeId="PTYCNT_PRP" hasTable="N" parentTypeId=""/>
     <Enumeration description="Logo Image URL" enumCode="LGOIMGURL" enumId="PCPRP_LGOIMGURL" sequenceId="01" enumTypeId="PTYCNT_PRP"/>
