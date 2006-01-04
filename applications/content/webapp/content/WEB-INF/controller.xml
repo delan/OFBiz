@@ -44,6 +44,7 @@
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.webapp.view.JasperReportsXmlViewHandler"/>
     <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/> 
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
+    <handler name="simplecontent" type="view" class="org.ofbiz.content.view.SimpleContentViewHandler"/>
 
     
     <preprocessor>
@@ -685,32 +686,6 @@
         <response name="error" type="view" value="EditContent"/>
     </request-map>
 
-    <!-- ESP Content and Content Assoc requests -->
-    <request-map uri="AddESPContent">
-        <security auth="false" https="false"/>
-        <response name="success" type="view" value="AddESPContent"/>
-        <response name="error" type="view" value="AddESPContent"/>
-    </request-map>
-
-    <request-map uri="persistESPContentStuff">
-        <security auth="false" https="false"/>
-        <event invoke="persistContentAndAssoc" path="" type="service"/>
-        <response name="success" type="view" value="AddESPContent"/>
-        <response name="error" type="view" value="AddESPContent"/>
-    </request-map>
-
-    <request-map uri="createCompositeDocTemplate">
-        <security auth="true" https="true"/>
-        <event invoke="createCompositeDocTemplate" path="" type="service"/>
-        <response name="success" type="view" value="AddESPContent"/>
-        <response name="error" type="view" value="AddESPContent"/>
-    </request-map>
-
-    <request-map uri="AddCompositeDocTemplate">
-        <security auth="false" https="false"/>
-        <response name="success" type="view" value="AddCompositeDocTemplate"/>
-        <response name="error" type="view" value="AddCompositeDocTemplate"/>
-    </request-map>
 
     <!-- Content Assoc requests -->
     <request-map uri="EditContentAssoc">
@@ -967,9 +942,9 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindCompDocTemplate"/>
     </request-map>
-    <request-map uri="addCompDocTemplate">
+    <request-map uri="ListCompDocTemplate">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditCompDocTemplate"/>
+        <response name="success" type="view" value="ListCompDocTemplate"/>
     </request-map>
     <request-map uri="EditCompDocTemplate">
         <security auth="true" https="true"/>
@@ -985,10 +960,17 @@
     </request-map>
     <request-map uri="createCompDocTemplate">
         <security auth="true" https="true"/>
-        <event invoke="createCompDocTemplate" path="" type="service"/>
+        <event invoke="persistContentAndAssoc" path="" type="service"/>
         <response name="success" type="view" value="EditCompDocTemplate"/>
         <response name="error" type="view" value="EditCompDocTemplate"/>
     </request-map>
+   <request-map uri="updateCompDocTemplate">
+       <security auth="true" https="true"/>
+       <event invoke="persistContentAndAssoc" path="" type="service"/>
+       <response name="success" type="view" value="EditCompDocTemplate"/>
+       <response name="error" type="view" value="EditCompDocTemplate"/>
+   </request-map>
+
 
     <!-- ================ ContentApproval Requests ================= -->
     <request-map uri="ListContentApproval">
@@ -1488,7 +1470,13 @@
     </request-map>
     
     <!-- ================ CompDoc Requests ================= -->
+    <!-- ================ SimpleContent Requests ================= -->
 
+    <request-map uri="ViewSimpleContent">
+        <security auth="false" https="false"/>
+        <response name="success" type="view" value="ViewSimpleContent"/>
+    </request-map>
+    
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="screen" page="component://content/widget/CommonScreens.xml#main"/>
@@ -1602,8 +1590,11 @@
     <view-map name="EditContentApproval" page="component://content/widget/compdoc/CompDocScreens.xml#EditContentApproval" type="screen"/>
 
     <view-map name="FindCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#FindCompDocTemplate" type="screen"/>
+    <view-map name="ListCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#ListCompDocTemplate" type="screen"/>
     <view-map name="EditCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocTemplate" type="screen"/>
     <view-map name="EditCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocInstance" type="screen"/>
     <view-map name="CompDocTemplateTree" page="component://content/widget/compdoc/CompDocScreens.xml#CompDocTemplateTree" type="screen"/>
+
+    <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
     <!-- end of view mappings -->
 </site-conf>
