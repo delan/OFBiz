@@ -214,14 +214,12 @@
                     <decorator-section name="body">
                         <section>   
                             <actions>
-                                <entity-condition entity-name="ContentAssocViewFrom"  list-name="compDocFindList">
+                                <entity-condition entity-name="Content"  list-name="compDocFindList">
                                     <condition-list combine="and" >
-                                        <condition-expr field-name="contentName" operator="equals" env-name="contentName" ignore-if-empty="true"/>
-                                        <condition-expr field-name="contentId" operator="equals" env-name="contentId" ignore-if-empty="true"/>
-                                        <condition-expr field-name="caFromDate" operator="equals" env-name="caFromDate" ignore-if-empty="true"/>
-                                        <condition-expr field-name="caThruDate" operator="equals" env-name="caThruDate" ignore-if-empty="true"/>
-                                        <condition-expr field-name="caContentIdTo" operator="equals" env-name="caContentIdTo" ignore-if-empty="true"/>
-                                        <condition-expr field-name="contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>                  </condition-list>
+                                        <condition-expr field-name="contentName" operator="equals" env-name="parameters.contentName" ignore-if-empty="true"/>
+                                        <condition-expr field-name="contentId" operator="equals" env-name="parameters.contentId" ignore-if-empty="true"/>
+                                        <condition-expr field-name="contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>                  
+                                    </condition-list>
                                 </entity-condition>
                             </actions>                      
                             <widgets>
@@ -362,9 +360,6 @@
     </screen>
      <screen name="cDTreeLine">
         <section>
-            <actions>
-                <script location="component://content/webapp/content/WEB-INF/actions/content/prepseqno.bsh"/>
-            </actions>
             <widgets>
                 <container>
                     <label text="${contentName}[${contentId}]" style="responseheader" />
