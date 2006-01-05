@@ -195,18 +195,42 @@
    <form name="EditCompDocTemplate" default-map-name="content" title="" type="single" target="updateCompDocTemplate" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
        <alt-target target="createCompDocTemplate" use-when="contentAssoc==null"/> 
-       <field name="contentName"  field-name="contentName" map-name="content"><display/></field>
-       <field name="contentId"  field-name="contentId" map-name="content"><text/></field> +        <field name="contentTypeId"  field-name="contentTypeId" map-name="content"><hidden value="COMPDOC_TEMPLATE"/></field> +        <field name="ownerContentId"  field-name="ownerContentId" map-name="content"><text/></field>
+       <field name="contentName"  field-name="contentName" map-name="content"><text/></field>
+       <field name="contentId"  field-name="contentId" map-name="content"><text/></field>
+       <field name="contentTypeId"  field-name="contentTypeId" map-name="content"><hidden value="COMPDOC_TEMPLATE"/></field>
+       <field name="ownerContentId"><lookup target-form-name="LookupContent"/></field>
        <field name="instanceOfContentId"  field-name="instanceOfContentId" map-name="content"><text/></field>
-       <field name="dataResourceId"  field-name="dataResourceId" map-name="content"><text/></field> +        <field name="templateDataResourceId"  field-name="templateDataResourceId" map-name="content"><text/></field>
+        <field name="dataResourceId">
+            <lookup target-form-name="LookupDataResource">
+            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+            </lookup>
+        </field>
+       <field name="templateDataResourceId"  field-name="templateDataResourceId" map-name="content"><text/></field>
        <field name="dataSourceId"  field-name="dataSourceId" map-name="content"><text/></field>
-       <field name="statusId"  field-name="statusId" map-name="content"><text/></field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" value="PUBLISH_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
        <field name="privilegeEnumId"  field-name="privilegeEnumId" map-name="content"><text/></field>
        <field name="serviceName"  field-name="serviceName" map-name="content"><text/></field>
        <field name="description"  field-name="description" map-name="content"><text/></field>
        <field name="localeString"  field-name="localeString" map-name="content"><text/></field>
-       <field name="mimeTypeId"  field-name="mimeTypeId" map-name="content"><text/></field>
-       <field name="characterSetId"  field-name="characterSetId" map-name="content"><text/></field>
+        <field name="mimeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${mimeTypeId} - ${description}" entity-name="MimeType" key-field-name="mimeTypeId">
+                    <entity-order-by field-name="mimeTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="characterSetId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="CharacterSet" key-field-name="characterSetId"/>
+            </drop-down>
+        </field>
        <field name="childLeafCount"  field-name="childLeafCount" map-name="content"><text/></field>
        <field name="childBranchCount"  field-name="childBranchCount" map-name="content"><text/></field>
        <field name="createdDate"  field-name="createdDate" map-name="content"><text/></field>
@@ -218,9 +242,10 @@
        <field name="contentAssocTypeId"  field-name="contentAssocTypeId" map-name="contentAssoc"><hidden value="COMPDOC_PART"/></field>
        <field use-when="contentAssoc!=null" name="fromDate"  field-name="fromDate" map-name="contentAssoc"><display/></field>
        <field use-when="contentAssoc==null" name="fromDate" field-name="fromDate"><hidden value="${nowTimestamp}"/></field>
-       <field name="thruDate"  field-name="thruDate" map-name="contentAssoc"><text/></field>
+       <field name="thruDate"  field-name="thruDate" map-name="contentAssoc"><date-find/></field>
        <field name="contentAssocPredicateId"  field-name="contentAssocPredicateId" map-name="contentAssoc"><text/></field>
        <field name="sequenceNum"  field-name="sequenceNum" map-name="contentAssoc"><text/></field>
+       <field use-when="contentAssoc!=null" name="sequenceNum" field-name="sequenceNum"><hidden value="${sequenceNum}"/></field>
        <field name="mapKey"  field-name="mapKey" map-name="contentAssoc"><text/></field>
        <field name="upperCoordinate"  field-name="upperCoordinate" map-name="contentAssoc"><text/></field>
        <field name="leftCoordinate"  field-name="leftCoordinate" map-name="contentAssoc"><text/></field>
@@ -233,36 +258,36 @@
         <auto-fields-entity entity-name="ContentAssoc"/>
         <field name="contentName"><text/></field>
 
-        <field name="contentId"><hidden/></field>
+        <field name="contentId"><text/></field>
         <field name="contentTypeId"><hidden value="COMPDOC_INSTANCE"/></field>
-        <field name="ownerContentId"><hidden/></field>
-        <field name="instanceOfContentId"><hidden/></field>
-        <field name="dataResourceId"><hidden/></field>
-        <field name="templateDataResourceId"><hidden/></field>
-        <field name="dataSourceId"><hidden/></field>
-        <field name="statusId"><hidden/></field>
-        <field name="privilegeEnumId"><hidden/></field>
-        <field name="serviceName"><hidden/></field>
-        <field name="description"><hidden/></field>
-        <field name="localeString"><hidden/></field>
-        <field name="mimeTypeId"><hidden/></field>
-        <field name="characterSetId"><hidden/></field>
-        <field name="childLeafCount"><hidden/></field>
-        <field name="childBranchCount"><hidden/></field>
-        <field name="createdDate"><hidden/></field>
-        <field name="createdByUserLogin"><hidden/></field>
-        <field name="lastModifiedDate"><hidden/></field>
-        <field name="lastModifiedByUserLogin"><hidden/></field>
+        <field name="ownerContentId"><text/></field>
+        <field name="instanceOfContentId"><text/></field>
+        <field name="dataResourceId"><text/></field>
+        <field name="templateDataResourceId"><text/></field>
+        <field name="dataSourceId"><text/></field>
+        <field name="statusId"><text/></field>
+        <field name="privilegeEnumId"><text/></field>
+        <field name="serviceName"><text/></field>
+        <field name="description"><text/></field>
+        <field name="localeString"><text/></field>
+        <field name="mimeTypeId"><text/></field>
+        <field name="characterSetId"><text/></field>
+        <field name="childLeafCount"><text/></field>
+        <field name="childBranchCount"><text/></field>
+        <field name="createdDate"><text/></field>
+        <field name="createdByUserLogin"><text/></field>
+        <field name="lastModifiedDate"><text/></field>
+        <field name="lastModifiedByUserLogin"><text/></field>
 
-        <field name="contentIdTo"><hidden/></field>
+        <field name="contentIdTo"><text/></field>
         <field name="contentAssocTypeId"><hidden value="TREE_CHILD"/></field>
         <field name="fromDate"><hidden value="${nowTimestamp}"/></field>
-        <field name="thruDate"><hidden/></field>
-        <field name="contentAssocPredicateId"><hidden/></field>
-        <field name="sequenceNum"><hidden/></field>
-        <field name="mapKey"><hidden/></field>
-        <field name="upperCoordinate"><hidden/></field>
-        <field name="leftCoordinate"><hidden/></field>
+        <field name="thruDate"><text/></field>
+        <field name="contentAssocPredicateId"><text/></field>
+        <field name="sequenceNum"><text/></field>
+        <field name="mapKey"><text/></field>
+        <field name="upperCoordinate"><text/></field>
+        <field name="leftCoordinate"><text/></field>
 
         <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="Approval" title="">
@@ -271,5 +296,65 @@
         <field name="Revision" title="">
             <hyperlink also-hidden="false" description="Revision" target="ListContentRevision?contentId=${contentId}"/> 
         </field>
+    </form>
+
+    <form name="EditCompDocContent" target="updateCompDocContent" title="" type="single"
+        default-title-style="tableheadtext" default-map-name="currentValue"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="Content" />
+        <field name="contentId"><display/></field>
+        <field name="contentTypeId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
+            </drop-down>
+        </field>
+        <field name="dataResourceId">
+            <lookup target-form-name="LookupDataResource">
+            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+            </lookup>
+        </field>
+        <field name="ownerContentId"><lookup target-form-name="LookupContent"/></field>
+        <field name="mimeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${mimeTypeId} - ${description}" entity-name="MimeType" key-field-name="mimeTypeId">
+                    <entity-order-by field-name="mimeTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="characterSetId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="CharacterSet" key-field-name="characterSetId"/>
+            </drop-down>
+        </field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" value="PUBLISH_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="createdByUserLogin" position="1"><display/></field>
+        <field name="createdDate" position="2"><display/></field>
+        <field name="lastModifiedByUserLogin" position="1"><display/></field>
+        <field name="lastModifiedDate" position="2"><display/></field>
+       <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <!-- ================ CompDoc Requests ================= -->
+
+    <form name="EditContentRevisionAndItem" target="updateContentRevisionAndItem" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="ContentRevision" />
+        <auto-fields-entity entity-name="ContentRevisionItem" />
+        
+        <field name="contentId" title="" widget-style="buttontext" ><text/></field>
+        <field name="contentRevisionSeqId" title=""><hidden/></field> 
+        <field name="committedByPartyId" title="" widget-style="inputBox"></field>
+        <field name="comments" title="" widget-style="inputBox"></field>
+        <field name="itemContentId" title="" widget-style="inputBox"></field>
+        <field name="oldDataResourceId" title="" widget-style="inputBox"></field>
+        <field name="newDataResourceId" title="" widget-style="inputBox"></field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit/></field>
     </form>
 </forms>

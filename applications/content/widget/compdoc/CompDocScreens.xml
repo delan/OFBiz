@@ -250,6 +250,7 @@
                 <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
                 <set field="contentAssocTypeId" from-field="parameters.caContentAssocTypeId"/>
                 <set field="fromDate" from-field="parameters.caFromDate"/>
+                <set field="sequenceNum" from-field="parameters.caSequenceNum"/>
 
                 <entity-one entity-name="Content" value-name="content"/>
                 <entity-one entity-name="ContentAssoc" value-name="contentAssoc"/>
@@ -287,15 +288,18 @@
     <screen name="CompDocTemplateTree">
         <section>
             <actions>
+                <set field="headerItem" value="Content"/>
+                <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="title" value="Composite Document Instance Edit Page"/>
+                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+
                 <set  field="rootEntityId" from-field="parameters.contentId" />
                 <set  field="contentId" from-field="parameters.contentId" />
                 <set  field="responseContentId" from-field="parameters.contentId" />
                 <set  field="ownerContentId" from-field="parameters.ownerContentId" />
-                <entity-one entity-name="Content" value-name="content" use-cache="true">
-                    <field-map field-name="contentId" env-name="contentId"/>
-                </entity-one>
                 <set field="enableEdit" value="false"/>
-                <set field="contentId" value="${content.contentId}" />
+                <set field="contentId" value="${contentId}" />
             </actions>
             <widgets>
                 <label text="&lt;p/&gt;" />
@@ -307,8 +311,12 @@
             </widgets>
         </section>
     </screen>
+    
     <screen name="responseTreeLine">
         <section>
+            <actions>
+                <script location="component://content/webapp/content/WEB-INF/actions/content/prepseqno.bsh"/>
+            </actions>
             <widgets>
                 <section>
                     <condition>
@@ -317,25 +325,32 @@
                     <widgets>
                         <container>
                             <label text="${contentName}[${contentId}]" style="responseheader" />
-                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${contentId}" style="tabButton"/>
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton"/>
-                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${contentId}" style="tabButton"/>
+                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;ownerContentId=${rootEntityId}" style="tabButton" target-window="_top" />
+                            <link  text="+Bef" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                            <link  text="+Aft" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
+                            <link  text="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}" style="tabButton" />
                             <container style="responsetext">
                                 <label text="${description}" style="responsetext" />
                             </container>
                         </container>    
                     </widgets>
         </section>
-        <section>
+         <section>
             <condition>
                 <if-compare-field field-name="responseContentId" operator="equals" to-field-name="contentId" />
             </condition>
+            <actions>
+                <script location="component://content/webapp/content/WEB-INF/actions/content/prepseqno.bsh"/>
+            </actions>
             <widgets>
               <container style="responseSelected">
                       <label text="${contentName}[${contentId}]" style="responseheader" />
-                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${contentId}" style="tabButton"/>
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton"/>
-                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${contentId}" style="tabButton"/>
+                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;ownerContentId=${rootEntityId}" style="tabButton" target-window="_top" />
+                            <link  text="+Bef" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                            <link  text="+Aft" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
+                            <link  text="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}" style="tabButton" />
                       <container style="responsetext">
                         <label text="${description}" style="responsetext" />
                       </container>
@@ -345,14 +360,17 @@
              </widgets>
         </section>
     </screen>
-    <screen name="cDTreeLine">
+     <screen name="cDTreeLine">
         <section>
+            <actions>
+                <script location="component://content/webapp/content/WEB-INF/actions/content/prepseqno.bsh"/>
+            </actions>
             <widgets>
                 <container>
                     <label text="${contentName}[${contentId}]" style="responseheader" />
-                            <link  text="Add Template Child" target="addCompDocTemplate?contentId=${contentId}" style="tabButton"/>
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton"/>
-                            <link  text="Edit Template" target="EditCompDocTemplate?contentId=${contentId}" style="tabButton"/>
+                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;ownerContentId=${rootEntityId}" style="tabButton" target-window="_top" />
+                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
+                            <link  text="Edit" target="EditCompDocContent?contentId=${contentId}" style="tabButton" />
                     <container style="responsetext">
                         <label text="${description}" style="responsetext" />
                     </container>
@@ -360,24 +378,73 @@
             </widgets>
         </section>
     </screen>
-    <screen name="AddContent">
+    
+     <screen name="AddCompDocTemplate">
         <section>
             <condition>
                 <if-has-permission permission="CONTENTMGR" action="CREATE"/>
             </condition>
             <actions>
                 <set field="headerItem" value="Content"/>
-<!--               <script location="component://content/widget/getMenuContext.bsh"/> -->
-                <set field="title" value="CD Content Edit Page"/>
+                <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="title" value="Composite Document Instance Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+
+                <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
+                <set  field="rootEntityId" from-field="parameters.caContentIdTo" />
+                <set  field="ownerContentId" from-field="parameters.ownerContentId" />
+                <set  field="sequenceNum" from-field="parameters.caSequenceNum" />
             </actions>
             <widgets>
-                <decorator-screen name="mainContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
                 <decorator-section name="body">
-                    <include-form name="AddContent" location="component://component://content/widget/compdoc/CompDocTemplateTreeForms.xml"/>
+                    <include-form name="EditCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
                 </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
+     
+    <screen name="EditCompDocContent">
+        <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="CREATE"/>
+            </condition>
+            <actions>
+                <set field="headerItem" value="Content"/>
+                <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="title" value="Composite Document Instance Edit Page"/>
+                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
+                <set  field="rootEntityId" from-field="parameters.caContentIdTo" />
+                <set  field="ownerContentId" from-field="parameters.ownerContentId" />
+                <set  field="sequenceNum" from-field="parameters.caSequenceNum" />
+            </actions>
+            <widgets>
+                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-section name="body">
+                    <include-form name="EditCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- ================ CompDoc Requests ================= -->
+    
+    <screen name="EditContentRevisionAndItem">
+        <section>
+            <widgets>
+                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="EditContentRevisionAndItem" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
