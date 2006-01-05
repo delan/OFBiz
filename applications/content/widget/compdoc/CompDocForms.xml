@@ -26,13 +26,10 @@
     <!-- CompDoc forms -->
     <form name="FindCompDocTemplate" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        default-entity-name="ContentAssocViewFrom"
+        default-entity-name="Content"
         target="ListCompDocTemplate" title=" " type="single" > 
         <field name="contentName" title="Name" ><text-find/></field>
         <field name="contentId" title="Content Id" ><text-find/></field>
-        <field name="caFromDate" title="From Date" ><date-find/></field>
-        <field name="caThruDate" title="Thru Date" ><date-find/></field>
-        <field name="caContentIdTo" title="Publish-to content" ><text-find/></field>
         <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="addCompDocTemplate" title="">
             <hyperlink also-hidden="false" description="Create" target="EditCompDocTemplate"/> 
