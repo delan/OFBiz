@@ -101,12 +101,6 @@
         
         <field name="contentId" title="" widget-style="buttontext" ><lookup target-form-name="LookupContent"/><text/></field>
         <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
-<!--         <field name="contentRevisionSeqId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="" key-field-name="contentRevisionSeqId"/>
-            </drop-down>
-        </field>
--->
         <field name="itemContentId" title="" widget-style="inputBox"></field>
         <field name="oldDataResourceId" title="" widget-style="inputBox"></field>
         <field name="newDataResourceId" title="" widget-style="inputBox"></field>
@@ -189,7 +183,7 @@
         </field>
     </form>
 
-   <form name="EditCompDocTemplate" default-map-name="content" title="" type="single" target="updateCompDocTemplate" 
+    <form name="EditCompDocTemplate" default-map-name="content" title="" type="single" target="javascript:setDataResourceTypeAndSubmit()"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
        <alt-target target="createCompDocTemplate" use-when="contentAssoc==null"/> 
        <field name="contentName"  field-name="contentName" map-name="content"><text/></field>
@@ -218,9 +212,9 @@
        <field name="localeString"  field-name="localeString" map-name="content"><text/></field>
         <field name="mimeTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${mimeTypeId} - ${description}" entity-name="MimeType" key-field-name="mimeTypeId">
-                    <entity-order-by field-name="mimeTypeId"/>
-                </entity-options>
+                <option key="1" description="Html - text/html"/><option key="2" description="MS Word - application/msword"/><option key="3" description="PDF - application/pdf"/>
+                <option key="4" description="Survey Response - application/vnd.ofbiz.survey.cdi"/><option key="5" description="Survey Template - application/vnd.ofbiz.survey.cdt"/>
+                <option key="6" description="Text - text/plain"/>
             </drop-down>
         </field>
         <field name="characterSetId">
@@ -246,6 +240,15 @@
        <field name="mapKey"  field-name="mapKey" map-name="contentAssoc"><text/></field>
        <field name="upperCoordinate"  field-name="upperCoordinate" map-name="contentAssoc"><text/></field>
        <field name="leftCoordinate"  field-name="leftCoordinate" map-name="contentAssoc"><text/></field>
+
+       <field name="dataResourceTypeId"  field-name="dataResourceTypeId" map-name="DataResource"><hidden value=""/></field>
+       <field name="dataTemplateTypeId"  field-name="dataTemplateTypeId" map-name="DataResource"><text/></field>
+       <field name="dataCategoryId"  field-name="dataCategoryId" map-name="DataResource"><text/></field>
+       <field name="dataResourceName"  field-name="dataResourceName" map-name="DataResource"><text/></field>
+       <field name="characterSetId"  field-name="characterSetId" map-name="DataResource"><text/></field>
+       <field name="objectInfo"  field-name="objectInfo" map-name="DataResource"><text/></field>
+
+       <field name="imageData" map-name="dummy"><file/></field>
        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 

@@ -27,10 +27,9 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
     <screen name="ListContentApproval">
         <section>
-<!--             <condition>
+            <condition>
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
--->
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
@@ -183,6 +182,8 @@
                 <set field="title" value="Find CompDoc"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
+                <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
@@ -206,6 +207,8 @@
                 <set field="title" value="List CompDoc"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
+                <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
@@ -285,10 +288,13 @@
     </screen>
     <screen name="CompDocTemplateTree">
         <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="CREATE"/>
+            </condition>
             <actions>
                 <set field="headerItem" value="Content"/>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="Composite Document Instance Edit Page"/>
+                <set field="title" value="Composite Document Template Tree Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
 
@@ -300,11 +306,17 @@
                 <set field="contentId" value="${contentId}" />
             </actions>
             <widgets>
-                <label text="&lt;p/&gt;" />
-                <container style="cdhr">
-                    <label text="Response tree: " style="cdtitle"/>
-                </container>
-                <include-tree  name="CompDocTemplateTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
+                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <label text="&lt;p/&gt;" />
+                        <container style="cdhr">
+                            <label text="Response tree: " style="cdtitle"/>
+                                                                                                          159,6         74%
+                        </container>
+                        <include-tree  name="CompDocTemplateTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
+                        <label text="Content Id: ${contentId}"/>
+                    </decorator-section>
+                </decorator-screen>
                 <label text="Content Id: ${contentId}"/>
             </widgets>
         </section>
@@ -323,9 +335,9 @@
                     <widgets>
                         <container>
                             <label text="${contentName}[${contentId}]" style="responseheader" />
-                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;ownerContentId=${rootEntityId}" style="tabButton" target-window="_top" />
-                            <link  text="+Bef" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
-                            <link  text="+Aft" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
+                            <link  text="+Bef" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                            <link  text="+Aft" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
                             <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
                             <link  text="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}" style="tabButton" />
                             <container style="responsetext">
@@ -344,9 +356,9 @@
             <widgets>
               <container style="responseSelected">
                       <label text="${contentName}[${contentId}]" style="responseheader" />
-                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;ownerContentId=${rootEntityId}" style="tabButton" target-window="_top" />
-                            <link  text="+Bef" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
-                            <link  text="+Aft" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
+                            <link  text="+Bef" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                            <link  text="+Aft" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
                             <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
                             <link  text="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}" style="tabButton" />
                       <container style="responsetext">
@@ -363,7 +375,7 @@
             <widgets>
                 <container>
                     <label text="${contentName}[${contentId}]" style="responseheader" />
-                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;ownerContentId=${rootEntityId}" style="tabButton" target-window="_top" />
+                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
                             <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
                             <link  text="Edit" target="EditCompDocContent?contentId=${contentId}" style="tabButton" />
                     <container style="responsetext">
