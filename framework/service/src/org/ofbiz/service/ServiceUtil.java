@@ -361,11 +361,17 @@ public class ServiceUtil {
         if (foundJobs != null && foundJobs.size() > 0) {
             Iterator i = foundJobs.iterator();
             while (i.hasNext()) {
-                GenericValue job = (GenericValue) i.next();
+                GenericValue jobSandbox = (GenericValue) i.next();
                 try {
-                    job.remove();
+                    jobSandbox.remove();
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to remove job : " + job, module);
+                    Debug.logError(e, "Unable to remove job : " + jobSandbox + "; " + e.toString(), module);
+                }
+                try {
+                    // in a separate try/catch because other entities like ApplicationSandbox and WorkEffort can point to the same record, though it pretty much doesn't happen
+                    jobSandbox.removeRelated("RuntimeData");
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, "When remove job unable to remove related RuntimeData for JobSandbox: " + jobSandbox + "; " + e.toString(), module);
                 }
             }
         }
