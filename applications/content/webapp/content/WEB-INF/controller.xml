@@ -946,6 +946,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="ListCompDocTemplate"/>
     </request-map>
+    <request-map uri="AddCompDocTemplate">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditCompDocTemplate"/>
+    </request-map>
     <request-map uri="EditCompDocTemplate">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditCompDocTemplate"/>
@@ -957,6 +961,10 @@
     <request-map uri="CompDocTemplateTree">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="CompDocTemplateTree"/>
+    </request-map>
+    <request-map uri="EditCompDocContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditCompDocContent"/>
     </request-map>
     <request-map uri="createCompDocTemplate">
         <security auth="true" https="true"/>
@@ -1594,6 +1602,8 @@
     <view-map name="EditCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocTemplate" type="screen"/>
     <view-map name="EditCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocInstance" type="screen"/>
     <view-map name="CompDocTemplateTree" page="component://content/widget/compdoc/CompDocScreens.xml#CompDocTemplateTree" type="screen"/>
+    <view-map name="EditCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocContent" type="screen"/>
+
 
     <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
     <!-- end of view mappings -->
