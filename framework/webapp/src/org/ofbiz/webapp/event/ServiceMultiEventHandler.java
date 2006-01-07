@@ -24,17 +24,19 @@
  */
 package org.ofbiz.webapp.event;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Arrays;
+
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
+
+import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -136,8 +138,8 @@ public class ServiceMultiEventHandler implements EventHandler {
                 "Y".equalsIgnoreCase(request.getParameter("_useRowSubmit"));
 
         // check if we are to also look in a global scope (no delimiter)
-        boolean checkGlobalScope = request.getParameter("_checkGlobalScope") == null ? false :
-                "Y".equalsIgnoreCase(request.getParameter("_checkGlobalScope"));
+        boolean checkGlobalScope = request.getParameter("_checkGlobalScope") == null ? true :
+                !"N".equalsIgnoreCase(request.getParameter("_checkGlobalScope"));
 
         // get the number of rows
         String rowCountField = request.getParameter("_rowCount");
@@ -162,169 +164,189 @@ public class ServiceMultiEventHandler implements EventHandler {
         String messageSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.message.suffix", locale);
 
         // prepare the error message list
-        List errorMessages = new ArrayList();
+        List errorMessages = FastList.newInstance();
 
-        // start the transaction
+        // big try/finally to make sure commit or rollback are run
         boolean beganTrans = false;
+        String returnString = null;
         try {
-            beganTrans = TransactionUtil.begin();
-        } catch (GenericTransactionException e) {
-            throw new EventHandlerException("Problem starting transaction", e);
-        }
-
-        // now loop throw the rows and prepare/invoke the service for each
-        for (int i = 0; i < rowCount; i++) {
-            String curSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
-            boolean rowSelected = request.getParameter(UtilHttp.ROW_SUBMIT_PREFIX + i) == null ? false :
-                    "Y".equalsIgnoreCase(request.getParameter(UtilHttp.ROW_SUBMIT_PREFIX + i));
-
-            // make sure we are to process this row
-            if (useRowSubmit && !rowSelected) {
-                continue;
+            // start the transaction
+            try {
+                beganTrans = TransactionUtil.begin();
+            } catch (GenericTransactionException e) {
+                throw new EventHandlerException("Problem starting transaction", e);
             }
 
-            // build the context
-            Map serviceContext = new HashMap();
-            Iterator modelParmInIter = model.getInModelParamList().iterator();
-            while (modelParmInIter.hasNext()) {
-                ModelParam modelParam = (ModelParam) modelParmInIter.next();
-                String name = (String) modelParam.name;
+            // now loop throw the rows and prepare/invoke the service for each
+            for (int i = 0; i < rowCount; i++) {
+                String curSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+                boolean rowSelected = request.getParameter(UtilHttp.ROW_SUBMIT_PREFIX + i) == null ? false :
+                        "Y".equalsIgnoreCase(request.getParameter(UtilHttp.ROW_SUBMIT_PREFIX + i));
 
-                // don't include userLogin, that's taken care of below
-                if ("userLogin".equals(name)) continue;
-                // don't include locale, that is also taken care of below
-                if ("locale".equals(name)) continue;
+                // make sure we are to process this row
+                if (useRowSubmit && !rowSelected) {
+                    continue;
+                }
 
-                Object value = null;
-                if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
-                    Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, curSuffix);
-                    value = paramMap;
-                } else if (modelParam.stringListSuffix != null && modelParam.stringListSuffix.length() > 0) {
-                    List paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
-                    value = paramList;
-                } else {
-                    // first check for request parameters
-                    String[] paramArr = request.getParameterValues(name + curSuffix);
-                    if (paramArr != null) {
-                        if (paramArr.length > 1) {
-                            value = Arrays.asList(paramArr);
-                        } else {
-                            value = paramArr[0];
+                // build the context
+                Map serviceContext = new HashMap();
+                Iterator modelParmInIter = model.getInModelParamList().iterator();
+                while (modelParmInIter.hasNext()) {
+                    ModelParam modelParam = (ModelParam) modelParmInIter.next();
+                    String name = (String) modelParam.name;
+
+                    // don't include userLogin, that's taken care of below
+                    if ("userLogin".equals(name)) continue;
+                    // don't include locale, that is also taken care of below
+                    if ("locale".equals(name)) continue;
+
+                    Object value = null;
+                    if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
+                        Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, curSuffix);
+                        value = paramMap;
+                    } else if (modelParam.stringListSuffix != null && modelParam.stringListSuffix.length() > 0) {
+                        List paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
+                        value = paramList;
+                    } else {
+                        // first check for request parameters
+                        String[] paramArr = request.getParameterValues(name + curSuffix);
+                        if (paramArr != null) {
+                            if (paramArr.length > 1) {
+                                value = Arrays.asList(paramArr);
+                            } else {
+                                value = paramArr[0];
+                            }
                         }
-                    }
 
-                    // if the parameter wasn't passed and no other value found, don't pass on the null
-                    if (value == null) {
-                        value = request.getAttribute(name + curSuffix);
-                    }
-                    if (value == null) {
-                        value = request.getSession().getAttribute(name + curSuffix);
-                    }
+                        // if the parameter wasn't passed and no other value found, don't pass on the null
+                        if (value == null) {
+                            value = request.getAttribute(name + curSuffix);
+                        }
+                        if (value == null) {
+                            value = session.getAttribute(name + curSuffix);
+                        }
 
-                    // now check global scope
-                    if (value == null) {
-                        if (checkGlobalScope) {
-                            String[] gParamArr = request.getParameterValues(name);
-                            if (gParamArr != null) {
-                                if (gParamArr.length > 1) {
-                                    value = Arrays.asList(gParamArr);
-                                } else {
-                                    value = gParamArr[0];
+                        // now check global scope
+                        if (value == null) {
+                            if (checkGlobalScope) {
+                                String[] gParamArr = request.getParameterValues(name);
+                                if (gParamArr != null) {
+                                    if (gParamArr.length > 1) {
+                                        value = Arrays.asList(gParamArr);
+                                    } else {
+                                        value = gParamArr[0];
+                                    }
+                                }                            
+                                if (value == null) {
+                                    value = request.getAttribute(name);
                                 }
-                            }                            
-                            if (value == null) {
-                                value = request.getAttribute(name);
-                            }
-                            if (value == null) {
-                                value = request.getSession().getAttribute(name);
+                                if (value == null) {
+                                    value = session.getAttribute(name);
+                                }
                             }
                         }
-                    }
 
-                    if (value == null) {
-                        // still null, give up for this one
-                        continue;
-                    }
+                        if (value == null) {
+                            // still null, give up for this one
+                            continue;
+                        }
 
-                    if (value instanceof String && ((String) value).length() == 0) {
-                        // interpreting empty fields as null values for each in back end handling...
-                        value = null;
+                        if (value instanceof String && ((String) value).length() == 0) {
+                            // interpreting empty fields as null values for each in back end handling...
+                            value = null;
+                        }
                     }
+                    // set even if null so that values will get nulled in the db later on
+                    serviceContext.put(name, value);
                 }
-                // set even if null so that values will get nulled in the db later on
-                serviceContext.put(name, value);
-            }
 
-            // get only the parameters for this service - converted to proper type
-            serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, null, locale);
+                // get only the parameters for this service - converted to proper type
+                serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, null, locale);
 
-            // include the UserLogin value object
-            if (userLogin != null) {
-                serviceContext.put("userLogin", userLogin);
-            }
+                // include the UserLogin value object
+                if (userLogin != null) {
+                    serviceContext.put("userLogin", userLogin);
+                }
 
-            // include the Locale object
-            if (locale != null) {
-                serviceContext.put("locale", locale);
-            }
+                // include the Locale object
+                if (locale != null) {
+                    serviceContext.put("locale", locale);
+                }
 
-            // invoke the service
-            Map result = null;
-            try {
-                result = dispatcher.runSync(serviceName, serviceContext);
-            } catch (ServiceAuthException e) {
-                // not logging since the service engine already did
-                errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
-            } catch (ServiceValidationException e) {
-                // not logging since the service engine already did
-                request.setAttribute("serviceValidationException", e);
-                List errors = e.getMessageList();
-                if (errors != null) {
-                    Iterator erri = errors.iterator();
-                    while (erri.hasNext()) {
-                        errorMessages.add("Service invocation error on row (" + i + "): " + erri.next());
-                    }
-                } else {
+                // invoke the service
+                Map result = null;
+                try {
+                    result = dispatcher.runSync(serviceName, serviceContext);
+                } catch (ServiceAuthException e) {
+                    // not logging since the service engine already did
                     errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
+                } catch (ServiceValidationException e) {
+                    // not logging since the service engine already did
+                    request.setAttribute("serviceValidationException", e);
+                    List errors = e.getMessageList();
+                    if (errors != null) {
+                        Iterator erri = errors.iterator();
+                        while (erri.hasNext()) {
+                            errorMessages.add("Service invocation error on row (" + i + "): " + erri.next());
+                        }
+                    } else {
+                        errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
+                    }
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Service invocation error", module);
+                    errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNested() + messageSuffixStr);
                 }
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Service invocation error", module);
-                errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNested() + messageSuffixStr);
-            }
 
-            // check for an error message
-            String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, "", "");
-            if (UtilValidate.isNotEmpty(errorMessage)) {
-                errorMessages.add(errorMessage);
+                // check for an error message
+                String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, "", "");
+                if (UtilValidate.isNotEmpty(errorMessage)) {
+                    errorMessages.add(errorMessage);
+                }
+                
+                // set the results in the request
+                Iterator rmei = result.entrySet().iterator();
+                while (rmei.hasNext()) {
+                    Map.Entry rme = (Map.Entry) rmei.next();
+                    String resultKey = (String) rme.getKey();
+                    Object resultValue = rme.getValue();
+
+                    if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
+                            !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
+                            !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+                        request.setAttribute(resultKey, resultValue);
+                    }
+                }
+            }
+        } finally {
+            if (errorMessages.size() > 0) {
+                // rollback the transaction
+                try {
+                    TransactionUtil.rollback(beganTrans, "Error in multi-service event handling: " + errorMessages.toString(), null);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Could not rollback transaction", module);
+                }
+                errorMessages.add(0, errorPrefixStr);
+                errorMessages.add(errorSuffixStr);
+                StringBuffer errorBuf = new StringBuffer();
+                Iterator ei = errorMessages.iterator();
+                while (ei.hasNext()) {
+                    String em = (String) ei.next();
+                    errorBuf.append(em + "\n");
+                }
+                request.setAttribute("_ERROR_MESSAGE_", errorBuf.toString());
+                returnString = "error";
+            } else {
+                // commit the transaction
+                try {
+                    TransactionUtil.commit(beganTrans);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Could not commit transaction", module);
+                    throw new EventHandlerException("Commit transaction failed");
+                }
+                returnString = "success";
             }
         }
-
-        if (errorMessages.size() > 0) {
-            // rollback the transaction
-            try {
-                TransactionUtil.rollback(beganTrans, "Error in multi-service event handling: " + errorMessages.toString(), null);
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not rollback transaction", module);
-            }
-            errorMessages.add(0, errorPrefixStr);
-            errorMessages.add(errorSuffixStr);
-            StringBuffer errorBuf = new StringBuffer();
-            Iterator ei = errorMessages.iterator();
-            while (ei.hasNext()) {
-                String em = (String) ei.next();
-                errorBuf.append(em + "\n");
-            }
-            request.setAttribute("_ERROR_MESSAGE_", errorBuf.toString());
-            return "error";
-        } else {
-            // commit the transaction
-            try {
-                TransactionUtil.commit(beganTrans);
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not commit transaction", module);
-                throw new EventHandlerException("Commit transaction failed");
-            }
-            return "success";
-        }
+        
+        return returnString;
     }
 }
