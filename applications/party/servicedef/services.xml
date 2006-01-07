@@ -48,9 +48,9 @@
         <description>Create a Person</description>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <override name="firstName" optional="false"/>
         <override name="lastName" optional="false"/>
-        <override name="statusId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createPersonAndUserLogin" engine="simple" require-new-transaction="true"
             location="org/ofbiz/party/party/PartySimpleMethods.xml" invoke="createPersonAndUserLogin" auth="false">
