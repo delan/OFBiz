@@ -157,7 +157,7 @@ public class ServiceEventHandler implements EventHandler {
                 while (i.hasNext()) {
                     FileItem item = (FileItem) i.next();
                     String fieldName = item.getFieldName();
-                    byte[] itemBytes = item.get();
+                    //byte[] itemBytes = item.get();
 
                     //Debug.log("Item Info : " + item.getName() + " / " + item.getSize() + " / " + item.getContentType(), module);
                     if (item.isFormField() || item.getSize() == 0) {
@@ -334,14 +334,15 @@ public class ServiceEventHandler implements EventHandler {
             request.setAttribute("_EVENT_MESSAGE_", result.get(ModelService.SUCCESS_MESSAGE));
 
             // set the results in the request
-            Iterator ri = result.keySet().iterator();
-            while (ri.hasNext()) {
-                String resultKey = (String) ri.next();
-                Object resultValue = result.get((Object) resultKey);
+            Iterator rmei = result.entrySet().iterator();
+            while (rmei.hasNext()) {
+                Map.Entry rme = (Map.Entry) rmei.next();
+                String resultKey = (String) rme.getKey();
+                Object resultValue = rme.getValue();
 
-                if (!resultKey.equals(ModelService.RESPONSE_MESSAGE) && !resultKey.equals(ModelService.ERROR_MESSAGE) &&
-                        !resultKey.equals(ModelService.ERROR_MESSAGE_LIST) && !resultKey.equals(ModelService.ERROR_MESSAGE_MAP) &&
-                        !resultKey.equals(ModelService.SUCCESS_MESSAGE) && !resultKey.equals(ModelService.SUCCESS_MESSAGE_LIST)) {
+                if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
+                        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
+                        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
                     request.setAttribute(resultKey, resultValue);
                 }
             }
