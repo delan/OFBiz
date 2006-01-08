@@ -39,7 +39,7 @@ if (!UtilValidate.isEmpty(productCategoryIdPar)) {
     context.put("category", category);
 }
 
-allProductionRuns = delegator.findByAnd("WorkEffortAndGoods", UtilMisc.toMap("workEffortName", planName, "statusId", "WIP_OUTGOING_FULFIL"), UtilMisc.toList("productId"));
+allProductionRuns = delegator.findByAnd("WorkEffortAndGoods", UtilMisc.toMap("workEffortName", planName, "statusId", "WEGS_CREATED", "workEffortGoodStdTypeId", "PRUN_PROD_DELIV"), UtilMisc.toList("productId"));
 productionRuns = new ArrayList();
 
 if (allProductionRuns != null) {

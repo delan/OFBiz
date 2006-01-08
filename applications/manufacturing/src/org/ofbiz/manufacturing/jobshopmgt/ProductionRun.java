@@ -59,8 +59,8 @@ public class ProductionRun {
     public static final String resource = "ManufacturingUiLabels";
     
     protected GenericValue productionRun; // WorkEffort (PROD_ORDER_HEADER)
-    protected GenericValue productionRunProduct; // WorkEffortGoodStandard (WIP_OUTGOING_FULFIL)
-    protected GenericValue productProduced; // Product (from WorkEffortGoodStandard WIP_OUTGOING_FILFIL)
+    protected GenericValue productionRunProduct; // WorkEffortGoodStandard (type: PRUN_PROD_DELIV)
+    protected GenericValue productProduced; // Product (from WorkEffortGoodStandard of type: PRUN_PROD_DELIV)
     protected Double quantity; // the estimatedQuantity
     
     protected Timestamp estimatedStartDate;
@@ -175,7 +175,7 @@ public class ProductionRun {
         if (exist()) {
             if (productProduced == null) {
                 try {
-                    List productionRunProducts = productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_OUTGOING_FULFIL"),null);
+                    List productionRunProducts = productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("workEffortGoodStdTypeId", "PRUN_PROD_DELIV"),null);
                     this.productionRunProduct = EntityUtil.getFirst(productionRunProducts);
                     quantity = productionRunProduct.getDouble("estimatedQuantity");
                     productProduced = productionRunProduct.getRelatedOneCache("Product");
@@ -343,8 +343,7 @@ public class ProductionRun {
                         GenericValue routingTask;
                         for (Iterator iter=productionRunRoutingTasks.iterator(); iter.hasNext();) {
                             routingTask = (GenericValue)iter.next();
-                            productionRunComponents.addAll(routingTask.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_INCOMING_FULFIL"),null));
-                            productionRunComponents.addAll(routingTask.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_INCOMING_DONE"),null));
+                            productionRunComponents.addAll(routingTask.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED"),null));
                         }
                     } catch (GenericEntityException e) {
                         Debug.logWarning(e.getMessage(), module);

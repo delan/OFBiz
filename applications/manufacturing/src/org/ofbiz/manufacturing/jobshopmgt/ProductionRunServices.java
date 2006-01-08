@@ -262,7 +262,8 @@ public class ProductionRunServices {
         serviceContext.clear();
         serviceContext.put("workEffortId", productionRunId);
         serviceContext.put("productId", productId);
-        serviceContext.put("statusId", "WIP_OUTGOING_FULFIL");
+        serviceContext.put("workEffortGoodStdTypeId", "PRUN_PROD_DELIV");
+        serviceContext.put("statusId", "WEGS_CREATED");
         serviceContext.put("estimatedQuantity", pRQuantity);
         serviceContext.put("fromDate", startDate);
         serviceContext.put("userLogin", userLogin);
@@ -329,7 +330,8 @@ public class ProductionRunServices {
                         // object to be sure to use the
                         // right component (possibly configured).
                         serviceContext.put("productId", node.getProduct().get("productId"));
-                        serviceContext.put("statusId", "WIP_INCOMING_FULFIL");
+                        serviceContext.put("workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED");
+                        serviceContext.put("statusId", "WEGS_CREATED");
                         serviceContext.put("fromDate", productBom.get("fromDate"));
                         // Here we use the getQuantity method to get the quantity already
                         // computed by the getManufacturingComponents service
@@ -857,7 +859,8 @@ public class ProductionRunServices {
         serviceContext.clear();
         serviceContext.put("workEffortId", workEffortId);
         serviceContext.put("productId", productId);
-        serviceContext.put("statusId", "WIP_INCOMING_FULFIL");
+        serviceContext.put("workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED");
+        serviceContext.put("statusId", "WEGS_CREATED");
         serviceContext.put("fromDate", now);
         serviceContext.put("estimatedQuantity", quantity);
         serviceContext.put("userLogin", userLogin);
@@ -930,6 +933,7 @@ public class ProductionRunServices {
         Map serviceContext = new HashMap();
         serviceContext.clear();
         serviceContext.put("workEffortId", theComponent.getString("workEffortId"));
+        serviceContext.put("workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED");
         serviceContext.put("productId", productId);
         serviceContext.put("fromDate", theComponent.getTimestamp("fromDate"));
         if (quantity != null) {
@@ -1793,7 +1797,7 @@ public class ProductionRunServices {
             List findOutgoingProductionRunsConds = new LinkedList();
 
             findOutgoingProductionRunsConds.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
-            findOutgoingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WIP_INCOMING_FULFIL"));
+            findOutgoingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WEGS_CREATED"));
             findOutgoingProductionRunsConds.add(new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN_EQUAL_TO, startDate));
 
             List findOutgoingProductionRunsStatusConds = new LinkedList();

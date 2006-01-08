@@ -444,7 +444,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProductionRunAssocs"/>
     </request-map>
-    <request-map uri="RemoveWorkEffortGoodStandard">
+    <request-map uri="removeRoutingProductLink">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeWorkEffortGoodStandard"/>
         <response name="success" type="view" value="EditRoutingProductLink"/>

@@ -73,7 +73,7 @@ public class ProductHelper {
         //Looks for the routing associated with the product
         List listRouting = null;
         try{
-            listRouting = product.getRelated("WorkEffortGoodStandard",UtilMisc.toMap("statusId", "ROU_PROD_TEMPLATE"),UtilMisc.toList("estimatedQuantity DESC"));
+            listRouting = product.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("workEffortGoodStdTypeId", "ROU_PROD_TEMPLATE"),UtilMisc.toList("estimatedQuantity DESC"));
             if (listRouting.size()>0) listRouting = EntityUtil.filterByDate(listRouting,eventDate);
         } catch (GenericEntityException e) {
             Debug.logError(e,"Error : product.getRelated routing... productId="+product.getString("productId"), module);

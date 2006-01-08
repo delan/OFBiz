@@ -164,7 +164,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         productId = request.getParameter("productId");
         if (productId != null && (actionForm.equals("updateProductComponent") || actionForm.equals("EditProductComponent"))){
             workEffortId = request.getParameter("workEffortId");
-            List productComponents = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", workEffortId,"productId",productId));
+            List productComponents = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", workEffortId, "workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED", "productId",productId));
             GenericValue productComponent = EntityUtil.getFirst(productComponents);
             Map productComponentData = productComponent.getAllFields();
             productComponentData.put("productionRunId", productionRunId);

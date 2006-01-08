@@ -62,7 +62,7 @@ if (allProductionRuns != null) {
         }
 
         // select the task's components, if any
-        allProductionRunComponents = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", productionRunTask.getString("workEffortId")));
+        allProductionRunComponents = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", productionRunTask.getString("workEffortId"),"workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED"));
         allProductionRunComponentsIt = allProductionRunComponents.iterator();
         while(allProductionRunComponentsIt.hasNext()) {
             productionRunComponent = allProductionRunComponentsIt.next();

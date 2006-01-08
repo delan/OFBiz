@@ -261,12 +261,12 @@
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="routing"/>
                 
-                <set field="statusId" value="ROU_PROD_TEMPLATE"/>
+                <set field="workEffortGoodStdTypeId" value="ROU_PROD_TEMPLATE"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <!--<entity-one entity-name="Agreement" value-name="agreement" auto-field-map="true"/>-->
                 <entity-and entity-name="WorkEffortGoodStandard" list-name="allRoutingProductLinks">
                     <field-map env-name="workEffortId" field-name="workEffortId"/>
-                    <field-map env-name="statusId" field-name="statusId"/>
+                    <field-map env-name="workEffortGoodStdTypeId" field-name="workEffortGoodStdTypeId"/>
                 </entity-and>
                 <entity-one entity-name="WorkEffortGoodStandard" value-name="routingProductLink" auto-field-map="true"/>
                 <!--<script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/routing/EditRoutingProductLink.bsh"/>-->

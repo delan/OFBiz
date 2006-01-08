@@ -29,7 +29,7 @@
 
     <simple-method method-name="getProductRouting" short-description="Get the product's routing and routing tasks">
         <set from-field="parameters.productId" field="lookupRouting.productId"/>
-        <set value="ROU_PROD_TEMPLATE" field="lookupRouting.statusId"/>
+        <set value="ROU_PROD_TEMPLATE" field="lookupRouting.workEffortGoodStdTypeId"/>
         <find-by-and entity-name="WorkEffortGoodStandard" list-name="routings" map-name="lookupRouting"/>
         <!-- TODO: we should consider the validity against a date passed as (optional) parameter -->
         <filter-list-by-date list-name="routings"/>

@@ -152,7 +152,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         while (tasksIt.hasNext()) {
             GenericValue task = (GenericValue)tasksIt.next();
             if (task.getString("currentStatusId").equals("PRUN_RUNNING")) {
-                List components = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", task.getString("workEffortId")));
+                List components = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", task.getString("workEffortId"), "workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED"));
                 List issuances = delegator.findByAnd("WorkEffortInventoryAssign", UtilMisc.toMap("workEffortId", task.getString("workEffortId")));
                 if (components.size() > 0 && issuances.size() == 0) {
                     issueTaskId = task.getString("workEffortId");
@@ -183,7 +183,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         productId = request.getParameter("productId");
         if (productId != null && (actionForm.equals("updateProductComponent") || actionForm.equals("EditProductComponent"))){
             workEffortId = request.getParameter("workEffortId");
-            List productComponents = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", workEffortId,"productId",productId));
+            List productComponents = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", workEffortId, "workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED", "productId",productId));
             GenericValue productComponent = EntityUtil.getFirst(productComponents);
             Map productComponentData = productComponent.getAllFields();
             productComponentData.put("productionRunId", productionRunId);
@@ -205,7 +205,8 @@ if (!UtilValidate.isEmpty(productionRunId)) {
                 component = (GenericValue) iter.next();
                 GenericValue product = component.getRelatedOne("Product");
                 String componentName = product.getString("productName");
-                String workEffortName = component.getRelatedOne("WorkEffort").getString("workEffortName");
+                GenericValue productionRunTask = component.getRelatedOne("WorkEffort");
+                String workEffortName = productionRunTask.getString("workEffortName");
                 Map componentData = component.getAllFields();
                 componentData.put("internalName", componentName);
                 componentData.put("workEffortName", workEffortName);
@@ -218,7 +219,26 @@ if (!UtilValidate.isEmpty(productionRunId)) {
                         totalIssued += issued.doubleValue();
                     }
                 }
+                Iterator returns = (delegator.findByAnd("WorkEffortAndInventoryProduced", UtilMisc.toMap("workEffortId", component.getString("workEffortId"), "productId", product.getString("productId")))).iterator();
+                double totalReturned = 0.0;
+                while (returns.hasNext()) {
+                    GenericValue returned = (GenericValue)returns.next();
+                    GenericValue returnDetail = EntityUtil.getFirst(delegator.findByAnd("InventoryItemDetail", UtilMisc.toMap("inventoryItemId", returned.getString("inventoryItemId")), UtilMisc.toList("inventoryItemDetailSeqId")));
+                    if (returnDetail != null) {
+                        Double qtyReturned = returnDetail.getDouble("quantityOnHandDiff");
+                        if (qtyReturned != null) {
+                            totalReturned += qtyReturned.doubleValue();
+                        }
+                    }
+                }
                 componentData.put("issuedQuantity", totalIssued);
+                componentData.put("returnedQuantity", totalReturned);
+                componentData.put("currentStatusId", productionRunTask.getString("currentStatusId"));
+                if (productionRunTask.getString("currentStatusId").equals("PRUN_RUNNING")) {
+                    componentData.put("isRunning", "Y");
+                } else {
+                    componentData.put("isRunning", "null");
+                }
                 productionRunComponentsData.add(componentData);
             }
         }

@@ -217,31 +217,8 @@
 
     <!-- Routing status, (workEffort Template) -->
     <StatusType description="Manufacturing Task and Routing status" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="ROUTING_STATUS"/>
-    <StatusType description="Product in-out routing Association" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="ROU_PRODUCT_ASSOC"/>
     
     <StatusItem description="Well defined and usable" sequenceId="01" statusCode="ACTIVE" statusId="ROU_ACTIVE" statusTypeId="ROUTING_STATUS"/>
-    <StatusItem description="Internal, Used for association between Product and associated Routing" sequenceId="01" statusCode="TEMPLATE" statusId="ROU_PROD_TEMPLATE" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    <StatusItem description="Incoming WIP Product Planned" sequenceId="02" statusCode="WIP_INCOMING_PLAN" statusId="WIP_INCOMING_PLAN" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    <StatusItem description="Incoming WIP Product Fulfilled" sequenceId="04" statusCode="WIP_INCOMING_FULFIL" statusId="WIP_INCOMING_FULFIL" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    <StatusItem description="Incoming WIP InventoryItem Reserved" sequenceId="06" statusCode="WIP_INCOMING_RES" statusId="WIP_INCOMING_RES" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    <StatusItem description="Incoming WIP InventoryItem Done" sequenceId="08" statusCode="WIP_INCOMING_DONE" statusId="WIP_INCOMING_DONE" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    <StatusItem description="Outgoing WIP Product Planned" sequenceId="03" statusCode="WIP_OUTGOING_PLAN" statusId="WIP_OUTGOING_PLAN" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    <StatusItem description="Outgoing WIP Product Fulfilled" sequenceId="05" statusCode="WIP_OUTGOING_FULFIL" statusId="WIP_OUTGOING_FULFIL" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    <StatusItem description="Outgoing WIP InventoryItem Reserved" sequenceId="07" statusCode="WIP_OUTGOING_RES" statusId="WIP_OUTGOING_RES" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    <StatusItem description="Outgoing WIP InventoryItem Done" sequenceId="09" statusCode="WIP_OUTGOING_DONE" statusId="WIP_OUTGOING_DONE" statusTypeId="ROU_PRODUCT_ASSOC"/>
-    
-    <!-- Production Run Inventory event status -->
-    <StatusType description="Product and Raw Materials to Routing Association" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    
-    <StatusItem description="Internal, Used for association between Product and associated Routing" sequenceId="01" statusCode="TEMPLATE" statusId="ROU_PROD_TEMPLATE" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    <StatusItem description="Incoming WIP Product Planned" sequenceId="02" statusCode="WIP_INCOMING_PLAN" statusId="WIP_INCOMING_PLAN" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    <StatusItem description="Incoming WIP Product Fulfilled" sequenceId="04" statusCode="WIP_INCOMING_FULFIL" statusId="WIP_INCOMING_FULFIL" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    <StatusItem description="Incoming WIP InventoryItem Reserved" sequenceId="06" statusCode="WIP_INCOMING_RES" statusId="WIP_INCOMING_RES" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    <StatusItem description="Incoming WIP InventoryItem Done" sequenceId="08" statusCode="WIP_INCOMING_DONE" statusId="WIP_INCOMING_DONE" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    <StatusItem description="Outgoing WIP Product Planned" sequenceId="03" statusCode="WIP_OUTGOING_PLAN" statusId="WIP_OUTGOING_PLAN" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    <StatusItem description="Outgoing WIP Product Fulfilled" sequenceId="05" statusCode="WIP_OUTGOING_FULFIL" statusId="WIP_OUTGOING_FULFIL" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    <StatusItem description="Outgoing WIP InventoryItem Reserved" sequenceId="07" statusCode="WIP_OUTGOING_RES" statusId="WIP_OUTGOING_RES" statusTypeId="PRUN_PRODUCT_ASSOC"/>
-    <StatusItem description="Outgoing WIP InventoryItem Done" sequenceId="09" statusCode="WIP_OUTGOING_DONE" statusId="WIP_OUTGOING_DONE" statusTypeId="PRUN_PRODUCT_ASSOC"/>
     
     <!-- Production Run status -->
     <StatusType description="Production Run Status" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="PRODUCTION_RUN"/>
@@ -254,5 +231,13 @@
     <StatusItem description="Cancelled" sequenceId="10" statusCode="CANCELLED" statusId="PRUN_CANCELLED" statusTypeId="PRODUCTION_RUN"/>
     
     <!-- ProductionRun Inventory assignement status -->
+    <WorkEffortGoodStandardType workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" description="Product and Routing Association" hasTable="N" parentTypeId=""/>
+    <WorkEffortGoodStandardType workEffortGoodStdTypeId="PRUN_PROD_DELIV" description="Production Run and Product to Deliver Association" hasTable="N" parentTypeId=""/>
+    <WorkEffortGoodStandardType workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" description="Production Run Task and Needed Product Association" hasTable="N" parentTypeId=""/>
+    <WorkEffortGoodStandardType workEffortGoodStdTypeId="PRUNT_PROD_DELIV" description="Production Run Task and Deliverable Product Association" hasTable="N" parentTypeId=""/>
     <!--  <StatusType description="WorkEffort Assignment" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/> -->
+    <StatusType description="Work Effort Good Standard Status" hasTable="N" parentTypeId="" statusTypeId="WEFG_STATUS"/>
+    <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="WEGS_CREATED" statusTypeId="WEFG_STATUS"/>
+    <StatusItem description="Completed" sequenceId="02" statusCode="COMPLETED" statusId="WEGS_COMPLETED" statusTypeId="WEFG_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="03" statusCode="CANCELLED" statusId="WEGS_CANCELLED" statusTypeId="WEFG_STATUS"/>
 </entity-engine-xml>

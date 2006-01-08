@@ -212,7 +212,7 @@ public class MrpServices {
         // ----------------------------------------
         resultList = null;
         iteratorResult = null;
-        parameters = UtilMisc.toMap("statusId", "WIP_INCOMING_FULFIL");
+        parameters = UtilMisc.toMap("workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED", "statusId", "WEGS_CREATED");
         try {
             resultList = delegator.findByAnd("WorkEffortAndGoods", parameters);
         } catch(GenericEntityException e) {
@@ -243,7 +243,7 @@ public class MrpServices {
         // ----------------------------------------
         resultList = null;
         iteratorResult = null;
-        parameters = UtilMisc.toMap("statusId", "WIP_OUTGOING_FULFIL", "workEffortTypeId", "PROD_ORDER_HEADER");
+        parameters = UtilMisc.toMap("workEffortGoodStdTypeId", "PRUN_PROD_DELIV", "statusId", "WEGS_CREATED", "workEffortTypeId", "PROD_ORDER_HEADER");
         try {
             resultList = delegator.findByAnd("WorkEffortAndGoods", parameters);
         } catch(GenericEntityException e) {
