@@ -51,7 +51,7 @@ if (shipment != null) {
                 while (productionRunsIt.hasNext()) {
                     productionRun = productionRunsIt.next();
                     productionRunProduct = null;
-                    productionRunProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", productionRun.getString("workEffortId"), "statusId", "WIP_OUTGOING_FULFIL"));
+                    productionRunProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", productionRun.getString("workEffortId"), "workEffortGoodStdTypeId", "PRUN_PROD_DELIV", "statusId", "WEGS_CREATED"));
                     if (productionRunProducts != null && productionRunProducts.size() > 0) {
                         //productionRunProduct = ((GenericValue)productionRunProducts.get(0)).getString("productId");
                         productionRunProduct = ((GenericValue)productionRunProducts.get(0)).getRelatedOne("Product");

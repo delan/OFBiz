@@ -134,7 +134,7 @@
         </field>
         <field name="deleteLink" title=" " widget-style="smallSubmit">
             <!--<hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>-->
-            <hyperlink target="deleteProductionRunComponent?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;productionRunId=${productionRunId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
+            <hyperlink target="deleteProductionRunComponent?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;productionRunId=${productionRunId}&amp;workEffortGoodStdTypeId=PRUNT_PROD_NEEDED" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
 

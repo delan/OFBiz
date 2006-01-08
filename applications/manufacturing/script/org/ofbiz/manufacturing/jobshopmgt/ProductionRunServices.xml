@@ -35,7 +35,8 @@
         <if-not-empty field-name="workEffort">
             <if-compare value="PRUN_CANCELLED" operator="not-equals" field-name="currentStatusId" map-name="workEffort">
                 <field-to-field field-name="parameters.workEffortId" to-field-name="lookupComponentsMap.workEffortId"/>
-                <string-to-field string="WIP_INCOMING_FULFIL" field-name="lookupComponentsMap.statusId"/>
+                <string-to-field string="WEGS_CREATED" field-name="lookupComponentsMap.statusId"/>
+                <set field="lookupComponentsMap.workEffortGoodStdTypeId" value="PRUNT_PROD_NEEDED"/>
 
                 <find-by-and entity-name="WorkEffortGoodStandard" list-name="components" map-name="lookupComponentsMap" />
                 <!-- now go through each work effort good standard and call a service to issue the inventory -->
@@ -55,6 +56,7 @@
     </simple-method>
     <simple-method method-name="issueProductionRunTaskComponent" short-description="Issues the Inventory for a Production Run Task Component" login-required="false">
         <if-empty field-name="parameters.workEffortGoodStandard">
+            <set field="parameters.workEffortGoodStdTypeId" value="PRUNT_PROD_NEEDED"/>
             <entity-one entity-name="WorkEffortGoodStandard" value-name="workEffortGoodStandard"/>
         <else>
             <env-to-env env-name="parameters.workEffortGoodStandard" to-env-name="workEffortGoodStandard"/>
@@ -160,7 +162,7 @@
 
                 <calculate field-name="quantityNotIssued" map-name="parameters"><number value="0"/></calculate>
             </if-compare>
-            <string-to-field string="WIP_INCOMING_DONE" field-name="workEffortGoodStandard.statusId"/>
+            <string-to-field string="WEGS_COMPLETED" field-name="workEffortGoodStandard.statusId"/>
             <store-value value-name="workEffortGoodStandard"/>
         </if-not-empty>
     </simple-method>

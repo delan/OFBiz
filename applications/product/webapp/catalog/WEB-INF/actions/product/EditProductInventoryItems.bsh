@@ -109,7 +109,8 @@ while (incomingShipmentAndItemIter.hasNext()) {
 findIncomingProductionRunsConds = new LinkedList();
 
 findIncomingProductionRunsConds.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
-findIncomingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WIP_OUTGOING_FULFIL"));
+findIncomingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WEGS_CREATED"));
+findIncomingProductionRunsConds.add(new EntityExpr("workEffortGoodStdTypeId", EntityOperator.EQUALS, "PRUN_PROD_DELIV"));
 
 findIncomingProductionRunsStatusConds = new LinkedList();   
 findIncomingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_CREATED"));
@@ -175,7 +176,8 @@ while (incomingProductionRunsIter.hasNext()) {
 findOutgoingProductionRunsConds = new LinkedList();
 
 findOutgoingProductionRunsConds.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
-findOutgoingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WIP_INCOMING_FULFIL"));
+findOutgoingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WEGS_CREATED"));
+findOutgoingProductionRunsConds.add(new EntityExpr("workEffortGoodStdTypeId", EntityOperator.EQUALS, "PRUNT_PROD_NEEDED"));
 
 findOutgoingProductionRunsStatusConds = new LinkedList();
 findOutgoingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_CREATED"));

@@ -39,7 +39,7 @@ if (!UtilValidate.isEmpty(productCategoryIdPar)) {
     context.put("category", category);
 }
 
-allProductionRuns = delegator.findByAnd("WorkEffortAndGoods", UtilMisc.toMap("workEffortName", planName, "statusId", "WIP_OUTGOING_FULFIL"), UtilMisc.toList("productId"));
+allProductionRuns = delegator.findByAnd("WorkEffortAndGoods", UtilMisc.toMap("workEffortName", planName, "statusId", "WEGS_CREATED", "workEffortGoodStdTypeId", "PRUN_PROD_DELIV"), UtilMisc.toList("productId"));
 productionRuns = new ArrayList();
 
 if (allProductionRuns != null) {
@@ -74,7 +74,7 @@ if (allProductionRuns != null) {
                                           "productionRunOrder", productionRunOrder,
                                           "customer", orh.getPlacingParty(),
                                           "address", orh.getShippingAddress());
-        allProductionComponents = delegator.findByAnd("WorkEffortAndGoods", UtilMisc.toMap("workEffortId", productionRunTask.getString("workEffortId"), "statusId", "WIP_INCOMING_FULFIL"), UtilMisc.toList("productId"));
+        allProductionComponents = delegator.findByAnd("WorkEffortAndGoods", UtilMisc.toMap("workEffortId", productionRunTask.getString("workEffortId"), "statusId", "WEGS_CREATED", "workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED"), UtilMisc.toList("productId"));
         componentList = new ArrayList();
 
         if (allProductionComponents != null) {

@@ -725,6 +725,7 @@
             package-name="org.ofbiz.workeffort.workeffort"
             title="Work Effort Good Standard Entity">
       <field name="workEffortId" type="id-ne"></field>
+      <field name="workEffortGoodStdTypeId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="estimatedQuantity" type="floating-point"></field>
@@ -732,16 +733,32 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="workEffortId"/>
+      <prim-key field="workEffortGoodStdTypeId"/>
       <prim-key field="productId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="WKEFF_GDSTD_WEFF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_GDSTD_TYPE" rel-entity-name="WorkEffortGoodStandardType">
+        <key-map field-name="workEffortGoodStdTypeId"/>
       </relation>
       <relation type="one" fk-name="WKEFF_GDSTD_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
       <relation type="one" fk-name="WKEFF_GDSTD_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+    </entity>
+    <entity entity-name="WorkEffortGoodStandardType"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort Good Standard Type Entity">
+      <field name="workEffortGoodStdTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="workEffortGoodStdTypeId"/>
+      <relation type="one" fk-name="WKEFF_GDSTD_TPAR" title="Parent" rel-entity-name="WorkEffortGoodStandardType">
+        <key-map field-name="parentTypeId" rel-field-name="workEffortGoodStdTypeId"/>
       </relation>
     </entity>
     <entity entity-name="WorkEffortInventoryAssign"
@@ -1055,6 +1072,7 @@
       <member-entity entity-alias="WEGS" entity-name="WorkEffortGoodStandard"></member-entity>
       <alias-all entity-alias="WE"></alias-all>
       <alias entity-alias="WEGS" name="productId"></alias>
+      <alias entity-alias="WEGS" name="workEffortGoodStdTypeId"></alias>
       <alias entity-alias="WEGS" name="statusId"></alias>
       <alias entity-alias="WEGS" name="estimatedQuantity"></alias>
       <view-link entity-alias="WE" rel-entity-alias="WEGS">

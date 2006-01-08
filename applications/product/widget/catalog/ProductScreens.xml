@@ -259,7 +259,7 @@
     
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="productAssocTypeId" value="MANUF_COMPONENT"/>
-                <set field="statusId" value="ROU_PROD_TEMPLATE"/>
+                <set field="workEffortGoodStdTypeId" value="ROU_PROD_TEMPLATE"/>
                 
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="ProductAssoc" list-name="components">
@@ -273,7 +273,7 @@
                 </entity-and>
                 <entity-and entity-name="WorkEffortGoodStandard" list-name="routings">
                     <field-map field-name="productId"/>
-                    <field-map field-name="statusId"/>
+                    <field-map field-name="workEffortGoodStdTypeId"/>
                 </entity-and>
             </actions>
             <widgets>
