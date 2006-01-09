@@ -2258,4 +2258,79 @@
             <key-map field-name="workEffortId"/>
         </relation>
     </entity>
+    
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.order.opportunity -->
+  <!-- ========================================================= -->
+
+        <entity entity-name="SalesOpportunity"
+            package-name="org.ofbiz.order.opportunity"
+            title="Main entity of information about sales opportunities">
+        <field name="salesOpportunityId" type="id-ne"></field>
+        <field name="opportunityName" type="name"></field>
+        <field name="description" type="very-long"/>
+        <field name="nextStep" type="name"/>
+        <field name="estimatedAmount" type="currency-amount"/>
+        <field name="estimatedProbability" type="floating-point"/>
+        <field name="currencyUomId" type="id-ne"/>
+        <field name="marketingCampaignId" type="id-ne"/>
+        <field name="dataSourceId" type="id-ne"/>
+        <field name="estimatedCloseDate" type="date-time"/>    	
+        <field name="stageEnumId" type="id-ne"/>
+        <field name="typeEnumId" type="id-ne"/>
+        <prim-key field="salesOpportunityId"/>
+        <relation fk-name="SLSOPP_CRNCY_UOM" rel-entity-name="Uom" type="one">
+            <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+        </relation>
+        <relation title="Stage" fk-name="SLSOPP_STG_ENUM" rel-entity-name="Enumeration" type="one">
+            <key-map field-name="stageEnumId" rel-field-name="enumId"/>
+        </relation>
+        <relation title="Type" fk-name="SLSOPP_TYP_ENUM" rel-entity-name="Enumeration" type="one">
+            <key-map field-name="typeEnumId" rel-field-name="enumId"/>
+        </relation>
+        <relation fk-name="SLSOPP_MKTGCMPG" rel-entity-name="MarketingCampaign" type="one">
+            <key-map field-name="marketingCampaignId"/>
+        </relation>
+    </entity>        
+
+    <entity entity-name="SalesOpportunityRole"
+            package-name="org.ofbiz.order.opportunity"
+            title="Describes roles of different partiesin a sales opportunity">
+        <field name="salesOpportunityId" type="id-ne"></field>
+        <field name="partyId" type="id-ne"></field>
+        <field name="roleTypeId" type="id-ne"/>
+        <!-- it may be nice to add fromDate and thruDate at some point to track changing roles if that's ever important -->
+        <prim-key field="salesOpportunityId"/>
+        <prim-key field="partyId"/>
+        <prim-key field="roleTypeId"/>
+        <relation fk-name="SLSOPPRL_SLSOPP" rel-entity-name="SalesOpportunity" type="one">
+            <key-map field-name="salesOpportunityId"/>
+        </relation>
+        <relation fk-name="SLSOPPRL_PARTY" rel-entity-name="Party" type="one">
+            <key-map field-name="partyId"/>
+        </relation>        
+        <relation fk-name="SLSOPPRL_ROLETYPE" rel-entity-name="RoleType" type="one">
+            <key-map field-name="roleTypeId"/>
+        </relation>        
+        <relation fk-name="SLSOPPRL_PTYROLE" rel-entity-name="PartyRole" type="one"> <!-- make sure the party actually is in the role specified -->
+            <key-map field-name="partyId"/>
+            <key-map field-name="roleTypeId"/>
+        </relation>
+    </entity>
+   
+    <view-entity entity-name="SalesOpportunityAndRole"
+                 package-name="org.ofbiz.order.opportunity"
+                 title="Agglomeration to help with searching for the opportunities of a particular party or role">
+        <member-entity entity-alias="SO" entity-name="SalesOpportunity"/>
+        <member-entity entity-alias="SOR" entity-name="SalesOpportunityRole"/>
+        <alias-all entity-alias="SO"/>
+        <alias-all entity-alias="SOR"/>
+        <view-link entity-alias="SO" rel-entity-alias="SOR">
+            <key-map field-name="salesOpportunityId"/>
+        </view-link>
+        <relation fk-name="SO_RL_PARTYVIEW" rel-entity-name="PartySummaryCRMView" type="one">
+            <key-map field-name="partyId"/>
+        </relation>
+    </view-entity>
+    
 </entitymodel>
