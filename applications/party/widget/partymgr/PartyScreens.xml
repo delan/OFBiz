@@ -133,6 +133,7 @@
                     <order-by field-name="partyRelationshipTypeId"/>
                     <order-by field-name="-fromDate"/>
                 </entity-condition>
+                <entity-condition entity-name="SecurityGroup" list-name="securityGroups"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">

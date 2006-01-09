@@ -35,7 +35,7 @@
           <tr>
             <td><div class="tabletext"><b>&nbsp;Description</b></div></td>
             <td><div class="tabletext"><b>&nbsp;From Date</b></div></td>
-            <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session)>
+            <#if security.hasEntityPermission("PARTYMGR", "_REL_DELETE", session)>
             <td>&nbsp;</td>
             </#if>
           </tr>
@@ -54,15 +54,18 @@
                     <#if "_NA_" != partyRelationship.roleTypeIdFrom>
                         in role <b>${roleTypeFrom.description}</b>
                     </#if>
+                    <#if partyRelationship.securityGroupId?exists>
+                    ${uiLabelMap.CommonAnd} ${uiLabelMap.PartyRelationSecurity} <b>${partyRelationship.getRelatedOne("SecurityGroup").get("description")}</b>
+                    </#if>
                 </div></td>
                 <td><div class="tabletext">&nbsp;${partyRelationship.fromDate}</div></td>
-                <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session)>
+                <#if security.hasEntityPermission("PARTYMGR", "_REL_DELETE", session)>
                 <td align="right">                     
                     <a href="<@ofbizUrl>deletePartyRelationship?partyIdTo=${partyRelationship.partyIdTo}&amp;roleTypeIdTo=${partyRelationship.roleTypeIdTo}&amp;roleTypeIdFrom=${partyRelationship.roleTypeIdFrom}&amp;partyIdFrom=${partyRelationship.partyIdFrom}&amp;fromDate=${partyRelationship.fromDate}&amp;partyId=${partyId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>&nbsp;
                 </td>
                 </#if>
               </tr>
-              <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
+              <#if security.hasEntityPermission("PARTYMGR", "_REL_UPDATE", session)>
               <tr>
                 <td colspan="3" align="right">
                     <form method="post" name="updatePartyRel${partyRelationship_index}" action="<@ofbizUrl>updatePartyRelationship</@ofbizUrl>">
@@ -88,7 +91,7 @@
         </#if>
     </div>
 
-  <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
+  <#if security.hasEntityPermission("PARTYMGR", "_REL_UPDATE", session)>
     <div><hr class="sepbar"></div>
     <div class="screenlet-body">
         <form name="addPartyRelationshipTo" method="post" action="<@ofbizUrl>createPartyRelationship</@ofbizUrl>">
@@ -116,6 +119,13 @@
                 <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
               </#list>
             </select>
+            <#-- set security group specific to this party relationship -->
+            <br/>${uiLabelMap.CommonAnd} ${uiLabelMap.PartyRelationSecurity} 
+            <select name="securityGroupId" class="selectBox">
+              <#list securityGroups as securityGroup>
+                <option value="${securityGroup.groupId}">${securityGroup.description}</option>
+              </#list>
+            </select><br/>
             from <input type="text" size="24" name="fromDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipTo.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
             thru <input type="text" size="24" name="thruDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipTo.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
           </div>
@@ -150,6 +160,12 @@
                 <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
               </#list>
             </select>
+            <br/>${uiLabelMap.CommonAnd} ${uiLabelMap.PartyRelationSecurity}
+            <select name="securityGroupId" class="selectBox">
+              <#list securityGroups as securityGroup>
+                <option value="${securityGroup.groupId}">${securityGroup.description}</option>
+              </#list>
+            </select><br/>
             from <input type="text" size="24" name="fromDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipFrom.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
             thru <input type="text" size="24" name="thruDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipFrom.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
           </div>
