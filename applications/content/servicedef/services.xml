@@ -29,7 +29,8 @@
 
     <!-- Email Related Services -->
     <service name="sendMailInterface" engine="interface" location="" invoke="">
-    	<description>Interface service for mail services</description>
+    	<description>Interface service for mail services.  contentType defaults to "text/html", sendType defaults to
+    	    "mail.smtp.host".  sendVia must be specified if sendType is different.  Configured in general.properties</description>
         <attribute name="sendTo" type="String" mode="IN" optional="true"/>
         <attribute name="sendCc" type="String" mode="IN" optional="true"/>
         <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
@@ -43,11 +44,11 @@
     </service>
     <service name="sendMail" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="sendMail">
-        <description>Send E-Mail Service</description>
+        <description>Send E-Mail Service.  partyId and communicationEventId aren't used by sendMail 
+            but are passed down to storeEmailAsCommunication during the SECA chain.  See sednMailInterface for more comments.</description>
         <implements service="sendMailInterface"/>
         <attribute name="body" type="String" mode="INOUT" optional="false"/>
         <attribute name="subject" type="String" mode="INOUT" optional="false"/>
-        <!-- partyId and communicationEventId aren't used by sendMail but are passed down to storeEmailAsCommunication during the SECA chain -->
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="communicationEventId" type="String" mode="INOUT" optional="true"/>
         <override name="contentType" mode="INOUT"/>
