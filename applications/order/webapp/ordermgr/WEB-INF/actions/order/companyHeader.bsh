@@ -39,8 +39,8 @@ if (invoice == null && invoiceId != null)	{
 }
 
 // defaults:
-logoImageUrl = null; // "http://localhost:8080/images/ofbiz_powered.gif"; // set default value......
-partyId = "Company";  // default company
+logoImageUrl = null; // "http://localhost:8080/images/ofbiz_powered.gif";
+partyId = null;
 
 if (orderHeader != null) {
     GenericValue productStore = (GenericValue) orderHeader.getRelated("ProductStore");
