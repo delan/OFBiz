@@ -44,6 +44,9 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
+
 
 /**
  * Services for Contact Mechanism maintenance
@@ -72,7 +75,7 @@ public class ContactMechServices {
         Timestamp now = UtilDateTime.nowTimestamp();
         List toBeStored = new LinkedList();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
@@ -138,7 +141,7 @@ public class ContactMechServices {
         List toBeStored = new LinkedList();
         boolean isModified = false;
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
@@ -271,7 +274,7 @@ public class ContactMechServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_DELETE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_DELETE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
@@ -330,7 +333,7 @@ public class ContactMechServices {
         Timestamp now = UtilDateTime.nowTimestamp();
         List toBeStored = new LinkedList();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
@@ -404,7 +407,7 @@ public class ContactMechServices {
         List toBeStored = new LinkedList();
         boolean isModified = false;
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
@@ -570,7 +573,7 @@ public class ContactMechServices {
         Timestamp now = UtilDateTime.nowTimestamp();
         List toBeStored = new LinkedList();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
@@ -626,7 +629,7 @@ public class ContactMechServices {
         List toBeStored = new LinkedList();
         boolean isModified = false;
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
@@ -802,7 +805,7 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
@@ -864,7 +867,7 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_DELETE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_DELETE");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
 
