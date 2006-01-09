@@ -174,4 +174,13 @@
     <entity-group group="org.ofbiz" entity="ShoppingListItemSurvey" />
     <entity-group group="org.ofbiz" entity="ShoppingListType" />
     <entity-group group="org.ofbiz" entity="ShoppingListWorkEffort" />
+    
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.order.opportunity -->
+    <!-- ========================================================= -->
+    
+    <entity-group group="org.ofbiz" entity="SalesOpportunity" />
+    <entity-group group="org.ofbiz" entity="SalesOpportunityRole" />
+    <entity-group group="org.ofbiz" entity="SalesOpportunityAndRole" />
+    
 </entitygroup>
