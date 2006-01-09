@@ -396,6 +396,12 @@
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="copyPartyContactMechs" engine="java"
+        location="org.ofbiz.party.contact.ContactMechServices" invoke="copyPartyContactMechs" auth="true">
+        <description>Copies all contact mechs from the partyIdFrom to the partyIdTo. Does not delete or overwrite any contact mechs.</description>
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- contact mech attribute services -->
     <service name="createContactMechAttribute" engine="simple" default-entity-name="ContactMechAttribute"
