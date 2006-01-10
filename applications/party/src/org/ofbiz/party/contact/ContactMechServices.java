@@ -958,50 +958,30 @@ public class ContactMechServices {
                 GenericValue contactMech = (GenericValue) thisMap.get("contactMech");
                 GenericValue partyContactMech = (GenericValue) thisMap.get("partyContactMech");
                 List partyContactMechPurposes = (List) thisMap.get("partyContactMechPurposes");
-                List toBeStored = new LinkedList();
 
-                // only one of these will be set
-                GenericValue postalAddress = (GenericValue) thisMap.get("postalAddress");
-                GenericValue telecomNumber = (GenericValue) thisMap.get("telecomNumber");
+                // get the contactMechId
+                String contactMechId = contactMech.getString("contactMechId");
 
-                // generate the new contactMechId
-                String contactMechId = delegator.getNextSeqId("ContactMech");
-
-                // copy the contact mech
-                GenericValue contactMechNew = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
-                contactMechNew.setNonPKFields(contactMech.getAllFields());
-                toBeStored.add(contactMechNew);
-
-                // copy the party contact mech for the partyIdTo effective now
-                GenericValue partyContactMechNew = delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyIdTo, 
-                            "contactMechId", contactMechId, "fromDate", UtilDateTime.nowTimestamp()));
-                partyContactMechNew.setNonPKFields(partyContactMech.getAllFields());
-                toBeStored.add(partyContactMechNew);
-
-                // copy postal address or telecom number if exists
-                if (postalAddress != null) {
-                    GenericValue newPostalAddress = delegator.makeValue("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId));
-                    newPostalAddress.setNonPKFields(postalAddress.getAllFields());
-                    toBeStored.add(newPostalAddress);
-                } else if (telecomNumber != null) {
-                    GenericValue newTelecomNumber = delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", contactMechId));
-                    newTelecomNumber.setNonPKFields(telecomNumber.getAllFields());
-                    toBeStored.add(newTelecomNumber);
+                // create a new party contact mech for the partyIdTo
+                Map serviceResults = dispatcher.runSync("createPartyContactMech", UtilMisc.toMap("partyId", partyIdTo, "userLogin", userLogin,
+                            "contactMechId", contactMechId, "fromDate", UtilDateTime.nowTimestamp(), 
+                            "allowSolicitation", partyContactMech.getString("allowSolicitation")));
+                if (ServiceUtil.isError(serviceResults)) {
+                    return serviceResults;
                 }
 
-                // loop through purposes and copy each 
+                // loop through purposes and copy each as a new purpose for the partyIdTo
                 for (Iterator piter = partyContactMechPurposes.iterator(); piter.hasNext(); ) {
                     GenericValue purpose = (GenericValue) piter.next();
-                    Map input = UtilMisc.toMap("partyId", partyIdTo, "contactMechId", contactMechId, "fromDate", UtilDateTime.nowTimestamp());
+                    Map input = UtilMisc.toMap("partyId", partyIdTo, "contactMechId", contactMechId, "userLogin", userLogin);
                     input.put("contactMechPurposeTypeId", purpose.getString("contactMechPurposeTypeId"));
-                    GenericValue newPurpose = delegator.makeValue("PartyContactMechPurpose", input); 
-                    toBeStored.add(newPurpose);
+                    serviceResults = dispatcher.runSync("createPartyContactMechPurpose", input);
+                    if (ServiceUtil.isError(serviceResults)) {
+                        return serviceResults;
+                    }
                 }
-
-                // store them all
-                delegator.storeAll(toBeStored);
             }
-        } catch (GenericEntityException e) {
+        } catch (GenericServiceException e) {
             Debug.logError(e, e.getMessage(), module);
             return ServiceUtil.returnError("Failed to copy contact mechs. Error: " + e.getMessage());
         }
