@@ -88,9 +88,25 @@
                 </entity-options>
             </drop-down>
         </field>
+
+        <!-- this is an example of how to display different types of contact mech to the user -->
+        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromEmailAddress}"
+            use-when="(parameters.get(&quot;communicationEventTypeId&quot;)!=null)&amp;&amp;(parameters.get(&quot;communicationEventTypeId&quot;).equals(&quot;EMAIL_COMMUNICATION&quot;))">
+            <drop-down allow-empty="false" current="selected">
+            	<list-options key-name="contactMechId" list-name="userEmailAddresses" description="${infoString}"/>
+            </drop-down>            
+        </field>
+        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}"
+            use-when="(parameters.get(&quot;communicationEventTypeId&quot;)==null)||!(parameters.get(&quot;communicationEventTypeId&quot;).equals(&quot;EMAIL_COMMUNICATION&quot;))"><text/></field>
         <!-- TODO: somehow show the address or email here, rather than just a contactMechId -->
-        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}"><text/></field>
-        <field name="contactMechIdTo" title="${uiLabelMap.PartyToContactMech}"><text/></field>
+        <field name="contactMechIdTo" title="${uiLabelMap.PartyToEmailAddress}"
+            use-when="(parameters.get(&quot;communicationEventTypeId&quot;)!=null)&amp;&amp;(parameters.get(&quot;communicationEventTypeId&quot;).equals(&quot;EMAIL_COMMUNICATION&quot;))">
+            <drop-down allow-empty="false" current="selected" no-current-selected-key="${parameters.contactMechIdTo}">
+            	<list-options key-name="contactMechId" list-name="targetEmailAddresses" description="${infoString}"/>
+            </drop-down>            
+        </field>
+        <field name="contactMechIdTo" title="${uiLabelMap.PartyToContactMech}"
+            use-when="(parameters.get(&quot;communicationEventTypeId&quot;)==null)||!(parameters.get(&quot;communicationEventTypeId&quot;).equals(&quot;EMAIL_COMMUNICATION&quot;))"><text/></field>
         
         <field name="roleTypeIdFrom" use-when="commEventRoleTypeIdFrom!=null">
             <drop-down no-current-selected-key="_NA_">
@@ -125,8 +141,22 @@
         <field name="partyIdTo" title="Party To"><display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/></field>
         <field name="statusId"><display-entity description="${description}" entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="contactMechTypeId"><display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/></field>
-        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}"><display/></field>
-        <field name="contactMechIdTo" title="${uiLabelMap.PartyToContactMech}"><display/></field>
+
+        <!-- This will display email addresses when it is an email.  This could be more elaborate to show the actual string, or it could
+            be done probably with a Java helper method to cut down on repetitive code -->
+        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromEmailAddress}" 
+            use-when="((communicationEvent.getString(&quot;contactMechTypeId&quot;)!=null)&amp;&amp;(communicationEvent.getString(&quot;contactMechTypeId&quot;).equals(&quot;EMAIL_ADDRESS&quot;)))">
+            <display-entity entity-name="ContactMech" key-field-name="contactMechId" description="${infoString}"/>
+        </field>
+        <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}" 
+            use-when="((communicationEvent.getString(&quot;contactMechTypeId&quot;)==null)||!(communicationEvent.getString(&quot;contactMechTypeId&quot;).equals(&quot;EMAIL_ADDRESS&quot;)))"><display/></field>
+        <field name="contactMechIdTo" title="${uiLabelMap.PartyToEmailAddress}"
+            use-when="((communicationEvent.getString(&quot;contactMechTypeId&quot;)!=null)&amp;&amp;(communicationEvent.getString(&quot;contactMechTypeId&quot;).equals(&quot;EMAIL_ADDRESS&quot;)))">
+            <display-entity entity-name="ContactMech" key-field-name="contactMechId" description="${infoString}"/>
+        </field>
+        <field name="contactMechIdTo" title="${uiLabelMap.PartyToContactMech}"
+            use-when="((communicationEvent.getString(&quot;contactMechTypeId&quot;)==null)||!(communicationEvent.getString(&quot;contactMechTypeId&quot;).equals(&quot;EMAIL_ADDRESS&quot;)))"><display/></field>
+
         <field name="roleTypeIdFrom"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="roleTypeIdTo"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><display/></field>
