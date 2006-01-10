@@ -47,13 +47,13 @@
             <sequenced-id-to-env sequence-name="ProductCategory" env-name="productCategoryId"/>
             <to-string field-name="productCategoryId"/>
             <env-to-field env-name="productCategoryId" map-name="newEntity"/>
-            <field-to-result field-name="productCategoryId" result-name="productCategoryId"/>
         <else>
             <check-id field-name="productCategoryId" map-name="newEntity"/>
             <check-errors/>
         </else>
         </if-empty>
-
+        <field-to-result field-name="newEntity.productCategoryId" result-name="productCategoryId"/>
+        
         <create-value value-name="newEntity"/>
 
         <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
