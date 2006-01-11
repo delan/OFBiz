@@ -182,5 +182,6 @@
     <entity-group group="org.ofbiz" entity="SalesOpportunity" />
     <entity-group group="org.ofbiz" entity="SalesOpportunityRole" />
     <entity-group group="org.ofbiz" entity="SalesOpportunityAndRole" />
+    <entity-group group="org.ofbiz" entity="SalesOpportunityStage" />
     
 </entitygroup>

@@ -2267,6 +2267,8 @@
             package-name="org.ofbiz.order.opportunity"
             title="Main entity of information about sales opportunities">
         <field name="salesOpportunityId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
         <field name="opportunityName" type="name"></field>
         <field name="description" type="very-long"/>
         <field name="nextStep" type="name"/>
@@ -2276,14 +2278,16 @@
         <field name="marketingCampaignId" type="id-ne"/>
         <field name="dataSourceId" type="id-ne"/>
         <field name="estimatedCloseDate" type="date-time"/>    	
-        <field name="stageEnumId" type="id-ne"/>
+        <field name="opportunityStageId" type="id-ne"/>
         <field name="typeEnumId" type="id-ne"/>
+        <field name="createdByUserLogin" type="id-vlong"/>
         <prim-key field="salesOpportunityId"/>
+        <prim-key field="fromDate"/>
         <relation fk-name="SLSOPP_CRNCY_UOM" rel-entity-name="Uom" type="one">
             <key-map field-name="currencyUomId" rel-field-name="uomId"/>
         </relation>
-        <relation title="Stage" fk-name="SLSOPP_STG_ENUM" rel-entity-name="Enumeration" type="one">
-            <key-map field-name="stageEnumId" rel-field-name="enumId"/>
+        <relation fk-name="SLSOPP_STAGE" rel-entity-name="SalesOpportunityStage" type="one">
+            <key-map field-name="opportunityStageId"/>
         </relation>
         <relation title="Type" fk-name="SLSOPP_TYP_ENUM" rel-entity-name="Enumeration" type="one">
             <key-map field-name="typeEnumId" rel-field-name="enumId"/>
@@ -2332,5 +2336,15 @@
             <key-map field-name="partyId"/>
         </relation>
     </view-entity>
+
+    <entity entity-name="SalesOpportunityStage"
+            package-name="org.ofbiz.order.opportunity"
+            title="Describes stages of a sales opportunity with associated probability factors.">
+        <field name="opportunityStageId" type="id-ne"></field>
+        <field name="description" type="description"/>
+        <field name="defaultProbability" type="floating-point"/>
+        <field name="sequenceNum" type="numeric"/>
+        <prim-key field="opportunityStageId"/>
+    </entity>
     
 </entitymodel>
