@@ -2,8 +2,23 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
 
+    <!-- create and update a productCategory -->
+    <form name="EditProductCategory" type="single" 
+        target="updateProductCategory" title="" default-map-name="productCategory"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <set field="partyId1" from-field="partyId"></set>
+        </actions>
+        <alt-target use-when="productCategory==null" target="createProductCategory"/>
+        <field use-when="productCategory!=null" name="productCategoryId" title="${uiLabelMap.AccountingproductCategoryId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field name="productCategoryTypeId"><drop-down><entity-options entity-name="ProductCategoryType" description="${description}"></entity-options></drop-down></field>
+        <field name="description"><text/></field>
+        <field use-when="productCategory!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="productCategory==null" name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
     <!-- Edit the list of active categories (connected to the catalog) and allow to add categories 
-                        where the primary category is the same as the productStoreId -->
+                        where the prefix is the company prefix -->
     <form name="editProdCatalogCategory" type="single" default-map-name="productCategory"
          default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="updateProductCategory">
 
@@ -40,9 +55,15 @@
              default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
+            <entity-condition entity-name="Product" list-name="products">
+                <condition-list>
+                    <condition-expr field-name="productId" operator="like" value="${prefix}%"/>
+                </condition-list>
+                <order-by field-name="productId"/>
+            </entity-condition>
         </actions>
         <field name="productId" widget-style="buttontext"><hyperlink target="EditProduct?productId=${productId}" description="${productId}"/></field>
-        <field name="description"><display/></field>
+        <field name="internalName"><display/></field>
         <field name="reservMaxPersons"><display/></field>
         <field name="reserv2ndPPPerc"><display/></field>
         <field name="reservNthPPPerc"><display/></field>
@@ -62,7 +83,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"> <date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="removeCategoryProductMember" description="[Remove Product from Category]" also-hidden="false"/>
+            <hyperlink target="removeCategoryProductMember?productCategoryId=${productCategoryId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="[Remove Product from Category]" also-hidden="false"/>
         </field>
     </form>
     
@@ -84,9 +105,7 @@
 
         <field use-when="product==null" name="isCreate"><hidden value="true"/></field>
 
-        <field use-when="product!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProduct}"><display/></field>
-        <field use-when="product==null&amp;&amp;productId==null" name="productId" title="${uiLabelMap.ProductProductId}"><text size="20" maxlength="20"/></field>
-        <field use-when="product==null&amp;&amp;productId!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotFindProductId} [${productId}]"><text size="20" maxlength="20"/></field>
+        <field use-when="product!=null" name="productId"><hidden value="productId"/></field>
 
         <!--field position="1" name="isVirtual" title="${uiLabelMap.ProductVirtualProduct}" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}" /><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
@@ -112,6 +131,7 @@
         <field name="primaryProductCategoryId" ><hidden value="${productStoreId}"/></field><!-- fix to this value -->
 
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text size="30" maxlength="60"/></field>
+        <field name="description" title="${uiLabelMap.ProductDescription}"><text size="30" maxlength="60"/></field>
         <!--field name="brandName" title="${uiLabelMap.ProductBrandName}" ><text size="30" maxlength="60"/></field-->
         <field name="comments" title="${uiLabelMap.ProductComments}"><text size="60" maxlength="250"/></field>
 
@@ -191,10 +211,10 @@
 
         <field position="1" name="returnable"  title="${uiLabelMap.ProductReturnable}" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
-        </field>
+        </field-->
         <field position="2" name="includeInPromotions" title="${uiLabelMap.ProductIncludePromotions}" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
-        </field-->
+        </field>
 
         <field position="1" name="taxable" title="${uiLabelMap.ProductTaxable}" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
@@ -267,8 +287,6 @@
         <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
         
         <field use-when="fixedAsset!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text size="20" maxlength="20"/></field>
-        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
         
         <field name="parentFixedAssetId"><hidden value="${productStoreId}"/></field>
         <field name="partyId"><hidden/></field>
@@ -307,4 +325,26 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="ListFixedAssets" type="list"  list-name="fixedAssets" 
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="FixedAsset" list-name="fixedAssets">
+                <condition-expr field-name="fixedAssetId" operator="like" value="${prefix}%"/>
+                <order-by field-name="fixedAssetId"/>
+            </entity-condition>
+        </actions>        
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="linktext">
+            <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset?fixedAssetId=${fixedAssetId}"/>
+        </field>
+        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}">
+            <display/>
+        </field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedTypeId}"><display-entity entity-name="FixedAssetType"/></field>
+        <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParentId}">
+            <display-entity entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}">
+                <sub-hyperlink target="EditFixedAsset?fixedAssetId=${parentFixedAssetId}" description="${parentFixedAssetId}" link-style="buttontext"/>
+            </display-entity>
+        </field>
+    </form>
+    
 </forms>

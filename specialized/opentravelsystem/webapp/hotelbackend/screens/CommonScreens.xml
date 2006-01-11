@@ -56,6 +56,10 @@
                 <set field="layoutSettings.headerImageUrl" value="/${organizationPartyId}/html/images/company.jpg" global="true"/>
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+                <entity-one entity-name="PartyAcctgPreference"  value-name="preference" use-cache="true">
+                    <field-map field-name="partyId" value="${organizationPartyId}"/>
+                </entity-one>
+                <set field="prefix" from-field="preference.invoiceIdPrefix" global="true"/>
             </actions>
             <widgets>
                 <!-- render header -->

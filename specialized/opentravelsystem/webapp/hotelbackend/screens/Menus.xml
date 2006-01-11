@@ -28,7 +28,6 @@
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
         default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
         <menu-item name="Find" title="Find"><link target="findParties?statusId=PARTYREL-ACTIVE"/></menu-item>
-        <menu-item name="New" title="New"><link target="editParty"/></menu-item>
         <menu-item name="Disabled" title="Disabled Parties"><link target="findParties?statusId=PARTYREL-DELETED"/></menu-item>
         <menu-item name="Security" title="Security"><link target="security"/></menu-item>
         <menu-item name="CompanyInfo" title="CompanyInfo"><link target="editCompany?organizationPartyId=${organizationPartyId}"/></menu-item>

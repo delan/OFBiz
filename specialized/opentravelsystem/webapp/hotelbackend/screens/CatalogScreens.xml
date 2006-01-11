@@ -49,6 +49,45 @@
         </section>
     </screen>
 
+    <screen name="EditProductCategory">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductCategory"/>
+                <set field="headerItem" value="category"/>
+                <set field="tabButtonItem" value="EditCategory"/>
+                <set field="labelTitleProperty" value="ProductCategory"/>
+                
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                <entity-one entity-name="ProductCategory" value-name="productCategory"/>
+                
+                <!--entity-condition entity-name="ProductCategory" list-name="categoryList">
+                    <condition-expr field-name="showInSelect" operator="not-equals" value="N"/>
+                    <order-by field-name="description"/>
+                </entity-condition>
+                <entity-condition entity-name="ProductCategoryType" list-name="productCategoryTypes">
+                    <order-by field-name="description"/>
+                </entity-condition>
+                
+                <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategory.bsh"/-->
+            </actions>
+            <widgets>
+                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <platform-specific><html>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/>
+                            </html></platform-specific>                                
+                        </container>
+                        <container>
+                            <label style="head1">&lt;br&gt;Edit/Add a product category ${productCategoryId}</label>
+                        </container>
+                        <include-form name="EditProductCategory" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="EditProdCatalogCategories">
         <section>
             <!--condition>
@@ -60,7 +99,9 @@
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
-                <entity-one entity-name="ProdCatalog"  value-name="prodCatalog" use-cache="true"/>
+                <entity-one entity-name="ProdCatalog"  value-name="prodCatalog" use-cache="true">
+                    <field-map field-name="prodCatalogId" value="${prodCatalogId}"/>
+                </entity-one>
                 <entity-condition entity-name="ProdCatalogCategory" list-name="prodCatalogCategories">
                     <condition-expr field-name="prodCatalogId" operator="equals"  value="${prodCatalogId}"/>
                     <order-by field-name="productCategoryId"/>
@@ -68,8 +109,8 @@
                     <order-by field-name="fromDate"/>
                 </entity-condition>
                 <entity-condition entity-name="ProductCategory" list-name="productCategories">
-                    <condition-expr field-name="primaryParentCategoryId" operator="equals" value="${productStoreId}"/>
-                    <order-by field-name="productCategoryId"/>
+                    <condition-expr field-name="productCategoryId" operator="like" value="${prefix}%"/>
+                    <order-by field-name="description"/>
                 </entity-condition>
                 <entity-condition entity-name="ProdCatalogCategoryType" list-name="prodCatalogCategoryTypes">
                     <order-by field-name="prodCatalogCategoryTypeId"/>
@@ -90,34 +131,8 @@
                                     <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/EditProdCatalogCategories.ftl"/>
                                 </html>
                             </platform-specific>
-                            <link target="EditCategory" text="[Create new Category]" style="buttontext"/>
+                            <link target="EditProductCategory" text="[Create new Category]" style="buttontext"/>
                         </container>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="EditCategory">
-        <section>
-            <actions>
-                <set field="page.appTabButtonItem" value="Product"/>
-                <set field="page.headerItem" value="categories"/>
-                <set field="page.tabButtonItem" value="EditCategory"/>
-                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
-                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"/>
-                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                <!--set field="leftbarScreenName" value="leftbar"/-->
-                <entity-one entity-name="ProductCategory" value-name="productCategory"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-	                       <platform-specific>
-	                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
-	                       </platform-specific>
-                        <label style="head1">Add/Update Category</label>
-                            <link target="EditCategory" text="[New Category]" style="buttontext"/>
-                            <include-form name="editProdCatalogCategory" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -132,12 +147,11 @@
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
                 <set field="page.tabButtonItem" value="EditCategoryProducts"/>
-                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                <entity-one entity-name="ProductCategory" value-name="productCategory"></entity-one>
+                <entity-one entity-name="ProductCategory" value-name="productCategory">
+                    <field-map field-name="productCategoryId" value="${parameters.productCategoryId}"/>
+                </entity-one>
                 <entity-condition entity-name="ProductCategoryMember" list-name="productCategoryMembers">
-                    <condition-list>
-                    <condition-expr field-name="productCategoryId" operator="equals"  value="${productCategoryId}"/>
-                    </condition-list>
+                    <condition-expr field-name="productCategoryId" operator="equals"  value="${parameters.productCategoryId}"/>
                     <order-by field-name="productId"/>
                     <order-by field-name="fromDate"/>
                 </entity-condition>
@@ -149,13 +163,13 @@
 	                       <platform-specific>
 	                           <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/CategoryTabBar.ftl"/></html>
 	                       </platform-specific>
-                            <label style="head1">${uiLabelMap.PageTitleEditCategoryProducts} for Category "${productCategory.description}" [${productCategoryId}]</label>
                         </container>
                         <container>
                             <link target="EditProduct"
                                 text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
                         </container>
                         <container>
+                            <label style="head1">${uiLabelMap.PageTitleEditCategoryProducts} for Category "${productCategory.description}" [${productCategory.productCategoryId}]</label>
                             <include-form name="EditCategoryProducts" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                         <container>
                             <label style="head1">&lt;br&gt;${uiLabelMap.ProductAddProductCategoryMember}</label>
@@ -174,28 +188,19 @@
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="products"/>
-                <!--set field="leftbarScreenName" value="leftbar"/-->
-                <entity-condition entity-name="Product" list-name="products">
-                    <condition-expr field-name="primaryProductCategoryId" operator="equals" value="${productStoreId}"/>
-                    <order-by field-name="productId"/>
-                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
+                            <link target="EditProduct"
+                                text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
+                        </container>
+                        <container>
                             <label style="head1">${uiLabelMap.ProductProducts}</label>
                         </container>
                         <container>
-                            <link target="EditProduct"
-                                text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
-                        </container>
-                        <container>
                             <include-form name="EditProducts" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
-                        </container>
-                        <container>
-                            <link target="EditProduct"
-                                text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
                         </container>
                     </decorator-section>
                 </decorator-screen>
@@ -209,27 +214,18 @@
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="fixedassets"/>
-                <!--set field="leftbarScreenName" value="leftbar"/-->
-                <entity-condition entity-name="FixedAsset" list-name="fixedAssets">
-                    <condition-expr field-name="parentFixedAssetId" operator="equals" value="${productStoreId}"/>
-                    <order-by field-name="fixedAssetId"/>
-                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
+                            <link target="EditFixedAsset"
+                                text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                        </container>
+                        <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
                         </container>
-                        <container>
-                            <link target="EditFixedAsset"
-                                text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
-                        </container>
-                        <include-form name="ListFixedAssets" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
-                        <container>
-                            <link target="EditFixedAsset"
-                                text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
-                        </container>
+                        <include-form name="ListFixedAssets" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -326,7 +322,7 @@
                        <platform-specific>
                            <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
                        </platform-specific>
-                            <label style="head1">${uiLabelMap.ProductEditProduct}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
+                            <label style="head1">${uiLabelMap.ProductEditProduct}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
                      </container>
                      <include-form name="EditProduct" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                      <!-- include the duplicate product form template -->
@@ -683,7 +679,7 @@
                 <entity-one entity-name="ProductCategory" value-name="productCategory"/>
 
                 <entity-condition entity-name="ProductCategoryRollup" list-name="currentProductCategoryRollups">
-                    <condition-expr field-name="productCategoryId" env-name="productCategoryId"/>
+                    <condition-expr field-name="productCategoryId" operator="like" value="${prefix}%"/>
                     <order-by field-name="sequenceNum"/>
                 </entity-condition>
                 <entity-condition entity-name="ProductCategoryRollup" list-name="parentProductCategoryRollups">
@@ -692,8 +688,8 @@
                 </entity-condition>
 
                 <entity-condition entity-name="ProductCategory" list-name="productCategoryCol">
-                    <condition-expr field-name="primaryParentCategoryId" operator="equals" value="${productStoreId}" />
-                    <order-by field-name="description"/>
+                    <condition-expr field-name="productCategoryId" operator="like" value="${prefix}%"/>
+                        <order-by field-name="description"/>
                 </entity-condition>
             </actions>
             <widgets>
