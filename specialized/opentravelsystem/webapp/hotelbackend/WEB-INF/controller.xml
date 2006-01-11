@@ -232,15 +232,9 @@
 
     <request-map uri="EditCategory">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCategory"/>
+        <response name="success" type="view" value="EditProductCategory"/>
     </request-map>
 
-    <request-map uri="CreateProductCategoryLinkToProdCatalog">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="CreateProductCategoryLinkToProdCatalog"/>
-        <response name="success" type="view" value="EditProdCatalogCategories"/>
-        <response name="error" type="view" value="EditCategory"/>
-    </request-map>
 
     <!-- =============== Fixed Asset mapping =================-->
     <request-map uri="ListFixedAssets"><!-- show a tabular list -->
@@ -786,6 +780,19 @@
         <response name="error" type="view" value="EditCategory"/>
     </request-map>
 
+    <request-map uri="createProductCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductCategory"/>
+        <response name="success" type="view" value="EditProductCategory"/>
+        <response name="error" type="view" value="EditProductCategory"/>
+    </request-map>
+    <request-map uri="DuplicateProductCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="duplicateProductCategory"/>
+        <response name="success" type="view" value="EditProductCategory"/>
+        <response name="error" type="view" value="EditProductCategory"/>
+    </request-map>
+    
     <!-- ================ Category Rollup Requests ================= -->
     <request-map uri="EditCategoryRollup">
         <security https="true" auth="true"/>
@@ -793,7 +800,7 @@
     </request-map>
     <request-map uri="addProductCategoryToCategory">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="safeAddProductCategoryToCategory"/>
+        <event type="service" path="" invoke="addProductCategoryToCategory"/>
         <response name="success" type="view" value="EditCategoryRollup"/>
         <response name="error" type="view" value="EditCategoryRollup"/>
     </request-map>
@@ -817,7 +824,7 @@
     </request-map>
     <request-map uri="addCategoryProductMember">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="safeAddProductToCategory"/>
+        <event type="service" path="" invoke="addProductToCategory"/>
         <response name="success" type="view" value="EditCategoryProducts"/>
         <response name="error" type="view" value="EditCategoryProducts"/>
     </request-map>
@@ -1059,7 +1066,7 @@
     <request-map uri="addFixedAssetProduct">
         <security https="true" auth="true"/>
         <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="addFixedAssetProduct"/>
-        <response name="success" type="view" value="showProductAssetUsage"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
         <response name="error" type="view" value="newFixedAssetProduct"/>
     </request-map>
     <request-map uri="updFixedAssetProduct">
@@ -1272,7 +1279,7 @@
     </request-map>
     <request-map uri="addProductToCategory">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="safeAddProductToCategory"/>
+        <event type="service" path="" invoke="addProductToCategory"/>
         <response name="success" type="view" value="EditProductCategories"/>
         <response name="error" type="view" value="EditProductCategories"/>
     </request-map>
@@ -3034,7 +3041,6 @@
     <view-map name="EditProductAssetUsage" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductAssetUsage"/>
     <view-map name="showFixedAssetProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#showFixedAssetProduct"/>
     <view-map name="newFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#newFixedAssetProduct"/>
-    <view-map name="EditCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategory"/>
     <view-map name="EditProdCatalogCategories" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProdCatalogCategories"/>
     <view-map name="EditCategoryRollup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryRollup"/>
     <view-map name="EditProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStore"/>
@@ -3044,7 +3050,7 @@
     <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
     <view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#selectStore"/>
     <view-map name="ImportProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ImportProduct"/>
-    <!--view-map name="EditProductCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/-->
+    <view-map name="EditProductCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/>
     <view-map name="EditProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProducts"/>
     <view-map name="EditCategoryProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryProducts"/>
     <view-map name="EditFixedAssets" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditFixedAssets"/> 

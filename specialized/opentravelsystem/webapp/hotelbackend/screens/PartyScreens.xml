@@ -36,6 +36,7 @@
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <container><link target="editParty" text="${uiLabelMap.CommonCreateNew} Party" style="buttontext"/></container>
                         <container><label style="head1" text="Find Parties"/></container>
                         <include-form name="FindParties" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
                         <section>

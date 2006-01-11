@@ -27,7 +27,7 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
 
     <!-- ================================================================ -->
-    <!-- Opentravelsystem Party Services -->
+    <!-- Opentravelsystem Payment Services -->
     <!-- ================================================================ -->
     
     <simple-method method-name="createPayment" short-description="--Add a payment with the invoice prefix--">

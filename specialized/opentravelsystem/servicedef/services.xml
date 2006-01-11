@@ -280,7 +280,7 @@
     <service name="createInvoice" engine="simple" default-entity-name="Invoice"
         location="org/ofbiz/opentravelsystem/InvoiceServices.xml" invoke="createInvoice">
         <description>Create Invoice Record with company prefix</description>
-        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="OUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceTypeId" mode="IN" optional="false"/>
         <override name="statusId" mode = "IN" optional="false"/>
@@ -292,6 +292,62 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceTypeId" mode="IN" optional="false"/>
         <override name="statusId" mode = "IN" optional="false"/>
+    </service>
+    <service name="createProductCategory" default-entity-name="ProductCategory" engine="simple"
+        location="org/ofbiz/opentravelsystem/CatalogServices.xml" invoke="createProductCategory" auth="true">
+        <description>Create an ProductCategory</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productCategoryTypeId" optional="false"/>
+    </service>
+    <service name="createProductCategoryOfbiz" default-entity-name="ProductCategory" engine="simple"
+        location="org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategory" auth="true">
+        <description>Create an ProductCategory</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productCategoryTypeId" optional="false"/>
+    </service>
+    <service name="createProduct" default-entity-name="Product" engine="simple"
+        location="org/ofbiz/opentravelsystem/CatalogServices.xml" invoke="createProduct" auth="true">
+        <description>Create a Product</description>
+        <implements service="interfaceProduct"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <override name="productTypeId" optional="false"/>
+        <override name="internalName" optional="false"/>
+    </service>
+    <service name="createProductOfbiz" default-entity-name="Product" engine="simple"
+        location="org/ofbiz/product/product/ProductServices.xml" invoke="createProduct" auth="true">
+        <description>Create a Product</description>
+        <implements service="interfaceProduct"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <override name="productTypeId" optional="false"/>
+        <override name="internalName" optional="false"/>
+    </service>
+    <service name="createFixedAsset" default-entity-name="FixedAsset" engine="simple"
+        location="org/ofbiz/opentravelsystem/CatalogServices.xml" invoke="createFixedAsset" auth="true">
+        <description>Create an FixedAsset</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fixedAssetTypeId" optional="false"/>
+    </service>
+    <service name="createFixedAssetOfbiz" default-entity-name="FixedAsset" engine="simple"
+        location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="createFixedAsset" auth="true">
+        <description>Create an FixedAsset</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fixedAssetTypeId" optional="false"/>
+    </service>
+    <service name="createOrderHeader" default-entity-name="OrderHeader" engine="simple"
+        location="org/ofbiz/opentravelsystem/OrderServices.xml" invoke="createOrderHeader" auth="true">
+        <description>Create OrderHeader</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="createOrderHeaderOfbiz" default-entity-name="OrderHeader" engine="simple"
+        location="org/ofbiz/order/order/OrderServices.xml" invoke="createOrderHeader" auth="true">
+        <description>Create OrderHeader</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     
 </services>
