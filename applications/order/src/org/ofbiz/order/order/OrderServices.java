@@ -2471,7 +2471,7 @@ public class OrderServices {
                         String dontCancelUserLogin = orderItem.getString("dontCancelSetUserLogin");
 
                         if (dontCancelUserLogin == null && dontCancelDate == null && autoCancelDate != null) {
-                            if (autoCancelDate.equals(nowTimestamp) || autoCancelDate.after(nowTimestamp)) {
+                            if (nowTimestamp.equals(autoCancelDate) || nowTimestamp.after(autoCancelDate)) {
                                 // cancel the order item
                                 Map svcCtx = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
                                 try {
