@@ -32,9 +32,7 @@ delegator = request.getAttribute("delegator");
 
 orderId = request.getParameter("orderId");
 if (orderId == null) {
-    orderId = session.getAttribute("orderId");
-} else {
-    session.setAttribute("orderId", orderId);
+    orderId = parameters.get("order_id");
 }
 context.put("orderId", orderId);
  
