@@ -1811,9 +1811,9 @@
     </service>
 
     <!-- ================ CompDoc Requests ================= -->
-    <service name="updateContentRevisionAndItem" engine="simple"
+    <service name="persistContentRevisionAndItem" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="updateContentRevisionAndItem" auth="false">
+        invoke="persistContentRevisionAndItem" auth="false">
         <description>Update a ContentRevision and ContentRevisionItem</description>
         <auto-attributes entity-name="ContentRevision" include="all" mode="IN" optional="true">
         </auto-attributes>
