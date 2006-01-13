@@ -2265,15 +2265,13 @@
   <!-- org.ofbiz.order.opportunity -->
   <!-- ========================================================= -->
 
-        <entity entity-name="SalesOpportunity"
+    <entity entity-name="SalesOpportunity"
             package-name="org.ofbiz.order.opportunity"
             title="Main entity of information about sales opportunities">
         <field name="salesOpportunityId" type="id-ne"></field>
-        <field name="fromDate" type="date-time"></field>
-        <field name="thruDate" type="date-time"></field>
         <field name="opportunityName" type="name"></field>
         <field name="description" type="very-long"/>
-        <field name="nextStep" type="name"/>
+        <field name="nextStep" type="very-long"/>
         <field name="estimatedAmount" type="currency-amount"/>
         <field name="estimatedProbability" type="floating-point"/>
         <field name="currencyUomId" type="id-ne"/>
@@ -2284,7 +2282,6 @@
         <field name="typeEnumId" type="id-ne"/>
         <field name="createdByUserLogin" type="id-vlong"/>
         <prim-key field="salesOpportunityId"/>
-        <prim-key field="fromDate"/>
         <relation fk-name="SLSOPP_CRNCY_UOM" rel-entity-name="Uom" type="one">
             <key-map field-name="currencyUomId" rel-field-name="uomId"/>
         </relation>
@@ -2297,11 +2294,46 @@
         <relation fk-name="SLSOPP_MKTGCMPG" rel-entity-name="MarketingCampaign" type="one">
             <key-map field-name="marketingCampaignId"/>
         </relation>
+        <relation fk-name="SLSOPP_USRLGN" rel-entity-name="UserLogin" type="one">
+            <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+        </relation>
     </entity>        
+
+    <entity entity-name="SalesOpportunityHistory"
+            package-name="org.ofbiz.order.opportunity"
+            title="Tracks a history of sales opportunity information">
+        <field name="salesOpportunityHistoryId" type="id-ne"></field>
+        <field name="salesOpportunityId" type="id-ne"></field>
+        <field name="description" type="very-long"/>
+        <field name="nextStep" type="very-long"/>
+        <field name="estimatedAmount" type="currency-amount"/>
+        <field name="estimatedProbability" type="floating-point"/>
+        <field name="currencyUomId" type="id-ne"/>
+        <field name="estimatedCloseDate" type="date-time"/>    	
+        <field name="opportunityStageId" type="id-ne"/>
+        <field name="changeNote" type="very-long">
+            <description>Used to track a reason for this change</description> <!-- maybe one day this should be a link to NoteData -->
+        </field>
+        <field name="modifiedByUserLogin" type="id-vlong"/>
+        <field name="modifiedTimestamp" type="date-time"/>
+        <prim-key field="salesOpportunityHistoryId"/>
+        <relation fk-name="SLOPHI_CRNCY_UOM" rel-entity-name="Uom" type="one">
+            <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+        </relation>
+        <relation fk-name="SLOPHI_STAGE" rel-entity-name="SalesOpportunityStage" type="one">
+            <key-map field-name="opportunityStageId"/>
+        </relation>
+        <relation fk-name="SLOPHI_SLSOPP" rel-entity-name="SalesOpportunity" type="one">
+            <key-map field-name="salesOpportunityId"/>
+        </relation>
+        <relation fk-name="SLOPHI_USRLGN" rel-entity-name="UserLogin" type="one">
+            <key-map field-name="modifiedByUserLogin" rel-field-name="userLoginId"/>
+        </relation>
+    </entity>
 
     <entity entity-name="SalesOpportunityRole"
             package-name="org.ofbiz.order.opportunity"
-            title="Describes roles of different partiesin a sales opportunity">
+            title="Describes roles of different parties involved in a sales opportunity">
         <field name="salesOpportunityId" type="id-ne"></field>
         <field name="partyId" type="id-ne"></field>
         <field name="roleTypeId" type="id-ne"/>
