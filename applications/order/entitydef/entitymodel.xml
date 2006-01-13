@@ -759,6 +759,7 @@
       <field name="orderNotificationId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="emailType" type="id-ne"></field>
+      <field name="comments" type="comment"></field>
       <field name="notificationDate" type="date-time"></field>
       <prim-key field="orderNotificationId"/>
       <relation type="one" fk-name="ORD_NOTIFY_ORDHDR" rel-entity-name="OrderHeader">
