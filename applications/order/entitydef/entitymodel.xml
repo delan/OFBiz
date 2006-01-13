@@ -46,6 +46,7 @@
     <!--  - org.ofbiz.order.return -->
     <!--  - org.ofbiz.order.shoppingcart -->
     <!--  - org.ofbiz.order.shoppinglist -->
+    <!--  - org.ofbiz.order.opportunity -->
     <!-- ========================================================= -->
 
 
@@ -2321,21 +2322,6 @@
             <key-map field-name="roleTypeId"/>
         </relation>
     </entity>
-   
-    <view-entity entity-name="SalesOpportunityAndRole"
-                 package-name="org.ofbiz.order.opportunity"
-                 title="Agglomeration to help with searching for the opportunities of a particular party or role">
-        <member-entity entity-alias="SO" entity-name="SalesOpportunity"/>
-        <member-entity entity-alias="SOR" entity-name="SalesOpportunityRole"/>
-        <alias-all entity-alias="SO"/>
-        <alias-all entity-alias="SOR"/>
-        <view-link entity-alias="SO" rel-entity-alias="SOR">
-            <key-map field-name="salesOpportunityId"/>
-        </view-link>
-        <relation fk-name="SO_RL_PARTYVIEW" rel-entity-name="PartySummaryCRMView" type="one">
-            <key-map field-name="partyId"/>
-        </relation>
-    </view-entity>
 
     <entity entity-name="SalesOpportunityStage"
             package-name="org.ofbiz.order.opportunity"
