@@ -180,6 +180,7 @@
     <!-- ========================================================= -->
     
     <entity-group group="org.ofbiz" entity="SalesOpportunity" />
+    <entity-group group="org.ofbiz" entity="SalesOpportunityHistory" />
     <entity-group group="org.ofbiz" entity="SalesOpportunityRole" />
     <entity-group group="org.ofbiz" entity="SalesOpportunityStage" />
     
