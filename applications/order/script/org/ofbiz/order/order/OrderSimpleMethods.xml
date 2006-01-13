@@ -55,6 +55,7 @@
         <sequenced-id-to-env sequence-name="OrderNotification" env-name="orderNotification.orderNotificationId"/>
         <set from-field="parameters.orderId" field="orderNotification.orderId"/>
         <set from-field="parameters.emailType" field="orderNotification.emailType"/>
+        <set from-field="parameters.comments" field="orderNotification.comments"/>
         <now-timestamp-to-env env-name="orderNotification.notificationDate"/>
         <create-value value-name="orderNotification"/>
     </simple-method>
