@@ -588,6 +588,7 @@
       <field name="communicationEventId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
+      <field name="contactMechId" type="id"><description>For additional communication event participants this represents the contactMechId of the ContactMech used.</description></field>
       <prim-key field="communicationEventId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
@@ -603,6 +604,9 @@
       <relation type="one" fk-name="COM_EVRL_PRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVRL_CMCH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
       </relation>
     </entity>
     <entity entity-name="CommunicationEventType"
