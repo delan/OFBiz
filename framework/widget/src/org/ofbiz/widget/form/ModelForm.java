@@ -34,6 +34,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javolution.util.FastList;
+
 import bsh.EvalError;
 import bsh.Interpreter;
 
@@ -633,17 +635,20 @@ public class ModelForm {
     }
 
     public void renderSingleFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, int positions) {
+        List tempFieldList = FastList.newInstance();
+        tempFieldList.addAll(this.fieldList);
+        
         // Check to see if there is a field, same name and same use-when (could come from extended form)
-        for (int j = 0; j < this.fieldList.size(); j++) {
-            ModelFormField modelFormField = (ModelFormField) this.fieldList.get(j);
+        for (int j = 0; j < tempFieldList.size(); j++) {
+            ModelFormField modelFormField = (ModelFormField) tempFieldList.get(j);
             if (!modelFormField.isUseWhenEmpty()) {
                 boolean shouldUse1 = modelFormField.shouldUse(context);
-                for (int i = j+1; i < this.fieldList.size(); i++) {
-                    ModelFormField curField = (ModelFormField) this.fieldList.get(i);
+                for (int i = j+1; i < tempFieldList.size(); i++) {
+                    ModelFormField curField = (ModelFormField) tempFieldList.get(i);
                     if (curField.getName() != null && curField.getName().equals(modelFormField.getName())) {
                         boolean shouldUse2 = curField.shouldUse(context);
                         if (shouldUse1 == shouldUse2) {
-                            this.fieldList.remove(i--);
+                            tempFieldList.remove(i--);
                         }
                     } else {
                         continue;
@@ -665,7 +670,7 @@ public class ModelForm {
         //formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
 
         // render each field row, except hidden & ignored rows
-        Iterator fieldIter = this.fieldList.iterator();
+        Iterator fieldIter = tempFieldList.iterator();
         ModelFormField lastFormField = null;
         ModelFormField currentFormField = null;
         ModelFormField nextFormField = null;
