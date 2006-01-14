@@ -98,6 +98,10 @@ public class ModelForm {
     protected boolean useRowSubmit = false;
     protected FlexibleStringExpander targetWindowExdr;
     protected String defaultRequiredFieldStyle;
+    protected String oddRowStyle;
+    protected String evenRowStyle;
+    protected String defaultTableStyle;
+    protected String headerRowStyle;
     protected boolean skipStart = false;
     protected boolean skipEnd = false;
     protected boolean hideHeader = false;
@@ -217,6 +221,10 @@ public class ModelForm {
                 this.formWidgetAreaStyle = parent.formWidgetAreaStyle;
                 this.defaultTitleAreaStyle = parent.defaultTitleAreaStyle;
                 this.defaultWidgetAreaStyle = parent.defaultWidgetAreaStyle;
+                this.oddRowStyle = parent.oddRowStyle;
+                this.evenRowStyle = parent.evenRowStyle;
+                this.defaultTableStyle = parent.defaultTableStyle;
+                this.headerRowStyle = parent.headerRowStyle;
                 this.defaultTitleStyle = parent.defaultTitleStyle;
                 this.defaultWidgetStyle = parent.defaultWidgetStyle;
                 this.defaultTooltipStyle = parent.defaultTooltipStyle;
@@ -275,7 +283,15 @@ public class ModelForm {
             this.defaultTitleAreaStyle = formElement.getAttribute("default-title-area-style");
         if (this.defaultWidgetAreaStyle == null || formElement.hasAttribute("default-widget-area-style"))
             this.defaultWidgetAreaStyle = formElement.getAttribute("default-widget-area-style");
-        if (this.defaultTitleStyle == null || formElement.hasAttribute("default-title-style"))
+        if (this.oddRowStyle == null || formElement.hasAttribute("odd-row-style"))
+            this.oddRowStyle = formElement.getAttribute("odd-row-style");
+        if (this.evenRowStyle == null || formElement.hasAttribute("even-row-style"))
+            this.evenRowStyle = formElement.getAttribute("even-row-style");
+        if (this.defaultTableStyle == null || formElement.hasAttribute("default-table-style"))
+            this.defaultTableStyle = formElement.getAttribute("default-table-style");
+        if (this.headerRowStyle == null || formElement.hasAttribute("header-row-style"))
+            this.headerRowStyle = formElement.getAttribute("header-row-style");
+        if (this.defaultTitleStyle == null || formElement.hasAttribute("header-row-style"))
             this.defaultTitleStyle = formElement.getAttribute("default-title-style");
         if (this.defaultWidgetStyle == null || formElement.hasAttribute("default-widget-style"))
             this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
@@ -943,11 +959,6 @@ public class ModelForm {
                 continue;
             }
 
-            // skip all of the submit/reset fields
-            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.SUBMIT || fieldInfo.getFieldType() == ModelFormField.FieldInfo.RESET) {
-                continue;
-            }
-
             if (!modelFormField.shouldUse(context)) {
                 continue;
             }
@@ -1344,6 +1355,34 @@ public class ModelForm {
     /**
      * @return
      */
+    public String getOddRowStyle() {
+        return this.oddRowStyle;
+    }
+    
+    /**
+     * @return
+     */
+    public String getEvenRowStyle() {
+        return this.evenRowStyle;
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultTableStyle() {
+        return this.defaultTableStyle;
+    }
+    
+    /**
+     * @return
+     */
+    public String getHeaderRowStyle() {
+        return this.headerRowStyle;
+    }
+    
+    /**
+     * @return
+     */
     public String getDefaultTitleStyle() {
         return this.defaultTitleStyle;
     }
@@ -1554,7 +1593,35 @@ public class ModelForm {
     public void setDefaultWidgetAreaStyle(String string) {
         this.defaultWidgetAreaStyle = string;
     }
-
+    
+    /**
+     * @param string
+     */
+    public void setOddRowStyle(String string) {
+        this.oddRowStyle = string;
+    }
+    
+    /**
+     * @param string
+     */
+    public void setEvenRowStyle(String string) {
+        this.evenRowStyle = string;
+    }
+    
+    /**
+     * @param string
+     */
+    public void setDefaultTableStyle(String string) {
+        this.defaultTableStyle = string;
+    }
+    
+    /**
+     * @param string
+     */
+    public void setHeaderRowStyle(String string) {
+        this.headerRowStyle = string;
+    }
+    
     /**
      * @param string
      */

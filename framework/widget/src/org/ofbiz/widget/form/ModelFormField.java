@@ -104,6 +104,8 @@ public class ModelFormField {
     protected String idName;
     protected boolean separateColumn = false;
     protected boolean requiredField = false;
+    protected String headerLink;
+    protected String headerLinkStyle;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -137,8 +139,8 @@ public class ModelFormField {
         if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
             separateColumn = true;
         this.requiredField = "true".equals(fieldElement.getAttribute("required-field"));
-
-
+        this.headerLink = fieldElement.getAttribute("header-link");
+        this.headerLinkStyle = fieldElement.getAttribute("header-link-style");
 
 
         String positionStr = fieldElement.getAttribute("position");
@@ -239,7 +241,7 @@ public class ModelFormField {
         if (UtilValidate.isNotEmpty(overrideFormField.titleAreaStyle))
             this.titleAreaStyle = overrideFormField.titleAreaStyle;
         if (UtilValidate.isNotEmpty(overrideFormField.widgetAreaStyle))
-            this.widgetAreaStyle = overrideFormField.widgetAreaStyle;
+            this.widgetAreaStyle = overrideFormField.widgetAreaStyle;     
         if (UtilValidate.isNotEmpty(overrideFormField.titleStyle))
             this.titleStyle = overrideFormField.titleStyle;
         if (UtilValidate.isNotEmpty(overrideFormField.widgetStyle))
@@ -252,6 +254,9 @@ public class ModelFormField {
             this.useWhen = overrideFormField.useWhen;
         if (overrideFormField.fieldInfo != null) {
             this.setFieldInfo(overrideFormField.fieldInfo);
+        }
+        if (overrideFormField.fieldInfo != null) {
+            this.setHeaderLink(overrideFormField.headerLink);
         }
         if (UtilValidate.isNotEmpty(overrideFormField.idName))
             this.idName = overrideFormField.idName;
@@ -972,6 +977,18 @@ public class ModelFormField {
     public String getIdName() {
         return idName;
     }
+    
+    /**
+     * @return
+     */
+    public String getHeaderLink() {
+        return headerLink;
+    }
+    
+    public String getHeaderLinkStyle() {
+        return headerLinkStyle;
+    }
+    
 
     /**
      * @param string
@@ -1162,7 +1179,7 @@ public class ModelFormField {
     public void setWidgetAreaStyle(String string) {
         this.widgetAreaStyle = string;
     }
-
+   
     /**
      * @param string
      */
@@ -1184,6 +1201,21 @@ public class ModelFormField {
         return this.separateColumn;
     }
 
+    /**
+     * @param string
+     */
+    public void setHeaderLink(String string) {
+        this.headerLink = string;
+    }
+    
+    /**
+     * @param string
+     */
+    public void setHeaderLinkStyle(String string) {
+        this.headerLinkStyle = string;
+    }
+    
+    
     /**
      * @return
      */
@@ -1636,8 +1668,7 @@ public class ModelFormField {
             }
             if (retVal == null || retVal.length() == 0) {
                 retVal = "&nbsp;";
-            }
-            if ("currency".equals(type)) { 
+            } else if ("currency".equals(type)) { 
                 Locale locale = (Locale) context.get("locale");
                 if (locale == null) locale = Locale.getDefault();
                 String isoCode = null;
