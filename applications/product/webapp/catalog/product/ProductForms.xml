@@ -569,20 +569,29 @@
         <field use-when="supplierProduct == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field use-when="supplierProduct != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="UpdateSupplierProduct" type="list" default-service-name="updateSupplierProduct"
+    <form name="ListSupplierProducts" type="list" 
             target="updateSupplierProduct" title="" list-name="productSuppliers"
-            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+            default-title-style="boxhead" default-widget-style="tabletext" default-tooltip-style="tabletext"
+            default-table-style="boxoutside" even-row-style="viewManyTR2" odd-row-style="viewManyTR1"
+            header-row-style="boxtop">
         <!--<auto-fields-service service-name="updateSupplierProduct"/>-->
 
-        <field name="partyId" title="${uiLabelMap.CommonPartyId}" widget-style="tabletext">
+        <field name="partyId" title="${uiLabelMap.CommonPartyId}" widget-style="tabletext"
+            header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=partyId" header-link-style="buttontext">
             <display-entity entity-name="PartyNameView" also-hidden="true" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" link-style="buttontext"/>
             </display-entity>
         </field>
         <field name="supplierProductId"><display/></field>
-        <field name="minimumOrderQuantity" title="${uiLabelMap.ProductMinimumOrderQuantity}" widget-area-style="tabletextright"><display/></field>
+        <field name="minimumOrderQuantity" title="${uiLabelMap.ProductMinimumOrderQuantity}" widget-area-style="tabletextright"
+            header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=minimumOrderQuantity" header-link-style="buttontext">
+                <display/>
+        </field>
         <field name="quantityUomId"><display/></field>
-        <field name="lastPrice" widget-area-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="lastPrice" widget-area-style="tabletextright"
+            header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=lastPrice"  header-link-style="buttontext">
+                <display type="currency" currency="${currencyUomId}"/>
+        </field>
         <field name="updateLink" title=" " widget-style="buttontext">
             <hyperlink target="EditProductSuppliers?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}"
                 description="${uiLabelMap.CommonUpdate}" also-hidden="false"/>
