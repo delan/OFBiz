@@ -163,6 +163,18 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute type="xs:string" name="odd-row-style">
+            <xs:annotation><xs:documentation>The odd-row-style specifies the style to use in the table content odd rows.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="even-row-style">
+            <xs:annotation><xs:documentation>The even-row-style specifies the style to use in the table content even rows.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="default-table-style">
+            <xs:annotation><xs:documentation>The default-table-style specifies the style to use in the table.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="header-row-style">
+            <xs:annotation><xs:documentation>The header-row-style specifies the style to use in the header of table.</xs:documentation></xs:annotation>
+        </xs:attribute>                
         <!-- not sure this is such a good idea
         <xs:attribute type="xs:string" name="hidden-values-map-name">
             <xs:annotation><xs:documentation>A map that contains hidden field name/value pairs. 
@@ -310,6 +322,12 @@
         </xs:attribute>
         <xs:attribute type="xs:string" name="title">
             <xs:annotation><xs:documentation>The name of this field that will be shown to the user; can use the ${} and foo.bar (dot) syntax to insert values from the context for parameterization or internationalization.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="header-link">
+            <xs:annotation><xs:documentation>A link for this field in the header of a list form.  Useful for sorting a list form by different columns.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="header-link-style">
+            <xs:annotation><xs:documentation>The CSS style for a header-link.</xs:documentation></xs:annotation>
         </xs:attribute>
         <xs:attribute type="xs:string" name="tooltip">
             <xs:annotation><xs:documentation>The text to show on mouse over or help for more information; can use the ${} and foo.bar (dot) syntax to insert values from the context for parameterization or internationalization.</xs:documentation></xs:annotation>

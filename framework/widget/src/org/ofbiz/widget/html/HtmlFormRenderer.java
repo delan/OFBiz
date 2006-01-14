@@ -36,6 +36,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.WidgetWorker;
@@ -797,7 +798,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("\"");
         }
         buffer.append(">");
-        buffer.append(titleText);
+        renderHyperlinkTitle(buffer, context, modelFormField, titleText);         
         buffer.append("</span>");
 
         this.appendWhitespace(buffer);
@@ -822,7 +823,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
                 buffer.append("\"");
             }
             buffer.append(">");
-            buffer.append(modelFormField.getTitle(context));
+            renderHyperlinkTitle(buffer, context, modelFormField, modelFormField.getTitle(context)); 
             buffer.append("</span>");
 
             this.appendWhitespace(buffer);
@@ -911,8 +912,17 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatListWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\" class=\"calendarTable\">");
-        // DEJ 20050101 removed the width=\"100%\", doesn't look very good with CSS float: left based side "columns"
+
+         if(UtilValidate.isNotEmpty(modelForm.getDefaultTableStyle())) {
+             buffer.append("<table");
+             buffer.append(" class=\"");
+             buffer.append(modelForm.getDefaultTableStyle());
+             buffer.append("\"");
+             buffer.append(">");
+         } else {
+             buffer.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\" class=\"calendarTable\">");
+             // DEJ 20050101 removed the width=\"100%\", doesn't look very good with CSS float: left based side "columns"
+         }
 
         this.appendWhitespace(buffer);
     }
@@ -923,7 +933,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         this.appendWhitespace(buffer);
         String queryString = null;
         if (UtilValidate.isNotEmpty((String)context.get("queryString"))) {
-        	queryString = (String)context.get("queryString");
+            queryString = (String)context.get("queryString");
         } else {
             Map inputFields = (Map)context.get("requestParameters");
             queryString = UtilHttp.urlEncodeArgs(inputFields);
@@ -936,8 +946,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.widget.form.FormStringRenderer#renderFormatHeaderRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.widget.form.ModelForm)
      */
     public void renderFormatHeaderRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<tr>");
-
+        buffer.append("<tr");
+        String headerStyle = modelForm.getHeaderRowStyle();
+        if (UtilValidate.isNotEmpty(headerStyle)) {
+            buffer.append(" class=\"");
+            buffer.append(headerStyle);
+            buffer.append("\"");
+        }
+        buffer.append(">");
         this.appendWhitespace(buffer);
     }
 
@@ -1018,8 +1034,28 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.widget.form.FormStringRenderer#renderFormatItemRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.widget.form.ModelForm)
      */
     public void renderFormatItemRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<tr>");
-
+        Integer itemIndex = (Integer)context.get("itemIndex"); 
+        
+        buffer.append("<tr");
+        if (itemIndex!=null) {
+            
+            if (itemIndex.intValue()%2==0) {
+               String evenRowStyle = modelForm.getEvenRowStyle();
+               if (UtilValidate.isNotEmpty(evenRowStyle)) {
+                   buffer.append(" class=\"");
+                   buffer.append(evenRowStyle);
+                   buffer.append("\"");
+                }
+            } else {
+                  String oddRowStyle = modelForm.getOddRowStyle();
+                  if (UtilValidate.isNotEmpty(oddRowStyle)) {
+                      buffer.append(" class=\"");
+                      buffer.append(oddRowStyle);
+                      buffer.append("\"");
+                  }
+            }
+        }
+        buffer.append(">");
         this.appendWhitespace(buffer);
     }
 
@@ -2017,5 +2053,25 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("</td>");
         }
         buffer.append("</tr></table>");
+    }
+    
+    /**
+     * Renders a link for the column header fields when there is a header-link="" specified in the <field > tag, using
+     * style from header-link-style=""
+     * @param buffer
+     * @param context
+     * @param modelFormField
+     * @param titleText
+     */
+    public void renderHyperlinkTitle(StringBuffer buffer, Map context, ModelFormField modelFormField, String titleText) {
+        if (UtilValidate.isNotEmpty(modelFormField.getHeaderLink())) {
+            StringBuffer targetBuffer = new StringBuffer();
+            FlexibleStringExpander target = new FlexibleStringExpander(modelFormField.getHeaderLink());         
+            String fullTarget = target.expandString(context);
+            targetBuffer.append(fullTarget);
+            makeHyperlinkString(buffer, modelFormField.getHeaderLinkStyle(), HyperlinkField.DEFAULT_TARGET_TYPE, targetBuffer.toString(), titleText, null);
+        } else {
+             buffer.append(titleText);
+        }
     }
 }
