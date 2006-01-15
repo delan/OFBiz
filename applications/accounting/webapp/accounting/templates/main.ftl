@@ -1,7 +1,7 @@
 <!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Copyright (c) 2003 The Open For Business Project - www.ofbiz.org -->
+<!-- Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org -->
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
