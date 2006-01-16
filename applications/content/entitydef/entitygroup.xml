@@ -122,7 +122,6 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="AssocRevisionItemView" />
-    <entity-group group="org.ofbiz" entity="ContentApprovalMaxView" />
 
 </entitygroup>
 
