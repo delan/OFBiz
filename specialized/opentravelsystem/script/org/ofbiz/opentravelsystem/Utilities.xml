@@ -65,26 +65,24 @@
                      </and>
                  </condition>
                  <then>
-                     
-                     <transaction-begin/>
                      <!--  create invoice header -->
-                     <set from-field="payment.partyIdFrom" field="invoice.partyId"/>
-                     <set from-field="payment.partyIdTo" field="invoice.partyIdFrom"/>
-                     <set from-field="payment.currencyUomId" field="invoice.currencyUomId"/>
-                     <set from-field="payment.effectiveDate" field="invoice.invoiceDate"/>
-                     <set from-field="payment.effectiveDate" field="invoice.dueDate"/>
-                     <set value="Generated from Payment ${payment.paymentId}" field="invoice.description"/>
-                     <set value="INVOICE_IN_PROCESS" field="invoice.statusId"/>
+                     <set from-field="payment.partyIdFrom" field="createInvoice.partyId"/>
+                     <set from-field="payment.partyIdTo" field="createInvoice.partyIdFrom"/>
+                     <set from-field="payment.currencyUomId" field="createInvoice.currencyUomId"/>
+                     <set from-field="payment.effectiveDate" field="createInvoice.invoiceDate"/>
+                     <set from-field="payment.effectiveDate" field="createInvoice.dueDate"/>
+                     <set value="Generated from Payment ${payment.paymentId}" field="createInvoice.description"/>
+                     <set value="INVOICE_IN_PROCESS" field="createInvoice.statusId"/>
                      <if-compare field-name="payment.partyIdFrom" operator="equals" value="${parameters.organizationPartyId}">
-                         <set value="PURCHASE_INVOICE" field="invoice.invoiceTypeId"/>
+                         <set value="PURCHASE_INVOICE" field="createInvoice.invoiceTypeId"/>
                          <else>
-                             <set value="SALES_INVOICE" field="invoice.invoiceTypeId"/>
+                             <set value="SALES_INVOICE" field="createInvoice.invoiceTypeId"/>
                          </else>
                      </if-compare>
-                     <call-service service-name="createInvoice" in-map-name="invoice">
-                         <result-to-field result-name="invoiceId" field-name="invoiceId"/>
+                     <call-service service-name="createInvoice" in-map-name="createInvoice">
+                         <result-to-field result-name="invoiceId" field-name="invoiceItem.invoiceId"/>
                      </call-service>
-                     
+                     <clear-field field-name="createInvoice"/><!-- required because the invoiceId gets inserted in here, not good to create the next one.-->                    
                      <calculate field-name="invoicesCreated">
                          <calcop operator="add">
                              <calcop operator="get" field-name="invoicesCreated"/>
@@ -103,7 +101,6 @@
                      <find-by-and entity-name="PartyTaxAuthInfo" map-name="partyTaxInfoSearch" list-name="partyTaxInfos"/>
                      <filter-list-by-date list-name="partyTaxInfos" to-list-name="fPartyTaxInfos"/>
                      <first-from-list entry-name="partyTaxInfo" list-name="fPartyTaxInfos"/>
-                     <set value="${invoiceId}" field="invoiceItem.invoiceId"/>
                      <if>
                          <condition>
                              <and>
@@ -179,7 +176,7 @@
                      </if>
                      
                      <!-- apply the payment to the invoice -->
-                     <set field="application.invoiceId" from-field="invoiceId"/>
+                     <set field="application.invoiceId" from-field="invoiceItem.invoiceId"/>
                      <set field="application.paymentId" from-field="payment.paymentId"/> 
                      <set field="application.amountApplied" from-field="payment.amount" />
                      <call-service service-name="updatePaymentApplication" in-map-name="application"/>
@@ -197,7 +194,7 @@
          <string-append field-name="invoicesCreated" string=" invoices created, all processed."/>
          <set value="${invoicesCreated}" field="_event_message_"/>
      </simple-method>
-
+     
      <simple-method method-name="SendReceivePayments" 
          short-description="Set all payments with the 'not paid' status to send/received i.e. post payment" use-transaction="true">
          <!--check-permission permission="CATALOG" action="_CREATE">

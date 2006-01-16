@@ -118,12 +118,12 @@
     
     <!-- hotelbackend specific Request Mappings -->
     <request-map uri="main">
-        <description>Check if access to productstores, when not log off, otherwise go to selectStore or main</description>
+        <description>Check if access to productstores, when not log off, otherwise go to selectStore or main (now disabled and using partyId of login</description>
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.opentravelsystem.otsEvents" invoke="checkProductStore"/> 
-        <response name="selectStore" type="view" value="selectStore"/>
+        <!--event type="java" path="org.ofbiz.opentravelsystem.otsEvents" invoke="checkProductStore"/> 
+        <response name="selectStore" type="view" value="selectStore"/-->
         <response name="success" type="view" value="main" />
-        <response name="error" type="view" value="noAccess" />
+        <response name="error" type="view" value="login" />
     </request-map>
 
     <request-map uri="intro">
@@ -299,13 +299,6 @@
         <response name="error" type="view" value="ImportProduct"/>
     </request-map>    
     
-   <!-- ================ ProductStore ================= -->
-    <request-map uri="EditProductStore"><!-- show a tabular list of products connected -->
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProductStore"/>
-    </request-map>
-
-
     <!-- ================ Orders ================= -->
     <request-map uri="findorders">
         <security https="true" auth="true"/>
@@ -2207,30 +2200,6 @@
         <response name="error" type="view" value="EditProductStorePromos"/>
     </request-map>
 
-    <!-- ================ ProductStore ProdCatalogs Requests ================= -->
-    <request-map uri="EditProductStoreCatalogs">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProductStoreCatalogs"/>
-    </request-map>
-    <request-map uri="createProductStoreCatalog">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductStoreCatalog"/>
-        <response name="success" type="view" value="EditProductStoreCatalogs"/>
-        <response name="error" type="view" value="EditProductStoreCatalogs"/>
-    </request-map>
-    <request-map uri="updateProductStoreCatalog">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductStoreCatalog"/>
-        <response name="success" type="view" value="EditProductStoreCatalogs"/>
-        <response name="error" type="view" value="EditProductStoreCatalogs"/>
-    </request-map>
-    <request-map uri="deleteProductStoreCatalog">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteProductStoreCatalog"/>
-        <response name="success" type="view" value="EditProductStoreCatalogs"/>
-        <response name="error" type="view" value="EditProductStoreCatalogs"/>
-    </request-map>
-
     <!-- ================ ProductStore Email Requests ================= -->
     <request-map uri="EditProductStoreEmails">
         <security https="true" auth="true"/>
@@ -3043,12 +3012,12 @@
     <view-map name="newFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#newFixedAssetProduct"/>
     <view-map name="EditProdCatalogCategories" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProdCatalogCategories"/>
     <view-map name="EditCategoryRollup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryRollup"/>
-    <view-map name="EditProductStore" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStore"/>
+    <view-map name="EditProductStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductStore"/>
     <view-map name="EditProductStoreRoles" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreRoles"/>
     <view-map name="EditProductStoreEmails" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreEmails"/>
     <view-map name="EditProductStoreTaxSetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreTaxSetup"/>
     <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
-    <view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#selectStore"/>
+    <!--view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#selectStore"/-->
     <view-map name="ImportProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ImportProduct"/>
     <view-map name="EditProductCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/>
     <view-map name="EditProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProducts"/>

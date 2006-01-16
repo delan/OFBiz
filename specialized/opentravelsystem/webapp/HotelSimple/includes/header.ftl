@@ -35,7 +35,7 @@
     <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>" type="text/javascript"></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
-    <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/HotelSimple/html/ecommain.css")}</@ofbizContentUrl>" type="text/css"/>
+    <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/hotelsimple/html/ecommain.css")}</@ofbizContentUrl>" type="text/css"/>
 
     <#-- Append CSS for catalog -->
     <#if catalogStyleSheet?exists>
@@ -51,40 +51,6 @@
     </#if>
     <#if metaKeywords?exists>
         <meta name="keywords" content="${metaKeywords}"/>
-    </#if>
-    <#if includeHtmlArea>    
-        <#assign contextPath=request.getContextPath()/>
-        <link rel="stylesheet" href="<@ofbizContentUrl>/HotelSimple/html/haagsestyles.css</@ofbizContentUrl>" type="text/css"/>
-        
-        <#assign primaryHTMLField=page.primaryHTMLField?if_exists/>
-        <#if (dynamicPrimaryHTMLField?exists)>
-          <#assign primaryHTMLField=dynamicPrimaryHTMLField/>
-        </#if>
-        <#assign secondaryHTMLField=page.secondaryHTMLField?if_exists/>
-        <#if (primaryHTMLField?exists && (primaryHTMLField?length > 0))>
-            <script type="text/javascript" language="javascript"> 
-              _editor_url = "/content/images/htmlarea/"; // omit the final slash
-            </script> 
-        
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <style type="text/css">
-                @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
-                textarea { background-color: #fff; border: 1px solid 00f; }
-            </style>
-            <script type="text/javascript">
-                var editor = null;
-                var summary = null;
-                function init_all() {
-                    primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
-                    <#if secondaryHTMLField?exists>
-                        secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
-                    </#if>
-                }
-            </script>
-        </#if>
     </#if>
 <link href="/HaagscheSuites/html/haagsestyles.css" rel="stylesheet" type="text/css">
 </head>

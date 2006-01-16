@@ -287,6 +287,7 @@
         <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
         
         <field use-when="fixedAsset!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="fixedAsset==null" name="fixedAssetId"><hidden/></field>
         
         <field name="parentFixedAssetId"><hidden value="${productStoreId}"/></field>
         <field name="partyId"><hidden/></field>
@@ -302,14 +303,14 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="selectStore" type="list" list-name="stores" 
+    <!--form name="selectStore" type="list" list-name="stores" 
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="setStore">
         <field name="productStoreId" title="${uiLabelMap.productStoreId}&amp;nbsp;-&amp;nbsp;[${uiLabelMap.StoreName}]" widget-style="tabletext"><display-entity entity-name="ProductStore"  key-field-name="productStoreId" description="${productStoreId} - [${storeName}]"/></field>
         <field name="roleTypeId" title="${uiLabelMap.CommonRoleType}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"> <display/></field>
         <field name="submitButton" title="Select" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
+    </form-->
     
     <form name="selectStoreAdmin" type="list" list-name="storesAdmin" 
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="setStore">

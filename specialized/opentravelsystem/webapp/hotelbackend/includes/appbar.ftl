@@ -35,13 +35,12 @@
 
 <#if requestAttributes.userLogin?has_content>
 	<#assign displayApps = [
-<#--		 {"title":"Main", 				"url":"main"} -->
  		{"title":"Product",				"url":"mainCatalog"}
 		,{"title":"Reservations",		"url":"findorders"}
 		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
 		,{"title":"Accounting",			"url":"mainAccounting"}
-		,{"title":"Website", 			"url":"/${productStoreId?if_exists}"}
-		,{"title":"Logout", 				"url":"logout"}
+		,{"title":"Website", 			"url":"/${parameters.userLogin.partyId}"}
+		,{"title":"Logout", 			"url":"logout"}
 		]>
 <#else>
 	<#assign displayApps = [
