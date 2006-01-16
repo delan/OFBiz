@@ -203,7 +203,8 @@
     </service>
 
     <service name="performFind" auth="false" engine="java" invoke="performFind" location="org.ofbiz.common.FindServices">
-        <description>Generic service to return an entity iterator</description>
+        <description>Generic service to return an entity iterator.  set filterByDate to Y to exclude expired records.  
+           set noConditionFind to Y to find without conditions.  </description>
         <attribute name="entityName" type="String" mode="IN" optional="false"/>
         <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
         <attribute name="orderBy" type="String" mode="IN" optional="true"/>
