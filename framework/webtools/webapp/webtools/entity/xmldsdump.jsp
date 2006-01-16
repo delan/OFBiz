@@ -255,39 +255,42 @@
                     continue;
                 }
                 values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), efo);
-
-                //Don't bother writing the file if there's nothing
-                //to put into it
-                if (values.hasNext()) {
-                    PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, fileName +".xml")), "UTF-8")));
-                    writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                    writer.println("<entity-engine-xml>");
-                    int fileSplitNumber = 1;
-
-                    GenericValue value = null;
-                    while ((value = (GenericValue) values.next()) != null) {
-                        value.writeXmlText(writer, "");
-                        numberWritten++;
-
-                        // split into small files
-                        if ((maxRecordsPerFile > 0) && (numberWritten % maxRecordsPerFile == 0)) {
-                            fileSplitNumber++;
-                            // close the file
-                            writer.println("</entity-engine-xml>");
-                            writer.close();
-
-                            // create a new file
-                            String splitNumStr = UtilFormatOut.formatPaddedNumber((long) fileSplitNumber, 3);
-                            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, fileName + "_" + splitNumStr +".xml")), "UTF-8")));
-                            writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                            writer.println("<entity-engine-xml>");
-                        }
-
-                        if (numberWritten % 500 == 0 || numberWritten == 1) {
-                           Debug.log("Records written [" + curEntityName + "]: " + numberWritten);
-                        }
-
+                boolean isFirst = true;
+                PrintWriter writer = null;
+                int fileSplitNumber = 1;
+                GenericValue value = null;
+                while ((value = (GenericValue) values.next()) != null) {
+                    //Don't bother writing the file if there's nothing
+                    //to put into it
+                    if (isFirst) {
+                        writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, fileName +".xml")), "UTF-8")));
+                        writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                        writer.println("<entity-engine-xml>");
+                        isFirst = false;
                     }
+                    value.writeXmlText(writer, "");
+                    numberWritten++;
+
+                    // split into small files
+                    if ((maxRecordsPerFile > 0) && (numberWritten % maxRecordsPerFile == 0)) {
+                        fileSplitNumber++;
+                        // close the file
+                        writer.println("</entity-engine-xml>");
+                        writer.close();
+
+                        // create a new file
+                        String splitNumStr = UtilFormatOut.formatPaddedNumber((long) fileSplitNumber, 3);
+                        writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, fileName + "_" + splitNumStr +".xml")), "UTF-8")));
+                        writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                        writer.println("<entity-engine-xml>");
+                    }
+
+                    if (numberWritten % 500 == 0 || numberWritten == 1) {
+                       Debug.log("Records written [" + curEntityName + "]: " + numberWritten);
+                    }
+
+                }
+                if (writer != null) {
                     writer.println("</entity-engine-xml>");
                     writer.close();
                     String thisResult = "["+fileNumber +"] [" + numberWritten + "] " + curEntityName + " wrote " + numberWritten + " records";

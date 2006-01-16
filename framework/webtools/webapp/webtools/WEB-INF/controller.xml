@@ -382,8 +382,11 @@
         <response name="success" type="view" value="EntitySQLProcessor"/>
         <response name="error" type="view" value="EntitySQLProcessor"/>
     </request-map>
-    <request-map uri="EntityExportAll">
+
+    <request-map uri="EntityExportAll"><security https="true" auth="true"/><response name="success" type="view" value="EntityExportAll"/><response name="error" type="view" value="EntityExportAll"/></request-map>
+    <request-map uri="entityExportAll">
         <security https="true" auth="true"/>
+        <event type="service" path="" invoke="entityExportAll"/>
         <response name="success" type="view" value="EntityExportAll"/>
         <response name="error" type="view" value="EntityExportAll"/>
     </request-map>

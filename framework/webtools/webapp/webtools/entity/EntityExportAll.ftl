@@ -43,7 +43,7 @@
 <hr>
 
 <div class="head2">Export:</div>
-<form method="post" action="<@ofbizUrl>EntityExportAll</@ofbizUrl>">
+<form method="post" action="<@ofbizUrl>entityExportAll</@ofbizUrl>">
     <div class="tabletext">Output Directory: <input type="text" class="inputBox" size="60" name="outpath" value="${outpath?if_exists}"></div>
     <div class="tabletext">TX Timeout Seconds (for each entity): <input type="text" size="6" value="${txTimeout?default('7200')}" name="txTimeout"/></div>
     <br/>

@@ -51,6 +51,14 @@
   try { definitionUrl = definitionIsUrl?new URL(definitionLoc):UtilURL.fromFilename(definitionLoc); }
   catch (java.net.MalformedURLException e) { messages.add(e.getMessage()); }
 
+  Iterator definitionNames = null;
+  if (definitionUrl != null) {
+    ModelDataFileReader reader = ModelDataFileReader.getModelDataFileReader(definitionUrl);
+    if (reader != null) {
+        definitionNames = ((Collection)reader.getDataFileNames()).iterator();
+    }
+  }
+  
   DataFile dataFile = null;
   if (dataFileUrl != null && definitionUrl != null && definitionName != null && definitionName.length() > 0) {
     try { dataFile = DataFile.readFile(dataFileUrl, definitionUrl, definitionName); }
@@ -81,9 +89,22 @@
 <hr>
 <%if(security.hasPermission("DATAFILE_MAINT", session)) {%>
   <form method="post" action="<ofbiz:url>/viewdatafile</ofbiz:url>">
-    <div class="tabletext">Data Filename or URL: <input name="DATAFILE_LOCATION" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileLoc)%>"> Is URL?:<INPUT type="checkbox" name="DATAFILE_IS_URL" <%=dataFileIsUrl?"checked":""%>></div>
     <div class="tabletext">Definition Filename or URL: <input name="DEFINITION_LOCATION" class="inputBox" type="text" size="60" value="<%=UtilFormatOut.checkNull(definitionLoc)%>"> Is URL?:<INPUT type="checkbox" name="DEFINITION_IS_URL" <%=definitionIsUrl?"checked":""%>></div>
-    <div class="tabletext">Data File Definition Name: <input name="DEFINITION_NAME" type="text" class="inputBox" size="30" value="<%=UtilFormatOut.checkNull(definitionName)%>"></div>
+    <div class="tabletext">Data File Definition Name: 
+    <% if (definitionNames != null) {
+        %><select name="DEFINITION_NAME" class="selectBox">
+          <option value=""></option>
+        <%
+        while (definitionNames.hasNext()) {
+            String oneDefinitionName = (String)definitionNames.next();
+            boolean isSelected = definitionName != null && definitionName.equals(oneDefinitionName);
+            %><option value="<%=oneDefinitionName%>" <%=(isSelected? "selected": "")%>><%=oneDefinitionName%></option><%
+        }
+        %></select><%
+    } else {%>
+    <input name="DEFINITION_NAME" type="text" class="inputBox" size="30" value="<%=UtilFormatOut.checkNull(definitionName)%>"></div>
+    <% } %>
+    <div class="tabletext">Data Filename or URL: <input name="DATAFILE_LOCATION" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileLoc)%>"> Is URL?:<INPUT type="checkbox" name="DATAFILE_IS_URL" <%=dataFileIsUrl?"checked":""%>></div>
     <div class="tabletext">Save to file: <input name="DATAFILE_SAVE" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(dataFileSave)%>"/></div>
     <div class="tabletext">Save to entity xml file: <input name="ENTITYXML_FILE_SAVE" type="text" class="inputBox" size="60" value="<%=UtilFormatOut.checkNull(entityXmlFileSave)%>"></div>
     <div><input type="submit" value="Run"></div>

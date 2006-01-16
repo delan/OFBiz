@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Locale;
 import java.util.Map;
 import java.io.File;
@@ -32,6 +34,10 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -49,7 +55,11 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntitySaxReader;
+import org.ofbiz.entity.model.ModelReader;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelViewEntity;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -103,16 +113,15 @@ public class WebToolsServices {
         if (filename != null && filename.length() > 0) {
             try {
                 url = isUrl?new URL(filename):UtilURL.fromFilename(filename);
-            } catch(MalformedURLException e) {
-//                errorMessageList.add("ERROR: " + e.getMessage());
+                InputStream is = url.openStream();
+                ins = new InputSource(is);
+            } catch(MalformedURLException mue) {
+                return ServiceUtil.returnError("ERROR: invalid file name (" + filename + "): " + mue.getMessage());
+            } catch(IOException ioe) {
+                return ServiceUtil.returnError("ERROR reading file name (" + filename + "): " + ioe.getMessage());
+            } catch(Exception exc) {
+                return ServiceUtil.returnError("ERROR: reading file name (" + filename + "): " + exc.getMessage());
             }
-            InputStream is = null;
-            try {
-                is = url.openStream();
-            } catch(IOException e) {
-//                errorMessageList.add("ERROR: " + e.getMessage());
-            }
-            ins = new InputSource(is);
         }
 
         // #############################
@@ -132,7 +141,7 @@ public class WebToolsServices {
             try {
                 templateReader = new FileReader(fmfilename);
             } catch(FileNotFoundException e) {
-//                errorMessageList.add("ERROR: " + e.getMessage());
+                return ServiceUtil.returnError("ERROR reading template file (" + fmfilename + "): " + e.getMessage());
             }
 
             StringWriter outWriter = new StringWriter();
@@ -152,7 +161,7 @@ public class WebToolsServices {
                 template.process(fmcontext, outWriter);
                 s = outWriter.toString();
             } catch(Exception ex) {
-//                errorMessageList.add("ERROR: " + ex.getMessage());
+                return ServiceUtil.returnError("ERROR processing template file (" + fmfilename + "): " + ex.getMessage());
             }
         }
 
@@ -176,11 +185,14 @@ public class WebToolsServices {
                     }
                 }
                 Map outputMap = dispatcher.runSync("parseEntityXmlFile", inputMap);
-                Long numberRead = (Long)outputMap.get("rowProcessed");
-
-                messages.add("Got " + numberRead.longValue() + " entities to write to the datasource.");
+                if (ServiceUtil.isError(outputMap)) {
+                    return ServiceUtil.returnError("ERROR: " + ServiceUtil.getErrorMessage(outputMap));
+                } else {
+                    Long numberRead = (Long)outputMap.get("rowProcessed");
+                    messages.add("Got " + numberRead.longValue() + " entities to write to the datasource.");
+                }
             } catch (Exception ex){
-//                errorMessageList.add("ERROR: " + exc.getMessage());
+                return ServiceUtil.returnError("ERROR parsing Entity Xml file: " + ex.getMessage());
             }
         } else {
             messages.add("No filename/URL or complete XML document specified, doing nothing.");
@@ -326,10 +338,104 @@ public class WebToolsServices {
             long numberRead = (url != null? reader.parse(url): reader.parse(xmltext));
             rowProcessed = new Long(numberRead);
         } catch (Exception ex){
-            return ServiceUtil.returnError("Error parsing entity xml file: " + ex.getMessage());
+            return ServiceUtil.returnError("Error parsing entity xml file: " + ex.toString());
         }
         // send the notification
         Map resp = UtilMisc.toMap("rowProcessed", rowProcessed);
+        return resp;
+    }
+
+    public static Map entityExportAll(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+
+        String outpath = (String)context.get("outpath"); // mandatory
+        Integer txTimeout = (Integer)context.get("txTimeout");
+        if (txTimeout == null) {
+            txTimeout = new Integer(7200);
+        }
+
+        List results = new ArrayList();
+
+        if (outpath != null && outpath.length() > 0) {
+            File outdir = new File(outpath);
+            if (!outdir.exists()) {
+                outdir.mkdir();
+            }
+            if (outdir.isDirectory() && outdir.canWrite()) {
+                
+                Iterator passedEntityNames = null;
+                try {
+                    ModelReader reader = delegator.getModelReader();
+                    Collection ec = reader.getEntityNames();
+                    TreeSet entityNames = new TreeSet(ec);
+                    passedEntityNames = entityNames.iterator();
+                } catch(Exception exc) {
+                    return ServiceUtil.returnError("Error retrieving entity names.");
+                }
+                int fileNumber = 1;
+
+                while (passedEntityNames.hasNext()) { 
+                    long numberWritten = 0;
+                    String curEntityName = (String)passedEntityNames.next();
+                    EntityListIterator values = null;
+
+                    try {
+                        ModelEntity me = delegator.getModelEntity(curEntityName);
+                        if (me instanceof ModelViewEntity) {
+                            results.add("["+fileNumber +"] [vvv] " + curEntityName + " skipping view entity");
+                            continue;
+                        }
+
+                        // some databases don't support cursors, or other problems may happen, so if there is an error here log it and move on to get as much as possible
+                        try {
+                            values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), null);
+                        } catch (Exception entityEx) {
+                            results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + entityEx);
+                            continue;
+                        }
+
+                        //Don't bother writing the file if there's nothing
+                        //to put into it
+                        GenericValue value = (GenericValue) values.next();
+                        if (value != null) {
+                            PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, curEntityName +".xml")), "UTF-8")));
+                            writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                            writer.println("<entity-engine-xml>");
+
+                            do {
+                                value.writeXmlText(writer, "");
+                                numberWritten++;
+                            } while ((value = (GenericValue) values.next()) != null);
+                            writer.println("</entity-engine-xml>");
+                            writer.close();
+                            results.add("["+fileNumber +"] [" + numberWritten + "] " + curEntityName + " wrote " + numberWritten + " records");
+                        } else {
+                            results.add("["+fileNumber +"] [---] " + curEntityName + " has no records, not writing file");
+                        }
+                        values.close();
+                    } catch (Exception ex) {
+                        if (values != null) {
+                            try {
+                                values.close();
+                            } catch(Exception exc) {
+                                //Debug.warning();
+                            }
+                        }
+                        results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex);
+                    }
+                    fileNumber++;
+                }
+            } else {
+                results.add("Path not found or no write access.");
+            }
+        } else {
+            results.add("No path specified, doing nothing.");
+        }
+        // send the notification
+        Map resp = UtilMisc.toMap("results", results);
         return resp;
     }
 
