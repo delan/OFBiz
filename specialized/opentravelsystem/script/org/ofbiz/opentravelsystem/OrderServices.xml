@@ -27,10 +27,10 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
 
     <!-- ================================================================ -->
-    <!-- Opentravelsystem Payment Services -->
+    <!-- Opentravelsystem Order Services -->
     <!-- ================================================================ -->
     
-    <simple-method method-name="createPayment" short-description="--Add a payment with the invoice prefix--">
+    <simple-method method-name="createOrderHeader" short-description="--Add a OrderHeader with the invoice prefix--">
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
@@ -42,15 +42,33 @@
             <check-errors/>
             
             <!-- create id using the invoice prefix -->
-            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Payment" env-name="nextPaymentId"/>
-            <set field="parameters.paymentId" value="${partyAcctgPreference.invoiceIdPrefix}${nextPaymentId}"/>
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}OrderHeader" env-name="nextOrderId"/>
+            <set field="parameters.orderId" value="${partyAcctgPreference.invoiceIdPrefix}${nextOrderId}"/>
+            <else><!-- customer enters an order, take prefix of company to pay from the productstore -->
+                <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="getProductStore" ret-field-name="productStore">
+                    <field field-name="request" type="javax.servlet.ServletRequest"/>
+                </call-class-method>
+                <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
+                    <field-map field-name="partyId" env-name="productStore.payToPartyId"/>
+                </entity-one>
+                <!-- create id using the invoice prefix -->
+                <if-not-empty field-name="partyAcctgPreference.invoiceIdPrefix">
+                    <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}OrderHeader" env-name="nextOrderId"/>
+                    <set field="parameters.orderId" value="${partyAcctgPreference.invoiceIdPrefix}${nextOrderId}"/>
+                    <else><!-- if company not known use normal sequencing -->
+                        <sequenced-id-to-env sequence-name="OrderHeader" env-name="parameters.orderId"/>
+                    </else>
+                </if-not-empty>
+            </else>
         </if-not-empty>
-        <!-- call original ofbiz service with preset paymentId -->
-        <set-service-fields service-name="createPaymentOfbiz" map-name="parameters" to-map-name="createPayment"/>
-        <call-service service-name="createPaymentOfbiz" in-map-name="createPayment">
-            <result-to-result result-name="paymentId" service-result-name="paymentId"/>
+        <log level="always" message="!!!!!!!!!! orderid: ${parameters.orderId}"></log>
+        <!-- call original ofbiz service with preset OrderHeaderId -->
+        <set-service-fields service-name="createOrderHeaderOfbiz" map-name="parameters" to-map-name="createOrderHeader"/>
+        <call-service service-name="createOrderHeaderOfbiz" in-map-name="createOrderHeader">
+            <result-to-result result-name="orderId" service-result-name="orderId"/>
         </call-service>
         
     </simple-method>
     
+
 </simple-methods>

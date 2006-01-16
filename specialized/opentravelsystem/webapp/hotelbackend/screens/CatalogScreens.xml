@@ -96,9 +96,12 @@
             <actions>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
-                <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
-                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"/>
+                <set field="productStoreId" from-field="parameters.userLogin.partyId"/>
+                <set field="prodCatalogId" from-field="parameters.userLogin.partyId"/>
                 <!--set field="leftbarScreenName" value="leftbar"/-->
+                <entity-one entity-name="PartyAcctgPreference"  value-name="partyAcctgPreference" use-cache="true">
+                    <field-map field-name="partyId" value="${parameters.userLogin.partyId}"/>
+                </entity-one>
                 <entity-one entity-name="ProdCatalog"  value-name="prodCatalog" use-cache="true">
                     <field-map field-name="prodCatalogId" value="${prodCatalogId}"/>
                 </entity-one>
@@ -109,7 +112,7 @@
                     <order-by field-name="fromDate"/>
                 </entity-condition>
                 <entity-condition entity-name="ProductCategory" list-name="productCategories">
-                    <condition-expr field-name="productCategoryId" operator="like" value="${prefix}%"/>
+                    <condition-expr field-name="productCategoryId" operator="like" value="${partyAcctgPreference.invoiceIdPrefix}%"/>
                     <order-by field-name="description"/>
                 </entity-condition>
                 <entity-condition entity-name="ProdCatalogCategoryType" list-name="prodCatalogCategoryTypes">
@@ -707,22 +710,22 @@
             </widgets>
         </section>
     </screen>
-    <screen name="selectStore">
+    <!--screen name="selectStore">
         <section> 
             <actions>
                 <set field="page.headerItem" value="selectStore"/>
                 <set field="nowTimestamp" value="${UtilDateTime.nowTimestamp()}"/>
-                <entity-condition entity-name="ProductStoreRole" list-name="stores"><!-- filter-by-date="nowTimestamp"-->
+                <entity-condition entity-name="ProductStoreRole" list-name="stores">
                     <condition-list>
                         <condition-expr field-name="partyId"  operator="equals" value="${userLogin.partyId}" />
                         <condition-expr field-name="roleTypeId"  operator="equals" value="ADMIN" />
                     </condition-list>
                 </entity-condition>
-                <entity-condition entity-name="ProductStore" list-name="storesAdmin">
+                <entity-condition entity-name="ProductStore" list-name="storesAdmin"-->
                     <!--condition-list>
                            <condition-expr field-name="productStoreId"  operator="not-equals" value="${userLogin.userLoginId}" />
                        </condition-list-->
-                </entity-condition>
+                <!--entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
@@ -744,7 +747,7 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen-->
     <screen name="ImportProduct">
         <section>            
             <actions>
@@ -761,6 +764,26 @@
                             <label style="head3">Format: &quot;ProductNr&quot;,descr,largeImage,smallImage,price,category,promo-y/n</label>
                         </container>
                         <include-form name="ImportProduct" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductStore">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductStore"/>
+                <set field="headerItem" value="store"/>
+                <set field="tabButtonItem" value="EditProductStore"/>
+                <set field="labelTitleProperty" value="ProductStore"/>
+                
+                <set field="productStoreId" from-field="parameters.userLogin.partyId"/>
+                <entity-one entity-name="ProductStore" value-name="productStore" auto-field-map="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="EditProductStore" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

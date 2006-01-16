@@ -32,8 +32,8 @@
     
     <simple-method method-name="addParty" short-description="--Add a Party--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
-            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${userLogin.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
         <check-errors/>
         

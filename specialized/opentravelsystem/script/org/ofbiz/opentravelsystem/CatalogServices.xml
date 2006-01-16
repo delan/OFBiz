@@ -52,40 +52,44 @@
     </simple-method>
     
     <simple-method method-name="createProduct" short-description="--Add a Product with the invoice prefix--">
-        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
-            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
-        </check-permission>        
-        <check-errors/>
-        
-        <!-- create id using the invoice prefix -->
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
-        <set-service-fields service-name="createProductOfbiz" map-name="parameters" to-map-name="createProduct"/>
-        <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Product" env-name="nextProductId"/>
-        <set field="createProduct.productId" value="${partyAcctgPreference.invoiceIdPrefix}${nextProductId}"/>
+        <if-not-empty field-name="partyAcctgPreference">
+            <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+                <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+                <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            </check-permission>        
+            <check-errors/>
+            
+            <!-- create id using the invoice prefix -->
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Product" env-name="nextProductId"/>
+            <set field="parameters.productId" value="${partyAcctgPreference.invoiceIdPrefix}${nextProductId}"/>
+        </if-not-empty>
         <!-- call original ofbiz service with preset ProductId -->
+        <set-service-fields service-name="createProductOfbiz" map-name="parameters" to-map-name="createProduct"/>
         <call-service service-name="createProductOfbiz" in-map-name="createProduct">
             <result-to-result result-name="productId" service-result-name="productId"/>
         </call-service>
     </simple-method>
     
     <simple-method method-name="createFixedAsset" short-description="--Add a FixedAsset with the invoice prefix--">
-        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
-            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
-        </check-permission>        
-        <check-errors/>
-        
-        <!-- create id using the invoice prefix -->
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
-        <set-service-fields service-name="createFixedAssetOfbiz" map-name="parameters" to-map-name="createFixedAsset"/>
-        <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}FixedAsset" env-name="nextFixedAssetId"/>
-        <set field="createFixedAsset.fixedAssetId" value="${partyAcctgPreference.invoiceIdPrefix}${nextFixedAssetId}"/>
+        <if-not-empty field-name="partyAcctgPreference">
+            <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+                <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+                <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            </check-permission>        
+            <check-errors/>
+            
+            <!-- create id using the invoice prefix -->
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}FixedAsset" env-name="nextFixedAssetId"/>
+            <set field="parameters.fixedAssetId" value="${partyAcctgPreference.invoiceIdPrefix}${nextFixedAssetId}"/>
+        </if-not-empty>
         <!-- call original ofbiz service with preset FixedAssetId -->
+        <set-service-fields service-name="createFixedAssetOfbiz" map-name="parameters" to-map-name="createFixedAsset"/>
         <call-service service-name="createFixedAssetOfbiz" in-map-name="createFixedAsset">
             <result-to-result result-name="fixedAssetId" service-result-name="fixedAssetId"/>
         </call-service>

@@ -83,7 +83,7 @@
         title="Hotel simplest, links in the site should open new window"
         server="default-server"
         location="webapp/HotelSimple"
-        mount-point="/HotelSimple"
+        mount-point="/hotelsimple"
         app-bar-display="false"/>        
 
     <webapp name="Shop"
