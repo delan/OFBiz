@@ -117,5 +117,12 @@
     <entity-group group="org.ofbiz" entity="SurveyResponseAnswer" />
     <entity-group group="org.ofbiz" entity="SurveyTrigger" />
 
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.content.compdoc -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="AssocRevisionItemView" />
+    <entity-group group="org.ofbiz" entity="ContentRevisionItemMaxView" />
+
 </entitygroup>
 

@@ -38,7 +38,7 @@
                 <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
@@ -63,7 +63,7 @@
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="EditContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
@@ -85,7 +85,7 @@
                 <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="ListContentRevision" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
@@ -112,7 +112,7 @@
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="EditContentRevision" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
@@ -135,7 +135,7 @@
                 <set field="contentRevisionSeqId" from-field="parameters.contentRevisionSeqId" to-scope="screen" default-value="${defaultContentRevisionSeqId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="ListContentRevisionItem" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
@@ -164,7 +164,7 @@
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="EditContentRevisionItem" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
@@ -179,18 +179,21 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+
+                <set field="menuName" value="empty"/>
                 <set field="title" value="Find CompDoc"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="currentContentMenuItemName" value=""/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="FindCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                        <link target="EditRootCompDocTemplate" text="Create New Root Composite Document" style="buttontext"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -204,16 +207,17 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="menuName" value="empty"/>
                 <set field="title" value="List CompDoc"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="currentContentMenuItemName" value="" />
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>   
                             <actions>
@@ -227,6 +231,8 @@
                             </actions>                      
                             <widgets>
                                 <include-form name="ListCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                                <link target="FindCompDocTemplate" text="Find" />
+                                <link target="EditCompDocTemplate" text="Create New" />
                             </widgets>
                         </section>   
                     </decorator-section>
@@ -242,11 +248,11 @@
             </condition>
             
             <actions>
-                <set field="headerItem" value="Content"/>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="menuName" value="empty"/>
                 <set field="title" value="Composite Document Template Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="currentContentMenuItemName" value=""/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
                 <set field="contentAssocTypeId" from-field="parameters.caContentAssocTypeId"/>
@@ -257,9 +263,34 @@
                 <entity-one entity-name="ContentAssoc" value-name="contentAssoc"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="EditCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditRootCompDocTemplate">
+        <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="CREATE"/>
+            </condition>
+            
+            <actions>
+                <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="menuName" value="empty"/>
+                <set field="title" value="Composite Document Root Template Edit Page"/>
+                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="currentContentMenuItemName" value=""/>
+                <set field="contentId" from-field="parameters.contentId"/>
+
+                <entity-one entity-name="Content" value-name="content"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="EditRootCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -275,10 +306,19 @@
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Composite Document Instance Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="currentContentMenuItemName" value="AddContent" />
+                <entity-one entity-name="Content" value-name="content"/>
+                <entity-one entity-name="ContentAssoc" value-name="contentAssoc"/>
+                <!-- 
+                <service result-map-name="results" service-name="getRevisionDataResource">
+                    <field-map field-name="contentId" env-name="parameters.rootEntityId"/>
+                    <field-map field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId"/>
+                    <field-map field-name="itemContentId" env-name="contentId"/>
+                </service>
+                -->
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="EditCompDocInstance" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
@@ -292,32 +332,24 @@
                 <if-has-permission permission="CONTENTMGR" action="CREATE"/>
             </condition>
             <actions>
-                <set field="headerItem" value="Content"/>
+                <set field="menuName" value="tree"/>
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Composite Document Template Tree Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="currentContentMenuItemName" value="find" />
 
                 <set  field="rootEntityId" from-field="parameters.contentId" />
-                <set  field="contentId" from-field="parameters.contentId" />
-                <set  field="responseContentId" from-field="parameters.contentId" />
+                <set  field="templateRevisionSeqId" from-field="parameters.templateRevisionSeqId" />
+                <set  field="instanceRevisionSeqId" from-field="parameters.instanceRevisionSeqId" />
                 <set  field="ownerContentId" from-field="parameters.ownerContentId" />
                 <set field="enableEdit" value="false"/>
-                <set field="contentId" value="${contentId}" />
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <label text="&lt;p/&gt;" />
-                        <container style="cdhr">
-                            <label text="Response tree: " style="cdtitle"/>
-                                                                                                          159,6         74%
-                        </container>
                         <include-tree  name="CompDocTemplateTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
-                        <label text="Content Id: ${contentId}"/>
                     </decorator-section>
                 </decorator-screen>
-                <label text="Content Id: ${contentId}"/>
             </widgets>
         </section>
     </screen>
@@ -334,15 +366,17 @@
                     </condition>
                     <widgets>
                         <container>
-                            <label text="${contentName}[${contentId}]" style="responseheader" />
+                            <label text="${contentName}[${contentId}][${maxRevisionSeqId}]" style="responseheader" />
                             <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
                             <link  text="+Bef" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
                             <link  text="+Aft" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
                             <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
                             <link  text="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}" style="tabButton" />
+                            <!-- 
                             <container style="responsetext">
                                 <label text="${description}" style="responsetext" />
                             </container>
+                            -->
                         </container>    
                     </widgets>
         </section>
@@ -355,15 +389,16 @@
             </actions>
             <widgets>
               <container style="responseSelected">
-                      <label text="${contentName}[${contentId}]" style="responseheader" />
-                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
-                            <link  text="+Bef" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
-                            <link  text="+Aft" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
-                            <link  text="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}" style="tabButton" />
-                      <container style="responsetext">
-                        <label text="${description}" style="responsetext" />
-                      </container>
+                  <link text="${contentName}[${contentId}]"  target="EditCompDocContent?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootEntityId=${rootEntityId}" style="responseheader" />
+                  <link text="Edit" target="EditCompDocContent?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootEntityId=${rootEntityId}" style="tabButton" />
+                  <link text="Approval" target="ListApprovalTemplateAndHistory?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootEntityId=${rootEntityId}" style="tabButton" />
+                  <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
+                  <link  text="+Bef" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                  <link  text="+Aft" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
+                  <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" style="tabButton" />
+                  <container style="responsetext">
+                      <label text="${description}" style="responsetext" />
+                  </container>
               </container>    
             </widgets>
         </section>
@@ -374,13 +409,15 @@
         <section>
             <widgets>
                 <container>
-                    <label text="${contentName}[${contentId}]" style="responseheader" />
-                            <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
-                            <link  text="Edit" target="EditCompDocContent?contentId=${contentId}" style="tabButton" />
+                    <link text="${contentName}[${contentId}]"  target="EditCompDocContent?contentId=${contentId}" style="responseheader" />
+                    <link text="Edit" target="EditCompDocContent?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" style="tabButton" />
+                    <link text="Approval" target="ListApprovalTemplateAndHistory?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" style="tabButton" />
+                    <link text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
+                    <!-- 
                     <container style="responsetext">
                         <label text="${description}" style="responsetext" />
                     </container>
+                    -->
                 </container>    
             </widgets>
         </section>
@@ -396,7 +433,7 @@
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Composite Document Instance Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="currentContentMenuItemName" value="AddContent" />
 
                 <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
                 <set  field="rootEntityId" from-field="parameters.caContentIdTo" />
@@ -404,7 +441,7 @@
                 <set  field="sequenceNum" from-field="parameters.caSequenceNum" />
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                 <decorator-section name="body">
                     <include-form name="EditCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
                 </decorator-section>
@@ -424,14 +461,14 @@
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Composite Document Instance Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="currentContentMenuItemName" value="find" />
                 <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
                 <set  field="rootEntityId" from-field="parameters.caContentIdTo" />
                 <set  field="ownerContentId" from-field="parameters.ownerContentId" />
                 <set  field="sequenceNum" from-field="parameters.caSequenceNum" />
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                 <decorator-section name="body">
                     <include-form name="EditCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
                 </decorator-section>
@@ -445,7 +482,7 @@
     <screen name="EditContentRevisionAndItem">
         <section>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="EditContentRevisionAndItem" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>

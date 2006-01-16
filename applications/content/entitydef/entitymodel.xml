@@ -1362,5 +1362,27 @@
         <key-map field-name="surveyApplTypeId"/>
       </relation>
     </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.content.compdoc -->
+  <!-- ========================================================= -->
+    
+    <view-entity entity-name="AssocRevisionItemView"
+                package-name="org.ofbiz.content.compdoc"
+                title="Latest Revision Children">
+      <member-entity entity-alias="CRI" entity-name="ContentRevisionItem"/>
+      <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
+      <alias entity-alias="CA" name="contentIdTo"" group-by="false"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" group-by="false"/>
+      <alias entity-alias="CA" name="thruDate" group-by="false"/>
+      <alias entity-alias="CA" name="fromDate" group-by="false"/>
+      <alias entity-alias="CRI" name="rootRevisionContentId" field="contentId" group-by="true"/>
+      <alias entity-alias="CRI" name="itemContentId" group-by="true"/>
+      <alias entity-alias="CRI" name="contentRevisionSeqId" group-by="false"/>
+      <alias entity-alias="CRI" name="maxRevisionSeqId" field="contentRevisionSeqId" function="max"/>
+      <view-link entity-alias="CA" rel-entity-alias="CRI">
+        <key-map field-name="contentId" rel-field-name="itemContentId"/>
+      </view-link>
+    </view-entity>
 </entitymodel>
 

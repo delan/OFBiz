@@ -10,28 +10,46 @@
             <include-screen name="cDTreeLine"
                 location="component://content/widget/compdoc/CompDocScreens.xml" />
             <sub-node node-name="node-body">
-                <entity-condition entity-name="ContentAssocViewFrom" use-cache="true" >
+                <entity-condition entity-name="AssocRevisionItemView" use-cache="false" >
                    <condition-list combine="and">
-                        <condition-expr field-name="caContentIdTo" operator="equals" env-name="contentId" />
-                        <condition-expr field-name="caContentAssocTypeId" operator="equals" value="COMPDOC_PART" />
-                        <condition-expr field-name="caThruDate" operator="equals" value=""/>
+                        <condition-expr field-name="contentIdTo" operator="equals" env-name="rootEntityId" />
+                        <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootEntityId" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" value="templateRevisionSeqId" />
+                        <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
+                        <condition-expr field-name="thruDate" operator="equals" value=""/>
                    </condition-list> 
-                   <order-by field-name="caSequenceNum"/>
+                   <select-field field-name="rootRevisionContentId"/>
+                   <select-field field-name="itemContentId"/>
+                   <select-field field-name="maxRevisionSeqId"/>
                 </entity-condition>
             </sub-node>
         </node>
-        <node name="node-body">
+        <node name="node-body" join-field-name="contentId">
+            <entity-one entity-name="Content"  use-cache="false">
+                <field-map field-name="contentId" env-name="itemContentId"/>
+            </entity-one>
             <include-screen name="responseTreeLine" 
                 location="component://content/widget/compdoc/CompDocScreens.xml" />
             <sub-node node-name="node-body">
-                <entity-condition entity-name="ContentAssocViewFrom" use-cache="true" >
+                <entity-condition entity-name="AssocRevisionItemView" use-cache="false" >
                    <condition-list combine="and">
-                        <condition-expr field-name="caContentIdTo" operator="equals" env-name="contentId" />
-                        <condition-expr field-name="caContentAssocTypeId" operator="equals" value="COMPDOC_PART" />
-                        <condition-expr field-name="caThruDate" operator="equals" value=""/>
+                        <condition-expr field-name="contentIdTo" operator="equals" env-name="contentId" />
+                        <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootEntityId" />
+                        <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="templateRevisionSeqId" />
+                        <condition-expr field-name="thruDate" operator="equals" value=""/>
                    </condition-list> 
-                   <order-by field-name="caSequenceNum"/>
+                   
+                   <select-field field-name="rootRevisionContentId"/>
+                   <select-field field-name="itemContentId"/>
+                   <select-field field-name="maxRevisionSeqId"/>
                 </entity-condition>
+                <!-- 
+                <service service-name="getMaxContentRevisionItems" result-map-name="result" result-map-list-name="contentRevisionItemList">
+                    <field-map field-name="contentIdTo" env-name="contentId"/>
+                    <field-map field-name="rootContentId" env-name="rootEntityId"/>
+                </service>
+                -->
             </sub-node>
         </node>
         <node name="node-test">
