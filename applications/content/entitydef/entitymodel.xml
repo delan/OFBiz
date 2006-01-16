@@ -132,7 +132,7 @@
     </entity>
     <entity entity-name="ContentApproval"
         package-name="org.ofbiz.content.content"
-        title="Content Association Entity">
+        title="Content Approval Entity">
         <field name="contentApprovalId" type="id-ne"></field>
         <field name="contentId" type="id-ne"></field>
         <field name="contentRevisionSeqId" type="id-ne"></field>
@@ -1372,7 +1372,7 @@
                 title="Latest Revision Children">
       <member-entity entity-alias="CRI" entity-name="ContentRevisionItem"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
-      <alias entity-alias="CA" name="contentIdTo"" group-by="false"/>
+      <alias entity-alias="CA" name="contentIdTo" group-by="false"/>
       <alias entity-alias="CA" name="contentAssocTypeId" group-by="false"/>
       <alias entity-alias="CA" name="thruDate" group-by="false"/>
       <alias entity-alias="CA" name="fromDate" group-by="false"/>
@@ -1383,6 +1383,20 @@
       <view-link entity-alias="CA" rel-entity-alias="CRI">
         <key-map field-name="contentId" rel-field-name="itemContentId"/>
       </view-link>
+    </view-entity>
+    <view-entity entity-name="ContentApprovalMaxView"
+        package-name="org.ofbiz.content.compdoc"
+        title="Content Association Entity">
+        <member-entity entity-alias="CA" entity-name="ContentApproval"/>
+        <alias  entity-alias="CA" name="contentApprovalId" group-by="false"></alias>
+        <alias  entity-alias="CA" name="contentId" group-by="true"></alias>
+        <alias  entity-alias="CA" name="contentRevisionSeqId" group-by="true"></alias>
+        <alias  entity-alias="CA" name="partyId" group-by="false"></alias>
+        <alias  entity-alias="CA" name="roleTypeId" group-by="false"></alias>
+        <alias  entity-alias="CA" name="approvalStatusId" group-by="false"></alias>
+        <alias  entity-alias="CA" name="approvalDate" group-by="false"></alias>
+        <alias  entity-alias="CA" name="sequenceNum" group-by="false"></alias>
+        <alias  entity-alias="CA" name="comments" group-by="false"></alias>
     </view-entity>
 </entitymodel>
 
