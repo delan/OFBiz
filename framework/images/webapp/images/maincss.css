@@ -253,6 +253,7 @@ padding-right: 5px;
 padding-left: 5px;
 padding-top: 1px;
 padding-bottom: 1px;
+white-space: nowrap;
 border: solid #000099 1px;
 }
 
@@ -273,6 +274,7 @@ padding-right: 5px;
 padding-left: 5px;
 padding-top: 1px;
 padding-bottom: 1px;
+white-space: nowrap;
 border: solid #000099 1px;
 }
 
