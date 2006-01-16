@@ -366,12 +366,11 @@
                     </condition>
                     <widgets>
                         <container>
-                            <label text="${contentName}[${contentId}][${maxRevisionSeqId}]" style="responseheader" />
+                            <link text="${contentName}[${contentId}][${maxRevisionSeqId}]" style="responseheader" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}&amp;maxRevisionSeqId=${maxRevisionSeqId}" />
+                            <link  text="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}&amp;maxRevisionSeqId=${maxRevisionSeqId}" style="tabButton" />
                             <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999" style="tabButton" target-window="_top" />
                             <link  text="+Bef" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
                             <link  text="+Aft" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}" style="tabButton" target-window="_top" />
-                            <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}" style="tabButton" />
-                            <link  text="Edit" target="EditCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}" style="tabButton" />
                             <!-- 
                             <container style="responsetext">
                                 <label text="${description}" style="responsetext" />
