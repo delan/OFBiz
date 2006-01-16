@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
@@ -375,7 +376,7 @@ public class FindServices {
             // try finding in inputFields Map
             filterByDate = (String) inputFields.get("filterByDate");
         }
-        
+
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         Map prepareResult = null;
@@ -392,6 +393,10 @@ public class FindServices {
             executeResult = dispatcher.runSync("executeFind", UtilMisc.toMap("entityName", entityName, "orderByList", orderByList, "entityConditionList", exprList, "noConditionFind", noConditionFind));
         } catch (GenericServiceException gse) {
             return ServiceUtil.returnError("Error finding iterator: " + gse.getMessage());
+        }
+
+        if (executeResult.get("listIt") == null) {
+            Debug.logInfo("No list iterator found for query string + [" + prepareResult.get("queryString") + "]", module);
         }
         
         Map results = ServiceUtil.returnSuccess();
@@ -437,9 +442,15 @@ public class FindServices {
         List keys = modelEntity.getAllFieldNames();
         ArrayList tmpList = createCondition(keys, normalizedFields, queryStringMap, origValueMap);
 
-        if (!UtilValidate.isEmpty(filterByDate) && "Y".equals(filterByDate)) {
-            EntityCondition filterByDateCondition = EntityUtil.getFilterByDateExpr();
-            tmpList.add(filterByDateCondition);
+        /* the filter by date condition should only be added when there are other conditions or when
+         * the user has specified a noConditionFind.  Otherwise, specifying filterByDate will become 
+         * its own condition.
+         */
+        if ((tmpList.size() > 0) || ((noConditionFind != null) && (noConditionFind.equals("Y")))) {
+            if (!UtilValidate.isEmpty(filterByDate) && "Y".equals(filterByDate)) {
+                EntityCondition filterByDateCondition = EntityUtil.getFilterByDateExpr();
+                tmpList.add(filterByDateCondition);
+            }
         }
 
         EntityConditionList exprList = null;
