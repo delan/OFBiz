@@ -47,7 +47,10 @@
                 
                 <container style="centerarea">
                     <!-- render appheader -->
+                    <!-- 
                     <platform-specific><html><html-template location="component://content/webapp/content/includes/header.ftl"/></html></platform-specific>
+                    -->
+                    <include-menu name="ContentAppBar" location="component://content/widget/ContentMenus.xml"/>
                     
                     <container style="contentarea">
                         <!-- by default will render left-bar only if leftbarScreen value not empty -->
@@ -94,6 +97,24 @@
                 <decorator-screen name="mainContentDecorator">
                     <decorator-section name="body">
                         <include-menu name="content" location="component://content/webapp/content/content/ContentMenus.xml"/>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="commonCompDocDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="CompDoc"/>
+                <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" />
+            </actions>
+            <widgets>
+                <decorator-screen name="mainContentDecorator">
+                    <decorator-section name="body">
+                        <label text="${title}" style="head1"/>
+                        <include-menu name="${menuName}" location="component://content/widget/compdoc/CompDocMenus.xml"/>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
