@@ -223,6 +223,12 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             writer.write(name);
             writer.write("\"");
         }
+        String title = link.getTitle(context);
+        if (UtilValidate.isNotEmpty(title)) {
+            writer.write(" title=\"");
+            writer.write(title);
+            writer.write("\"");
+        }        
         String targetWindow = link.getTargetWindow(context);
         if (UtilValidate.isNotEmpty(targetWindow)) {
             writer.write(" target=\"");

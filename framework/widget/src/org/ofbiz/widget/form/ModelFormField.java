@@ -98,6 +98,8 @@ public class ModelFormField {
     protected String requiredFieldStyle;
     protected Integer position = null;
     protected String redWhen;
+    protected String event;
+    protected String action;
     protected FlexibleStringExpander useWhen;
 
     protected FieldInfo fieldInfo = null;
@@ -133,6 +135,8 @@ public class ModelFormField {
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
         this.requiredFieldStyle = fieldElement.getAttribute("required-field-style");
         this.redWhen = fieldElement.getAttribute("red-when");
+        this.event = fieldElement.getAttribute("event");
+        this.action = fieldElement.getAttribute("action");
         this.setUseWhen(fieldElement.getAttribute("use-when"));
         this.idName = fieldElement.getAttribute("id-name");
         String sepColumns = fieldElement.getAttribute("separate-column");
@@ -250,6 +254,10 @@ public class ModelFormField {
             this.position = overrideFormField.position;
         if (UtilValidate.isNotEmpty(overrideFormField.redWhen))
             this.redWhen = overrideFormField.redWhen;
+        if (UtilValidate.isNotEmpty(overrideFormField.event))
+            this.event = overrideFormField.event;
+        if (UtilValidate.isNotEmpty(overrideFormField.action))
+            this.action = overrideFormField.action;
         if (overrideFormField.useWhen != null && !overrideFormField.useWhen.isEmpty())
             this.useWhen = overrideFormField.useWhen;
         if (overrideFormField.fieldInfo != null) {
@@ -759,7 +767,22 @@ public class ModelFormField {
         return redWhen;
     }
 
+
     /**
+     * @return
+     */
+    public String getEvent() {
+        return event;
+    }
+
+    /**
+     * @return
+     */
+    public String getAction() {
+        return action;
+    }
+
+/**
      * the widget/interaction part will be red if the date value is
      *  before-now (for ex. thruDate), after-now (for ex. fromDate), or by-name (if the
      *  field's name or entry-name or fromDate or thruDate the corresponding
@@ -1129,6 +1152,21 @@ public class ModelFormField {
      */
     public void setRedWhen(String string) {
         redWhen = string;
+    }
+
+
+    /**
+     * @param string
+     */
+    public void setEvent(String string) {
+        event = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setAction(String string) {
+        action = string;
     }
 
     /**
@@ -2670,13 +2708,13 @@ public class ModelFormField {
     }
 
     public static class LookupField extends TextField {
-        protected String formName;
+        protected FlexibleStringExpander formName;
         protected String descriptionFieldName;
         protected String targetParameter;
         
         public LookupField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
-            this.formName = element.getAttribute("target-form-name");
+            this.formName = new FlexibleStringExpander(element.getAttribute("target-form-name"));
             this.descriptionFieldName = element.getAttribute("description-field-name");
             this.targetParameter = element.getAttribute("target-parameter");
         }
@@ -2689,8 +2727,8 @@ public class ModelFormField {
             formStringRenderer.renderLookupField(buffer, context, this);
         }
 
-        public String getFormName() {
-            return this.formName;
+        public String getFormName(Map context) {
+            return this.formName.expandString(context);
         }
 
         public List getTargetParameterList() {
@@ -2705,7 +2743,7 @@ public class ModelFormField {
         }
 
         public void setFormName(String str) {
-            this.formName = str;
+            this.formName = new FlexibleStringExpander(str);
         }
         
         public String getDescriptionFieldName() {

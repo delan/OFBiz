@@ -334,6 +334,10 @@ public class ScreenRenderer {
         context.push();
     }
 
+    public Map getContext() {
+    	return context;
+    }
+    
     public void populateContextForService(DispatchContext dctx, Map serviceContext) {
         this.populateBasicContext(serviceContext, dctx.getDelegator(), dctx.getDispatcher(), dctx.getSecurity(), 
                 (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));

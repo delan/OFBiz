@@ -42,6 +42,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.form.FormFactory;
@@ -56,6 +57,9 @@ import org.ofbiz.widget.menu.ModelMenu;
 import org.ofbiz.widget.tree.ModelTree;
 import org.ofbiz.widget.tree.TreeFactory;
 import org.ofbiz.widget.tree.TreeStringRenderer;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -814,6 +818,10 @@ public abstract class ModelScreenWidget implements Serializable {
         protected FlexibleStringExpander editContainerStyle;
         protected FlexibleStringExpander enableEditName;
         protected boolean xmlEscape = false;
+        protected String dataResourceId;
+        protected String width;
+        protected String height;
+        protected String border;
         
         public Content(ModelScreen modelScreen, Element subContentElement) {
             super(modelScreen, subContentElement);
@@ -824,6 +832,11 @@ public abstract class ModelScreenWidget implements Serializable {
             this.editContainerStyle = new FlexibleStringExpander(subContentElement.getAttribute("edit-container-style"));
             this.enableEditName = new FlexibleStringExpander(subContentElement.getAttribute("enable-edit-name"));
             this.xmlEscape = "true".equals(subContentElement.getAttribute("xml-escape"));
+            this.width = subContentElement.getAttribute("width");
+            if (UtilValidate.isEmpty(this.width)) this.width="60%";
+            this.height = subContentElement.getAttribute("height");
+            if (UtilValidate.isEmpty(this.height)) this.width="400px";
+            this.border = subContentElement.getAttribute("border");
             return;
         }
 
@@ -839,17 +852,43 @@ public abstract class ModelScreenWidget implements Serializable {
                 }
                 
                 // This is an important step to make sure that the current contentId is in the context
-                // as temples that contain "subcontent" elements will expect to find the master
+                // as templates that contain "subcontent" elements will expect to find the master
                 // contentId in the context as "contentId".
                 ((MapStack) context).push();
                 context.put("contentId", expandedContentId);
                 
-                screenStringRenderer.renderContentBegin(writer, context, this);
-                screenStringRenderer.renderContentBody(writer, context, this);
-                screenStringRenderer.renderContentEnd(writer, context, this);
+                GenericDelegator delegator = (GenericDelegator) context.get("delegator");
+                GenericValue content = null;
+                if (UtilValidate.isNotEmpty(expandedContentId)) {
+                	content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", expandedContentId));
+                }
+                
+                GenericValue dataResource = null;
+                this.dataResourceId = content.getString("dataResourceId");
+                if (UtilValidate.isNotEmpty(dataResourceId)) {
+                	dataResource = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", expandedContentId));
+                }
+                
+                String mimeTypeId = null;
+                if (dataResource != null) {
+                	mimeTypeId = dataResource.getString("mimeTypeId");
+                }
+                
+                if (UtilValidate.isNotEmpty(mimeTypeId) 
+                		&& ((mimeTypeId.indexOf("application") >= 0) || (mimeTypeId.indexOf("image")) >= 0) ) {
+                	screenStringRenderer.renderContentFrame(writer, context, this);
+                } else {
+                	screenStringRenderer.renderContentBegin(writer, context, this);
+                	screenStringRenderer.renderContentBody(writer, context, this);
+                	screenStringRenderer.renderContentEnd(writer, context, this);
+                }
                 ((MapStack) context).pop();
             } catch (IOException e) {
                 String errMsg = "Error rendering content with contentId [" + getContentId(context) + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            } catch (GenericEntityException e) {
+                String errMsg = "Error obtaining content with contentId [" + getContentId(context) + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new RuntimeException(errMsg);
             }
@@ -879,6 +918,22 @@ public abstract class ModelScreenWidget implements Serializable {
         public String rawString() {
             // may want to expand this a bit more
             return "<content content-id=\"" + this.contentId.getOriginal() + "\" xml-escape=\"" + this.xmlEscape + "\"/>";
+        }
+        
+        public String getDataResourceId() {
+            return this.dataResourceId;
+        }
+        
+        public String getWidth() {
+            return this.width;
+        }
+        
+        public String getHeight() {
+            return this.height;
+        }
+        
+        public String getBorder() {
+            return this.border;
         }
     }
 
