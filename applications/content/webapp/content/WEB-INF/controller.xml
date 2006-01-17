@@ -954,6 +954,14 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditCompDocTemplate"/>
     </request-map>
+    <request-map uri="AddRootCompDocTemplate">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditRootCompDocTemplate"/>
+    </request-map>
+    <request-map uri="EditRootCompDocTemplate">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditRootCompDocTemplate"/>
+    </request-map>
     <request-map uri="EditCompDocInstance">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditCompDocInstance"/>
@@ -977,6 +985,18 @@
        <event invoke="persistContentAndAssoc" path="" type="service"/>
        <response name="success" type="view" value="EditCompDocTemplate"/>
        <response name="error" type="view" value="EditCompDocTemplate"/>
+   </request-map>
+    <request-map uri="createRootCompDocTemplate">
+        <security auth="true" https="true"/>
+        <event invoke="persistRootCompDoc"  path="org.ofbiz.content.compdoc.CompDocEvents" type="java"/>
+        <response name="success" type="view" value="EditRootCompDocTemplate"/>
+        <response name="error" type="view" value="EditRootCompDocTemplate"/>
+    </request-map>
+   <request-map uri="updateRootCompDocTemplate">
+       <security auth="true" https="true"/>
+        <event invoke="persistRootCompDoc"  path="org.ofbiz.content.compdoc.CompDocEvents" type="java"/>
+       <response name="success" type="view" value="EditRootCompDocTemplate"/>
+       <response name="error" type="view" value="EditRootCompDocTemplate"/>
    </request-map>
 
 
@@ -1600,10 +1620,10 @@
     <view-map name="FindCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#FindCompDocTemplate" type="screen"/>
     <view-map name="ListCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#ListCompDocTemplate" type="screen"/>
     <view-map name="EditCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocTemplate" type="screen"/>
+    <view-map name="EditRootCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocTemplate" type="screen"/>
     <view-map name="EditCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocInstance" type="screen"/>
     <view-map name="CompDocTemplateTree" page="component://content/widget/compdoc/CompDocScreens.xml#CompDocTemplateTree" type="screen"/>
     <view-map name="EditCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocContent" type="screen"/>
-
 
     <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
     <!-- end of view mappings -->
