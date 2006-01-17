@@ -117,15 +117,19 @@ public class CheckOutEvents {
         if ("error".equals(CheckOutEvents.cartNotEmpty(request, response)) == true) {
             return "error";
         }
+        
+        HttpSession session = request.getSession();
 
         //Locale locale = UtilHttp.getLocale(request);
         String curPage = request.getParameter("checkoutpage");
         Debug.logInfo("CheckoutPage: " + curPage, module);
 
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+        GenericValue userLogin = cart.getUserLogin();
+        if (userLogin == null) userLogin = (GenericValue) session.getAttribute("userLogin");
 
         if ("shippingaddress".equals(curPage) == true) {
             // Set the shipping address options
@@ -139,7 +143,7 @@ public class CheckOutEvents {
             if (UtilValidate.isNotEmpty(taxAuthPartyGeoIds)) {
                 try {
                     Map createCustomerTaxAuthInfoResult = dispatcher.runSync("createCustomerTaxAuthInfo", 
-                            UtilMisc.toMap("partyId", cart.getPartyId(), "taxAuthPartyGeoIds", taxAuthPartyGeoIds, "partyTaxId", partyTaxId, "isExempt", isExempt));
+                            UtilMisc.toMap("partyId", cart.getPartyId(), "taxAuthPartyGeoIds", taxAuthPartyGeoIds, "partyTaxId", partyTaxId, "isExempt", isExempt, "userLogin", userLogin));
                     ServiceUtil.getMessages(request, createCustomerTaxAuthInfoResult, null);
                     if (ServiceUtil.isError(createCustomerTaxAuthInfoResult)) {
                         return "error";

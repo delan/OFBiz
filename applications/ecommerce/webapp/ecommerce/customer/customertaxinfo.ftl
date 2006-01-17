@@ -24,7 +24,7 @@
 -->
 <#if partyTaxAuthInfoAndDetailList?exists>
     <#list partyTaxAuthInfoAndDetailList as partyTaxAuthInfoAndDetail>
-        <div>
+        <div class="tabletext">
             <a href="<@ofbizUrl>deleteCustomerTaxAuthInfo?partyId=${partyId}&amp;taxAuthPartyId=${partyTaxAuthInfoAndDetail.taxAuthPartyId}&amp;taxAuthGeoId=${partyTaxAuthInfoAndDetail.taxAuthGeoId}&amp;fromDate=${partyTaxAuthInfoAndDetail.fromDate}</@ofbizUrl>" class="buttontext">X</a>
             [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName}): Tax ID [${partyTaxAuthInfoAndDetail.partyTaxId?default("N/A")}], Is Exempt? [${partyTaxAuthInfoAndDetail.isExempt?default("N")}]
         </div>
@@ -32,6 +32,7 @@
     <div>
         <span class="tableheadtext">Add Tax Info:</span>
         <select name="taxAuthPartyGeoIds" class="selectBox">
+          <option></option>
           <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>
             <option value="${taxAuthorityAndDetail.taxAuthPartyId}::${taxAuthorityAndDetail.taxAuthGeoId}">[${taxAuthorityAndDetail.geoCode}] ${taxAuthorityAndDetail.geoName} (${taxAuthorityAndDetail.groupName?if_exists})</option>
           </#list>
