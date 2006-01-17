@@ -301,7 +301,9 @@ public class UtilDateTime {
     
     public static java.util.Calendar toCalendar(java.sql.Timestamp stamp) {
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(stamp.getTime());
+        if (stamp != null) {
+            cal.setTimeInMillis(stamp.getTime());
+        }
         return cal;
     }
 
