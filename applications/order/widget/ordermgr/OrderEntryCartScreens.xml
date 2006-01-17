@@ -147,4 +147,19 @@
             </widgets>
         </section>
     </screen>
+    <screen name="LookupBulkAddProducts">
+     <section>
+            <actions>
+                <set field="title" value="Bulk Add Product"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/cart/LookupBulkAddProducts.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="LookupBulkAddProducts" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
