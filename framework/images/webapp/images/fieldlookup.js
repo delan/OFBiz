@@ -73,7 +73,11 @@ function lookup_popup2 (view_name) {
             argString += "&parm" + (i-2) + "=" + this.args[i];
         }
     }
-	var obj_lookupwindow = window.open(view_name + '?id=' + this.id + argString,'FieldLookup', 'width=750,height=550,scrollbars=yes,status=no,resizable=yes,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+    var sep = "?";
+    if (view_name.indexOf("?") >= 0) {
+        sep = "&";
+    }
+	var obj_lookupwindow = window.open(view_name + sep + 'id=' + this.id + argString,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,resizable=yes,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }
