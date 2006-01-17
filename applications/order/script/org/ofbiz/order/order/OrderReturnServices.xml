@@ -238,10 +238,21 @@
             <check-errors/>
 
             <else>
-                <if-compare field-name="returnItemTypeId" map-name="parameters" operator="not-equals" type="String" value="RETURN_MAN_ADJ">
-                    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderIllegalReturnItemTypePassed"/></add-error>
+                <!-- if returnable quantity is zero, then this operation is only allowed for adjustment and shipping -->
+                <if>
+                    <condition>
+                    	<and>
+                           <if-compare field-name="returnItemTypeId" map-name="parameters" operator="not-equals" type="String" value="RETURN_MAN_ADJ"/>                    	
+                           <if-compare field-name="returnItemTypeId" map-name="parameters" operator="not-equals" type="String" value="RITM_SHIPPING_CHRG"/>                    	                           
+                        </and>
+                    </condition>
+                    <then>
+                        <log level="error" message="Illegal returnItemType for ${parameters}"/>
+                        <add-error><fail-property resource="OrderErrorUiLabels" property="OrderIllegalReturnItemTypePassed"/></add-error>
                     <check-errors/>
-                </if-compare>
+                        
+                    </then>
+                </if>
             </else>
         </if-compare>
 
@@ -473,7 +484,7 @@
         <!-- create the return items -->
         <calculate field-name="returnTotal" type="Double"><number value="0.0"/></calculate>
         <iterate entry-name="orderItem" list-name="orderItems">
-            <set value="ITEM" field="newItemCtx.returnItemType"/>
+<!--            <set value="ITEM" field="newItemCtx.returnItemType"/> -->
             <field-to-field field-name="returnId" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="newItemCtx"/>
@@ -498,6 +509,19 @@
                 </calcop>
             </calculate>
 
+            <!-- get the matching return item type from the order item type -->
+            <!-- TODO: ask David/Andy why the returnItemMapKeys does not have orderItemtypeIds? should we actually be looking through productTypeIds
+                to find returnItemTypeIds? -->
+            <set from-field="orderItem.orderItemTypeId" field="orderItemTypeId"/>
+            <entity-one entity-name="ReturnItemTypeMap" value-name="returnItemTypeMapping">
+            	<field-map env-name="orderItemTypeId" field-name="returnItemMapKey"/>
+            </entity-one>
+            <if-empty field-name="returnItemTypeId" map-name="returnItemTypeMapping" >
+            	<log level="warning" message="No matching return item type map found for order item: [${orderItem}]"/>
+            </if-empty>
+            
+            <set from-field="returnItemTypeMapping.returnItemTypeId" field="newItemCtx.returnItemTypeId"/>
+
             <!-- create the return item -->
             <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
         </iterate>
@@ -514,7 +538,7 @@
             <log level="always" message="shipping amount is greater than 0"/>
 
             <string-to-field string="Shipping Adjustment" field-name="description" map-name="shipItemCtx"/>
-            <string-to-field string="ADJUSTMENT" field-name="returnItemType" map-name="shipItemCtx"/>
+            <string-to-field string="RITM_SHIPPING_CHRG" field-name="returnItemTypeId" map-name="shipItemCtx"/>
 
             <field-to-field field-name="returnId" to-map-name="shipItemCtx"/>
             <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="shipItemCtx"/>
@@ -556,7 +580,7 @@
             <log level="always" message="diff amount is not 0"/>
 
             <string-to-field string="Balance Adjustment" field-name="description" map-name="balanceItemCtx"/>
-            <string-to-field string="ADJUSTMENT" field-name="returnItemType" map-name="balanceItemCtx"/>
+            <string-to-field string="RETURN_MAN_ADJ" field-name="returnItemTypeId" map-name="balanceItemCtx"/>
 
             <field-to-field field-name="returnId" to-map-name="balanceItemCtx"/>
             <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="balanceItemCtx"/>
