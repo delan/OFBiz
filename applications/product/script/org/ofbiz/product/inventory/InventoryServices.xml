@@ -90,8 +90,8 @@
         <entity-one entity-name="InventoryItem" value-name="inventoryItem"/>
         <entity-one entity-name="InventoryItemDetailSummary" value-name="inventoryItemDetailSummary"/>
 
-        <set from-field="inventoryItemDetailSummary.availableToPromiseTotal" field="inventoryItem.availableToPromiseTotal"/>
-        <set from-field="inventoryItemDetailSummary.quantityOnHandTotal" field="inventoryItem.quantityOnHandTotal"/>
+        <set field="inventoryItem.availableToPromiseTotal" from-field="inventoryItemDetailSummary.availableToPromiseTotal"/>
+        <set field="inventoryItem.quantityOnHandTotal" from-field="inventoryItemDetailSummary.quantityOnHandTotal"/>
         <store-value value-name="inventoryItem"/>
     </simple-method>
     <simple-method method-name="updateOldInventoryToDetailAll" short-description="Update Old Inventory To Detail All">

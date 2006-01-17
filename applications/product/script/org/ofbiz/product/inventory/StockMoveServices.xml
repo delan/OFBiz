@@ -40,10 +40,11 @@
         <check-errors/>
 
         <!-- First find all OrderItemShipGrpInvRes that are in a FLT_BULK location in the current Facility -->
-        <string-to-field string="FLT_BULK" field-name="locationTypeEnumId" map-name="findOiirailMap"/>
-        <string-to-field string="ITEM_APPROVED" field-name="orderItemStatusId" map-name="findOiirailMap"/>
-        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findOiirailMap"/>
-        <find-by-and entity-name="OrderItemShipGrpInvResAndItemLocation" map-name="findOiirailMap" list-name="orderItemShipGrpInvResAndItemLocationList"/>
+        <entity-and entity-name="OrderItemShipGrpInvResAndItemLocation" list-name="orderItemShipGrpInvResAndItemLocationList">
+            <field-map field-name="locationTypeEnumId" value="FLT_BULK"/>
+            <field-map field-name="orderItemStatusId" value="ITEM_APPROVED"/>
+            <field-map field-name="facilityId" env-name="parameters.facilityId"/>
+        </entity-and>
 
         <!--
             Consolidate into a List of infos return as moveByOisgirInfoList where each info Map contains:
@@ -183,8 +184,8 @@
         </check-permission>
         <check-errors/>
 
-        <field-to-env field-name="stockMoveHandled" map-name="parameters"/>
-        <string-to-field string="" field-name="productId" map-name="productSave"/>
+        <set field="stockMoveHandled" from-field="parameters.stockMoveHandled"/>
+        <set field="productSave.productId" value=""/>
 
         <!--
             The will involve finding all stock moves for ProductFacilityLocation based pre-emptive moves.
@@ -195,10 +196,12 @@
              - totalQuantity
         -->
         <!-- start by finding all Xxx where locationTypeEnumId=FLT_PICKLOC and total of InventoryItems in the loc are less than minimumStock (ProductFacilityLocation, FacilityLocation, InventoryItem) -->
-        <string-to-field string="FLT_PICKLOC" field-name="locationTypeEnumId" map-name="productFacilityLocationQuantityTestMap"/>
-        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="productFacilityLocationQuantityTestMap"/>
-        <string-to-list string="productId" list-name="productFacilityLocationQuantityTestOrderList"/>
-        <find-by-and entity-name="ProductFacilityLocationQuantityTest" map-name="productFacilityLocationQuantityTestMap" list-name="productFacilityLocationQuantityTestList" order-by-list-name="productFacilityLocationQuantityTestOrderList"/>
+        <entity-and entity-name="ProductFacilityLocationQuantityTest" list-name="productFacilityLocationQuantityTestList">
+            <field-map field-name="locationTypeEnumId" value="FLT_PICKLOC"/>
+            <field-map field-name="facilityId" env-name="parameters.facilityId"/>
+            <order-by field-name="productId"/>
+        </entity-and>
+        
         <iterate entry-name="productFacilityLocationQuantityTest" list-name="productFacilityLocationQuantityTestList">
             <!-- TODO: this comparison could be done by the database and be more efficient, but since we don't have field to field comparisons in the entity engine or EntityCondition operations in simple-methods, some work needs to be done before that can happen -->
             <if>
@@ -206,7 +209,17 @@
                     <and>
                         <not><if-empty field-name="productFacilityLocationQuantityTest.moveQuantity"/></not>
                         <if-compare field-name="productFacilityLocationQuantityTest.moveQuantity" operator="greater" value="0" type="Double"/>
-                        <if-compare-field field-name="productFacilityLocationQuantityTest.availableToPromiseTotal" operator="less" to-field-name="productFacilityLocationQuantityTest.minimumStock" type="Double"/>
+                        <or>
+                            <and>
+                                <if-empty field-name="productFacilityLocationQuantityTest.availableToPromiseTotal"/>
+                                <not><if-empty field-name="productFacilityLocationQuantityTest.minimumStock"/></not>
+                                <if-compare field-name="productFacilityLocationQuantityTest.minimumStock" operator="greater" value="0" type="Double"></if-compare>
+                            </and>
+                            <and>
+                                <not><if-empty field-name="productFacilityLocationQuantityTest.availableToPromiseTotal"/></not>
+                                <if-compare-field field-name="productFacilityLocationQuantityTest.availableToPromiseTotal" operator="less" to-field-name="productFacilityLocationQuantityTest.minimumStock" type="Double"/>
+                            </and>
+                        </or>
                     </and>
                 </condition>
                 <then>
@@ -225,17 +238,18 @@
                             <get-related-one value-name="productFacilityLocationQuantityTest" relation-name="FacilityLocation" to-value-name="targetFacilityLocationSave"/>
 
                             <!-- create a moveInfo for each from location with a corresponding quantity -->
-                            <field-to-field field-name="productId" map-name="productFacilityLocationQuantityTest" to-map-name="findInventoryItemAndLocationMap"/>
-                            <field-to-field field-name="facilityId" map-name="productFacilityLocationQuantityTest" to-map-name="findInventoryItemAndLocationMap"/>
-                            <string-to-field string="FLT_BULK" field-name="locationTypeEnumId" map-name="findInventoryItemAndLocationMap"/>
-                            <find-by-and entity-name="InventoryItemAndLocation" map-name="findInventoryItemAndLocationMap" list-name="InventoryItemAndLocationList"/>
+                            <entity-and entity-name="InventoryItemAndLocation" list-name="inventoryItemAndLocationList">
+                                <field-map field-name="productId" env-name="productFacilityLocationQuantityTest.productId"/>
+                                <field-map field-name="facilityId" env-name="productFacilityLocationQuantityTest.facilityId"/>
+                                <field-map field-name="locationTypeEnumId" value="FLT_BULK"/>
+                            </entity-and>
 
-                            <if-empty field-name="InventoryItemAndLocationList">
+                            <if-empty field-name="inventoryItemAndLocationList">
                                 <string-to-list string="Error in stock move, could not find a bulk location for facility [${productFacilityLocationQuantityTest.facilityId}] and product [${productFacilityLocationQuantityTest.productId}]" list-name="warningMessageList"/>
                             <else>
                                  <field-to-env field-name="moveQuantity" map-name="productFacilityLocationQuantityTest" env-name="targetLocationMoveQuantity"/>
                                 <!-- start by making a Map where the locationSeqId is the key and the value is a List of InventoryItemAndLocation -->
-                                <iterate entry-name="InventoryItemAndLocation" list-name="InventoryItemAndLocationList">
+                                <iterate entry-name="InventoryItemAndLocation" list-name="inventoryItemAndLocationList">
                                     <field-to-list field-name="InventoryItemAndLocation" list-name="InventoryItemAndLocationByLocMap.${InventoryItemAndLocation.locationSeqId}"/>
                                 </iterate>
                                 <iterate-map key-name="locationSeqId" value-name="perLocationInventoryItemAndLocList" map-name="InventoryItemAndLocationByLocMap">
@@ -247,7 +261,7 @@
                                             </calculate>
                                         </iterate>
                                     <else>
-                                        <env-to-env env-name="fromLocationTotalAvailableToPromise.${locationSeqId}" to-env-name="totalAvailableToPromise"  />
+                                        <env-to-env env-name="fromLocationTotalAvailableToPromise.${locationSeqId}" to-env-name="totalAvailableToPromise"/>
                                     </else>
                                     </if-empty>
 
