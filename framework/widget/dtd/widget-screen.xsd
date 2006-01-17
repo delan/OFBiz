@@ -823,6 +823,15 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute type="xs:string" name="width">
+            <xs:annotation><xs:documentation>Used if non-html content to specify width of iframe.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="height">
+            <xs:annotation><xs:documentation>Used if non-html content to specify height of iframe.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="border">
+            <xs:annotation><xs:documentation>Used if non-html content to specify border of iframe.</xs:documentation></xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="decorator-screen" substitutionGroup="AllWidgets">
         <xs:annotation>

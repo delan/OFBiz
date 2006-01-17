@@ -50,5 +50,7 @@ public interface ScreenStringRenderer {
     public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label) throws IOException;
     public void renderLink(Writer writer, Map context, ModelScreenWidget.Link link) throws IOException;
     public void renderImage(Writer writer, Map context, ModelScreenWidget.Image image) throws IOException;
+
+    public void renderContentFrame(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException;
 }
 

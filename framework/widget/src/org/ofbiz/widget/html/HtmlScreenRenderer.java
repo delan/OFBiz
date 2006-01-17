@@ -23,6 +23,7 @@
  */
 package org.ofbiz.widget.html;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
@@ -38,11 +39,15 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
+import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.widget.WidgetContentWorker;
 import org.ofbiz.widget.screen.ModelScreenWidget;
 import org.ofbiz.widget.screen.ScreenStringRenderer;
@@ -365,6 +370,30 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             }
             appendWhitespace(writer);
         }
+    }
+
+    public void renderContentFrame(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
+    	
+    	String dataResourceId = content.getDataResourceId();
+    	String urlString = "ViewSimpleContent?dataResourceId=" + dataResourceId;
+    	
+    	String width = content.getWidth();
+    	String widthString=" width=\"" + width + "\"";
+    	String height = content.getHeight();
+    	String heightString=" height=\"" + height + "\"";
+    	String border = content.getBorder();
+    	String borderString = (UtilValidate.isNotEmpty(border)) ? " border=\"" + border + "\"" : "";
+    	
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        HttpServletResponse response = (HttpServletResponse) context.get("response");
+        if (request != null && response != null) {
+        	ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        	RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+        	String fullUrlString = rh.makeLink(request, response, urlString, true, false, false);
+        	String linkString = "<iframe src=\"" + fullUrlString + "\" " + widthString + heightString + borderString + " />";
+        	writer.write(linkString);
+        }
+    	
     }
 
 

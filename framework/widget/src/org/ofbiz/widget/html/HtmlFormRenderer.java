@@ -254,6 +254,16 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append('"');
         }
 
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction();
+        if (UtilValidate.isNotEmpty(event) && UtilValidate.isNotEmpty(action)) {
+            buffer.append(" ");
+            buffer.append(event);
+            buffer.append("=\"");
+            buffer.append(action);
+            buffer.append('"');
+        }
+
         buffer.append("/>");
         
         this.addAstericks(buffer, context, modelFormField);
@@ -407,6 +417,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ModelFormField modelFormField = dropDownField.getModelFormField();
         ModelForm modelForm = modelFormField.getModelForm();
 
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction();
+
         buffer.append("<select");
 
         String className = modelFormField.getWidgetStyle();
@@ -441,6 +454,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
             */
         }
 
+
+        if (UtilValidate.isNotEmpty(event) && UtilValidate.isNotEmpty(action)) {
+            buffer.append(" ");
+            buffer.append(event);
+            buffer.append("=\"");
+            buffer.append(action);
+            buffer.append('"');
+        }
 
         buffer.append(" size=\"1\">");
 
@@ -595,6 +616,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ModelForm modelForm = modelFormField.getModelForm();
         List allOptionValues = radioField.getAllOptionValues(context, modelForm.getDelegator());
         String currentValue = modelFormField.getEntry(context);
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction();
 
         // list out all options according to the option list
         Iterator optionValueIter = allOptionValues.iterator();
@@ -625,7 +648,17 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append('"');
             buffer.append(" value=\"");
             buffer.append(optionValue.getKey());
-            buffer.append("\"/>");
+            buffer.append("\"");
+
+            if (UtilValidate.isNotEmpty(event) && UtilValidate.isNotEmpty(action)) {
+                buffer.append(" ");
+                buffer.append(event);
+                buffer.append("=\"");
+                buffer.append(action);
+                buffer.append('"');
+            }
+            
+            buffer.append("/>");
 
             buffer.append(optionValue.getDescription());
             buffer.append("</div>");
@@ -1694,7 +1727,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(modelFormField.getParameterName(context));
             buffer.append(", '");
         }
-        buffer.append(lookupField.getFormName());
+        buffer.append(lookupField.getFormName(context));
         buffer.append("'");
         List targetParameterList = lookupField.getTargetParameterList();
         if (targetParameterList.size() > 0) {
@@ -1965,6 +1998,16 @@ public class HtmlFormRenderer implements FormStringRenderer {
         if (height != null) {
             buffer.append(" height=\"");
             buffer.append(height.intValue());
+            buffer.append('"');
+        }
+
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction();
+        if (UtilValidate.isNotEmpty(event) && UtilValidate.isNotEmpty(action)) {
+            buffer.append(" ");
+            buffer.append(event);
+            buffer.append("=\"");
+            buffer.append(action);
             buffer.append('"');
         }
 

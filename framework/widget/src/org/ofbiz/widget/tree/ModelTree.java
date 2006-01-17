@@ -111,7 +111,7 @@ public class ModelTree {
         this.trailNameExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(treeElement.getAttribute("trail-name"), "trail"));
         this.delegator = delegator;
         this.dispatcher = dispatcher;
-        setDefaultEntityName( treeElement.getAttribute("entity-name") );
+        setDefaultEntityName(treeElement.getAttribute("entity-name"));
         try {
             openDepth = Integer.parseInt(treeElement.getAttribute("open-depth"));
         } catch(NumberFormatException e) {
@@ -328,7 +328,7 @@ public class ModelTree {
             this.wrapStyleExdr = new FlexibleStringExpander(nodeElement.getAttribute("wrap-style"));
             this.renderStyle = nodeElement.getAttribute("render-style");
             this.entryName = UtilFormatOut.checkEmpty(nodeElement.getAttribute("entry-name"), null); 
-            setEntityName( nodeElement.getAttribute("entity-name") );
+            setEntityName(nodeElement.getAttribute("entity-name"));
             if (this.pkName == null || nodeElement.hasAttribute("join-field-name"))
                 this.pkName = nodeElement.getAttribute("join-field-name");
     
@@ -417,7 +417,7 @@ public class ModelTree {
                 }
                 modelTree.currentNodeTrail.add(id);
                 context.put("currentNodeTrail", modelTree.currentNodeTrail);
-                String currentNodeTrailPiped = StringUtil.join( modelTree.currentNodeTrail, "|");
+                String currentNodeTrailPiped = StringUtil.join(modelTree.currentNodeTrail, "|");
                 context.put("currentNodeTrailPiped", currentNodeTrailPiped);
                 treeStringRenderer.renderNodeBegin(writer, context, this, depth, isLast);
                 //if (Debug.infoOn()) Debug.logInfo(" context:" +
@@ -565,9 +565,9 @@ public class ModelTree {
                      Debug.logError(e, module); 
                     throw new RuntimeException(e.getMessage());
                  }
-             } else if (nodeCount == null ) {
+             } else if (nodeCount == null) {
                  getChildren(context);
-                if (subNodeValues != null )
+                if (subNodeValues != null)
                     nodeCount = new Long(subNodeValues.size());
              }
              
@@ -641,36 +641,33 @@ public class ModelTree {
         public boolean isFollowTrail() {
             boolean isFollowTrail = false;
             String rStyle = getRenderStyle();
-            if (rStyle != null && (rStyle.equals("follow-trail") || rStyle.equals("show-peers") || rStyle.equals("follow-trail")))
+            if (rStyle != null && (rStyle.equals("follow-trail") || rStyle.equals("show-peers") || rStyle.equals("follow-trail"))) {
                 isFollowTrail = true;
+            }
             
             return isFollowTrail;
         }
     
         public boolean showPeers(int currentDepth) {
-        
             int trailSize = 0;
             List trail = modelTree.getTrailList();
             int openDepth = modelTree.getOpenDepth();
             int postTrailOpenDepth = modelTree.getPostTrailOpenDepth();
-            if (trail != null)
-                trailSize = trail.size();
+            if (trail != null) trailSize = trail.size();
                 
             boolean showPeers = false;
             String rStyle = getRenderStyle();
-            if (rStyle == null )
+            if (rStyle == null) {
                 showPeers = true;
-            else if (!isFollowTrail() )
+            } else if (!isFollowTrail()) {
                 showPeers = true;
-            else if ((currentDepth < trailSize) && (rStyle != null) &&  (rStyle.equals("show-peers") || rStyle.equals("expand-collapse")))
+            } else if ((currentDepth < trailSize) && (rStyle != null) &&  (rStyle.equals("show-peers") || rStyle.equals("expand-collapse"))) {
                 showPeers = true;
-            else if (openDepth >= currentDepth)
+            } else if (openDepth >= currentDepth) {
                 showPeers = true;
-            else {
-                
+            } else {
                 int depthAfterTrail = currentDepth - trailSize;
-                if (depthAfterTrail >= 0 && depthAfterTrail <= postTrailOpenDepth)
-                    showPeers = true;
+                if (depthAfterTrail >= 0 && depthAfterTrail <= postTrailOpenDepth) showPeers = true;
             }
             
             return showPeers;
@@ -682,8 +679,9 @@ public class ModelTree {
 
         public String getWrapStyle(Map context) {
             String val = this.wrapStyleExdr.expandString(context);
-            if (UtilValidate.isEmpty(val))
+            if (UtilValidate.isEmpty(val)) {
                 val = this.modelTree.getWrapStyle(context);
+            }
             return val;
         }
     
@@ -788,7 +786,7 @@ public class ModelTree {
             protected FlexibleStringExpander idExdr;
             protected FlexibleStringExpander styleExdr;
             
-            public Label( Element labelElement) {
+            public Label(Element labelElement) {
     
                 // put the text attribute first, then the pcdata under the element, if both are there of course
                 String textAttr = UtilFormatOut.checkNull(labelElement.getAttribute("text"));
@@ -831,6 +829,7 @@ public class ModelTree {
             protected FlexibleStringExpander targetWindowExdr;
             protected FlexibleStringExpander prefixExdr;
             protected FlexibleStringExpander nameExdr;
+            protected FlexibleStringExpander titleExdr;
             protected Image image;
             protected String urlMode = "intra-app";
             protected boolean fullPath = false;
@@ -849,9 +848,10 @@ public class ModelTree {
                 setSecure(null);
                 setEncode(null);
                 setName(null);
+                setTitle(null);
             }
 
-            public Link( Element linkElement) {
+            public Link(Element linkElement) {
     
                 setText(linkElement.getAttribute("text"));
                 setId(linkElement.getAttribute("id"));
@@ -864,6 +864,7 @@ public class ModelTree {
                 setSecure(linkElement.getAttribute("secure"));
                 setEncode(linkElement.getAttribute("encode"));
                 setName(linkElement.getAttribute("name"));
+                setTitle(linkElement.getAttribute("title"));
                 Element imageElement = UtilXml.firstChildElement(linkElement, "image");
                 if (imageElement != null) {
                     this.image = new Image(imageElement);
@@ -895,6 +896,9 @@ public class ModelTree {
             
             public String getName(Map context) {
                 return this.nameExdr.expandString(context);
+            }
+            public String getTitle(Map context) {
+                return this.titleExdr.expandString(context);
             }
         
             public String getTarget(Map context) {
@@ -929,33 +933,36 @@ public class ModelTree {
                 return this.image;
             }
 
-            public void setText( String val ) {
+            public void setText(String val) {
                 String textAttr = UtilFormatOut.checkNull(val);
                 this.textExdr = new FlexibleStringExpander(textAttr);
             }
-            public void setId( String val ) {
+            public void setId(String val) {
                 this.idExdr = new FlexibleStringExpander(val);
             }
-            public void setStyle( String val ) {
+            public void setStyle(String val) {
                 this.styleExdr = new FlexibleStringExpander(val);
             }
-            public void setName( String val ) {
+            public void setName(String val) {
                 this.nameExdr = new FlexibleStringExpander(val);
             }
-            public void setTarget( String val ) {
+            public void setTitle(String val) {
+                this.titleExdr = new FlexibleStringExpander(val);
+            }
+            public void setTarget(String val) {
                 this.targetExdr = new FlexibleStringExpander(val);
             }
-            public void setTargetWindow( String val ) {
+            public void setTargetWindow(String val) {
                 this.targetWindowExdr = new FlexibleStringExpander(val);
             }
-            public void setPrefix( String val ) {
+            public void setPrefix(String val) {
                 this.prefixExdr = new FlexibleStringExpander(val);
             }
-            public void setUrlMode( String val ) {
+            public void setUrlMode(String val) {
                 if (UtilValidate.isNotEmpty(val))
                     this.urlMode = val;
             }
-            public void setFullPath( String val ) {
+            public void setFullPath(String val) {
                 String sFullPath = val;
                 if (sFullPath != null && sFullPath.equalsIgnoreCase("true"))
                     this.fullPath = true;
@@ -963,7 +970,7 @@ public class ModelTree {
                     this.fullPath = false;
             }
 
-            public void setSecure( String val ) {
+            public void setSecure(String val) {
                 String sSecure = val;
                 if (sSecure != null && sSecure.equalsIgnoreCase("true"))
                     this.secure = true;
@@ -971,14 +978,14 @@ public class ModelTree {
                     this.secure = false;
             }
 
-            public void setEncode( String val ) {
+            public void setEncode(String val) {
                 String sEncode = val;
                 if (sEncode != null && sEncode.equalsIgnoreCase("true"))
                     this.encode = true;
                 else
                     this.encode = false;
             }
-            public void setImage( Image img ) {
+            public void setImage(Image img) {
                 this.image = img;
             }
                 
@@ -1005,7 +1012,7 @@ public class ModelTree {
                 setUrlMode(null);
             }
 
-            public Image( Element imageElement) {
+            public Image(Element imageElement) {
     
                 setSrc(imageElement.getAttribute("src"));
                 setId(imageElement.getAttribute("id"));
@@ -1055,26 +1062,26 @@ public class ModelTree {
                 return this.urlMode;
             }
             
-            public void setSrc( String val ) {
+            public void setSrc(String val) {
                 String textAttr = UtilFormatOut.checkNull(val);
                 this.srcExdr = new FlexibleStringExpander(textAttr);
             }
-            public void setId( String val ) {
+            public void setId(String val) {
                 this.idExdr = new FlexibleStringExpander(val);
             }
-            public void setStyle( String val ) {
+            public void setStyle(String val) {
                 this.styleExdr = new FlexibleStringExpander(val);
             }
-            public void setWidth( String val ) {
+            public void setWidth(String val) {
                 this.widthExdr = new FlexibleStringExpander(val);
             }
-            public void setHeight( String val ) {
+            public void setHeight(String val) {
                 this.heightExdr = new FlexibleStringExpander(val);
             }
-            public void setBorder( String val ) {
+            public void setBorder(String val) {
                 this.borderExdr = new FlexibleStringExpander(val);
             }
-            public void setUrlMode( String val ) {
+            public void setUrlMode(String val) {
                 if (UtilValidate.isEmpty(val))
                     this.urlMode = "content";
                 else
