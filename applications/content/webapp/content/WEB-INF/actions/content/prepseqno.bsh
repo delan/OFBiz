@@ -1,0 +1,10 @@
+import org.ofbiz.base.util.Debug;
+
+seqNo = context.get("caSequenceNum");
+Debug.logInfo("caSequenceNum:" + seqNo, "");
+if (seqNo != null) {
+    seqNumBefore = seqNo - 1;
+    context.put("seqNumBefore", seqNumBefore);
+    seqNumAfter = seqNo + 1;
+    context.put("seqNumAfter", seqNumAfter);
+}
