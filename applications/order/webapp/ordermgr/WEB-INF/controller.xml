@@ -250,6 +250,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="receivepayment"/>
     </request-map>
+    <request-map uri="receiveOfflinePayments">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.OrderManagerEvents" invoke="receiveOfflinePayment"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="receivepayment"/>
+    </request-map>
     <request-map uri="allowordersplit">
         <security https="true" auth="true"/>
         <event type="service" invoke="setAllowOrderSplit"/>
