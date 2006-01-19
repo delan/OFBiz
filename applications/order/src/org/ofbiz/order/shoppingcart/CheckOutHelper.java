@@ -759,10 +759,14 @@ public class CheckOutHelper {
     }
 
     public Map processPayment(GenericValue productStore, GenericValue userLogin) throws GeneralException {
-        return processPayment(productStore, userLogin, false);
+        return processPayment(productStore, userLogin, false, false);
     }
 
     public Map processPayment(GenericValue productStore, GenericValue userLogin, boolean faceToFace) throws GeneralException {
+        return processPayment(productStore, userLogin, faceToFace, false);
+    }
+
+    public Map processPayment(GenericValue productStore, GenericValue userLogin, boolean faceToFace, boolean manualHold) throws GeneralException {
         // Get some payment related strings
         String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage");
         String ERROR_MESSAGE = productStore.getString("authErrorMessage");
@@ -810,7 +814,7 @@ public class CheckOutHelper {
                 }
 
                 // approve the order
-                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, manualHold);
 
                 if ("Y".equalsIgnoreCase(productStore.getString("manualAuthIsCapture"))) {
                     Map captCtx = new HashMap();
@@ -844,7 +848,7 @@ public class CheckOutHelper {
         if (requireAuth) {
             if (orderTotal == 0) {
                 // if there is nothing to authorize; don't bother
-                boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+                boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, manualHold);
                 if (!ok) {
                     throw new GeneralException("Problem with order change; see above error");
                 }
@@ -893,7 +897,7 @@ public class CheckOutHelper {
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
 
                     // set the order and item status to approved
-                    boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+                    boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, manualHold);
                     if (!ok) {
                         throw new GeneralException("Problem with order change; see above error");
                     }
@@ -966,7 +970,7 @@ public class CheckOutHelper {
                 }
 
                 // approve this as long as there are only COD and Billing Account types
-                boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+                boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, manualHold);
                 if (!ok) {
                     throw new GeneralException("Problem with order change; see above error");
                 }

@@ -60,10 +60,13 @@
         <action service="resetGrandTotal" mode="sync"/>
         <action service="sendOrderCompleteNotification" mode="async" persist="true"/>
     </eca>
+
+    <!-- DISABLED FOR NOW
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
         <condition field-name="statusId" operator="equals" value="ORDER_PROCESSING"/>
         <action service="processOrderWf" mode="async" persist="true" />
     </eca>
+    -->
 
     <!-- This ECA is for content usage subscriptions
          Andy: not all orders will be subscriptions; ITS NOT RECOMMENDED TO TRIGGER ON THIS - Use the fulfillment services for processing subscriptions
