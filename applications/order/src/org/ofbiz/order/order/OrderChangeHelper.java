@@ -54,21 +54,30 @@ public class OrderChangeHelper {
     public static final String module = OrderChangeHelper.class.getName();
 
     public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {
+        return approveOrder(dispatcher, userLogin, orderId, false);
+    }
+
+    public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, boolean holdOrder) {
         GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
         if (productStore == null) {
             throw new IllegalArgumentException("Could not find ProductStore for orderId [" + orderId + "], cannot approve order.");
         }
+
+        // interal status for held orders
         String HEADER_STATUS = "ORDER_PROCESSING";
         String ITEM_STATUS = "ITEM_CREATED";
         String DIGITAL_ITEM_STATUS = "ITEM_APPROVED";
-        if (productStore.get("headerApprovedStatus") != null) {
-            HEADER_STATUS = productStore.getString("headerApprovedStatus");
-        }
-        if (productStore.get("itemApprovedStatus") != null) {
-            ITEM_STATUS = productStore.getString("itemApprovedStatus");
-        }
-        if (productStore.get("digitalItemApprovedStatus") != null) {
-            DIGITAL_ITEM_STATUS = productStore.getString("digitalItemApprovedStatus");
+
+        if (!holdOrder) {
+            if (productStore.get("headerApprovedStatus") != null) {
+                HEADER_STATUS = productStore.getString("headerApprovedStatus");
+            }
+            if (productStore.get("itemApprovedStatus") != null) {
+                ITEM_STATUS = productStore.getString("itemApprovedStatus");
+            }
+            if (productStore.get("digitalItemApprovedStatus") != null) {
+                DIGITAL_ITEM_STATUS = productStore.getString("digitalItemApprovedStatus");
+            }
         }
 
         try {
