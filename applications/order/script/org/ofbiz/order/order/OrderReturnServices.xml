@@ -510,17 +510,33 @@
             </calculate>
 
             <!-- get the matching return item type from the order item type -->
-            <!-- TODO: ask David/Andy why the returnItemMapKeys does not have orderItemtypeIds? should we actually be looking through productTypeIds
-                to find returnItemTypeIds? -->
+
             <set from-field="orderItem.orderItemTypeId" field="orderItemTypeId"/>
-            <entity-one entity-name="ReturnItemTypeMap" value-name="returnItemTypeMapping">
-            	<field-map env-name="orderItemTypeId" field-name="returnItemMapKey"/>
-            </entity-one>
+            <if-compare field-name="orderItemTypeId" value="PRODUCT_ORDER_ITEM" operator="equals">
+            <!-- Check if orderItemTypeId equals PRODUCT_ORDER_ITEM, if so, use ProductType and ReturnItemTypeMap to get ReturnItemType-->
+                <entity-one entity-name="Product" value-name="product">
+                    <field-map field-name="productId" env-name="orderItem.productId"/>
+                    <select-field field-name="productTypeId"/>
+                </entity-one>
+                <entity-one entity-name="ReturnItemTypeMap" value-name="returnItemTypeMapping">
+            	    <field-map env-name="product.productTypeId" field-name="returnItemMapKey"/>
+                </entity-one>
+            <else>
+            <!-- if not, try the ReturnItemTypeMap, but this may not actually work, so log a warning -->
+                <log level="warning" message="Trying to find returnItemtype from ReturnItemTypeMap with orderItemtypeId [${orderItem.orderItemTypeId}] for order item [${orderItem}]"/> 
+                <entity-one entity-name="ReturnItemTypeMap" value-name="returnItemTypeMapping">
+                   <field-map env-name="orderItemTypeId" field-name="returnItemMapKey"/>
+                </entity-one>
+            </else>
+            </if-compare>
+
             <if-empty field-name="returnItemTypeId" map-name="returnItemTypeMapping" >
-            	<log level="warning" message="No matching return item type map found for order item: [${orderItem}]"/>
+                <add-error><fail-message message="No matching return item type map found for order item: [${orderItem}]"/></add-error>
+                <check-errors/>
+            <else>
+                <set from-field="returnItemTypeMapping.returnItemTypeId" field="newItemCtx.returnItemTypeId"/>
+            </else>
             </if-empty>
-            
-            <set from-field="returnItemTypeMapping.returnItemTypeId" field="newItemCtx.returnItemTypeId"/>
 
             <!-- create the return item -->
             <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
