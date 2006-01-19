@@ -19,6 +19,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ * @author Mu Jinsong (mujinsong@opensourcestrategies.com)
+ * @author Si Chen (sichen@opensourcestrategies.com)
+ *
  */
 
 import org.ofbiz.entity.condition.EntityExpr;
@@ -31,14 +34,29 @@ import org.ofbiz.base.util.UtilMisc;
 productId = request.getParameter("productId");
 
 conditionList = new LinkedList();
+orConditionList = new LinkedList();
+mainConditionList = new LinkedList();
+
 //make sure the look up is case insensitive
 conditionList.add(new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("productId")),
         EntityOperator.LIKE, "%" + productId.toUpperCase() + "%"));
 
+// do not include configurabl products
 conditionList.add(new EntityExpr("productTypeId", EntityOperator.NOT_EQUAL, "AGGREGATED"));
-conditionList.add(new EntityExpr("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
-conditions = new EntityConditionList(conditionList,EntityOperator.AND);
 
-productList = delegator.findByCondition("Product", conditions, UtilMisc.toList("productId", "brandName", "internalName"), UtilMisc.toList("productId"));
+// no virtual products: note that isVirtual could be null, which in some databases is different than isVirtual != "Y".
+// we consider those products to be non-virtual and hence addable to the order in bulk
+orConditionList.add(new EntityExpr("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
+orConditionList.add(new EntityExpr("isVirtual", EntityOperator.EQUALS, "N"));
+orConditionList.add(new EntityExpr("isVirtual", EntityOperator.EQUALS, null));
+
+orConditions = new EntityConditionList(orConditionList, EntityOperator.OR);
+conditions = new EntityConditionList(conditionList, EntityOperator.AND);
+
+mainConditionList.add(orConditions);
+mainConditionList.add(conditions);
+mainConditions = new EntityConditionList(mainConditionList, EntityOperator.AND);
+
+productList = delegator.findByCondition("Product", mainConditions, UtilMisc.toList("productId", "brandName", "internalName"), UtilMisc.toList("productId"));
 context.put("productList",productList);
 
