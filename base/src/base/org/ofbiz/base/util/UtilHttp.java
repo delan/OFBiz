@@ -445,6 +445,11 @@ public class UtilHttp {
 
     /** URL Encodes a Map of arguements */
     public static String urlEncodeArgs(Map args) {
+    	return urlEncodeArgs(args, true);
+    }
+
+    /** URL Encodes a Map of arguements */
+    public static String urlEncodeArgs(Map args, boolean useExpandedEntites) {
         StringBuffer buf = new StringBuffer();
         if (args != null) {
             Iterator i = args.entrySet().iterator();
@@ -461,7 +466,13 @@ public class UtilHttp {
                     }
 
                     if (valueStr != null && valueStr.length() > 0) {
-                        if (buf.length() > 0) buf.append("&amp;");
+                        if (buf.length() > 0) {
+                        	if (useExpandedEntites) {
+                            	buf.append("&amp;");
+                        	} else {
+                            	buf.append("&");
+                        	}
+                        }
                         try {
                             buf.append(URLEncoder.encode(name, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
