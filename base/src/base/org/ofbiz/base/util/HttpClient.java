@@ -338,7 +338,7 @@ public class HttpClient {
         if (rawStream != null) {
             arguments = rawStream;
         } else if (parameters != null && parameters.size() > 0) {
-            arguments = UtilHttp.urlEncodeArgs(parameters);
+            arguments = UtilHttp.urlEncodeArgs(parameters, false);
         }
 
         // Append the arguments to the query string if GET.
