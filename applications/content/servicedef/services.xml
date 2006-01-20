@@ -1819,6 +1819,7 @@
         </auto-attributes>
         <auto-attributes entity-name="ContentRevisionItem" include="all" mode="IN" optional="true">
         </auto-attributes>
+        <attribute name="contentRevisionSeqId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <service name="convertDocument" auth="false" engine="java" transaction-timout="72000" 
@@ -1849,4 +1850,22 @@
         <attribute name="filenameOriginal" type="String" mode="IN" optional="false"/>
         <attribute name="filenameOut" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <service name="prepForApproval" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="prepForApproval" auth="false">
+        <description>Set ContentApprovals for approval process</description>
+        <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="templateContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
+        <attribute name="instanceContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="checkForOpenApprovals" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="prepForApproval" auth="false">
+        <description>Set ContentApprovals for approval process</description>
+        <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="openApprovalExists" type="Boolean" mode="OUT" optional="false"/>
+    </service>
+
 </services>
