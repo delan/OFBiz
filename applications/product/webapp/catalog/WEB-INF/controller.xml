@@ -210,7 +210,7 @@
     </request-map>
     <request-map uri="updateProductCategoryToCategory">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductCategoryToCategory"/>
+        <event type="service-multi" path="" invoke="updateProductCategoryToCategory"/>
         <response name="success" type="view" value="EditCategoryRollup"/>
         <response name="error" type="view" value="EditCategoryRollup"/>
     </request-map>
