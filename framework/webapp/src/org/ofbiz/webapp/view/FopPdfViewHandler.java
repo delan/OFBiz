@@ -32,16 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilXml;
-
-import org.apache.avalon.framework.logger.Log4JLogger;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.fop.apps.Driver;
-import org.apache.fop.image.FopImageFactory;
-import org.apache.fop.messaging.MessageHandler;
-import org.apache.fop.tools.DocumentInputSource;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
+import org.ofbiz.base.util.GeneralException;
 
 /**
  * Uses XSL-FO formatted templates to generate PDF views
@@ -70,35 +61,12 @@ public class FopPdfViewHandler extends JPublishViewHandler {
             Debug.logVerbose("XSL-FO : " + writer.toString(), module);
         }
         
-        // configure logging for the FOP
-        Logger logger = new Log4JLogger(Debug.getLogger(module));
-        MessageHandler.setScreenLogger(logger);        
-                          
-        // load the FOP driver
-        Driver driver = new Driver();
-        driver.setRenderer(Driver.RENDER_PDF);
-        driver.setLogger(logger);
-                                        
-        // read the XSL-FO XML Document
-        Document xslfo = null;
+        // render the byte array
+        ByteArrayOutputStream out = null;
         try {
-            xslfo = UtilXml.readXmlDocument(writer.toString());
-        } catch (Throwable t) {
-            throw new ViewHandlerException("Problems reading the parsed content to XML Document", t);
-        }
-        
-        // create the output stream for the PDF
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        driver.setOutputStream(out);     
-                
-        // set the input source (XSL-FO) and generate the PDF        
-        InputSource is = new DocumentInputSource(xslfo);               
-        driver.setInputSource(is);        
-        try {
-            driver.run();
-            FopImageFactory.resetCache();
-        } catch (Throwable t) {
-            throw new ViewHandlerException("Unable to generate PDF from XSL-FO", t);
+            out = FopRenderer.render(writer);
+        } catch (GeneralException e) {
+            throw new ViewHandlerException(e.getMessage(), e.getNested());
         }
                   
         // set the content type and length                    
