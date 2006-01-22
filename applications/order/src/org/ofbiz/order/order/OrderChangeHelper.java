@@ -85,7 +85,7 @@ public class OrderChangeHelper {
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
 
             /*
-            // call the service to check/run digial fulfillment
+            // call the service to check/run digital fulfillment
             Map checkDigi = dispatcher.runSync("checkDigitalItemFulfillment", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
             // this service will return a message with success if there were any problems. Get this message and return it to the user
             String message = (String) checkDigi.get(ModelService.SUCCESS_MESSAGE);
