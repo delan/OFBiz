@@ -225,7 +225,7 @@
     <ReturnReason sequenceId="01" returnReasonId="RTN_NOT_WANT" description="Did Not Want Item"/>
     <ReturnReason sequenceId="02" returnReasonId="RTN_DEFECTIVE_ITEM" description="Defective Item"/>
     <ReturnReason sequenceId="03" returnReasonId="RTN_MISSHIP_ITEM" description="Mis-Shipped Item"/>
-    <ReturnReason sequenceId="04" returnReasonId="RTN_DIG_FILL_FAIL" description="Digial Fulfillment Failed"/>
+    <ReturnReason sequenceId="04" returnReasonId="RTN_DIG_FILL_FAIL" description="Digital Fulfillment Failed"/>
 
     <!-- Return Types -->
     <ReturnType sequenceId="01" returnTypeId="RTN_CREDIT" description="Store Credit"/>
