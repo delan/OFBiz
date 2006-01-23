@@ -70,18 +70,46 @@ function popUp(url, name, height, width) {
 function popUpSmall(url, name) {
     popUp(url, name, '300', '450');
 }
-function popUpPrint(serverRoot, screen) {
-    screen = screen.replace(/\:/g, "%3A");
-    screen = screen.replace(/\//g, "%2F");
-    screen = screen.replace(/\#/g, "%23");
-    screen = screen.replace(/\?/g, "%3F");
-    screen = screen.replace(/\=/g, "%3D");
-
+function popUpPrint(serverRoot, screen1) {
+    popUpPrint(serverRoot, screen1, null, null);
+}
+function popUpPrint(serverRoot, screen1, screen2) {
+    popUpPrint(serverRoot, screen1, screen2, null);
+}
+function popUpPrint(serverRoot, screen1, screen2, screen3) {
     if  (serverRoot == null) {
         serverRoot = "";
     }
 
-    var url = serverRoot + "/webtools/control/print?screen=" + screen;
+    var url = serverRoot + "/webtools/control/print";
+
+    if (screen1 != null) {
+        screen1 = screen1.replace(/\:/g, "%3A");
+        screen1 = screen1.replace(/\//g, "%2F");
+        screen1 = screen1.replace(/\#/g, "%23");
+        screen1 = screen1.replace(/\?/g, "%3F");
+        screen1 = screen1.replace(/\=/g, "%3D");
+        url = url + "?screen=" + screen1;
+
+        if (screen2 != null) {
+            screen2 = screen2.replace(/\:/g, "%3A");
+            screen2 = screen2.replace(/\//g, "%2F");
+            screen2 = screen2.replace(/\#/g, "%23");
+            screen2 = screen2.replace(/\?/g, "%3F");
+            screen2 = screen2.replace(/\=/g, "%3D");
+            url = url + "&screen=" + screen2;
+
+            if (screen3 != null) {
+                screen3 = screen3.replace(/\:/g, "%3A");
+                screen3 = screen3.replace(/\//g, "%2F");
+                screen3 = screen3.replace(/\#/g, "%23");
+                screen3 = screen3.replace(/\?/g, "%3F");
+                screen3 = screen3.replace(/\=/g, "%3D");
+                url = url + "&screen=" + screen3;
+            }
+        }
+    }
+
     popUp(url, "PrintWindow", '250', '650');
 }
 
