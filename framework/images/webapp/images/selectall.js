@@ -70,6 +70,20 @@ function popUp(url, name, height, width) {
 function popUpSmall(url, name) {
     popUp(url, name, '300', '450');
 }
+function popUpPrint(serverRoot, screen) {
+    screen = screen.replace(/\:/g, "%3A");
+    screen = screen.replace(/\//g, "%2F");
+    screen = screen.replace(/\#/g, "%23");
+    screen = screen.replace(/\?/g, "%3F");
+    screen = screen.replace(/\=/g, "%3D");
+
+    if  (serverRoot == null) {
+        serverRoot = "";
+    }
+
+    var url = serverRoot + "/webtools/control/print?screen=" + screen;
+    popUp(url, "PrintWindow", '250', '650');
+}
 
 // hidden div functions
 
