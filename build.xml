@@ -228,26 +228,32 @@
     <!-- ================================================================== -->
 
     <target name="run" depends="build">
-        <java jar="ofbiz.jar" fork="true"/>
+        <java jar="ofbiz.jar" fork="true">
+            <jvmarg value="-Xmx384M"/>
+        </java>
     </target>
     <target name="run-pos" depends="build">
         <java jar="ofbiz.jar" fork="true">
+            <jvmarg value="-Xmx384M"/>
             <arg value="pos"/>
         </java>
     </target>
     <target name="run-install" depends="build">
         <java jar="ofbiz.jar" fork="true">
+            <jvmarg value="-Xmx384M"/>
             <arg value="install"/>
         </java>
     </target>
     <target name="run-install-seed" depends="build">
         <java jar="ofbiz.jar" fork="true">
+            <jvmarg value="-Xmx384M"/>
             <arg value="install"/>
             <arg value="readers=seed"/>
         </java>
     </target>
     <target name="run-debug" depends="build">
         <java jar="ofbiz.jar"  fork="true">
+            <jvmarg value="-Xmx384M"/>
             <jvmarg value="-Xnoagent"/>
             <jvmarg value="-Djava.compiler=NONE"/>
             <jvmarg value="-Xdebug"/>
@@ -256,6 +262,7 @@
     </target>
     <target name="run-tests" depends="build">
         <java jar="ofbiz.jar" fork="true">
+            <jvmarg value="-Xmx384M"/>
             <arg value="test"/>
         </java>
     </target>
