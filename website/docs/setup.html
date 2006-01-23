@@ -38,7 +38,7 @@ Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
  src="http://sourceforge.net/sflogo.php?group_id=27173"
  alt="SourceForge Logo" border="0"/></a> <br/>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br/>
-Last Updated: August 04, 2004<br/>
+Last Updated: 23 January 2006<br/>
 <h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
 <ul>
   <li><a href="#Introduction">Introduction</a></li>
@@ -72,14 +72,14 @@ as possible about the problem you are having.</p>
 distribution and following some simple instructions. For more
 options and explanations, see the rest of this document.</p>
 <ol>
-  <li>Download and install the Java 2 v1.4 or later JDK/J2SDK (not the
-JRE, need the full SDK) from <a href="java.sun.com">Sun's Java site</a>, and make sure
+  <li>Download and install the Java 2 v1.4 or later (but only in the 1.4 series, <b>not 1.5</b>) JDK/J2SDK (not the
+JRE, you need the full SDK) from <a href="java.sun.com">Sun's Java (J2SE) site</a>, and make sure
 your JAVA_HOME environment variable is set to this JDK after installation 
 (NOTE that for Mac OS X no JVM setup is needed, just make sure you are up to date with the Java 1.4 series with the OS X Software Update facility)</li>
   <li>Download the OFBiz Apps archive and unzip it in the directory of
 your choice. This should create one sub-directory: <b>ofbiz</b>. This
 will be the OFBIZ_HOME location.</li>
-  <li>Start OFBiz with embedded Jetty by going into the <b>ofbiz</b>
+  <li>Start OFBiz with embedded Tomcat by going into the <b>ofbiz</b>
 directory and then running <b>"startofbiz.bat"</b> (or
 "%JAVA_HOME%\bin\java -jar ofbiz.jar") for Windows, or <b>"./startofbiz.sh"</b>
 (or "$JAVA_HOME/bin/java -jar ofbiz.jar") for Linux/Unix.
@@ -99,9 +99,13 @@ for the Catalog Manager application.</li>
 <h3><a name="Building">Building From SVN</a></h3>
 <hr/>
 
-<p>When building from SVN you will need to have Ant 1.5 or later (see
-http://ant.apache.org) installed and setup properly in addition to a
-Java 1.4 or newer J2SDK (NOT just the JRE, need to full SDK) as mentioned above.</p>
+<p>When building from SVN you will need to have a
+Java 1.4 or newer J2SDK (NOT just the JRE, need to full SDK; 
+also make sure it is a 1.4 series and not a 1.5 series JDK) as mentioned above.
+The build is done using Ant, and sufficient Ant libraries
+are included with OFBiz. If you have Ant installed separately 
+just make sure you have version 1.5 or later, and then run Ant
+as normal intead of as listed in the following examples.</p>
 
 <p>In the directory where you want OFBiz to be, do a SVN checkout of
 the ofbiz module on the java.net servers. For example: </p>
@@ -110,16 +114,16 @@ the ofbiz module on the java.net servers. For example: </p>
 
 <p>For information on connecting to SVN <a href="http://svn.ofbiz.org/" target="_blank">click here (svn.ofbiz.org).</a></p>
 
-<p>Now go into the "ofbiz" directory and run "ant". It will compile all
-modules and leave you an executable jar (ofbiz.jar) in the "ofbiz" directory. </p>
+<p>Now go into the "ofbiz" directory and run <b>"ant.bat"</b> (Windows), or <b>"./ant"</b> (Linux/Unix/OSX). It will compile all
+modules and leave you an executable jar (ofbiz.jar) in the "ofbiz" directory.</p>
 
-<p>To load the seed data, run "ant run-install", or
-"$JAVA_HOME/bin/java -jar ofbiz.jar install", or "%JAVA_HOME%\bin\java -jar ofbiz.jar install"</p>
+<p>To load the seed data, run <b>"ant.bat run-install"</b> or <b>"%JAVA_HOME%\bin\java -jar ofbiz.jar install"</b> (Windows), or <b>"./ant run-install"</b> or
+<b>"$JAVA_HOME/bin/java -jar ofbiz.jar install"</b> (Linux/Unix/OSX)</p>
 
-<p>To start the server run "ant run", or "$JAVA_HOME/bin/java -jar ofbiz.jar",or "%JAVA_HOME%\bin\java -jar ofbiz.jar"</p>
+<p>To start the server run <b>"ant.bat run"</b> or <b>"%JAVA_HOME%\bin\java -jar ofbiz.jar"</b> (Windows), or <b>"./ant run"</b> or <b>"$JAVA_HOME/bin/java -jar ofbiz.jar"</b> (Linux/Unix/OSX)</p>
 
-<p>Another build option in the Ant build script that is useful is "ant
-clean". That will clean out all built classes allowing you to run "ant"
+<p>Another build option in the Ant build script that is useful is 
+<b>"ant.bat clean"</b> (Windows) or <b>"./ant clean"</b> (Linux/Unix/OSX). That will clean out all built classes allowing you to run "ant"
 again to get a clean build. If you are running into funny errors after updating from SVN in the
 future, give this clean build process a try first.</p>
 
@@ -136,57 +140,52 @@ from IBM that complies with DB2 specs and is based on the Cloudscape product.
 This database is good for demonstration purposes because it is
 easy to setup and use. It is not the best for large data sets and does not
 provide the same performance or scalability that a major database would, 
-but compared to HypersonicSQL (that we used to use) it is significantly better.
+but compared to HypersonicSQL (that we used to use) it is significantly better
+because while not as fast for small scale operations it is closer to a production
+database environment and allows us to catch issues earlier on.
 Smaller sites might even consider this as an option for their production deployment,
 especially once the database is a bit more stabilized.</p>
 
 <p>There are many open source databases that will scale well and deliver good performance.
-The two most popular are MySQL Max DB (was SAP DB) and PostgreSQL. Postgres is a very full featured
+The two most popular are PostgreSQL and MySQL (4.1.11 or later, or the 5 series) . Postgres is a very full featured
 database with transaction support, foreign keys, stored procedures, et
-cetera. Max DB (SAP DB) is another good open source
-and it deserves special mention. SAP decided to start making it easier
-for users to use commercial databases instead of their own and open sourced their
-database, SAP DB. While maybe not as good in some ways as Oracle or
-some other commercial DBs it
-has many development and production features and performs very well
-with a very complete and advanced feature set.</p>
+cetera. Postgres also has very friendly license terms. 
+MySQL is a pretty good option these days as well. Please note that if
+you use this in a commercial production instance you may have to purchase a
+commercial license because it is GPL licensed and so is the JDBC driver.
+MySQL AB allows use of the JDBC driver in open source projects in spite the GPL
+license, but this may not apply for commercial use of a modified OFBiz.
+For some a commercial license is the preferred way to go anyway because of support
+and warranty and other issues. For those with this preference considering Postgres there is also
+a commercial Postgres derivative called EnterpriseDB.</p>
 
 <p>Commercial databases are also supported. If you have database
-licenses for other
-needs, or have major in-house familiarity with and support for a
-certain commercial
-database, then there is no reason not to take advantage of that. OFBiz
-has been tested
-with Oracle, Sybase, SQL Server and others and should work fine with
-any database that has a JDBC driver.</p>
+licenses for other needs, or have major in-house familiarity with and support for a
+certain commercial database, then there is no reason not to take advantage of that. OFBiz
+has been tested with Oracle, DB2, Sybase, MS SQL Server and others and should work fine with
+any database that has a JDBC driver. Please note that we have experienced that in some cases the JDBC drivers included
+with certain databases are not fully specification compliant. The options are often to use the database-specific
+APIs or to get a third party driver. The database-specific code is an issue because of licensing restrictions
+and additional difficulty needed to keep up with them, so sometimes a third party (even a commercial one) is preferred.
+For example with Oracle we have had much more success with the DataDirect JDBC driver.</p>
 
 <p>There is no need to run any SQL scripts to create the tables or
-populate them
-with the default data. The entity engine can create missing tables or
-fields
-when the server starts up and does so if the appropriate property is
-set in the
-entityengine.xml file. This is the file that configures the servers for
-the
-entity engine.</p>
+populate them with the default data. The entity engine can create missing tables or
+fields when the server starts up and does so if the appropriate property is
+set in the entityengine.xml file. This is the file that configures the servers for
+the entity engine.</p>
 
 <p>For the table creation routine to work properly, the field types
-must be set
-up. Do this by specifying the corresponding fieldtypeXXX.xml (where XXX
-is the database
-name) file for the server in the entityengine.xml file. These
-fieldtypeXXX.xml
-files are located in the <b>ofbiz/framework/entity/fieldtype</b>
+must be set up. Do this by specifying the corresponding fieldtypeXXX.xml (where XXX
+is the database name) file for the server in the entityengine.xml file. These
+fieldtypeXXX.xml files are located in the <b>ofbiz/framework/entity/fieldtype</b>
 directory.</p>
 
-<p>Default data can be loaded automatically once the server has been
-started by
-going to a JSP, which is described above (ie the install page in
-WebTools).</p>
+<p>Default data can be loaded through the "run-install" Ant target as mentioned in the Building from SVN section.</p>
 <hr/>
 <h3><a name="J2EE_Containers">J2EE Containers</a></h3>
 <hr/>
-<p>OFBiz comes and runs by default with Jetty for a Servlet/JSP container and
+<p>OFBiz comes and runs by default with Tomcat for a Servlet/JSP container and
 JOTM for a transaction (JTA) manager. A patched version of Minerva (included in SVN)
 is the current preference for a transaction aware connection pool, though as
 other options are made available that may change.</p>
@@ -201,7 +200,7 @@ created a configuration and script template tool that takes the classpath and we
 settings from the various OFBiz files to more easily generate the files you need.
 For more information, see the README file in the ofbiz/framework/appservers directory.
  If you are looking for a good commercial J2EE app
-server, Orion is a good place to start, but we recommend trying out Jetty and JOTM
+server, Orion is a good place to start, but we recommend trying out Tomcat and JOTM
 and see if they meet your needs.</p>
 
 </div>
