@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javolution.util.FastList;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -52,7 +54,7 @@ public class CommonWorkers {
     public final static String module = CommonWorkers.class.getName();
 
     public static List getCountryList(GenericDelegator delegator) {
-        List geoList = new ArrayList();
+        List geoList = FastList.newInstance();
         String defaultCountry = UtilProperties.getPropertyValue("general.properties", "country.geo.id.default");
         GenericValue defaultGeo = null;
         if (defaultCountry != null && defaultCountry.length() > 0) { 
@@ -62,15 +64,16 @@ public class CommonWorkers {
                 Debug.logError(e, "Cannot lookup Geo", module);
             }       
         }        
-        Map findMap = UtilMisc.toMap("geoTypeId", "COUNTRY");
-        List sortList = UtilMisc.toList("geoName");
         try {
-            geoList = delegator.findByAndCache("Geo", findMap, sortList);
+        	List countryGeoList = delegator.findByAndCache("Geo", UtilMisc.toMap("geoTypeId", "COUNTRY"), UtilMisc.toList("geoName"));
+            if (defaultGeo != null) {
+                geoList.add(defaultGeo);
+            	geoList.addAll(countryGeoList);
+            } else {
+            	geoList = countryGeoList;
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot lookup Geo", module);
-        }        
-        if (defaultGeo != null) {
-            geoList.add(0, defaultGeo);
         }        
         return geoList;            
     }
