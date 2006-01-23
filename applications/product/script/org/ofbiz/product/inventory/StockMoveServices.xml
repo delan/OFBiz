@@ -366,28 +366,28 @@
                         <make-value entity-name="InventoryItem" map-name="inventoryItem" value-name="targetInventoryItem"/>
                         <set from-field="parameters.targetLocationSeqId" field="targetInventoryItem.locationSeqId"/>
                         <!-- now that targetInventoryItem is populated with quantities, etc, call createInventoryItem service -->
+                        <clear-field field-name="createNonOisgirTargetDetailMap"/>
                         <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
                         <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
-                            <result-to-field result-name="inventoryItemId" field-name="createTargetDetailMap.inventoryItemId"/>
+                            <result-to-field result-name="inventoryItemId" field-name="createNonOisgirTargetDetailMap.inventoryItemId"/>
                         </call-service>
 
                         <!-- instead of updating InventoryItem, add an InventoryItemDetail for new Target InventoryItem -->
-                        <set from-field="currentQuantityToMove" field="createTargetDetailMap.availableToPromiseDiff"/>
-                        <set from-field="currentQuantityToMove" field="createTargetDetailMap.quantityOnHandDiff"/>
-                        <call-service service-name="createInventoryItemDetail" in-map-name="createTargetDetailMap"/>
-                        <clear-field field-name="createTargetDetailMap"/>
+                        <set from-field="currentQuantityToMove" field="createNonOisgirTargetDetailMap.availableToPromiseDiff"/>
+                        <set from-field="currentQuantityToMove" field="createNonOisgirTargetDetailMap.quantityOnHandDiff"/>
+                        <call-service service-name="createInventoryItemDetail" in-map-name="createNonOisgirTargetDetailMap"/>
 
                         <!-- okay, move it over, calculate new ATP, QOH -->
                         <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
-                        <set from-field="inventoryItem.inventoryItemId" field="createDetailMap.inventoryItemId"/>
-                        <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
+                        <clear-field field-name="createNonOisgirDetailMap"/>
+                        <set from-field="inventoryItem.inventoryItemId" field="createNonOisgirDetailMap.inventoryItemId"/>
+                        <calculate field-name="createNonOisgirDetailMap.availableToPromiseDiff" type="Double">
                             <calcop field-name="currentQuantityToMove" operator="negative"/>
                         </calculate>
-                        <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
+                        <calculate field-name="createNonOisgirDetailMap.quantityOnHandDiff" type="Double">
                             <calcop field-name="currentQuantityToMove" operator="negative"/>
                         </calculate>
-                        <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
-                        <clear-field field-name="createDetailMap"/>
+                        <call-service service-name="createInventoryItemDetail" in-map-name="createNonOisgirDetailMap"/>
 
                         <refresh-value value-name="targetInventoryItem"/>
                         <log level="info" message="Just created new targetInventoryItem from non-OISGIR (ie location level based) [${targetInventoryItem}]"/>
@@ -429,7 +429,7 @@
 
             <!--
                 if this is a non-serialized InventoryItem, create a new targetInventoryItem in the
-                target location and start moving all OrderItemShipGrpInvRes over, plus min move quantity from PFL
+                target location and start moving all OrderItemShipGrpInvRes over, plus min move quantity from ProductFacilityLocation
             -->
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
                 <!-- create a new InventoryItem for the targetInventoryItem -->
@@ -511,12 +511,14 @@
 
                     <!-- okay, move it over, start by calculating new QOHs; note that don't need to modify the ATP since with an OISGIR that has already been subtracted out, so it shouldn't be subtracted from the source or added to the target -->
                     <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
-                    <set from-field="inventoryItem.inventoryItemId" field="createDetailMap.inventoryItemId"/>
-                    <set from-field="targetInventoryItem.inventoryItemId" field="createTargetDetailMap.inventoryItemId"/>
-                    <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
+                    <clear-field field-name="createOisgirDetailMap"/>
+                    <clear-field field-name="createOisgirTargetDetailMap"/>
+                    <set from-field="inventoryItem.inventoryItemId" field="createOisgirDetailMap.inventoryItemId"/>
+                    <set from-field="targetInventoryItem.inventoryItemId" field="createOisgirTargetDetailMap.inventoryItemId"/>
+                    <calculate field-name="createOisgirDetailMap.quantityOnHandDiff" type="Double">
                         <calcop field-name="currentQuantityToMove" operator="negative"/>
                     </calculate>
-                    <calculate field-name="createTargetDetailMap.quantityOnHandDiff" type="Double">
+                    <calculate field-name="createOisgirTargetDetailMap.quantityOnHandDiff" type="Double">
                         <calcop field-name="currentQuantityToMove" operator="get"/>
                     </calculate>
 
@@ -528,19 +530,17 @@
                     <!-- if the OISGIR has a quantityNotAvailable, move that over by adding it to the origin, and subtracting it from the target -->
                     <if-not-empty field-name="orderItemShipGrpInvRes.quantityNotAvailable">
                         <if-compare field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="greater" value="0" type="Double">
-                            <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
+                            <calculate field-name="createOisgirDetailMap.availableToPromiseDiff" type="Double">
                                 <calcop field-name="quantityNotAvailableToMove" operator="get"/>
                             </calculate>
-                            <calculate field-name="createTargetDetailMap.availableToPromiseDiff" type="Double">
+                            <calculate field-name="createOisgirTargetDetailMap.availableToPromiseDiff" type="Double">
                                 <calcop field-name="quantityNotAvailableToMove" operator="negative"/>
                             </calculate>
                         </if-compare>
                     </if-not-empty>
 
-                    <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
-                    <call-service service-name="createInventoryItemDetail" in-map-name="createTargetDetailMap"/>
-                    <clear-field field-name="createDetailMap"/>
-                    <clear-field field-name="createTargetDetailMap"/>
+                    <call-service service-name="createInventoryItemDetail" in-map-name="createOisgirDetailMap"/>
+                    <call-service service-name="createInventoryItemDetail" in-map-name="createOisgirTargetDetailMap"/>
 
                     <!-- create the new and remove or update the old OISGIRs -->
                     <create-value value-name="targetOrderItemShipGrpInvRes"/>
