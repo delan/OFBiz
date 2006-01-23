@@ -47,6 +47,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.config.ServiceConfigUtil;
 
@@ -346,22 +347,15 @@ public class ServiceUtil {
         EntityCondition cancelled = new EntityConditionList(canExp, EntityOperator.AND);
         EntityCondition finished = new EntityConditionList(finExp, EntityOperator.AND);
 
-        EntityCondition done = new EntityConditionList(UtilMisc.toList(cancelled, finished), EntityOperator.OR);
-        EntityCondition main = new EntityConditionList(UtilMisc.toList(done, pool), EntityOperator.AND);
+        EntityCondition doneCond = new EntityConditionList(UtilMisc.toList(cancelled, finished), EntityOperator.OR);
+        EntityCondition mainCond = new EntityConditionList(UtilMisc.toList(doneCond, pool), EntityOperator.AND);
 
         // lookup the jobs
-        List foundJobs = null;
         try {
-            foundJobs = delegator.findByCondition("JobSandbox", main, null, null);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot get jobs to purge");
-            return ServiceUtil.returnError(e.getMessage());
-        }
+        	EntityListIterator foundJobs = delegator.findListIteratorByCondition("JobSandbox", mainCond, null, null);
 
-        if (foundJobs != null && foundJobs.size() > 0) {
-            Iterator i = foundJobs.iterator();
-            while (i.hasNext()) {
-                GenericValue jobSandbox = (GenericValue) i.next();
+            GenericValue jobSandbox = null;
+            while ((jobSandbox = (GenericValue) foundJobs.next()) != null) {
                 try {
                     jobSandbox.remove();
                 } catch (GenericEntityException e) {
@@ -374,6 +368,11 @@ public class ServiceUtil {
                     Debug.logWarning(e, "When remove job unable to remove related RuntimeData for JobSandbox: " + jobSandbox + "; " + e.toString(), module);
                 }
             }
+            
+            foundJobs.close();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get jobs to purge");
+            return ServiceUtil.returnError(e.getMessage());
         }
 
         return ServiceUtil.returnSuccess();
