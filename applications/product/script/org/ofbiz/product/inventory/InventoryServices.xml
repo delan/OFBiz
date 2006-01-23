@@ -83,7 +83,11 @@
         <field-to-result field-name="newEntity.inventoryItemDetailSeqId" result-name="inventoryItemDetailSeqId"/>
 
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-
+        
+        <!-- if availableToPromiseDiff or quantityOnHandDiff are empty set to 0 -->
+        <if-empty field-name="newEntity.availableToPromiseDiff"><set field="newEntity.availableToPromiseDiff" value="0" type="Double"/></if-empty>
+        <if-empty field-name="newEntity.quantityOnHandDiff"><set field="newEntity.quantityOnHandDiff" value="0" type="Double"/></if-empty>
+        
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateInventoryItemFromDetail" short-description="Update an InventoryItem From the Associated Detail Records" login-required="false">
