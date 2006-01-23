@@ -37,26 +37,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilObject;
-import org.ofbiz.webapp.stats.ServerHitBin;
-import org.ofbiz.webapp.stats.VisitHandler;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
+import org.ofbiz.webapp.stats.ServerHitBin;
+import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.view.ViewFactory;
 import org.ofbiz.webapp.view.ViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.webapp.website.WebSiteWorker;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericValue;
-import javolution.util.FastMap;
 
 /**
  * RequestHandler - Request Processor Object
@@ -607,6 +608,43 @@ public class RequestHandler implements Serializable {
                 System.currentTimeMillis() - viewStartTime, userLogin, delegator);
         }
     }
+
+    public static String getDefaultServerRootUrl(HttpServletRequest request, boolean secure) {
+        String httpsPort = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+        String httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
+        String httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+        String httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host");
+        boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");
+
+        StringBuffer newURL = new StringBuffer();
+
+        if (secure && useHttps) {
+            String server = httpsServer;
+            if (server == null || server.length() == 0) {
+                server = request.getServerName();
+            }
+
+            newURL.append("https://");
+            newURL.append(server);
+            if (!httpsPort.equals("443")) {
+                newURL.append(":").append(httpsPort);
+            }
+
+        } else {
+            String server = httpServer;
+            if (server == null || server.length() == 0) {
+                server = request.getServerName();
+            }
+
+            newURL.append("http://");
+            newURL.append(server);
+            if (!httpPort.equals("80")) {
+                newURL.append(":").append(httpPort);
+            }
+        }
+        return newURL.toString();
+    }
+
 
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url) {
         String initialLink = this.makeLink(request, response, url);
