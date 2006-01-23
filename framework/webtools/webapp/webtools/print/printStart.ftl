@@ -30,7 +30,6 @@
 <#assign screenMap = (requestAttributes.screenPrinterMap)?if_exists>
 <#assign screens = (screenMap.keySet())?if_exists>
 <#assign auto = "true">
-<#assign count = 1>
 <html>
     <body>
       <center>
@@ -38,6 +37,7 @@
         <object align="center" height="200" width="600" classid="java:org.ofbiz.webtools.print.applet.PdfPrintApplet"
                 type="application/x-java-applet" mayscript="true" archive="/webtools/applet/ofbiz-webtools-print.jar, /webtools/applet/14_os_jpedal.jar"
                 codebase="/webtools/applet" server-url= "${serverRoot}" rmi-name="RMIFopPrintServer" rmi-host="${serverHost}" rmi-port="1099"
+                <#assign count = 1>
                 <#list screens as screen>
                   <#assign printer = screenMap.get(screen)?if_exists>
                   <#if printer?has_content>
@@ -46,6 +46,7 @@
                     <#assign auto = "false">
                   </#if>
                   screen.${count}="${screen}"
+                  <#assign count = count + 1>
                 </#list>>
 
             <object align="center" height="200" width="600" classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93">
@@ -57,6 +58,7 @@
                 <param name="rmi-name" value="RMIFopPrintServer">
                 <param name="rmi-host" value="${serverHost}">
                 <param name="rmi-port" value="1099">
+                <#assign count = 1>
                 <#list screens as screen>
                   <#assign printer = screenMap.get(screen)?if_exists>
                   <#if printer?has_content>
@@ -65,7 +67,7 @@
                     <#assign auto = "false">
                   </#if>
                   <param name="screen.${count}" value="${screen}">
-
+                  <#assign count = count + 1>
                 </#list>
             </object>
         </object>
