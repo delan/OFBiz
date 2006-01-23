@@ -250,10 +250,12 @@ public class PdfPrintApplet extends Applet {
             buf.append(count);
             buf.append("=");
             buf.append(URLEncoder.encode(printer, "UTF-8"));
+            count++;
         }
 
         String path = "/webtools/control/printComplete?" + buf.toString();
         URL url = new URL(serverUrl + path);
+        System.out.println("Returning complete: " + url.toExternalForm());
         this.getAppletContext().showDocument(url);
     }
 

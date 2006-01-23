@@ -32,13 +32,21 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 
-import org.ofbiz.base.util.GeneralException;
+import org.apache.avalon.framework.logger.Log4JLogger;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.fop.apps.Driver;
+import org.apache.fop.image.FopImageFactory;
+import org.apache.fop.messaging.MessageHandler;
+import org.apache.fop.tools.DocumentInputSource;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.webapp.view.FopRenderer;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 import org.ofbiz.widget.screen.ScreenRenderer;
 
@@ -72,23 +80,50 @@ public class FopPrintRemoteImpl extends UnicastRemoteObject implements FopPrintR
         }
 
         Debug.log("Attempt to render screen [" + screenUri + "] using parameters: " + parameters, module);
+        return render(screenUri, parameters);
 
+    }
+
+    public byte[] render(String screen, Map parameters) throws RemoteException {
         // render and obtain the XSL-FO
         Writer writer = new StringWriter();
         try {
             ScreenRenderer screens = new ScreenRenderer(writer, null, htmlScreenRenderer);
             screens.populateContextForService(dctx, parameters);
-            screens.render(screenUri);
+            screens.render(screen);
         } catch (Throwable t) {
             throw new RemoteException("Problems with the response writer/output stream", t);
         }
 
-        // render the byte array
-        ByteArrayOutputStream out = null;
+        // configure logging for the FOP
+        Logger logger = new Log4JLogger(Debug.getLogger(module));
+        MessageHandler.setScreenLogger(logger);
+
+        // load the FOP driver
+        Driver driver = new Driver();
+        driver.setRenderer(Driver.RENDER_PDF);
+        driver.setLogger(logger);
+
+        // read the XSL-FO XML Document
+        Document xslfo = null;
         try {
-            out = FopRenderer.render(writer);
-        } catch (GeneralException e) {
-            throw new RemoteException(e.getMessage(), e.getNested());
+            xslfo = UtilXml.readXmlDocument(writer.toString());
+        } catch (Throwable t) {
+            throw new RemoteException("Problems reading the parsed content to XML Document", t);
+        }
+
+        // create the output stream for the PDF
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        driver.setOutputStream(out);
+
+        // set the input source (XSL-FO) and generate the PDF
+        InputSource is = new DocumentInputSource(xslfo);
+        driver.setInputSource(is);
+        try {
+            driver.run();
+            FopImageFactory.resetCache();
+        } catch (Throwable t) {
+            throw new RemoteException("Unable to generate PDF from XSL-FO", t);
         }
 
         byte[] bytes = out.toByteArray();
