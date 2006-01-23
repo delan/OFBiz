@@ -44,6 +44,7 @@
         <path id="local.class.path">
             <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
             <fileset dir="../../base/lib" includes="*.jar"/>
+            <fileset dir="../../base/lib/commons" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
             <fileset dir="../entity/lib" includes="*.jar"/>
             <fileset dir="../entity/build/lib" includes="*.jar"/>
@@ -52,6 +53,7 @@
             <fileset dir="../service/build/lib" includes="*.jar"/>
             <fileset dir="../minilang/build/lib" includes="*.jar"/>
             <fileset dir="../webapp/build/lib" includes="*.jar"/>
+            <fileset dir="../widget/build/lib" includes="*.jar"/>
         </path>
     </target>
 
@@ -85,11 +87,20 @@
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,classpath">
-    	<javac debug="on" source="1.4" deprecation="on" destdir="${build.dir}/classes">
+        <condition property="noapplet" value="PdfPrintApplet.java">
+            <not>
+                <and>
+                    <available classname="org.jpedal.PdfDecoder" classpathref="local.class.path" property="jpedel.avail"/>
+                    <available classname="netscape.javascript.JSObject" classpathref="local.class.path" property="jsobject.avail"/>
+                </and>
+            </not>
+        </condition>
+        <javac debug="on" source="1.4" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
                 <path refid="local.class.path"/>
             </classpath>
             <src path="${src.dir}"/>
+            <exclude name="**/${noapplet}"/>
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
@@ -98,9 +109,32 @@
         </copy>
     </target>
 
-    <target name="jar" depends="classes">
-        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>
+    <target name="stubs" depends="classes">
+        <rmic base="${build.dir}/classes" classname="org.ofbiz.webtools.print.rmi.FopPrintRemoteImpl">
+            <classpath>
+                <path refid="local.class.path"/>
+            </classpath>
+        </rmic>
     </target>
+
+    <target name="main-jar" depends="stubs">
+        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes">
+            <fileset dir="${build.dir}/classes" excludes="org/ofbiz/webtools/print/**"/>            
+        </jar>
+    </target>
+
+    <target name="print-jar" depends="stubs">
+        <jar jarfile="${build.dir}/lib/${name}-print.jar">
+            <fileset dir="${build.dir}/classes" includes="org/ofbiz/webtools/print/**"/>
+        </jar>
+        <signjar sectionsonly="true" keystore="../../base/config/ofbizssl.jks" storepass="changeit" keypass="changeit"
+                storetype="jks" jar="${build.dir}/lib/${name}-print.jar" alias="ssl"/>
+        <copy todir="webapp/webtools/applet">
+            <fileset file="${build.dir}/lib/${name}-print.jar"/>
+        </copy>
+    </target>
+
+    <target name="jar" depends="main-jar, print-jar"/>
 
     <!-- ================================================================== -->
     <!-- Build JavaDoc                                                      -->

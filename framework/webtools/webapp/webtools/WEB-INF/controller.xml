@@ -437,6 +437,32 @@
         <response name="error" type="view" value="EntitySyncStatus"/>
     </request-map>
 
+    <!-- printing requests -->
+    <request-map uri="print">
+        <event type="java" path="org.ofbiz.webtools.print.rmi.FopPrintServer" invoke="readFopPrintServerCookies"/>
+        <response name="success" type="view" value="printStart"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    <request-map uri="printComplete">
+        <event type="java" path="org.ofbiz.webtools.print.rmi.FopPrintServer" invoke="writeFopPrintServerCookies"/>
+        <response name="success" type="view" value="printDone"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    <request-map uri="META-INF">
+        <event type="java" path="org.ofbiz.webtools.print.rmi.FopPrintServer" invoke="return404"/>
+        <response name="success" type="none"/>
+        <response name="error" type="none"/>
+    </request-map>
+    <request-map uri="com">
+        <event type="java" path="org.ofbiz.webtools.print.rmi.FopPrintServer" invoke="return404"/>
+        <response name="success" type="none"/>
+        <response name="error" type="none"/>
+    </request-map>
+    <request-map uri="org">
+        <event type="java" path="org.ofbiz.webtools.print.rmi.FopPrintServer" invoke="return404"/>
+        <response name="success" type="none"/>
+        <response name="error" type="none"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -493,6 +519,9 @@
     <view-map name="scheduleJob" type="region"/>
     <view-map name="availableServices" type="screen" page="component://webtools/widget/AvailableServicesScreens.xml#AvailableServicesList"/>
     <view-map name="serviceEcaDetail" type="screen" page="component://webtools/widget/AvailableServicesScreens.xml#ServiceEcaDetail"/>
+
+    <view-map name="printStart" type="screen" page="component://webtools/widget/CommonScreens.xml#printStart"/>
+    <view-map name="printDone" type="screen" page="component://webtools/widget/CommonScreens.xml#printDone"/>
 
     <view-map name="UomReport" page="/UomReport.xml" type="datavision" info="Uom"/>
     <view-map name="JasperDemoPdf" page="/JasperDemo.xml" type="jasperreportspdf" info="Uom"/>
