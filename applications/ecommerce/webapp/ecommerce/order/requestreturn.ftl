@@ -67,7 +67,9 @@
                 <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
                 <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
                 <input type="hidden" name="description_o_${rowCount}" value="${orderItem.itemDescription?if_exists}"/>
-                <input type="hidden" name="returnItemType_o_${rowCount}" value="ITEM"/>
+                <#-- <input type="hidden" name="returnItemType_o_${rowCount}" value="ITEM"/> -->
+                <#assign returnItemType = returnItemTypeMap.get(returnableItems.get(orderItem).get("itemTypeKey"))/>
+                <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="${returnItemType}"/>
 
                 <#-- need some order item information -->
                 <#assign orderHeader = orderItem.getRelatedOne("OrderHeader")>

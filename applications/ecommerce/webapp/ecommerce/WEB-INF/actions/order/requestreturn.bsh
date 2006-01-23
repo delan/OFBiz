@@ -50,6 +50,15 @@ if (orderId != null) {
     context.put("orderHeader", orderHeader);
 }
 
+returnItemTypeMap = delegator.findByAnd("ReturnItemTypeMap", UtilMisc.toMap("returnHeaderTypeId", "CUSTOMER_RETURN"));
+iter = returnItemTypeMap.iterator();
+typeMap = new HashMap();
+while (iter.hasNext()) {
+    value = iter.next();
+    typeMap.put(value.getString("returnItemMapKey"), value.getString("returnItemTypeId"));
+}
+context.put("returnItemTypeMap", typeMap);
+
 //put in the return to party information from the order header
 if (orderId != null) {
     order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
