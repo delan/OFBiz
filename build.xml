@@ -49,7 +49,8 @@
         files="base/build.xml,framework/entity/build.xml"/>
 
     <property name="site.dir" value="website"/>
-
+    <property name="memory.max.param" value="-Xmx384M"/>
+    
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
@@ -229,31 +230,31 @@
 
     <target name="run" depends="build">
         <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="-Xmx384M"/>
+            <jvmarg value="${memory.max.param}"/>
         </java>
     </target>
     <target name="run-pos" depends="build">
         <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="-Xmx384M"/>
+            <jvmarg value="${memory.max.param}"/>
             <arg value="pos"/>
         </java>
     </target>
     <target name="run-install" depends="build">
         <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="-Xmx384M"/>
+            <jvmarg value="${memory.max.param}"/>
             <arg value="install"/>
         </java>
     </target>
     <target name="run-install-seed" depends="build">
         <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="-Xmx384M"/>
+            <jvmarg value="${memory.max.param}"/>
             <arg value="install"/>
             <arg value="readers=seed"/>
         </java>
     </target>
     <target name="run-debug" depends="build">
         <java jar="ofbiz.jar"  fork="true">
-            <jvmarg value="-Xmx384M"/>
+            <jvmarg value="${memory.max.param}"/>
             <jvmarg value="-Xnoagent"/>
             <jvmarg value="-Djava.compiler=NONE"/>
             <jvmarg value="-Xdebug"/>
@@ -262,7 +263,7 @@
     </target>
     <target name="run-tests" depends="build">
         <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="-Xmx384M"/>
+            <jvmarg value="${memory.max.param}"/>
             <arg value="test"/>
         </java>
     </target>
