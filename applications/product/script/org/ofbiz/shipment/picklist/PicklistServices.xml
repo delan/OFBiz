@@ -74,13 +74,17 @@
 
         <if-empty field-name="orderHeaderList" map-name="parameters">
             <log level="always" message="No order header list found in parameters; finding orders to pick."/>
-            <string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
-            <string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
-            <if-not-empty field-name="parameters.isRushOrder"><env-to-env env-name="parameters.isRushOrder" to-env-name="orderHeaderLkpMp.isRushOrder"/></if-not-empty>
-            <string-to-list string="+orderDate" list-name="orderHeaderOrdLst"/><!-- oldest first -->
-            <find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
+
+            <entity-condition entity-name="OrderHeader" list-name="orderHeaderList">
+                <condition-list combine="and">
+                    <condition-expr field-name="orderTypeId" value="SALES_ORDER"/>
+                    <condition-expr field-name="statusId" value="ORDER_APPROVED"/>
+                    <condition-expr field-name="isRushOrder" env-name="parameters.isRushOrder" ignore-if-empty="true"/>
+                </condition-list>
+                <order-by field-name="+orderDate"/><!-- oldest first -->
+            </entity-condition>
         <else>
-            <field-to-env field-name="orderHeaderList" map-name="parameters" env-name="orderHeaderList"/>
+            <set from-field="parameters.orderHeaderList" field="orderHeaderList"/>
             <log level="info" message="Found orderHeaderList in parameters; using: ${orderHeaderList}"/>
         </else>
         </if-empty>
@@ -124,9 +128,9 @@
                         </entity-and>
 
                         <!-- only add to picklist if inventory is not available (quantityNotAvailable on OISGIR greater than 0) when maySplit is N (wait until all available to ship) -->
-                        <string-to-field string="Y" field-name="pickThisOrder"/>
-                        <string-to-field string="N" field-name="needsStockMove"/>
-                        <string-to-field string="Y" field-name="allPickStarted"/>
+                        <set value="Y" field="pickThisOrder"/>
+                        <set value="N" field="needsStockMove"/>
+                        <set value="Y" field="allPickStarted"/>
                         <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemShipGrpInvResList">
                             <if-compare field-name="pickThisOrder" operator="equals" value="Y">
                                 <get-related-one value-name="orderItemShipGrpInvRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
@@ -144,7 +148,7 @@
                                 <!-- if all picklistItemList are not empty, don't include order as a pick candidate; keep a flag to see -->
                                 <if-empty field-name="picklistItemList">
                                     <!-- note that this is separate because we can't really use it as a break condition, must check all of them before any useful information is to be had -->
-                                    <string-to-field string="N" field-name="allPickStarted"/>
+                                    <set value="N" field="allPickStarted"/>
 
                                     <if>
                                         <condition>
@@ -160,21 +164,21 @@
                                             </or>
                                         </condition>
                                         <then>
-                                            <string-to-field string="N" field-name="pickThisOrder"/>
+                                            <set value="N" field="pickThisOrder"/>
                                         </then>
                                         <else>
                                             <!-- check InventoryItem->FacilityLocation (if exists), if it is of type FLT_BULK set needs stock move to true -->
                                             <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
                                             <if-not-empty field-name="facilityLocation">
                                                 <if-compare field-name="facilityLocation.locationTypeEnumId" operator="equals" value="FLT_BULK">
-                                                    <string-to-field string="Y" field-name="needsStockMove"/>
+                                                    <set value="Y" field="needsStockMove"/>
                                                 </if-compare>
                                             </if-not-empty>
 
                                             <!-- make the orderItemShipGrpInvResInfo and add it to the orderItemShipGrpInvResInfoList -->
-                                            <env-to-env env-name="orderItemShipGrpInvRes" to-env-name="orderItemShipGrpInvResInfo.orderItemShipGrpInvRes"/>
-                                            <env-to-env env-name="inventoryItem" to-env-name="orderItemShipGrpInvResInfo.inventoryItem"/>
-                                            <env-to-env env-name="facilityLocation" to-env-name="orderItemShipGrpInvResInfo.facilityLocation"/>
+                                            <set from-field="orderItemShipGrpInvRes" field="orderItemShipGrpInvResInfo.orderItemShipGrpInvRes"/>
+                                            <set from-field="inventoryItem" field="orderItemShipGrpInvResInfo.inventoryItem"/>
+                                            <set from-field="facilityLocation" field="orderItemShipGrpInvResInfo.facilityLocation"/>
                                             <field-to-list field-name="orderItemShipGrpInvResInfo" list-name="orderItemShipGrpInvResInfoList"/>
                                             <clear-field field-name="orderItemShipGrpInvResInfo"/>
                                         </else>
@@ -192,15 +196,15 @@
                             </condition>
                             <then>
                                 <!-- make the info map for this orderHeader -->
-                                <env-to-env env-name="orderHeader" to-env-name="orderHeaderInfo.orderHeader"/>
-                                <env-to-env env-name="orderItemShipGroup" to-env-name="orderHeaderInfo.orderItemShipGroup"/>
-                                <env-to-env env-name="orderItemAndShipGroupAssocList" to-env-name="orderHeaderInfo.orderItemAndShipGroupAssocList"/>
-                                <env-to-env env-name="orderItemShipGrpInvResList" to-env-name="orderHeaderInfo.orderItemShipGrpInvResList"/>
-                                <env-to-env env-name="orderItemShipGrpInvResInfoList" to-env-name="orderHeaderInfo.orderItemShipGrpInvResInfoList"/>
+                                <set from-field="orderHeader" field="orderHeaderInfo.orderHeader"/>
+                                <set from-field="orderItemShipGroup" field="orderHeaderInfo.orderItemShipGroup"/>
+                                <set from-field="orderItemAndShipGroupAssocList" field="orderHeaderInfo.orderItemAndShipGroupAssocList"/>
+                                <set from-field="orderItemShipGrpInvResList" field="orderHeaderInfo.orderItemShipGrpInvResList"/>
+                                <set from-field="orderItemShipGrpInvResInfoList" field="orderHeaderInfo.orderItemShipGrpInvResInfoList"/>
 
                                 <!-- pick now, or needs stock move first? -->
                                 <!-- put in pick or move lists for the given shipmentMethodTypeId -->
-                                <env-to-env env-name="orderItemShipGroup.shipmentMethodTypeId" to-env-name="shipmentMethodTypeId"/>
+                                <set from-field="orderItemShipGroup.shipmentMethodTypeId" field="shipmentMethodTypeId"/>
                                 <if-empty field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}">
                                     <get-related-one value-name="orderItemShipGroup" relation-name="ShipmentMethodType" to-value-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.shipmentMethodType"/>
                                 </if-empty>
@@ -231,8 +235,10 @@
         </iterate>
 
         <!-- find all ShipmentMethodType in order by sequenceNum, for each one get the value from the pickMoveByShipmentMethodInfoMap and add it to the pickMoveByShipmentMethodInfoList -->
-        <string-to-list string="+sequenceNum" list-name="shipmentMethodTypeOrdLst"/>
-        <find-by-and list-name="shipmentMethodTypeList" entity-name="ShipmentMethodType" map-name="" order-by-list-name="shipmentMethodTypeOrdLst"/>
+        <entity-condition entity-name="ShipmentMethodType" list-name="shipmentMethodTypeList">
+            <order-by field-name="+sequenceNum"/>
+        </entity-condition>
+
         <iterate entry-name="shipmentMethodType" list-name="shipmentMethodTypeList">
             <if-not-empty field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodType.shipmentMethodTypeId}">
                 <field-to-list field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodType.shipmentMethodTypeId}" list-name="pickMoveByShipmentMethodInfoList"/>
@@ -273,24 +279,23 @@
                     <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItemAndShipGroupAssoc.statusId">
                         <calculate field-name="reservedQuantity" type="Double"><number value="0"/></calculate>
 
-                        <field-to-field field-name="orderItemAndShipGroupAssoc.orderItemSeqId" to-field-name="itemFilterMap.orderItemSeqId"/>
+                        <set from-field="orderItemAndShipGroupAssoc.orderItemSeqId" field="itemFilterMap.orderItemSeqId"/>
                         <filter-list-by-and map-name="itemFilterMap" list-name="orderReadyToPickInfo.orderItemShipGrpInvResList" to-list-name="perItemResList"/>
                         <iterate entry-name="orderItemShipGrpInvRes" list-name="perItemResList">
-                            <field-to-env field-name="inventoryItemId" map-name="orderItemShipGrpInvRes"/>
+                            <set from-field="orderItemShipGrpInvRes.inventoryItemId" field="inventoryItemId"/>
                             <!-- update reserved quantity per inventoryItem, keep track of orderItems this came from -->
-                            <field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
+                            <set from-field="inventoryItems.${inventoryItemId}" field="inventoryItem"/>
                             <if-empty field-name="inventoryItem">
-                                <env-to-field env-name="inventoryItemId" map-name="invItmLookupMap"/>
-                                <find-by-primary-key value-name="inventoryItem" entity-name="InventoryItem" map-name="invItmLookupMap"/>
-                                <env-to-field env-name="inventoryItem" field-name="${inventoryItemId}" map-name="inventoryItems"/>
+                                <entity-one entity-name="InventoryItem" value-name="inventoryItem"></entity-one>
+                                <set field="inventoryItems.${inventoryItemId}" from-field="inventoryItem"/>
                             </if-empty>
 
                             <if-compare-field field-name="inventoryItem.facilityId" operator="equals" to-field-name="parameters.facilityId">
-                                <field-to-list field-name="orderItemShipGrpInvRes" list-name="perItemResListValid"/>
+                                <set field="perItemResListValid[]" from-field="orderItemShipGrpInvRes"/>
 
-                                <field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
-                                <field-to-list field-name="orderItemAndShipGroupAssoc" list-name="inventoryItemOrderItemList"/>
-                                <env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemShipGrpInvRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
+                                <set field="inventoryItemOrderItemList" from-field="inventoryItemOrderItems.${inventoryItemId}"/>
+                                <set field="inventoryItemOrderItemList[]" from-field="orderItemAndShipGroupAssoc"/>
+                                <set field="inventoryItemOrderItems.${orderItemShipGrpInvRes.inventoryItemId}" from-field="inventoryItemOrderItemList"/>
                                 <clear-field field-name="inventoryItemOrderItemList"/>
                                 <if-not-empty field-name="inventoryItemQuantities.${inventoryItemId}">
                                     <calculate field-name="inventoryItemQuantities.${inventoryItemId}" type="Double">
@@ -299,7 +304,7 @@
                                         </calcop>
                                     </calculate>
                                 <else>
-                                    <env-to-field env-name="orderItemShipGrpInvRes.quantity" field-name="inventoryItemQuantities.${inventoryItemId}"/>
+                                    <set from-field="orderItemShipGrpInvRes.quantity" field="inventoryItemQuantities.${inventoryItemId}"/>
                                 </else>
                                 </if-not-empty>
                             </if-compare-field>
@@ -314,10 +319,10 @@
 
                         <if-not-empty field-name="perItemResListValid">
                             <clear-field field-name="orderItemInfo"/>
-                            <env-to-env env-name="orderItemAndShipGroupAssoc" to-env-name="orderItemInfo.orderItemAndShipGroupAssoc"/>
-                            <env-to-env env-name="perItemResListValid" to-env-name="orderItemInfo.orderItemShipGrpInvResList"/>
+                            <set field="orderItemInfo.orderItemAndShipGroupAssoc" from-field="orderItemAndShipGroupAssoc"/>
+                            <set field="orderItemInfo.orderItemShipGrpInvResList" from-field="perItemResListValid"/>
                             <get-related-one value-name="orderItemAndShipGroupAssoc" relation-name="Product" to-value-name="orderItemInfo.product" use-cache="true"/>
-                            <field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
+                            <set field="orderItemInfoList[]" from-field="orderItemInfo"/>
                         </if-not-empty>
                         <clear-field field-name="perItemResListValid"/>
 
@@ -339,11 +344,11 @@
                             </calcop>
                         </calculate>
                         <if-compare-field field-name="reservedIssuedQuantity" operator="not-equals" to-field-name="orderItemAndShipGroupAssoc.quantity" type="Double">
-                            <env-to-field env-name="orderItemAndShipGroupAssoc" map-name="wrongQuantityReserved"/>
-                            <env-to-field env-name="reservedQuantity" map-name="wrongQuantityReserved"/>
-                            <env-to-field env-name="issuedQuantity" map-name="wrongQuantityReserved"/>
-                            <env-to-field env-name="reservedIssuedQuantity" map-name="wrongQuantityReserved"/>
-                            <field-to-list field-name="wrongQuantityReserved" list-name="wrongQuantityReservedList"/>
+                            <set field="wrongQuantityReserved.orderItemAndShipGroupAssoc" from-field="orderItemAndShipGroupAssoc"/>
+                            <set field="wrongQuantityReserved.reservedQuantity" from-field="reservedQuantity"/>
+                            <set field="wrongQuantityReserved.issuedQuantity" from-field="issuedQuantity"/>
+                            <set field="wrongQuantityReserved.reservedIssuedQuantity" from-field="reservedIssuedQuantity"/>
+                            <set field="wrongQuantityReservedList[]" from-field="wrongQuantityReserved"/>
                             <clear-field field-name="wrongQuantityReserved"/>
                         </if-compare-field>
                     </if-compare>
@@ -351,10 +356,10 @@
 
                 <!-- keep the order info for easy handling of order pack info -->
                 <if-not-empty field-name="orderItemInfoList">
-                    <env-to-env env-name="orderReadyToPickInfo.orderHeader" to-env-name="orderHeaderInfo.orderHeader"/>
-                    <env-to-env env-name="orderReadyToPickInfo.orderItemShipGroup" to-env-name="orderHeaderInfo.orderItemShipGroup"/>
-                    <env-to-env env-name="orderItemInfoList" to-env-name="orderHeaderInfo.orderItemInfoList"/>
-                    <field-to-list field-name="orderHeaderInfo" list-name="orderHeaderInfoList"/>
+                    <set field="orderHeaderInfo.orderHeader" from-field="orderReadyToPickInfo.orderHeader"/>
+                    <set field="orderHeaderInfo.orderItemShipGroup" from-field="orderReadyToPickInfo.orderItemShipGroup"/>
+                    <set field="orderHeaderInfo.orderItemInfoList" from-field="orderItemInfoList"/>
+                    <set field="orderHeaderInfoList[]" from-field="orderHeaderInfo"/>
                 </if-not-empty>
 
                 <clear-field field-name="orderHeaderInfo"/>
@@ -365,7 +370,7 @@
 
         <!-- warn if insufficient QOH for reserved amount -->
         <iterate-map map-name="inventoryItemQuantities" key-name="inventoryItemId" value-name="quantityNeeded">
-            <env-to-env env-name="inventoryItems.${inventoryItemId}" to-env-name="inventoryItem"/>
+            <set from-field="inventoryItems.${inventoryItemId}" field="inventoryItem"/>
             <if>
                 <condition>
                     <and>
@@ -387,9 +392,9 @@
                 </condition>
                 <then>
                     <clear-field field-name="insufficientQoh"/>
-                    <env-to-field env-name="inventoryItem" map-name="insufficientQoh"/>
-                    <env-to-field env-name="quantityNeeded" map-name="insufficientQoh"/>
-                    <field-to-list field-name="insufficientQoh" list-name="insufficientQohList"/>
+                    <set from-field="inventoryItem" field="insufficientQoh.inventoryItem"/>
+                    <set from-field="quantityNeeded" field="insufficientQoh.quantityNeeded"/>
+                    <set from-field="insufficientQoh" field="insufficientQohList[]"/>
                 </then>
             </if>
         </iterate-map>
@@ -418,8 +423,8 @@
 
         <!-- if the orderHeaderInfoList is not empty, create a Picklist, then populate it -->
         <if-not-empty field-name="orderHeaderInfoList">
-            <env-to-env env-name="parameters.facilityId" to-env-name="createPicklistMap.facilityId"/>
-            <env-to-env env-name="parameters.shipmentMethodTypeId" to-env-name="createPicklistMap.shipmentMethodTypeId"/>
+            <set from-field="parameters.facilityId" field="createPicklistMap.facilityId"/>
+            <set from-field="parameters.shipmentMethodTypeId" field="createPicklistMap.shipmentMethodTypeId"/>
             <call-service service-name="createPicklist" in-map-name="createPicklistMap">
                 <result-to-field result-name="picklistId"/>
             </call-service>
@@ -431,10 +436,10 @@
             <iterate entry-name="orderHeaderInfo" list-name="orderHeaderInfoList">
                 <clear-field field-name="picklistBinId"/>
                 <clear-field field-name="createPicklistBinMap"/>
-                <env-to-env env-name="picklistId" to-env-name="createPicklistBinMap.picklistId"/>
-                <env-to-env env-name="binLocationNumber" to-env-name="createPicklistBinMap.binLocationNumber"/>
-                <env-to-env env-name="orderHeaderInfo.orderItemShipGroup.orderId" to-env-name="createPicklistBinMap.primaryOrderId"/>
-                <env-to-env env-name="orderHeaderInfo.orderItemShipGroup.shipGroupSeqId" to-env-name="createPicklistBinMap.primaryShipGroupSeqId"/>
+                <set from-field="picklistId" field="createPicklistBinMap.picklistId"/>
+                <set from-field="binLocationNumber" field="createPicklistBinMap.binLocationNumber"/>
+                <set from-field="orderHeaderInfo.orderItemShipGroup.orderId" field="createPicklistBinMap.primaryOrderId"/>
+                <set from-field="orderHeaderInfo.orderItemShipGroup.shipGroupSeqId" field="createPicklistBinMap.primaryShipGroupSeqId"/>
                 <call-service service-name="createPicklistBin" in-map-name="createPicklistBinMap">
                     <result-to-field result-name="picklistBinId"/>
                 </call-service>
@@ -444,7 +449,7 @@
                 <iterate entry-name="orderItemInfo" list-name="orderHeaderInfo.orderItemInfoList">
                     <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemInfo.orderItemShipGrpInvResList">
                         <clear-field field-name="createPicklistItemMap"/>
-                        <env-to-env env-name="picklistBinId" to-env-name="createPicklistItemMap.picklistBinId"/>
+                        <set from-field="picklistBinId" field="createPicklistItemMap.picklistBinId"/>
                         <set-service-fields service-name="createPicklistItem" map-name="orderItemShipGrpInvRes" to-map-name="createPicklistItemMap"/>
                         <call-service service-name="createPicklistItem" in-map-name="createPicklistItemMap"/>
                     </iterate>
@@ -473,15 +478,15 @@
         <field-to-result field-name="newEntity.picklistId" result-name="picklistId"/>
 
         <if-empty field-name="newEntity.statusId">
-            <string-to-field string="PICKLIST_INPUT" field-name="newEntity.statusId"/>
+            <set value="PICKLIST_INPUT" field="newEntity.statusId"/>
         </if-empty>
 
         <!-- auto-set the picklistDate, this is not user-changeable -->
         <now-timestamp-to-env env-name="newEntity.picklistDate"/>
 
         <!-- set the created and lastModified info -->
-        <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.createdByUserLogin"/>
-        <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
 
         <create-value value-name="newEntity"/>
     </simple-method>
@@ -502,15 +507,15 @@
                     <field-map env-name="parameters.statusId" field-name="statusIdTo"/>
                 </entity-one>
                 <if-empty field-name="checkStatusValidChange">
-                    <string-to-list string="ERROR: Changing the status from ${lookedUpValue.statusId} to ${parameters.statusId} is not allowed." list-name="error_list"/>
+                    <set value="ERROR: Changing the status from ${lookedUpValue.statusId} to ${parameters.statusId} is not allowed." field="error_list[]"/>
                 </if-empty>
 
                 <make-value entity-name="PicklistStatusHistory" value-name="newStatusValue"/>
-                <env-to-env env-name="parameters.picklistId" to-env-name="newStatusValue.picklistId"/>
-                <env-to-env env-name="lookedUpValue.statusId" to-env-name="newStatusValue.statusId"/>
-                <env-to-env env-name="parameters.statusId" to-env-name="newStatusValue.statusIdTo"/>
+                <set from-field="parameters.picklistId" field="newStatusValue.picklistId"/>
+                <set from-field="lookedUpValue.statusId" field="newStatusValue.statusId"/>
+                <set from-field="parameters.statusId" field="newStatusValue.statusIdTo"/>
                 <now-timestamp-to-env env-name="newStatusValue.changeDate"/>
-                <env-to-env env-name="userLogin.userLoginId" to-env-name="newStatusValue.changeUserLoginId"/>
+                <set from-field="userLogin.userLoginId" field="newStatusValue.changeUserLoginId"/>
                 <create-value value-name="newStatusValue"/>
             </if-compare-field>
         </if-not-empty>
@@ -523,7 +528,7 @@
 
         <!-- now that all changes have been checked, set the nonpks -->
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        <env-to-env env-name="userLogin.userLoginId" to-env-name="lookedUpValue.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="lookedUpValue.lastModifiedByUserLogin"/>
 
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -701,7 +706,7 @@
 
         <!-- Assemble the information per facility location for the pick sheet -->
         <iterate entry-name="picklistBinInfo" list-name="picklistInfo.picklistBinInfoList">
-            <env-to-env env-name="picklistBinInfo.picklistBin" to-env-name="picklistBinByIdMap.${picklistBinInfo.picklistBin.picklistBinId}"/>
+            <set from-field="picklistBinInfo.picklistBin" field="picklistBinByIdMap.${picklistBinInfo.picklistBin.picklistBinId}"/>
 
             <iterate entry-name="picklistItemInfo" list-name="picklistBinInfo.picklistItemInfoList">
                 <!--
@@ -716,21 +721,21 @@
                 -->
                 <if-not-empty field-name="picklistItemInfo.inventoryItemAndLocation.locationSeqId">
                     <make-value value-name="facilityLocation" entity-name="FacilityLocation" map-name="picklistItemInfo.inventoryItemAndLocation"/>
-                    <env-to-env env-name="facilityLocation" to-env-name="facilityLocationByLocationSeqIdMap.${facilityLocation.locationSeqId}"/>
+                    <set from-field="facilityLocation" field="facilityLocationByLocationSeqIdMap.${facilityLocation.locationSeqId}"/>
 
                     <clear-field field-name="picklistItemInfoTempList"/>
-                    <env-to-env env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}" to-env-name="picklistItemInfoTempList"/>
-                    <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
-                    <env-to-env env-name="picklistItemInfoTempList" to-env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}"/>
+                    <set field="picklistItemInfoTempList" from-field="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}"/>
+                    <set field="picklistItemInfoTempList[]" from-field="picklistItemInfo"/>
+                    <set field="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}" from-field="picklistItemInfoTempList"/>
                 <else>
                     <!-- handle case where an InventoryItem is not associated with a location -->
                     <if-not-empty field-name="picklistItemInfo.orderItem.productId">
                         <clear-field field-name="productValueTemp"/>
-                        <env-to-env env-name="picklistItemInfo.orderItem.productId" to-env-name="productId"/>
+                        <set field="productId" from-field="picklistItemInfo.orderItem.productId"/>
                         <entity-one entity-name="Product" value-name="productValueTemp" use-cache="true">
                             <field-map field-name="productId"/>
                         </entity-one>
-                        <env-to-env to-env-name="productByProductIdMap.${productId}" env-name="productValueTemp"/>
+                        <set field="productByProductIdMap.${productId}" from-field="productValueTemp"/>
 
                         <!--
                         <call-bsh><![CDATA[
@@ -739,9 +744,9 @@
                         -->
 
                         <clear-field field-name="picklistItemInfoTempList"/>
-                        <env-to-env env-name="picklistItemInfoListByProductIdMap.${productId}" to-env-name="picklistItemInfoTempList"/>
-                        <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
-                        <env-to-env env-name="picklistItemInfoTempList" to-env-name="picklistItemInfoListByProductIdMap.${productId}"/>
+                        <set field="picklistItemInfoTempList" from-field="picklistItemInfoListByProductIdMap.${productId}"/>
+                        <set field="picklistItemInfoTempList[]" from-field="picklistItemInfo"/>
+                        <set field="picklistItemInfoListByProductIdMap.${productId}" from-field="picklistItemInfoTempList"/>
 
                         <!--
                         <call-bsh><![CDATA[
@@ -763,18 +768,18 @@
         <iterate-map map-name="facilityLocationByLocationSeqIdMap" key-name="locationSeqId" value-name="facilityLocationList[]"/>
 
         <!-- order/sort the facilityLocations -->
-        <string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+sectionId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
+        <set value="+areaId" field="facilityLocsOrdLst[]"/>
+        <set value="+aisleId" field="facilityLocsOrdLst[]"/>
+        <set value="+sectionId" field="facilityLocsOrdLst[]"/>
+        <set value="+levelId" field="facilityLocsOrdLst[]"/>
+        <set value="+positionId" field="facilityLocsOrdLst[]"/>
         <order-value-list list-name="facilityLocationList" order-by-list-name="facilityLocsOrdLst"/>
 
         <!-- Now we have an ordered list of FacilityLocations, create a facilityLocationInfoList -->
         <iterate entry-name="facilityLocation" list-name="facilityLocationList">
             <clear-field field-name="facilityLocationInfo"/>
-            <env-to-env env-name="facilityLocation" to-env-name="facilityLocationInfo.facilityLocation"/>
-            <env-to-env env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}" to-env-name="facilityLocationInfo.picklistItemInfoList"/>
+            <set from-field="facilityLocation" field="facilityLocationInfo.facilityLocation"/>
+            <set from-field="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}" field="facilityLocationInfo.picklistItemInfoList"/>
 
             <!-- make the pickQuantity and quantityByPicklistBinIdMap -->
             <iterate entry-name="picklistItemInfo" list-name="facilityLocationInfo.picklistItemInfoList">
@@ -792,7 +797,7 @@
 
                 <!-- also put the product record in place -->
                 <if-empty field-name="facilityLocationInfo.product">
-                    <env-to-env env-name="picklistItemInfo.product" to-env-name="facilityLocationInfo.product"/>
+                    <set from-field="picklistItemInfo.product" field="facilityLocationInfo.product"/>
                 <else>
                     <if-compare-field field-name="facilityLocationInfo.product.productId" operator="not-equals" to-field-name="picklistItemInfo.product.productId">
                         <!-- Uh oh, have different products in the same location... what to do about this? -->
@@ -806,13 +811,13 @@
             <!-- create the picklistBinInfoList from the quantityByPicklistBinIdMap -->
             <iterate-map key-name="picklistBinId" value-name="quantity" map-name="facilityLocationInfo.quantityByPicklistBinIdMap">
                 <clear-field field-name="picklistBinInfo"/>
-                <env-to-env env-name="picklistBinByIdMap.${picklistBinId}" to-env-name="picklistBinInfo.picklistBin"/>
-                <env-to-env env-name="quantity" to-env-name="picklistBinInfo.quantity"/>
-                <env-to-env env-name="picklistBinInfo" to-env-name="facilityLocationInfo.picklistBinInfoList[]"/>
+                <set from-field="picklistBinByIdMap.${picklistBinId}" field="picklistBinInfo.picklistBin"/>
+                <set from-field="quantity" field="picklistBinInfo.quantity"/>
+                <set from-field="picklistBinInfo" field="facilityLocationInfo.picklistBinInfoList[]"/>
             </iterate-map>
             <order-map-list list-name="facilityLocationInfo.picklistBinInfoList"><order-by field-name="picklistBin.binLocationNumber"/></order-map-list>
 
-            <env-to-env env-name="facilityLocationInfo" to-env-name="facilityLocationInfoList[]"/>
+            <set from-field="facilityLocationInfo" field="facilityLocationInfoList[]"/>
         </iterate>
 
         <!-- === handle the ones by Product === -->
@@ -820,14 +825,14 @@
         <iterate-map map-name="productByProductIdMap" key-name="productId" value-name="productList[]"/>
 
         <!-- order/sort the products -->
-        <string-to-list string="+productId" list-name="productsOrdLst"/>
+        <set value="+productId" field="productsOrdLst[]"/>
         <order-value-list list-name="productList" order-by-list-name="productsOrdLst"/>
 
         <!-- Now we have an ordered list of Products, create a noLocationProductInfoList -->
         <iterate entry-name="product" list-name="productList">
             <clear-field field-name="productInfo"/>
-            <env-to-env env-name="product" to-env-name="productInfo.product"/>
-            <env-to-env env-name="picklistItemInfoListByProductIdMap.${product.productId}" to-env-name="productInfo.picklistItemInfoList"/>
+            <set from-field="product" field="productInfo.product"/>
+            <set from-field="picklistItemInfoListByProductIdMap.${product.productId}" field="productInfo.picklistItemInfoList"/>
 
             <!-- make the pickQuantity and quantityByPicklistBinIdMap -->
             <iterate entry-name="picklistItemInfo" list-name="productInfo.picklistItemInfoList">
@@ -847,13 +852,13 @@
             <!-- create the picklistBinInfoList from the quantityByPicklistBinIdMap -->
             <iterate-map key-name="picklistBinId" value-name="quantity" map-name="productInfo.quantityByPicklistBinIdMap">
                 <clear-field field-name="picklistBinInfo"/>
-                <env-to-env env-name="picklistBinByIdMap.${picklistBinId}" to-env-name="picklistBinInfo.picklistBin"/>
-                <env-to-env env-name="quantity" to-env-name="picklistBinInfo.quantity"/>
-                <env-to-env env-name="picklistBinInfo" to-env-name="productInfo.picklistBinInfoList[]"/>
+                <set from-field="picklistBinByIdMap.${picklistBinId}" field="picklistBinInfo.picklistBin"/>
+                <set from-field="quantity" field="picklistBinInfo.quantity"/>
+                <set from-field="picklistBinInfo" field="productInfo.picklistBinInfoList[]"/>
             </iterate-map>
             <order-map-list list-name="productInfo.picklistBinInfoList"><order-by field-name="picklistBin.binLocationNumber"/></order-map-list>
 
-            <env-to-env env-name="productInfo" to-env-name="noLocationProductInfoList[]"/>
+            <set from-field="productInfo" field="noLocationProductInfoList[]"/>
         </iterate>
 
         <field-to-result field-name="facilityLocationInfoList"/>
@@ -883,7 +888,7 @@
             <clear-field field-name="picklistRoleInfo"/>
             <get-related-one value-name="picklistRole" relation-name="PartyNameView" to-value-name="picklistRoleInfo.partyNameView" use-cache="true"/>
             <get-related-one value-name="picklistRole" relation-name="RoleType" to-value-name="picklistRoleInfo.roleType" use-cache="true"/>
-            <env-to-env env-name="picklistRole" to-env-name="picklistRoleInfo.picklistRole"/>
+            <set from-field="picklistRole" field="picklistRoleInfo.picklistRole"/>
             <field-to-list field-name="picklistRoleInfo" list-name="picklistRoleInfoList"/>
         </iterate>
 
@@ -893,14 +898,14 @@
             <clear-field field-name="picklistStatusHistoryInfo"/>
             <get-related-one value-name="picklistStatusHistory" relation-name="StatusItem" to-value-name="picklistStatusHistoryInfo.statusItem" use-cache="true"/>
             <get-related-one value-name="picklistStatusHistory" relation-name="ToStatusItem" to-value-name="picklistStatusHistoryInfo.statusItemTo" use-cache="true"/>
-            <env-to-env env-name="picklistStatusHistory" to-env-name="picklistStatusHistoryInfo.picklistStatusHistory"/>
+            <set from-field="picklistStatusHistory" field="picklistStatusHistoryInfo.picklistStatusHistory"/>
             <field-to-list field-name="picklistStatusHistoryInfo" list-name="picklistStatusHistoryInfoList"/>
         </iterate>
 
         <clear-field field-name="picklistBinOrderList"/>
         <clear-field field-name="picklistBinInfoList"/>
 
-        <string-to-list string="+binLocationNumber" list-name="picklistBinOrderList"/>
+        <set value="+binLocationNumber" field="picklistBinOrderList[]"/>
         <get-related value-name="picklist" relation-name="PicklistBin" list-name="picklistBinList" order-by-list-name="picklistBinOrderList"/>
         <iterate entry-name="picklistBin" list-name="picklistBinList">
             <clear-field field-name="picklistBinInfo"/>
@@ -916,21 +921,21 @@
                 <get-related-one value-name="picklistItem" relation-name="InventoryItemAndLocation" to-value-name="picklistItemInfo.inventoryItemAndLocation"/>
                 <get-related-one value-name="picklistItem" relation-name="OrderItemShipGrpInvRes" to-value-name="picklistItemInfo.orderItemShipGrpInvRes"/>
                 <get-related value-name="picklistItem" relation-name="ItemIssuance" list-name="picklistItemInfo.itemIssuanceList"/>
-                <env-to-env env-name="picklistItem" to-env-name="picklistItemInfo.picklistItem"/>
-                <env-to-env env-name="picklistBin" to-env-name="picklistItemInfo.picklistBin"/>
+                <set from-field="picklistItem" field="picklistItemInfo.picklistItem"/>
+                <set from-field="picklistBin" field="picklistItemInfo.picklistBin"/>
                 <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoList"/>
             </iterate>
-            <env-to-env env-name="picklistItemInfoList" to-env-name="picklistBinInfo.picklistItemInfoList"/>
+            <set from-field="picklistItemInfoList" field="picklistBinInfo.picklistItemInfoList"/>
 
-            <env-to-env env-name="picklistBin" to-env-name="picklistBinInfo.picklistBin"/>
+            <set from-field="picklistBin" field="picklistBinInfo.picklistBin"/>
             <field-to-list field-name="picklistBinInfo" list-name="picklistBinInfoList"/>
         </iterate>
 
         <clear-field field-name="picklistInfo"/>
-        <env-to-env env-name="picklist" to-env-name="picklistInfo.picklist"/>
-        <env-to-env env-name="picklistRoleInfoList" to-env-name="picklistInfo.picklistRoleInfoList"/>
-        <env-to-env env-name="picklistStatusHistoryInfoList" to-env-name="picklistInfo.picklistStatusHistoryInfoList"/>
-        <env-to-env env-name="picklistBinInfoList" to-env-name="picklistInfo.picklistBinInfoList"/>
+        <set from-field="picklist" field="picklistInfo.picklist"/>
+        <set from-field="picklistRoleInfoList" field="picklistInfo.picklistRoleInfoList"/>
+        <set from-field="picklistStatusHistoryInfoList" field="picklistInfo.picklistStatusHistoryInfoList"/>
+        <set from-field="picklistBinInfoList" field="picklistInfo.picklistBinInfoList"/>
         <get-related-one value-name="picklist" relation-name="StatusItem" to-value-name="picklistInfo.statusItem" use-cache="true"/>
         <get-related-one value-name="picklist" relation-name="Facility" to-value-name="picklistInfo.facility" use-cache="true"/>
         <get-related-one value-name="picklist" relation-name="ShipmentMethodType" to-value-name="picklistInfo.shipmentMethodType" use-cache="true"/>
@@ -991,92 +996,92 @@
 
         <!-- go through all quantities and get inventoryItem and facilityLocation -->
         <iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
-            <env-to-env env-name="inventoryItems.${inventoryItemId}" to-env-name="inventoryItem"/>
+            <set from-field="inventoryItems.${inventoryItemId}" field="inventoryItem"/>
 
             <!-- create a list of locations, then sort it, will have to create a reverse Map to go from location to inventory item -->
             <clear-field field-name="facilityLocation"/>
             <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
             <if-not-empty field-name="facilityLocation">
-                <env-to-env env-name="facilityLocation" to-env-name="facilityLocationMap.${facilityLocation.locationSeqId}"/>
+                <set from-field="facilityLocation" field="facilityLocationMap.${facilityLocation.locationSeqId}"/>
                 <!-- support multiple invnetoryItemIds per facilityLocation.locationSeqId -->
                 <clear-field field-name="inventoryItemIdList"/>
-                <env-to-env env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}" to-env-name="inventoryItemIdList"/>
-                <field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
-                <env-to-env env-name="inventoryItemIdList" to-env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}"/>
+                <set from-field="inventoryItemsByLocation.${facilityLocation.locationSeqId}" field="inventoryItemIdList"/>
+                <set from-field="inventoryItemId" field="inventoryItemIdList[]"/>
+                <set from-field="inventoryItemIdList" field="inventoryItemsByLocation.${facilityLocation.locationSeqId}"/>
             <else>
-                <field-to-list field-name="inventoryItemId" list-name="noLocationInventoryItemIds"/>
+                <set from-field="inventoryItemId" field="noLocationInventoryItemIds[]"/>
             </else>
             </if-not-empty>
         </iterate-map>
 
         <!-- make a facilityLocations List from the facilityLocationMap, which was used to guarantee uniqueness -->
         <iterate-map map-name="facilityLocationMap" key-name="locationSeqId" value-name="facilityLocation">
-            <field-to-list field-name="facilityLocation" list-name="facilityLocations"/>
+            <set from-field="facilityLocation" field="facilityLocations[]"/>
         </iterate-map>
 
         <!-- order the facilityLocations -->
-        <string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+sectionId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
+        <set value="+areaId" field="facilityLocsOrdLst[]"/>
+        <set value="+aisleId" field="facilityLocsOrdLst[]"/>
+        <set value="+sectionId" field="facilityLocsOrdLst[]"/>
+        <set value="+levelId" field="facilityLocsOrdLst[]"/>
+        <set value="+positionId" field="facilityLocsOrdLst[]"/>
         <order-value-list list-name="facilityLocations" order-by-list-name="facilityLocsOrdLst"/>
 
         <!-- for each facility location add an entry to the inventoryItemInfoList -->
         <iterate entry-name="facilityLocation" list-name="facilityLocations">
             <!-- facilityLocationInfoList: facilityLocation, productInfoList (product, quantity, inventoryItemList, orderItemList) -->
             <clear-field field-name="facilityLocationInfo"/>
-            <env-to-field env-name="facilityLocation" map-name="facilityLocationInfo"/>
+            <set from-field="facilityLocation" field="facilityLocationInfo.facilityLocation"/>
 
             <!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity, product, statusItems -->
-            <env-to-env env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}" to-env-name="inventoryItemIdList"/>
+            <set from-field="inventoryItemsByLocation.${facilityLocation.locationSeqId}" field="inventoryItemIdList"/>
             <iterate entry-name="inventoryItemId" list-name="inventoryItemIdList">
                 <clear-field field-name="inventoryItemInfo"/>
-                <env-to-field env-name="facilityLocation" map-name="inventoryItemInfo"/>
-                <field-to-field field-name="inventoryItems.${inventoryItemId}" to-field-name="inventoryItemInfo.inventoryItem"/>
-                <field-to-field field-name="inventoryItemOrderItems.${inventoryItemId}" to-field-name="inventoryItemInfo.orderItems"/>
-                <field-to-field field-name="inventoryItemQuantities.${inventoryItemId}" to-field-name="inventoryItemInfo.quantity"/>
+                <set from-field="facilityLocation" field="inventoryItemInfo.facilityLocation"/>
+                <set from-field="inventoryItems.${inventoryItemId}" field="inventoryItemInfo.inventoryItem"/>
+                <set from-field="inventoryItemOrderItems.${inventoryItemId}" field="inventoryItemInfo.orderItems"/>
+                <set from-field="inventoryItemQuantities.${inventoryItemId}" field="inventoryItemInfo.quantity"/>
                 <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
                 <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
                 <field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
 
                 <!-- before destroying inventoryItemInfo, add info to the productInfoMap -->
-                <env-to-env env-name="inventoryItemInfo.product" to-env-name="productInfoMap.${inventoryItemInfo.product.productId}.product"/>
+                <set from-field="inventoryItemInfo.product" field="productInfoMap.${inventoryItemInfo.product.productId}.product"/>
                 <calculate field-name="productInfoMap.${inventoryItemInfo.product.productId}.quantity" type="Double">
                     <calcop field-name="productInfoMap.${inventoryItemInfo.product.productId}.quantity" operator="get"/>
                     <calcop field-name="inventoryItemInfo.quantity" operator="get"/>
                 </calculate>
-                <field-to-list field-name="inventoryItemInfo.inventoryItem" list-name="productInfoMap.${inventoryItemInfo.product.productId}.inventoryItemList"/>
+                <set from-field="inventoryItemInfo.inventoryItem" field="productInfoMap.${inventoryItemInfo.product.productId}.inventoryItemList[]"/>
                 <!-- put orderItems in Map by orderId:orderItemSeqId to make sure they are unique -->
                 <iterate entry-name="orderItem" list-name="inventoryItemInfo.orderItems">
-                    <env-to-env env-name="orderItem" to-env-name="orderItemMap.${orderItem.orderId}:${orderItem.orderItemSeqId}"/>
+                    <set from-field="orderItem" field="orderItemMap.${orderItem.orderId}:${orderItem.orderItemSeqId}"/>
                 </iterate>
             </iterate>
 
             <iterate-map key-name="orderItemCompositeId" value-name="orderItem" map-name="orderItemMap">
-                <field-to-list field-name="orderItem" list-name="productInfoMap.${orderItem.productId}.orderItemList"/>
+                <set from-field="orderItem" field="productInfoMap.${orderItem.productId}.orderItemList[]"/>
             </iterate-map>
 
             <!-- move all values from productInfoMap to facilityLocationInfo.productInfoList -->
             <iterate-map key-name="productId" value-name="productInfo" map-name="productInfoMap">
-                <field-to-list field-name="productInfo" list-name="facilityLocationInfo.productInfoList"/>
+                <set from-field="productInfo" field="facilityLocationInfo.productInfoList[]"/>
             </iterate-map>
 
-            <field-to-list field-name="facilityLocationInfo" list-name="facilityLocationInfoList"/>
+            <set from-field="facilityLocationInfo" field="facilityLocationInfoList[]"/>
             <clear-field field-name="orderItemMap"/>
             <clear-field field-name="productInfoMap"/>
         </iterate>
 
         <!-- add all noLocationInventoryItemIds to inventoryItemInfoList with all entries except facilityLocation -->
         <iterate entry-name="inventoryItemId" list-name="noLocationInventoryItemIds">
-            <field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
-            <field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
-            <field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
+            <set from-field="inventoryItems${inventoryItemId}" field="inventoryItemInfo.inventoryItem"/>
+            <set from-field="inventoryItemOrderItems.${inventoryItemId}" field="inventoryItemInfo.orderItems"/>
+            <set from-field="inventoryItemQuantities.${inventoryItemId}" field="inventoryItemInfo.quantity"/>
             <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
             <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
-            <field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
+            <set from-field="inventoryItemInfo" field="inventoryItemInfoList[]"/>
             <clear-field field-name="inventoryItemInfo"/>
         </iterate>
     </simple-method>
