@@ -30,25 +30,31 @@
     <!-- Opentravelsystem Catalog Services -->
     <!-- ================================================================ -->
     
-    <simple-method method-name="createProductCategory" short-description="--Add a ProductCategory with the invoice prefix--">
-        <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
-            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
-        </check-permission>        
-        <check-errors/>
-        
-        <!-- create id using the invoice prefix -->
+    <simple-method method-name="createProductCategory" short-description="--Add a ProductCategory with the invoice prefix--" >
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
-        <set-service-fields service-name="createProductCategoryOfbiz" map-name="parameters" to-map-name="createProductCategory"/>
-        <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}ProductCategory" env-name="nextProductCategoryId"/>
-        <set field="createProductCategory.productCategoryId" value="${partyAcctgPreference.invoiceIdPrefix}${nextProductCategoryId}"/>
+        <if-not-empty field-name="partyAcctgPreference">
+            <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+                <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+                <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            </check-permission>        
+            <check-errors/>
+            
+            <if-empty field-name="parameters.productCategoryId">
+                <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}ProductCategory" env-name="nextProductCategoryId"/>
+                <set field="parameters.productCategoryId" value="${partyAcctgPreference.invoiceIdPrefix}${nextProductCategoryId}"/>
+                <else>
+                    <set field="parameters.productCategoryId" value="${partyAcctgPreference.invoiceIdPrefix}${parameters.productCategoryId}"/>
+                </else>
+            </if-empty>
+            <set field="parameters.detailScreen" value="component://${parameters.userLogin.partyId}/includes/categorydetail.ftl"/>
+        </if-not-empty>
         <!-- call original ofbiz service with preset ProductCategoryId -->
+        <set-service-fields service-name="createProductCategoryOfbiz" map-name="parameters" to-map-name="createProductCategory"/>
         <call-service service-name="createProductCategoryOfbiz" in-map-name="createProductCategory">
             <result-to-result result-name="productCategoryId" service-result-name="productCategoryId"/>
         </call-service>
-        
     </simple-method>
     
     <simple-method method-name="createProduct" short-description="--Add a Product with the invoice prefix--">
@@ -62,9 +68,15 @@
             </check-permission>        
             <check-errors/>
             
-            <!-- create id using the invoice prefix -->
-            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Product" env-name="nextProductId"/>
-            <set field="parameters.productId" value="${partyAcctgPreference.invoiceIdPrefix}${nextProductId}"/>
+            <!-- create id using the invoice prefix if not provided but add prefix-->
+            <if-empty field-name="parameters.productId">
+                <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Product" env-name="nextProductId"/>
+                <set field="parameters.productId" value="${partyAcctgPreference.invoiceIdPrefix}${nextProductId}"/>
+                <else>
+                    <set field="parameters.productId" value="${partyAcctgPreference.invoiceIdPrefix}${parameters.productId}"/>
+                </else>
+            </if-empty>
+            <set field="parameters.detailScreen" value="component://${parameters.userLogin.partyId}/includes/productdetail.ftl"/>
         </if-not-empty>
         <!-- call original ofbiz service with preset ProductId -->
         <set-service-fields service-name="createProductOfbiz" map-name="parameters" to-map-name="createProduct"/>

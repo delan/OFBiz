@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +42,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 
 import org.apache.commons.fileupload.FileItem;
@@ -79,14 +81,13 @@ public class importData {
 		Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
 		if (loc == null) loc = Locale.getDefault();
 		String organizationPartyId = userLogin.getString("partyId");
-		
+		Map results = null;
+
 		if (getFile(request).equals("error") || localFile == null || localFile.length() == 0) { // get the content of the uploaded file...
 			request.setAttribute("_ERROR_MESSAGE_", "imPortProduct: Uploaded file not found or an empty file......");
 			return "error";
 		}
 		if (debug) Debug.logInfo("File loaded...", module);
-		
-		List toBeStored = new LinkedList(); // file to keep all the values which need updating
 		
 		GenericValue catalog = null;
 		GenericValue partyAcctgPreference = null;
@@ -108,64 +109,81 @@ public class importData {
 			return "error";
 		}
 		// create basis categories
+		String browseCategory = null;
+		String promoCategory = null;
 		// promotion
-		toBeStored.add(delegator.makeValue("ProductCategory",UtilMisc.toMap(
-				"productCategoryId",organizationPartyId + "_PROMO",
-				"productCategoryTypeId","CATALOG_CATEGORY",
-				"primaryParentCategoryId",organizationPartyId,
-				"description","Promotion Items")));
-		
+		try { 
+			results = dispatcher.runSync("createProductCategory",UtilMisc.toMap(
+					"userLogin",userLogin,
+					"productCategoryTypeId","CATALOG_CATEGORY",
+					"primaryParentCategoryId",organizationPartyId,
+					"description","Promotion Items")); 
+			promoCategory = (String) results.get("productCategoryId");
 		// connect to catalog
-		toBeStored.add(delegator.makeValue("ProdCatalogCategory",UtilMisc.toMap(
-				"prodCatalogId",organizationPartyId,
-				"productCategoryId",organizationPartyId + "_PROMO",
-				"prodCatalogCategoryTypeId","PCCT_PROMOTIONS",
-				"fromDate",nowTimestamp)));
-		
-		// browseroot
-		toBeStored.add(delegator.makeValue("ProductCategory",UtilMisc.toMap(
-				"primaryParentCategoryId",organizationPartyId,
-				"productCategoryId",organizationPartyId + "_ROOT",
-				"productCategoryTypeId","CATALOG_CATEGORY",
-				"description","contain the categories to browse"	)));
-		
-		// connect to catalog
-		toBeStored.add(delegator.makeValue("ProdCatalogCategory",UtilMisc.toMap(
-				"prodCatalogId",organizationPartyId,
-				"productCategoryId",organizationPartyId + "_ROOT",
-				"prodCatalogCategoryTypeId","PCCT_BROWSE_ROOT",
-				"fromDate",nowTimestamp)));
+			results = dispatcher.runSync("addProductCategoryToProdCatalog",UtilMisc.toMap(
+					"userLogin",userLogin,
+					"prodCatalogId",organizationPartyId,
+					"productCategoryId",promoCategory,
+					"prodCatalogCategoryTypeId","PCCT_PROMOTIONS",
+					"fromDate",nowTimestamp));
 
-		List categories = new ArrayList(); // remember added categories, do not add links over and over
+	    // browseroot
+			results = dispatcher.runSync("createProductCategory",UtilMisc.toMap(
+					"userLogin",userLogin,
+					"primaryParentCategoryId",organizationPartyId,
+					"productCategoryTypeId","CATALOG_CATEGORY",
+					"description","contain the categories to browse"	));
+			browseCategory = (String) results.get("productCategoryId");
+		
+		// connect to catalog
+			results = dispatcher.runSync("addProductCategoryToProdCatalog",UtilMisc.toMap(
+					"userLogin",userLogin,
+					"prodCatalogId",organizationPartyId,
+					"productCategoryId",browseCategory,
+					"prodCatalogCategoryTypeId","PCCT_BROWSE_ROOT",
+					"fromDate",nowTimestamp));
+			
+		} catch (GenericServiceException e1) {
+			request.setAttribute("_ERROR_MESSAGE_", "Error creating/linking base Categories");
+			return "error";
+		}
+
 		while ((fileLine = getLine()) != null && lineNumber < 100) {
 			if (debug) Debug.logInfo("Line read: " +fileLine, module);
 			
 			// prepare structures for updating
-			GenericValue product =delegator.makeValue("Product",UtilMisc.toMap(
+			Map product = UtilMisc.toMap(
+					"userLogin",userLogin,
 					"productTypeId","FINISHED_GOOD",		
 					"includeInPromotions","Y",						// allow promotions
-					"primaryProductCategoryId", organizationPartyId));
-			GenericValue productPrice =delegator.makeValue("ProductPrice",UtilMisc.toMap(
+					"primaryProductCategoryId", organizationPartyId);
+			Map productPrice =UtilMisc.toMap(
+					"userLogin",userLogin,
 					"productPricePurposeId","PURCHASE",
 					"productPriceTypeId","DEFAULT_PRICE",
 					"currencyUomId",partyAcctgPreference.getString("baseCurrencyUomId"),
 					"productStoreGroupId","_NA_",
-					"fromDate",nowTimestamp));
-			GenericValue productCategory =delegator.makeValue("ProductCategory",UtilMisc.toMap(
+					"fromDate",nowTimestamp);
+			Map productCategory = UtilMisc.toMap(
+					"userLogin",userLogin,
 					"primaryParentCategoryId",organizationPartyId,
-					"productCategoryTypeId","CATALOG_CATEGORY")); // category itself
-			GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember",UtilMisc.toMap( // connect product to category
-					"fromDate",nowTimestamp));
-			GenericValue productCategoryMemberPromo = delegator.makeValue("ProductCategoryMember",UtilMisc.toMap( // connect product to promo category
+					"productCategoryTypeId","CATALOG_CATEGORY"); // category itself
+			Map productCategoryMember = UtilMisc.toMap( // connect product to category
+					"userLogin",userLogin,
+					"fromDate",nowTimestamp);
+			Map productCategoryMemberPromo = UtilMisc.toMap( // connect product to promo category
+					"userLogin",userLogin,
 					"fromDate",nowTimestamp,
-					"productCategoryId",organizationPartyId + "_PROMO"));
-			GenericValue prodCatalogCategory =delegator.makeValue("ProdCatalogCategory",UtilMisc.toMap(  // category to productCatalog
+					"productCategoryId",promoCategory);
+			Map prodCatalogCategory = UtilMisc.toMap(  // category to productCatalog
+					"userLogin",userLogin,
 					"prodCatalogId",organizationPartyId,
 					"prodCatalogCategoryTypeId","PCCT_QUICK_ADD",  // dummy entry
-					"fromDate",nowTimestamp));
-			GenericValue productCategoryRollup =delegator.makeValue("ProductCategoryRollup",UtilMisc.toMap( // category to parent for browsing
+					"fromDate",nowTimestamp);
+			Map productCategoryRollup =UtilMisc.toMap( // category to parent for browsing
+					"userLogin",userLogin,
 					"fromDate",nowTimestamp,
-					"parentProductCategoryId",organizationPartyId + "_ROOT"));
+					"parentProductCategoryId",browseCategory);
 			
 			int infoItemNr = 0;
 			boolean promo = false;
@@ -176,30 +194,31 @@ public class importData {
 				if (debug) Debug.logInfo("Token read: " + infoItem, module);
 				switch(++infoItemNr) {
 				case 1: // product number
-					product.put("productId", prefix.concat("-").concat(infoItem));
-					productPrice.put("productId", prefix.concat("-").concat(infoItem));
-					productCategoryMemberPromo.put("productId",prefix.concat("-").concat(infoItem)); // connect to promocategory if required
-					productCategoryMember.put("productId",prefix.concat("-").concat(infoItem)); // connect to browse category
+					product.put("productId", infoItem);
+					productPrice.put("productId", prefix.concat(infoItem));
+					productCategoryMemberPromo.put("productId",prefix.concat(infoItem)); // connect to promocategory if required
+					productCategoryMember.put("productId",prefix.concat(infoItem)); // connect to browse category
 					break;
 				case 2: //description
 					product.put("productName", infoItem);
+					product.put("internalName", infoItem);
 					product.put("description", infoItem);
 					break;
 				case 3: // large image
-					product.put("largeImageUrl", "/".concat(organizationPartyId).concat("/html/").concat(infoItem));
+					product.put("largeImageUrl", "/".concat(organizationPartyId).concat("/html/images/").concat(infoItem));
 					break;
 				case 4: //small image
-					product.put("smallImageUrl","/".concat(organizationPartyId).concat("/html/").concat(infoItem));
+					product.put("smallImageUrl","/".concat(organizationPartyId).concat("/html/images").concat(infoItem));
 					break;
 				case 5: //price
 						productPrice.put("price", new Double(Double.parseDouble(infoItem)));
 					break;
 				case 6: //category
-					productCategory.put("productCategoryId", prefix.concat("-").concat(infoItem));
+					productCategory.put("productCategoryId", infoItem);
 					productCategory.put("description",infoItem);
-					prodCatalogCategory.put("productCategoryId", prefix.concat("-").concat(infoItem));
-					productCategoryRollup.put("productCategoryId", prefix.concat("-").concat(infoItem));
-					productCategoryMember.put("productCategoryId", prefix.concat("-").concat(infoItem));
+					prodCatalogCategory.put("productCategoryId", prefix.concat(infoItem));
+					productCategoryRollup.put("productCategoryId", prefix.concat(infoItem));
+					productCategoryMember.put("productCategoryId", prefix.concat(infoItem));
 					break;
 				case 7: //promo (y/n)
 					if (infoItem.equals("N") || infoItem.equals("n")|| infoItem.equals(" ")) {
@@ -217,37 +236,35 @@ public class importData {
 			GenericValue prExist = null;
 			GenericValue catExist = null;
 			try {
-				prExist = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId",product.getString("productId")));
-				catExist = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId",productCategory.getString("productCategoryId")));
+				prExist = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId",prefix.concat((String)product.get("productId"))));
+				catExist = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId",prefix.concat((String)productCategory.get("productCategoryId"))));
 			} catch(GenericEntityException e2) {
 				request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
 				return "error";
 			}
 			
-			// update/create
-			toBeStored.add(productCategory); 				// category
-			toBeStored.add(product); 							// product
-			toBeStored.add(productPrice); 						// product price
-			
-			// create links only if items did not exist
-			if(prExist == null) {
-				toBeStored.add(productCategoryMember); 	// product link to category
+			// create only if items did not exist
+			try { 
+				if (catExist == null) { 
+					results = dispatcher.runSync("createProductCategory",productCategory);									// add category
+					results = dispatcher.runSync("addProductCategoryToProdCatalog",prodCatalogCategory); 			// link to catalog
+					results = dispatcher.runSync("addProductCategoryToCategory",productCategoryRollup); 			// link to browse category
+				}
+				if(prExist == null) {
+					results = dispatcher.runSync("createProduct",product); 																// create product
+					results = dispatcher.runSync("createProductPrice",productPrice); 												// create product price
+					results = dispatcher.runSync("addProductToCategory",productCategoryMember);						// add to browse category
+				}
+				if (promo) 
+					results = dispatcher.runSync("addProductToCategory",productCategoryMemberPromo);				// add product to promo category
+				
+			} catch (GenericServiceException e1) {
+				request.setAttribute("_ERROR_MESSAGE_", "Error creating/linking base Categories");
+				return "error";
 			}
-			if (catExist == null && categories.indexOf(productCategory.getString("productCategoryId")) == -1) {
-				categories.add(productCategory.getString("productCategoryId"));  // add to the list so not recreated
-				toBeStored.add(productCategoryRollup); 		// category to browseroot category
-			}
-			if (promo) 
-				toBeStored.add(productCategoryMemberPromo); 	// product link to promotion category
 		}
 		
-		try {	// create entities for this record
-            delegator.storeAll(toBeStored);
-		} catch(GenericEntityException e2) {
-			request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
-			return "error";
-		}
-		request.setAttribute("_EVENT_MESSAGE_", "Import successfull: " + toBeStored.size() + " records imported/updated.");
+		request.setAttribute("_EVENT_MESSAGE_", "Import successfull. ");
 		return (String) "success";
 	}		
 	
@@ -276,7 +293,11 @@ public class importData {
 		}
 		else	{ // not quoted field find next comma...
 			end = fileLine.indexOf(",");
-			if (end > 0)	{ // found?
+			if (fileLine.charAt(0) == ',') { //empty
+				token = "";
+				fileLine = fileLine.substring(end + 1);
+			}
+			else if (end > 0)	{ // found?
 				token = fileLine.substring(start,end);
 				fileLine = fileLine.substring(end + 1);
 			}

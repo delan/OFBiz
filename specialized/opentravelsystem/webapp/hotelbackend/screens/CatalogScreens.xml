@@ -679,6 +679,10 @@
                 <set field="productStoreId" from-scope="user" from-field="productStoreId" global="true"/>
                 <set field="productCategoryId" from-field="parameters.showProductCategoryId"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId" default-value="${productCategoryId}"/>
+                <entity-one entity-name="PartyAcctgPreference"  value-name="partyAcctgPreference" use-cache="true">
+                    <field-map field-name="partyId" value="${parameters.userLogin.partyId}"/>
+                </entity-one>
+                <set field="prefix" from-field="partyAcctgPreference.invoiceIdPrefix"/>
                 <entity-one entity-name="ProductCategory" value-name="productCategory"/>
 
                 <entity-condition entity-name="ProductCategoryRollup" list-name="currentProductCategoryRollups">
