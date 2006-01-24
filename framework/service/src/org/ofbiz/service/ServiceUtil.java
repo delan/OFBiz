@@ -47,6 +47,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.config.ServiceConfigUtil;
@@ -354,9 +355,13 @@ public class ServiceUtil {
         try {
         	boolean noMoreResults = false;
         	while (!noMoreResults) {
-            	EntityListIterator foundJobs = delegator.findListIteratorByCondition("JobSandbox", mainCond, null, null);
+        		EntityFindOptions findOptions = new EntityFindOptions();
+        		findOptions.setMaxRows(1000);
+        		findOptions.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
+        		
+            	EntityListIterator foundJobs = delegator.findListIteratorByCondition("JobSandbox", mainCond, null, null, null, findOptions);
             	// get 1000 at a time for removal so we can close the ELI (and the ResultSet) while doing removes to avoid problems with cursors
-            	List curList = foundJobs.getPartialList(0, 1000);
+            	List curList = foundJobs.getPartialList(1, 1000);
                 foundJobs.close();
             	
             	if (curList != null && curList.size() > 0) {
