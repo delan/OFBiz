@@ -303,7 +303,8 @@ public class ManagerEvents {
                     LocalDispatcher dispatcher = session.getDispatcher();
                     Map returnResp = null;
                     try {
-                        returnResp = dispatcher.runSync("quickReturnOrder", UtilMisc.toMap("orderId", orderId, "userLogin", session.getUserLogin()));
+                        returnResp = dispatcher.runSync("quickReturnOrder", UtilMisc.toMap("orderId", orderId, 
+                                                        "returnHeaderTypeId", "CUSTOMER_RETURN", "userLogin", session.getUserLogin()));
                     } catch (GenericServiceException e) {
                         Debug.logError(e, module);
                         pos.showDialog("dialog/error/exception", e.getMessage());
