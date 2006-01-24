@@ -365,7 +365,7 @@ public class ServiceUtil {
                     // in a separate try/catch because other entities like ApplicationSandbox and WorkEffort can point to the same record, though it pretty much doesn't happen
                     jobSandbox.removeRelated("RuntimeData");
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e, "When remove job unable to remove related RuntimeData for JobSandbox: " + jobSandbox + "; " + e.toString(), module);
+                    Debug.logWarning(e, "After removing job unable to remove related RuntimeData for JobSandbox: " + jobSandbox + "; " + e.toString(), module);
                 }
             }
             
