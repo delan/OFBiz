@@ -431,12 +431,22 @@ public class EntityListIterator implements ListIterator {
         try {
             if (number == 0) return FastList.newInstance();
             List list = FastList.newInstance();
+            
+            // just in case the caller missed the 1 based thingy
+            if (start == 0) start = 1;
 
-            // if can't reposition to desired index, throw exception
-            if (!resultSet.absolute(start)) {
-                // maybe better to just return an empty list here...
-                return list;
-                //throw new GenericEntityException("Could not move to the start position of " + start + ", there are probably not that many results for this find.");
+            // if starting on result 1 just call next() to avoid scrollable issues in some databases
+            if (start == 1) {
+                if (!resultSet.next()) {
+                    return list;
+                }
+            } else {
+                // if can't reposition to desired index, throw exception
+                if (!resultSet.absolute(start)) {
+                    // maybe better to just return an empty list here...
+                    return list;
+                    //throw new GenericEntityException("Could not move to the start position of " + start + ", there are probably not that many results for this find.");
+                }
             }
 
             // get the first as the current one
