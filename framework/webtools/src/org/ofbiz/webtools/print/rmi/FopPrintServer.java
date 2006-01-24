@@ -73,7 +73,7 @@ public class FopPrintServer implements Container {
 
     public boolean start() throws ContainerException {
         // get the container config
-        ContainerConfig.Container cfg = ContainerConfig.getContainer("rmi-dispatcher", configFile);
+        ContainerConfig.Container cfg = ContainerConfig.getContainer("rmi-print-server", configFile);
         ContainerConfig.Container.Property initialCtxProp = cfg.getProperty("use-initial-context");
         ContainerConfig.Container.Property lookupHostProp = cfg.getProperty("bound-host");
         ContainerConfig.Container.Property lookupPortProp = cfg.getProperty("bound-port");
