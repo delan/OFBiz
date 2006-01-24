@@ -38,7 +38,6 @@ import java.util.Map;
 public interface FopPrintRemote extends Remote {
 
     public static final String module = FopPrintRemote.class.getName();
-
-    public byte[] getFopPdf(String screenUri, Map parameters) throws RemoteException;
-
+    
+    public byte[] getXslFo(String screenUri, Map parameters) throws RemoteException;
 }
