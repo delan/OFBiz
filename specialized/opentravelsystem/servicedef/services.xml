@@ -294,24 +294,24 @@
         <override name="statusId" mode = "IN" optional="false"/>
     </service>
     <service name="createProductCategory" default-entity-name="ProductCategory" engine="simple"
-        location="org/ofbiz/opentravelsystem/CatalogServices.xml" invoke="createProductCategory" auth="true">
+        location="org/ofbiz/opentravelsystem/CatalogServices.xml" invoke="createProductCategory">
         <description>Create an ProductCategory</description>
-        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="productCategoryTypeId" optional="false"/>
     </service>
     <service name="createProductCategoryOfbiz" default-entity-name="ProductCategory" engine="simple"
-        location="org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategory" auth="true">
+        location="org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategory">
         <description>Create an ProductCategory</description>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="productCategoryTypeId" optional="false"/>
     </service>
     <service name="createProduct" default-entity-name="Product" engine="simple"
-        location="org/ofbiz/opentravelsystem/CatalogServices.xml" invoke="createProduct" auth="true">
+        location="org/ofbiz/opentravelsystem/CatalogServices.xml" invoke="createProduct">
         <description>Create a Product</description>
         <implements service="interfaceProduct"/>
-        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <override name="productTypeId" optional="false"/>
         <override name="internalName" optional="false"/>
     </service>
