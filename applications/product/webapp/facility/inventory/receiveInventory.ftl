@@ -303,6 +303,7 @@
 <#elseif requestParameters.initialSelected?exists && purchaseOrder?has_content>
   <form method="post" action="<@ofbizUrl>receiveInventoryProduct</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
     <#-- general request fields -->
+    <input type="hidden" name="_checkGlobalScope" value="N">
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
     <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
     <input type="hidden" name="initialSelected" value="Y">
