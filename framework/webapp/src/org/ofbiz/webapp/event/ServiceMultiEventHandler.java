@@ -275,6 +275,10 @@ public class ServiceMultiEventHandler implements EventHandler {
 
                 // invoke the service
                 Map result = null;
+                if (Debug.verboseOn()) {
+                    Debug.logInfo("ready to call " + serviceName + " with context " + serviceContext, module);
+                }
+
                 try {
                     result = dispatcher.runSync(serviceName, serviceContext);
                 } catch (ServiceAuthException e) {
@@ -304,16 +308,18 @@ public class ServiceMultiEventHandler implements EventHandler {
                 }
                 
                 // set the results in the request
-                Iterator rmei = result.entrySet().iterator();
-                while (rmei.hasNext()) {
-                    Map.Entry rme = (Map.Entry) rmei.next();
-                    String resultKey = (String) rme.getKey();
-                    Object resultValue = rme.getValue();
+                if ((result != null) && (result.entrySet() != null)) {
+                    Iterator rmei = result.entrySet().iterator();
+                    while (rmei.hasNext()) {
+                        Map.Entry rme = (Map.Entry) rmei.next();
+                        String resultKey = (String) rme.getKey();
+                        Object resultValue = rme.getValue();
 
-                    if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
-                            !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
-                            !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
-                        request.setAttribute(resultKey, resultValue);
+                        if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
+                                !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
+                                !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+                            request.setAttribute(resultKey, resultValue);
+                        }
                     }
                 }
             }
