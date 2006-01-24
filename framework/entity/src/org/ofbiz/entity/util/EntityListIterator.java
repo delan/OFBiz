@@ -25,7 +25,6 @@ package org.ofbiz.entity.util;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -430,7 +429,7 @@ public class EntityListIterator implements ListIterator {
      */
     public List getPartialList(int start, int number) throws GenericEntityException {
         try {
-            if (number == 0) return new ArrayList();
+            if (number == 0) return FastList.newInstance();
             List list = FastList.newInstance();
 
             // if can't reposition to desired index, throw exception
