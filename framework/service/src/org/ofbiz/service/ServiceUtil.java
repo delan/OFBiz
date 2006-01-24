@@ -352,24 +352,33 @@ public class ServiceUtil {
 
         // lookup the jobs
         try {
-        	EntityListIterator foundJobs = delegator.findListIteratorByCondition("JobSandbox", mainCond, null, null);
-
-            GenericValue jobSandbox = null;
-            while ((jobSandbox = (GenericValue) foundJobs.next()) != null) {
-                try {
-                    jobSandbox.remove();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to remove job : " + jobSandbox + "; " + e.toString(), module);
-                }
-                try {
-                    // in a separate try/catch because other entities like ApplicationSandbox and WorkEffort can point to the same record, though it pretty much doesn't happen
-                    jobSandbox.removeRelated("RuntimeData");
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e, "After removing job unable to remove related RuntimeData for JobSandbox: " + jobSandbox + "; " + e.toString(), module);
-                }
-            }
-            
-            foundJobs.close();
+        	boolean noMoreResults = false;
+        	while (!noMoreResults) {
+            	EntityListIterator foundJobs = delegator.findListIteratorByCondition("JobSandbox", mainCond, null, null);
+            	// get 1000 at a time for removal so we can close the ELI (and the ResultSet) while doing removes to avoid problems with cursors
+            	List curList = foundJobs.getPartialList(0, 1000);
+                foundJobs.close();
+            	
+            	if (curList != null && curList.size() > 0) {
+                    Iterator curIter = curList.iterator();
+                    while (curIter.hasNext()) {
+                        GenericValue jobSandbox = (GenericValue) curIter.next();
+                        try {
+                            jobSandbox.remove();
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Unable to remove job : " + jobSandbox + "; " + e.toString(), module);
+                        }
+                        try {
+                            // in a separate try/catch because other entities like ApplicationSandbox and WorkEffort can point to the same record, though it pretty much doesn't happen
+                            jobSandbox.removeRelated("RuntimeData");
+                        } catch (GenericEntityException e) {
+                            Debug.logWarning(e, "After removing job unable to remove related RuntimeData for JobSandbox: " + jobSandbox + "; " + e.toString(), module);
+                        }
+                    }
+            	} else {
+            		noMoreResults = true;
+            	}
+        	}
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get jobs to purge");
             return ServiceUtil.returnError(e.getMessage());
