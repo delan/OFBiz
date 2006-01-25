@@ -119,6 +119,34 @@
         <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
 
+        <!-- test the total return amount vs the total order amount -->
+        <if-compare field-name="parameters.statusId" value="RETURN_ACCEPTED" operator="equals">
+            <!-- get orderId form one of ReturnItem, we assume that all returnItem assosicate to the same order -->
+            <!-- TODO: search for a list of DISTINCT orderId from ReturnItem and check this for all of them -->
+            <entity-condition entity-name="ReturnItem" list-name="returnItems">
+                <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
+            </entity-condition>
+            <first-from-list entry-name="returnItem" list-name="returnItems"/>
+            <if-not-empty field-name="returnItem.orderId">
+                <set field="returnTotalCtx.orderId" from-field="returnItem.orderId"/>
+                <!-- no adjustment needed: adjustment is passed in to calculate the effect of an additional item on return total.  -->
+                <calculate field-name="returnTotalCtx.adjustment"><number value="0.0"/></calculate>
+                <call-service service-name="getOrderAvailableReturnedTotal" in-map-name="returnTotalCtx">
+                    <result-to-field result-name="availableReturnTotal" field-name="availableReturnTotal"/>
+                    <result-to-field result-name="returnTotal" field-name="returnTotal"/>
+                    <result-to-field result-name="orderTotal" field-name="orderTotal"/>
+                </call-service>
+                <log level="info" message="Available amount for return (order #${returnItem.orderId}) : ${availableReturnTotal} [orderTotal = ${orderTotal} / returnTotal = ${returnTotal}]"/>
+                <if-compare field-name="availableReturnTotal" operator="less" value="0" type="Double">
+                    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
+            </if-compare>
+            <else>
+                <log level="info" message="Not an order based return; unable to check valid amounts!"/>
+            </else>
+            </if-not-empty>
+            <check-errors/>
+        </if-compare>
+
         <field-to-result field-name="returnHeader.statusId" result-name="currentStatusId"/>
         <set-nonpk-fields map-name="parameters" value-name="returnHeader"/>
         <store-value value-name="returnHeader"/>
@@ -255,25 +283,6 @@
                 </if>
             </else>
         </if-compare>
-
-        <!-- test the total return amount vs the total order amount -->
-        <if-not-empty field-name="parameters.orderId">
-            <set field="returnTotalCtx.adjustment" from-field="parameters.returnPrice"/>
-            <set field="returnTotalCtx.orderId" from-field="parameters.orderId"/>
-            <call-service service-name="getOrderAvailableReturnedTotal" in-map-name="returnTotalCtx">
-                <result-to-field result-name="availableReturnTotal" field-name="availableReturnTotal"/>
-                <result-to-field result-name="returnTotal" field-name="returnTotal"/>
-                <result-to-field result-name="orderTotal" field-name="orderTotal"/>
-            </call-service>
-            <log level="always" message="Available amount for return (order #${parameters.orderId}) : ${availableReturnTotal} [${orderTotal} / ${returnTotal} / ${parameters.returnPrice}]"/>
-            <if-compare field-name="availableReturnTotal" operator="less" value="0" type="Double">
-                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
-            </if-compare>
-        <else>
-            <log level="always" message="Not an order based return; unable to check valid amounts!"/>
-        </else>
-        </if-not-empty>
-        <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ReturnItem"/>
         <set from-field="parameters.returnId" field="newEntity.returnId"/>
