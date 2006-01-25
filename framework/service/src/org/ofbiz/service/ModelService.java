@@ -36,6 +36,9 @@ import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.factory.WSDLFactory;
 import javax.xml.namespace.QName;
 
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
 import com.ibm.wsdl.extensions.soap.SOAPBindingImpl;
 import com.ibm.wsdl.extensions.soap.SOAPBodyImpl;
 import com.ibm.wsdl.extensions.soap.SOAPOperationImpl;
@@ -138,13 +141,13 @@ public class ModelService implements Serializable {
     public Set overrideParameters = new ListOrderedSet();
 
     /** List of permission groups for service invocation */
-    public List permissionGroups = new LinkedList();
+    public List permissionGroups = FastList.newInstance();
 
-    /** Context Information, a list of parameters used by the service, contains ModelParam objects */
-    protected Map contextInfo = new HashMap();
+    /** Context Information, a Map of parameters used by the service, contains ModelParam objects */
+    protected Map contextInfo = FastMap.newInstance();
 
-    /** Context Information, a list of parameters used by the service, contains ModelParam objects */
-    protected List contextParamList = new LinkedList();
+    /** Context Information, a List of parameters used by the service, contains ModelParam objects */
+    protected List contextParamList = FastList.newInstance();
 
     /** Flag to say if we have pulled in our addition parameters from our implemented service(s) */
     protected boolean inheritedParameters = false;
@@ -234,6 +237,7 @@ public class ModelService implements Serializable {
         }
     }
 
+    /* DEJ20060125 This is private but not used locally, so just commenting it out for now... may remove later
     private void copyParams(Collection params) {
         if (params != null) {
             Iterator i = params.iterator();
@@ -243,6 +247,7 @@ public class ModelService implements Serializable {
             }
         }
     }
+    */
 
     /**
      * Adds a clone of a parameter definition to this service
@@ -251,16 +256,6 @@ public class ModelService implements Serializable {
         if (param != null) {
             ModelParam newParam = new ModelParam(param);
             addParam(newParam);
-        }
-    }
-
-    private void copyParamsAndClone(Collection params) {
-        if (params != null) {
-            Iterator i = params.iterator();
-            while (i.hasNext()) {
-                ModelParam param = (ModelParam) i.next();
-                addParamClone(param);
-            }
         }
     }
 
@@ -307,45 +302,45 @@ public class ModelService implements Serializable {
      * @param mode Test either mode IN or mode OUT
      */
     public void validate(Map test, String mode, Locale locale) throws ServiceValidationException {
-        Map requiredInfo = new HashMap();
-        Map optionalInfo = new HashMap();
+        Map requiredInfo = FastMap.newInstance();
+        Map optionalInfo = FastMap.newInstance();
         boolean verboseOn = Debug.verboseOn();
 
-        if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + name + "} : Validating context - " + test, module);
+        if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : Validating context - " + test, module);
 
         // do not validate results with errors
         if (mode.equals(OUT_PARAM) && test != null && test.containsKey(RESPONSE_MESSAGE)) {
             if (RESPOND_ERROR.equals(test.get(RESPONSE_MESSAGE)) || RESPOND_FAIL.equals(test.get(RESPONSE_MESSAGE))) {
-                if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + name + "} : response was an error, not validating.", module);
+                if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : response was an error, not validating.", module);
                 return;
             }
         }
 
         // get the info values
-        Collection values = contextInfo.values();
-        Iterator i = values.iterator();
-
-        while (i.hasNext()) {
-            ModelParam p = (ModelParam) i.next();
-
-            if (p.mode.equals("INOUT") || p.mode.equals(mode)) {
-                if (!p.optional)
-                    requiredInfo.put(p.name, p.type);
-                else
-                    optionalInfo.put(p.name, p.type);
+        Iterator contextParamIter = this.contextParamList.iterator();
+        while (contextParamIter.hasNext()) {
+            ModelParam modelParam = (ModelParam) contextParamIter.next();
+            // Debug.logInfo("In ModelService.validate preparing parameter [" + modelParam.name + (modelParam.optional?"(optional):":"(required):") + modelParam.mode + "] for service [" + this.name + "]", module);
+            if ("INOUT".equals(modelParam.mode) || mode.equals(modelParam.mode)) {
+                if (modelParam.optional) {
+                    optionalInfo.put(modelParam.name, modelParam.type);
+                } else {
+                    requiredInfo.put(modelParam.name, modelParam.type);
+                }
             }
         }
 
         // get the test values
-        Map requiredTest = new HashMap();
-        Map optionalTest = new HashMap();
+        Map requiredTest = FastMap.newInstance();
+        Map optionalTest = FastMap.newInstance();
 
-        if (test == null) test = new HashMap();
+        if (test == null) test = FastMap.newInstance();
         requiredTest.putAll(test);
 
-        List requiredButNull = new ArrayList();
+        List requiredButNull = FastList.newInstance();
         if (requiredTest != null) {
-            List keyList = new ArrayList(requiredTest.keySet());
+            List keyList = FastList.newInstance();
+            keyList.addAll(requiredTest.keySet());
             Iterator t = keyList.iterator();
 
             while (t.hasNext()) {
@@ -363,14 +358,14 @@ public class ModelService implements Serializable {
 
         // check for requiredButNull fields and return an error since null values are not allowed for required fields
         if (requiredButNull.size() > 0) {
-            List missingMsg = new ArrayList();
+            List missingMsg = FastList.newInstance();
             Iterator rbni = requiredButNull.iterator();
             while (rbni.hasNext()) {
                 String missingKey = (String) rbni.next();
                 String message = this.getParam(missingKey).getPrimaryFailMessage(locale);
                 if (message == null) {
-                    String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale) + " ";
-                    message = errMsg + missingKey + "\n";
+                    String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale);
+                    message = errMsg + " [" + this.name + "." + missingKey + "]";
                 }
                 missingMsg.add(message);
             }
@@ -425,19 +420,22 @@ public class ModelService implements Serializable {
             Set missing = new TreeSet(keySet);
 
             missing.removeAll(testSet);
-            List missingMsgs = new ArrayList();
+            List missingMsgs = FastList.newInstance();
 
             Iterator iter = missing.iterator();
             while (iter.hasNext()) {
                 String key = (String) iter.next();
                 String msg = model.getParam(key).getPrimaryFailMessage(locale);
                 if (msg == null) {
-                    String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale) + " ";
-                    msg = errMsg  + key + "\n";;
+                    String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale) ;
+                    msg = errMsg + " [" + model.name + "." + key + "]";
                 }
                 missingMsgs.add(msg);
             }
-            throw new ServiceValidationException(missingMsgs, model, new ArrayList(missing), null, mode);
+            
+            List missingCopy = FastList.newInstance();
+            missingCopy.addAll(missing);
+            throw new ServiceValidationException(missingMsgs, model, missingCopy, null, mode);
         }
 
         // This is to see if the info set contains all from the test set
@@ -445,7 +443,7 @@ public class ModelService implements Serializable {
             Set extra = new TreeSet(testSet);
 
             extra.removeAll(keySet);
-            List extraMsgs = new ArrayList();
+            List extraMsgs = FastList.newInstance();
 
             Iterator iter = extra.iterator();
             while (iter.hasNext()) {
@@ -456,15 +454,18 @@ public class ModelService implements Serializable {
                     msg = param.getPrimaryFailMessage(locale);
                 }
                 if (msg == null) {
-                    msg = "Unknown parameter found: " + key;
+                    msg = "Unknown parameter found: [" + model.name + "." + key + "]";
                 }
                 extraMsgs.add(msg);
             }
-            throw new ServiceValidationException(extraMsgs, model, null, new ArrayList(extra), mode);
+
+            List extraCopy = FastList.newInstance();
+            extraCopy.addAll(extra);
+            throw new ServiceValidationException(extraMsgs, model, null, extraCopy, mode);
         }
 
         // * Validate types next
-        List typeFailMsgs = new ArrayList();
+        List typeFailMsgs = FastList.newInstance();
         Iterator i = testSet.iterator();
         while (i.hasNext()) {
             String key = (String) i.next();
@@ -482,7 +483,7 @@ public class ModelService implements Serializable {
                             if (!typeValidate(val, testObject)) {
                                 String msg = val.getFailMessage(locale);
                                 if (msg == null) {
-                                    msg = "The following parameter failed validation: " + key;
+                                    msg = "The following parameter failed validation: [" + model.name + "." + key + "]";
                                 }
                                 typeFailMsgs.add(msg);
                             }
@@ -490,7 +491,7 @@ public class ModelService implements Serializable {
                             Debug.logError(e, module);
                             String msg = param.getPrimaryFailMessage(locale);
                             if (msg == null) {
-                                msg = "The following parameter failed validation: " + key;
+                                msg = "The following parameter failed validation: [" + model.name + "." + key + "]";
                             }
                             typeFailMsgs.add(msg);
                         }
@@ -498,7 +499,7 @@ public class ModelService implements Serializable {
                         if (!ObjectType.instanceOf(testObject, infoType, null)) {
                             String msg = val.getFailMessage(locale);
                             if (msg == null) {
-                                msg = "The following parameter failed validation: " + key;
+                                msg = "The following parameter failed validation: [" + model.name + "." + key + "]";
                             }
                             typeFailMsgs.add(msg);
                         }
@@ -507,8 +508,7 @@ public class ModelService implements Serializable {
             } else {
                 if (!ObjectType.instanceOf(testObject, infoType, null)) {
                     String testType = testObject == null ? "null" : testObject.getClass().getName();
-                    String msg = "Type check failed for field [" + key + "]; expected type is [" +
-                            infoType + "]; actual type is [" + testType + "]";
+                    String msg = "Type check failed for field [" + model.name + "." + key + "]; expected type is [" + infoType + "]; actual type is [" + testType + "]";
                     typeFailMsgs.add(msg);
                 }
             }
@@ -590,7 +590,7 @@ public class ModelService implements Serializable {
      * @return List of parameter names
      */
     public List getParameterNames(String mode, boolean optional, boolean internal) {
-        List names = new ArrayList();
+        List names = FastList.newInstance();
 
         if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
             return names;
@@ -719,7 +719,7 @@ public class ModelService implements Serializable {
     }
 
     private List makeSuffixList(Map source, ModelParam param) {
-        List paramList = new ArrayList();
+        List paramList = FastList.newInstance();
         Set sourceSet = source.keySet();
         Iterator i = sourceSet.iterator();
         while (i.hasNext()) {
@@ -764,24 +764,21 @@ public class ModelService implements Serializable {
      * @return A list of required IN parameters in the order which they were defined.
      */
     public List getInParameterSequence(Map source) {
-        List target = new LinkedList();
-
+        List target = FastList.newInstance();
         if (source == null) {
             return target;
         }
         if (contextInfo == null || contextInfo.size() == 0) {
             return target;
         }
-        Iterator i = this.contextParamList.iterator();
-
-        while (i.hasNext()) {
-            ModelParam p = (ModelParam) i.next();
+        Iterator contextParamIter = this.contextParamList.iterator();
+        while (contextParamIter.hasNext()) {
+            ModelParam modelParam = (ModelParam) contextParamIter.next();
 
             // don't include OUT parameters in this list, only IN and INOUT
-            if ("OUT".equals(p.mode)) continue;
+            if ("OUT".equals(modelParam.mode)) continue;
 
-            Object srcObject = source.get(p.name);
-
+            Object srcObject = source.get(modelParam.name);
             if (srcObject != null) {
                 target.add(srcObject);
             }
@@ -794,7 +791,9 @@ public class ModelService implements Serializable {
      * the service was created.
      */
     public List getModelParamList() {
-        return new LinkedList(this.contextParamList);
+        List newList = FastList.newInstance();
+        newList.addAll(this.contextParamList);
+    	return newList;
     }
 
     /**
@@ -802,15 +801,15 @@ public class ModelService implements Serializable {
      * the service was created.
      */
     public List getInModelParamList() {
-        List inList = new LinkedList();
-        Iterator i = this.contextParamList.iterator();
-
-        while (i.hasNext()) {
-            ModelParam p = (ModelParam) i.next();
-
+        List inList = FastList.newInstance();
+        Iterator contactParamIter = this.contextParamList.iterator();
+        while (contactParamIter.hasNext()) {
+            ModelParam modelParam = (ModelParam) contactParamIter.next();
+            
             // don't include OUT parameters in this list, only IN and INOUT
-            if ("OUT".equals(p.mode)) continue;
-            inList.add(p);
+            if ("OUT".equals(modelParam.mode)) continue;
+            
+            inList.add(modelParam);
         }
         return inList;
     }
@@ -837,26 +836,33 @@ public class ModelService implements Serializable {
 
             // handle interfaces
             if (implServices != null && implServices.size() > 0 && dctx != null) {
-                // backup the old info
-                List oldParams = this.contextParamList;
-
-                // reset the fields
-                this.contextInfo = new HashMap();
-                this.contextParamList = new LinkedList();
-
                 Iterator implIter = implServices.iterator();
                 while (implIter.hasNext()) {
                     String serviceName = (String) implIter.next();
                     ModelService model = dctx.getModelService(serviceName);
                     if (model != null) {
-                        copyParamsAndClone(model.contextInfo.values());
+                        Iterator contextParamIter = model.contextParamList.iterator();
+                        while (contextParamIter.hasNext()) {
+                            ModelParam newParam = (ModelParam) contextParamIter.next();
+                            ModelParam existingParam = (ModelParam) this.contextInfo.get(newParam.name);
+                            if (existingParam != null) {
+                                // if the existing param is not INOUT and the newParam.mode is different from existingParam.mode, make the existing param optional and INOUT
+                            	// TODO: this is another case where having different optional/required settings for IN and OUT would be quite valuable...
+                            	if (!"INOUT".equals(existingParam.mode) && !existingParam.mode.equals(newParam.mode)) {
+                                    existingParam.mode = "INOUT";
+                            		existingParam.optional = true;
+                            	}
+                            } else {
+                                // instead of calling: addParamClone(param), do it here because we want to make the inputs optional and such because earlier services in a group may create the parameters for later
+                                ModelParam newParamClone = new ModelParam(newParam);
+                                newParamClone.optional = true;
+                                this.addParam(newParamClone);
+                            }
+                        }
                     } else {
                         Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                     }
                 }
-
-                // put the old values back on top
-                copyParams(oldParams);
             }
 
             // handle any override parameters
